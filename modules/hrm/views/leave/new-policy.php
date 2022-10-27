@@ -78,7 +78,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
                     'help'     => $f_year_help_text,
                     'value'    => $f_year,
                     'options'  => [
-                                      '' => '&mdash; ' . esc_attr__( 'select year', 'erp' ) . ' &mdash;',
+                                      '' => '&mdash; ' . esc_attr__( 'Select year', 'erp' ) . ' &mdash;',
                                   ] + $financial_years,
                     'disabled' => $disabled,
                 ] ); ?>

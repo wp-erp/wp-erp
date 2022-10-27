@@ -1,7 +1,7 @@
 <div class="wrap erp-hr-depts">
 
     <h2>
-        <?php esc_html_e( 'People', 'erp' ); ?>
+        <?php esc_html_e( 'People > Departments', 'erp' ); ?>
         <a href="#" id="erp-new-dept" class="add-new-h2" data-single="1"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
 
         <form method="get">

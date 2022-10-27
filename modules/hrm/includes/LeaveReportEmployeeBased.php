@@ -59,7 +59,7 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
         $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
         $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
 
-        $financial_years       =  [ '' => esc_attr__( 'select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all(), 'fy_name', 'id' );
+        $financial_years       =  [ '' => esc_attr__( 'Select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all(), 'fy_name', 'id' );
         $selected_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
         $date_range_start      = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
         $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : ''; ?>

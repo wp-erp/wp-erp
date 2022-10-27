@@ -1,6 +1,6 @@
 <div class="wrap erp erp-hr-designation">
     <h2>
-        <?php esc_html_e( 'People', 'erp' ); ?>
+        <?php esc_html_e( 'People > Designations', 'erp' ); ?>
         <a href="#" id="erp-new-designation" data-single="1" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
     </h2>
 

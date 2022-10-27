@@ -6,7 +6,7 @@ $employee_table->prepare_items();
 <div class="wrap erp-hr-employees" id="wp-erp">
 
     <h2>
-        <?php esc_html_e( 'People', 'erp' ); ?>
+        <?php esc_html_e( 'People > Employees', 'erp' ); ?>
 
         <?php if ( current_user_can( 'erp_create_employee' ) ) : ?>
             <a href="#" id="erp-employee-new" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>

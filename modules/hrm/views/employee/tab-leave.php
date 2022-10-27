@@ -91,7 +91,7 @@ $current_assigned_policies = $f_year && array_key_exists( $f_year, $policy_resul
 <form action="#" id="erp-hr-empl-leave-history">
     <select name="f_year" id="f_year">
         <?php
-        echo wp_kses( erp_html_generate_dropdown( [ '' => esc_attr__( 'select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all(), 'fy_name', 'id' ), $f_year ), [
+        echo wp_kses( erp_html_generate_dropdown( [ '' => esc_attr__( 'Select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all(), 'fy_name', 'id' ), $f_year ), [
 			'option' => [
 				'value'    => [],
 				'selected' => [],

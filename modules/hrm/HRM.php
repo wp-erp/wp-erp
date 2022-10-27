@@ -210,6 +210,7 @@ class HRM {
             'emp_set_photo'          => __( 'Set Photo', 'erp' ),
             'confirm'                => __( 'Are you sure?', 'erp' ),
             'delConfirmDept'         => __( 'Are you sure to delete this department?', 'erp' ),
+            'delConfirmDesignation'  => __( 'Are you sure to delete this designation?', 'erp' ),
             'delConfirmPolicy'       => __( 'If you delete this policy, the leave entitlements and requests related to it will also be deleted. Are you sure to delete this policy?', 'erp' ),
             'delConfirmHoliday'      => __( 'Are you sure to delete this Holiday?', 'erp' ),
             'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'erp' ),
