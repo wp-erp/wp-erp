@@ -2010,7 +2010,7 @@ table.leave-requests td.column-status span {
     display: inline !important;
 }
 table.leave-requests td.column-status .status-1 {
-    width: 79px;
+    width: 90px;
     height: 27px;
     font-weight: 400;
     font-size: 13px;
@@ -2042,18 +2042,18 @@ table.leave-requests td.column-status .status-3 {
     text-align: center;
     color: #3A0D0D;
     padding: 5px 15px;
-    background: #FFC9C9;
+    background: #FEE2E2;
     border-radius: 3px;
 }
 
-table.leaves td.column-status .status-2 {
-  background: #ffba00;
-  color: #fff;
-}
-table.leaves td.column-status .status-3 {
-  background: #dd3d36;
-  color: #fff;
-}
+/*table.leaves td.column-status .status-2 {*/
+/*  background: #ffba00;*/
+/*  color: #fff;*/
+/*}*/
+/*table.leaves td.column-status .status-3 {*/
+/*  background: #dd3d36;*/
+/*  color: #fff;*/
+/*}*/
 table.leaves td.column-status .status-4 {
   background: #3E87D0;
   color: #fff;

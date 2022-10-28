@@ -51,7 +51,7 @@
                 var user_name = $(this).val();
                 x_timer = setTimeout(function(){
                     self.searchEmployee()
-                }, 1000);
+                }, 500);
             });
             // $( '.input-component' ).on( 'keyup', '#employee_name', self, this.searchEmployee );
             $( '.input-component' ).on( 'click', '.list-employee-name', self, this.setEmployee );
