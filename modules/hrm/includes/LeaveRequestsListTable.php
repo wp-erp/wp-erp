@@ -518,7 +518,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     <option value=''><?php echo esc_attr__( 'Select year', 'erp' ); ?></option>
                                     <?php
                                     foreach ( $financial_years as $key => $year ) {
-                                        if ( (int) $filters['financial_year'] === (int) $year ) {
+                                        if ( ! empty( $filters['financial_year'] ) && (int) $filters['financial_year'] === (int) $year ) {
                                             $selected_f_year = $key;
                                         }
                                         echo sprintf( "<option value='%s'>%s</option>\n", esc_html( $key ), esc_html( $year ) );

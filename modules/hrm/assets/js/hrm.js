@@ -1276,11 +1276,13 @@
             },
 
             toggleFilterDropdown: function() {
-                document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
+                $("#erp-dropdown-content").toggleClass( 'show' );
+                // document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
             },
 
             toggleLeaveFilterDropdown: function() {
-                document.getElementById( 'erp-leave-dropdown-content' ).classList.toggle( 'show' );
+                $("#erp-leave-dropdown-content").toggleClass( 'show' );
+                // document.getElementById( 'erp-leave-dropdown-content' ).classList.toggle( 'show' );
             },
 
             resetLeaveFilterDropdown: function() {
