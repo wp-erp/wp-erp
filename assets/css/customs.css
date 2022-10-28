@@ -1012,14 +1012,6 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: #0D3A26;
 }
 
-.input-component input.leave-status[id='1']:checked+label {
-    background: #CEF4E4;
-}
-
-.input-component input.leave-status[id='1']:checked+label span {
-    color: #0D3A26;
-}
-
 .input-component input.leave-status[id='1']:hover+label {
     background: #FFFFFF;
     border: 1px solid #CEF4E4;
@@ -1029,12 +1021,12 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: #000000;
 }
 
-.input-component input.leave-status[id='2']:checked+label {
-    background: #FFE9C9;
+.input-component input.leave-status[id='1']:checked+label {
+    background: #CEF4E4;
 }
 
-.input-component input.leave-status[id='2']:checked+label span {
-    color: #3A180D;
+.input-component input.leave-status[id='1']:checked+label span {
+    color: #0D3A26;
 }
 
 .input-component input.leave-status[id='2']:hover+label {
@@ -1044,6 +1036,14 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .input-component input.leave-status[id='2']:hover+label span {
     color: #000000;
+}
+
+.input-component input.leave-status[id='2']:checked+label {
+    background: #FFE9C9;
+}
+
+.input-component input.leave-status[id='2']:checked+label span {
+    color: #3A180D;
 }
 
 .input-component input.leave-status[id='3']:hover+label {

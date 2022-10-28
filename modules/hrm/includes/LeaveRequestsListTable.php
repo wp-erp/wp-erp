@@ -358,7 +358,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
         $per_page          = 20;
         $current_page      = $this->get_pagenum();
         $offset            = ( $current_page - 1 ) * $per_page;
-        $this->page_status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
+        $this->page_status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
 
         // get current year as default f_year
         $current_f_year = erp_hr_get_financial_year_from_date();
