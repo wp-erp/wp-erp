@@ -46,6 +46,7 @@
             // Leave report custom filter
             $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
             $( '#filter_leave_year' ).on( 'change', self, this.customLeaveFilter );
+            $( '#custom-date-range-leave-filter' ).on( 'change', '#end_date', self, this.customLeaveFilterEndData );
             $( '.input-component' ).on( 'keyup', '#employee_name', function (e){
                 clearTimeout(x_timer);
                 var user_name = $(this).val();
@@ -1162,16 +1163,27 @@
                 var element = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">' +
                     '<div style="display: flex">' +
                     '<label for="start_date">From ' +
-                    '<input autocomplete="off" name="start_date" class="erp-leave-date-field" type="text">&nbsp;' +
+                    '<input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text">&nbsp;' +
                     '</div>' +
                     '<div>' +
                     '<label for="end_date">To ' +
-                    '<input autocomplete="off" name="end_date" class="erp-leave-date-field" type="text">' +
+                    '<input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text">' +
                     ' </div>' +
                     '</div>';
                 $('#custom-date-range-leave-filter').append( element );
             }
             Leave.initDateField();
+        },
+
+        customLeaveFilterEndData: function() {
+            let startDate = new Date($("#start_date").val());
+            let endDate = new Date($("#end_date").val());
+            if(Date.parse(startDate) > Date.parse(endDate)){
+                alert("Invalid Date Range");
+                document.getElementById('filter_employee_search').disabled = 'disabled'
+            }else{
+                document.getElementById('filter_employee_search').disabled = false
+            }
         },
 
         setLeavePolicy: function (e) {

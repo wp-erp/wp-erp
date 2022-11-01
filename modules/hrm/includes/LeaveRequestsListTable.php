@@ -359,6 +359,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
         $current_page      = $this->get_pagenum();
         $offset            = ( $current_page - 1 ) * $per_page;
         $this->page_status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
+        if( !empty( $_GET['filter_employee_search'] ) && 'Apply' === $_GET['filter_employee_search'] ){
+            $this->page_status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : 'all';
+        }
 
         // get current year as default f_year
         $current_f_year = erp_hr_get_financial_year_from_date();
@@ -550,7 +553,12 @@ class LeaveRequestsListTable extends \WP_List_Table {
                             </div>
                         </div>
                         <div class='input-component'>
-                            <label for="filter_leave_status"><?php esc_html_e( 'Leave status', 'erp' ); ?></label>
+                            <label for="filter_leave_status">
+                                <?php esc_html_e( 'Leave status', 'erp' ); ?>
+                                <span>
+                                    <?php echo erp_help_tip( esc_html__( 'Select the leave request states as per your preference. Selecting none would show all leave states including Approved, Pending and Rejected.', 'erp' ) ); ?>
+                                </span>
+                            </label>
                             <div style="margin: 15px 0 25px 0">
                                 <?php
                                 foreach ( $this->counts as $key => $title ) {
@@ -578,7 +586,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                     <div class="wperp-filter-panel-footer">
                         <input type="button" class="wperp-btn btn--cancel btn--filter-apply" value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
                         <input type="button" class="wperp-btn btn--reset btn--filter-apply" value="<?php esc_attr_e( 'Reset', 'erp' ); ?>" name="leave_filter_reset">
-                        <input type="submit" name="filter_employee" id="filter" class="wperp-btn btn--filter-apply" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
+                        <input type="submit" name="filter_employee_search" id="filter_employee_search" class="wperp-btn btn--filter-apply" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
                     </div>
                 </div>
             </div>

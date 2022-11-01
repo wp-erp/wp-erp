@@ -1459,7 +1459,9 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
         $where .= ' AND (' . implode( ' OR ', $wh ) . ')';
     } else {
-        $where .= ' AND request.last_status = ' . absint( $args['status'] );
+        if ( $args['status'] !== 'all' ) {
+            $where .= ' AND request.last_status = ' . absint( $args['status'] );
+        }
     }
 
     if ( $args['user_id'] ) {

@@ -1000,6 +1000,14 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     color: #B4B4B4;
 }
 
+.input-component label span span {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+    color: #000000;
+}
+
 .input-component input.leave-status {
     display: none;
 }
