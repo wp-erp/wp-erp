@@ -19,7 +19,6 @@ if ( ! empty( $get['financial_year'] ) || ! empty( $get['employee_name'] ) || ! 
     $title_text = esc_html__( 'No requests found!', 'erp' );
     $desc = esc_html__( 'Try different search filters to filter leave requests as per your preference', 'erp' );
     $img = esc_url( WPERP_ASSETS . '/images/no_request.svg' );
-	    $button = '';
 }
 ?>
 <div class="zero-request">

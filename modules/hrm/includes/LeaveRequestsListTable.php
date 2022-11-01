@@ -385,13 +385,13 @@ class LeaveRequestsListTable extends \WP_List_Table {
         if ( ! empty( $_GET['filter_leave_year'] ) && 4 !== $_GET['filter_leave_year'] ) {
             if ( 1 === (int) $_GET['filter_leave_year'] ) {
                 $args['start_date'] = date( 'Y-m-d', strtotime( '-7 days' ) );
-                $args['end_date'] = date( 'Y-m-d' );
+                $args['end_date']   = date( 'Y-m-d' );
             } elseif ( 2 === (int) $_GET['filter_leave_year'] ) {
                 $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of previous month' ) );
-                $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
+                $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
             } elseif ( 3 === (int) $_GET['filter_leave_year'] ) {
                 $args['start_date'] = date( 'Y-m-01', strtotime( '-3 month' ) );
-                $args['end_date'] = date( 'Y-m-t' );
+                $args['end_date']   = date( 'Y-m-t' );
             }
         }
 
@@ -433,8 +433,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
      */
     public function filter_option( $filtered_option = true ) {
         // phpcs:disable
-        $policies    = LeavePolicy::all();
-        $policy_data = [];
+        $policies          = LeavePolicy::all();
+        $policy_data       = [];
         $leave_policy_name = '';
         foreach ( $policies as $policy ) {
             if ( ! empty( $_GET['leave_policy'] ) && $policy['id'] === (int) $_GET['leave_policy'] ) {
@@ -452,7 +452,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             $financial_years[ $f_year['id'] ] = $f_year['fy_name'];
         }
 
-        $filters = [];
+        $filters         = [];
         $selected_f_year = '';
         if ( ! empty( $_GET['employee_name'] ) ) {
             $filters['employee_name'] = $_GET['employee_name'];
@@ -467,7 +467,16 @@ class LeaveRequestsListTable extends \WP_List_Table {
             $this->counts = erp_hr_leave_get_requests_count( $selected_f_year );
         }
         if ( ! empty( $_GET['filter_leave_status'] ) ) {
-            $filters['filter_leave_status'] = $this->counts[$_GET['filter_leave_status']]['label'];
+            if ( is_array( $_GET['filter_leave_status'] ) ) {
+                $status = [];
+                foreach ( $_GET['filter_leave_status'] as $filter_leave_status ) {
+                    $status[] = $this->counts[ $filter_leave_status ]['label'];
+                }
+
+                $filters['filter_leave_status'] = implode( ', ', $status);
+            } else {
+                $filters['filter_leave_status'] = $this->counts[ $_GET['filter_leave_status'] ]['label'];
+            }
         }
         if ( ! empty( $_GET['filter_leave_year'] ) ) {
             if ( 1 === (int) $_GET['filter_leave_year'] ) {
@@ -477,7 +486,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             } elseif ( 3 === (int) $_GET['filter_leave_year'] ) {
                 $filters['filter_leave_year'] = esc_html__( 'Last 3 months', 'erp' );
             } elseif ( 'custom' === $_GET['filter_leave_year'] ) {
-                $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $_GET['start_date'])) . ' - ' . date( 'M d, Y', strtotime( $_GET['end_date']));
+                $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $_GET['start_date'] ) ) . ' - ' . date( 'M d, Y', strtotime( $_GET['end_date'] ) );
             }
         }
 
@@ -548,7 +557,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     if ( 'all' === $key ) {
                                         continue;
                                     }
-                                    echo sprintf( "<input name='filter_leave_status' class='filter_leave_status leave-status' id='%s' type='radio' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
+                                    echo sprintf( "<input name='filter_leave_status[]' class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
                             </div>
@@ -560,7 +569,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                 <option value='1'><?php echo esc_html__( 'Last week', 'erp' ); ?></option>
                                 <option value='2'><?php echo esc_html__( 'Last month', 'erp' ); ?></option>
                                 <option value='3'><?php echo esc_html__( 'Last 3 months', 'erp' ); ?></option>
-                                <option value="custom" ><?php echo esc_html__( 'Custom', 'erp' ); ?></option>
+                                <option value="custom"><?php echo esc_html__( 'Custom', 'erp' ); ?></option>
                             </select>
                             <span id="custom-date-range-leave-filter"></span>
                         </div>
@@ -641,7 +650,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             }
             ?>
         </div>
-		<?php
+        <?php
     }
 
 }
