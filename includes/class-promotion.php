@@ -27,23 +27,47 @@ class Promotion {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        
-        $current_time      = erp_current_datetime()->setTimezone ( new \DateTimeZone( 'America/New_York' ) );
-        $promotion_start   = $current_time->setDate( 2021, 05, 11 )->setTime( 9, 0, 0 );
-        // $promotion_end     = $promotion_start->modify( '+7 days' )->setTime( 23, 59, 59 );
-        $promotion_end     = $current_time->setDate( 2021, 05, 24 )->setTime( 23, 59, 59 );
-        
-        // 2021-03-15 09:00:00 EST - 2021-03-22 23:59:59 EST
-        if ( $current_time > $promotion_end || $current_time < $promotion_start ) {
+
+        if ( ! isset( $_GET['page'] ) || 0 !== strpos( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 'erp' ) ) {
             return;
         }
 
-        if ( $current_time >= $promotion_start && $current_time <= $promotion_end ) {
-            $msg            = '<strong>Eid Mubarak!</strong></br>Stay Safe & Spread Happiness.</br>Enjoy up to <strong>45% OFF</strong> on <strong>WP ERP Pro</strong>.';
-            $option_name    = 'erp_eid_offer_2021';
-            $this->generate_notice( $msg, $option_name );
+        $promo_notice  = get_transient( 'erp_promo_notice' );
+
+        if ( false === $promo_notice ) {
+            $promo_notice_url = 'http://wperp.com/wp-json/erp/v1/promotions';
+            $response         = wp_remote_get( $promo_notice_url, [ 'timeout' => 15 ] );
+
+            if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
+                return;
+            }
+
+            $promo_notice = wp_remote_retrieve_body( $response );
+            set_transient( 'erp_promo_notice', $promo_notice, DAY_IN_SECONDS );
+        }
+
+        $promo_notice = json_decode( $promo_notice, true );
+        $current_time = erp_current_datetime()->setTimezone( new \DateTimeZone( 'America/New_York' ) )->format( 'Y-m-d H:i:s T' );
+
+        if ( $current_time > $promo_notice['end_date'] || $current_time < $promo_notice['start_date'] ) {
             return;
         }
+
+        $offer            = new \stdClass;
+        $offer->link      = $promo_notice['action_url'];
+        $offer->key       = "erp-{$promo_notice['key']}";
+        $offer->btn_txt   = ! empty( $promo_notice['action_title'] ) ? $promo_notice['action_title'] : __( 'Get Now', 'erp' );
+        $offer->message   = [];
+        $offer->message[] = sprintf( __( '<strong>%s</strong>', 'erp' ), $promo_notice['title'] );
+
+        if ( ! empty( $promo_notice['description'] ) ) {
+            $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['description'] );
+        }
+
+        $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['content'] );
+        $offer->message   = implode( '<br>', $offer->message );
+
+        return $this->generate_notice( $offer );
     }
 
     /**
@@ -53,20 +77,24 @@ class Promotion {
      *
      * @return void
      */
-    public function generate_notice( $msg, $option_name ) {
+    public function generate_notice( $offer ) {
         // check if it has already been dismissed
-        $hide_notice = get_option( $option_name, 'no' );
-
-        if ( 'hide' === $hide_notice ) {
+        if ( 'hide' === get_option( $offer->key, 'no' ) ) {
             return;
         }
 
-        $offer_msg = '<p class="highlight-text">' . $msg . 
-                ' <a target="_blank" href="https://wperp.com/pricing/?nocache&utm_medium=text&utm_source=wordpress-erp-eidoffer2021">Get Now</a>
-            </p>';
         ?>
         <div class="notice is-dismissible erp-promotional-offer-notice" id="erp-promotional-offer-notice">
-            <?php echo wp_kses_post( $offer_msg ); ?>
+            <p class="highlight-text">
+                <?php echo wp_kses( $offer->message, [ 'strong' => [], 'br' => [] ] ); ?>
+                <p>
+                    <a target="_blank"
+                        href="<?php echo esc_url_raw( $offer->link ) ?>"
+                        style="padding:5px 15px;">
+                        <?php echo esc_html( $offer->btn_txt ); ?>
+                    </a>
+                </p>
+            </p>
         </div><!-- #erp-promotional-offer-notice -->
 
         <script type='text/javascript'>
@@ -74,9 +102,9 @@ class Promotion {
                 e.preventDefault();
 
                 wp.ajax.post('erp-dismiss-promotional-offer-notice-temp', {
-                    dismissed: true,
-                    option_name : '<?php echo esc_html( $option_name ); ?>',
-                    _wpnonce : '<?php echo wp_create_nonce( 'erp_admin' ); ?>',
+                    dismissed   : true,
+                    option_name : '<?php echo esc_attr( $offer->key ); ?>',
+                    _wpnonce    : '<?php echo wp_create_nonce( 'erp_admin' ); ?>',
                 } );
             });
         </script>
@@ -92,7 +120,7 @@ class Promotion {
                 font-size: 16px;
                 font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
-            
+
             .erp-promotional-offer-notice a {
                 color: lightcyan;
                 border: 0.5px solid lightseagreen;

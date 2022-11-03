@@ -45,6 +45,8 @@ function erp_acct_get_all_invoices( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
     $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
 
+    erp_disable_mysql_strict_mode();
+
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
     }
@@ -63,38 +65,42 @@ function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare(
-        "Select
+        "SELECT
 
-    voucher.editable,
-    voucher.currency,
+            voucher.editable,
+            voucher.currency,
 
-    invoice.id,
-    invoice.voucher_no,
-    invoice.customer_id,
-    invoice.customer_name,
-    invoice.trn_date,
-    invoice.due_date,
-    invoice.billing_address,
-    invoice.amount,
-    invoice.discount,
-    invoice.discount_type,
-    invoice.tax,
-    invoice.tax_zone_id,
-    invoice.estimate,
-    invoice.attachments,
-    invoice.status,
-    invoice.particulars,
-    invoice.created_at,
+            invoice.id,
+            invoice.voucher_no,
+            invoice.customer_id,
+            invoice.customer_name,
+            invoice.trn_date,
+            invoice.due_date,
+            invoice.billing_address,
+            invoice.amount,
+            invoice.discount,
+            invoice.discount_type,
+            invoice.shipping,
+            invoice.shipping_tax,
+            invoice.tax,
+            invoice.tax_zone_id,
+            invoice.estimate,
+            invoice.attachments,
+            invoice.status,
+            invoice.particulars,
+            invoice.created_at,
 
-    inv_acc_detail.debit,
-    inv_acc_detail.credit
+            inv_acc_detail.debit,
+            inv_acc_detail.credit
 
-    FROM {$wpdb->prefix}erp_acct_invoices as invoice
-    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id
-    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
-    WHERE invoice.voucher_no = %d",
+        FROM {$wpdb->prefix}erp_acct_invoices as invoice
+        LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
+        WHERE invoice.voucher_no = %d",
         $invoice_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -108,7 +114,7 @@ function erp_acct_get_invoice( $invoice_no ) {
         $row['line_items'][ $key ]['line_total'] = $total;
     }
 
-    $row['attachments'] = unserialize( $row['attachments'] );
+    $row['attachments'] = isset( $row['attachments'] ) ? maybe_unserialize( $row['attachments'] ) : null;
     $row['total_due']   = erp_acct_get_invoice_due( $invoice_no );
     $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $invoice_no );
 
@@ -151,7 +157,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
-    if ( ! empty( reset( $results )['ecommerce_type'] ) ) {
+    if ( ! is_null( $results ) && ! empty( reset( $results )['ecommerce_type'] ) ) {
         // product name should not fetch form `erp_acct_products`
         $results = array_map(
             function ( $result ) {
@@ -192,7 +198,7 @@ function erp_acct_insert_invoice( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_voucher_no',
             [
                 'type'       => 'invoice',
@@ -203,11 +209,15 @@ function erp_acct_insert_invoice( $data ) {
             ]
         );
 
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to create voucher', 'erp' ) );
+        }
+
         $voucher_no = $wpdb->insert_id;
 
         $invoice_data = erp_acct_get_formatted_invoice_data( $data, $voucher_no );
 
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_invoices',
             [
                 'voucher_no'      => $invoice_data['voucher_no'],
@@ -219,6 +229,8 @@ function erp_acct_insert_invoice( $data ) {
                 'amount'          => $invoice_data['amount'],
                 'discount'        => $invoice_data['discount'],
                 'discount_type'   => $invoice_data['discount_type'],
+                'shipping'        => $invoice_data['shipping'],
+                'shipping_tax'    => $invoice_data['shipping_tax'],
                 'tax'             => $invoice_data['tax'],
                 'tax_zone_id'     => $invoice_data['tax_rate_id'],
                 'estimate'        => $invoice_data['estimate'],
@@ -229,6 +241,10 @@ function erp_acct_insert_invoice( $data ) {
                 'created_by'      => $invoice_data['created_by'],
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to create invoice', 'erp' ) );
+        }
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
 
@@ -254,7 +270,11 @@ function erp_acct_insert_invoice( $data ) {
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
 
-        return new WP_Error( 'invoice-exception', $e->getMessage() );
+        return new WP_Error(
+            'invoice-exception',
+            /* translators: error message */
+            sprintf( __( 'Could not create invoice. Error: %s', 'erp' ), $e->getMessage() )
+        );
     }
 
     $invoice = erp_acct_get_invoice( $voucher_no );
@@ -279,9 +299,9 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 
     $user_id = get_current_user_id();
 
-    $invoice_data['created_at'] = date( 'Y-m-d' );
+    $invoice_data['created_at'] = erp_current_datetime()->format( 'Y-m-d' );
     $invoice_data['created_by'] = $user_id;
-    $invoice_data['updated_at'] = date( 'Y-m-d' );
+    $invoice_data['updated_at'] = erp_current_datetime()->format( 'Y-m-d' );
     $invoice_data['updated_by'] = $user_id;
 
     $estimate_type      = 1;
@@ -294,7 +314,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         $sub_total = $item['qty'] * $item['unit_price'];
 
         // insert into invoice details
-        $wpdb->insert(
+        $inserted = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_invoice_details',
             [
                 'trn_no'         => $voucher_no,
@@ -303,12 +323,17 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 'unit_price'     => $item['unit_price'],
                 'discount'       => $item['discount'],
                 'tax'            => $item['tax'],
+                'tax_cat_id'     => ! empty( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
                 'item_total'     => $sub_total,
                 'ecommerce_type' => ! empty( $item['ecommerce_type'] ) ? $item['ecommerce_type'] : null,
                 'created_at'     => $invoice_data['created_at'],
                 'created_by'     => $invoice_data['created_by'],
             ]
         );
+
+        if ( ! $inserted ) {
+            throw new Exception( __( 'Failed to create invoice details', 'erp' ) );
+        }
 
         $details_id = $wpdb->insert_id;
 
@@ -320,7 +345,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             $tax_rate_agency = ! empty( $item['tax_rate_agency'] ) ? $item['tax_rate_agency'] : null;
         } else {
             // calculate tax for every related agency
-            $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
+            $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
         }
 
         if ( ! empty( $tax_rate_agency ) ) {
@@ -335,7 +360,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 }
 
                 /*==== insert into invoice details tax ====*/
-                $wpdb->insert(
+                $inserted = $wpdb->insert(
                     $wpdb->prefix . 'erp_acct_invoice_details_tax',
                     [
                         'invoice_details_id' => $details_id,
@@ -346,6 +371,10 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                         'created_by'         => $invoice_data['created_by'],
                     ]
                 );
+
+                if ( ! $inserted ) {
+                    throw new Exception( __( 'Failed to create tax data of invoice details', 'erp' ) );
+                }
             }
         }
     }
@@ -361,7 +390,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 $credit = $tax_agency_detail;
             }
 
-            $wpdb->insert(
+            $inserted = $wpdb->insert(
                 $wpdb->prefix . 'erp_acct_tax_agency_details',
                 [
                     'agency_id'   => $agency_id,
@@ -374,6 +403,10 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                     'created_by'  => $invoice_data['created_by'],
                 ]
             );
+
+            if ( ! $inserted ) {
+                throw new \Exception( __( 'Failed to create tax agency details', 'erp' ) );
+            }
         }
     }
 }
@@ -399,14 +432,14 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
     if ( $contra ) {
         $invoice_no = $invoice_data['voucher_no'];
         $debit      = 0;
-        $credit     = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'];
+        $credit     = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'] + $invoice_data['shipping'] + $invoice_data['shipping_tax'];
     } else {
         $invoice_no = $voucher_no;
-        $debit      = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'];
+        $debit      = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'] + $invoice_data['shipping'] + $invoice_data['shipping_tax'];
         $credit     = 0;
     }
 
-    $wpdb->insert(
+    $inserted = $wpdb->insert(
         $wpdb->prefix . 'erp_acct_invoice_account_details',
         [
             'invoice_no'  => $invoice_no,
@@ -421,6 +454,12 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
             'updated_by'  => $invoice_data['created_by'],
         ]
     );
+
+    if ( ! $inserted ) {
+        throw new \Exception( __( 'Failed to create invoice account details', 'erp' ) );
+    }
+
+    return $wpdb->insert_id;
 }
 
 /**
@@ -571,6 +610,8 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
                 'amount'          => $invoice_data['amount'],
                 'discount'        => $invoice_data['discount'],
                 'discount_type'   => $invoice_data['discount_type'],
+                'shipping'        => $invoice_data['shipping'],
+                'shipping_tax'    => $invoice_data['shipping_tax'],
                 'tax'             => $invoice_data['tax'],
                 'estimate'        => false,
                 'attachments'     => $invoice_data['attachments'],
@@ -636,6 +677,8 @@ function erp_acct_update_draft_and_estimate( $data, $invoice_no ) {
         'amount'          => $invoice_data['amount'],
         'discount'        => $invoice_data['discount'],
         'discount_type'   => $invoice_data['discount_type'],
+        'shipping'        => $invoice_data['shipping'],
+        'shipping_tax'    => $invoice_data['shipping_tax'],
         'tax'             => $invoice_data['tax'],
         'estimate'        => $invoice_data['estimate'],
         'attachments'     => $invoice_data['attachments'],
@@ -685,6 +728,8 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
     $invoice_data['discount_type']   = isset( $data['discount_type'] ) ? $data['discount_type'] : null;
+    $invoice_data['shipping']        = isset( $data['shipping'] ) ? $data['shipping'] : 0;
+    $invoice_data['shipping_tax']    = isset( $data['shipping_tax'] ) ? $data['shipping_tax'] : 0;
     $invoice_data['tax_rate_id']     = isset( $data['tax_rate_id'] ) ? $data['tax_rate_id'] : 0;
     $invoice_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : [];
     $invoice_data['trn_by']          = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
@@ -756,27 +801,12 @@ function erp_acct_void_invoice( $invoice_no ) {
 }
 
 /**
- * Tax category with agency
- */
-function get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
-    global $wpdb;
-
-    return $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT agency_id, tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency where tax_id = %d and tax_cat_id = %d",
-            absint( $tax_id ),
-            absint( $tax_cat_id )
-        ),
-        ARRAY_A
-    );
-}
-
-/**
  * Insert invoice/s data into ledger
  *
  * @param array $invoice_data
  *
- * @return mixed
+ * @return void
+ * @throws Exception
  */
 function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 0, $contra = false ) {
     global $wpdb;
@@ -786,29 +816,37 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
-    $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
-    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );
+    $sales_ledger_id              = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
+    $sales_discount_ledger_id     = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );
+    $sales_shipping_ledger_id     = $ledger_map->get_ledger_id_by_slug( 'shipment' );
+    $sales_shipping_tax_ledger_id = $ledger_map->get_ledger_id_by_slug( 'shipment_tax' );
 
     if ( $contra ) {
-        $trn_no = $voucher_no;
+        $sales_credit        = 0;
+        $discount_debit      = 0;
+        $shipment_credit     = 0;
+        $shipment_tax_credit = 0;
 
-        $discount_debit = 0;
-        $sales_credit   = 0;
-
-        $sales_debit     = $invoice_data['amount'];
-        $discount_credit = $invoice_data['discount'];
+        $trn_no              = $voucher_no;
+        $sales_debit         = $invoice_data['amount'];
+        $discount_credit     = $invoice_data['discount'];
+        $shipment_debit      = $invoice_data['shipping'];
+        $shipment_tax_debit  = $invoice_data['shipping_tax'];
     } else {
-        $trn_no = $invoice_data['voucher_no'];
+        $sales_debit         = 0;
+        $discount_credit     = 0;
+        $shipment_debit      = 0;
+        $shipment_tax_debit  = 0;
 
-        $sales_debit     = 0;
-        $discount_credit = 0;
-
-        $sales_credit   = $invoice_data['amount'];
-        $discount_debit = $invoice_data['discount'];
+        $trn_no              = $invoice_data['voucher_no'];
+        $sales_credit        = $invoice_data['amount'];
+        $discount_debit      = $invoice_data['discount'];
+        $shipment_credit     = $invoice_data['shipping'];
+        $shipment_tax_credit = $invoice_data['shipping_tax'];
     }
 
     // insert amount in ledger_details
-    $wpdb->insert(
+    $inserted = $wpdb->insert(
         $wpdb->prefix . 'erp_acct_ledger_details',
         [
             'ledger_id'   => $sales_ledger_id,
@@ -824,24 +862,80 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         ]
     );
 
-    // insert discount in ledger_details
-    $wpdb->insert(
-        $wpdb->prefix . 'erp_acct_ledger_details',
-        [
-            'ledger_id'   => $sales_discount_ledger_id,
-            'trn_no'      => $trn_no,
-            'particulars' => $invoice_data['particulars'],
-            'debit'       => $discount_debit,
-            'credit'      => $discount_credit,
-            'trn_date'    => $invoice_data['trn_date'],
-            'created_at'  => $date,
-            'created_by'  => $user_id,
-            'updated_at'  => $date,
-            'updated_by'  => $user_id,
-        ]
-    );
+    if ( ! $inserted ) {
+        throw new \Exception( __( 'Failed to insert amount in ledger details', 'erp' ) );
+    }
 
-    erp_acct_purge_cache( ['list' => 'sales_transaction'] );
+    // insert discount in ledger_details
+    if ( (float) $discount_debit > 0 || (float) $discount_credit > 0 ) {
+        $inserted = $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_discount_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $discount_debit,
+                'credit'      => $discount_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to insert discount in ledger details', 'erp' ) );
+        }
+    }
+
+    // insert shipping in ledger_details
+    if ( (float) $shipment_debit > 0 || (float) $shipment_credit > 0 ) {
+        $inserted = $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_shipping_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $shipment_debit,
+                'credit'      => $shipment_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to insert shipping in ledger details', 'erp' ) );
+        }
+    }
+
+    // insert shipping tax in ledger_details
+    if ( (float) $shipment_tax_debit > 0 || (float) $shipment_tax_credit > 0 ) {
+        $inserted = $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_ledger_details',
+            [
+                'ledger_id'   => $sales_shipping_tax_ledger_id,
+                'trn_no'      => $trn_no,
+                'particulars' => $invoice_data['particulars'],
+                'debit'       => $shipment_tax_debit,
+                'credit'      => $shipment_tax_credit,
+                'trn_date'    => $invoice_data['trn_date'],
+                'created_at'  => $date,
+                'created_by'  => $user_id,
+                'updated_at'  => $date,
+                'updated_by'  => $user_id,
+            ]
+        );
+
+        if ( ! $inserted ) {
+            throw new \Exception( __( 'Failed to insert shipping tax in ledger details', 'erp' ) );
+        }
+    }
+
+    erp_acct_purge_cache( [ 'list' => 'sales_transaction' ] );
 }
 
 /**
@@ -1065,9 +1159,17 @@ function erp_acct_get_recievables_overview() {
 function erp_acct_get_invoice_due( $invoice_no ) {
     global $wpdb;
 
-    $result = $wpdb->get_row( $wpdb->prepare( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = %d GROUP BY ia.invoice_no", $invoice_no ), ARRAY_A );
+    $result = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT ia.invoice_no, SUM( ia.debit - ia.credit) as due
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia
+            WHERE ia.invoice_no = %d
+            GROUP BY ia.invoice_no", $invoice_no
+        ),
+        ARRAY_A
+    );
 
-    return $result['due'];
+    return ! empty( $result['due'] ) ? $result['due'] : 0;
 }
 
 /**

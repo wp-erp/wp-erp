@@ -10,6 +10,20 @@ $employee_table->prepare_items();
 
         <?php if ( current_user_can( 'erp_create_employee' ) ) : ?>
             <a href="#" id="erp-employee-new" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
+            
+            <div class="erp-btn-group">
+                <button id="erp-hr-employee-import-csv"
+                    data-title="<?php esc_attr_e( 'Import Employee', 'erp' ); ?>"
+                    data-btn="<?php esc_attr_e( 'Import', 'erp' ); ?>">
+                    <?php esc_html_e( 'Import', 'erp' ); ?>
+                </button>
+                
+                <button id="erp-hr-employee-export-csv"
+                    data-title="<?php esc_attr_e( 'Export Employee', 'erp' ); ?>"
+                    data-btn="<?php esc_attr_e( 'Export', 'erp' ); ?>">
+                    <?php esc_html_e( 'Export', 'erp' ); ?>
+                </button>
+            </div>
         <?php endif; ?>
 
         <form method="get">

@@ -4,7 +4,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">{{ __('Tax Rates', 'erp') }}</h2>
-                    <a class="wperp-btn btn--primary" @click.prevent="newTaxRate">
+                    <a class="wperp-btn btn--primary" @click.prevent="newTaxRate" id="add-tax-rate">
                         <span>{{ __('Add Tax Rate', 'erp') }}</span>
                     </a>
                 </div>
@@ -69,7 +69,7 @@ export default {
         return {
             modalParams: null,
             columns: {
-                tax_rate_name: { label:  __('Tax Zone Name', 'erp') },
+                tax_rate_name: { label:  __('Tax Zone Name', 'erp'), isColPrimary: true },
                 actions      : { label: __('Actions', 'erp') }
             },
             rows: [],
@@ -251,12 +251,17 @@ export default {
             padding: 20px !important;
         }
 
-        .actions {
-            text-align: right;
-        }
+        @media (min-width: 783px) {
+            .actions {
+                text-align: right;
+            }
 
-        .col--actions {
-            float: right !important;
+            .col--actions {
+                float: right !important;
+            }
+            .row-actions {
+                text-align: right !important;
+            }
         }
     }
 </style>

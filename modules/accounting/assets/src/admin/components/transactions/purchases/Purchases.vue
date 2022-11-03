@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import 'assets/js/plugins/chart.min';
 import 'assets/js/status_chart';
 
 import ComboBox from 'admin/components/select/ComboBox.vue';
@@ -31,6 +30,7 @@ import PurchasesStats from 'admin/components/transactions/purchases/PurchasesSta
 import PurchasesList from 'admin/components/transactions/purchases/PurchasesList.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 import {mapState} from "vuex";
+import HTTP from "admin/http";
 
 export default {
     name: 'Purchases',
@@ -71,7 +71,15 @@ export default {
         }, 200);
 
         if(!this.vendors.length){
-            this.$store.dispatch('purchase/fetchVendors');
+            HTTP.get('/people', {
+                params: {
+                    type: 'vendor',
+                    per_page: -1,
+                    page: 1 // *offset issue
+                }
+            }).then(response => {
+                this.$store.dispatch('purchase/fillVendors', response.data);
+            });
         }
     }
 

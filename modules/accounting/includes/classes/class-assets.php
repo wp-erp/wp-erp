@@ -56,10 +56,11 @@ class Assets {
      */
     private function register_scripts( $scripts ) {
         global $current_user;
-        $u_id       = $current_user->ID;
-        $site_url   = site_url();
-        $logout_url = esc_url( wp_logout_url() );
-        $acct_url   = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
+        $u_id              = $current_user->ID;
+        $site_url          = site_url();
+        $logout_url        = esc_url( wp_logout_url() );
+        $acct_url          = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
+        $acct_tutorial_url = admin_url( 'admin.php' ) . '?page=erp-accounting&tutorial=true#/';
 
         foreach ( $scripts as $handle => $script ) {
             $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
@@ -105,34 +106,38 @@ class Assets {
         $trn_statuses = erp_acct_get_all_trn_statuses();
 
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', [
-            'user_id'            => $u_id,
-            'site_url'           => $site_url,
-            'logout_url'         => $logout_url,
-            'acct_assets'        => ERP_ACCOUNTING_ASSETS,
-            'erp_assets'         => WPERP_ASSETS,
-            'erp_acct_menus'     => $menus,
-            'erp_acct_url'       => $acct_url,
-            'decimal_separator'  => $erp_acct_dec_separator,
-            'thousand_separator' => $erp_acct_ths_separator,
-            'currency_format'    => erp_acct_get_price_format(),
-            'symbol'             => erp_acct_get_currency_symbol(),
-            'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
-            'current_date'       => erp_current_datetime()->format( 'Y-m-d' ),
-            'fy_lower_range'     => $fy_ranges['lower'],
-            'fy_upper_range'     => $fy_ranges['upper'],
-            'ledgers'            => $ledgers,
-            'trn_statuses'       => $trn_statuses,
-            'pdf_plugin_active'  => is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ),
-            'link_copy_success'  => __( 'Link has been successfully copied.', 'erp' ),
-            'link_copy_error'    => __( 'Failed to copy the link.', 'erp' ),
-            'date_format'        => erp_get_date_format(),
-            'banner_dimension'   => [
+            'user_id'             => $u_id,
+            'site_url'            => $site_url,
+            'logout_url'          => $logout_url,
+            'acct_assets'         => ERP_ACCOUNTING_ASSETS,
+            'erp_assets'          => WPERP_ASSETS,
+            'erp_acct_menus'      => $menus,
+            'erp_acct_url'        => $acct_url,
+            'erp_acct_tut_url'    => $acct_tutorial_url,
+            'admin_url'           => admin_url( 'admin.php' ),
+            'decimal_separator'   => $erp_acct_dec_separator,
+            'thousand_separator'  => $erp_acct_ths_separator,
+            'currency_format'     => erp_acct_get_price_format(),
+            'symbol'              => erp_acct_get_currency_symbol(),
+            'erp_debug_mode'      => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
+            'current_date'        => erp_current_datetime()->format( 'Y-m-d' ),
+            'fy_lower_range'      => $fy_ranges['lower'],
+            'fy_upper_range'      => $fy_ranges['upper'],
+            'ledgers'             => $ledgers,
+            'trn_statuses'        => $trn_statuses,
+            'pdf_plugin_active'   => is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ),
+            'link_copy_success'   => __( 'Link has been successfully copied.', 'erp' ),
+            'link_copy_error'     => __( 'Failed to copy the link.', 'erp' ),
+            'date_format'         => erp_get_date_format(),
+            'erp_fields'          => erp_get_import_export_fields(),
+            'export_import_nonce' => wp_create_nonce( 'erp-import-export-nonce' ),
+            'banner_dimension'    => [
                 'width'       => 600,
                 'height'      => 600,
                 'flex-width'  => true,
                 'flex-height' => true,
             ],
-            'rest' => [
+            'rest'                => [
                 'root'    => esc_url_raw( get_rest_url() ),
                 'nonce'   => wp_create_nonce( 'wp_rest' ),
                 'version' => 'erp/v1',
@@ -209,17 +214,5 @@ class Assets {
         ];
 
         return $styles;
-    }
-
-
-    /**
-     * Undocumented function
-     *
-     * @since 1.7.5
-     * 
-     * @return void
-     */
-    public function includes() {
-
     }
 }

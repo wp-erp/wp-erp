@@ -2,38 +2,56 @@
 
 namespace WeDevs\ERP\Framework;
 
+use WeDevs\ERP\Settings\Helpers;
+
 /**
  * Erp Settings page main class
+ *
+ * @deprecated 1.9.0
  */
 class ERP_Settings_Page {
 
-    /**
+     /**
      * Page ID
      *
      * @var string
      */
-    protected $id = '';
+    public $id = '';
 
     /**
      * Page label
      *
      * @var string
      */
-    protected $label = '';
+    public $label = '';
 
     /**
      * Single options update or multiple
      *
      * @var bool
      */
-    protected $single_option = false;
+    public $single_option = false;
 
     /**
      * Section fields
      *
      * @var array
      */
-    protected $section_fields = [];
+    public $section_fields = [];
+
+    /**
+     * Icon For Section
+     *
+     * @var string
+     */
+    public $icon = "";
+
+    /**
+     * Extra variables
+     *
+     * @return array
+     */
+    public $extra = [];
 
     /**
      * Get id
@@ -95,6 +113,13 @@ class ERP_Settings_Page {
                 $options = $this->get_settings();
             }
 
+            // Modify options data for some sub sections
+            $sub_sub_section = isset( $_POST['sub_sub_section' ] ) ? sanitize_text_field( wp_unslash( $_POST['sub_sub_section' ] ) ) : null;
+
+            if ( ! empty ( $sub_sub_section ) ) {
+                $options = $options[ $sub_sub_section ];
+            }
+
             // Options to update will be stored here
             $update_options = [];
 
@@ -146,9 +171,7 @@ class ERP_Settings_Page {
                     }
                 } else {
                     update_option( $this->get_option_id(), $update_options );
-                } ?>
-                	<div id="message" class="updated notice is-dismissible"><p><strong><?php esc_html_e( 'Settings saved.' ); ?></strong></p></div>
-                <?php
+                }
             }
 
             do_action( 'erp_after_save_settings' );
@@ -156,9 +179,6 @@ class ERP_Settings_Page {
     }
 
     public function parse_option_value( $value ) {
-        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-        }
-
         $type         = isset( $value['type'] ) ? sanitize_title( $value['type'] ) : '';
         $option_value = null;
 
@@ -167,7 +187,7 @@ class ERP_Settings_Page {
             // Standard types
             case 'checkbox':
 
-                if ( isset( $_POST[ $value['id'] ] ) ) {
+                if ( ! empty ( $_POST[ $value['id'] ] ) ) {
                     $option_value = 'yes';
                 } else {
                     $option_value = 'no';
@@ -179,7 +199,7 @@ class ERP_Settings_Page {
             case 'wysiwyg':
 
                 if ( isset( $_POST[$value['id']] ) ) {
-                    $option_value = wp_kses_post( trim( $_POST[ $value['id'] ] ) );
+                    $option_value = wp_kses_post( wp_unslash( $_POST[ $value['id'] ] ) );
                 } else {
                     $option_value = '';
                 }
@@ -203,37 +223,54 @@ class ERP_Settings_Page {
             case 'color':
             case 'password':
             case 'single_select_page':
-            case 'image':
             case 'radio':
             case 'hidden':
+            case 'hidden-fixed':
+                $option_value = '';
+                if ( isset( $_POST[ $value['id'] ] ) ) {
+                    $option_value = sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) );
+                }
+                break;
 
-               if ( isset( $_POST[$value['id']] ) ) {
-                   $option_value = sanitize_text_field( wp_unslash( $_POST[ $value['id'] ] ) );
-               } else {
-                   $option_value = '';
-               }
+            case 'image':
+                $option_value = '';
+
+                if ( ! isset( $_FILES[ $value['id'] ] ) ) {
+                    break;
+                }
+
+                $upload = [
+                    'name'        => isset( $_FILES[ $value['id'] ]['name'] ) ? sanitize_file_name( wp_unslash( $_FILES[ $value['id'] ]['name'] ) ) : '',
+                    'type'        => isset( $_FILES[ $value['id'] ]['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES[ $value['id'] ]['type'] ) ) : '',
+                    'tmp_name'    => isset( $_FILES[ $value['id'] ]['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES[ $value['id'] ]['tmp_name'] ) ) : '',
+                    'error'       => isset( $_FILES[ $value['id'] ]['error'] ) ? sanitize_text_field( wp_unslash( $_FILES[ $value['id'] ]['error'] ) ) : '',
+                    'size'        => isset( $_FILES[ $value['id'] ]['size'] ) ? sanitize_text_field( wp_unslash( $_FILES[ $value['id'] ]['size'] ) ) : '',
+                    'post_status' => 'erp_hr_rec',
+                ];
+
+                $uploader = new \WeDevs\ERP\Uploader();
+                $uploaded = $uploader->handle_upload( $upload );
+
+                if ( $uploaded['success'] && ! empty( $uploaded['attach_id'] ) ) {
+                    $option_value = $uploaded['attach_id'];
+                }
 
                 break;
 
             // Special types
             case 'multiselect':
-
                 // Get countries array
+                $selected_countries = [];
                 if ( isset( $_POST[ $value['id'] ] ) ) {
                     $selected_countries = array_map( 'sanitize_text_field', wp_unslash( (array) $_POST[ $value['id'] ] ) );
-                } else {
-                    $selected_countries = [];
                 }
 
                 $option_value = $selected_countries;
-
                 break;
 
             // Custom handling
             default:
-
                 do_action( 'erp_update_option_' . $type, $value );
-
                 break;
 
         }
@@ -267,7 +304,7 @@ class ERP_Settings_Page {
         $fields         = $this->get_settings();
         $sections       = $this->get_sections();
         $section_fields = $this->get_section_fields( $section );
-        $query_arg      = ERP_Admin_Settings::get_current_tab_and_section();
+        $query_arg      = Helpers::get_current_tab_and_section();
 
         if ( count( $sections ) && $query_arg['subtab'] ) {
             if ( ! array_key_exists( $query_arg['subtab'], $sections ) ) {
@@ -780,5 +817,19 @@ class ERP_Settings_Page {
         }
 
         return $option_value;
+    }
+
+    /**
+     * Get settings options from the settings API.
+     *
+     * @param string $option_name
+     * @param array  $options
+     *
+     * @since 1.8.6
+     *
+     * @return array|object options
+     */
+    public function get_settings_options( $option_name, $default = [] ) {
+        return get_option( $option_name, $default );
     }
 }

@@ -219,7 +219,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (array) $item;
 
         if ( empty( $id ) || empty( $item['id'] ) ) {
-            return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $photo_id = erp_people_get_meta( $id, 'photo_id', true );
@@ -258,13 +258,13 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_vendor( $request ) {
-        if ( erp_acct_check_people_exists( $request['email'] ) ) {
-            return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
+        if ( erp_acct_exist_people( $request['email'] ) ) {
+            return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!', 'erp' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id = erp_insert_people( $item );
+        $id   = erp_acct_insert_people( $item );
 
         $vendor       = (array) erp_get_people( $id );
         $vendor['id'] = $id;
@@ -294,14 +294,14 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = erp_get_people( $id );
 
         if ( ! $item ) {
-            return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
         $old_data = (array) $item;
 
         $item = $this->prepare_item_for_database( $request );
 
-        $id = erp_insert_people( $item );
+        $id   = erp_acct_insert_people( $item );
 
         $vendor       = (array) erp_get_people( $id );
         $vendor['id'] = $id;
@@ -332,7 +332,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $exist = erp_acct_check_associated_tranasaction( $id );
 
         if ( $exist ) {
-            $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.' ) );
+            $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.', 'erp' ) );
 
             wp_send_json_error( $error );
         }
@@ -374,7 +374,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             $exist = erp_acct_check_associated_tranasaction( $id );
 
             if ( $exist ) {
-                $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.' ) );
+                $error = new WP_Error( 'rest_customer_has_trans', __( 'Can not remove! Customer has transactions.', 'erp' ) );
 
                 wp_send_json_error( $error );
             }
@@ -699,13 +699,13 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'         => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'first_name' => [
-                    'description' => __( 'First name for the resource.' ),
+                    'description' => __( 'First name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -714,7 +714,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'last_name'  => [
-                    'description' => __( 'Last name for the resource.' ),
+                    'description' => __( 'Last name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -723,14 +723,14 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'required'    => true,
                 ],
                 'email'      => [
-                    'description' => __( 'The email address for the resource.' ),
+                    'description' => __( 'The email address for the resource.', 'erp' ),
                     'type'        => 'string',
                     'format'      => 'email',
                     'context'     => [ 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'mobile'     => [
-                    'description' => __( 'Mobile number for the resource.' ),
+                    'description' => __( 'Mobile number for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -738,7 +738,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'company'     => [
-                    'description' => __( 'Company name for the resource.' ),
+                    'description' => __( 'Company name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -746,7 +746,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'phone'      => [
-                    'description' => __( 'Phone number for the resource.' ),
+                    'description' => __( 'Phone number for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -754,13 +754,13 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'website'    => [
-                    'description' => __( 'Website link of the resource.' ),
+                    'description' => __( 'Website link of the resource.', 'erp' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
                 ],
                 'notes'      => [
-                    'description' => __( 'Notes of the resource.' ),
+                    'description' => __( 'Notes of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -768,7 +768,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'fax'      => [
-                    'description' => __( 'Fax of the resource.' ),
+                    'description' => __( 'Fax of the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -776,7 +776,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'street_1'      => [
-                    'description' => __( 'Stree 1 for the resource.' ),
+                    'description' => __( 'Stree 1 for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -784,7 +784,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'street_2'      => [
-                    'description' => __( 'Stree 2 for the resource.' ),
+                    'description' => __( 'Stree 2 for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -792,7 +792,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'city'      => [
-                    'description' => __( 'City for the resource.' ),
+                    'description' => __( 'City for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -800,7 +800,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'postal_code'      => [
-                    'description' => __( 'Zip code for the resource.' ),
+                    'description' => __( 'Zip code for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
@@ -808,12 +808,12 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'photo_id'      => [
-                    'description' => __( 'Photo ID for the resource.' ),
+                    'description' => __( 'Photo ID for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'view', 'edit' ],
                 ],
                 'photo'      => [
-                    'description' => __( 'Photo for the resource.' ),
+                    'description' => __( 'Photo for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'arg_options' => [

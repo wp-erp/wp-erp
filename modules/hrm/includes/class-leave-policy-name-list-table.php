@@ -99,15 +99,15 @@ class Leave_Policy_Name_List_Table extends WP_List_Table {
             'id'          => $item->id,
         ];
 
-        $params['action'] = 'edit';
-        $edit_url         = add_query_arg( $params, admin_url( 'admin.php' ) );
+        $params['action']   = 'edit';
+        $edit_url           = add_query_arg( $params, admin_url( 'admin.php' ) );
 
         $params['action']   = 'delete';
         $params['_wpnonce'] = wp_create_nonce( 'delete_policy_name' );
         $delete_url         = add_query_arg( $params, admin_url( 'admin.php' ) );
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d">%s</a>', $edit_url, $item->id, esc_html__( 'Edit', 'erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d">%s</a>', $delete_url, $item->id, esc_html__( 'Delete', 'erp' ) );
+        $actions['edit']    = sprintf( '<a href="%s" class="erp-hr-leave-type-edit" data-id="%d">%s</a>', $edit_url, $item->id, esc_html__( 'Edit', 'erp' ) );
+        $actions['delete']  = sprintf( '<a href="%s" class="submitdelete erp-hr-leave-type-delete" data-id="%d">%s</a>', $delete_url, $item->id, esc_html__( 'Delete', 'erp' ) );
 
         return sprintf( '<strong>%s</strong> %2$s', $item->name, $this->row_actions( $actions ) );
     }
@@ -132,17 +132,23 @@ class Leave_Policy_Name_List_Table extends WP_List_Table {
             return;
         }
 
-        // security check!
-        if ( isset( $_POST['_wpnonce'] ) && ! empty( $_POST['_wpnonce'] ) ) {
-            $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-            $action = 'bulk-' . $this->_args['plural'];
-
-            if ( ! wp_verify_nonce( $nonce, $action ) ) {
-                wp_die( 'Nope! Security check failed!' );
-            }
+        if ( empty( $_POST['_wpnonce'] ) ) {
+            wp_die( esc_html__( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['ids'] ) );
+        $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+        $action = 'bulk-' . $this->_args['plural'];
+
+        if ( ! wp_verify_nonce( $nonce, $action ) ) {
+            wp_die( esc_html__( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $ids = array_map( 'intval', wp_unslash( $_REQUEST['ids'] ) );
 
         foreach ( $ids as $id ) {
             erp_hr_remove_leave_policy_name( $id );

@@ -2,9 +2,9 @@
 
     <# if ( ! data.group_id ) { #>
         <div class="row" data-selected = "'{{ data.user_id }}'">
-            <label for="erp-select-customer-company"><?php esc_attr_e( 'Contact/Company', 'erp' ); ?> <span class="required">*</span></label>
+            <label for="erp-select-customer-company"><?php esc_html_e( 'Contact/Company', 'erp' ); ?> <span class="required">*</span></label>
             <select style="width:240px;" name="user_id" id="erp-crm-contact-subscriber-user" required="required" data-types="contact,company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php esc_attr_e( 'Select a Contact or company', 'erp' ); ?>">
-                <option value=""><?php esc_attr_e( 'Select a contact or company', 'erp' ); ?></option>
+                <option value=""><?php esc_html_e( 'Select a contact or company', 'erp' ); ?></option>
             </select>
         </div>
     <# } #>

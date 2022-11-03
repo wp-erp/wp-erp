@@ -146,17 +146,17 @@ class Admin_Menu {
      * @return void
      */
     public function router() {
-        $component = 'settings';
-        $menu      = erp_menu();
-        $menu      = $menu[$component];
+        $component   = 'settings';
+        $menu        = erp_menu();
+        $menu        = $menu[ $component ];
+        $section     = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : false;
+        $section     = $section && isset( $menu[ $section ] ) ? $section : 'settings';
+        $sub_section = isset( $_GET['sub_section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub_section'] ) ) : false;
+        $sub_section = $sub_section && ! empty( $menu[ $section ]['submenu'][ $sub_section ] ) ? $sub_section : false;
+        $callback    = $menu[ $section ]['callback'];
 
-        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'settings';
-        $sub     = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section']  ) ) : false;
-
-        $callback = $menu[$section]['callback'];
-
-        if ( $sub ) {
-            $callback = $menu[$section]['submenu'][$sub]['callback'];
+        if ( $sub_section ) {
+            $callback = $menu[ $section ]['submenu'][ $sub_section ]['callback'];
         }
 
         call_user_func( $callback );
@@ -168,7 +168,7 @@ class Admin_Menu {
      * @return void
      */
     public function settings_page() {
-        new \WeDevs\ERP\Settings();
+        new \WeDevs\ERP\Settings\Settings();
     }
 
     /**
@@ -204,7 +204,11 @@ class Admin_Menu {
         }
 
         foreach ( $menus as $item ) {
-            remove_menu_page( $item );
+            $item = erp_serialize_string_to_array( $item );
+
+            if ( ! empty( $item[2] ) ) {
+                remove_menu_page( $item[2] );
+            }
         }
 
         remove_menu_page( 'edit-tags.php?taxonomy=link_category' );
@@ -305,6 +309,7 @@ class Admin_Menu {
      * @return void
      */
     public function addon_page() {
+        wp_enqueue_style( 'erp-addons-fonts', 'https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap', [], WPERP_VERSION );
         include_once __DIR__ . '/views/add-ons.php';
     }
 }

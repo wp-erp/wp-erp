@@ -1,11 +1,11 @@
 Vue.component('vtable', {
     template:
-        '<div class="content-header-section">'
-        +'<form method="get">'
-            +'<p class="search-box erp-list-table-search {{ search.wrapperClass }}">'
-                +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input.prevent="searchAction( searchQuery )" >'
-            +'</p>'
+    '<form method="get">'
+        +'<p class="search-box erp-list-table-search {{ search.wrapperClass }}" id="erp-vtable-seach">'
+            +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
+            +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input.prevent="searchAction( searchQuery )" >'
+        +'</p>'
+        +'<div class="content-header-section">'
             +'<template v-if="hasExtraBulkAction()">'
                 +'<div class="wperp-filter-dropdown">'
                     +'<a @click.prevent="toggleDropdown()" class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>'
@@ -29,20 +29,20 @@ Vue.component('vtable', {
                                 +'</template>'
                             +'</div>'
                             +'<div class="wperp-filter-panel-footer">'
-                                +'<input type="submit" class="wperp-btn btn--cancel btn--filter" style="float: left" value="Cancel" @click.prevent="toggleDropdown()">'
-                                +'<input type="reset" class="wperp-btn btn--cancel btn--filter btn--reset" value="Reset" @click.prevent="resetDropdown()">'
-                                +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="filterText">'
+                                +'<input type="submit" class="wperp-btn btn--cancel btn--filter" :value="cancelText" @click.prevent="toggleDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--reset btn--filter" :value="resetText" @click.prevent="resetDropdown()">'
+                                +'<input type="submit" class="wperp-btn btn--primary" id="filter" @click.prevent="handleExtraBulkAction()" :value="applyText">'
                             +'</div>'
                         +'</div>'
                     +'</div>'
                 +'</div>'
             +'</template>'
-        +'</form>'
         +'</div>'
+    +'</form>'
         +'<div class="vtable-wrap list-table-wrap {{ wrapperClass }}">'
             +'<div class="list-table-inner {{ tableWrapper }}">'
                 +'<form method="get">'
-                    +'<div class="tablenav top" style="padding-top:0;">'
+                    +'<div class="tablenav top" style="padding-top:0; height: auto;">'
                         +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
                             +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
                         +'</ul>'
@@ -155,7 +155,7 @@ Vue.component('vtable', {
                                         + '</template>'
                                     + '</template>'
                                 +'</tr>'
-                                +'<tr v-if="( tableData.length < 1 ) || !isLoaded">'
+                                +'<tr class="no-items" v-if="( tableData.length < 1 ) || !isLoaded">'
                                     +'<td :colspan="columnCount"><span v-if="!isLoaded">{{ loadingText }}</span><span v-else>{{ noResultText }}</span></td>'
                                 +'</tr>'
                             +'</tbody>'
@@ -398,6 +398,8 @@ Vue.component('vtable', {
             bulkActions              : __('Bulk Actions', 'erp'),
             filterText               : __('Filter', 'erp'),
             applyText                : __('Apply', 'erp'),
+            cancelText               : __('Cancel', 'erp'),
+            resetText                : __('Reset', 'erp'),
             selectAllText            : __('Select All', 'erp'),
             loadingText              : __('Loading...', 'erp'),
         }

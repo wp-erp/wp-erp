@@ -61,7 +61,12 @@ class Google_Auth {
 
         $token = get_option( 'erp_google_access_token' );
 
-        if ( !empty( $token ) ) {
+        if ( array_key_exists( 'error', (array) $token ) ) {
+            $token = [];
+            update_option( 'erp_google_access_token', $token );
+        }
+
+        if ( ! empty( $token ) ) {
             $client->setAccessToken( $token );
         }
 
@@ -114,7 +119,7 @@ class Google_Auth {
     }
 
     public function has_credentials() {
-        $options = get_option( 'erp_settings_erp-crm_email_connect_gmail', [] );
+        $options = get_option( 'erp_settings_erp-email_gmail', [] );
 
         if ( !isset( $options['client_id'] ) || empty( $options['client_id'] ) ) {
             return false;
@@ -167,7 +172,7 @@ class Google_Auth {
     }
 
     public function get_settings_url() {
-        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect', 'sub_section' => 'gmail' ], admin_url( 'admin.php' ) );
+        $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect' );
 
         return $settings_url;
     }

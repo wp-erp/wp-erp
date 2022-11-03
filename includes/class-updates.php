@@ -55,6 +55,10 @@ class Updates {
         '1.8.0'   => 'updates/update-1.8.0.php',
         '1.8.1'   => 'updates/update-1.8.1.php',
         '1.8.3'   => 'updates/update-1.8.3.php',
+        '1.8.5'   => 'updates/update-1.8.5.php',
+        '1.10.0'  => 'updates/update-1.10.0.php',
+        '1.10.2'  => 'updates/update-1.10.2.php',
+        '1.11.0'  => 'updates/update-1.11.0.php',
     ];
 
     /**
@@ -79,6 +83,7 @@ class Updates {
 
         $this->action( 'erp_update_1_5_0_process_memory_exceeded', 'memory_exceeded' );
         $this->action( 'erp_update_1_5_2_process_memory_exceeded', 'memory_exceeded' );
+        $this->action( 'erp_hr_bg_process_1_10_0_memory_exceeded', 'memory_exceeded' );
     }
 
     /**
@@ -246,5 +251,28 @@ class Updates {
         }
 
         return $return;
+    }
+
+    /**
+     * Retrieves memory limit.
+     *
+     * @since 1.11.0
+     *
+     * @return int
+     */
+    protected function get_memory_limit() {
+        if ( function_exists( 'ini_get' ) ) {
+            $memory_limit = ini_get( 'memory_limit' );
+        } else {
+            // Sensible default.
+            $memory_limit = '128M';
+        }
+
+        if ( ! $memory_limit || -1 === intval( $memory_limit ) ) {
+            // Unlimited, set to 32GB.
+            $memory_limit = '32000M';
+        }
+
+        return intval( $memory_limit ) * 1024 * 1024;
     }
 }

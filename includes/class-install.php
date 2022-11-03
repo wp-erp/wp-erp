@@ -418,72 +418,72 @@ Account Manager
         $charset_collate = $wpdb->get_charset_collate();
 
         $table_schema = [
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_company_locations` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `company_id` int(11) unsigned DEFAULT NULL,
-                `name` varchar(255) DEFAULT NULL,
-                `address_1` varchar(255) DEFAULT NULL,
-                `address_2` varchar(255) DEFAULT NULL,
-                `city` varchar(100) DEFAULT NULL,
-                `state` varchar(100) DEFAULT NULL,
-                `zip` int(6) DEFAULT NULL,
-                `country` varchar(5) DEFAULT NULL,
-                `fax` varchar(20) DEFAULT NULL,
-                `phone` varchar(20) DEFAULT NULL,
-                `created_at` datetime NOT NULL,
-                `updated_at` datetime NOT NULL,
-                PRIMARY KEY (`id`),
-                KEY `company_id` (`company_id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_company_locations` (
+                id int(11) unsigned NOT NULL AUTO_INCREMENT,
+                company_id int(11) unsigned DEFAULT NULL,
+                name varchar(255) DEFAULT NULL,
+                address_1 varchar(255) DEFAULT NULL,
+                address_2 varchar(255) DEFAULT NULL,
+                city varchar(100) DEFAULT NULL,
+                state varchar(100) DEFAULT NULL,
+                zip int(6) DEFAULT NULL,
+                country varchar(5) DEFAULT NULL,
+                fax varchar(20) DEFAULT NULL,
+                phone varchar(20) DEFAULT NULL,
+                created_at datetime NOT NULL,
+                updated_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY company_id (company_id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_depts` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `title` varchar(200) NOT NULL DEFAULT '',
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_depts` (
+                id int(11) unsigned NOT NULL AUTO_INCREMENT,
+                title varchar(200) NOT NULL DEFAULT '',
                 `description` text,
                 `lead` int(11) unsigned DEFAULT '0',
-                `parent` int(11) unsigned DEFAULT '0',
+                parent int(11) unsigned DEFAULT '0',
                 `status` tinyint(1) unsigned DEFAULT '1',
-                `created_at` datetime NOT NULL,
-                `updated_at` datetime NOT NULL,
-                PRIMARY KEY (`id`)
+                created_at datetime NOT NULL,
+                updated_at datetime NOT NULL,
+                PRIMARY KEY (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_designations` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-                `title` varchar(200) NOT NULL DEFAULT '',
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_designations` (
+                id int(11) unsigned NOT NULL AUTO_INCREMENT,
+                title varchar(200) NOT NULL DEFAULT '',
                 `description` text,
                 `status` tinyint(1) DEFAULT '1',
-                `created_at` datetime NOT NULL,
-                `updated_at` datetime NOT NULL,
-                PRIMARY KEY (`id`)
+                created_at datetime NOT NULL,
+                updated_at datetime NOT NULL,
+                PRIMARY KEY (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employees` (
-                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_employees` (
+                id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
-                `employee_id` varchar(20) DEFAULT NULL,
-                `designation` int(11) unsigned NOT NULL DEFAULT '0',
-                `department` int(11) unsigned NOT NULL DEFAULT '0',
+                employee_id varchar(20) DEFAULT NULL,
+                designation int(11) unsigned NOT NULL DEFAULT '0',
+                department int(11) unsigned NOT NULL DEFAULT '0',
                 `location` int(10) unsigned NOT NULL DEFAULT '0',
-                `hiring_source` varchar(20) NOT NULL,
-                `hiring_date` date NOT NULL,
-                `termination_date` date NOT NULL,
-                `date_of_birth` date NOT NULL,
-                `reporting_to` bigint(20) unsigned NOT NULL DEFAULT '0',
-                `pay_rate` int(11) unsigned NOT NULL DEFAULT '0',
-                `pay_type` varchar(20) NOT NULL DEFAULT '',
+                hiring_source varchar(20) NOT NULL,
+                hiring_date date NOT NULL,
+                termination_date date NOT NULL,
+                date_of_birth date NOT NULL,
+                reporting_to bigint(20) unsigned NOT NULL DEFAULT '0',
+                pay_rate decimal(20,2) unsigned NOT NULL DEFAULT '0',
+                pay_type varchar(20) NOT NULL DEFAULT '',
                 `type` varchar(20) NOT NULL,
                 `status` varchar(10) NOT NULL DEFAULT '',
-                `deleted_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`),
-                KEY `user_id` (`user_id`),
-                KEY `employee_id` (`employee_id`),
-                KEY `designation` (`designation`),
-                KEY `department` (`department`),
+                deleted_at datetime DEFAULT NULL,
+                PRIMARY KEY (id),
+                KEY user_id (user_id),
+                KEY employee_id (employee_id),
+                KEY designation (designation),
+                KEY department (department),
                 KEY `status` (`status`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_history` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_employee_history` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
                 `module` varchar(20) DEFAULT NULL,
@@ -497,7 +497,7 @@ Account Manager
                 KEY `module` (`module`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_notes` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_employee_notes` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
                 `comment` text NOT NULL,
@@ -508,192 +508,192 @@ Account Manager
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leaves (
-                  id smallint(6) NOT NULL AUTO_INCREMENT,
-                  name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id)
+                id smallint(6) NOT NULL AUTO_INCREMENT,
+                name varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id)
               ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies (
-                  id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  leave_id smallint(5) UNSIGNED NOT NULL,
-                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  color varchar(10) DEFAULT NULL,
-                  apply_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  employee_type enum('-1','permanent','parttime','contract','temporary','trainee') NOT NULL DEFAULT 'permanent',
-                  department_id int(11) NOT NULL DEFAULT '-1',
-                  location_id int(11) NOT NULL DEFAULT '-1',
-                  designation_id int(11) NOT NULL DEFAULT '-1',
-                  gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
-                  marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
-                  f_year smallint(5) UNSIGNED DEFAULT NULL,
-                  apply_for_new_users tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  encashment_based_on enum('pay_rate','basic','gross') DEFAULT NULL,
-                  forward_default enum('encashment','carryover') NOT NULL DEFAULT 'encashment',
-                  applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
-                  accrued_amount decimal(10,2) NOT NULL DEFAULT '0.00',
-                  accrued_max_days smallint(4) UNSIGNED NOT NULL DEFAULT '0',
-                  halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY leave_id (leave_id),
-                  KEY f_year (f_year)
+                id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                leave_id smallint(5) UNSIGNED NOT NULL,
+                `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `days` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                color varchar(10) DEFAULT NULL,
+                apply_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                employee_type enum('-1','permanent','parttime','contract','temporary','trainee') NOT NULL DEFAULT 'permanent',
+                department_id int(11) NOT NULL DEFAULT '-1',
+                location_id int(11) NOT NULL DEFAULT '-1',
+                designation_id int(11) NOT NULL DEFAULT '-1',
+                gender enum('-1','male','female','other') NOT NULL DEFAULT '-1',
+                marital enum('-1','single','married','widowed') NOT NULL DEFAULT '-1',
+                f_year smallint(5) UNSIGNED DEFAULT NULL,
+                apply_for_new_users tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                carryover_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                carryover_uses_limit tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                encashment_days tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                encashment_based_on enum('pay_rate','basic','gross') DEFAULT NULL,
+                forward_default enum('encashment','carryover') NOT NULL DEFAULT 'encashment',
+                applicable_from_days smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+                accrued_amount decimal(10,2) NOT NULL DEFAULT '0.00',
+                accrued_max_days smallint(4) UNSIGNED NOT NULL DEFAULT '0',
+                halfday_enable tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY leave_id (leave_id),
+                KEY f_year (f_year)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_policies_segregation (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  leave_policy_id bigint(20) UNSIGNED NOT NULL,
-                  jan tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  feb tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  mar tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  apr tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  may tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  jun tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  jul tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  aug tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  sep tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  oct tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  nov tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY leave_policy_id (leave_policy_id)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                leave_policy_id bigint(20) UNSIGNED NOT NULL,
+                jan tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                feb tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                mar tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                apr tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                may tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                jun tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                jul tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                aug tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                sep tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                oct tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                nov tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                decem tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY leave_policy_id (leave_policy_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_entitlements (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  user_id bigint(20) UNSIGNED NOT NULL,
-                  leave_id smallint(6) UNSIGNED NOT NULL,
-                  created_by bigint(20) UNSIGNED DEFAULT NULL,
-                  trn_id bigint(20) UNSIGNED NOT NULL,
-                  trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others', 'leave_accrual', 'carry_forward_leave_expired') NOT NULL DEFAULT 'leave_policies',
-                  day_in decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  day_out decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  f_year smallint(6) NOT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY comp_key_1 (user_id,leave_id,f_year,trn_type),
-                  KEY trn_id (trn_id),
-                  KEY leave_id (leave_id)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `user_id` bigint(20) UNSIGNED NOT NULL,
+                leave_id smallint(6) UNSIGNED NOT NULL,
+                created_by bigint(20) UNSIGNED DEFAULT NULL,
+                trn_id bigint(20) UNSIGNED NOT NULL,
+                trn_type enum('leave_policies','leave_approval_status','leave_encashment_requests','leave_entitlements','unpaid_leave','leave_encashment', 'leave_carryforward', 'manual_leave_policies', 'Accounts', 'others', 'leave_accrual', 'carry_forward_leave_expired') NOT NULL DEFAULT 'leave_policies',
+                day_in decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                day_out decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                f_year smallint(6) NOT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY comp_key_1 (`user_id`,leave_id,f_year,trn_type),
+                KEY trn_id (trn_id),
+                KEY leave_id (leave_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_requests (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  user_id bigint(20) UNSIGNED NOT NULL,
-                  leave_id smallint(6) UNSIGNED NOT NULL,
-                  leave_entitlement_id bigint(20) UNSIGNED NOT NULL default '0',
-                  day_status_id smallint(5) UNSIGNED NOT NULL DEFAULT '1',
-                  days decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  start_date int(11) NOT NULL,
-                  end_date int(11) NOT NULL,
-                  reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  last_status smallint(6) UNSIGNED NOT NULL DEFAULT '2',
-                  created_by bigint(20) UNSIGNED DEFAULT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY user_id (user_id),
-                  KEY user_leave (user_id,leave_id),
-                  KEY user_entitlement (user_id,leave_entitlement_id),
-                  KEY last_status (last_status),
-                  KEY leave_entitlement_id (leave_entitlement_id)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `user_id` bigint(20) UNSIGNED NOT NULL,
+                leave_id smallint(6) UNSIGNED NOT NULL,
+                leave_entitlement_id bigint(20) UNSIGNED NOT NULL default '0',
+                day_status_id smallint(5) UNSIGNED NOT NULL DEFAULT '1',
+                `days` decimal(5,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                `start_date` int(11) NOT NULL,
+                end_date int(11) NOT NULL,
+                reason text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                last_status smallint(6) UNSIGNED NOT NULL DEFAULT '2',
+                created_by bigint(20) UNSIGNED DEFAULT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY `user_id` (`user_id`),
+                KEY user_leave (`user_id`,leave_id),
+                KEY user_entitlement (`user_id`,leave_entitlement_id),
+                KEY last_status (last_status),
+                KEY leave_entitlement_id (leave_entitlement_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_approval_status (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  leave_request_id bigint(20) UNSIGNED NOT NULL,
-                  approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-                  approved_by bigint(20) UNSIGNED DEFAULT NULL,
-                  message text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY leave_request_id (leave_request_id),
-                  KEY approval_status_id (approval_status_id)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                leave_request_id bigint(20) UNSIGNED NOT NULL,
+                approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                approved_by bigint(20) UNSIGNED DEFAULT NULL,
+                `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY leave_request_id (leave_request_id),
+                KEY approval_status_id (approval_status_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_request_details (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  leave_request_id bigint(20) UNSIGNED NOT NULL,
-                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
-                  workingday_status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-                  user_id bigint(20) UNSIGNED NOT NULL,
-                  f_year smallint(6) NOT NULL,
-                  leave_date int(11) NOT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY leave_request_id (leave_request_id),
-                  KEY user_id (user_id),
-                  KEY user_fyear_leave (user_id,f_year,leave_date)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                leave_request_id bigint(20) UNSIGNED NOT NULL,
+                leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
+                workingday_status tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+                `user_id` bigint(20) UNSIGNED NOT NULL,
+                f_year smallint(6) NOT NULL,
+                leave_date int(11) NOT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY leave_request_id (leave_request_id),
+                KEY `user_id` (`user_id`),
+                KEY user_fyear_leave (`user_id`,f_year,leave_date)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leave_encashment_requests (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  user_id bigint(20) UNSIGNED NOT NULL,
-                  leave_id smallint(6) UNSIGNED NOT NULL,
-                  approved_by bigint(20) UNSIGNED DEFAULT NULL,
-                  approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-                  encash_days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  forward_days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  amount decimal(20,2) NOT NULL DEFAULT '0.00',
-                  total decimal(20,2) NOT NULL DEFAULT '0.00',
-                  f_year smallint(5) UNSIGNED NOT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY user_id (user_id),
-                  KEY leave_id (leave_id),
-                  KEY f_year (f_year)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `user_id` bigint(20) UNSIGNED NOT NULL,
+                leave_id smallint(6) UNSIGNED NOT NULL,
+                approved_by bigint(20) UNSIGNED DEFAULT NULL,
+                approval_status_id tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+                encash_days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                forward_days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                amount decimal(20,2) NOT NULL DEFAULT '0.00',
+                total decimal(20,2) NOT NULL DEFAULT '0.00',
+                f_year smallint(5) UNSIGNED NOT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY `user_id` (`user_id`),
+                KEY leave_id (leave_id),
+                KEY f_year (f_year)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_leaves_unpaid (
-                  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  leave_id smallint(6) UNSIGNED NOT NULL,
-                  leave_request_id bigint(20) UNSIGNED NOT NULL,
-                  leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
-                  user_id bigint(20) UNSIGNED NOT NULL,
-                  days decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
-                  amount decimal(20,2) NOT NULL DEFAULT '0.00',
-                  total decimal(20,2) NOT NULL DEFAULT '0.00',
-                  f_year smallint(5) UNSIGNED NOT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY  (id),
-                  KEY user_id (user_id),
-                  KEY leave_id (leave_id),
-                  KEY f_year (f_year),
-                  KEY leave_request_id (leave_request_id),
-                  KEY leave_approval_status_id (leave_approval_status_id)
+                id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                leave_id smallint(6) UNSIGNED NOT NULL,
+                leave_request_id bigint(20) UNSIGNED NOT NULL,
+                leave_approval_status_id bigint(20) UNSIGNED NOT NULL,
+                `user_id` bigint(20) UNSIGNED NOT NULL,
+                `days` decimal(4,1) UNSIGNED NOT NULL DEFAULT '0.0',
+                amount decimal(20,2) NOT NULL DEFAULT '0.00',
+                total decimal(20,2) NOT NULL DEFAULT '0.00',
+                f_year smallint(5) UNSIGNED NOT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY `user_id` (`user_id`),
+                KEY leave_id (leave_id),
+                KEY f_year (f_year),
+                KEY leave_request_id (leave_request_id),
+                KEY leave_approval_status_id (leave_approval_status_id)
             ) $charset_collate;",
 
             "CREATE TABLE {$wpdb->prefix}erp_hr_financial_years (
-                  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-                  fy_name varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  start_date int(11) DEFAULT NULL,
-                  end_date int(11) DEFAULT NULL,
-                  description varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                  created_by bigint(20) UNSIGNED DEFAULT NULL,
-                  updated_by bigint(20) UNSIGNED DEFAULT NULL,
-                  created_at int(11) DEFAULT NULL,
-                  updated_at int(11) DEFAULT NULL,
-                  PRIMARY KEY (id),
-                  KEY year_search (start_date,end_date),
-                  KEY start_date (start_date),
-                  KEY end_date (end_date)
+                id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                fy_name varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                `start_date` int(11) DEFAULT NULL,
+                end_date int(11) DEFAULT NULL,
+                `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                created_by bigint(20) UNSIGNED DEFAULT NULL,
+                updated_by bigint(20) UNSIGNED DEFAULT NULL,
+                created_at int(11) DEFAULT NULL,
+                updated_at int(11) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY year_search (start_date,end_date),
+                KEY start_date (start_date),
+                KEY end_date (end_date)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_user_leaves` (
+            "CREATE TABLE `{$wpdb->prefix}erp_user_leaves` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` int(11) DEFAULT NULL,
                 `request_id` int(11) DEFAULT NULL,
@@ -704,7 +704,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_holidays_indv` (
+            "CREATE TABLE `{$wpdb->prefix}erp_holidays_indv` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `holiday_id` int(11) DEFAULT NULL,
                 `title` varchar(255) DEFAULT NULL,
@@ -714,7 +714,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_holiday` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_holiday` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `title` varchar(200) NOT NULL,
                 `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -726,7 +726,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_work_exp` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_work_exp` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `employee_id` int(11) DEFAULT NULL,
                 `company_name` varchar(100) DEFAULT NULL,
@@ -740,13 +740,13 @@ Account Manager
                 KEY `employee_id` (`employee_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_education` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_education` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `employee_id` int(11) unsigned DEFAULT NULL,
                 `school` varchar(100) DEFAULT NULL,
                 `degree` varchar(100) DEFAULT NULL,
                 `field` varchar(100) DEFAULT NULL,
-                `result` JSON DEFAULT NULL,
+                `result` varchar(50) DEFAULT NULL,
                 `result_type` enum('grade', 'percentage') DEFAULT NULL,
                 `finished` int(4) unsigned DEFAULT NULL,
                 `notes` text,
@@ -757,7 +757,7 @@ Account Manager
                 KEY `employee_id` (`employee_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_dependents` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_dependents` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `employee_id` int(11) DEFAULT NULL,
                 `name` varchar(100) DEFAULT NULL,
@@ -769,7 +769,7 @@ Account Manager
                 KEY `employee_id` (`employee_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_performance` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_employee_performance` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `employee_id` int(11) unsigned DEFAULT NULL,
                 `reporting_to` int(11) unsigned DEFAULT NULL,
@@ -791,7 +791,7 @@ Account Manager
                 KEY `employee_id` (`employee_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_announcement` (
+            "CREATE TABLE `{$wpdb->prefix}erp_hr_announcement` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` bigint(20) unsigned NOT NULL,
                 `post_id` bigint(11) NOT NULL,
@@ -803,7 +803,7 @@ Account Manager
                 KEY `status` (`status`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoples` (
+            "CREATE TABLE `{$wpdb->prefix}erp_peoples` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` bigint(20) unsigned DEFAULT '0',
                 `first_name` varchar(60) DEFAULT NULL,
@@ -835,7 +835,7 @@ Account Manager
                 KEY `email` (`email`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoplemeta` (
+            "CREATE TABLE `{$wpdb->prefix}erp_peoplemeta` (
                 `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `erp_people_id` bigint(20) DEFAULT NULL,
                 `meta_key` varchar(255) DEFAULT NULL,
@@ -845,14 +845,14 @@ Account Manager
                 KEY `meta_key` (`meta_key`(191))
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_types` (
+            "CREATE TABLE `{$wpdb->prefix}erp_people_types` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(20) DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `name` (`name`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_type_relations` (
+            "CREATE TABLE `{$wpdb->prefix}erp_people_type_relations` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `people_id` bigint(20) unsigned DEFAULT NULL,
                 `people_types_id` int(11) unsigned DEFAULT NULL,
@@ -862,7 +862,7 @@ Account Manager
                 KEY `people_types_id` (`people_types_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
+            "CREATE TABLE `{$wpdb->prefix}erp_audit_log` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `component` varchar(50) NOT NULL DEFAULT '',
                 `sub_component` varchar(50) NOT NULL DEFAULT '',
@@ -881,7 +881,7 @@ Account Manager
                 KEY `created_by` (`created_by`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_companies` (
+            "CREATE TABLE `{$wpdb->prefix}erp_crm_customer_companies` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `customer_id` bigint(20) DEFAULT NULL,
                 `company_id` bigint(50) DEFAULT NULL,
@@ -890,28 +890,29 @@ Account Manager
                 KEY `company_id` (`company_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_activities` (
-                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE {$wpdb->prefix}erp_crm_customer_activities (
+                id int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` int(11) DEFAULT NULL,
                 `type` varchar(255) DEFAULT NULL,
                 `message` longtext,
-                `email_subject` text,
-                `log_type` varchar(255) DEFAULT NULL,
+                email_subject text,
+                log_type varchar(255) DEFAULT NULL,
                 `start_date` datetime DEFAULT NULL,
-                `end_date` datetime DEFAULT NULL,
-                `created_by` int(11) DEFAULT NULL,
-                `extra` longtext,
-                `sent_notification` tinyint(4) DEFAULT '0',
-                `created_at` datetime DEFAULT NULL,
-                `updated_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`),
+                end_date datetime DEFAULT NULL,
+                created_by int(11) DEFAULT NULL,
+                extra longtext,
+                sent_notification tinyint(4) DEFAULT '0',
+                done_at datetime DEFAULT NULL,
+                created_at datetime DEFAULT NULL,
+                updated_at datetime DEFAULT NULL,
+                PRIMARY KEY  (id),
                 KEY `user_id` (`user_id`),
                 KEY `type` (`type`),
-                KEY `log_type` (`log_type`),
-                KEY `created_by` (`created_by`)
+                KEY log_type (log_type),
+                KEY created_by (created_by)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
+            "CREATE TABLE `{$wpdb->prefix}erp_crm_activities_task` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `activity_id` int(11) DEFAULT NULL,
                 `user_id` int(11) DEFAULT NULL,
@@ -920,7 +921,7 @@ Account Manager
                 KEY `user_id` (`user_id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_group` (
+            "CREATE TABLE `{$wpdb->prefix}erp_crm_contact_group` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `description` text,
@@ -930,7 +931,7 @@ Account Manager
                 PRIMARY KEY  (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_subscriber` (
+            "CREATE TABLE `{$wpdb->prefix}erp_crm_contact_subscriber` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `user_id` int(11) DEFAULT NULL,
                 `group_id` int(11) DEFAULT NULL,
@@ -944,7 +945,7 @@ Account Manager
                 KEY `hash` (`hash`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
+            "CREATE TABLE `{$wpdb->prefix}erp_crm_save_search` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `user_id` int(11) DEFAULT NULL,
               `type` VARCHAR(255) DEFAULT NULL,
@@ -956,7 +957,7 @@ Account Manager
               PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_email_replies` (
+            "CREATE TABLE `{$wpdb->prefix}erp_crm_save_email_replies` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `name` text,
               `subject` text,
@@ -964,7 +965,7 @@ Account Manager
               PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_voucher_no` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_voucher_no` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `type` varchar(255) DEFAULT NULL,
                 `currency` varchar(50) DEFAULT NULL,
@@ -976,7 +977,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_bill_account_details` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_bill_account_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `bill_no` int(11) DEFAULT NULL,
                 `trn_no` int(11) DEFAULT NULL,
@@ -991,7 +992,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_bill_details` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_bill_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `trn_no` int(11) DEFAULT NULL,
                 `ledger_id` int(11) DEFAULT NULL,
@@ -1004,7 +1005,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_bills` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_bills` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
                 `vendor_id` int(11) DEFAULT NULL,
@@ -1024,7 +1025,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_chart_of_accounts` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_chart_of_accounts` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `slug` varchar(255) DEFAULT NULL,
@@ -1035,7 +1036,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_currency_info` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_currency_info` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `sign` varchar(255) DEFAULT NULL,
@@ -1046,7 +1047,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_account_details` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_invoice_account_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `invoice_no` int(11) DEFAULT NULL,
                 `trn_no` int(11) DEFAULT NULL,
@@ -1061,24 +1062,26 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `product_id` int(11) DEFAULT NULL,
-                `qty` int(11) DEFAULT NULL,
-                `unit_price` decimal(20,2) DEFAULT 0,
-                `discount` decimal(20,2) DEFAULT 0,
-                `tax` decimal(20,2) DEFAULT 0,
-                `item_total` decimal(20,2) DEFAULT 0,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE {$wpdb->prefix}erp_acct_invoice_details (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                product_id int(11) DEFAULT NULL,
+                qty decimal(10,2) DEFAULT NULL,
+                unit_price decimal(20,2) DEFAULT 0,
+                discount decimal(20,2) DEFAULT 0,
+                shipping decimal(20,2) DEFAULT 0,
+                tax decimal(20,2) DEFAULT 0,
+                tax_cat_id int(11) DEFAULT NULL,
+                item_total decimal(20,2) DEFAULT 0,
+                ecommerce_type varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_receipts` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_invoice_receipts` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
                 `customer_id` int(11) DEFAULT NULL,
@@ -1099,7 +1102,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_receipts_details` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_invoice_receipts_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
                 `invoice_no` int(11) DEFAULT NULL,
@@ -1111,7 +1114,7 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoices` (
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_invoices` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
                 `customer_id` int(11) DEFAULT NULL,
@@ -1122,6 +1125,8 @@ Account Manager
                 `amount` decimal(20,2) DEFAULT 0,
                 `discount` decimal(20,2) DEFAULT 0,
                 `discount_type` varchar(255) DEFAULT NULL,
+                `shipping` decimal(20,2) DEFAULT 0,
+                `shipping_tax` decimal(20,2) DEFAULT 0,
                 `tax` decimal(20,2) DEFAULT 0,
                 `tax_zone_id` int(11) DEFAULT NULL,
                 `estimate` boolean DEFAULT NULL,
@@ -1135,539 +1140,556 @@ Account Manager
                 PRIMARY KEY (`id`)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journal_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `ledger_id` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `debit` decimal(20,2) DEFAULT 0,
-                `credit` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_journal_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                ledger_id int(11) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                debit decimal(20,2) DEFAULT 0,
+                credit decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journals` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_date` date DEFAULT NULL,
-                `ref` varchar(255) DEFAULT NULL,
-                `voucher_no` int(11) DEFAULT NULL,
-                `voucher_amount` decimal(20,2) DEFAULT 0,
-                `particulars` varchar(255) DEFAULT NULL,
-                `attachments` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_journals` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_date date DEFAULT NULL,
+                ref varchar(255) DEFAULT NULL,
+                voucher_no int(11) DEFAULT NULL,
+                voucher_amount decimal(20,2) DEFAULT 0,
+                particulars varchar(255) DEFAULT NULL,
+                attachments varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_categories` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_ledger_categories` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                name varchar(255) DEFAULT NULL,
+                slug varchar(255) DEFAULT NULL,
+                chart_id int(11) DEFAULT NULL,
+                parent_id int(11) DEFAULT NULL,
+                system tinyint(1) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_ledger_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                ledger_id int(11) DEFAULT NULL,
+                trn_no int(11) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                debit decimal(20,2) DEFAULT 0,
+                credit decimal(20,2) DEFAULT 0,
+                trn_date date DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_ledger_settings` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                ledger_id int(11) DEFAULT NULL,
+                short_code varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_ledgers` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                chart_id int(11) DEFAULT NULL,
+                category_id int(11) DEFAULT NULL,
                 `name` varchar(255) DEFAULT NULL,
-                `slug` varchar(255) DEFAULT NULL,
-                `chart_id` int(11) DEFAULT NULL,
-                `parent_id` int(11) DEFAULT NULL,
+                slug varchar(255) DEFAULT NULL,
+                code int(11) DEFAULT NULL,
+                unused tinyint(1) DEFAULT NULL,
                 `system` tinyint(1) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `ledger_id` int(11) DEFAULT NULL,
-                `trn_no` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `debit` decimal(20,2) DEFAULT 0,
-                `credit` decimal(20,2) DEFAULT 0,
-                `trn_date` date DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_settings` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `ledger_id` int(11) DEFAULT NULL,
-                `short_code` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledgers` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `chart_id` int(11) DEFAULT NULL,
-                `category_id` int(11) DEFAULT NULL,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_cash_at_banks` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                ledger_id int(11) DEFAULT NULL,
                 `name` varchar(255) DEFAULT NULL,
-                `slug` varchar(255) DEFAULT NULL,
-                `code` int(11) DEFAULT NULL,
-                `unused` tinyint(1) DEFAULT NULL,
-                `system` tinyint(1) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                balance decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_cash_at_banks` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `ledger_id` int(11) DEFAULT NULL,
-                `name` varchar(255) DEFAULT NULL,
-                `balance` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_transfer_voucher` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                amount decimal(20,2) DEFAULT NULL,
+                ac_from int(11) DEFAULT NULL,
+                ac_to int(11) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_transfer_voucher` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT NULL,
-                `ac_from` int(11) DEFAULT NULL,
-                `ac_to` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `financial_year_id` int(11) DEFAULT NULL,
-                `chart_id` int(11) DEFAULT NULL,
-                `ledger_id` int(11) DEFAULT NULL,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_opening_balances` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                financial_year_id int(11) DEFAULT NULL,
+                chart_id int(11) DEFAULT NULL,
+                ledger_id int(11) DEFAULT NULL,
                 `type` varchar(50) DEFAULT NULL,
-                `debit` decimal(20,2) DEFAULT 0,
-                `credit` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                debit decimal(20,2) DEFAULT 0,
+                credit decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_financial_years` (
+                id int(11) NOT NULL AUTO_INCREMENT,
                 `name` VARCHAR(255) DEFAULT NULL,
                 `start_date` date DEFAULT NULL,
-                `end_date` date DEFAULT NULL,
+                end_date date DEFAULT NULL,
                 `description` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_bill` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `vendor_id` int(11) DEFAULT NULL,
-                `vendor_name` varchar(255) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `trn_by` varchar(255) DEFAULT NULL,
-                `trn_by_ledger_id` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `ref` varchar(255) DEFAULT NULL,
-                `attachments` varchar(255) DEFAULT NULL,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_pay_bill` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                vendor_id int(11) DEFAULT NULL,
+                vendor_name varchar(255) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                trn_by varchar(255) DEFAULT NULL,
+                trn_by_ledger_id int(11) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                ref varchar(255) DEFAULT NULL,
+                attachments varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_bill_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `bill_no` int(11) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_pay_bill_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                bill_no int(11) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_purchase` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `vendor_id` int(11) DEFAULT NULL,
-                `vendor_name` varchar(255) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `trn_by` varchar(255) DEFAULT NULL,
-                `transaction_charge` decimal(20,2) DEFAULT 0,
-                `ref` varchar(255) DEFAULT NULL,
-                `trn_by_ledger_id` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `attachments` varchar(255) DEFAULT NULL,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_pay_purchase` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                vendor_id int(11) DEFAULT NULL,
+                vendor_name varchar(255) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                trn_by varchar(255) DEFAULT NULL,
+                transaction_charge decimal(20,2) DEFAULT 0,
+                ref varchar(255) DEFAULT NULL,
+                trn_by_ledger_id int(11) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                attachments varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_purchase_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `purchase_no` int(11) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE {$wpdb->prefix}erp_acct_pay_purchase_details (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                purchase_no int(11) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                tax_cat_id int(11) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_account_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `people_id` varchar(255) DEFAULT NULL,
-                `trn_no` int(11) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `trn_by` varchar(255) DEFAULT NULL,
-                `voucher_type` varchar(255) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `debit` decimal(20,2) DEFAULT 0,
-                `credit` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_people_account_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                people_id varchar(255) DEFAULT NULL,
+                trn_no int(11) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                trn_by varchar(255) DEFAULT NULL,
+                voucher_type varchar(255) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                debit decimal(20,2) DEFAULT 0,
+                credit decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `people_id` varchar(255) DEFAULT NULL,
-                `voucher_no` int(11) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `trn_date` date DEFAULT NULL,
-                `trn_by` varchar(255) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `voucher_type` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_people_trn` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                people_id varchar(255) DEFAULT NULL,
+                voucher_no int(11) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                trn_date date DEFAULT NULL,
+                trn_by varchar(255) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                voucher_type varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `people_id` varchar(255) DEFAULT NULL,
-                `voucher_no` int(11) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `debit` decimal(20,2) DEFAULT 0,
-                `credit` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_people_trn_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                people_id varchar(255) DEFAULT NULL,
+                voucher_no int(11) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                debit decimal(20,2) DEFAULT 0,
+                credit decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_categories` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_product_categories` (
+                id int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
-                `parent` int(11) NOT NULL DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                parent int(11) NOT NULL DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_types` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `name` varchar(255) DEFAULT NULL,
-                `slug` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_product_types` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                name varchar(255) DEFAULT NULL,
+                slug varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_products` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `name` varchar(255) DEFAULT NULL,
-                `product_type_id` int(11) DEFAULT NULL,
-                `category_id` int(11) DEFAULT NULL,
-                `tax_cat_id` int(11) DEFAULT NULL,
-                `vendor` int(11) DEFAULT NULL,
-                `cost_price` decimal(20,2) DEFAULT 0,
-                `sale_price` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_products` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                name varchar(255) DEFAULT NULL,
+                product_type_id int(11) DEFAULT NULL,
+                category_id int(11) DEFAULT NULL,
+                tax_cat_id int(11) DEFAULT NULL,
+                vendor int(11) DEFAULT NULL,
+                cost_price decimal(20,2) DEFAULT 0,
+                sale_price decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `product_id` int(11) DEFAULT NULL,
-                `trn_no` int(11) DEFAULT NULL,
-                `stock_in` int(11) DEFAULT NULL,
-                `stock_out` int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_product_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                product_id int(11) DEFAULT NULL,
+                trn_no int(11) DEFAULT NULL,
+                stock_in int(11) DEFAULT NULL,
+                stock_out int(11) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `vendor_id` int(11) DEFAULT NULL,
-                `vendor_name` varchar(255) DEFAULT NULL,
-                `billing_address` varchar(255) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `due_date` date DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `tax` decimal(20,2) DEFAULT NULL ,
-                `tax_zone_id` integer DEFAULT NULL,
-                `ref` varchar(255) DEFAULT NULL,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_purchase` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                vendor_id int(11) DEFAULT NULL,
+                vendor_name varchar(255) DEFAULT NULL,
+                billing_address varchar(255) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                due_date date DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                tax decimal(20,2) DEFAULT NULL ,
+                tax_zone_id integer DEFAULT NULL,
+                ref varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
-                `purchase_order` boolean DEFAULT NULL,
-                `attachments` varchar(255) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+                purchase_order boolean DEFAULT NULL,
+                attachments varchar(255) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_account_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `purchase_no` int(11) DEFAULT NULL,
-                `trn_no` int(11) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `debit` decimal(20,2) DEFAULT 0,
-                `credit` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_purchase_account_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                purchase_no int(11) DEFAULT NULL,
+                trn_no int(11) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                debit decimal(20,2) DEFAULT 0,
+                credit decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `product_id` int(11) DEFAULT NULL,
-                `qty` int(11) DEFAULT NULL,
-                `price` decimal(20,2) DEFAULT 0,
-                `amount` decimal(20,2) DEFAULT 0,
-                `tax` decimal(20,2) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE {$wpdb->prefix}erp_acct_purchase_details (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                product_id int(11) DEFAULT NULL,
+                qty decimal(10,2) DEFAULT NULL,
+                price decimal(20,2) DEFAULT 0,
+                amount decimal(20,2) DEFAULT 0,
+                tax decimal(20,2) DEFAULT NULL,
+                tax_cat_id int(11) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}erp_acct_purchase_details_tax (
-                `id` int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `invoice_details_id` int(20) NOT NULL,
-                `agency_id` int(20) DEFAULT NULL,
-                `tax_rate` decimal(20,2) NOT NULL,
-                `created_at` datetime DEFAULT NULL,
-                `created_by` int(20) DEFAULT NULL,
-                `updated_at` datetime DEFAULT NULL,
-                `updated_by` int(20) DEFAULT NULL,
-                PRIMARY KEY  (`id`)
+            "CREATE TABLE {$wpdb->prefix}erp_acct_purchase_details_tax (
+                id int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                invoice_details_id int(20) NOT NULL,
+                agency_id int(20) DEFAULT NULL,
+                tax_rate decimal(20,2) NOT NULL,
+                created_at datetime DEFAULT NULL,
+                created_by int(20) DEFAULT NULL,
+                updated_at datetime DEFAULT NULL,
+                updated_by int(20) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_categories` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_tax_categories` (
+                id int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(100) DEFAULT NULL,
                 `description` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tax_rate_name` varchar(255) DEFAULT NULL,
-                `tax_number` varchar(100) DEFAULT NULL,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_taxes` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                tax_rate_name varchar(255) DEFAULT NULL,
+                tax_number varchar(100) DEFAULT NULL,
                 `default` boolean DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_cat_agency` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tax_id` int(11) DEFAULT NULL,
-                `component_name` varchar(255) DEFAULT NULL,
-                `tax_cat_id` int(11) DEFAULT NULL,
-                `agency_id` int(11) DEFAULT NULL,
-                `tax_rate` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_tax_cat_agency` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                tax_id int(11) DEFAULT NULL,
+                component_name varchar(255) DEFAULT NULL,
+                tax_cat_id int(11) DEFAULT NULL,
+                agency_id int(11) DEFAULT NULL,
+                tax_rate decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_tax_agencies` (
+                id int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                ecommerce_type varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_pay` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `voucher_type` varchar(255) DEFAULT NULL,
-                `trn_by` int(11) DEFAULT NULL,
-                `agency_id` int(11) DEFAULT NULL,
-                `ledger_id` int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_tax_pay` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                voucher_type varchar(255) DEFAULT NULL,
+                trn_by int(11) DEFAULT NULL,
+                agency_id int(11) DEFAULT NULL,
+                ledger_id int(11) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agency_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `agency_id` int(11) DEFAULT NULL,
-                `trn_no` int(11) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `debit` decimal(20, 2) DEFAULT 0,
-                `credit` decimal(20, 2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_tax_agency_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                agency_id int(11) DEFAULT NULL,
+                trn_no int(11) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                debit decimal(20, 2) DEFAULT 0,
+                credit decimal(20, 2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details_tax` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `invoice_details_id` int(11) DEFAULT NULL,
-                `agency_id` int(11) DEFAULT NULL,
-                `tax_rate` decimal(20,2) DEFAULT 0,
-                `tax_amount` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_invoice_details_tax` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                invoice_details_id int(11) DEFAULT NULL,
+                agency_id int(11) DEFAULT NULL,
+                tax_rate decimal(20,2) DEFAULT 0,
+                tax_amount decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_trn_status_types` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `type_name` varchar(255) DEFAULT NULL,
-                `slug` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_trn_status_types` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                type_name varchar(255) DEFAULT NULL,
+                slug varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_payment_methods` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE {$wpdb->prefix}erp_acct_synced_taxes (
+                id int NOT NULL AUTO_INCREMENT,
+                system_id bigint NOT NULL,
+                sync_id bigint DEFAULT NULL,
+                sync_slug varchar(100) DEFAULT NULL,
+                sync_type varchar(100) DEFAULT NULL,
+                sync_source varchar(100) DEFAULT NULL,
+                PRIMARY KEY  (id),
+                KEY system_id (system_id),
+                KEY sync_id (sync_id),
+                KEY sync_slug (sync_slug),
+                KEY sync_type (sync_type),
+                KEY sync_source (sync_source)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_payment_methods` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                name varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_expenses` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                voucher_no int(11) DEFAULT NULL,
+                people_id int(11) DEFAULT NULL,
+                people_name varchar(255) DEFAULT NULL,
+                address varchar(255) DEFAULT NULL,
+                trn_date date DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                ref varchar(255) DEFAULT NULL,
+                check_no varchar(255) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                status int(11) DEFAULT NULL,
+                trn_by int(11) DEFAULT NULL,
+                transaction_charge decimal(20,2) DEFAULT 0,
+                trn_by_ledger_id int(11) DEFAULT NULL,
+                attachments varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_expense_details` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                ledger_id int(11) DEFAULT NULL,
+                particulars varchar(255) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_acct_expense_checks` (
+                id int(11) NOT NULL AUTO_INCREMENT,
+                trn_no int(11) DEFAULT NULL,
+                check_no varchar(255) DEFAULT NULL,
+                voucher_type varchar(255) DEFAULT NULL,
+                amount decimal(20,2) DEFAULT 0,
+                bank varchar(255) DEFAULT NULL,
                 `name` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expenses` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `voucher_no` int(11) DEFAULT NULL,
-                `people_id` int(11) DEFAULT NULL,
-                `people_name` varchar(255) DEFAULT NULL,
-                `address` varchar(255) DEFAULT NULL,
-                `trn_date` date DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `ref` varchar(255) DEFAULT NULL,
-                `check_no` varchar(255) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `status` int(11) DEFAULT NULL,
-                `trn_by` int(11) DEFAULT NULL,
-                `transaction_charge` decimal(20,2) DEFAULT 0,
-                `trn_by_ledger_id` int(11) DEFAULT NULL,
-                `attachments` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_details` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `ledger_id` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_checks` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `trn_no` int(11) DEFAULT NULL,
-                `check_no` varchar(255) DEFAULT NULL,
-                `voucher_type` varchar(255) DEFAULT NULL,
-                `amount` decimal(20,2) DEFAULT 0,
-                `bank` varchar(255) DEFAULT NULL,
-                `name` varchar(255) DEFAULT NULL,
-                `pay_to` varchar(255) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                pay_to varchar(255) DEFAULT NULL,
+                created_at date DEFAULT NULL,
+                created_by varchar(50) DEFAULT NULL,
+                updated_at date DEFAULT NULL,
+                updated_by varchar(50) DEFAULT NULL,
+                PRIMARY KEY  (id)
             ) $charset_collate;",
         ];
 

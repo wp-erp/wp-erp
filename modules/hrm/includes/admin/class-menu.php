@@ -194,13 +194,7 @@ class Admin_Menu {
         // check permission/capability
         $permission = $menu[ $section ]['capability'];
 
-        if ( ! current_user_can( $permission ) ) {
-            $error_message  = '<h2 style="text-align: center; margin-top:40px">';
-            $error_message .= esc_html__( 'Sorry! You are not allowed to access this page.', 'erp' );
-            $error_message .= '</h2>';
-
-            wp_die( wp_kses_post( $error_message ) );
-        }
+        erp_verify_page_access_permission( $permission );
 
         $callback = $menu[ $section ]['callback'];
 
@@ -219,7 +213,6 @@ class Admin_Menu {
      * @return void
      */
     public function hr_calendar_script() {
-        wp_enqueue_script( 'erp-momentjs' );
         wp_enqueue_script( 'erp-fullcalendar' );
         enqueue_fullcalendar_locale();
         wp_enqueue_style( 'erp-fullcalendar' );
@@ -238,18 +231,36 @@ class Admin_Menu {
      * Handles the people page
      *
      * @since 1.8.0
+     * @since 1.8.5 Added requests page in the people menu items
      *
      * @return void
      */
     public function people_page() {
-        $subsection = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'employee';
+        $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : 'employee';
 
-        if ( 'employee' === $subsection ) {
-            $this->employee_page();
-        } elseif ( 'department' === $subsection ) {
-            $this->department_page();
-        } elseif ( 'designation' === $subsection ) {
-            $this->designation_page();
+        switch ( $sub_section ) {
+            case 'employee':
+                $this->employee_page();
+                break;
+
+            case 'requests':
+                $this->requests_page();
+                break;
+
+            case 'department':
+                $this->department_page();
+                break;
+
+            case 'designation':
+                $this->designation_page();
+                break;
+
+            case 'announcement':
+                $this->announcement_page();
+                break;
+
+            default:
+                do_action( "erp_hr_{$sub_section}_page" );
         }
     }
 
@@ -326,11 +337,30 @@ class Admin_Menu {
     }
 
     /**
+     * Renders requests page template
+     *
+     * @since 1.8.5
+     *
+     * @return void
+     */
+    public function requests_page() {
+        erp_verify_page_access_permission( 'erp_hr_manager' );
+
+        $template = apply_filters( 'erp_hr_requests_templates', WPERP_HRM_VIEWS . '/requests.php' );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+    }
+
+    /**
      * Handles the dashboard page
      *
      * @return void
      */
     public function department_page() {
+        erp_verify_page_access_permission( 'erp_manage_department' );
+
         $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
@@ -357,7 +387,22 @@ class Admin_Menu {
      * @return void
      */
     public function designation_page() {
+        erp_verify_page_access_permission( 'erp_manage_designation' );
+
         include WPERP_HRM_VIEWS . '/designation.php';
+    }
+
+    /**
+     * Render the announcement page
+     *
+     * @since 1.10.0
+     *
+     * @return void
+     */
+    public function announcement_page() {
+        erp_verify_page_access_permission( 'erp_manage_announcement' );
+
+        include WPERP_HRM_VIEWS . '/announcements.php';
     }
 
     /**

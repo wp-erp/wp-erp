@@ -18,34 +18,9 @@ class Validate_Data {
      *
      * @return void
      */
-
     public function __construct() {
-        $this->action( 'erp_tool_import_csv_action', 'pre_validate_csv_data' );
-        $this->action( 'validate_csv_data', 'validate_csv_data', 10, 3 );
+        $this->filter( 'erp_validate_csv_data', 'validate_csv_data', 10, 3 );
         $this->filter( 'validate_field', 'validate_custom_field', 10, 3 );
-    }
-
-    /**
-     * Pre validate csv data
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function pre_validate_csv_data( $data ) {
-        $errors = new ERP_Errors( 'import_csv_data' );
-        // Check if current user has permission
-        if ( ! current_user_can( 'administrator' ) ) {
-            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You do not have permission to access this page', 'erp' ) ) );
-        }
-
-        $files = wp_check_filetype_and_ext( $data['file']['tmp_name'], $data['file']['name'] );
-
-        // Check if current user has permission
-        if ( 'csv' !== $files['ext'] && 'text/csv' !== $files['type'] ) {
-            $errors->add( new \WP_Error( 'no-permission', __( 'Sorry ! You have to provide valid csv file', 'erp' ) ) );
-        }
-        $this->through_error_if_found( $errors );
     }
 
     /**
@@ -53,52 +28,28 @@ class Validate_Data {
      *
      * @since 1.6.5
      *
-     * @return void
+     * @return array
      */
     public function validate_csv_data( $csv_data, $fields, $type ) {
-        $prodessed_data = $this->filter_validate_csv_data( $csv_data, $fields, $type );
+        $errors         = [];
+        $processed_data = $this->filter_validate_csv_data( $csv_data, $fields, $type );
+        $total_rows     = count( $processed_data );
 
-        $this->process_errors( $prodessed_data );
-    }
-
-    /**
-     * Process errors
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function process_errors( $prodessed_data ) {
-        $errors = new ERP_Errors( 'import_csv_data' );
-
-        if ( ! empty( $prodessed_data ) ) {
-            foreach ( $prodessed_data as $pdata_key => $pdata_val ) {
+        if ( ! empty( $processed_data ) ) {
+            foreach ( $processed_data as $pdata_key => $pdata_val ) {
                 $pdata_key_arr = explode( '_', $pdata_key );
-                $errors->add( new WP_Error( 'csv_error_' . $pdata_key, __( '<strong>Error #ROW ' . ( $pdata_key_arr[1] + 1 ) . '</strong>', 'erp' ) ) );
+
+                $errors[] = '<strong>' . __( sprintf( "Error at #ROW %d", $pdata_key_arr[1] + 1 ), 'erp' ) . '</strong>';
+                
                 foreach ( $pdata_val as $pdval ) {
                     foreach ( $pdval['errors'] as $err ) {
-                        $errors->add( new WP_Error( 'csv_error_' . $pdval['field_name'], __( $err, 'erp' ) ) );
+                        $errors[] = __( sprintf( "%s", $err ), 'erp' );
                     }
                 }
             }
-            $this->through_error_if_found( $errors );
         }
-    }
 
-    /**
-     * Through errors if found & redirect
-     *
-     * @since 1.6.5
-     *
-     * @return void
-     */
-    public function through_error_if_found( $errors ) {
-        if ( $errors->has_error() ) {
-            $errors->save();
-            $redirect_to = add_query_arg( array( 'error' => $errors->get_key() ), admin_url( 'admin.php?page=erp-tools&tab=import' ) );
-            wp_safe_redirect( $redirect_to );
-            exit;
-        }
+        return $errors;
     }
 
     /**
@@ -154,6 +105,7 @@ class Validate_Data {
                 }
             }
         }
+
         return $error_list;
     }
 
@@ -168,88 +120,136 @@ class Validate_Data {
         switch ( $dt_key ) {
             case 'first_name':
                 return $this->validate_field( 'First name', $dt_value, $type, 'not_empty:true|max:60|min:2|is_valid_name:true' );
+    
             case 'middle_name':
                 return $this->validate_field( 'Middle name', $dt_value, $type, 'max:60|is_valid_name:true' );
+
             case 'last_name':
                 return $this->validate_field( 'Last name', $dt_value, $type, 'not_empty:true|max:60|min:2|is_valid_name:true' );
+
+            case 'name':
+                return $this->validate_field( 'Name', $dt_value, $type, 'not_empty:true|max:60|min:2|is_valid_name:true|unique:name' );
+
             case 'email':
                 return $this->validate_field( 'Email', $dt_value, $type, 'not_empty:true|max:90|min:2|email:true|unique:email|not_csv_column_duplicate:email' );
+
             case 'employee_id':
-                return $this->validate_field( 'Employee id', $dt_value, $type, 'max:20|unique:employee_id|is_valid_emp_id:true' );
+                return $this->validate_field( 'Employee ID', $dt_value, $type, 'max:20|unique:employee_id|is_valid_emp_id:true' );
+
             case 'phone':
                 return $this->validate_field( 'Phone', $dt_value, $type, 'min:4|max:22|is_phone:true' );
+
             case 'mobile':
                 return $this->validate_field( 'Mobile', $dt_value, $type, 'min:4|max:22|is_phone:true' );
+
             case 'other':
                 return $this->validate_field( 'Other', $dt_value, $type, 'max:50|' );
+
             case 'website':
                 return $this->validate_field( 'Website', $dt_value, $type, 'max:90|is_valid_url:true' );
+
             case 'fax':
                 return $this->validate_field( 'Fax', $dt_value, $type, 'max:20|is_phone:true' );
+
             case 'notes':
                 return $this->validate_field( 'Notes', $dt_value, $type, 'max:250|' );
+
             case 'street_1':
                 return $this->validate_field( 'Street 1', $dt_value, $type, 'max:250|' );
+
             case 'street_2':
                 return $this->validate_field( 'Street 2', $dt_value, $type, 'max:250|' );
+
             case 'city':
                 return $this->validate_field( 'City', $dt_value, $type, 'max:80|is_valid_name:true' );
+
             case 'state':
                 return $this->validate_field( 'State', $dt_value, $type, 'max:50|' );
+
             case 'postal_code':
                 return $this->validate_field( 'Postal code', $dt_value, $type, 'max:10|zip:true' );
+
             case 'country':
                 return $this->validate_field( 'Country', $dt_value, $type, 'max:20|' );
+
             case 'currency':
                 return $this->validate_field( 'Currency', $dt_value, $type, 'max:5|' );
+
             case 'life_stage':
                 return $this->validate_field( 'Life stage', $dt_value, $type, 'max:100|' );
+
             case 'user_email':
                 return $this->validate_field( 'User email', $dt_value, $type, 'not_empty:true|max:100|email:true|unique:user_email|not_csv_column_duplicate:user_email' );
+
             case 'designation':
                 return $this->validate_field( 'Designation', $dt_value, $type, 'max:30|' );
+
             case 'department':
                 return $this->validate_field( 'Department', $dt_value, $type, 'max:30|' );
+
             case 'location':
                 return $this->validate_field( 'Location', $dt_value, $type, 'max:20|' );
+
             case 'hiring_source':
                 return $this->validate_field( 'hiring source', $dt_value, $type, 'max:20|' );
+
             case 'hiring_date':
                 return $this->validate_field( 'Hiring date', $dt_value, $type, 'max:20|is_date:true' );
+
             case 'date_of_birth':
                 return $this->validate_field( 'Date of birth', $dt_value, $type, 'max:20|is_date:true' );
+
             case 'reporting_to':
                 return $this->validate_field( 'Reporting to', $dt_value, $type, 'max:20|' );
+
             case 'pay_rate':
-                return $this->validate_field( 'Pay rate', $dt_value, $type, 'max:11|is_valid_amount:true' );
+                return $this->validate_field( 'Pay rate', $dt_value, $type, 'is_valid_amount:true' );
+
             case 'type':
                 return $this->validate_field( 'Type', $dt_value, $type, 'max:20|' );
+
             case 'pay_type':
                 return $this->validate_field( 'Pay type', $dt_value, $type, 'max:20|' );
+
             case 'status':
                 return $this->validate_field( 'Statue', $dt_value, $type, 'max:10|' );
+
             case 'other_email':
                 return $this->validate_field( 'Other email', $dt_value, $type, 'max:60|email:true' );
+
             case 'address':
                 return $this->validate_field( 'Address', $dt_value, $type, 'max:200|' );
+
             case 'work_phone':
                 return $this->validate_field( 'Work phone', $dt_value, $type, 'max:20|is_phone:true' );
+
             case 'gender':
                 return $this->validate_field( 'Gender', $dt_value, $type, 'max:10|' );
+
             case 'marital_status':
                 return $this->validate_field( 'Marital status', $dt_value, $type, 'max:20|' );
+
             case 'nationality':
                 return $this->validate_field( 'Nationality', $dt_value, $type, 'max:30|' );
+
             case 'driving_license':
                 return $this->validate_field( 'Driving licence', $dt_value, $type, 'max:30|' );
+
             case 'hobbies':
-                return $this->validate_field( 'Hobbies', $dt_value, $type, 'max:200|' );
+                return $this->validate_field( 'Hobbies', $dt_value, $type, 'max:255|' );
+
             case 'user_url':
                 return $this->validate_field( 'User email', $dt_value, $type, 'max:600|' );
-            case 'description':
-                return $this->validate_field( 'Description', $dt_value, $type, 'max:200|' );
+
+            case 'category_id':
+                return $this->validate_field( 'Category ID', $dt_value, $type, 'not_empty:true' );
+
+            case 'product_type_id':
+                return $this->validate_field( 'Product type ID', $dt_value, $type, 'not_empty:true' );
+
             default:
                 return apply_filters( 'validate_field', [], $dt_key, $dt_value, $type );
+
         }
     }
 
@@ -279,21 +279,25 @@ class Validate_Data {
                                 $errors[] = __( "{$field_name} can not be empty", 'erp' );
                             }
                             break;
+
                         case 'max':
                             if ( strlen( $field_value ) > $rule_value ) {
                                 $errors[] = __( "{$field_name} can not be more than {$rule_value} charecters", 'erp' );
                             }
                             break;
+
                         case 'min':
                             if ( ! empty( $field_value ) && strlen( $field_value ) < $rule_value ) {
                                 $errors[] = __( "{$field_name} can not be less than {$rule_value} charecters", 'erp' );
                             }
                             break;
+
                         case 'email':
                             if ( $rule_value == 'true' && ! is_email( $field_value ) && ! empty( $field_value ) ) {
                                 $errors[] = __( "{$field_name} should be a valid email", 'erp' );
                             }
                             break;
+
                         case 'is_date':
                             if ( $rule_value == 'true' ) {
                                 $check_is_date = $this->is_valid_date( $rule_value, $field_value, $field_name );
@@ -302,70 +306,108 @@ class Validate_Data {
                                 }
                             }
                             break;
+
                         case 'is_phone':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_contact_no( $field_value ) ) {
                                 if ( false !== strpos( $field_value, 'E' ) ) {
                                     $errors[] = __( "The input ({$field_value}) for {$field_name} may be exponential. Please change your number in proper format.", 'erp' );
                                 } else {
-                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected and it may contain space, dot(.), hyphen(-) only.", 'erp' );
+                                    $errors[] = __( "{$field_name} is not valid. Minimum 4 and maximum 18 digits are expected.", 'erp' );
                                 }
                             }
                             break;
+
                         case 'not_csv_column_duplicate':
                             $check_is_duplicate_column = $this->is_duplicate_column( $rule_value, $field_value, $field_name );
                             if ( $check_is_duplicate_column ) {
                                 $errors[] = $check_is_duplicate_column;
                             }
                             break;
+
                         case 'unique':
-                            if ( $type === 'employee' ) {
-                                $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
-                                if ( $check_is_unique_emp ) {
-                                    $errors[] = $check_is_unique_emp;
-                                }
+                            switch ( $type ) {
+                                case 'employee':
+                                    $check_is_unique_emp = $this->check_unique_employee( $rule_value, $field_value, $field_name );
+                                    
+                                    if ( $check_is_unique_emp ) {
+                                        $errors[] = $check_is_unique_emp;
+                                    }
+                                    break;
+
+                                case 'contact':
+                                case 'company':
+                                case 'customer':
+                                case 'vendor':
+                                    $check_is_unique_cont = $this->check_unique_contact( $rule_value, $field_value, $field_name );
+                                
+                                    if ( $check_is_unique_cont ) {
+                                        $errors[] = $check_is_unique_cont;
+                                    }
+                                    break;
+
+                                case 'product':
+                                    $check_is_unique_cont = $this->check_unique_product( $rule_value, $field_value, $field_name );
+                                
+                                    if ( $check_is_unique_cont ) {
+                                        $errors[] = $check_is_unique_cont;
+                                    }
+                                    break;
+
+                                case 'product_non_unique':
+                                    break;
                             }
-                            if ( $type === 'contact' || $type === 'company' || $type === 'vendor' ) {
-                                $check_is_unique_cont = $this->check_unique_contact( $rule_value, $field_value, $field_name );
-                                if ( $check_is_unique_cont ) {
-                                    $errors[] = $check_is_unique_cont;
-                                }
-                            }
+
                             break;
+
                         case 'is_valid_name':
                             if ( $rule_value === 'true' ) {
-                                if ( $type === 'company' || $field_name === 'City' ) {
-                                    if ( ! empty( $field_value ) && erp_contains_disallowed_chars( $field_value ) ) {
-                                        $errors[] = __( "{$field_name} should not contain special charecters like %;\"=<>\/*+?$^{}[]", 'erp' );
-                                    }
-                                } else {
-                                    if ( ! empty( $field_value ) && ! erp_is_valid_name( $field_value ) ) {
-                                        $errors[] = __( "{$field_name} should not contain digits and special charecters like !_@%#&:;\"=<>\/*+?$^{}[]", 'erp' );
-                                    }
+                                switch ( $type ) {
+                                    case 'company':
+                                    case 'city':
+                                        if ( ! empty( $field_value ) && erp_contains_disallowed_chars( $field_value ) ) {
+                                            $errors[] = __( "{$field_name} should not contain special charecters like %;\"=<>\/*+?$^{}[]", 'erp' );
+                                        }
+                                        break;
+
+                                    case 'product':
+                                    case 'product_non_unique':
+                                        break;
+
+                                    default:
+                                        if ( ! empty( $field_value ) && ! erp_is_valid_name( $field_value ) ) {
+                                            $errors[] = __( "{$field_name} should not contain digits and special charecters like !_@%#&:;\"=<>\/*+?$^{}[]", 'erp' );
+                                        }
                                 }
                             }
                             break;
+
                         case 'is_valid_emp_id':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_employee_id( $field_value ) ) {
                                 $errors[] = __( "{$field_name} is not valid. It should start with letter or digit and may contain letters, digits and hyphen (-) only", 'erp' );
                             }
                             break;
+
                         case 'zip':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_zip_code( $field_value ) ) {
                                 $errors[] = __( "{$field_name} is not valid. It should start with letter or digit and may contain letters, digits, space and hyphen (-) only", 'erp' );
                             }
                             break;
+
                         case 'is_valid_amount':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_currency_amount( $field_value ) ) {
-                                $errors[] = __( "{$field_name} is not valid. It may contain digits and commas(,) and decimal point values only.", 'erp' );
+                                $errors[] = __( "{$field_name} is not valid. It may contain integer or decimal point values with maximum 2 digits after decimal point.", 'erp' );
                             }
                             break;
+
                         case 'is_valid_url':
                             if ( $rule_value === 'true' && ! empty( $field_value ) && ! erp_is_valid_url( $field_value ) ) {
                                 $errors[] = __( "{$field_name} is not valid. Please provide a valid one.", 'erp' );
                             }
                             break;
+
                         default:
                             $custom_error_check = apply_filters( 'custom_validation', $rule_value, $field_value, $field_name, $type );
+                            
                             if ( $custom_error_check ) {
                                 $errors[] = $custom_error_check;
                             }
@@ -389,8 +431,8 @@ class Validate_Data {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                'SELECT COUNT(*) FROM %s WHERE %s=%s',
-                $wpdb->prefix . 'erp_peoples', $column, $value
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_peoples WHERE $column = %s",
+                [ $value ]
             )
         );
 
@@ -411,8 +453,30 @@ class Validate_Data {
 
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                'SELECT COUNT(*) FROM %s as emp LEFT JOIN %s as users ON emp.user_id=users.id WHERE %s=%s',
-                $wpdb->prefix . 'erp_hr_employees', $wpdb->prefix . 'users', $column, $value
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees as emp LEFT JOIN {$wpdb->prefix}users as users ON emp.user_id = users.ID WHERE $column = %s",
+                $value
+            )
+        );
+
+        if ( $result > 0 ) {
+            return __( "{$field_name} already exists. Try different one", 'erp' );
+        }
+    }
+
+    /**
+     * Check product specific field is unique or not
+     *
+     * @since 1.9.0
+     *
+     * @return string
+     */
+    public function check_unique_product( $column, $value, $field_name ) {
+        global $wpdb;
+
+        $result =  $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_acct_products WHERE $column = %s",
+                [ $value ]
             )
         );
 

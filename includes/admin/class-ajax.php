@@ -26,15 +26,287 @@ class Ajax {
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
-        $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
+        $this->action( 'wp_ajax_erp_check_gmail_connection_established', 'check_gmail_connection_established' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
         $this->action( 'wp_ajax_erp-api-key', 'new_api_key' );
         $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key' );
         $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer' );
         $this->action( 'wp_ajax_erp-toggle-module', 'toggle_module' );
+        $this->action( 'wp_ajax_erp_import_csv', 'import_csv' );
+        $this->action( 'wp_ajax_erp_acct_get_sample_csv_url', 'generate_csv_url' );
+        $this->action( 'wp_ajax_erp_reset_data', 'erp_reset_data' );
     }
 
+    /**
+     * Generates url for accounting people
+     *
+     * @since 1.8.5
+     *
+     * @return mixed
+     */
+    public function generate_csv_url() {
+        $this->verify_nonce( 'erp-import-export-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_ac_create_customer' ) && ! current_user_can( 'erp_ac_create_vendor' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+        $path = ! empty( $_POST['path'] ) ? sanitize_text_field( wp_unslash( $_POST['path'] ) ) : '';
+
+        switch ( $type ) {
+            case 'customers':
+                $type = 'customer';
+                break;
+
+            case 'vendors':
+                $type = 'vendor';
+                break;
+        }
+
+        $nonce = wp_create_nonce( 'erp-import-export-nonce' );
+        $page  = "?page=erp-accounting&action=download_sample&type={$type}&_wpnonce={$nonce}#{$path}";
+        $url   = admin_url( "admin.php{$page}" );
+
+        $this->send_success( $url );
+    }
+
+    /**
+     * Imports CSV file in ERP
+     *
+     * @since 1.8.5
+     *
+     * @return mixed
+     */
+    public function import_csv() {
+        $this->verify_nonce( 'erp-import-export-nonce' );
+
+        if ( ! is_user_logged_in() ) {
+            $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+        }
+
+        $capability_for_type = [
+            'employee' => 'erp_create_employee',
+            'contact'  => 'erp_crm_add_contact',
+            'company'  => 'erp_crm_add_contact', //NB: no capability for company, using contact capability
+            'customer' => 'erp_ac_create_customer',
+            'vendor'   => 'erp_ac_create_vendor',
+        ];
+
+        $type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+
+        if ( ! in_array( $type, [ 'contact', 'company', 'employee', 'vendor', 'customer' ], true ) ) {
+            $this->send_error( __( 'Unknown import type!', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'administrator' ) && ! current_user_can( $capability_for_type[ $type ] ) ) {
+            $this->send_error( __( 'Sorry ! You do not have permission to access this page', 'erp' ) );
+        }
+
+        if ( empty( $_FILES['csv_file'] ) ) {
+            $this->send_error( __( 'No CSV file selected!', 'erp' ) );
+        }
+
+        $file_name    = isset( $_FILES['csv_file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) ) : '';
+        $file_tmpname = isset( $_FILES['csv_file']['tmp_name'] ) ? sanitize_url( wp_unslash( $_FILES['csv_file']['tmp_name'] ) ) : '';
+        $file_info    = wp_check_filetype_and_ext( $file_tmpname, $file_name );
+
+        if ( 'csv' !== $file_info['ext'] && 'text/csv' !== $file_info['type'] ) {
+            $this->send_error( __( 'The file is not a valid CSV file! Please provide a valid one.', 'erp' ) );
+        }
+
+        $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
+
+        $csv = new \ParseCsv\Csv();
+        $csv->encoding( null, 'UTF-8' );
+        $csv->parse( $file_tmpname );
+
+        if ( empty( $csv->data ) ) {
+            $this->send_error( __( 'No data found to import!', 'erp' ) );
+        }
+
+        $csv_data   = [];
+        $csv_data[] = array_keys( $csv->data[0] );
+
+        foreach ( $csv->data as $data_item ) {
+            $csv_data[] = array_values( $data_item );
+        }
+
+        if ( ! empty( $csv_data ) ) {
+            $count  = 0;
+            $errors = [];
+
+            $errors = apply_filters( 'erp_validate_csv_data', $csv_data, $fields, $type );
+
+            if ( ! empty( $errors ) ) {
+                $error_html = '<ul class="erp-list">';
+
+                foreach ( $errors as $error ) {
+                    $error_html .= "<li>{$error}</li>";
+                }
+
+                $error_html = $error_html . '</ul>';
+
+                $this->send_error( $error_html );
+            }
+
+            foreach ( $csv_data as $line ) {
+                if ( empty( $line ) ) {
+                    continue;
+                }
+
+                $line_data = [];
+
+                if ( is_array( $fields ) && ! empty( $fields ) ) {
+                    foreach ( $fields as $key => $value ) {
+                        if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
+                            if ( $type === 'employee' ) {
+                                $employee_fields = [
+                                    'work'     => [
+                                        'designation',
+                                        'department',
+                                        'location',
+                                        'hiring_source',
+                                        'hiring_date',
+                                        'date_of_birth',
+                                        'reporting_to',
+                                        'pay_rate',
+                                        'pay_type',
+                                        'type',
+                                        'status',
+                                    ],
+                                    'personal' => [
+                                        'photo_id',
+                                        'user_id',
+                                        'first_name',
+                                        'middle_name',
+                                        'last_name',
+                                        'other_email',
+                                        'phone',
+                                        'work_phone',
+                                        'mobile',
+                                        'address',
+                                        'gender',
+                                        'marital_status',
+                                        'nationality',
+                                        'driving_license',
+                                        'hobbies',
+                                        'user_url',
+                                        'description',
+                                        'street_1',
+                                        'street_2',
+                                        'city',
+                                        'country',
+                                        'state',
+                                        'postal_code',
+                                    ],
+                                ];
+
+                                $departments  = erp_hr_get_departments_dropdown_raw();
+                                $designations = erp_hr_get_designation_dropdown_raw();
+
+                                if ( in_array( $key, $employee_fields['work'], true ) ) {
+                                    if ( $key === 'designation' ) {
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
+                                    } elseif ( $key === 'department' ) {
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
+                                    } else {
+                                        $line_data['work'][ $key ] = $line[ $value ];
+                                    }
+                                } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
+                                    $line_data['personal'][ $key ] = $line[ $value ];
+                                } else {
+                                    $line_data[ $key ] = $line[ $value ];
+                                }
+                            } else {
+                                $line_data[ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
+                                $line_data['type'] = $type;
+                            }
+                        }
+                    }
+                }
+
+                if ( 'employee' === $type ) {
+                    if ( ! isset( $line_data['work']['status'] ) ) {
+                        $line_data['work']['status'] = 'active';
+                    }
+
+                    $item_insert_id = erp_hr_employee_create( $line_data );
+
+                    if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
+                        continue;
+                    }
+                } else if ( 'vendor' === $type || 'customer' === $type ) {
+                    $item_insert_id = erp_insert_people( $line_data );
+
+                    if ( is_wp_error( $item_insert_id ) ) {
+                        continue;
+                    }
+                } else if ( 'contact' === $type || 'company' === $type ) {
+                    $contact_owner              = ! empty( $_POST['contact_owner'] )
+                                                  ? absint( wp_unslash( $_POST['contact_owner'] ) )
+                                                  : erp_crm_get_default_contact_owner();
+
+                    if ( 'contact' === $type && ( ! erp_crm_is_current_user_manager() ) && erp_crm_is_current_user_crm_agent() && $contact_owner !== get_current_user_id() ) {
+                        $this->send_error( __( 'You can only import your own contacts', 'erp' ) );
+                    }
+
+                    $line_data['contact_owner'] = $contact_owner;
+                    $people                     = erp_insert_people( $line_data, true );
+
+                    if ( is_wp_error( $people ) ) {
+                        continue;
+                    }
+
+                    $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
+                    $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
+
+                    if ( ! $people->exists ) {
+                        $contact->update_life_stage( $life_stage );
+                    } else if ( ! $contact->get_life_stage() ) {
+                        $contact->update_life_stage( $life_stage );
+                    }
+
+                    if ( ! empty( $_POST['contact_group'] ) ) {
+                        $contact_group = absint( $_POST['contact_group'] );
+
+                        $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
+                            'group_id' => $contact_group,
+                            'user_id'  => $people->id,
+                        ] )->first();
+
+                        if ( empty( $existing_data ) ) {
+                            $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
+
+                            erp_crm_create_new_contact_subscriber( [
+                                'group_id'       => $contact_group,
+                                'user_id'        => $people->id,
+                                'status'         => 'subscribe',
+                                'subscribe_at'   => current_time( 'mysql' ),
+                                'unsubscribe_at' => null,
+                                'hash'           => $hash,
+                            ] );
+                        }
+                    }
+                }
+
+                ++ $count;
+            }
+        }
+
+        if ( 0 === $count ) {
+            $this->send_error( __( 'Something went wrong or items already exist', 'erp' ) );
+        }
+
+        $this->send_success( __( sprintf( '%d items have been imported successfully', $count ), 'erp' ) );
+    }
+
+    /**
+     * Deletes a file
+     *
+     * @return mixed
+     */
     public function file_delete() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
             return;
@@ -229,119 +501,17 @@ class Ajax {
     }
 
     /**
-     * Test the SMTP connection.
-     *
-     * @return void
-     */
-    public function smtp_test_connection() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-smtp-test-connection-nonce' ) ) {
-            return;
-        }
-
-        if ( empty( $_REQUEST['mail_server'] ) ) {
-            $this->send_error( esc_html__( 'No host address provided', 'erp' ) );
-        }
-
-        if ( empty( $_REQUEST['port'] ) ) {
-            $this->send_error( esc_html__( 'No port address provided', 'erp' ) );
-        }
-
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            if ( empty( $_REQUEST['username'] ) ) {
-                $this->send_error( esc_html__( 'No email address provided', 'erp' ) );
-            }
-
-            if ( empty( $_REQUEST['password'] ) ) {
-                $this->send_error( esc_html__( 'No email password provided', 'erp' ) );
-            }
-        }
-
-        if ( empty( $_REQUEST['to'] ) ) {
-            $this->send_error( esc_html__( 'No testing email address provided', 'erp' ) );
-        }
-
-        $mail_server    = isset( $_REQUEST['mail_server'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mail_server'] ) ) : '';
-        $port           = isset( $_REQUEST['port'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['port'] ) ) : 465;
-        $authentication = isset( $_REQUEST['authentication'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['authentication'] ) ) : 'smtp';
-        $username       = isset( $_REQUEST['username'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['username'] ) ) : '';
-        $password       = isset( $_REQUEST['password'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['password'] ) ) : '';
-
-        global $phpmailer, $wp_version;
-
-        // (Re)create it, if it's gone missing.
-        if ( version_compare( $wp_version, '5.5' ) >= 0 ) {
-            if ( ! ( $phpmailer instanceof \PHPMailer\PHPMailer\PHPMailer ) ) {
-                require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
-                require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
-                $phpmailer = new \PHPMailer\PHPMailer\PHPMailer( true );
-            }
-        } else {
-            if ( ! ( $phpmailer instanceof PHPMailer ) ) {
-                require_once ABSPATH . WPINC . '/class-phpmailer.php';
-                require_once ABSPATH . WPINC . '/class-smtp.php';
-                $phpmailer = new \PHPMailer( true );
-            }
-        }
-
-        $to      = isset( $_REQUEST['to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['to'] ) ) : '';
-        $subject = esc_html__( 'ERP SMTP Test Mail', 'erp' );
-        $message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
-
-        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
-
-        if ( ! isset( $erp_email_settings['from_email'] ) ) {
-            $from_email = get_option( 'admin_email' );
-        } else {
-            $from_email = $erp_email_settings['from_email'];
-        }
-
-        if ( ! isset( $erp_email_settings['from_name'] ) ) {
-            global $current_user;
-
-            $from_name = $current_user->display_name;
-        } else {
-            $from_name = $erp_email_settings['from_name'];
-        }
-
-        $content_type = 'text/html';
-
-        $phpmailer->AddAddress( $to );
-        $phpmailer->From       = $from_email;
-        $phpmailer->FromName   = $from_name;
-        $phpmailer->Sender     = $phpmailer->From;
-        $phpmailer->Subject    = $subject;
-        $phpmailer->Body       = $message;
-        $phpmailer->Mailer     = 'smtp';
-        $phpmailer->Host       = $mail_server;
-        $phpmailer->SMTPSecure = $authentication;
-        $phpmailer->Port       = $port;
-
-        if ( ! empty( $_REQUEST['authentication'] ) ) {
-            $phpmailer->SMTPAuth   = true;
-            $phpmailer->Username   = $username;
-            $phpmailer->Password   = $password;
-        }
-
-        $phpmailer->isHTML( true );
-
-        try {
-            $result = $phpmailer->Send();
-
-            $this->send_success( esc_html__( 'Test email has been sent.', 'erp' ) );
-        } catch ( \Exception $e ) {
-            $this->send_error( $e->getMessage() );
-        }
-    }
-
-    /**
      * Test the Imap connection.
      *
      * @return void
      */
     public function imap_test_connection() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-imap-test-connection-nonce' ) ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
             return;
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
 
         if ( empty( $_REQUEST['mail_server'] ) ) {
@@ -369,12 +539,49 @@ class Ajax {
 
         try {
             $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
-            $imap->is_connected();
 
-            $this->send_success( esc_html__( 'Your IMAP connection is established.', 'erp' ) );
+            if ( $imap->is_connected() ) {
+                $option = get_option( 'erp_settings_erp-email_imap', [] );
+                $option['imap_status'] = 1;
+                update_option( 'erp_settings_erp-email_imap', $option );
+
+                $this->send_success( esc_html__( 'Your IMAP connection is established.', 'erp' ) );
+            }
         } catch ( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
+    }
+
+    /**
+     * Check if GMAIL/G-Suit connection is established based on connection-data
+     *
+     * @return void
+     */
+    public function check_gmail_connection_established() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        if ( wperp()->google_auth->has_credentials() ) {
+            $url = wperp()->google_auth->get_client()->createAuthUrl();
+
+            if ( is_wp_error( $url ) ) {
+                $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+            }
+
+            $data = [
+                'link'           => $url,
+                'status'         => true,
+                'is_connected'   => (boolean) wperp()->google_auth->is_connected(),
+                'disconnect_url' => wperp()->google_auth->get_disconnect_url()
+            ];
+
+            $this->send_success( $data );
+        }
+
+        $this->send_error( __('No credential set yet !', 'erp') );
     }
 
     /**
@@ -391,31 +598,39 @@ class Ajax {
             return;
         }
 
-        define( 'ERP_IS_IMPORTING', true );
-
-        $limit = 50; // Limit to import per request
-
-        $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
-        update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
-        $offset = ( $attempt - 1 ) * $limit;
-
-        $user_role     = isset( $_REQUEST['user_role'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) ) : '';
-        $contact_owner = isset( $_REQUEST['contact_owner'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['contact_owner'] ) ) : '';
-        $life_stage    = isset( $_REQUEST['life_stage'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['life_stage'] ) ) : '';
-        $contact_group = isset( $_REQUEST['contact_group'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['contact_group'] ) ) : '';
-
-        if ( ! empty( $user_role ) ) {
-            $user_query  = new \WP_User_Query( ['role__in' => $user_role, 'number' => $limit, 'offset' => $offset] );
-            $users       = $user_query->get_results();
-            $total_items = $user_query->get_total();
-        } else {
-            $user_query  = new \WP_User_Query( ['number' => $limit, 'offset' => $offset] );
-            $users       = $user_query->get_results();
-            $total_items = $user_query->get_total();
+        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $user_ids = [];
-        $user_ids = wp_list_pluck( $users, 'ID' );
+        define( 'ERP_IS_IMPORTING', true );
+
+        $limit   = 50; // Limit to import per request
+        $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
+
+        update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
+
+        $offset        = ( $attempt - 1 ) * $limit;
+
+        $user_role     = isset( $_REQUEST['user_role'] )     ? sanitize_text_field( wp_unslash( $_REQUEST['user_role'] ) )     : '';
+        $contact_owner = isset( $_REQUEST['contact_owner'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['contact_owner'] ) ) : '';
+        $life_stage    = isset( $_REQUEST['life_stage'] )    ? sanitize_text_field( wp_unslash( $_REQUEST['life_stage'] ) )    : '';
+        $contact_group = isset( $_REQUEST['contact_group'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['contact_group'] ) ) : '';
+
+        $query_args = [
+            'number'   => $limit,
+            'offset'   => $offset
+        ];
+
+        if ( ! empty( $user_role ) ) {
+            $query_args['role__in'] = $user_role;
+        }
+
+        $user_query  = new \WP_User_Query( $query_args );
+        $users       = $user_query->get_results();
+        $total_items = $user_query->get_total();
+
+        $user_ids    = [];
+        $user_ids    = wp_list_pluck( $users, 'ID' );
 
         foreach ( $user_ids as $user_id ) {
             $wp_user     = get_user_by( 'id', $user_id );
@@ -589,11 +804,11 @@ class Ajax {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( isset( $_POST['module_id'] ) && ! empty( $_POST['module_id'] ) ) {
+        if ( ! empty( $_POST['module_id'] ) ) {
             if ( is_array( $_POST['module_id'] ) ) {
                 $module_ids   = array_map( 'sanitize_text_field', wp_unslash( $_POST['module_id'] ) );
             } else {
-                $module_ids[] = isset( $_POST['module_id'] ) ? sanitize_text_field( wp_unslash( $_POST['module_id'] ) ) : '';
+                $module_ids[] = sanitize_text_field( wp_unslash( $_POST['module_id'] ) );
             }
         }
 
@@ -621,6 +836,41 @@ class Ajax {
             $this->send_error( __( 'Invalid input.', 'erp') );
         }
 
+    }
+
+    /**
+     * Reset WP ERP Data
+     *
+     * @since 1.8.8
+     *
+     * @return void
+     */
+    public function erp_reset_data() {
+
+        $this->verify_nonce( 'erp-reset-nonce' );
+
+        if ( current_user_can( 'manage_options' ) === false ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $reset_text = sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) );
+
+        if ( ! isset( $_POST['erp_reset_confirmation'] ) || 'Reset' !== sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) ) ) {
+            $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
+        }
+
+        $resetted = erp_reset_data();
+
+        if ( is_wp_error( $resetted ) ) {
+            $this->send_error( esc_html__( 'Sorry, Something went wrong. Please try again !', 'erp' ) );
+        }
+
+        $this->send_success(
+            [
+                'message'        => esc_html__( 'Resetted WP ERP successfully. You will be redirected soon. Please Setup WP ERP again or Skip to continue.', 'erp' ),
+                'redirected_url' => admin_url( "admin.php?page=erp-setup" ),
+            ]
+        );
     }
 }
 

@@ -701,8 +701,13 @@ table.erp-settings-table {
         padding: 6px 10px;
     }
 
-    .erp-hr-new-leave-request-wrap {
-        margin: 20px 0px;
+    .leave-calendar-actions-wrap {
+        margin-bottom: 20px;
+        display: flex;
+
+        div {
+            padding: 0 3px;;
+        }
     }
 }
 
@@ -2485,6 +2490,227 @@ div.erp-nav-container {
 /* Resolving conflicts after WP 5.6 released */
 .erp-count-class {
     display:block !important;
+}
+
+/** ERP Tutorial Styles **/
+.wp-pointer-content {
+    h3 {
+        border: 1px solid #1a9ed4 !important;
+        background: #1a9ed4 !important;
+        &:before{
+            color: #1a9ed4 !important;
+        }
+    }
+}
+
+.wp-pointer-top .wp-pointer-arrow-inner, .wp-pointer-undefined .wp-pointer-arrow-inner {
+    border-bottom-color: #1a9ed4 !important;
+}
+
+.erp-pointer-buttons{
+    a{
+        &.close{
+            float: left!important;
+            margin-top: 10px;
+            margin-left: 16px;
+        }
+    }
+
+    .button-primary {
+        background: #1a9ed4 !important;
+        border-color: #1a9ed4 !important;
+    }
+}
+
+/* Tools Page CSS ----------- */
+.erp-tools-navbar {
+    background: #fff;
+    padding: 10px!important;
+    border-bottom: 0px!important;
+    margin-top: -9px!important;
+    margin-left: -22px!important;
+
+    .nav-tab, .nav-tab:focus {
+        border: none;
+        background: transparent;
+        padding: 14px 24px 14px 19px;
+        margin-top: 2px;
+        margin-bottom: -10px;
+        font-size: 14px;
+        box-shadow: none;
+        color: #000000;
+    }
+
+    .nav-tab-active, .nav-tab:hover {
+        border: none;
+        background: #F2F2F3;
+        border-radius: 3px 3px 0px 0px;
+    }
+}
+
+.tools-section {
+    margin: 30px 194px 20px 194px;
+    width: 60%;
+
+    .display-flex{
+        display: flex;
+    }
+
+    .section-title {
+        font-size: 24px;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .tools-alert {
+        padding: 20px 16px 8px 18px;
+        border: 1px solid #ccc;
+        margin-top: 20px;
+        border-radius: 3px;
+
+        .tools-alert-title {
+            color: #000000;
+            font-size: 18px;
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .tools-alert-description-icon {
+            width: 25px;
+            margin-top: 18px;
+        }
+
+        .tools-alert-description-text {
+            margin: 8px;
+            margin-top: 16px;
+        }
+
+    }
+
+    .tools-alert-no-title {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    .tools-alert-warning {
+        color: #E67E22;
+        border: 1px solid #E67E22;
+        background: #FFFBF3;
+        i {
+            color: #FFA100;
+        }
+    }
+
+    .tools-alert-info {
+        color: #1A9ED4;
+        border: 1px solid #1A9ED4;
+        background: #FAFDFF;
+        i {
+            color: #1A9ED4;
+            font-size: 16px;
+        }
+    }
+
+    .tools-card {
+        background: #FFFFFF;
+        padding: 30px;
+        margin-top: 20px;
+        border-radius: 3px;
+
+        .tools-content-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-top: 0px;
+        }
+        
+        .tools-content-info-text {
+            font-size: 14px;
+        }
+    }
+
+    .tools-input {
+        border-radius: 3px;
+        height: 38px;
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+        border: 2px solid #f5f5f5 !important;
+
+        &::placeholder {
+            color: #AEAEAE;
+        }
+    }
+
+    .tools-btn {
+        height: 30px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 7px 15px 8px 15px;
+        border-radius: 3px!important;
+    }
+
+    .tools-btn-submit {
+        margin-top: 25px;
+        float: right;
+        
+        .fa-spinner {
+            font-size: 14px;
+        }
+    }
+
+    .tools-submit-hidden {
+        display: none;
+    }
+
+    .tools-btn-loading {
+        color: #000;
+        cursor: progress;
+        background: #dcdcde;
+    }
+
+    .tools-btn-danger {
+        background: #FF4848;
+        color: #ffffff;
+    }
+
+    .tools-error-message {
+        color: #FF4848
+    }
+
+    .tools-error-input, .tools-error-input:focus {
+        border: 1px solid #FF4848!important;
+        box-shadow: none!important;
+        outline: none!important;
+    }
+
+    .tools-success-input, .tools-success-input:focus {
+        border: 1px solid #a5dc86!important;
+        box-shadow: none!important;
+        outline: none!important;
+    }
+
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media screen and (min-width : 120px) and (max-width : 768px) {
+    .tools-section {
+        margin: 30px 0px 20px 0px;
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 782px) and (max-width : 1024px) {
+    .tools-section {
+        margin: 30px 0px 20px 0px;
+        width: 100%;
+    }
 }
 
 @import "responsive.less";

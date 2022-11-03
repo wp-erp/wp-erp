@@ -291,7 +291,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_rate( $id );
@@ -327,9 +327,9 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['tax_rate'] = array_sum( $item_rates );
 
-        $tax_id = erp_acct_insert_tax_rate( $tax_data );
+        erp_acct_insert_tax_rate( $tax_data );
 
-        $tax_data['id'] = $tax_id;
+        $tax_data['id'] = $tax_data['tax_rate_name'];
 
         $this->add_log( $tax_data, 'add' );
 
@@ -356,7 +356,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_rates = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_item_for_database( $request );
@@ -398,7 +398,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_rates = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_item_for_database( $request );
@@ -433,7 +433,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_line_item_for_database( $request );
@@ -463,7 +463,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_rates = [];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $tax_data = $this->prepare_line_item_for_database( $request );
@@ -492,7 +492,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['db_id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         erp_acct_delete_tax_rate_line( $id );
@@ -511,7 +511,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_rate( $id );
@@ -584,7 +584,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_tax_pay_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_tax_pay_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $item = erp_acct_get_tax_pay_record( $id );
@@ -885,16 +885,16 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'           => (int) $item->id,
-            'voucher_no'   => $item->voucher_no,
-            'agency_id'    => erp_acct_get_tax_agency_name_by_id( $item->agency_id ),
-            'trn_date'     => $item->trn_date,
-            'particulars'  => $item->particulars,
-            'amount'       => $item->amount,
-            'trn_by'       => $item->trn_by,
-            'ledger_id'    => erp_acct_get_ledger_name_by_id( $item->ledger_id ),
-            'voucher_type' => $item->voucher_type,
-            'created_at'   => $item->created_at,
+            'id'           => isset( $item->id ) ? (int) $item->id : 0,
+            'voucher_no'   => isset( $item->voucher_no ) ? $item->voucher_no : '',
+            'agency_id'    => isset( $item->agency_id ) ? erp_acct_get_tax_agency_name_by_id( $item->agency_id ) : '',
+            'trn_date'     => isset( $item->trn_date ) ? $item->trn_date : '',
+            'particulars'  => isset( $item->particulars ) ? $item->particulars : '',
+            'amount'       => isset( $item->amount ) ? $item->amount : '',
+            'trn_by'       => isset( $item->trn_by ) ? $item->trn_by : '',
+            'ledger_id'    => isset( $item->ledger_id ) ? erp_acct_get_ledger_name_by_id( $item->ledger_id ) : '',
+            'voucher_type' => isset( $item->voucher_type ) ? $item->voucher_type : '',
+            'created_at'   => isset( $item->created_at ) ? $item->created_at : '',
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -920,13 +920,13 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'tax_zone_id'           => (int) $item->tax_zone_id,
-            'agency_id'             => (int) $item->agency_id,
-            'tax_rate_id'           => (int) $item->tax_rate_id,
-            'tax_rate_name'         => $item->tax_rate_name,
-            'default'               => (int) $item->default,
-            'sales_tax_category_id' => $item->tax_cat_id,
-            'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : null,
+            'tax_zone_id'           => ! empty( $item->tax_zone_id ) ? (int) $item->tax_zone_id : null,
+            'agency_id'             => ! empty( $item->agency_id ) ? (int) $item->agency_id : null,
+            'tax_rate_id'           => ! empty( $item->tax_rate_id ) ? (int) $item->tax_rate_id : null,
+            'tax_rate_name'         => ! empty( $item->tax_rate_name ) ? $item->tax_rate_name : null,
+            'default'               => ! empty( $item->default ) ? (int) $item->default : null,
+            'sales_tax_category_id' => ! empty( $item->tax_cat_id ) ? $item->tax_cat_id : null,
+            'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : 0,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -951,19 +951,19 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'       => 'object',
             'properties' => [
                 'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                    'description' => __( 'Unique identifier for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'tax_rate_name'       => [
-                    'description' => __( 'Tax rate name for the resource.' ),
+                    'description' => __( 'Tax rate name for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'is_compound' => [
-                    'description' => __( 'Tax type for the resource.' ),
+                    'description' => __( 'Tax type for the resource.', 'erp' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],

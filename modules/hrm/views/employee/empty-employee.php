@@ -96,14 +96,21 @@
 </style>
 <div class="tmpl-container">
 
-    <img class="employee-list" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/employee-list@2x.png' ); ?>"
-         alt="Employee List">
+    <img class="employee-list" src="<?php echo esc_attr( WPERP_HRM_ASSETS . '/images/employee-list@2x.png' ); ?>"
+         alt="<?php esc_attr_e( 'Employee List', 'erp' ); ?>" />
 
     <div class="tmpl-buttons">
-        <a href="#" onclick="jQuery('#erp-employee-new').click()"
-           class="button button-primary"><?php esc_html_e( 'Add your first employee!', 'erp' ); ?></a>
-        <a href="<?php echo esc_url( admin_url( 'admin.php?page=erp-tools&tab=import' ) ); ?>"
-           class="button"><?php esc_html_e( 'Import employee from CSV', 'erp' ); ?></a>
+        <a href="#"
+            onclick="jQuery('#erp-employee-new').click()"
+            class="button button-primary">
+            <?php esc_html_e( 'Add your first employee!', 'erp' ); ?>
+        </a>
+
+        <a href="#"
+            onclick="jQuery('#erp-hr-employee-import-csv').click()"
+            class="button">
+            <?php esc_html_e( 'Import employee from CSV', 'erp' ); ?>
+        </a>
     </div>
 
     <h2 class="feature-headline"><?php esc_html_e( 'What You Can Do With A Complete HR Solution', 'erp' ); ?></h2>
@@ -111,7 +118,7 @@
     <ul class="features-box">
 
         <li class="feature-box">
-            <img class="feature-box-img" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/employee-details@2x.png' ); ?>"
+            <img class="feature-box-img" src="<?php echo esc_url( WPERP_HRM_ASSETS . '/images/employee-details@2x.png' ); ?>"
                  alt="Feature Image">
             <div class="feature-content">
                 <h3 class="feature-title"><?php esc_html_e( 'Employee details', 'erp' ); ?></h3>
@@ -120,7 +127,7 @@
         </li>
 
         <li class="feature-box">
-            <img class="feature-box-img" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/notes@2x.png' ); ?>"
+            <img class="feature-box-img" src="<?php echo esc_url( WPERP_HRM_ASSETS . '/images/notes@2x.png' ); ?>"
                  alt="Feature Image">
             <div class="feature-content">
                 <h3 class="feature-title"><?php esc_html_e( 'Notes', 'erp' ); ?></h3>
@@ -129,7 +136,7 @@
         </li>
 
         <li class="feature-box">
-            <img class="feature-box-img" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/performance@2x.png' ); ?>"
+            <img class="feature-box-img" src="<?php echo esc_url( WPERP_HRM_ASSETS . '/images/performance@2x.png' ); ?>"
                  alt="Feature Image">
             <div class="feature-content">
                 <h3 class="feature-title"><?php esc_html_e( 'Performance', 'erp' ); ?> </h3>
@@ -138,7 +145,7 @@
         </li>
 
         <li class="feature-box">
-            <img class="feature-box-img" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/departments@2x.png' ); ?>"
+            <img class="feature-box-img" src="<?php echo esc_url( WPERP_HRM_ASSETS . '/images/departments@2x.png' ); ?>"
                  alt="Feature Image">
             <div class="feature-content">
                 <h3 class="feature-title"><?php esc_html_e( 'Departments', 'erp' ); ?></h3>
@@ -147,7 +154,7 @@
         </li>
 
         <li class="feature-box">
-            <img class="feature-box-img" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/announcement@2x.png' ); ?>"
+            <img class="feature-box-img" src="<?php echo esc_url( WPERP_HRM_ASSETS . '/images/announcement@2x.png' ); ?>"
                  alt="Feature Image">
             <div class="feature-content">
                 <h3 class="feature-title"><?php esc_html_e( 'Announcement', 'erp' ); ?></h3>
@@ -156,7 +163,7 @@
         </li>
 
         <li class="feature-box">
-            <img class="feature-box-img" src="<?php echo esc_html( WPERP_HRM_ASSETS . '/images/reports@2x.png' ); ?>"
+            <img class="feature-box-img" src="<?php echo esc_url( WPERP_HRM_ASSETS . '/images/reports@2x.png' ); ?>"
                  alt="Feature Image">
             <div class="feature-content">
                 <h3 class="feature-title"><?php esc_html_e( 'Reports', 'erp' ); ?></h3>

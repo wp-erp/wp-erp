@@ -60,6 +60,12 @@
             // trigger get employees
             $( '.leave-entitlement-form' ).on( 'change', '#leave_policy', self, this.entitlement.getFilteredEmployee );
 
+            //initialize edit and delete actions of leave type
+            this.leaveType.initActions();
+
+            // trigger on create new leave type
+            $( '#erp-hr-leave-type-create' ).on( 'submit', Leave.leaveType.create );
+
             this.initDateField();
         },
 
@@ -241,7 +247,7 @@
                         Leave.initToggleCheckbox();
                     },
                     onSubmit: function(modal) {
-                        e.data.holiday.submit.call(this, modal);
+                        e.data.holiday.submit.call(this, modal, 'add');
                     }
                 }); //popup
             },
@@ -321,26 +327,100 @@
                 }
             },
 
-            submit: function(modal) {
-                wp.ajax.send( {
-                    data: this.serializeObject(),
-                    success: function(res) {
-                        modal.closeModal();
+            submit: function(modal, context) {
+                if ( context !== 'import' ) {
+                    wp.ajax.send( {
+                        data: this.serializeObject(),
+                        success: function(res) {
+                            modal.closeModal();
 
-                        $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
-                            Leave.initDateField();
-                            Leave.initToggleCheckbox();
+                            $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                                Leave.initDateField();
+                                Leave.initToggleCheckbox();
 
-                            $('#holiday_msg').html( res );
-                        } );
-                    },
-                    error: function(error) {
-                        modal.enableButton();
-                        modal.showError( error );
+                                $('#holiday_msg').html( res );
+                            } );
+                        },
+                        error: function(error) {
+                            modal.enableButton();
+                            modal.showError( error );
+                        }
+                    });
+                    return;
+                }
+
+                var self         = Leave.holiday,
+                    titles       = self.parseInputArray( $(this), 'input[name="title[]"]' ),
+                    starts       = self.parseInputArray( $(this), 'input[name="start[]"]' ),
+                    ends         = self.parseInputArray( $(this), 'input[name="end[]"]' ),
+                    descriptions = self.parseInputArray( $(this), 'input[name="description[]"]' ),
+                    referer      = $(this).find('input[name="_wp_http_referer"]').val(),
+                    action       = $(this).find('input[name="action"]').val(),
+                    nonce        = $(this).find('input[name="_wpnonce"]').val(),
+                    updateArea   = $(this).find('#holiday_import_warning'),
+                    doneCount    = updateArea.find('.done_count'),
+                    total        = titles.length,
+                    chunkSize    = 30,
+                    done         = 0;
+
+                updateArea.removeClass('erp-hide');
+                updateArea.find('.total_count').text(total);
+
+                for ( var index = 0; index < total; index += chunkSize ) {
+                    var form = new FormData();
+                    form.append("_wpnonce", nonce);
+                    form.append("action", action);
+                    form.append("_wp_http_referer", referer);
+
+                    for ( var offset = 0; offset < chunkSize; offset++) {
+                        if(offset + index >= titles.length){
+                            break;
+                        }
+
+                        form.append("title[]", titles[offset + index]);
+                        form.append("start[]", starts[offset + index]);
+                        form.append("end[]", ends[offset + index]);
+                        form.append("description[]", descriptions[offset + index]);
                     }
-                });
-            },
 
+                    wp.ajax.send( {
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        success: function(res) {
+                            $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                                Leave.initDateField();
+                                Leave.initToggleCheckbox();
+                                done += chunkSize;
+                                doneCount.text(Math.min(done, total));
+
+                                $('#holiday_msg').html( res );
+
+                                if ( done >= total ) {
+                                    updateArea.addClass('erp-hide');
+
+                                    var msg_element = $('#holiday_msg div p');
+                                    var msg = msg_element.text();
+                                    msg = msg.replace( /\d+/g, total);
+                                    msg_element.text(msg);
+
+                                    modal.closeModal();
+                                }
+                            } );
+                        },
+                        error: function(error) {
+                            modal.enableButton();
+                            modal.showError( error );
+                        }
+                    });
+                }
+
+                if ( total === 0 ) {
+                    setTimeout( function() {
+                        modal.closeModal();
+                    }, 300 );
+                }
+            },
             import: function(e) {
                 e.preventDefault();
 
@@ -355,9 +435,15 @@
                         Leave.holiday.checkRange();
                     },
                     onSubmit: function(modal) {
-                        e.data.holiday.submit.call(this, modal);
+                        e.data.holiday.submit.call(this, modal, 'import');
                     }
                 }); //popup
+            },
+            parseInputArray: function( elem, field ) {
+                return elem.find( field )
+                    .map( function() {
+                        return $(this).val();
+                    } ).get();
             },
         },
 
@@ -367,22 +453,40 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmPolicy ) ) {
+                swal({
+                    title              : '',
+                    text               : wpErpHr.delConfirmPolicy,
+                    type               : 'warning',
+                    showCancelButton   : true,
+                    cancelButtonText   : wpErpHr.cancel,
+                    confirmButtonColor : '#fa6e5c',
+                    confirmButtonText  : wpErpHr.confirm_delete,
+                    closeOnConfirm     : true
+                },
+                function() {
                     wp.ajax.send( 'erp-hr-leave-policy-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
                             id: self.data( 'id' )
                         },
-                        success: function() {
+                        success: function(response) {
+                            swal({
+                                title: '',
+                                text: response,
+                                type: 'success',
+                                timer: 2200,
+                                showConfirmButton: false
+                            });
+
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
                             });
                         },
                         error: function(response) {
-                            alert( response );
+                            swal('', response, 'error');
                         }
                     });
-                }
+                });
             },
         },
 
@@ -808,6 +912,198 @@
             },
         },
 
+        leaveType: {
+            initActions: function() {
+                // trigger on deleting leave type
+                $( '.erp-hr-leave-type-delete' ).on( 'click', Leave.leaveType.remove );
+
+                // tigger on edit leave type
+                $( '.erp-hr-leave-type-edit' ).on ( 'click', Leave.leaveType.edit );
+
+                // trigger on bulk action
+                $( '#erp-hr-leave-type-table-form' ).on( 'submit', Leave.leaveType.bulkAction );
+            },
+
+            reloadTable: function() {
+                $( '#col-right' ).load( window.location.href + ' #col-right .list-table-wrap', function() {
+                    Leave.leaveType.initActions(); // this is necessary because the DOM elements getting replaced by new elements
+                });
+            },
+
+            resetForm: function() {
+                var $form = $( '#erp-hr-leave-type-create' )[0];
+
+                $form.name.value              = '';
+                $form.description.value       = '';
+                $form['policy-name-id'].value = 0;
+                $form.submit.value            = 'Save';
+            },
+
+            create: function( e ) {
+                e.preventDefault();
+
+                var form        = e.target,
+                    id          = form['policy-name-id'].value,
+                    name        = form.name.value,
+                    description = form.description.value,
+                    data        = {
+                    id          : id,
+                    name        : name,
+                    description : description,
+                    _wpnonce    : wpErpHr.nonce,
+                };
+
+                $( '.erp-loader' ).css( 'display', 'block' );
+
+                wp.ajax.send( 'erp-hr-leave-type-create', {
+                    data: data,
+                    success: function ( response ) {
+                        $( '.erp-loader' ).css( 'display', 'none' );
+
+                        swal({
+                            title: '',
+                            text: response,
+                            type: 'success',
+                            timer: 2200,
+                            showConfirmButton: false
+                        });
+
+                        Leave.leaveType.reloadTable();
+                        Leave.leaveType.resetForm();
+                    },
+                    error: function ( error ) {
+                        $( '.erp-loader' ).css( 'display', 'none' );
+
+                        swal( '', error, 'error' );
+                    }
+                });
+            },
+
+            edit: function( e ) {
+                e.preventDefault();
+
+                var self = $( this ),
+                    id   = self.data( 'id' );
+
+                wp.ajax.send( 'erp-hr-get-leave-type', {
+                    data: {
+                        id       : id,
+                        _wpnonce : wpErpHr.nonce,
+                    },
+                    success: function( response ) { // response is a leave type
+                        var form = $( '#erp-hr-leave-type-create' )[0];
+                        if ( form === undefined ) return;
+
+                        form['policy-name-id'].value = id;
+                        form.name.value              = response.name;
+                        form.description.value       = response.description;
+                        form.submit.value            = wpErpHr.popup.update_status;
+                    },
+                    error: function ( error ) {
+                        swal( '', error, 'error' );
+                    }
+                });
+            },
+
+            remove: function ( e ) {
+                e.preventDefault();
+                Leave.leaveType.resetForm(); // Necessary in case the form is in edit mode before deleting
+
+                var self = $( this );
+
+                swal({
+                    title              : '',
+                    text               : wpErpHr.leave_type_delete,
+                    type               : 'warning',
+                    showCancelButton   : true,
+                    cancelButtonText   : wpErpHr.cancel,
+                    confirmButtonColor : '#fa6e5c',
+                    confirmButtonText  : wpErpHr.confirm_delete,
+                    closeOnConfirm     : false
+                },
+                function() {
+                    wp.ajax.send('erp-hr-leave-type-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' )
+                        },
+                        success: function ( response ) {
+                            self.closest( 'tr' ).fadeOut( 'fast', function () {
+                                $( this ).remove();
+                            } );
+
+                            swal({
+                                title: '',
+                                text: response,
+                                type: 'success',
+                                timer: 2200,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function ( error ) {
+                            swal( '', error, 'error' );
+                        }
+                    });
+                });
+            },
+
+            bulkAction: function ( e ) {
+                e.preventDefault();
+
+                var form = e.target;
+
+                if ( form.action.value !== 'delete' && form.action2.value !== 'delete' ) {
+                    return;
+                }
+
+                var cbs = form['ids[]'];
+                var ids = [];
+
+                for ( var i = 0; i < cbs.length; i++ ) {
+                    if ( cbs[i].checked ) {
+                        ids.push( cbs[i].value );
+                    }
+                }
+
+                if ( ids.length === 0 ) {
+                    return;
+                }
+
+                swal({
+                    title              : '',
+                    text               : wpErpHr.leave_type_bulk_delete,
+                    type               : 'warning',
+                    showCancelButton   : true,
+                    cancelButtonText   : wpErpHr.cancel,
+                    confirmButtonColor : '#fa6e5c',
+                    confirmButtonText  : wpErpHr.confirmDelete,
+                    closeOnConfirm     : false
+                },
+                function() {
+                    wp.ajax.send( 'erp-hr-leave-type-bulk-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            ids: ids
+                        },
+                        success: function ( response ) {
+                            Leave.leaveType.reloadTable();
+
+                            swal({
+                                title: '',
+                                text: response,
+                                type: 'success',
+                                timer: 2200,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function ( error ) {
+                            swal( '', error, 'error' );
+                        }
+                    });
+                });
+            }
+        },
+
         importICalInit: function ( e ) {
             e.preventDefault();
             $( 'body #erp-ical-input' ).trigger( 'click' );
@@ -875,6 +1171,7 @@
             }
             Leave.initDateField();
         },
+
         checkDateRange: function() {
             var new_date = new Date( this.value );
             var year = new_date.getFullYear();

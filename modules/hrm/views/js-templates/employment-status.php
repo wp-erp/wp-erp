@@ -1,37 +1,27 @@
-<?php
-$id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
-$value = '';
-
-if ( $id ) {
-    $employee = new \WeDevs\ERP\HRM\Employee( $id );
-    $value = $employee->get_status();
-}
-?>
-
 <div class="status-form-wrap">
     <div class="row">
         <?php
         erp_html_form_input( [
-            'label'    => __( 'Date', 'erp' ),
-            'name'     => 'date',
-            'value'    => erp_current_datetime()->format('Y-m-d'),
-            'required' => true,
+            'label'       => __( 'Date', 'erp' ),
+            'name'        => 'date',
+            'value'       => erp_current_datetime()->format('Y-m-d'),
+            'required'    => true,
             'custom_attr' => [ 'autocomplete' => 'off' ],
-            'class'    => 'erp-date-field',
+            'class'       => 'erp-date-field',
         ] );
         ?>
     </div>
 
-    <div class="row">
+    <div class="row" data-selected="{{ data.work.status }}">
         <?php
         erp_html_form_input( [
-            'label'       => __( 'Employee Status', 'erp' ),
-            'name'        => 'status',
-            'value'       => $value,
-            'type'        => 'select',
-            'id'          => 'erp-hr-employee-status-option',
-            'custom_attr' => [ 'data-selected' => $value ],
-            'options'     => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
+            'label'   => __( 'Employee Status', 'erp' ),
+            'name'    => 'status',
+            'value'   => '{{ data.work.status }}',
+            'type'    => 'select',
+            'class'   => 'erp-hrm-select2',
+            'id'      => 'erp-hr-employee-status-option',
+            'options' => [ 0 => __( '- Select -', 'erp' ) ] + erp_hr_get_employee_statuses(),
         ] );
         ?>
     </div>

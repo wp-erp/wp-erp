@@ -6,11 +6,20 @@
                 <a href="" id="erp-customer-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }} {{ buttonTitle }}</a>
             </h2>
 
+            <div class="erp-btn-group">
+                <button @click.prevent="showImportModal = true">{{ __( 'Import', 'erp' ) }}</button>
+                <button @click.prevent="showExportModal = true">{{ __( 'Export', 'erp' ) }}</button>
+            </div>
+
             <!-- top search bar -->
             <people-search v-model="search" />
         </div>
 
-        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false" />
+        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" :type="peopleType" @close="showModal = false" />
+
+        <import-modal v-if="showImportModal" :title="importTitle" :type="url" @close="showImportModal = false" />
+
+        <export-modal v-if="showExportModal" :title="exportTitle" :type="url" @close="showExportModal = false" />
 
         <list-table
             tableClass="wperp-table people-table table-striped table-dark "
@@ -45,6 +54,8 @@ import HTTP from 'admin/http';
 import PeopleSearch from 'admin/components/people/PeopleSearch.vue';
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import PeopleModal from 'admin/components/people/PeopleModal.vue';
+import ImportModal from 'admin/components/people/ImportModal.vue';
+import ExportModal from 'admin/components/people/ExportModal.vue';
 
 export default {
     name: 'People',
@@ -52,7 +63,9 @@ export default {
     components: {
         PeopleSearch,
         ListTable,
-        PeopleModal
+        PeopleModal,
+        ImportModal,
+        ExportModal,
     },
 
     data() {
@@ -76,7 +89,7 @@ export default {
             paginationData: {
                 totalItems : 0,
                 totalPages : 0,
-                perPage    : 20,
+                perPage    : 10,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions : [
@@ -85,11 +98,16 @@ export default {
             ],
             search: '',
             showModal             : false,
+            showImportModal       : false,
+            showExportModal       : false,
             buttonTitle           : '',
+            importTitle           : '',
+            exportTitle           : '',
             pageTitle             : '',
             url                   : '',
             singleUrl             : '',
-            isActiveOptionDropdown: false
+            isActiveOptionDropdown: false,
+            peopleType            : 'customer',
         };
     },
 
@@ -97,8 +115,10 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
 
         this.$on('modal-close', () => {
-            this.showModal = false;
-            this.people = null;
+            this.showModal       = false;
+            this.showImportModal = false;
+            this.showExportModal = false;
+            this.people          = null;
         });
 
         this.$root.$on('peopleUpdate', () => {
@@ -106,10 +126,36 @@ export default {
             this.fetchItems();
         });
 
-        this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? __('Customer', 'erp') : __('Vendor', 'erp');
-        this.pageTitle   = (this.$route.name.toLowerCase() === 'customers') ? __('Customers', 'erp') : __('Vendors', 'erp');
-        this.url         = this.$route.name.toLowerCase();
-        this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
+        this.$root.$on('imported-people', () => {
+            this.showImportModal = false;
+            this.fetchItems();
+        });
+
+        if ( this.$route.name.toLowerCase().includes( 'customer' ) ) {
+            this.peopleType  = 'customer';
+            this.pageTitle   = __('Customers', 'erp');
+            this.buttonTitle = __('Customer', 'erp');
+            this.importTitle = __('Import Customers', 'erp');
+            this.exportTitle = __('Export Customers', 'erp');
+            this.url         = 'customers';
+            this.singleUrl   = 'CustomerDetails';
+        } else if ( this.$route.name.toLowerCase().includes( 'vendor' ) ) {
+            this.peopleType  = 'vendor';
+            this.pageTitle   = __('Vendors', 'erp');
+            this.buttonTitle = __('Vendor', 'erp');
+            this.importTitle = __('Import Vendors', 'erp');
+            this.exportTitle = __('Export Vendors', 'erp');
+            this.url         = 'vendors';
+            this.singleUrl   = 'VendorDetails';
+        } else {
+            this.peopleType  = 'people';
+            this.pageTitle   = __('Peoples', 'erp');
+            this.buttonTitle = __('People', 'erp');
+            this.importTitle = __('Import People', 'erp');
+            this.exportTitle = __('Export People', 'erp');
+            this.url         = this.$route.name.toLowerCase();
+            this.singleUrl   = 'PeopleDetails';
+        }
 
         this.fetchItems();
     },
@@ -219,6 +265,7 @@ export default {
         },
 
         goToPage(page) {
+            this.$store.dispatch('spinner/setSpinner', true);
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
 
@@ -240,39 +287,13 @@ export default {
             display: flex;
             align-items: center;
 
-            @media (max-width: 767px) {
-                flex-direction: column;
-
-                .add-new-people, .people-search {
-                    width: 100% !important;
-
-                    h4 {
-                        display: none;
-                    }
-                }
-
-                .people-search {
-                    margin: 20px 0;
-                }
-
-                .people-search {
-                    .input-with-addon {
-                        margin: 0 !important;
-                    }
-
-                    form {
-                        width: 100%;
-                        justify-content: space-between;
-                    }
-                }
-            }
-
             .add-new-people {
                 align-items: center;
                 display: flex;
-                width: 50%;
+                width: 65%;
                 margin: 0;
                 padding: 0;
+
                 a {
                     background: #1a9ed4;
                     border-radius: 3px;
@@ -284,6 +305,27 @@ export default {
                     text-align: center;
                     text-decoration: none;
                     width: 150px;
+
+                    @media (max-width: 782px) and (min-width: 768px) {
+                        margin-right: 18rem;
+                        margin-bottom: 3px;
+                        max-width: 120px;
+                    }
+
+                    @media (max-width: 767px) and (min-width: 707px) {
+                        margin-right: 16rem;
+                        margin-bottom: 3px;
+                    }
+
+                    @media (max-width: 706px) and (min-width: 651px) {
+                        margin-right: 14rem;
+                        margin-bottom: 3px;
+                    }
+
+                    @media (max-width: 650px) {
+                        margin-right: 12rem;
+                        margin-bottom: 3px;
+                    }
                 }
             }
         }
@@ -326,15 +368,86 @@ export default {
                     }
                 }
             }
-            .col--actions {
-                float: left !important;
+            @media (min-width: 783px) {
+                .col--actions {
+                    float: left !important;
+                }
             }
             .row-actions {
                 padding-left: 20px !important;
+                text-align: left !important;
             }
         }
         .check-column {
             padding: 20px !important;
+        }
+    }
+
+    .search-btn {
+        @media (max-width: 650px) {
+            display: none;
+        }
+    }
+
+    .people-search {
+        @media (max-width: 479px) {
+            margin-top: 20px;
+        }
+    }
+
+    .erp-btn-group {
+        display: inline-flex;
+        position: absolute;
+        right: 17.5rem;
+
+        &:after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        @media (max-width: 782px) {
+            right: 17rem;
+            margin-top: 23px;
+        }
+
+        @media (max-width: 650px) {
+            right: 8.5rem;
+        }
+
+        button {
+            padding: 5px 15px;
+            border: 0.3px solid rgb(226, 226, 226);
+            background-color: #fff;
+            color: rgba(0,0,0,0.6);
+            font-size: 12px;
+            font-weight: 400;
+            text-decoration: none;
+            line-height: inherit;
+            cursor: pointer;
+
+            @media (max-width: 479px) {
+                padding: 5px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 3.5px;
+                border-bottom-right-radius: 3.5px;
+            }
+
+            &:first-child {
+                border-top-left-radius: 3.5px;
+                border-bottom-left-radius: 3.5px;
+            }
+
+            :not(:last-child) {
+                border-right: none;
+            }
+
+            &:hover {
+                background-color: #1A9ED4;
+                color: #fff;
+            }
         }
     }
 </style>

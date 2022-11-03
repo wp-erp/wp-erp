@@ -394,6 +394,55 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
 }
 
 /**
+ * Retrieves tax category with agency
+ *
+ * @since 1.10.0
+ *
+ * @param int $tax_id
+ * @param int $tax_cat_id
+ *
+ * @return array
+ */
+function erp_acct_get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
+    global $wpdb;
+
+    return $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT agency_id, tax_rate
+            FROM {$wpdb->prefix}erp_acct_tax_cat_agency
+            where tax_id = %d and tax_cat_id = %d",
+            [ $tax_id, $tax_cat_id ]
+        ),
+        ARRAY_A
+    );
+}
+
+/**
+ * Retrieves agency wise tax rate for invoice items
+ *
+ * @since 1.10.0
+ *
+ * @param int|string $invoice_details_id
+ *
+ * @return array
+ */
+function erp_acct_get_invoice_items_agency_wise_tax_rate( $invoice_details_id ) {
+    global $wpdb;
+
+    $result = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT agency_id, tax_rate
+            FROM {$wpdb->prefix}erp_acct_invoice_details_tax
+            WHERE invoice_details_id = %d",
+            $invoice_details_id
+        ),
+        ARRAY_A
+    );
+
+    return ! empty( $result ) && ! is_wp_error( $result ) ? $result : [];
+}
+
+/**
  * Get Accounting Quick Access Menus
  *
  * @return array
@@ -458,7 +507,7 @@ function erp_acct_quick_access_menu() {
         'tax_rate'        => [
             'title' => 'Tax Payment',
             'slug'  => 'pay_tax',
-            'url'   => 'pay-tax',
+            'url'   => 'settings/pay-tax',
         ],
         'opening_balance' => [
             'title' => __( 'Opening Balance', 'erp' ),
@@ -486,13 +535,16 @@ function erp_acct_check_voucher_edit_state( $id ) {
 }
 
 /**
- * Check if people exists (customer/vendor)
+ * Check if people exists in given types
+ *
+ * @since 1.8.4
  *
  * @param string $email
+ * @param array $types
  *
  * @return bool
  */
-function erp_acct_check_people_exists( $email ) {
+function erp_acct_exist_people( $email, $types = [] ) {
     $people = erp_get_people_by( 'email', $email );
 
     // this $email belongs to nobody
@@ -500,8 +552,14 @@ function erp_acct_check_people_exists( $email ) {
         return false;
     }
 
-    if ( in_array( 'customer', $people->types, true ) || in_array( 'vendor', $people->types, true ) ) {
-        return true;
+    if ( empty( $types ) ) {
+        $types = [ 'customer', 'vendor' ];
+    }
+
+    foreach ( $types as $type ) {
+        if ( in_array( $type, $people->types, true ) ) {
+            return $type;
+        }
     }
 
     return false;
@@ -531,63 +589,38 @@ function erp_acct_get_all_trn_statuses() {
     return $wpdb->get_results( "SELECT id,type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
 }
 
-// accounting customer auto create
-add_action( 'erp_crm_save_contact_data', 'erp_acct_customer_create_from_crm', 10, 3 );
-add_action( 'erp_crm_contact_created', 'erp_acct_customer_auto_create_from_crm', 10, 2 );
+add_action( 'erp_people_created', 'erp_acct_customer_create_from_crm', 10, 3 );
 
 /**
  * Auto create customer when creating CRM contact/company
  *
- * @param  $customer
- * @param  $customer_id
- * @param  $data
+ * @since 1.2.7
+ * @since 1.10.3 Removed an unused parameter $customer
  *
- * @since  1.2.7
+ * @param int|string $customer_id ID of the people that has been created
+ * @param array      $data        Data of the newly created people
+ * @param string     $people_type Type of the newly created people
+ *
+ * @return mixed
  */
-function erp_acct_customer_create_from_crm( $customer, $customer_id, $data ) {
-    $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
-    $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
+function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) {
+    if ( 'contact' === $people_type || 'company' === $people_type ) {
+        $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
+        $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
+        // Check whether the email already exists in Accounting
+        $exists_people        = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
 
-    if ( ! $customer_auto_import ) {
-        return;
+        if ( ! $exists_people && $customer_auto_import && count( $crm_user_type ) ) {
+            // No need to add wordpress `user id` again
+            // `user id` already added when contact is created
+            $data['is_wp_user'] = false;
+            $data['wp_user_id'] = '';
+            $data['people_id'] = $customer_id;
+            $data['type']      = 'customer';
+
+            erp_convert_to_people( $data );
+         }
     }
-
-    if ( ! count( $crm_user_type ) ) {
-        return;
-    }
-
-    // no need to add wordpress `user id` again
-    // [ `user id` already added when contact is created ]
-    $data['is_wp_user'] = false;
-    $data['wp_user_id'] = '';
-
-    if ( ! isset( $data['company'] ) ) {
-        // the created crm user type is NOT a company
-        if ( ! in_array( 'contact', $crm_user_type ) ) {
-            return;
-        }
-    } else {
-        if ( ! in_array( 'company', $crm_user_type ) ) {
-            return;
-        }
-    }
-
-    $data['people_id'] = $customer_id;
-    $data['type']      = 'customer';
-
-    erp_convert_to_people( $data );
-}
-
-/**
- * Accounting customer auto create from crm
- *
- * @since  1.2.8
- *
- * @param int    $contact_id
- * @param object $data
- */
-function erp_acct_customer_auto_create_from_crm( $contact_id, $data ) {
-    erp_acct_customer_create_from_crm( [], $contact_id, $data );
 }
 
 /**

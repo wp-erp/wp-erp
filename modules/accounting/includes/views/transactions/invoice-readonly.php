@@ -8,7 +8,6 @@ $transaction = erp_acct_get_transaction( $transaction_id );
 
 <head>
     <title><?php printf( '%s %s %s', esc_attr( $transaction['type'] ), esc_attr__( 'from', 'erp' ), esc_attr( $company->name ) ); ?></title>
-    <link rel="stylesheet" href="<?php echo esc_url( WPERP_ASSETS . '/css/invoice-front.css' ); ?>">
     <?php do_action( 'erp_readonly_invoice_header' ); ?>
 </head>
 
@@ -123,7 +122,17 @@ $transaction = erp_acct_get_transaction( $transaction_id );
             </div>
 
             <div class="invoice-extra">
+                <?php if ( ! empty( $transaction['attachments'] ) && count( $transaction['attachments'] ) > 0 ): ?>
+                    <h4><?php esc_html_e( 'Attachments', 'erp' ); ?></h4>
 
+                    <?php foreach ( $transaction['attachments'] as $attachment ): ?>
+                        <a target="_blank" href="<?php echo esc_attr( $attachment ); ?>">
+                            <?php echo esc_attr( $attachment ); ?>
+                        </a>
+                        <br>
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
             </div>
         </div>
 
@@ -138,5 +147,3 @@ $transaction = erp_acct_get_transaction( $transaction_id );
 </body>
 
 </html>
-
-

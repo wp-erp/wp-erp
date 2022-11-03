@@ -286,6 +286,12 @@ window.wperp = window.wperp || {};
             // Validates custom required checkboxes
             $( "body" ).on( "change", "span.checkbox input[required]", this.validateCheckbox );
 
+            // Danger Zone Input & Confirmation Modal
+            $( '.erp-danger-zone' ).on( 'input', '#erp_reset_confirmation', this.onChangeDangerZoneInput );
+            $( '.erp-danger-zone' ).on( 'click', 'button.tools-btn-submit', this.viewDangerZoneConfirmation );
+
+            $( '.wrap.erp #message button.notice-dismiss' ).on( 'click', this.dismissNoticeMessage );
+
             this.initFields();
         },
 
@@ -300,7 +306,7 @@ window.wperp = window.wperp || {};
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
-                yearRange: '-50:+5',
+                yearRange: '-100:+5',
             });
 
             $( ".erp-date-picker-from" ).datepicker({
@@ -636,6 +642,106 @@ window.wperp = window.wperp || {};
                 }
             }
         },
+
+        /**
+         * Danger Zone Confirmation Popup
+         *
+         * @param object event
+        */
+        viewDangerZoneConfirmation: function( e ) {
+            e.preventDefault();
+
+            var confirmationElement   = $("#erp_reset_confirmation"),
+                toolsSubmitButton     = $('.tools-btn-submit'),
+                toolsLoadingButton    = $('.tools-btn-loading'),
+                toolsErrorMessage     = $(".tools-error-message"),
+                resetConfirmationText = confirmationElement.val(),
+                isValidConfirmation   = ( typeof resetConfirmationText !== 'undefined' ) && ( String( resetConfirmationText ).length !== 0 ) && ( resetConfirmationText === 'Reset' );
+
+            if ( ! isValidConfirmation ) {
+                toolsErrorMessage.html( wpErpDangerZone.confirmResetBeforeContinue );
+                confirmationElement.addClass('tools-error-input');
+            } else {
+                toolsErrorMessage.html('');
+                confirmationElement.removeClass('tools-error-input');
+
+                swal({
+                    title             : wpErpDangerZone.resetErp,
+                    text              : wpErpDangerZone.areYouSureReset,
+                    showCancelButton  : true,
+                    confirmButtonText : wpErpDangerZone.yesResetIt,
+                    confirmButtonColor: "#FF4848",
+                    imageUrl          : wpErpDangerZone.trashIcon
+                },
+                function() {
+                    toolsSubmitButton.addClass('tools-submit-hidden');
+                    toolsLoadingButton.removeClass('tools-submit-hidden');
+
+                    $.ajax({
+                        type    : "POST",
+                        url     : ajaxurl,
+                        dataType: 'json',
+                        data    : $("#danger-zone-form").serialize()
+                    })
+                    .fail(function(xhr) {
+                        swal('', wpErpDangerZone.somethingWrong, 'error');
+                        toolsSubmitButton.removeClass('tools-submit-hidden');
+                        toolsLoadingButton.addClass('tools-submit-hidden');
+                    })
+                    .done(function(response) {
+                        if(response.success) {
+                            toolsSubmitButton.removeClass('tools-submit-hidden');
+                            toolsLoadingButton.addClass('tools-submit-hidden');
+
+                            swal({
+                                title: '',
+                                text : response.data.message,
+                                time : 3000,
+                                type : 'success',
+                                showConfirmButton: false,
+                            });
+
+                            setTimeout(function() {
+                                window.location.href = response.data.redirected_url;
+                            }, 1000);
+                        } else {
+                            toolsSubmitButton.removeClass('tools-submit-hidden');
+                            toolsLoadingButton.addClass('tools-submit-hidden');
+                            swal('', response.data, 'error');
+                        }
+                    });
+                });
+            }
+        },
+
+        /**
+         * On change danger zone input
+         *
+         * @param object event
+         */
+        onChangeDangerZoneInput: function( e ) {
+            var confirmationElement   = $("#erp_reset_confirmation"),
+                resetConfirmationText = confirmationElement.val(),
+                isValidConfirmation   = ( typeof resetConfirmationText !== 'undefined' ) && ( String( resetConfirmationText ).length !== 0 ) && ( resetConfirmationText === 'Reset' );
+
+            if ( isValidConfirmation ) {
+                $(".tools-error-message").html('');
+                confirmationElement.removeClass('tools-error-input');
+                confirmationElement.addClass('tools-success-input');
+            } else {
+                confirmationElement.removeClass('tools-success-input');
+                $(".tools-error-message").html( wpErpDangerZone.confirmResetBeforeContinue );
+                confirmationElement.addClass('tools-error-input');
+            }
+        },
+
+        /**
+         * Close notice message on click on 'x' button
+         */
+         dismissNoticeMessage: function( e ) {
+             e.preventDefault();
+             e.target.closest( 'div' ).remove();
+         }
     };
 
     $(function() {
@@ -828,9 +934,11 @@ jQuery.fn.serializeObject = function() {
     window.addEventListener( 'click', function(e) {
         var dropdownArea             = document.querySelectorAll( '.wperp-filter-dropdown' )[0];
         var select2Container         = document.querySelector( '.select2-container--open' );
+        var dateRangePicker          = document.querySelectorAll( '.daterangepicker' )[0];
         var targetNotContainDropdown = typeof dropdownArea !== 'undefined' && ! dropdownArea.contains( e.target );
+        var clickOnDrPicker          = typeof dateRangePicker !== 'undefined' && dateRangePicker.contains( e.target );
 
-        if ( targetNotContainDropdown && select2Container === null ){
+        if ( targetNotContainDropdown && select2Container === null && ! clickOnDrPicker ){
             document.getElementById( 'erp-dropdown-content' ).classList.remove( 'show' );
         }
     });

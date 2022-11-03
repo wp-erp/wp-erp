@@ -130,8 +130,6 @@ function erp_acct_update_tax_cat( $data, $id ) {
         [
             'name'        => $tax_data['name'],
             'description' => $tax_data['description'],
-            'created_at'  => $tax_data['created_at'],
-            'created_by'  => $tax_data['created_by'],
             'updated_at'  => $tax_data['updated_at'],
             'updated_by'  => $tax_data['updated_by'],
         ],

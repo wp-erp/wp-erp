@@ -131,7 +131,7 @@ export default {
             } else {
                 this.start_date = `${dateObj.getFullYear()}-${month}-01`;
                 this.end_date   = erp_acct_var.current_date;
-            };
+            }
 
            // this.updateDate();
 
@@ -145,7 +145,7 @@ export default {
                 query: {
                     start: this.start_date,
                     end  : this.end_date
-                } });
+                } }).catch(()=>{});
         },
 
         fetchItems() {
@@ -227,6 +227,20 @@ export default {
             justify-content: space-between;
             width: 100%;
             padding: 20px 0;
+        }
+
+        @media screen {
+            @media ( max-width: 782px ) {
+                thead th.column.amount {
+                    display: none !important;
+                }
+
+                tbody {
+                    tr + tr {
+                        border-top: 1px solid black;
+                    }
+                }
+            }
         }
     }
     .income-statement .t-foot td {

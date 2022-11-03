@@ -83,6 +83,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
 
         // Save Replies in Settings page
+        $this->action( 'wp_ajax_erp-crm-get-save-replies', 'get_template_save_replies' );
         $this->action( 'wp_ajax_erp-crm-save-replies', 'save_template_save_replies' );
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
@@ -115,6 +116,10 @@ class Ajax_Handler {
     public function get_all_contact() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-vue-table' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $contacts = [];
@@ -162,7 +167,7 @@ class Ajax_Handler {
                 if ( $_REQUEST['status'] === 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['life_stage'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) );
+                    $args['life_stage'] = sanitize_title_with_dashes( wp_unslash( $_REQUEST['status'] ) );
                 }
             }
         }
@@ -181,7 +186,7 @@ class Ajax_Handler {
         }
 
         if ( isset( $_REQUEST['filter_contact_company'] ) && ! empty( $_REQUEST['filter_contact_company'] ) ) {
-            $companies = erp_crm_company_get_customers( [ 'id' => sanitize_text_field( wp_unslash( $_REQUEST['filter_contact_company'] ) ) ] );
+            $companies = erp_crm_company_get_customers( intval( wp_unslash( $_REQUEST['filter_contact_company'] ) ) );
 
             foreach ( $companies as $company ) {
                 $contacts['data'][] = $company['contact_details'];
@@ -234,18 +239,31 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
 
         if ( isset( $_POST['type'] ) && empty( $_POST['type'] ) ) {
             $this->send_error( __( 'Type must be required', 'erp' ) );
         }
 
-        if ( 'contact_companies' === $_POST['type'] ) {
-            $data = erp_crm_customer_get_company( $_POST );
-        } elseif ( 'company_contacts' === $_POST['type'] ) {
-            $data = erp_crm_company_get_customers( $_POST );
-        } else {
-            $data = [];
+        if ( empty( $_POST['id'] ) ) {
+            $this->send_error( __( 'Contact/Company ID is required', 'erp' ) );
+        }
+
+        $customer_id = intval( wp_unslash( $_POST['id'] ) );
+        $data        = [];
+
+        switch ( $_POST['type'] ) {
+            case 'contact_companies':
+                $data = erp_crm_customer_get_company( $customer_id );
+                break;
+
+            case 'company_contacts':
+                $data = erp_crm_company_get_customers( $customer_id );
+                break;
         }
 
         if ( is_wp_error( $data ) ) {
@@ -265,6 +283,10 @@ class Ajax_Handler {
     public function get_assignable_contact() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
@@ -294,9 +316,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $current_user_id                      = get_current_user_id();
-        $posted                               = array_map( 'strip_tags_deep', $_POST );
-        $posted['contact']['main']['company'] = stripslashes( $posted['contact']['main']['company'] ); // To remove Apostrophe slash
+        $current_user_id                         = get_current_user_id();
+        $posted                                  = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
+        $posted['contact']['meta']['life_stage'] = isset( $_POST['contact']['meta']['life_stage'] ) ? sanitize_title_with_dashes( wp_unslash( $_POST['contact']['meta']['life_stage'] ) ) : '';
+        $posted['contact']['main']['company']    = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
 
         $data = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
@@ -338,8 +361,6 @@ class Ajax_Handler {
 
         erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
 
-        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $data );
-
         $customer_data = $customer->to_array();
         $statuses      = erp_crm_customer_get_status_count( $data['type'] );
 
@@ -358,7 +379,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $customer_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
         $customer    = new Contact( $customer_id );
 
         if ( ! $customer_id || ! $customer ) {
@@ -381,8 +406,8 @@ class Ajax_Handler {
         }
 
         $ids         = [];
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ) : intval( $_REQUEST['id'] );
-        $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ) : intval( wp_unslash( $_REQUEST['id'] ) );
+        $hard        = isset( $_REQUEST['hard'] ) ? intval( wp_unslash( $_REQUEST['hard'] ) ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
         // Check if this contact OR company has relationship with any company OR contact
@@ -455,7 +480,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array) sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : intval( $_REQUEST['id'] );
+        if ( ! current_user_can( 'erp_crm_add_contact' ) ) {
+            $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
+        }
+
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['id'] ) ) : intval( wp_unslash( $_REQUEST['id'] ) );
         $type        = isset( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : '';
 
         $data = [
@@ -490,8 +519,8 @@ class Ajax_Handler {
 
         $ids                = [];
         $contact_subscriber = [];
-        $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) ) : [];
-        $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? wp_unslash( $_POST['group_id'] ) : [];
+        $user_ids           = ! empty( $_POST['user_id'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) ) : [];
+        $group_ids          = ! empty( $_POST['group_id'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['group_id'] ) ) : [];
 
         if ( empty( $user_ids ) ) {
             $this->send_error( __( 'Contact must be required', 'erp' ) );
@@ -541,7 +570,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $id    = isset( $_POST['user_id'] ) ? sanitize_text_field( wp_unslash( $_POST['user_id'] ) ) : 0;
+        $id    = isset( $_POST['user_id'] ) ? intval( wp_unslash( $_POST['user_id'] ) ) : 0;
         $type  = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
         $is_wp = isset( $_POST['is_wp'] ) ? true : false;
 
@@ -583,10 +612,15 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        $id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $type        = isset( $_REQUEST['assign_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['assign_type'] ) ) : '';
-        $id          = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $company_id  = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
-        $customer_id = isset( $_REQUEST['erp_assign_customer_id'] ) ? intval( $_REQUEST['erp_assign_customer_id'] ) : 0;
+        $company_id  = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( wp_unslash( $_REQUEST['erp_assign_company_id'] ) ) : 0;
+        $customer_id = isset( $_REQUEST['erp_assign_customer_id'] ) ? intval( wp_unslash( $_REQUEST['erp_assign_customer_id'] ) ) : 0;
 
         if ( $company_id && erp_crm_check_customer_exist_company( $id, $company_id ) ) {
             $this->send_error( __( 'Company already assigned. Choose another company', 'erp' ) );
@@ -623,8 +657,12 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $row_id     = isset( $_REQUEST['row_id'] ) ? intval( $_REQUEST['row_id'] ) : 0;
-        $company_id = isset( $_REQUEST['company_id'] ) ? intval( $_REQUEST['company_id'] ) : 0;
+        $row_id     = isset( $_REQUEST['row_id'] ) ? intval( wp_unslash( $_REQUEST['row_id'] ) ) : 0;
+        $company_id = isset( $_REQUEST['company_id'] ) ? intval( wp_unslash( $_REQUEST['company_id'] ) ) : 0;
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $row_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         $result = erp_crm_customer_update_company( $row_id, $company_id );
 
@@ -639,13 +677,23 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-
-        if ( $id ) {
-            erp_crm_customer_remove_company( $id );
+        if ( empty( $_POST['id'] ) ) {
+            $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
-        $this->send_success( __( 'hello', 'erp' ) );
+        $id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $response = erp_crm_customer_remove_company( $id );
+
+        if ( is_wp_error( $response ) ) {
+            $this->send_error( $response->get_error_message() );
+        }
+
+        $this->send_success();
     }
 
     /**
@@ -658,6 +706,10 @@ class Ajax_Handler {
     public function search_crm_user() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $term = isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '';
@@ -686,6 +738,14 @@ class Ajax_Handler {
      * @return void
      */
     public function search_company_contact() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $term = isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '';
 
         if ( empty( $term ) ) {
@@ -738,7 +798,7 @@ class Ajax_Handler {
                     ! current_user_can('manage_options') &&
                     (int) $user->contact_owner !== get_current_user_id()
                 ) {
-                    continue;;
+                    continue;
                 }
 
                 if ( in_array( 'company', $user->types, true ) ) {
@@ -762,6 +822,10 @@ class Ajax_Handler {
     public function save_assign_contact() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_crm_edit_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $form_data = isset( $_POST['formData'] ) ? sanitize_text_field( wp_unslash( $_POST['formData'] ) ) : '';
@@ -799,19 +863,24 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $customer_id  = isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-        $type         = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-        $email        = isset( $_POST['customer_email'] ) ? sanitize_email( wp_unslash( $_POST['customer_email'] ) ) : '';
-        $role         = isset( $_POST['customer_role'] ) ? sanitize_text_field( wp_unslash( $_POST['customer_role'] ) ) : '';
-        $notify_email = isset( $_POST['send_password_notification'] ) ? true : false;
-
-        if ( ! $customer_id ) {
+        if ( empty( $_POST['id'] ) ) {
             $this->send_error( __( 'Contact not found', 'erp' ) );
         }
 
-        if ( ! $type ) {
+        if ( empty( $_POST['type'] ) ) {
             $this->send_error( __( 'Contact type not found', 'erp' ) );
         }
+
+        $customer_id = intval( wp_unslash( $_POST['id'] ) );
+        $type        = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_crm_edit_contact', $customer_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $email        = isset( $_POST['customer_email'] ) ? sanitize_email( wp_unslash( $_POST['customer_email'] ) ) : '';
+        $role         = isset( $_POST['customer_role'] ) ? sanitize_text_field( wp_unslash( $_POST['customer_role'] ) ) : '';
+        $notify_email = isset( $_POST['send_password_notification'] ) ? true : false;
 
         $allowed_roles_to_create = array_keys( erp_get_editable_roles() );
 
@@ -860,10 +929,10 @@ class Ajax_Handler {
         $form_data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 
         $data = [
-            'id'          => ( isset( $_POST['id'] ) && ! empty( $form_data['id'] ) ) ? sanitize_text_field( wp_unslash( $form_data['id'] ) ) : '',
-            'name'        => sanitize_text_field( wp_unslash( $form_data['group_name'] ) ),
-            'description' => sanitize_text_field( wp_unslash( $form_data['group_description'] ) ),
-            'private'     => erp_validate_boolean( $form_data['group_private'] ) ? 1 : null,
+            'id'          => ! empty( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : '',
+            'name'        => ! empty( $_POST['group_name'] ) ? sanitize_text_field( wp_unslash( $_POST['group_name'] ) ) : '',
+            'description' => ! empty( $_POST['group_description'] ) ? sanitize_text_field( wp_unslash( $_POST['group_description'] ) ) : '',
+            'private'     => ! empty( $_POST['group_private'] ) && erp_validate_boolean( sanitize_text_field( wp_unslash( $_POST['group_private'] ) ) ) ? 1 : null,
         ];
 
         erp_crm_save_contact_group( $data );
@@ -885,7 +954,16 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        // Check permission
+        if ( ! current_user_can( 'erp_crm_edit_groups' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['id'] ) ) {
+            $this->send_error( __( 'No group found', 'erp' ) );
+        }
+
+        $query_id = intval( wp_unslash( $_REQUEST['id'] ) );
 
         $result = erp_crm_get_contact_group_by_id( $query_id );
 
@@ -904,16 +982,16 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-
         // Check permission
         if ( ! current_user_can( 'erp_crm_delete_groups' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( ! $query_id ) {
-            $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
+        if ( empty( $_REQUEST['id'] ) ) {
+            $this->send_error( __( 'No group found', 'erp' ) );
         }
+
+        $query_id = intval( wp_unslash( $_REQUEST['id'] ) );
 
         $data = erp_crm_get_contact_group_by_id( $query_id );
 
@@ -954,10 +1032,14 @@ class Ajax_Handler {
         }
 
         $data    = [];
-        $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $user_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
 
         if ( ! $user_id ) {
             $this->send_error( __( 'Contact not found. Try again', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to assign this contact in a group', 'erp' ) );
         }
 
         $result = erp_crm_get_editable_assign_contact( $user_id );
@@ -989,8 +1071,8 @@ class Ajax_Handler {
 
         $data = [];
 
-        $user_id   = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
-        $group_ids = ! empty( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ) : [];
+        $user_id   = ! empty( $_POST['user_id'] ) ? absint( wp_unslash( $_POST['user_id'] ) ) : 0;
+        $group_ids = ! empty( $_POST['group_id'] ) ? array_map( 'intval', wp_unslash( $_POST['group_id'] ) ) : [];
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No user data found', 'erp' ) );
@@ -1006,10 +1088,10 @@ class Ajax_Handler {
                 'group_id' => $group_id,
             ];
 
+            erp_crm_create_new_contact_subscriber( $data );
+
             do_action( 'erp_crm_log_assign_contact_group', $group_id, $user_id );
         }
-
-        erp_crm_create_new_contact_subscriber( $data );
 
         $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
     }
@@ -1026,8 +1108,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $user_id  = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $group_id = isset( $_REQUEST['group_id'] ) ? intval( $_REQUEST['group_id'] ) : 0;
+        $user_id  = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
+        $group_id = isset( $_REQUEST['group_id'] ) ? intval( wp_unslash( $_REQUEST['group_id'] ) ) : 0;
 
         if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
             $this->send_error( __( 'You don\'t have any permission to remove this contact from a group', 'erp' ) );
@@ -1058,8 +1140,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $user_id  = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
-        $group_id = isset( $_POST['group_id'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['group_id'] ) ) : [];
+        $user_id  = isset( $_REQUEST['user_id'] ) ? intval( wp_unslash( $_REQUEST['user_id'] ) ) : 0;
+        $group_id = isset( $_POST['group_id'] ) ? array_map( 'intval', wp_unslash( $_POST['group_id'] ) ) : [];
 
         if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
             $this->send_error( __( 'You don\'t have any permission to assign this contact', 'erp' ) );
@@ -1099,20 +1181,23 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        // @TODO: check permission
-        unset( $_POST['_wp_http_referer'] );
-        unset( $_POST['_wpnonce'] );
-        unset( $_POST['action'] );
+        // Check permission
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( empty( $_POST['customer_id'] ) ) {
             $this->send_error( __( 'No customer found', 'erp' ) );
         }
 
-        $customer_id = absint( $_POST['customer_id'] );
-        unset( $_POST['customer_id'] );
+        $customer_id = absint( wp_unslash( $_POST['customer_id'] ) );
+        $customer    = new \WeDevs\ERP\CRM\Contact( $customer_id );
+        $postdata    = wp_unslash( $_POST );
 
-        $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
-        $customer->update_meta( 'crm_social_profile', $_POST );
+        unset( $postdata['_wp_http_referer'], $postdata['_wpnonce'], $postdata['action'], $postdata['customer_id'] );
+
+        $postdata = map_deep( 'sanitize_text_field', $postdata );
+        $customer->update_meta( 'crm_social_profile', $postdata );
 
         $this->send_success( __( 'Succesfully added social profiles', 'erp' ) );
     }
@@ -1125,13 +1210,27 @@ class Ajax_Handler {
      * @return json
      */
     public function fetch_all_activity() {
-        // if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-        //     die();
-        // }
+        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
-        $post_data = isset( $_POST ) ? $_POST : [];
-        $data      = array_map( 'sanitize_text_field', wp_unslash( $post_data ) );
-        $feeds     = erp_crm_get_feed_activity( $data );
+        // Check permission
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $postdata = [
+            'customer_id' => ! empty( $_POST['customer_id'] ) ? intval( wp_unslash( $_POST['customer_id'] ) ) : null,
+            'created_by'  => ! empty( $_POST['created_by'] ) ? intval( wp_unslash( $_POST['created_by'] ) ) : null,
+            'limit'       => ! empty( $_POST['limit'] ) ? intval( wp_unslash( $_POST['limit'] ) ) : null,
+            'offset'      => ! empty( $_POST['offset'] ) ? intval( wp_unslash( $_POST['offset'] ) ) : null,
+            'count'       => ! empty( $_POST['count'] ) ? intval( wp_unslash( $_POST['count'] ) ) : null,
+            'assigned_to' => ! empty( $_POST['assigned_to'] ) ? intval( wp_unslash( $_POST['assigned_to'] ) ) : null,
+            'created_by'  => ! empty( $_POST['created_by'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['created_by'] ) ) : null,
+            'type'        => ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : null,
+            'created_at'  => ! empty( $_POST['created_at'] ) ? sanitize_text_field( wp_unslash( $_POST['created_at'] ) ) : null,
+        ];
+
+        $feeds = erp_crm_get_feed_activity( $postdata );
+
         $this->send_success( $feeds );
     }
 
@@ -1148,10 +1247,28 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        // Check permission
+        if ( ! current_user_can( erp_crm_get_manager_role() ) && ! current_user_can( erp_crm_get_agent_role() ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        if ( empty( $_POST['user_id'] ) ) {
+            $this->send_error( __( 'Customer not found', 'erp' ) );
+        }
+
+        if ( empty( $_POST['message'] ) ) {
+            $this->send_error( __( 'Content must be required', 'erp' ) );
+        }
+
         $save_data       = [];
-        $postdata        = $_POST;
-        $attachments     = ( isset( $postdata['attachments'] ) ) ? $postdata['attachments'] : [];
-        $old_attachments = ( isset( $postdata['old_attachments'] ) ) ? $postdata['old_attachments'] : [];
+        $activity_id     = ! empty( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : '';
+        $activity_type   = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+        $message         = wp_kses_post( wp_unslash( $_POST['message'] ) );
+        $user_id         = absint( wp_unslash( $_POST['user_id'] ) );
+        $created_by      = ! empty( $_POST['created_by'] ) ? absint( wp_unslash( $_POST['created_by'] ) ) : '';
+        $email_subject   = ! empty( $_POST['email_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['email_subject'] ) ) : '';
+        $attachments     = ! empty( $_POST['attachments'] ) ? map_deep( wp_unslash( $_POST['attachments'] ), 'sanitize_text_field' ) : [];
+        $old_attachments = ! empty( $_POST['old_attachments'] ) ? map_deep( wp_unslash( $_POST['old_attachments'] ), 'sanitize_text_field' ) : [];
 
         if ( ! empty( $old_attachments) ) {
             foreach( $old_attachments as $old_atch ) {
@@ -1160,69 +1277,51 @@ class Ajax_Handler {
             }
         }
 
-        if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
-            $this->send_error( __( 'Customer not found', 'erp' ) );
-        }
-
-        // Check permission
-        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
-            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
-        }
-
-        if ( isset( $postdata['message'] ) && empty( $postdata['message'] ) ) {
-            $this->send_error( __( 'Content must be required', 'erp' ) );
-        }
-
-        switch ( $postdata['type'] ) {
+        switch ( $activity_type ) {
             case 'new_note':
                 $extra_data = [
                     'attachments' => $attachments,
                 ];
 
                 $save_data = [
-                    'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
-                    'user_id'    => $postdata['user_id'],
-                    'created_by' => $postdata['created_by'],
-                    'message'    => $postdata['message'],
-                    'type'       => $postdata['type'],
+                    'id'         => $activity_id,
+                    'user_id'    => $user_id,
+                    'created_by' => $created_by,
+                    'message'    => $message,
+                    'type'       => $activity_type,
                     'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                do_action( 'erp_crm_save_customer_new_note_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_new_note_feed', $save_data );
 
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
-                do_action( 'erp_crm_log_activity_new', $postdata );
+                do_action( 'erp_crm_log_activity_new', array_merge( $save_data, $extra_data ) );
 
                 $this->send_success( $data );
 
                 break;
 
             case 'email':
-                $message = wp_unslash( $postdata['message'] );
-
                 $extra_data = [
                     'attachments' => $attachments,
                 ];
 
                 $save_data = [
-                    'user_id'       => $postdata['user_id'],
-                    'created_by'    => $postdata['created_by'],
+                    'user_id'       => $user_id,
+                    'created_by'    => $created_by,
                     'message'       => $message,
-                    'type'          => $postdata['type'],
-                    'email_subject' => $postdata['email_subject'],
+                    'type'          => $activity_type,
+                    'email_subject' => $email_subject,
                     'extra'         => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
-                $data = erp_crm_save_customer_feed_data( $save_data );
-
-                $contact_id = intval( $postdata['user_id'] );
-
-                $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+                $data    = erp_crm_save_customer_feed_data( $save_data );
+                $contact = new \WeDevs\ERP\CRM\Contact( $user_id );
 
                 $headers = '';
                 $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
@@ -1231,7 +1330,7 @@ class Ajax_Handler {
                 $reply_to_name      = erp_crm_get_email_from_name();
 
                 if ( $erp_is_imap_active ) {
-                    $imap_options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+                    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
                     $reply_to     = $imap_options['username'];
                 } else {
                     $reply_to = erp_crm_get_email_from_address();
@@ -1240,10 +1339,8 @@ class Ajax_Handler {
                 $headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
 
                 $contact_owner_id = $contact->get_contact_owner();
-
-                $server_host = isset( $_SERVER['HTTP_HOST'] ) ? wp_unslash( $_SERVER['HTTP_HOST'] ) : '';
-
-                $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
+                $server_host      = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+                $message_id       = md5( uniqid( time() ) ) . ".{$user_id}.{$contact_owner_id}.r2@{$server_host}";
 
                 $custom_headers = [
                     'In-Reply-To' => "<{$message_id}>",
@@ -1257,25 +1354,31 @@ class Ajax_Handler {
 
                 $email_url  = add_query_arg( $query, admin_url( 'admin-ajax.php' ) );
                 $img_url    = '<img src="' . $email_url . '" width="1" height="1" style="display:none;" />';
-
                 $email_body = $message . $img_url;
 
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
-                $mail_attachments = wp_list_pluck( $attachments, 'path' );
+                $mail_attachments   = wp_list_pluck( $attachments, 'path' );
+                $mail_error_message = __( 'Can not send email, Please try again later', 'erp' );
 
                 if ( wperp()->google_auth->is_active() ) {
                     //send using gmail api
-                    $sent = erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
+                    $sent = erp_mail_send_via_gmail( $contact->email, $email_subject, $email_body, $headers, $mail_attachments, $custom_headers );
                 } else {
                     // Send email at contact
-                    $sent = erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
+                    try {
+                        erp_mail( $contact->email, $email_subject, $email_body, $headers, $mail_attachments, $custom_headers );
+                        $sent = true;
+                    } catch ( \Exception $e ) {
+                        $sent = false;
+                        $mail_error_message = $e->getMessage();
+                    }
                 }
 
-                do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_email_feed', $save_data );
 
                 if ( ! $sent ) {
-                    $this->send_error( __( 'Can not send email, Please try later', 'erp' ) );
+                    $this->send_error( $mail_error_message );
                 }
 
                 if ( ! $data ) {
@@ -1288,48 +1391,77 @@ class Ajax_Handler {
 
             case 'log_activity':
                 $extra_data = [
-                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [ get_current_user_id() ],
+                    'invite_contact' => ! empty( $_POST['invite_contact'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['invite_contact'] ) ) : [ get_current_user_id() ],
                     'attachments'    => $attachments,
                 ];
 
+                $start_date = erp_current_datetime()->format( 'Y-m-d H:i:s' );
+                if ( ! empty( $_POST['log_date'] ) ) {
+                    $log_date   = sanitize_text_field( wp_unslash( $_POST['log_date'] ) );
+                    $log_time   = ! empty( $_POST['log_time'] ) ? sanitize_text_field( wp_unslash( $_POST['log_time'] ) ) : '';
+                    $start_date = erp_current_datetime()->modify( "{$log_date}{$log_time}" )->format( 'Y-m-d H:i:s' );
+                }
+
                 $save_data = [
-                    'id'            => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
-                    'user_id'       => $postdata['user_id'],
-                    'created_by'    => $postdata['created_by'],
-                    'message'       => $postdata['message'],
-                    'type'          => $postdata['type'],
-                    'log_type'      => $postdata['log_type'],
-                    'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
-                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['log_date'] . $postdata['log_time'] ) ),
+                    'id'            => $activity_id,
+                    'user_id'       => $user_id,
+                    'created_by'    => $created_by,
+                    'message'       => $message,
+                    'type'          => $activity_type,
+                    'log_type'      => ! empty( $_POST['log_type'] ) ? sanitize_text_field( wp_unslash( $_POST['log_type'] ) ) : '',
+                    'email_subject' => $email_subject,
+                    'start_date'    => $start_date,
                     'extra'         => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                do_action( 'erp_crm_save_customer_log_activity_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_log_activity_feed', $save_data );
 
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
-                do_action( 'erp_crm_log_activity_new', $postdata );
+                do_action( 'erp_crm_log_activity_new', array_merge( $save_data, $extra_data ) );
 
                 $this->send_success( $data );
 
                 break;
 
             case 'schedule':
-                $save_data = erp_crm_customer_prepare_schedule_postdata( $postdata );
+                $data = [
+                    'id'                         => $activity_id,
+                    'user_id'                    => $user_id,
+                    'type'                       => $activity_type,
+                    'created_by'                 => $created_by,
+                    'message'                    => $message,
+                    'attachments'                => $attachments,
+                    'old_attachments'            => $old_attachments,
+                    'schedule_type'              => ! empty( $_POST['schedule_type'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_type'] ) ) : '',
+                    'schedule_title'             => ! empty( $_POST['schedule_title'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_title'] ) ) : '',
+                    'all_day'                    => ! empty( $_POST['all_day'] ) ? sanitize_text_field( wp_unslash( $_POST['all_day'] ) ) : false,
+                    'photo_id'                   => ! empty( $_POST['photo_id'] ) ? sanitize_text_field( wp_unslash( $_POST['photo_id'] ) ) : '',
+                    'allow_notification'         => ! empty( $_POST['allow_notification'] ) ? sanitize_text_field( wp_unslash( $_POST['allow_notification'] ) ) : false,
+                    'invite_contact'             => ! empty( $_POST['invite_contact'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['invite_contact'] ) ) : [],
+                    'notification_via'           => ! empty( $_POST['notification_via'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_via'] ) ) : null,
+                    'notification_time'          => ! empty( $_POST['notification_time'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_time'] ) ) : null,
+                    'notification_time_interval' => ! empty( $_POST['notification_time_interval'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_time_interval'] ) ) : null,
+                    'start_time'                 => ! empty( $_POST['start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['start_time'] ) ) : '',
+                    'end_time'                   => ! empty( $_POST['end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['end_time'] ) ) : '',
+                    'start_date'                 => ! empty( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '',
+                    'end_date'                   => ! empty( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '',
+                ];
 
-                $data = erp_crm_save_customer_feed_data( $save_data );
+                $save_data = erp_crm_customer_prepare_schedule_postdata( $data );
+                $data      = erp_crm_save_customer_feed_data( $save_data );
 
-                do_action( 'erp_crm_save_customer_schedule_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_schedule_feed', $save_data );
 
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
-                do_action( 'erp_crm_log_activity_new', $postdata );
+                do_action( 'erp_crm_log_activity_new', $save_data );
 
                 $this->send_success( $data );
 
@@ -1337,19 +1469,26 @@ class Ajax_Handler {
 
             case 'tasks':
                 $extra_data = [
-                    'task_title'     => ( isset( $postdata['task_title'] ) && ! empty( $postdata['task_title'] ) ) ? $postdata['task_title'] : '',
-                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+                    'task_title'     => ! empty( $_POST['task_title'] ) ? sanitize_text_field( wp_unslash( $_POST['task_title'] ) ) : '',
+                    'invite_contact' => ! empty( $_POST['invite_contact'] ) ? array_map( 'intval', (array) wp_unslash( $_POST['invite_contact'] ) ) : [],
                     'attachments'    => $attachments,
                 ];
 
+                $start_date = erp_current_datetime()->format( 'Y-m-d H:i:s' );
+                if ( ! empty( $_POST['task_date'] ) ) {
+                    $task_date   = sanitize_text_field( wp_unslash( $_POST['task_date'] ) );
+                    $task_time   = ! empty( $_POST['task_time'] ) ? sanitize_text_field( wp_unslash( $_POST['task_time'] ) ) : '';
+                    $start_date = erp_current_datetime()->modify( "{$task_date}{$task_time}" )->format( 'Y-m-d H:i:s' );
+                }
+
                 $save_data = [
-                    'id'            => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
-                    'user_id'       => $postdata['user_id'],
-                    'created_by'    => $postdata['created_by'],
-                    'message'       => $postdata['message'],
-                    'type'          => $postdata['type'],
-                    'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
-                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['task_date'] . $postdata['task_time'] ) ),
+                    'id'            => $activity_id,
+                    'user_id'       => $user_id,
+                    'created_by'    => $created_by,
+                    'message'       => $message,
+                    'type'          => $activity_type,
+                    'email_subject' => $email_subject,
+                    'start_date'    => $start_date,
                     'extra'         => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
@@ -1359,18 +1498,18 @@ class Ajax_Handler {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
-                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data );
 
                 erp_crm_assign_task_to_users( $data, $save_data );
 
-                do_action( 'erp_crm_log_activity_new', $postdata );
+                do_action( 'erp_crm_log_activity_new', array_merge( $save_data, $extra_data ) );
 
                 $this->send_success( $data );
 
                 break;
 
             default:
-                do_action( 'erp_crm_save_customer_feed_data', $postdata );
+                do_action( 'erp_crm_save_customer_feed_data' );
                 break;
         }
     }
@@ -1545,7 +1684,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? sanitize_text_field( wp_unslash( $_POST['search_id'] ) ) : 0;
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? intval( wp_unslash( $_POST['search_id'] ) ) : 0;
 
         if ( ! $id ) {
             $this->send_error( __( 'Search name not found', 'erp' ) );
@@ -1595,7 +1738,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $query_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
 
         $result = erp_crm_customer_get_single_activity_feed( $query_id );
 
@@ -1614,15 +1757,18 @@ class Ajax_Handler {
      * @return json
      */
     public function save_template_save_replies() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-save-replies' ) ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $data = [
-            'id'       => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0,
+            'id'       => isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0,
             'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
             'subject'  => isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '',
-            /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
             'template' => isset( $_POST['template'] ) ? wp_kses_post( wp_unslash( $_POST['template'] ) ) : '',
         ];
 
@@ -1632,7 +1778,10 @@ class Ajax_Handler {
             $this->send_error( $results->get_error_message() );
         }
 
-        $this->send_success( stripslashes_deep( $results ) );
+        $this->send_success( [
+            'message' => erp_get_message( ['type' => 'save_success', 'additional' => __( 'Templates', 'erp' )] ),
+            'data'    => stripslashes_deep( $results )
+        ] );
     }
 
     /**
@@ -1647,7 +1796,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $query_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
         if ( ! $query_id ) {
             $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
@@ -1656,7 +1805,14 @@ class Ajax_Handler {
         $result = erp_crm_get_save_replies_by_id( $query_id );
 
         if ( $result ) {
-            $this->send_success( stripslashes_deep( $result ) );
+            $updated = $this->save_template_save_replies();
+
+            if ( $updated ) {
+                $this->send_success( [
+                    'message' => erp_get_message( ['type' => 'update_success', 'additional' => __( 'Templates', 'erp' ) ] ),
+                    'data'    => stripslashes_deep( $result )
+                ] );
+            }
         }
 
         $this->send_error( __( 'No results found', 'erp' ) );
@@ -1674,7 +1830,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
 
         if ( ! $query_id ) {
             $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
@@ -1686,7 +1846,9 @@ class Ajax_Handler {
             $this->send_error( $resp->get_error_message() );
         }
 
-        $this->send_success( __( 'Save reply item delete successfully', 'erp' ) );
+        $this->send_success( [
+            'message' => erp_get_message( ['type' => 'delete_success', 'additional' => __( 'Templates', 'erp' ) ] ),
+        ] );
     }
 
     /**
@@ -1697,12 +1859,16 @@ class Ajax_Handler {
      * @return json|object
      */
     public function load_save_replies() {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-customer-feed' ) ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
-        $template_id = isset( $_REQUEST['template_id'] ) ? intval( $_REQUEST['template_id'] ) : 0;
-        $contact_id  = isset( $_REQUEST['contact_id'] ) ? intval( $_REQUEST['contact_id'] ) : 0;
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $template_id = isset( $_REQUEST['template_id'] ) ? intval( wp_unslash( $_REQUEST['template_id'] ) ) : 0;
+        $contact_id  = isset( $_REQUEST['contact_id'] ) ? intval( wp_unslash( $_REQUEST['contact_id'] ) ) : 0;
 
         $result = erp_crm_render_save_replies( $template_id, $contact_id );
 
@@ -1711,6 +1877,33 @@ class Ajax_Handler {
         }
 
         $this->send_success( $result );
+    }
+
+    /**
+     * Get saved template replies list
+     *
+     * @return json|object
+     */
+    public function get_template_save_replies() {
+        $this->verify_nonce( 'erp-settings-nonce' );
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
+        $short_codes = erp_crm_get_save_replies_shortcodes();
+        $replies     = erp_crm_get_save_replies();
+
+        $data = [
+            'replies'     => $replies,
+            'short_codes' => $short_codes,
+        ];
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_process'] ) );
+        }
+
+        $this->send_success( $data );
     }
 
     /**
@@ -1723,6 +1916,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
         }
 
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         if ( empty( intval( $_POST['contact_id'] ) ) ) {
             wp_send_json_error( [ 'message' => __( 'could not find contact id', 'erp' ) ] );
         }
@@ -1732,7 +1929,7 @@ class Ajax_Handler {
         $tags = array_map( 'trim', $tags );
         $tags = array_map( 'sanitize_text_field', $tags );
 
-        $inserted = wp_set_object_terms( intval( $_POST['contact_id'] ), $tags, 'erp_crm_tag' );
+        $inserted = wp_set_object_terms( intval( wp_unslash( $_POST['contact_id'] ) ), $tags, 'erp_crm_tag' );
 
         if ( ! is_wp_error( $inserted ) ) {
             wp_send_json( [ 'message' => __( 'tags updated successfully', 'erp' ) ] );
@@ -1742,47 +1939,87 @@ class Ajax_Handler {
     }
 
     /**
-     * Email Attatchment
+     * Upload and process activity attachments.
      *
-     * @return void
+     * @return mixed
      */
     public function activity_attachment() {
-        $files         = ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : []; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        $wp_upload_dir = wp_upload_dir();
-        $subdir        = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
-        $path          = $wp_upload_dir['basedir'] . '/' . $subdir . '/';
-        $attatchments  = [];
-        $file_names    = [];
+        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
-        //Create CRM attachments directory
-        if ( ! file_exists( $path ) ) {
-            wp_mkdir_p( $path );
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'erp_crm_manage_activites' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        foreach ( $files['name'] as $key => $file ) {
-            $extension    = pathinfo( $file, PATHINFO_EXTENSION );
-            $new_filename = $file;
+        if ( empty( $_FILES['files'] ) ) {
+            $this->send_success(
+                [
+                    'url'   => [],
+                    'files' => [],
+                ]
+            );
+        }
 
-            if ( file_exists( $path . $new_filename ) ) {
-                $new_filename = uniqid() . '.' . $extension;
+        $file_names     = isset( $_FILES['files']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['files']['name'] ) ) : [];
+        $file_tmp_names = isset( $_FILES['files']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['files']['tmp_name'] ) ) : [];
+        $file_errors    = isset( $_FILES['files']['error'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_FILES['files']['error'] ) ) : [];
+        $path           = erp_crm_get_attachment_dir();
+        $attatchments   = [];
+        $invalid_files  = [];
+        $valid_files    = [];
+
+        // Verify extension and type of each file
+        foreach ( $file_names as $index => $file_name ) {
+            $fileinfo = wp_check_filetype_and_ext( $file_tmp_names[ $index ], $file_name );
+
+            if ( ! $fileinfo['ext'] || ! $fileinfo['type'] || 0 !== (int) $file_errors[ $index ] ) {
+                $invalid_files[] = $file_name;
+                continue;
             }
 
-            if ( absint( $files['error'][ $key ] ) == 0 ) {
-                if ( move_uploaded_file( $files['tmp_name'][ $key ], $path . $new_filename ) ) {
-                    $file_name      = $path . $new_filename;
-                    $attatchments[] = [
-                        'name' => $file,
-                        'path' => $path . basename( $file_name ),
-                        'slug' => $new_filename,
-                    ];
-                    $file_names[]   = $file;
-                }
+            $valid_files[] = [
+                'name'     => $file_name,
+                'tmp_name' => $file_tmp_names[ $index ],
+                'ext'      => $fileinfo['ext'],
+            ];
+        }
+
+        if ( ! empty( $invalid_files ) ) {
+            $this->send_error(
+                sprintf(
+                    /* translators: 1) opening <strong> tag, 2) closing <strong> tag, 3) line break tag, 4) line break tag, 5) list of file names */
+                    __( '%1$sThe attachments will not be uploaded.%2$s%3$sThe following files are not valid: %4$s%5$s', 'erp' ),
+                    '<strong>',
+                    '</strong>',
+                    '<br>',
+                    '<br>',
+                    implode( '<br>', $invalid_files )
+                )
+            );
+        }
+
+        $uploaded_files = [];
+        foreach ( $valid_files as $file ) {
+            $new_filename = $file['name'];
+            if ( file_exists( trailingslashit( $path ) . $file['name'] ) ) {
+                $new_filename = uniqid() . '.' . $file['ext'];
+            }
+
+            $relative_filepath = trailingslashit( $path ) . $new_filename;
+            if ( move_uploaded_file( $file['tmp_name'], $relative_filepath ) ) {
+                $uploaded_files[] = $file['name'];
+                $attatchments[]   = [
+                    'name' => $file['name'],
+                    'path' => trailingslashit( $path ) . basename( $relative_filepath ),
+                    'slug' => $new_filename,
+                ];
             }
         }
 
-        wp_send_json_success( [
-            'url'   => $attatchments,
-            'files' => $file_names,
-        ] );
+        $this->send_success(
+            [
+                'url'   => $attatchments,
+                'files' => $uploaded_files,
+            ]
+        );
     }
 }

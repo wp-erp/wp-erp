@@ -1,53 +1,50 @@
-<style>
-    .wperp-filter-dropdown .wperp-btn.btn--cancel:hover {
-        background-color: transparent !important;
-        border: 1px solid #e2e2e2 !important;
-    }
-    .wperp-filter-dropdown .wperp-btn.btn--reset {
-        color: #3c9fd4 !important;
-        margin-right: 5px !important
-    }
-
-    .wperp-filter-dropdown .wperp-btn.btn--reset:hover {
-        color: #135e96 !important;
-    }
-</style>
-
 <?php
-if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
-    $id          = intval( $_GET['filter_assign_contact'] );
-    $custom_data = [
-        'filter_assign_contact' => [
-            'id'           => $id,
-            'display_name' => get_the_author_meta( 'display_name', $id ),
-        ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
-    ];
-} elseif ( isset( $_GET['filter_contact_company' ] ) && !empty( $_GET['filter_contact_company' ] ) ) {
-    $id          = intval( $_GET['filter_contact_company'] );
-    $custom_data = [
-        'filter_contact_company' => [
-            'id'           => $id,
-            'display_name' => erp_get_people( $id )->company,
-        ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
-    ];
-} else {
-    $custom_data = [
-        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
-    ];
-}
+    if ( ! empty( $_GET['filter_assign_contact' ] ) ) {
+        $id          = intval( $_GET['filter_assign_contact'] );
+        $custom_data = [
+            'filter_assign_contact' => [
+                'id'           => $id,
+                'display_name' => get_the_author_meta( 'display_name', $id ),
+            ],
+            'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
+        ];
+    } elseif ( ! empty( $_GET['filter_contact_company' ] ) ) {
+        $id          = intval( $_GET['filter_contact_company'] );
+        $people      = erp_get_people( $id );
+        $custom_data = [
+            'filter_contact_company' => [
+                'id'           => $id,
+                'display_name' => $people->company,
+            ],
+            'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
+        ];
+    } else {
+        $custom_data = [
+            'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) ),
+        ];
+    }
 ?>
 
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp" v-cloak>
 
     <h2>
-        <?php esc_attr_e( 'Contacts', 'erp' ); ?>
-        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) { ?>
-            <a href="#" @click.prevent="addContact( 'contact', '<?php esc_attr_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_attr_e( 'Add New Contact', 'erp' ); ?></a>
-        <?php } ?>
+        <?php esc_html_e( 'Contacts', 'erp' ); ?>
+
+        <?php if ( current_user_can( 'erp_crm_add_contact' ) ) : ?>
+            <a href="#" @click.prevent="addContact( 'contact', '<?php esc_html_e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php esc_html_e( 'Add New Contact', 'erp' ); ?></a>
+            <?php if ( erp_crm_is_current_user_manager() ) { ?>
+                <a href="#" @click.prevent="importUsers()" id="erp-contact-import-users" class="erp-contact-import-users add-new-h2"><?php esc_html_e( 'Import Users', 'erp' ); ?></a>
+            <?php } ?>
+        <?php endif; ?>
 
         <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
+
+        <?php if ( current_user_can( 'erp_crm_manager' ) ) : ?>
+            <div class="erp-btn-group" id="crm-import-export">
+                <button @click.prevent="importCsv( 'contact' )"><?php esc_html_e( 'Import', 'erp' ); ?></button>
+                <button @click.prevent="exportCsv( 'contact' )"><?php esc_html_e( 'Export', 'erp' ); ?></button>
+            </div>
+        <?php endif; ?>
     </h2>
 
     <?php do_action( 'erp_crm_contact_menu', 'contacts' ); ?>
@@ -73,7 +70,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         :extra-bulk-action="extraBulkAction"
         :additional-params="additionalParams"
         :remove-url-params="removeUrlParams"
-        :custom-data = '<?php echo json_encode( $custom_data, JSON_UNESCAPED_UNICODE ); ?>'
+        :custom-data = '<?php echo wp_json_encode( $custom_data, JSON_UNESCAPED_UNICODE ); ?>'
     ></vtable>
 
 </div>

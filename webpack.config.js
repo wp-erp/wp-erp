@@ -16,6 +16,11 @@ var rootEntryPoints = {
     // style: './less/style.less',
 };
 
+// @todo: Organize these settings asset compiling
+entryPoints[`../../assets/js/erp-settings-bootstrap`] = `./includes/Settings/assets/src/bootstrap.js`;
+entryPoints[`../../assets/js/erp-settings`] = `./includes/Settings/assets/src/main.js`;
+entryPoints[`../../assets/css/erp-settings`] = `./includes/Settings/assets/less/settings.less`;
+
 var moduleEntryPoints = {
     hr: {},
 
@@ -113,6 +118,7 @@ var mainConfig = {
             '@': path.resolve('./assets/src/'),
             frontend: path.resolve('./assets/src/frontend/'),
             // 'admin': path.resolve('./assets/src/admin/'),
+            settings: path.resolve('./includes/Settings/assets/src/'),
             admin: path.resolve('./modules/accounting/assets/src/admin/')
         },
         modules: [
@@ -155,7 +161,7 @@ var mainConfig = {
                 use: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(woff(2)?|ttf|eot|svg|gif|png)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
                     loader: 'url-loader',
                     options: {

@@ -62,18 +62,26 @@ var mixin = {
         },
 
         uploadFile: function( input, el ) {
-            var formData   = new FormData();
-            vm.progressbar = true;
+            vm.progressbar   = true;
+            var formData     = new FormData(),
+                atchOutputEl = $( `#${el.attr('id')}` ).find( '#crm-atch-output' ),
+                fileHtml     = '';
+
+            atchOutputEl.html( '' );
+            el.css( 'display', 'block' );
+
+            $( 'input[name="save_notes"]' ).attr( 'disabled', true );
 
             formData.append( 'action', 'erp_crm_activity_attachment' );
-            el.css( 'display', 'block' );
-            
+            formData.append( '_wpnonce', wpCRMvue.nonce );
             $.each( input, function( index, object ) {
                 $.each( object.files, function( i, file ) {
-                    formData.append( 'files[]', file );
-                    $( `#${el.attr('id')}` ).find( '#crm-atch-output' ).append( `<p> ${i+1}. ${file.name}</p>` );
+                formData.append( 'files[]', file );
+                fileHtml += `<p> ${i+1}. ${file.name}</p>`;
                 } );
             } );
+
+            atchOutputEl.html( fileHtml );
 
             jQuery.ajax({
                 url: wpCRMvue.ajaxurl,
@@ -86,9 +94,13 @@ var mixin = {
                     if ( response.success ) {
                         vm.feedData.attachments = response.data.url;
                         vm.files = response.data.files;
+                        atchOutputEl.html( fileHtml );
+                    } else {
+                        atchOutputEl.html( response.data );
                     }
-                },
 
+                    $( 'input[name="save_notes"]' ).attr( 'disabled', false );
+                },
                 xhr: function(){
                     //upload Progress
                     var xhr = $.ajaxSettings.xhr();
@@ -103,6 +115,9 @@ var mixin = {
                             //update progressbar
                             $( '.progress-bar' ).css( 'width', + percent +'%' );
                             $( '.status' ).text(percent +'%');
+                            if ( percent === 100 ) {
+                                atchOutputEl.html( wpCRMvue.validatingAtch );
+                            }
                         }, true);
                     }
 
@@ -458,7 +473,7 @@ Vue.component( 'email-note', {
                 action      : 'erp-crm-load-save-replies-data',
                 template_id : this.emailTemplates,
                 contact_id  : this.feedData.user_id,
-                _wpnonce    : wpCRMvue.nonce
+                _wpnonce    : wpErp.nonce
             };
 
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
@@ -561,6 +576,7 @@ Vue.component( 'schedule-note', {
                 tpEnd                       : '',
                 inviteContact               : [],
                 removeAtchFlag              : [],
+                client_time_zone            : '',
             },
 
             isValid: false
@@ -568,7 +584,8 @@ Vue.component( 'schedule-note', {
     },
 
     created: function() {
-        this.feedData.old_attachments = [];
+        this.feedData.old_attachments  = [];
+        this.feedData.client_time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     },
 
     compiled: function() {
@@ -664,7 +681,7 @@ Vue.component( 'schedule-note', {
 
 
 /****************************************************************
-***************       Main Vue Instance       *******************
+ ***************       Main Vue Instance       *******************
 ****************************************************************/
 
 /**
@@ -738,10 +755,11 @@ var vm = new Vue({
             this.offset = this.offset + this.limit;
 
             var data = {
-                action : 'erp_crm_get_customer_activity',
-                customer_id : this.customer_id,
-                limit: this.limit,
-                offset: this.offset,
+                action     : 'erp_crm_get_customer_activity',
+                _wpnonce   : wpCRMvue.nonce,
+                customer_id: this.customer_id,
+                limit      : this.limit,
+                offset     : this.offset,
             };
 
             if ( this.filterFeeds.customer_id ) {
@@ -864,7 +882,7 @@ var vm = new Vue({
                 self.feedData.end_time       = self.feedData.tpEnd;
                 self.feedData.invite_contact = self.feedData.inviteContact;
             };
-            
+
             jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
                 if ( ! resp.success ) {
                     alert( resp.data );
@@ -878,9 +896,9 @@ var vm = new Vue({
                     setTimeout( function() {
                         vm.feeds = _.map( vm.feeds, function( feed ){
                             if ( feed.id == resp.data.id ) {
-                               return resp.data;
+                            return resp.data;
                             }
-                           return feed;
+                        return feed;
                         });
 
                         if ( vm.feeds.length > vm.limit ) {
@@ -903,7 +921,12 @@ var vm = new Vue({
                         return false;
                     }
 
-                    vm.feeds.splice( 0, 0, resp.data );
+                    if ( !vm.feeds ) {
+                        vm.feeds = [];
+                        vm.feeds[0] = resp.data;
+                    } else {
+                        vm.feeds.splice( 0, 0, resp.data );
+                    }
 
                     if ( vm.feeds.length > vm.limit ) {
                         vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
@@ -986,10 +1009,11 @@ var vm = new Vue({
         fetchFeeds: function( filter ) {
 
             var data = {
-                action : 'erp_crm_get_customer_activity',
-                customer_id : this.customer_id,
-                limit: this.limit,
-                offset: this.offset,
+                action     : 'erp_crm_get_customer_activity',
+                _wpnonce   : wpCRMvue.nonce,
+                customer_id: this.customer_id,
+                limit      : this.limit,
+                offset     : this.offset,
             };
 
 

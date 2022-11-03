@@ -60,10 +60,9 @@ class Scripts {
         // register vendors first
         wp_register_script( 'erp-select2', $vendor . '/select2/select2.full.min.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-tiptip', $vendor . '/tiptip/jquery.tipTip.min.js', [ 'jquery' ], $this->version, true );
-        wp_register_script( 'erp-momentjs', $vendor . '/moment/moment.min.js', false, $this->version, true );
-        wp_register_script( 'erp-fullcalendar', $vendor . '/fullcalendar/fullcalendar' . $this->suffix . '.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
-        wp_register_script( 'erp-datetimepicker', $vendor . '/jquery-ui/timepicker-addon/jquery-ui-timepicker-addon.min.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
-        wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', [ 'jquery', 'erp-momentjs' ], $this->version, true );
+        wp_register_script( 'erp-fullcalendar', $vendor . '/fullcalendar/fullcalendar' . $this->suffix . '.js', [ 'jquery', 'moment' ], $this->version, true );
+        wp_register_script( 'erp-datetimepicker', $vendor . '/jquery-ui/timepicker-addon/jquery-ui-timepicker-addon.min.js', [ 'jquery', 'moment' ], $this->version, true );
+        wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', [ 'jquery', 'moment' ], $this->version, true );
         wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', [ 'jquery' ], $this->version, true );
@@ -90,9 +89,12 @@ class Scripts {
         wp_register_script( 'erp-flotchart-selection', $vendor . '/flot/jquery.flot.selection.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-flotchart-stack', $vendor . '/flot/jquery.flot.stack.js', [ 'jquery' ], $this->version, true );
 
+        // Chart js library
+        wp_register_script( 'erp-chartjs', $vendor . '/chartjs/chart.min.js', [ 'jquery' ], $this->version, true );
+
         // core js files
         wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
-        wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', [ 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ], $this->version, true );
+        wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', [ 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker', 'erp-sweetalert' ], $this->version, true );
         wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', [ 'jquery', 'plupload-handlers' ], $this->version, true );
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-system-status', $js . '/system-status' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
@@ -106,6 +108,9 @@ class Scripts {
 
         // toastr.js
         wp_register_script( 'erp-toastr', $vendor . '/toastr/toastr.min.js', [], $this->version, true );
+
+        // date range picker
+        wp_register_script( 'erp-daterangepicker', $vendor . '/daterangepicker/daterangepicker.min.js', [ 'jquery' ], $this->version, true );
     }
 
     /**
@@ -141,10 +146,13 @@ class Scripts {
         wp_register_style( 'erp-toastr', $vendor . '/toastr/toastr.min.css', false, $this->version );
 
         // core css files
-        wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
+        wp_register_style( 'erp-styles', $css . '/admin.css', [ 'erp-sweetalert' ], $this->version );
 
         // custom menu design
-        wp_register_style( 'erp-custom-menu', $css . '/custom-menu.css', false, $this->version );
+        wp_register_style( 'erp-custom-styles', $css . '/customs.css', false, $this->version );
+
+        // date range picker
+        wp_register_style( 'erp-daterangepicker', $vendor . '/daterangepicker/daterangepicker.min.css', false, $this->version );
     }
 
     /**
@@ -213,7 +221,7 @@ class Scripts {
         $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
         if ( ! empty( $page ) && ( 'erp-hr' === $page || 'erp-crm' === $page || 'erp-settings' === $page ) ) {
-            wp_enqueue_style( 'erp-custom-menu' );
+            wp_enqueue_style( 'erp-custom-styles' );
         }
     }
 }

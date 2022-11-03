@@ -268,7 +268,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
  * Sort parents before children
  *
  * @since 1.0
- * @since 1.8.4 Fixed when there is no parent = 0
+ * @since 1.8.5 Fixed sorting when there is no parentless item
  *
  * @param array $objects input objects with attributes 'id' and 'parent'
  * @param array $result  (optional, reference) internal
@@ -278,6 +278,16 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
  * @return array output
  */
 function erp_parent_sort( array $objects, array &$result = [], $parent = 0, $depth = 0 ) {
+    $parents = [];
+
+    foreach ( $objects as $object ) {
+        $parents[] = intval( $object->parent );
+    }
+
+    if ( ! empty( $parents ) && min( $parents ) !== 0 ) {
+        return $objects;
+    }
+
     foreach ( $objects as $key => $object ) {
         if ( $object->parent == $parent ) {
             $object->depth = $depth;
@@ -535,20 +545,43 @@ function erp_hr_holiday_reminder_to_employees() {
  * Retrieves html for hr people menu
  *
  * @since 1.8.0
+ * @since 1.8.5 Added `Requests` as new menu item
  *
  * @param string $selected
  *
  * @return void
  */
-function erp_hr_get_people_menu_html( $selected = 'employee' ) {
+function erp_hr_get_people_menu_html( $selected = '' ) {
     $dropdown = [
-        'employee'     => [ 'title' => esc_html__( 'Employees', 'erp' ), 'cap' => 'erp_list_employee' ],
-        'department'   => [ 'title' => esc_html__( 'Departments', 'erp' ), 'cap' => 'erp_manage_department' ],
-        'designation'  => [ 'title' => esc_html__( 'Designations', 'erp' ), 'cap' => 'erp_manage_designation' ],
-        'announcement' => [ 'title' => esc_html__( 'Announcements', 'erp' ), 'cap' => 'erp_manage_announcement' ],
+        'employee'     => [
+            'title' => esc_html__( 'Employees', 'erp' ),
+            'cap'   => 'erp_list_employee'
+        ],
+        'requests'     => [
+            'title' => esc_html__( 'Requests', 'erp' ),
+            'cap'   => 'erp_hr_manager'
+        ],
+        'department'   => [
+            'title' => esc_html__( 'Departments', 'erp' ),
+            'cap'   => 'erp_manage_department'
+        ],
+        'designation'  => [
+            'title' => esc_html__( 'Designations', 'erp' ),
+            'cap'   => 'erp_manage_designation'
+        ],
+        'announcement' => [
+            'title' => esc_html__( 'Announcements', 'erp' ),
+            'cap'   => 'erp_manage_announcement'
+        ],
     ];
 
     $dropdown = apply_filters( 'erp_hr_people_menu_items', $dropdown );
+
+    if ( empty( $selected ) ) {
+        $selected = ! empty( $_GET['sub-section'] )
+                    ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) )
+                    : 'employee';
+    }
 
     ob_start();
     ?>
@@ -556,10 +589,8 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-                <?php if ( 'announcement' === $key && current_user_can( $value['cap'] ) ) : ?>
-                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
-                <?php elseif ( current_user_can( $value['cap'] ) ) : ?>
-                    <li class="<?php echo $key === $selected ? 'active' : ''; ?>"><a href="<?php echo add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ); ?>" class="" data-key="<?php echo $key; ?>"><?php echo $value['title']; ?></a></li>
+                <?php if ( current_user_can( $value['cap'] ) ) : ?>
+                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -567,4 +598,115 @@ function erp_hr_get_people_menu_html( $selected = 'employee' ) {
 
     <?php
     echo ob_get_clean();
+}
+
+/**
+ * Retrieves all employee request types
+ *
+ * @since 1.8.5
+ *
+ * @return array
+ */
+function erp_hr_get_employee_requests_types() {
+    $results  = erp_hr_get_leave_requests();
+
+    $types    = [
+        'leave' => [
+            'count'   => $results['total'],
+            'label'   => __( 'Leave', 'erp' ),
+        ]
+    ];
+
+    return apply_filters( 'erp_hr_employee_request_types', $types );
+}
+
+/**
+ * Retrieves all pending requests counts
+ *
+ * @since 1.8.5
+ *
+ * @return array
+ */
+function erp_hr_get_employee_pending_requests_count() {
+    $leave_requests    = erp_hr_get_leave_requests( [ 'number' => -1, 'status' => 2 ] );
+
+    $requests['leave'] = $leave_requests['total'];
+
+    return apply_filters( 'erp_hr_employee_pending_request_count', $requests );
+}
+
+
+/**
+ * Get ERP Financial Years
+ *
+ * @since 1.8.6
+ *
+ * @return array $f_years
+ */
+function erp_get_hr_financial_years() {
+    global $wpdb;
+
+    $f_years = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_financial_years", ARRAY_A );
+
+    return $f_years;
+}
+
+/**
+ * ERP Settings save leave years
+ *
+ * @since 1.8.6
+ *
+ * @param array $post_data
+ *
+ * @return object|boolean WP_Error or true
+ */
+function erp_settings_save_leave_years ( $post_data = [] ) {
+
+    $year_names = [];
+
+    // Error handles
+    foreach ( $post_data as $key => $data ) {
+        if ( empty( $data['fy_name'] ) ) {
+            return new WP_Error( 'errors', __( 'Please give a financial year name on row #' . ( $key + 1 ), 'erp' ) );
+        }
+        if ( empty( $data['start_date'] ) ) {
+            return new WP_Error( 'errors', __( 'Please give a financial year start date on row #' . ( $key + 1 ), 'erp' ) );
+        }
+        if ( empty( $data['end_date'] ) ) {
+            return new WP_Error( 'errors', __( 'Please give a financial year end date on row #' . ( $key + 1 ), 'erp' ) );
+        }
+        if ( ( strtotime( $data['end_date'] ) < strtotime( $data['start_date'] ) ) || strtotime( $data['end_date'] ) === strtotime( $data['start_date'] ) ) {
+            return new WP_Error( 'errors', __( 'End date must be greater than the start date on row #' . ( $key + 1 ), "erp" ) );
+        }
+
+        if ( in_array( $data['fy_name'], $year_names ) ) {
+            return new WP_Error( 'errors', __( 'Duplicate financial year name ' . $data['fy_name'] . ' on row #' . ( $key + 1 ), 'erp' ) );
+        } else {
+            array_push( $year_names, $data['fy_name'] );
+        }
+    }
+
+    global $wpdb;
+
+    // Empty HR leave years data
+    $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_hr_financial_years' );
+
+    // Insert leave years
+    foreach ( $post_data as $data ) {
+
+        $data['fy_name']     = sanitize_text_field( wp_unslash( $data['fy_name'] ) );
+        $data['start_date']  = strtotime( sanitize_text_field( wp_unslash( $data['start_date'] ) ) );
+        $data['end_date']    = strtotime( sanitize_text_field( wp_unslash( $data['end_date'] ) ) );
+        $data['description'] = sanitize_text_field( wp_unslash( $data['description'] ) );
+        $data['created_by']  = get_current_user_id();
+        $data['created_at']  = date( 'Y-m-d' );
+
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_hr_financial_years',
+            $data,
+            ['%s', '%s', '%s', '%s', '%d', '%s']
+        );
+    }
+
+    return true;
 }

@@ -72,19 +72,21 @@
                         <tr :key="index" v-for="(detail, index) in invoice.line_items">
                             <th>{{ index+1 }}</th>
                             <th>{{ detail.name }}</th>
-                            <td>{{ detail.qty }}</td>
-                            <td>{{ moneyFormat( detail.unit_price ) }}</td>
-                            <td>{{ moneyFormat( parseFloat(detail.unit_price) * parseFloat(detail.qty) ) }}</td>
+                            <td class="col--qty">{{ detail.qty }}</td>
+                            <td class="col--uni_price">{{ moneyFormat( detail.unit_price ) }}</td>
+                            <td class="col--amount">{{ moneyFormat( parseFloat(detail.unit_price) * parseFloat(detail.qty) ) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <tr class="inline-edit-row">
                             <td class="wperp-invoice-amounts" colspan="7">
                                 <ul>
-                                    <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat( invoice.amount ) }}</li>
-                                    <li><span>{{ __('Discount', 'erp') }}:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
-                                    <li><span>{{ __('Tax', 'erp') }}:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
-                                    <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( total ) }}</li>
+                                    <li><span>{{ __( 'Subtotal', 'erp' ) }}:</span> {{ moneyFormat( invoice.amount ) }}</li>
+                                    <li><span>{{ __( 'Discount', 'erp' ) }}:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
+                                    <li><span>{{ __( 'Tax', 'erp' ) }}:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
+                                    <li v-if="parseFloat( this.invoice.shipping ) > 0"><span>{{ __( 'Shipping', 'erp' ) }}:</span> (+) {{ moneyFormat( invoice.shipping ) }}</li>
+                                    <li v-if="parseFloat( this.invoice.shipping_tax ) > 0"><span>{{ __( 'Shipping Tax', 'erp' ) }}:</span> (+) {{ moneyFormat( invoice.shipping_tax ) }}</li>
+                                    <li><span>{{ __( 'Total', 'erp' ) }}:</span> {{ moneyFormat( total ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -96,19 +98,23 @@
 
         <trans-particulars :particulars="invoice.particulars" />
 
-        <div class="invoice-attachments d-print-none">
+        <div class="invoice-attachments" v-if="invoice.attachments && invoice.attachments.length">
             <h4>{{ __('Attachments', 'erp') }}</h4>
-            <a class="attachment-item" :href="attachment"
+            <a class="attachment-item d-print-none" :href="attachment"
                 :key="index"
                 v-for="(attachment, index) in invoice.attachments" download>
-                <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
-                <div class="attachment-meta">
+                <img :src="acct_var.acct_assets + '/images/file-thumb.png'" class="d-print-none" />
+                <div class="attachment-meta d-print-none">
                     <span>{{attachment.substring(attachment.lastIndexOf('/')+1) }}</span><br>
                     <!-- <span class="text-muted">file size</span> -->
                 </div>
             </a>
-        </div>
 
+            <!-- Print Attachment Links only in Print Media View -->
+            <a class="d-print-block" :href="attachment" target="_blank" v-for="(attachment, index) in invoice.attachments" :key="invoice.attachments.length + 1 + index">
+                {{ attachment }}
+            </a>
+        </div>
     </div>
 </template>
 
@@ -142,11 +148,15 @@ export default {
 
     computed: {
         total () {
-            if ( !this.invoice.amount ) {
+            if ( ! this.invoice.amount ) {
                 return '00.00';
             }
 
-            return parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
+            return parseFloat( this.invoice.amount )
+                + parseFloat( this.invoice.tax )
+                + parseFloat( ! this.invoice.shipping ? 0 : this.invoice.shipping )
+                + parseFloat( ! this.invoice.shipping_tax ? 0 : this.invoice.shipping_tax )
+                - parseFloat( this.invoice.discount );
         }
     },
 
@@ -166,3 +176,49 @@ export default {
     }
 };
 </script>
+
+<style lang="less" scoped>
+    .wperp-invoice-table {
+        @media (max-width: 782px) {
+            .col--qty,
+            .col--uni_price,
+            .col--amount {
+                display: table-cell !important;
+                width: 10%;
+            }
+
+            tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+                display: none !important;
+            }
+
+            .wperp-invoice-amounts {
+                li {
+                    padding-right: 0 !important;
+                }
+            }
+        }
+    }
+    
+    .d-print-block {
+        display: none;
+    }
+
+    @media print{
+        .d-print-block {
+            display: block !important;
+        }
+
+        .invoice-attachments {
+            .attachment-item {
+                padding: 0px !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0px;
+                display: block !important;
+                align-items: left;
+                margin-bottom: 0px;
+                margin-right: 0px;
+            }
+        }
+    }
+</style>

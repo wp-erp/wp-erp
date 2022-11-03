@@ -1494,12 +1494,10 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     }
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
-    //echo $query; die();
+
     $requests = $wpdb->get_results( $query, ARRAY_A );
 
     $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
-
-    //echo "<pre>"; print_r( $requests ); die;
 
     $formatted_data = [];
 
@@ -2719,30 +2717,30 @@ function import_holidays_csv( $file ) {
         $description = ( isset( $data['description'] ) ) ? $data['description'] : '';
 
         if ( empty( $title ) ) {
-            $line_error .= __( 'Title can not be empty', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title can not be empty', 'erp' ) . '<br>';
         }
 
         if ( strlen( $title ) > 200 ) {
-            $line_error .= __( 'Title can not be more than 200 charecters', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title can not be more than 200 characters', 'erp' ) . '<br>';
         }
 
         if ( empty( $start ) || empty( $end ) ) {
-            $line_error .= __( 'Start OR End date can not be empty', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Start OR End date can not be empty', 'erp' ) . '<br>';
         }
 
         if ( ! is_string( $title ) && ! is_string( $start ) && ! is_string( $end ) ) {
-            $line_error .= __( 'Title, Start & End must be', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Title, Start & End must be', 'erp' ) . '<br>';
         }
 
         if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $start ) ) {
-            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false ) {
             $start = erp_current_datetime()->modify( $start )->format( 'Y-m-d 00:00:00' );
             $csv->data[ $data_key ]['start'] = $start;
         }
 
         if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $end )  ) {
-            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
             $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
             $csv->data[ $data_key ]['end'] = $end;
@@ -2752,11 +2750,11 @@ function import_holidays_csv( $file ) {
         $holiday = $holiday_model->where( 'title', '=', $title )->where( 'start', '=', $start );
 
         if ( $holiday->count() ) {
-            $line_error .= __( 'Holiday entry already exists', 'wp-erp' ) . '<br>';
+            $line_error .= __( 'Holiday entry already exists', 'erp' ) . '<br>';
         }
 
         if ( ! empty( $line_error ) ) {
-            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'wp-erp' ) . '<br>';
+            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'erp' ) . '<br>';
             $error_msg .= $line_error;
         }
 
@@ -2861,7 +2859,7 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     /*
      * Update
@@ -2875,7 +2873,13 @@ function erp_hr_insert_leave_policy_name( $args = [] ) {
             return new WP_Error( 'exists', esc_html__( 'Name already exists', 'erp' ) );
         }
 
-        $leave = Leave::find( $args['id'] )->update( $args );
+        $leave = Leave::find( $args['id'] );
+
+        if ( ! $leave ) {
+            return new WP_Error( 'not_exists', __( 'Leave Type doesn\'t exists.', 'erp' ) );
+        }
+
+        $leave->update( $args );
 
         return $leave->id;
     }
@@ -2905,14 +2909,34 @@ function erp_hr_remove_leave_policy_name( $id ) {
     $has_policy = Leave_Policy::where( 'leave_id', $id )->first();
 
     if ( $has_policy ) {
-        return new WP_Error( 'has_policy', __( 'Can not remove, connected with policy', 'erp' ) );
+        return new WP_Error( 'has_policy', __( 'This leave type cannot be deleted as it is associated with a leave policy', 'erp' ) );
     }
 
     $leave = Leave::find( $id );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy_name' ] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     $leave->delete();
+}
+
+
+/**
+ * Get leave entitlements count associated with a leave policy
+ *
+ * @since 1.10.0
+ *
+ * @param int $leave_policy_id
+ *
+ * @return int|WP_Error
+ */
+function erp_hr_get_entitlemnt_of_leave_policy( $leave_policy_id ) {
+    $leave_policy = Leave_Policy::find( $leave_policy_id );
+
+    if ( ! $leave_policy ) {
+        return new WP_Error( 'invalid-policy', __( 'No valid leave policy found', 'erp' ) );
+    }
+
+    return count( $leave_policy->entitlements );
 }
 
 /**
@@ -2970,7 +2994,12 @@ function erp_hr_new_policy_name_url( $id = null ) {
  * @return array
  */
 function erp_hr_get_department_leads_id() {
-    return Department::select( 'lead' )->pluck( 'lead' )->toArray();
+    global $wpdb;
+
+    $results   = $wpdb->get_results( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts", ARRAY_A );
+    $dep_leads = wp_list_pluck( $results, 'lead' );
+
+    return $dep_leads;
 }
 
 /**
@@ -2998,23 +3027,37 @@ function erp_hr_is_current_user_dept_lead() {
  * @param $leaves
  */
 function erp_hr_save_leave_attachment( $request_id, $request, $leaves ) {
-    if ( isset( $_FILES['leave_document'] ) && isset( $_FILES['leave_document']['name'] ) && ! empty( $_FILES['leave_document']['name'][0] ) ) {
-        $uploader = new \WeDevs\ERP\Uploader();
+    if ( ! isset( $_FILES['leave_document'] ) ) {
+        return;
+    }
 
-        foreach ( $_FILES['leave_document']['name'] as $key => $value ) {
-            $upload = [
-                'name'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['name'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['name'][$key] ) ) : '',
-                'type'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['type'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['type'][$key] ) ) : '',
-                'tmp_name' => isset( $_FILES['leave_document'], $_FILES['leave_document']['tmp_name'][$key] ) ? $_FILES['leave_document']['tmp_name'][$key] : '',
-                'error'    => isset( $_FILES['leave_document'], $_FILES['leave_document']['error'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['error'][$key] ) ) : '',
-                'size'     => isset( $_FILES['leave_document'], $_FILES['leave_document']['size'][$key] ) ? sanitize_text_field( wp_unslash( $_FILES['leave_document']['size'][$key] ) ) : '',
-            ];
+    $file_names     = isset( $_FILES['leave_document']['name'] ) ? array_map( 'sanitize_file_name', (array) wp_unslash( $_FILES['leave_document']['name'] ) ) : [];
+    $file_tmp_names = isset( $_FILES['leave_document']['tmp_name'] ) ? array_map( 'sanitize_url', (array) wp_unslash( $_FILES['leave_document']['tmp_name'] ) ) : [];
+    $file_types     = isset( $_FILES['leave_document']['type'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['type'] ) : [];
+    $file_sizes     = isset( $_FILES['leave_document']['size'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['size'] ) : [];
+    $file_errors    = isset( $_FILES['leave_document']['error'] ) ? array_map( 'sanitize_text_field', (array) $_FILES['leave_document']['error'] ) : [];
 
-            $file   = $uploader->handle_upload( $upload );
+    $uploader = new \WeDevs\ERP\Uploader();
 
-            if ( isset( $file['success'] ) && $file['success'] ) {
-                add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $file['attach_id'] );
-            }
+    for ( $i = 0; $i < count( $file_names ); ++ $i ) {
+        $fileinfo = wp_check_filetype_and_ext( $file_tmp_names[ $i ], $file_names[ $i ] );
+
+        if ( ! $fileinfo['ext'] || ! $fileinfo['type'] || 0 !== (int) $file_errors[ $i ] ) {
+            continue;
+        }
+
+        $uploaded = $uploader->handle_upload(
+            [
+                'name'     => $file_names[ $i ],
+                'tmp_name' => $file_tmp_names[ $i ],
+                'type'     => $file_types[ $i ],
+                'error'    => $file_errors[ $i ],
+                'size'     => $file_sizes[ $i ],
+            ]
+        );
+
+        if ( ! empty( $uploaded['success'] ) ) {
+            add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $uploaded['attach_id'] );
         }
     }
 }
@@ -3036,7 +3079,7 @@ function erp_hr_get_financial_year_from_date( $date = null ) {
     }
 
     if ( ! is_numeric( $date ) ) {
-        if ( is_valid_date( $date ) ) {
+        if ( erp_is_valid_date( $date ) ) {
             $date = erp_current_datetime()->modify( $date )->setTime( 0, 0, 0 )->getTimestamp();
         } else {
             return null;
@@ -3119,4 +3162,225 @@ function erp_hr_get_financial_year_from_date_range( $start_date, $end_date ) {
             ]
         )
     );
+}
+
+/**
+ * Automatic removal of old entitlements and assignment of new entitlements
+ * after employee type change
+ *
+ * @since 1.10.2
+ *
+ * @param object $erp_user instance of \WeDevs\ERP\HRM\Models\Employee
+ *
+ * @return void
+ */
+function erp_hr_manage_leave_policy_on_employee_type_change( $erp_user ) {
+    $user_previous_entitlements = erp_hr_leave_get_entitlements( [
+        'user_id' => $erp_user->user_id,
+    ] ) ['data'];
+
+    $f_year = erp_hr_get_financial_year_from_date();
+
+    if ( empty( $f_year ) ) {
+        return;
+    }
+
+    $policies = get_employee_matched_leave_policies( $erp_user, $f_year );
+
+    usort(
+        $user_previous_entitlements,
+        function ( $a, $b ) {
+            if ( $a->day_in > $b->day_in ) {
+                return -1;
+            } elseif ( $a->day_in < $b->day_in ) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    );
+
+    foreach ( $policies as $policy ) {
+        $no_entitlements = count( $user_previous_entitlements );
+        $do_not_delete   = [];
+
+        for ( $i = 0; $i < $no_entitlements; $i++ ) {
+            if ( $user_previous_entitlements[ $i ]->leave_id === $policy->leave_id ) {
+                $do_not_delete[] = $i;
+            }
+        }
+
+        foreach ( $do_not_delete as $index ) {
+            unset( $user_previous_entitlements[ $index ] );
+        }
+    }
+
+    $last_entitlement_id = false;
+
+    foreach ( $policies as $policy ) {
+        $data = [
+            'user_id'     => $erp_user->user_id,
+            'leave_id'    => $policy->leave_id,
+            'created_by'  => get_current_user_id(),
+            'trn_id'      => $policy->id,
+            'trn_type'    => 'leave_policies',
+            'day_in'      => $policy->days,
+            'day_out'     => 0,
+            'description' => ! empty( $policy->description ) ? $policy->description : 'Generated',
+            'f_year'      => $policy->f_year,
+        ];
+
+        $new_entitlement_id = erp_hr_leave_insert_entitlement( $data );
+
+        if ( is_wp_error( $new_entitlement_id ) ) {
+            //TODO handle can't create new entitlement
+        } elseif ( ! empty( $user_previous_entitlements ) ) {
+            $last_entitlement_id = $new_entitlement_id;
+            $new_entitlement     = Leave_Entitlement::find( $new_entitlement_id );
+            $leave               = Leave::find( $new_entitlement->leave_id );
+            $old_entitlement     = Leave_Entitlement::find( array_shift( $user_previous_entitlements )->id );
+
+            transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave );
+
+            $old_entitlement->delete();
+        }
+    }
+
+    if ( empty( $user_previous_entitlements ) || $last_entitlement_id === false ) {
+        erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
+        return;
+    }
+
+    // if count( $user_previous_entitlements ) > count( $policies )
+    $new_entitlement = Leave_Entitlement::find( $last_entitlement_id );
+    $leave           = Leave::find( $new_entitlement->leave_id );
+
+    foreach ( $user_previous_entitlements as $old_entitlement_info ) {
+        $old_entitlement = Leave_Entitlement::find( $old_entitlement_info->id );
+
+        transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave );
+
+        $old_entitlement->delete();
+    }
+    // if no policy matched, no old entitlement will be deleted or no new entitlement will be created
+
+    erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
+}
+
+/**
+ * Get applicable leave policies of the Employee
+ *
+ * @since 1.10.2
+ *
+ * @param object $erp_user instance of \WeDevs\ERP\HRM\Models\Employee
+ * @param object $f_year
+ *
+ * return object
+ */
+function get_employee_matched_leave_policies( $erp_user, $f_year ) {
+    $policies = Leave_Policy::where(
+        function ( $query ) use ( $erp_user ) {
+            $query->where( 'employee_type', $erp_user->type )
+                    ->orWhere( 'employee_type', '-1' );
+        }
+    );
+
+    if ( $erp_user->department !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'department_id', $erp_user->department )
+                        ->orWhere( 'department_id', '-1' );
+            }
+        );
+    }
+
+    if ( $erp_user->designation !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'designation_id', $erp_user->designation )
+                        ->orWhere( 'designation_id', '-1' );
+            }
+        );
+    }
+
+    if ( $erp_user->location !== '0' ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $erp_user ) {
+                $query->where( 'location_id', $erp_user->location )
+                        ->orWhere( 'location_id', '-1' );
+            }
+        );
+    }
+
+    $employee = new \WeDevs\ERP\HRM\Employee( $erp_user->user_id );
+
+    if ( $employee->get_gender() ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $employee ) {
+                $query->where( 'gender', $employee->get_gender() )
+                        ->orWhere( 'gender', '-1' );
+            }
+        );
+    }
+
+    if ( $employee->get_marital_status() ) {
+        $policies = $policies->where(
+            function ( $query ) use ( $employee ) {
+                $query->where( 'marital', $employee->get_marital_status() )
+                        ->orWhere( 'marital', '-1' );
+            }
+        );
+    }
+
+    $policies = $policies->where(
+        function ( $query ) use ( $f_year ) {
+            $query->where( 'f_year', $f_year->id );
+        }
+    );
+
+    return $policies->orderByDesc( 'days' )
+                        ->get();
+}
+
+/**
+ * Assign requests of old entitlements to new entitlement
+ *
+ * @since 1.10.2
+ *
+ * @param object $old_entitlement
+ * @param object $new_entitlement
+ * @param object $leave
+ *
+ * return void
+ */
+function transfer_requests_to_new_entitlements( $old_entitlement, $new_entitlement, $leave ) {
+    if ( ! $old_entitlement->leave_requests ) {
+        return;
+    }
+
+    // assign the old entitlement requests to the new one
+    foreach ( $old_entitlement->leave_requests as $request ) {
+        if ( ! $request->approval_status ) {
+            $new_entitlement->leave_requests()->save( $request );
+            $leave->requests()->save( $request );
+            continue;
+        }
+
+        foreach ( $request->approval_status as $status ) {
+            if ( ! $status->entitlements ) {
+                continue;
+            }
+
+            foreach ( $status->entitlements as $entitlement_after_processed_request ) {
+                $leave->entitlements()->save( $entitlement_after_processed_request );
+            }
+        }
+
+        if ( $request->unpaid ) {
+            $leave->unpaids()->save( $request->unpaid );
+        }
+
+        $new_entitlement->leave_requests()->save( $request );
+        $leave->requests()->save( $request );
+    }
 }

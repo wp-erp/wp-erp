@@ -44,14 +44,6 @@
             $('body').on('change', 'input[type=checkbox][name="allow_notification"]', this.triggerCustomerScheduleAllowNotification);
             $('body').on('change', 'select#erp-crm-feed-log-type', this.triggerLogType);
 
-            // Save Replies in settings page
-            $('body').on('click', 'a#erp-crm-add-save-replies', this.saveReplies.create);
-            $('body').on('click', 'a.erp-crm-delete-save-replies', this.saveReplies.remove);
-            $('body').on('click', 'a.erp-crm-save-replies-edit', this.saveReplies.edit);
-
-            $('body').on('change', 'select#erp-crm-template-shortcodes', this.saveReplies.setShortcodes);
-
-
             // Report
             if ( 'this_year' == $('#crm-filter-duration').val() ) {
                 $('.custom-filter').hide();
@@ -61,7 +53,7 @@
 
             $('body').on( 'change', '.wp-list-table', function(e) {
                 var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
-                
+
                 if ( selector.is(':checked') ) {
                     $('.tablenav .bulkactions').show();
                 } else {
@@ -102,7 +94,7 @@
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
-                yearRange: '-50:+5',
+                yearRange: '-100:+0',
             });
         },
 
@@ -672,126 +664,6 @@
                     });
                 }
             }
-        },
-
-        saveReplies: {
-
-            pageReload: function () {
-                $('td.erp-crm-templates-wrapper').load(window.location.href + ' table.erp-crm-templates-table');
-            },
-
-            create: function (e) {
-                e.preventDefault();
-
-                var self = $(this);
-
-                $.erpPopup({
-                    title: self.attr('title'),
-                    button: wpErpCrm.add_submit,
-                    id: 'erp-crm-new-save-replies',
-                    content: wperp.template('erp-crm-new-save-replies')({data: {}}).trim(),
-                    extraClass: 'larger',
-
-                    onSubmit: function (modal) {
-                        modal.disableButton();
-
-                        wp.ajax.send({
-                            data: this.serialize(),
-                            success: function (res) {
-                                WeDevs_ERP_CRM.saveReplies.pageReload();
-                                modal.enableButton();
-                                modal.closeModal();
-                            },
-                            error: function (error) {
-                                modal.enableButton();
-                                modal.showError(error);
-                            }
-                        });
-                    }
-                }); //popup
-
-            },
-
-            edit: function (e) {
-                e.preventDefault();
-
-                var self = $(this),
-                    query_id = self.data('id');
-
-                $.erpPopup({
-                    title: self.attr('title'),
-                    button: wpErpCrm.update_submit,
-                    id: 'erp-crm-edit-save-replies',
-                    extraClass: 'larger',
-                    onReady: function () {
-                        var modal = this;
-
-                        $('header', modal).after($('<div class="loader"></div>').show());
-
-                        wp.ajax.send('erp-crm-edit-save-replies', {
-                            data: {
-                                id: query_id,
-                                _wpnonce: wpErpCrm.nonce
-                            },
-                            success: function (res) {
-                                var html = wp.template('erp-crm-new-save-replies')(res);
-                                $('.content', modal).html(html);
-                                $('.loader', modal).remove();
-                            }
-                        });
-                    },
-
-                    onSubmit: function (modal) {
-                        modal.disableButton();
-
-                        wp.ajax.send({
-                            data: this.serialize(),
-                            success: function (res) {
-                                WeDevs_ERP_CRM.saveReplies.pageReload();
-                                modal.enableButton();
-                                modal.closeModal();
-                            },
-                            error: function (error) {
-                                modal.enableButton();
-                                modal.showError(error);
-                            }
-                        });
-                    }
-
-                });
-            },
-
-            remove: function (e) {
-                e.preventDefault();
-
-                var self = $(this);
-
-                if (confirm(wpErpCrm.delConfirm)) {
-                    wp.ajax.send('erp-crm-delete-save-replies', {
-                        data: {
-                            _wpnonce: wpErpCrm.nonce,
-                            id: self.data('id')
-                        },
-                        success: function () {
-                            self.closest('tr').fadeOut('fast', function () {
-                                $(this).remove();
-                            });
-                        },
-                        error: function (response) {
-                            alert(response);
-                        }
-                    });
-                }
-            },
-
-            setShortcodes: function (e) {
-                e.preventDefault();
-                var self = $(this);
-                var element = document.querySelector("trix-editor");
-                element.editor.insertString(self.val());
-                self.val('');
-            }
-
         },
 
         report: {

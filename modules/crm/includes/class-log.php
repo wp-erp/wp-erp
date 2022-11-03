@@ -187,7 +187,7 @@ class Log {
 
         if ( isset( $data['invite_contact'] ) ) {
             foreach ( $data['invite_contact'] as $user_id ) {
-                $invited        = \get_user_by( 'ID', (int) $user_id );
+                $invited        = get_userdata( $user_id );
                 $invited_name[] = $invited->display_name;
             }
 

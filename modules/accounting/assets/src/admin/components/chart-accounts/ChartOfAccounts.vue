@@ -5,7 +5,7 @@
                 <div class="wperp-col-6">
                     <h2 class="content-header__title">
                         {{ __('Chart of Accounts', 'erp') }}
-                        <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}">
+                        <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}" id="erp-add-chart-of-account">
                             {{ __('Add New', 'erp') }}
                         </router-link>
                     </h2>
@@ -101,7 +101,7 @@ export default {
     data() {
         return {
             columns: {
-                code       : { label: __('Code', 'erp') },
+                code       : { label: __('Code', 'erp'), isColPrimary: true },
                 ledger_name: { label: __('Name', 'erp') },
                 balance    : { label: __('Balance', 'erp') },
                 trn_count  : { label: __('Count', 'erp') },

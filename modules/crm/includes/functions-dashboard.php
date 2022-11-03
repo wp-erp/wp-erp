@@ -213,7 +213,7 @@ function erp_crm_dashboard_widget_my_schedules() {
                 },
                 editable: false,
                 eventLimit: true,
-                events: <?php echo json_encode( $schedules_data ); ?>,
+                events: <?php echo wp_json_encode( $schedules_data ); ?>,
                 eventClick: function(calEvent, jsEvent, view) {
                     var scheduleId = calEvent.schedule.id;
                     $.erpPopup({
@@ -377,27 +377,26 @@ function customer_statics() {
     wp_enqueue_style( 'erp-jvectormap' );
 
     echo '<div id="erp-hr-customer-statics" style="width: 100%; height: 300px;"></div>';
-    $customer_countries = [];
+    
+    $customer_countries = get_transient( 'erp_customer_countries_widget' );
 
-    if ( false == get_transient( 'erp_customer_countries_widget' ) ) {
+    if ( false === $customer_countries ) {
         global $wpdb;
         $countries = $wpdb->get_results( 'SELECT country FROM ' . $wpdb->prefix . 'erp_peoples', OBJECT );
-
         $codes     = [];
 
         foreach ( $countries as $code_of ) {
-            if ( !is_null( $code_of->country ) ) {
+            if ( ! is_null( $code_of->country ) ) {
                 $codes[] = $code_of->country;
             }
         }
 
         $customer_countries = array_count_values( $codes );
-        set_transient( 'erp_customer_countries_widget', $customer_countries, time() + ( 3 * HOUR_IN_SECONDS ) );
-    } else {
-        $customer_countries = get_transient( 'erp_customer_countries_widget' );
+        set_transient( 'erp_customer_countries_widget', $customer_countries, 3 * HOUR_IN_SECONDS );
     }
 
-    ob_start(); ?>
+    ob_start();
+    ?>
     <script>
         jQuery(document).ready(function () {
             jQuery('#erp-hr-customer-statics').vectorMap({
@@ -406,16 +405,16 @@ function customer_statics() {
                 zoomOnScroll: false,
                 series: {
                     regions: [{
-                        values: <?php echo json_encode( $customer_countries ); ?>,
+                        values: <?php echo wp_json_encode( $customer_countries ); ?>,
                         scale: ['#C8EEFF', '#0071A4'],
                         normalizeFunction: 'polynomial'
                     }]
                 },
                 onRegionTipShow: function (e, el, code) {
-                    if (typeof <?php echo json_encode( $customer_countries ); ?>[code] === 'undefined') {
+                    if (typeof <?php echo wp_json_encode( $customer_countries ); ?>[code] === 'undefined') {
                         el.html('No data');
                     } else {
-                        el.html(el.html() + ': ' + <?php echo json_encode( $customer_countries ); ?>[code]);
+                        el.html(el.html() + ': ' + <?php echo wp_json_encode( $customer_countries ); ?>[code]);
                     }
                 }
             });

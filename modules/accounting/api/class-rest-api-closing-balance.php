@@ -85,11 +85,11 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function close_balancesheet( $request ) {
         if ( empty( $request['start_date'] ) ) {
-            return new WP_Error( 'rest_invalid_date', __( 'Start date missing.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invalid_date', __( 'Start date missing.', 'erp' ), [ 'status' => 404 ] );
         }
 
         if ( empty( $request['end_date'] ) ) {
-            return new WP_Error( 'rest_invalid_date', __( 'End date missing.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invalid_date', __( 'End date missing.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $args = [
@@ -115,7 +115,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_next_fn_year( $request ) {
         if ( empty( $request['date'] ) ) {
-            return new WP_Error( 'rest_invalid_date', __( 'Invalid resource date.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_invalid_date', __( 'Invalid resource date.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $data     = erp_acct_clsbl_get_closest_next_fn_year( $request['date'] );
@@ -134,7 +134,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_closest_fn_year( $request ) {
-        $data     = erp_acct_get_closest_fn_year_date( date( 'Y-m-d' ) );
+        $data     = erp_acct_get_closest_fn_year_date( erp_current_datetime()->format( 'Y-m-d' ) );
         $response = rest_ensure_response( $data );
 
         $response->set_status( 200 );

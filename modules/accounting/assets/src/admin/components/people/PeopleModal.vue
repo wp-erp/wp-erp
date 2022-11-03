@@ -97,7 +97,8 @@
                                                 <multi-select
                                                 v-model="peopleFields.country"
                                                 :options="countries"
-                                                :multiple="false" @input="getState( peopleFields.country )" />
+                                                :multiple="false"
+                                                @input="getState( peopleFields.country )" />
                                             </div>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
@@ -165,12 +166,15 @@ export default {
 
     props: {
         people: {
-            type: Object
+            type: Object,
         },
-        title: {
-            required: true
+        title : {
+            type    : String,
+            required: true,
         },
-        type: [String]
+        type  : {
+            type: String,
+        }
     },
 
     data() {
@@ -227,20 +231,64 @@ export default {
                 return false;
             }
 
+            var self = this;
+
+            if (this.peopleFields.email) {
+                if (!this.people) {
+                    HTTP.get('/people/check-email', {
+                        params: {
+                            email: this.peopleFields.email
+                        }
+                    }).then((res) => {
+                        self.emailExists = res.data;
+
+                        if (res.data) {
+                            if (res.data == 'contact' || res.data == 'company') {
+                                swal({
+                                    title : '',
+                                    text : __('This email already exists in CRM! Do you want to import and update the contact?', 'erp'),
+                                    type : 'info',
+                                    showCancelButton : true,
+                                    cancelButtonText : __('Cancel', 'erp'),
+                                    cancelButtonColor : '#bababa',
+                                    confirmButtonText : __('Import & Update', 'erp'),
+                                    confirmButtonColor : '#58badb',
+                                },
+                                function(input) {
+                                    self.emailExists = false;
+
+                                    if (false !== input) {
+                                        self.addPeople(peopleFields);
+                                    }
+                                });
+                            } else {
+                                self.error_message.push(__('Email already exists as customer/vendor', 'erp'));
+                                self.emailExists = false;
+
+                                return false;
+                            }
+                        } else {
+                            self.addPeople(peopleFields);
+                        }
+                    });
+                } else {
+                    self.addPeople(peopleFields);
+                }
+            }
+        },
+
+        addPeople(peopleFields) {
             this.$store.dispatch('spinner/setSpinner', true);
 
-            var type = '';
-            var url = '';
+            let url  = this.url;
+            let type = 'post';
 
-            if (!this.people) {
-                url = this.url;
-                type = 'post';
-            } else {
-                url = this.url + '/' + peopleFields.id;
+            if ( this.people ) {
+                url  = this.url + '/' + peopleFields.id;
                 type = 'put';
             }
 
-            var message = (type === 'post') ? 'Created' : 'Updated';
+            let message = (type === 'post') ? __( 'Created Successfully', 'erp' ) : __( 'Updated Successfully', 'erp' );
 
             HTTP[type](url, peopleFields).then(response => {
                 this.$root.$emit('peopleUpdate');
@@ -254,13 +302,6 @@ export default {
             this.error_message = window.acct.hooks.applyFilters('acctPeopleFieldsError', []);
 
             if (this.error_message.length) {
-                return false;
-            }
-
-            if (this.emailExists) {
-                this.error_message.push(__('Email already exists as customer/vendor', 'erp'));
-                this.emailExists = false;
-
                 return false;
             }
 
@@ -358,7 +399,7 @@ export default {
                 this.peopleFields.street_1    = people.billing.street_1;
                 this.peopleFields.street_2    = people.billing.street_2;
                 this.peopleFields.city        = people.billing.city;
-                this.peopleFields.country     = people.billing.country ? !!this.selectedCountry(people.billing.country) : '';
+                this.peopleFields.country     = people.billing.country ? this.selectedCountry(people.billing.country) : '';
                 this.peopleFields.postal_code = people.billing.postal_code;
 
                 if (people.photo) {
@@ -383,16 +424,16 @@ export default {
         },
 
         generateUrl() {
-            var url;
-            if (this.type) {
-                if (this.type === 'customer') {
-                    url = 'customers';
-                } else {
-                    url = 'vendors';
-                }
-            } else if (this.$route.name.toLowerCase() === 'customerdetails') {
+            let url;
+
+            if ( this.type ) {
+                url = this.type === 'customer' ? 'customers' : 'vendors';
+                return url;
+            }
+
+            if ( this.$route.name.toLowerCase().includes( 'customer' ) ) {
                 url = 'customers';
-            } else if (this.$route.name.toLowerCase() === 'vendordetails') {
+            } else if ( this.$route.name.toLowerCase().includes( 'vendor' ) ) {
                 url = 'vendors';
             } else {
                 url = this.$route.name.toLowerCase();

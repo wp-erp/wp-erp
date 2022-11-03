@@ -3,9 +3,9 @@
 
     <h3><?php esc_html_e( 'Employee Status', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
+        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>"
             data-template="erp-employment-status"
-            data-title="<?php esc_html_e( 'Employee Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
+            data-title="<?php esc_attr_e( 'Employee Status', 'erp' ); ?>"><?php esc_html_e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
@@ -38,7 +38,7 @@
                         </td>
                         <td class="action">
                             <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) && ( 0 !== $num ) ) { ?>
-                                <a href="#" class="remove" data-id="<?php echo esc_html( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
+                                <a href="#" class="remove" data-id="<?php echo esc_attr( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
                             <?php } ?>
                         </td>
                     </tr>
@@ -57,7 +57,7 @@
 
     <h3><?php esc_html_e( 'Employment Type', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-type" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>"
+        <a href="#" id="erp-empl-type" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>"
             data-template="erp-employment-type"
             data-title="<?php esc_html_e( 'Employment Type', 'erp' ); ?>"><?php esc_html_e( 'Update Type', 'erp' ); ?></a>
     <?php } ?>
@@ -91,9 +91,23 @@
                             <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
                         </td>
                         <td class="action">
-                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) && ( 0 !== $num ) ) { ?>
-                                <a href="#" class="remove" data-id="<?php echo esc_html( $employment_history['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
-                            <?php } ?>
+                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                                <?php if ( 0 !== $num ) : ?>
+                                    <a href="#"
+                                        class="remove"
+                                        data-id="<?php echo esc_attr( $employment_history['id'] ); ?>">
+                                        <span class="dashicons dashicons-trash"></span>
+                                    </a>
+                                <?php else : ?>
+                                    <a href="#"
+                                        class="edit"
+                                        data-id="<?php echo esc_attr( $employment_history['id'] ); ?>"
+                                        data-title="<?php esc_html_e( 'Employment Type History', 'erp' ); ?>"
+                                        data-template="erp-employment-type-history">
+                                        <span class="dashicons dashicons-edit-large"></span>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
@@ -113,7 +127,7 @@
 
         <h3><?php esc_html_e( 'Compensation', 'erp' ); ?></h3>
         <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-compensation" data-title="<?php esc_html_e( 'Update Compensation', 'erp' ); ?>"><?php esc_html_e( 'Update Compensation', 'erp' ); ?></a>
+            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-compensation" data-title="<?php esc_html_e( 'Update Compensation', 'erp' ); ?>"><?php esc_html_e( 'Update Compensation', 'erp' ); ?></a>
         <?php } ?>
 
         <table class="widefat">
@@ -155,9 +169,23 @@
                                 <?php echo ( ! empty( $compensation['comment'] ) ) ? wp_kses_post( $compensation['comment'] ) : '--'; ?>
                             </td>
                             <td class="action">
-                                <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() )&& ( 0 !== $num ) ) { ?>
-                                    <a href="#" class="remove" data-id="<?php echo esc_html( $compensation['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
-                                <?php } ?>
+                                <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                                    <?php if ( 0 !== $num ) : ?>
+                                        <a href="#"
+                                            class="remove"
+                                            data-id="<?php echo esc_attr( $compensation['id'] ); ?>">
+                                            <span class="dashicons dashicons-trash"></span>
+                                        </a>
+                                    <?php else : ?>
+                                        <a href="#"
+                                            class="edit"
+                                            data-id="<?php echo esc_attr( $compensation['id'] ); ?>"
+                                            data-title="<?php esc_html_e( 'Compensation History', 'erp' ); ?>"
+                                            data-template="erp-employment-compensation-history">
+                                            <span class="dashicons dashicons-edit-large"></span>
+                                        </a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php
@@ -177,7 +205,7 @@
 
     <h3><?php esc_html_e( 'Job Information', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo esc_html( $employee->get_user_id() ); ?>" data-template="erp-employment-jobinfo" data-title="<?php esc_html_e( 'Update Job Information', 'erp' ); ?>"><?php esc_html_e( 'Update Job Information', 'erp' ); ?></a>
+        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo esc_attr( $employee->get_user_id() ); ?>" data-template="erp-employment-jobinfo" data-title="<?php esc_html_e( 'Update Job Information', 'erp' ); ?>"><?php esc_html_e( 'Update Job Information', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
@@ -206,15 +234,40 @@
                     </td>
                     <td>
                         <?php
-                        $location = ( ! empty( $row['location'] ) ) ? esc_html( $row['location'] ) : erp_get_company_default_location_name();
-                        echo esc_html( $location );
+                        $locations = erp_company_get_location_dropdown_raw();
+
+                        if ( ! empty( $row['location'] ) && array_key_exists( $row['location'], $locations ) ) {
+                            echo esc_html( $locations[ $row['location'] ] );
+                        } else {
+                            echo esc_html( erp_get_company_default_location_name() );
+                        }
                         ?>
                     </td>
                     <td>
-                        <?php echo ( ! empty( $row['department'] ) ) ? esc_html( $row['department'] ) : '--'; ?>
+                        <?php
+                        $departments = erp_hr_get_departments_dropdown_raw();
+
+                        if ( empty( $row['department'] ) ) {
+                            echo '--';
+                        } elseif ( array_key_exists( $row['department'], $departments ) ) {
+                            echo esc_html( $departments[ $row['department'] ] );
+                        } else {
+                            echo esc_html( $row['department'] );
+                        }
+                        ?>
                     </td>
                     <td>
-                        <?php echo ( ! empty( $row['designation'] ) ) ? esc_html( $row['designation'] ) : '--'; ?>
+                        <?php
+                        $designations = erp_hr_get_designation_dropdown_raw();
+
+                        if ( empty( $row['designation'] ) ) {
+                            echo '--';
+                        } elseif ( array_key_exists( $row['designation'], $designations ) ) {
+                            echo esc_html( $designations[ $row['designation'] ] );
+                        } else {
+                            echo esc_html( $row['designation'] );
+                        }
+                        ?>
                     </td>
                     <td>
                     <?php
@@ -228,9 +281,23 @@
                     ?>
                     </td>
                     <td class="action">
-                        <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() )&& ( 0 !== $num ) ) { ?>
-                            <a href="#" class="remove" data-id="<?php echo esc_html( $row['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
-                        <?php } ?>
+                        <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                            <?php if ( 0 !== $num ) : ?>
+                                <a href="#"
+                                    class="remove"
+                                    data-id="<?php echo esc_attr( $row['id'] ); ?>">
+                                    <span class="dashicons dashicons-trash"></span>
+                                </a>
+                            <?php else : ?>
+                                <a href="#"
+                                    class="edit"
+                                    data-id="<?php echo esc_attr( $row['id'] ); ?>"
+                                    data-title="<?php esc_html_e( 'Job Info History', 'erp' ); ?>"
+                                    data-template="erp-employment-job-info-history">
+                                    <span class="dashicons dashicons-edit-large"></span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php

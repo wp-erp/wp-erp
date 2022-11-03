@@ -160,6 +160,7 @@ class Human_Resource {
 
         $localize_script = apply_filters( 'erp_hr_localize_script', [
             'nonce'                  => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'erp_fields'             => erp_get_import_export_fields(),
             'popup'                  => [
                 'dept_title'            => __( 'New Department', 'erp' ),
                 'dept_submit'           => __( 'Create Department', 'erp' ),
@@ -192,6 +193,7 @@ class Human_Resource {
                 'already_terminate'     => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'        => __( 'Sorry, this employee is already active', 'erp' ),
                 'already_selected'      => __( 'The selected option is already active. Try different one.', 'erp' ),
+                'sent_to'               => __( 'Sent To Details', 'erp' ),
             ],
             'asset_url'              => WPERP_ASSETS,
             'emp_upload_photo'       => __( 'Upload Photo', 'erp' ),
@@ -217,11 +219,18 @@ class Human_Resource {
                 'section'       => 'leave',
                 'sub-section'   => 'leave-entitlements&tab=assignment',
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
+            'currentDate'            => erp_current_datetime()->format( 'Y-m-d' ),
+            'invalid_filter_data'    => __( 'Invalid filter data', 'erp' ),
+            'start_end_date'         => __( 'Start date must be earlier than End date', 'erp' ),
+            'leave_type_delete'      => __( 'Are you sure to delete this leave type?', 'erp' ),
+            'leave_type_bulk_delete' => __( 'Are you sure to delete these leave types?', 'erp' ),
+            'cancel'                 => __( 'Cancel', 'erp' ),
+            'confirm_delete'         => __( 'Yes, Delete', 'erp' ),
         ] );
 
         switch ( $section ) {
             case 'people':
-                if ( $sub_section === 'employee' ) {
+                if ( 'employee' === $sub_section ) {
                     wp_enqueue_script( 'post' );
                     $employee                          = new Employee();
                     $localize_script['employee_empty'] = $employee->to_array();
@@ -234,8 +243,18 @@ class Human_Resource {
                     wp_enqueue_script( 'erp-flotchart-axislables' );
                     wp_enqueue_script( 'erp-flotchart-valuelabel' );
                     wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+
+                } else if ( 'requests' === $sub_section ) {
+
+                    ?><script>window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash( wp_json_encode( apply_filters( 'erp_localized_data', [] ) ) ) ); ?>');</script><?php
+
                     wp_enqueue_style( 'erp-sweetalert' );
                     wp_enqueue_script( 'erp-sweetalert' );
+                    wp_enqueue_style( 'erp-daterangepicker' );
+                    wp_enqueue_script( 'erp-daterangepicker' );
+                    wp_enqueue_script( 'erp-hr-i18n', WPERP_ASSETS . '/js/i18n.js', [], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], gmdate( 'Ymd' ), true );
+                    wp_enqueue_script( 'erp-hr-requests', WPERP_HRM_ASSETS . "/js/requests.js", [ 'erp-script', 'erp-vuejs', 'jquery', 'erp-hr-i18n' ], gmdate( 'Ymd' ), true );
                 }
 
                 break;
@@ -260,11 +279,25 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
                 break;
+
+            case 'leave':
+                wp_enqueue_style( 'erp-sweetalert' );
+                wp_enqueue_script( 'erp-sweetalert' );
         }
 
         // if its an employee page
 
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
+
+        wp_localize_script( 'erp-hr-requests', 'erpHrReq', [
+            'nonce'          => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+            'adminurl'       => admin_url( 'admin.php' ),
+            'request_types'  => erp_hr_get_employee_requests_types(),
+            'employees'      => erp_hr_get_employees_dropdown_raw(),
+            'filterEmployee' => __( 'Employee', 'erp' ),
+            'clear'          => __( 'Clear', 'erp' )
+        ] );
 
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_style( 'erp-select2' );
@@ -307,6 +340,11 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-import.php', 'erp-employee-import-csv' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-export.php', 'erp-employee-export-csv' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation-history-edit.php', 'erp-employment-compensation-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info-history-edit.php', 'erp-employment-job-info-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/jemployment-type-history-edit.php', 'erp-employment-type-history' );
                 break;
 
             case 'leave':
@@ -358,6 +396,9 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation-history-edit.php', 'erp-employment-compensation-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info-history-edit.php', 'erp-employment-job-info-history' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-type-history-edit.php', 'erp-employment-type-history' );
                 break;
         }
     }

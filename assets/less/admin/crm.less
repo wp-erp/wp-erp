@@ -1746,6 +1746,24 @@ table.widefat.cfi-table {
     }
 }
 
+@media (min-width: 120px) and (max-width: 782px) {
+    .erp-crm-customer,
+    .erp-crm-subscriber-contact {
+        table.wp-list-table {
+            &.customers {
+                .column-name {
+                    width: 90%;
+                }
+            }
+        }
+
+        .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column)  {
+            min-width: 80%;
+            display: block;
+        }
+    }
+}
+
 @media (min-width: 783px) and (max-width: 1199px) {
     .cfi-table {
         width: 55%;

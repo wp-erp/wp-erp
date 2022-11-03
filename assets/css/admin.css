@@ -1767,6 +1767,17 @@ table.widefat.cfi-table {
     width: 30%;
   }
 }
+@media (min-width: 120px) and (max-width: 782px) {
+  .erp-crm-customer table.wp-list-table.customers .column-name,
+  .erp-crm-subscriber-contact table.wp-list-table.customers .column-name {
+    width: 90%;
+  }
+  .erp-crm-customer .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column),
+  .erp-crm-subscriber-contact .wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.check-column) {
+    min-width: 80%;
+    display: block;
+  }
+}
 @media (min-width: 783px) and (max-width: 1199px) {
   .cfi-table {
     width: 55%;
@@ -1899,9 +1910,19 @@ span.green {
 .job-tab-wrap table.widefat a.remove,
 .performance-tab-wrap table.widefat a.remove,
 .job-tab-wrap table.widefat a.performance-remove,
-.performance-tab-wrap table.widefat a.performance-remove {
+.performance-tab-wrap table.widefat a.performance-remove,
+.job-tab-wrap table.widefat a.edit,
+.performance-tab-wrap table.widefat a.edit {
   visibility: hidden;
   color: #999;
+}
+.job-tab-wrap table.widefat a.remove:hover,
+.performance-tab-wrap table.widefat a.remove:hover {
+  color: #dd3d36;
+}
+.job-tab-wrap table.widefat a.edit:hover,
+.performance-tab-wrap table.widefat a.edit:hover {
+  color: #32607e;
 }
 .job-tab-wrap table.widefat td.action,
 .performance-tab-wrap table.widefat td.action,
@@ -1912,7 +1933,9 @@ span.green {
 .job-tab-wrap table.widefat tr:hover a.remove,
 .performance-tab-wrap table.widefat tr:hover a.remove,
 .job-tab-wrap table.widefat tr:hover a.performance-remove,
-.performance-tab-wrap table.widefat tr:hover a.performance-remove {
+.performance-tab-wrap table.widefat tr:hover a.performance-remove,
+.job-tab-wrap table.widefat tr:hover a.edit,
+.performance-tab-wrap table.widefat tr:hover a.edit {
   visibility: visible;
 }
 .job-tab-wrap a.action,
@@ -2425,6 +2448,141 @@ table.leaves td.column-status .status-4 {
 .new-leave-request-form #f_year {
   width: 162px;
 }
+/**
+* Requests
+*/
+#erp-hr-requests .req-status {
+  padding: 5px;
+  color: white;
+  border-radius: 2px;
+}
+#erp-hr-requests .req-status.status-1,
+#erp-hr-requests .req-status.status-7,
+#erp-hr-requests .req-status.status-approved {
+  background-color: #6ecc26;
+}
+#erp-hr-requests .req-status.status-2,
+#erp-hr-requests .req-status.status-pending {
+  background-color: #ffc111;
+}
+#erp-hr-requests .req-status.status-3,
+#erp-hr-requests .req-status.status-rejected {
+  background-color: #da4343;
+}
+#erp-hr-requests .employee-header {
+  font-weight: 600;
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .employee-header {
+    line-height: 2.5em !important;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .block-td {
+    display: block;
+    margin-left: 32%;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .left-margin-employee-small {
+    margin-left: 0%;
+  }
+}
+@media (max-width: 767px) and (min-width: 601px) {
+  #erp-hr-requests .hide-td {
+    display: none;
+  }
+}
+@media (min-width: 601px) {
+  #erp-hr-requests .text-center-small {
+    text-align: center !important;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .column-heading-small {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  #erp-hr-requests .column-heading-mid {
+    display: none;
+  }
+}
+#erp-hr-requests .toggle-row-btn {
+  display: none;
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .toggle-row-btn {
+    position: absolute;
+    right: 8px;
+    top: 10px;
+    display: block;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border: none;
+    outline: 0;
+    background: 0 0;
+  }
+}
+#erp-hr-requests .toggle-row-btn:before {
+  position: absolute;
+  top: -5px;
+  left: 10px;
+  border-radius: 50%;
+  display: block;
+  padding: 1px 2px 1px 0;
+  color: #3c434a;
+  content: "\f140";
+  font: normal 20px/1 dashicons;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#erp-hr-requests .expanded .toggle-row-btn:before {
+  content: "\f142";
+}
+#erp-hr-requests .toggle-row-btn:hover {
+  cursor: pointer;
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .hide-additional-info {
+    display: none;
+  }
+  #erp-hr-requests .hide-additional-info.employee-header {
+    display: block !important;
+  }
+}
+@media (max-width: 601px) {
+  #erp-hr-requests .decor-additional-info::before {
+    position: absolute;
+    right: 10px;
+    /* match padding of regular table cell */
+    display: block;
+    overflow: hidden;
+    width: 32%;
+    /* leave a little space for a gutter */
+    margin-left: -45%;
+    content: attr(data-columnname);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #3c434a !important;
+  }
+}
+#erp-hr-requests .select2-selection {
+  border-color: #F0F0F0 !important;
+  font-weight: 200 !important;
+}
+#erp-hr-requests #erp-hr-filter-date {
+  margin: 8px 0 0 2px;
+  min-height: 27px;
+  height: 27px;
+  width: 98%;
+  border-radius: 4px;
+  border-color: #F0F0F0;
+  font-weight: 200;
+  font-size: inherit;
+}
 .caret {
   display: inline-block;
   width: 0;
@@ -2881,8 +3039,12 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp table.form-table td {
   padding: 6px 10px;
 }
-.erp .erp-hr-new-leave-request-wrap {
-  margin: 20px 0px;
+.erp .leave-calendar-actions-wrap {
+  margin-bottom: 20px;
+  display: flex;
+}
+.erp .leave-calendar-actions-wrap div {
+  padding: 0 3px;
 }
 ul.erp-list {
   width: 100%;
@@ -4426,6 +4588,190 @@ div.erp-nav-container.--show-secondary .-secondary {
 .erp-count-class {
   display: block !important;
 }
+/** ERP Tutorial Styles **/
+.wp-pointer-content h3 {
+  border: 1px solid #1a9ed4 !important;
+  background: #1a9ed4 !important;
+}
+.wp-pointer-content h3:before {
+  color: #1a9ed4 !important;
+}
+.wp-pointer-top .wp-pointer-arrow-inner,
+.wp-pointer-undefined .wp-pointer-arrow-inner {
+  border-bottom-color: #1a9ed4 !important;
+}
+.erp-pointer-buttons a.close {
+  float: left!important;
+  margin-top: 10px;
+  margin-left: 16px;
+}
+.erp-pointer-buttons .button-primary {
+  background: #1a9ed4 !important;
+  border-color: #1a9ed4 !important;
+}
+/* Tools Page CSS ----------- */
+.erp-tools-navbar {
+  background: #fff;
+  padding: 10px!important;
+  border-bottom: 0px!important;
+  margin-top: -9px !important;
+  margin-left: -22px !important;
+}
+.erp-tools-navbar .nav-tab,
+.erp-tools-navbar .nav-tab:focus {
+  border: none;
+  background: transparent;
+  padding: 14px 24px 14px 19px;
+  margin-top: 2px;
+  margin-bottom: -10px;
+  font-size: 14px;
+  box-shadow: none;
+  color: #000000;
+}
+.erp-tools-navbar .nav-tab-active,
+.erp-tools-navbar .nav-tab:hover {
+  border: none;
+  background: #F2F2F3;
+  border-radius: 3px 3px 0px 0px;
+}
+.tools-section {
+  margin: 30px 194px 20px 194px;
+  width: 60%;
+}
+.tools-section .display-flex {
+  display: flex;
+}
+.tools-section .section-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+.tools-section .tools-alert {
+  padding: 20px 16px 8px 18px;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  border-radius: 3px;
+}
+.tools-section .tools-alert .tools-alert-title {
+  color: #000000;
+  font-size: 18px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+.tools-section .tools-alert p {
+  font-size: 13px;
+}
+.tools-section .tools-alert .tools-alert-description-icon {
+  width: 25px;
+  margin-top: 18px;
+}
+.tools-section .tools-alert .tools-alert-description-text {
+  margin: 8px;
+  margin-top: 16px;
+}
+.tools-section .tools-alert-no-title {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.tools-section .tools-alert-warning {
+  color: #E67E22;
+  border: 1px solid #E67E22;
+  background: #FFFBF3;
+}
+.tools-section .tools-alert-warning i {
+  color: #FFA100;
+}
+.tools-section .tools-alert-info {
+  color: #1A9ED4;
+  border: 1px solid #1A9ED4;
+  background: #FAFDFF;
+}
+.tools-section .tools-alert-info i {
+  color: #1A9ED4;
+  font-size: 16px;
+}
+.tools-section .tools-card {
+  background: #FFFFFF;
+  padding: 30px;
+  margin-top: 20px;
+  border-radius: 3px;
+}
+.tools-section .tools-card .tools-content-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+  margin-top: 0px;
+}
+.tools-section .tools-card .tools-content-info-text {
+  font-size: 14px;
+}
+.tools-section .tools-input {
+  border-radius: 3px;
+  height: 38px;
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+  border: 2px solid #f5f5f5 !important;
+}
+.tools-section .tools-input::placeholder {
+  color: #AEAEAE;
+}
+.tools-section .tools-btn {
+  height: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 15px 8px 15px;
+  border-radius: 3px!important;
+}
+.tools-section .tools-btn-submit {
+  margin-top: 25px;
+  float: right;
+}
+.tools-section .tools-btn-submit .fa-spinner {
+  font-size: 14px;
+}
+.tools-section .tools-submit-hidden {
+  display: none;
+}
+.tools-section .tools-btn-loading {
+  color: #000;
+  cursor: progress;
+  background: #dcdcde;
+}
+.tools-section .tools-btn-danger {
+  background: #FF4848;
+  color: #ffffff;
+}
+.tools-section .tools-error-message {
+  color: #FF4848;
+}
+.tools-section .tools-error-input,
+.tools-section .tools-error-input:focus {
+  border: 1px solid #FF4848 !important;
+  box-shadow: none!important;
+  outline: none!important;
+}
+.tools-section .tools-success-input,
+.tools-section .tools-success-input:focus {
+  border: 1px solid #a5dc86 !important;
+  box-shadow: none!important;
+  outline: none!important;
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media screen and (min-width: 120px) and (max-width: 768px) {
+  .tools-section {
+    margin: 30px 0px 20px 0px;
+    width: 100%;
+  }
+}
+@media screen and (min-width: 782px) and (max-width: 1024px) {
+  .tools-section {
+    margin: 30px 0px 20px 0px;
+    width: 100%;
+  }
+}
 /*****/
 /**
 * Media Query for responsive
@@ -4644,5 +4990,15 @@ div.erp-nav-container.--show-secondary .-secondary {
   }
   .erp-table td:last-child {
     border-bottom: 0;
+  }
+  div.wperp-table-responsive div.table-container,
+  div.wperp-invoice-table {
+    width: 100% !important;
+    display: block !important;
+    overflow-x: auto !important;
+  }
+  div.wperp-table-responsive div.table-container > table,
+  div.wperp-invoice-table > table {
+    width: 782px !important;
   }
 }

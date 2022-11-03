@@ -1,4 +1,3 @@
-
 <div class="postbox">
     <h3>
         <?php esc_html_e( 'Admin Menu', 'erp' ); ?>
@@ -10,20 +9,39 @@
 
         <form method="post" class="erp-tools-form" action="<?php echo esc_url( admin_url( 'admin.php?page=erp-tools' ) ); ?>">
             <?php
-            $menus          = get_option( '_erp_admin_menu', [] );
+            global $menu;
+            $menus = [];
+
+            foreach ( $menu as $single_menu ) {
+                if ( ! empty ( $single_menu[0] ) && ! empty ( $single_menu[2] ) && $single_menu[2] !== 'erp' ) { // Without ERP
+                    $single_menu[0] = explode( '<', $single_menu[0] )[0]; // Remove if any <span> inside title
+                    array_push( $menus, $single_menu );
+                }
+            }
+
+            $inactive_menu_options = get_option( '_erp_admin_menu', [] );
+            $inactive_menus        = [];
+
+            foreach ( (array) $inactive_menu_options as $inactive_menu ) {
+                $single_menu = erp_serialize_string_to_array( $inactive_menu );
+
+                if ( ! empty ( $single_menu[0] ) && ! empty ( $single_menu[2] ) && $single_menu[2] !== 'erp' ) {
+                    array_push( $inactive_menus, $single_menu );
+                }
+            }
+
+            $menus          = array_merge( $menus, $inactive_menus );
             $adminbar_menus = get_option( '_erp_adminbar_menu', [] );
             ?>
-            <ul class="erp-list list-inline">
-                <li><label><input type="checkbox" name="menu[]" value="index.php" <?php checked( in_array( 'index.php', $menus ), true ); ?>><?php esc_html_e( 'Dashboard', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="edit.php" <?php checked( in_array( 'edit.php', $menus ), true ); ?>><?php esc_html_e( 'Posts', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="upload.php" <?php checked( in_array( 'upload.php', $menus ), true ); ?>><?php esc_html_e( 'Media', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="edit.php?post_type=page" <?php checked( in_array( 'edit.php?post_type=page', $menus ), true ); ?>><?php esc_html_e( 'Pages', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="edit-comments.php" <?php checked( in_array( 'edit-comments.php', $menus ), true ); ?>><?php esc_html_e( 'Comments', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="themes.php" <?php checked( in_array( 'themes.php', $menus ), true ); ?>><?php esc_html_e( 'Themes', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="plugins.php" <?php checked( in_array( 'plugins.php', $menus ), true ); ?>><?php esc_html_e( 'Plugins', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="users.php" <?php checked( in_array( 'users.php', $menus ), true ); ?>><?php esc_html_e( 'Users', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="tools.php" <?php checked( in_array( 'tools.php', $menus ), true ); ?>><?php esc_html_e( 'Tools', 'erp' ); ?></label></li>
-                <li><label><input type="checkbox" name="menu[]" value="options-general.php" <?php checked( in_array( 'options-general.php', $menus ), true ); ?>><?php esc_html_e( 'Settings', 'erp' ); ?></label></li>
+            <ul class="erp-list list-inline erp-toolbar-menu">
+                <?php foreach ( $menus as $menu_item ): ?>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="menu[]" value="<?php echo htmlspecialchars( serialize( $menu_item ) ); ?>" <?php checked( in_array( $menu_item, $inactive_menus ), true ); ?>>
+                            <?php echo esc_html( $menu_item[0] ); ?>
+                        </label>
+                    </li>
+                <?php endforeach; ?>
             </ul>
 
             <h4><?php esc_html_e( 'Admin Bar Menu', 'erp' ); ?></h4>
@@ -33,6 +51,8 @@
                 <li><label><input type="checkbox" name="admin_menu[]" value="updates" <?php checked( in_array( 'updates', $adminbar_menus ), true ); ?>><?php esc_html_e( 'Updates', 'erp' ); ?></label></li>
                 <li><label><input type="checkbox" name="admin_menu[]" value="comments" <?php checked( in_array( 'comments', $adminbar_menus ), true ); ?>><?php esc_html_e( 'Comments', 'erp' ); ?></label></li>
                 <li><label><input type="checkbox" name="admin_menu[]" value="new-content" <?php checked( in_array( 'new-content', $adminbar_menus ), true ); ?>><?php esc_html_e( 'New Posts', 'erp' ); ?></label></li>
+                <li><label><input type="checkbox" name="admin_menu[]" value="wp-erp-acct" <?php checked( in_array( 'wp-erp-acct', $adminbar_menus ), true ); ?>><?php esc_html_e( 'New Transaction', 'erp' ); ?></label></li>
+                <li><label><input type="checkbox" name="admin_menu[]" value="wp-erp" <?php checked( in_array( 'wp-erp', $adminbar_menus ), true ); ?>><?php esc_html_e( 'WP ERP', 'erp' ); ?></label></li>
             </ul>
 
             <?php wp_nonce_field( 'erp-remove-menu-nonce' ); ?>

@@ -55,33 +55,35 @@ function erp_acct_get_purchase( $purchase_no ) {
     $sql = $wpdb->prepare(
         "SELECT
 
-    voucher.editable,
-    purchase.id,
-    purchase.voucher_no,
-    purchase.vendor_id,
-    purchase.trn_date,
-    purchase.due_date,
-    purchase.amount,
-    purchase.vendor_name,
-    purchase.ref,
-    purchase.status,
-    purchase.purchase_order,
-    purchase.attachments,
-    purchase.particulars,
-    purchase.created_at,
-    purchase.tax,
-    purchase.tax_zone_id,
+            voucher.editable,
+            purchase.id,
+            purchase.voucher_no,
+            purchase.vendor_id,
+            purchase.trn_date,
+            purchase.due_date,
+            purchase.amount,
+            purchase.vendor_name,
+            purchase.ref,
+            purchase.status,
+            purchase.purchase_order,
+            purchase.attachments,
+            purchase.particulars,
+            purchase.created_at,
+            purchase.tax,
+            purchase.tax_zone_id,
 
-    purchase_acc_detail.purchase_no,
-    purchase_acc_detail.debit,
-    purchase_acc_detail.credit
+            purchase_acc_detail.purchase_no,
+            purchase_acc_detail.debit,
+            purchase_acc_detail.credit
 
-    FROM {$wpdb->prefix}erp_acct_purchase AS purchase
-    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON purchase.voucher_no = voucher.id
-    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
-    WHERE purchase.voucher_no = %d",
+        FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+        LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON purchase.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
+        WHERE purchase.voucher_no = %d",
         $purchase_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $row                = $wpdb->get_row( $sql, ARRAY_A );
     $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
@@ -122,6 +124,8 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
         WHERE purchase.voucher_no = %d",
         $voucher_no
     );
+
+    erp_disable_mysql_strict_mode();
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -170,9 +174,8 @@ function erp_acct_insert_purchase( $data ) {
             ]
         );
 
-        $voucher_no  = $wpdb->insert_id;
-        $purchase_no = $voucher_no;
-
+        $voucher_no    = $wpdb->insert_id;
+        $purchase_no   = $voucher_no;
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $voucher_no );
 
         $wpdb->insert(
@@ -207,30 +210,35 @@ function erp_acct_insert_purchase( $data ) {
                 'product_id' => $item['product_id'],
                 'qty'        => $item['qty'],
                 'price'      => $item['unit_price'],
-                'tax'        => $item['tax_amount'],
+                'tax'        => isset( $item['tax_amount'] ) ? $item['tax_amount'] : 0,
+                'tax_cat_id' => isset( $item['tax_cat_id'] ) ? $item['tax_cat_id'] : null,
                 'amount'     => $item['item_total'],
                 'created_at' => $purchase_data['created_at'],
                 'created_by' => $created_by,
                 'updated_at' => $purchase_data['updated_at'],
                 'updated_by' => $purchase_data['updated_by'],
             ] );
-        }
 
-        $details_id = $wpdb->insert_id;
+            $details_id = $wpdb->insert_id;
 
-        if ( isset( $purchase_data['tax_rate'] ) && isset( $purchase_data['tax_rate']['agency_id'] ) ) {
-            $tax_rate_agency = get_purchase_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
+            if ( isset( $purchase_data['tax_rate'] ) && isset( $purchase_data['tax_rate']['id'] ) ) {
+                $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
 
-            $wpdb->insert(
-                $wpdb->prefix . 'erp_acct_purchase_details_tax',
-                [
-                    'invoice_details_id' => $details_id,
-                    'agency_id'          => isset( $purchase_data['tax_rate']['agency_id'] ) ? $purchase_data['tax_rate']['agency_id'] : null,
-                    'tax_rate'           => $tax_rate_agency->tax_rate,
-                    'updated_at'         => $purchase_data['updated_at'],
-                    'updated_by'         => $purchase_data['updated_by'],
-                ]
-            );
+                foreach ( $tax_rate_agency as $tra ) {
+                    $wpdb->insert(
+                        $wpdb->prefix . 'erp_acct_purchase_details_tax',
+                        [
+                            'invoice_details_id' => $details_id,
+                            'agency_id'          => $tra['agency_id'],
+                            'tax_rate'           => $tra['tax_rate'],
+                            'created_at'         => $purchase_data['created_at'],
+                            'created_by'         => $created_by,
+                            'updated_at'         => $purchase_data['updated_at'],
+                            'updated_by'         => $purchase_data['updated_by'],
+                        ]
+                    );
+                }
+            }
         }
 
         do_action( 'erp_acct_after_purchase_create', $data, $voucher_no );
@@ -286,22 +294,6 @@ function erp_acct_insert_purchase( $data ) {
     erp_acct_purge_cache( [ 'list' => 'purchase_transaction' ] );
 
     return $purchase;
-}
-
-/**
- * Tax category with agency
- */
-function get_purchase_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
-    global $wpdb;
-
-    return $wpdb->get_row(
-        $wpdb->prepare(
-            "SELECT agency_id, tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency where tax_id = %d and tax_cat_id = %d",
-            absint( $tax_id ),
-            absint( $tax_cat_id )
-        ),
-        OBJECT
-    );
 }
 
 /**
@@ -400,20 +392,21 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
                 $details_id = $wpdb->insert_id;
 
-                if(isset($purchase_data['tax_rate']) && isset($purchase_data['tax_rate']['agency_id'])){
+                if ( isset( $purchase_data['tax_rate'] ) ){
+                    $tax_rate_agency = erp_acct_get_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
 
-                    $tax_rate_agency = get_purchase_tax_rate_with_agency( $purchase_data['tax_rate']['id'], $item['tax_cat_id'] );
-
-                    $wpdb->insert(
-                        $wpdb->prefix . 'erp_acct_purchase_details_tax',
-                        [
-                            'invoice_details_id' => $details_id,
-                            'agency_id'          => isset($purchase_data['tax_rate']['agency_id']) ? $purchase_data['tax_rate']['agency_id'] : null,
-                            'tax_rate'           => $tax_rate_agency->tax_rate ,
-                            'updated_at'         => $purchase_data['updated_at'],
-                            'updated_by'         => $purchase_data['updated_by']
-                        ]
-                    );
+                    foreach ( $tax_rate_agency as $tra ) {
+                        $wpdb->insert(
+                            $wpdb->prefix . 'erp_acct_purchase_details_tax',
+                            [
+                                'invoice_details_id' => $details_id,
+                                'agency_id'          => $tra['agency_id'],
+                                'tax_rate'           => $tra['tax_rate'],
+                                'updated_at'         => $purchase_data['updated_at'],
+                                'updated_by'         => $purchase_data['updated_by'],
+                            ]
+                        );
+                    }
                 }
             }
 
@@ -832,6 +825,8 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
         $args['orderby'],
         $args['order']
     );
+
+    erp_disable_mysql_strict_mode();
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );

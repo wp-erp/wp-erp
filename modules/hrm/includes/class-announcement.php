@@ -35,6 +35,7 @@ class Announcement {
         $this->action( 'init', 'post_types' );
         $this->action( 'do_meta_boxes', 'do_metaboxes' );
         $this->action( 'save_post', 'save_announcement_meta', 10, 2 );
+        $this->action( 'init', 'redirect_to_announcement_tab' );
 
         $this->filter( 'manage_edit-erp_hr_announcement_columns', 'add_type_columns' );
         $this->filter( 'manage_erp_hr_announcement_posts_custom_column', 'assign_type_edit_columns', 10, 2 );
@@ -43,6 +44,22 @@ class Announcement {
         // $this->filter( 'submenu_file', 'submenu_file', 999 );
 
         $this->action( 'admin_head', 'filter_admin_sidebar_menu_items' );
+    }
+
+    /**
+     * Redirect to announcement tab in people page after create/update of announcement
+     *
+     * @since 1.10.0
+     *
+     * @return void
+     */
+    public function redirect_to_announcement_tab() {
+        $request_uri = ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        if ( strpos( $request_uri, 'edit.php?post_type=erp_hr_announcement' ) !== false ) {
+            wp_safe_redirect( admin_url( 'admin.php?page=erp-hr&section=people&sub-section=announcement' ) );
+            exit;
+        }
     }
 
     /**
@@ -396,11 +413,7 @@ class Announcement {
      * @return void
      */
     public function save_announcement_meta( $post_id, $post ) {
-        if ( ! isset( $_POST['hr_announcement_meta_action_nonce'] ) ) {
-            return $post_id;
-        }
-
-        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['hr_announcement_meta_action_nonce'] ) ), 'hr_announcement_meta_action' ) ) {
+        if ( ! isset( $_POST['hr_announcement_meta_action_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['hr_announcement_meta_action_nonce'] ), 'hr_announcement_meta_action' ) ) {
             return $post_id;
         }
 
@@ -410,18 +423,14 @@ class Announcement {
 
         $post_type = get_post_type_object( $post->post_type );
 
-        if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ) {
-            return $post_id;
-        }
-
-        if ( !current_user_can( 'erp_manage_announcement' ) ) {
+        if ( ! current_user_can( $post_type->cap->edit_post, $post_id ) && ! current_user_can( 'erp_manage_announcement' ) ) {
             return $post_id;
         }
 
         $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_assign_type'] ) ) : '';
-        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_employee'] ) : [];
-        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_department'] ) : [];
-        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? array_map( 'sanitize_text_field', $_POST['hr_announcement_assign_designation'] ) : [];
+        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['hr_announcement_assign_employee'] ) ) : [];
+        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['hr_announcement_assign_department'] ) ) : [];
+        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['hr_announcement_assign_designation'] ) ) : [];
 
         if ( $type == 'by_department' ) {
             $selected = $departments;
@@ -434,7 +443,7 @@ class Announcement {
         // Assign / Send announcements to the selected group
         erp_hr_assign_announcements_to_employees( $post_id, $type, $selected );
 
-        //Redirect to announment list page
+        // Redirect to announcement list page
         wp_redirect( admin_url( 'edit.php?post_type=erp_hr_announcement' ) );
         exit;
 

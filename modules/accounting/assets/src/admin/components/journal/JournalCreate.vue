@@ -46,7 +46,7 @@
                 <table class="wperp-table wperp-form-table new-journal-form">
                     <thead>
                     <tr>
-                        <th scope="col" class="column-primary">{{ __('SL No.', 'erp') }}</th>
+                        <th scope="col">{{ __('SL No.', 'erp') }}</th>
                         <th scope="col">{{ __('Account', 'erp') }}</th>
                         <th scope="col">{{ __('Particulars', 'erp') }}</th>
                         <th scope="col">{{ __('Debit', 'erp') }}</th>
@@ -55,8 +55,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="key" v-for="(line,key) in transactionLines">
-                        <td scope="row" class="column-primary">
+                    <tr :key="key" v-for="(line,key) in transactionLines" class="inline-edit-row">
+                        <td scope="row">
                             {{ key+1 }}
                         </td>
                         <td class="col--account" :data-colname="__('Account', 'erp')">
@@ -77,12 +77,12 @@
                             <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
-                    <tr class="add-new-line">
+                    <tr class="add-new-line inline-edit-row">
                         <td colspan="9" style="text-align: left;">
                             <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
                         </td>
                     </tr>
-                    <tr class="total-amount-row">
+                    <tr class="total-amount-row inline-edit-row">
                         <td colspan="3" class="pl-10 text-right col--total-amount">
                             <span>{{ __('Total Amount', 'erp') }}</span>
                         </td>
@@ -97,7 +97,7 @@
                         <td></td>
                     </tr>
                     </tbody>
-                    <tr class="add-attachment-row">
+                    <tr class="add-attachment-row inline-edit-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
@@ -106,7 +106,7 @@
                         </td>
                     </tr>
                     <tfoot>
-                    <tr>
+                    <tr class="inline-edit-row">
                         <td colspan="9" style="text-align: right;">
                             <submit-button :text="__( 'Save', 'erp' )"></submit-button>
                         </td>

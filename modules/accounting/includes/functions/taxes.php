@@ -71,24 +71,26 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     $sql = "SELECT
 
-    tax.id,
-    tax.tax_rate_name,
-    tax.tax_number,
-    tax.default,
-    tax.created_at,
-    tax.created_by,
-    tax.updated_at,
-    tax.updated_by,
+                tax.id,
+                tax.tax_rate_name,
+                tax.tax_number,
+                tax.default,
+                tax.created_at,
+                tax.created_by,
+                tax.updated_at,
+                tax.updated_by,
 
-    tax_item.tax_id,
-    tax_item.component_name,
-    tax_item.agency_id,
-    tax_item.tax_cat_id
+                tax_item.tax_id,
+                tax_item.component_name,
+                tax_item.agency_id,
+                tax_item.tax_cat_id
 
-    FROM {$wpdb->prefix}erp_acct_taxes AS tax
-    LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
+            FROM {$wpdb->prefix}erp_acct_taxes AS tax
+            LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
 
-    WHERE tax.id = {$tax_no} LIMIT 1";
+            WHERE tax.id = {$tax_no} LIMIT 1";
+
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -110,7 +112,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
  *
  * @param $data
  *
- * @return int
+ * @return array
  */
 function erp_acct_insert_tax_rate( $data ) {
     global $wpdb;
@@ -120,13 +122,12 @@ function erp_acct_insert_tax_rate( $data ) {
     $data['created_by'] = $created_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
+    $items    = $data['tax_components'];
+    $tax_id   = (int) $data['tax_rate_name'];
+    $inserted = [];
 
-    $items = $data['tax_components'];
-
-    $tax_id = (int) $data['tax_rate_name'];
-
-    foreach ( $items as $key => $item ) {
-        $wpdb->insert(
+    foreach ( $items as $item ) {
+        $result = $wpdb->insert(
             $wpdb->prefix . 'erp_acct_tax_cat_agency',
             [
                 'tax_id'         => $tax_id,
@@ -140,11 +141,15 @@ function erp_acct_insert_tax_rate( $data ) {
                 'updated_by'     => $tax_data['updated_by'],
             ]
         );
+
+        if ( ! is_wp_error( $result ) ) {
+            $inserted[] = $wpdb->insert_id;
+        }
     }
 
-    erp_acct_purge_cache( ['list' => 'tax_rates'] );
+    erp_acct_purge_cache( [ 'list' => 'tax_rates' ] );
 
-    return $tax_id;
+    return $inserted;
 }
 
 /**
@@ -169,8 +174,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
             'tax_rate_id' => $tax_data['tax_rate_id'],
             'tax_number'  => $tax_data['tax_number'],
             'default'     => $tax_data['default'],
-            'created_at'  => $tax_data['created_at'],
-            'created_by'  => $tax_data['created_by'],
             'updated_at'  => $tax_data['updated_at'],
             'updated_by'  => $tax_data['updated_by'],
         ],
@@ -193,8 +196,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
                 'tax_cat_id'     => $item['tax_cat_id'],
                 'agency_id'      => $item['agency_id'],
                 'tax_rate'       => $item['tax_rate'],
-                'created_at'     => $tax_data['created_at'],
-                'created_by'     => $tax_data['created_by'],
                 'updated_at'     => $tax_data['updated_at'],
                 'updated_by'     => $tax_data['updated_by'],
             ],
@@ -306,8 +307,6 @@ function erp_acct_edit_tax_rate_line( $data ) {
             'tax_cat_id'     => $tax_data['tax_cat_id'],
             'agency_id'      => $tax_data['agency_id'],
             'tax_rate'       => $tax_data['tax_rate'],
-            'created_at'     => $tax_data['created_at'],
-            'created_by'     => $tax_data['created_by'],
             'updated_at'     => $tax_data['updated_at'],
             'updated_by'     => $tax_data['updated_by'],
         ],
@@ -658,6 +657,8 @@ function erp_acct_get_formatted_tax_line_data( $data ) {
 function erp_acct_tax_summary() {
     global $wpdb;
 
+    erp_disable_mysql_strict_mode();
+
     return $wpdb->get_results(
         "SELECT
         tax.id AS tax_rate_id,
@@ -679,4 +680,72 @@ function erp_acct_get_default_tax_rate_name_id() {
     global $wpdb;
 
     return $wpdb->get_var( "SELECT id FROM {$wpdb->prefix}erp_acct_taxes WHERE `default` = 1" );
+}
+
+/**
+ * Inserts synced tax data
+ *
+ * @since 1.10.0
+ *
+ * @param array $args
+ *
+ * @return int|string|\WP_Error
+ */
+function erp_acct_insert_synced_tax( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'system_id'   => null,
+        'sync_type'   => '',
+        'sync_source' => '',
+        'sync_id'     => null,
+        'sync_slug'   => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    if ( empty( $args['system_id'] ) || ( empty( $args['sync_slug'] ) && empty( $args['sync_id'] ) ) ) {
+        return new \WP_Error( 'inconsistent-data', __( 'Inconsistent data provided', 'erp' ) );
+    }
+
+    $inserted = $wpdb->insert( "{$wpdb->prefix}erp_acct_synced_taxes", $args, [ '%d', '%s', '%s', '%d', '%s' ] );
+
+    return $inserted;
+}
+
+/**
+ * Retrieves system id of synced tax data
+ *
+ * @since 1.10.0
+ *
+ * @param string $sync_type
+ * @param string $sync_source
+ * @param int|string $sync_id
+ * @param string $sync_slug
+ *
+ * @return int|null
+ */
+function erp_acct_get_synced_tax_system_id( $sync_type, $sync_source, $sync_id = false, $sync_slug = false ) {
+    global $wpdb;
+
+    $sql  = "SELECT system_id
+            FROM {$wpdb->prefix}erp_acct_synced_taxes
+            WHERE sync_type = %s
+            AND sync_source = %s";
+
+    $args = [ $sync_type, $sync_source ];
+
+    if ( false !== $sync_id ) {
+        $sql   .= " AND sync_id = %d";
+        $args[] = $sync_id;
+    }
+
+    if ( false !== $sync_slug ) {
+        $sql   .= " AND sync_slug = %s";
+        $args[] = $sync_slug;
+    }
+
+    $system_id = $wpdb->get_var( $wpdb->prepare( $sql, $args ) );
+
+    return ! is_wp_error( $system_id ) ? (int) $system_id : null;
 }

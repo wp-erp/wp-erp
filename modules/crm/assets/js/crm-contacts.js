@@ -9,7 +9,14 @@
                     dateFormat: 'yy-mm-dd',
                     changeMonth: true,
                     changeYear: true,
-                    yearRange: '-50:+5',
+                    yearRange: '-100:+5',
+                });
+
+                $('.erp-crm-date-field').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: '-100:-2',
                 });
 
                 $( '.erp-select2' ).select2({
@@ -1610,9 +1617,7 @@
                         type = form.find('#erp-customer-type').val(),
                         id   = form.find('#erp-customer-id').val();
 
-                    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-                    if ( val == '' || !re.test( val ) ) {
+                    if ( val.trim() == '' ) {
                         return false;
                     }
 
@@ -1631,6 +1636,9 @@
                             if ( $.inArray( 'contact', response.types ) != -1 || $.inArray( 'company', response.types ) != -1 ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.contact_exit + '</div>');
+                            } else if ( $.inArray( 'customer', response.types ) != -1 || $.inArray( 'vendor', response.types != -1 ) ){
+                                form.find('.modal-suggession').remove();
+                                form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.import_acc_user_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-user_id="'+ response.id +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
                             } else if ( typeof response.data !== undefined && 'wp_user' == response.data.types ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.wpuser_make_contact_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-is_wp="yes" data-user_id="'+ response.data.ID +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
@@ -1821,7 +1829,300 @@
 
                 addSearchSegment: function() {
                     this.showHideSegment = !this.showHideSegment;
-                }
+                },
+
+                importUsers: function() {
+                    var self = this;
+
+                    $.erpPopup({
+                        title: wpErpCrm.import_users,
+                        button: wpErpCrm.import,
+                        id: 'erp-customer-import-users',
+                        content: wperp.template('erp-crm-import-users')({ type: type }),
+                        extraClass: 'medium',
+                        onReady: function() {
+                            var modal  = this,
+                                form   = '#erp-customer-import-users form.erp-modal-form';
+
+                            $( form ).attr( 'enctype', 'multipart/form-data' );
+                            $( form ).attr( 'id', 'users_import_form' );
+
+                            $('.erp-select2').select2();
+                        },
+                        onSubmit: function(modal) {
+                            modal.disableButton();
+
+                            var data       = this.serialize(),
+                                totalItems = 0,
+                                left       = 0,
+                                imported   = 0,
+                                exists     = 0,
+                                percent    = 0,
+                                type       = 'success',
+                                message    = '',
+                                statusDiv  = $("div#import-status-indicator");
+
+                            statusDiv.show();
+
+                            wp.ajax.send({
+                                data: data,
+                                success: function(response) {
+                                    totalItems = response.total_items;
+                                    left       = response.left;
+                                    exists     = response.exists;
+                                    imported   = totalItems - left;
+                                    done       = imported - exists;
+
+                                    if (imported > 0 || totalItems > 0) {
+                                        percent = Math.floor((100 / totalItems) * (imported));
+
+                                        type = 'success';
+                                        message = __('Successfully imported all users!', 'erp');
+                                    } else {
+                                        type = 'error';
+                                        message = __('No users found to import!', 'erp');
+                                    }
+
+                                    statusDiv.find('#progress-total').html(percent + '%');
+                                    statusDiv.find('#progressbar-total').val(percent);
+                                    statusDiv.find('#completed-total').html( __('Imported ', 'erp') + done + __(' out of ', 'erp') + totalItems);
+
+                                    if (exists > 0) {
+                                        statusDiv.find('#failed-total').html(__('Already Exist ', 'erp') + exists);
+                                    }
+
+                                    if (left > 0) {
+                                        return form.submit();
+                                    } else {
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                        contact.$broadcast('vtable:reload');
+
+                                        swal({
+                                            title: '',
+                                            text: message,
+                                            type: type,
+                                            timer: 2200,
+                                            showConfirmButton: false
+                                        });
+                                    }
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass( 'erp-hide' );
+                                    swal('', error, 'error');
+                                }
+                            });
+                        }
+                    });
+                },
+
+                importCsv: function(type) {
+                    var self = this;
+
+                    $.erpPopup({
+                        title: wpErpCrm.import_title,
+                        button: wpErpCrm.import,
+                        id: 'erp-customer-import',
+                        content: wperp.template('erp-crm-import-customer')({ type: type }),
+                        extraClass: 'medium',
+                        onReady: function() {
+                            var modal  = this,
+                                form   = '#erp-customer-import form.erp-modal-form';
+
+                            $( '#erp-crm-csv-import-error' ).hide();
+                            $( '#erp-crm-csv-import-error' ).html('');
+
+                            $( form ).attr( 'enctype', 'multipart/form-data' );
+                            $( form ).attr( 'id', 'import_form' );
+
+                            $( 'button#erp-crm-sample-csv' ).on( 'click', function(e) {
+                                e.preventDefault();
+                                var csvUrl = $(this).data('url');
+                                window.location.href = csvUrl;
+                            });
+
+                            $( 'form#import_form #csv_file' ).on('change', function (e) {
+                                e.preventDefault();
+
+                                if (!this) {
+                                    return;
+                                }
+
+                                self.processCsvImporter(this, type);
+                            });
+                        },
+                        onSubmit: function(modal) {
+                            modal.disableButton();
+                            $( '#erp-crm-csv-import-error' ).hide();
+
+                            var data = new FormData(this.get(0));
+
+                            wp.ajax.send({
+                                data: data,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    modal.enableButton();
+                                    modal.closeModal();
+                                    contact.$broadcast('vtable:reload');
+
+                                    swal({
+                                        title: '',
+                                        text: response,
+                                        type: 'success',
+                                        timer: 2500,
+                                        showConfirmButton: false
+                                    });
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass( 'erp-hide' );
+                                    // swal('', error, 'error');
+                                    $( '#erp-crm-csv-import-error' ).show();
+                                    $( '#erp-crm-csv-import-error' ).html(error);
+                                    $( '#import_form > div' ).animate( { scrollTop: 0 }, 'fast' );
+                                }
+                            });
+                        }
+                    });
+                },
+
+                exportCsv: function(type) {
+                    var self  = $(this),
+                        label = type == 'contact'
+                              ? __( 'Select contact fields to export', 'erp' )
+                              : __( 'Select company fields to export', 'erp' );
+
+                    $.erpPopup({
+                        title: wpErpCrm.export_title,
+                        button: wpErpCrm.export,
+                        id: 'erp-customer-export',
+                        content: wperp.template('erp-crm-export-customer')({ type: type, label: label }),
+                        extraClass: '',
+
+                        onReady: function() {
+                            var modal  = this,
+                                form   = '#erp-customer-export form.erp-modal-form',
+                                fields = wpErpCrm.erp_fields[type] ? wpErpCrm.erp_fields[type].fields : [],
+                                html   = '';
+
+                            $( form ).attr( 'id', 'export_form' );
+
+                            for (var i = 0; i < fields.length; i++) {
+                                html += '<div class="col-1.5"><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + contact.strTitleCase(fields[i]) + '</label></div>';
+                            }
+
+                            if (html) {
+                                $('form#export_form #fields').html(html);
+                            }
+
+                            $("#export_form #selecctall").change(function (e) {
+                                e.preventDefault();
+
+                                $("#export_form #fields input[type=checkbox]").prop('checked', $(this).prop("checked"));
+                            });
+                        },
+
+                        onSubmit: function(modal) {
+                            this.unbind('submit');
+                            this.get(0).submit();
+                            modal.closeModal();
+                        }
+                    });
+                },
+
+                processCsvImporter: function(fileSelector, type) {
+                    $('#erp-csv-fields-container').show();
+
+                    var fieldsHtml     = '',
+                        required       = '',
+                        reqSpan        = '',
+                        fields         = wpErpCrm.erp_fields[type] ? wpErpCrm.erp_fields[type].fields : [],
+                        requiredFields = wpErpCrm.erp_fields[type] ? wpErpCrm.erp_fields[type].required_fields : [];
+
+                    for (var i = 0; i < fields.length; i++) {
+
+                        if (requiredFields.indexOf(fields[i]) !== -1) {
+                            required = 'required';
+                            reqSpan  = ' <span class="required">*</span>';
+                        } else {
+                            required = '';
+                            reqSpan  = '';
+                        }
+
+                        fieldsHtml += `
+                            <tr>
+                                <th>
+                                    <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + this.strTitleCase(fields[i]) + reqSpan + `</label>
+                                </th>
+                                <td>
+                                    <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
+                                    </select>
+                                </td>
+                            </tr>`;
+                    }
+
+                    $('#erp-csv-fields-container').html(fieldsHtml);
+
+                    this.mapCsvFields(fileSelector, '.csv_fields');
+                },
+
+                mapCsvFields: function(fileSelector, fieldSelector) {
+                    var file      = fileSelector.files[0],
+                        reader    = new FileReader(),
+                        first5000 = file.slice(0, 5000);
+
+                    reader.readAsText(first5000);
+
+                    reader.onload = function (e) {
+                        var csv             = reader.result,
+                            lines           = csv.split('\n'),
+                            columnNamesLine = lines[0],
+                            columnNames     = columnNamesLine.split(','),
+                            html            = '';
+
+                        html += '<option value="">&mdash; Select Field &mdash;</option>';
+
+                        columnNames.forEach(function (item, index) {
+                            item = item.replace(/"/g, "");
+
+                            html += '<option value="' + index + '">' + item + '</option>';
+                        });
+
+                        if (html) {
+                            var fieldLabel;
+
+                            $(fieldSelector).html(html);
+
+                            $(fieldSelector).each(function () {
+                                var options = $(this).find('option');
+
+                                fieldLabel  = $(this).parent().parent().find('label').text();
+
+                                var targetOption = $(options).filter(function () {
+                                    var option_text = $(this).html(),
+                                        regEx       = new RegExp(fieldLabel, 'i');
+
+                                    return regEx.test(option_text);
+                                });
+
+                                if (targetOption) {
+                                    $(options).removeAttr("selected");
+                                    $(this).val($(targetOption).val());
+                                }
+                            });
+                        }
+                    };
+                },
+
+                strTitleCase: function(string) {
+                    var str = string.replace(/_/g, ' ');
+
+                    return str.toLowerCase().split(' ').map(function (word) {
+                        return (word.charAt(0).toUpperCase() + word.slice(1));
+                    }).join(' ');
+                },
             },
 
             ready: function() {

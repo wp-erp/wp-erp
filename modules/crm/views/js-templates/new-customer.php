@@ -22,7 +22,7 @@
                             <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/mystery-person.png' ); ?>" alt="">
                             <a href="#" id="erp-set-customer-photo" class="button button-primary">
                                 <i class="fa fa-cloud-upload"></i>
-                                <?php esc_attr_e( 'Upload Photo', 'erp' ); ?>
+                                <?php esc_html_e( 'Upload Photo', 'erp' ); ?>
                             </a>
                         <# } #>
                     </div>
@@ -33,11 +33,11 @@
             <div class="col-4 right-column">
                 <div class="erp-crm-modal-right">
                 <# if ( _.contains( data.types, 'company' ) ) { #>
-                    <span class="required space-top">* <?php esc_attr_e( 'Company name and email are required', 'erp' ); ?></span>
+                    <span class="required space-top">* <?php esc_html_e( 'Company name and email are required', 'erp' ); ?></span>
 
                     <?php do_action( 'erp_crm_company_form_top' ); ?>
                 <# } else { #>
-                    <span class="required space-top">* <?php esc_attr_e( 'First name and email are required', 'erp' ); ?></span>
+                    <span class="required space-top">* <?php esc_html_e( 'First name and email are required', 'erp' ); ?></span>
 
                     <?php $custom_attr_length = apply_filters( 'erp_crm_custom_attr_length', 30 ); ?>
 
@@ -155,7 +155,7 @@
                                     'label' => __( 'Date of Birth', 'erp' ),
                                     'name'  => 'contact[meta][date_of_birth]',
                                     'value' => '{{ data.date_of_birth }}',
-                                    'class' => 'erp-date-field erp-crm-date-field',
+                                    'class' => 'erp-crm-date-field',
                                 ] ); ?>
                             </div>
                             <div class="col-3">
@@ -219,7 +219,7 @@
                             </div>
 
                             <div class="col-3" data-selected="{{ data.country }}">
-                                <label for="erp-popup-country"><?php esc_attr_e( 'Country', 'erp' ); ?></label>
+                                <label for="erp-popup-country"><?php esc_html_e( 'Country', 'erp' ); ?></label>
                                 <select name="contact[main][country]" id="erp-popup-country" class="erp-country-select erp-select2" data-parent="ol">
                                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
                                     <?php echo wp_kses( $country->country_dropdown( erp_get_country() ),
@@ -262,7 +262,7 @@
 
                     <?php if ( erp_crm_get_contact_group_dropdown() ) { ?>
                         <fieldset class="contact-group">
-                            <legend><?php esc_attr_e( 'Contact Group', 'erp' ); ?></legend>
+                            <legend><?php esc_html_e( 'Contact Group', 'erp' ); ?></legend>
 
                             <div class="row">
                                 <div class="col-6" id="erp-crm-contact-subscriber-group-checkbox" data-selected = "{{ data.group_id }}">
@@ -289,7 +289,7 @@
                         <?php } ?>
 
                         <fieldset class="additional-info">
-                        <legend><?php esc_attr_e( 'Additional Info', 'erp' ); ?></legend>
+                        <legend><?php esc_html_e( 'Additional Info', 'erp' ); ?></legend>
 
                         <div class="row">
 
@@ -331,7 +331,7 @@
                         </fieldset>
 
                         <fieldset class="social-info">
-                        <legend><?php esc_attr_e( 'Social Info', 'erp' ); ?></legend>
+                        <legend><?php esc_html_e( 'Social Info', 'erp' ); ?></legend>
 
                         <div class="row">
 

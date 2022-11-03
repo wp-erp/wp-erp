@@ -1,14 +1,12 @@
 <template>
     <div class="people-search">
-        <h4>{{ __('Search', 'erp') }}</h4>
-
         <form @submit.prevent="searchPeople">
             <div class="input-with-addon">
-                <input v-model="search" type="search" class="wperp-form-field">
+                <input v-model="search" type="search" class="wperp-form-field" :placeholder="__('Search People', 'erp')">
                 <span v-if="search" @click="clearSearch">&#x2716;</span>
             </div>
-
-            <button type="submit" class="wperp-btn btn--primary">{{ __('Search', 'erp') }}</button>
+            
+            <button type="submit" class="wperp-btn btn--primary search-btn">{{ __('Search', 'erp') }}</button>
         </form>
     </div>
 </template>
@@ -39,9 +37,11 @@ export default {
 <style lang="less" scoped>
 .people-search {
     display: flex;
-    width: 50%;
+    position: absolute;
+    width: 20%;
     align-items: center;
     justify-content: flex-end;
+    right: 1.25rem;
 
     form {
         display: flex
@@ -51,12 +51,40 @@ export default {
         margin: 0;
     }
 
+    @media (max-width: 782px) {
+        right: 0.8rem;
+        margin-top: 9px;
+    }
+
     .input-with-addon {
         position: relative;
-        margin: 0 15px;
+
+        @media (max-width: 782px) {
+            margin-top: 14px;
+            height: 29.8px;
+            max-height: 29.8px;
+        }
 
         input {
-            width: 200px;
+            width: 180px;
+            max-height: 25px;
+            height: 25px;
+            border: 0.3px solid rgb(226, 226, 226);
+
+            &::placeholder {
+                color: rgba(0,0,0,0.6) !important;
+                font-size: 12px !important;
+                font-weight: 400 !important;
+            }
+
+            @media (max-width: 782px) {
+                height: 30px;
+                min-height: 30px;
+            }
+
+             @media (max-width: 650px) {     
+                width: 120px;
+            }
         }
 
         span {
@@ -65,6 +93,16 @@ export default {
             top: 10px;
             font-size: 10px;
             cursor: pointer;
+        }
+    }
+
+    .search-btn {
+        @media (max-width: 782px) {
+            margin-top: 14px!important;
+        }
+
+        @media (max-width: 650px) {
+            display: none;
         }
     }
 }

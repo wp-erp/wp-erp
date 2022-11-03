@@ -53,35 +53,36 @@ function erp_acct_get_payment( $invoice_no ) {
     global $wpdb;
 
     $sql = "SELECT
+                pay_inv.id,
+                pay_inv.voucher_no,
+                pay_inv.customer_id,
+                pay_inv.customer_name,
+                pay_inv.trn_date,
+                pay_inv.amount,
+                pay_inv.trn_by,
+                pay_inv.ref,
+                pay_inv.trn_by_ledger_id,
+                pay_inv.particulars,
+                pay_inv.attachments,
+                pay_inv.status,
+                pay_inv.created_at,
+                pay_inv.transaction_charge,
 
-    pay_inv.id,
-    pay_inv.voucher_no,
-    pay_inv.customer_id,
-    pay_inv.customer_name,
-    pay_inv.trn_date,
-    pay_inv.amount,
-    pay_inv.trn_by,
-    pay_inv.ref,
-    pay_inv.trn_by_ledger_id,
-    pay_inv.particulars,
-    pay_inv.attachments,
-    pay_inv.status,
-    pay_inv.created_at,
-    pay_inv.transaction_charge,
+                pay_inv_detail.invoice_no,
+                pay_inv_detail.amount as pay_inv_detail_amount,
 
-    pay_inv_detail.invoice_no,
-    pay_inv_detail.amount as pay_inv_detail_amount,
+                ledger_detail.particulars,
+                ledger_detail.debit,
+                ledger_detail.credit
 
-    ledger_detail.particulars,
-    ledger_detail.debit,
-    ledger_detail.credit
+            from {$wpdb->prefix}erp_acct_invoice_receipts as pay_inv
 
-    from {$wpdb->prefix}erp_acct_invoice_receipts as pay_inv
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts_details as pay_inv_detail ON pay_inv.voucher_no = pay_inv_detail.voucher_no
+            LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ledger_detail ON pay_inv.voucher_no = ledger_detail.trn_no
 
-    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts_details as pay_inv_detail ON pay_inv.voucher_no = pay_inv_detail.voucher_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ledger_detail ON pay_inv.voucher_no = ledger_detail.trn_no
+            WHERE pay_inv.voucher_no = {$invoice_no}";
 
-    WHERE pay_inv.voucher_no = {$invoice_no}";
+    erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 

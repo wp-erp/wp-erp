@@ -18,14 +18,14 @@
             <h3>{{ __('Income Statement', 'erp') }}</h3>
             <p>{{ __('A summary of a management\'s performance reflected as the profitability of an organization during the time interval', 'erp') }}.</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'IncomeStatement' }">View Report</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'IncomeStatement' }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
             <h3>{{ __('Sales Tax', 'erp') }}</h3>
             <p>{{ __('It generates report based on the sales tax charged or paid for the current financial cycle/year', 'erp') }}.</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTax' }">{{ __('View Report', 'erp') }}</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTaxReportOverview' }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
@@ -49,8 +49,22 @@ export default {
 
     data() {
         return {
-            reportLists: window.acct.hooks.applyFilters('acctExtensionReportsList', [])
+            reportLists  : window.acct.hooks.applyFilters('acctExtensionReportsList', []),
+            proEnable    : false,
+            proActivated : false,
         };
+    },
+
+    watch:{
+      '$store.state..common.erp_pro_activated' : function() {
+          console.log(this.$store.state.erp_pro_activated + 'ok')
+      }
+    },
+
+    mounted(){
+        setTimeout( ()=>{
+           this.proActivated = this.$store.state.erp_pro_activated
+        }, 200);
     }
 };
 </script>

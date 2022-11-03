@@ -2,12 +2,12 @@
 
 namespace WeDevs\ERP;
 
-use WeDevs\ERP\Framework\ERP_Settings_Page;
+use WeDevs\ERP\Settings\Template as Settings_Page;
 
 /**
  * Email Class
  */
-class Email extends ERP_Settings_Page {
+class Email extends Settings_Page {
 
     /**
      * Email method ID.
@@ -514,7 +514,7 @@ class Email extends ERP_Settings_Page {
             <th scope="row" class="titledesc"><?php esc_html_e( 'Template Tags', 'erp' ); ?></th>
             <td class="forminp">
                 <em><?php esc_html_e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
-                <?php echo '<code>' . wp_kses_post( implode( '</code>, <code>', $this->find ) ) . '</code>'; ?>
+                <code><?php echo wp_kses_post( implode( '</code>, <code>', $this->find ) ) ?></code>
             </td>
         </tr>
         <?php

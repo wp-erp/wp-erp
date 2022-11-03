@@ -109,9 +109,19 @@ span.green {
     table.widefat {
         margin-bottom: 20px;
 
-        a.remove,a.performance-remove {
+        a.remove,
+        a.performance-remove,
+        a.edit {
             visibility: hidden;
             color: #999;
+        }
+
+        a.remove:hover {
+            color: #dd3d36;
+        }
+
+        a.edit:hover {
+            color: rgb(50, 96, 126);
         }
 
         td.action, th.action {
@@ -119,7 +129,9 @@ span.green {
         }
 
         tr:hover {
-            a.remove, a.performance-remove {
+            a.remove,
+            a.performance-remove,
+            a.edit {
                 visibility: visible;
             }
         }
@@ -561,4 +573,161 @@ table.leaves {
 #erp-hr-leave-req-leave-policy,
 .new-leave-request-form #f_year {
     width: 162px;
+}
+
+/**
+* Requests
+*/
+@mid-width: 767px;
+@small-width: 601px;
+
+#erp-hr-requests {
+    .req-status {
+        padding: 5px;
+        color: white;
+        border-radius: 2px;
+
+        &.status-1,
+        &.status-7,
+        &.status-approved {
+            background-color: #6ecc26;
+        }
+
+        &.status-2,
+        &.status-pending {
+            background-color: #ffc111;
+        }
+
+        &.status-3,
+        &.status-rejected {
+            background-color: rgb(218, 67, 67);
+        }
+    }
+
+    .employee-header {
+        font-weight: 600;
+
+        @media (max-width: @small-width) {
+            line-height: 2.5em !important;
+        }
+    }
+
+    .block-td {
+        @media (max-width: @small-width) {
+            display: block;
+            margin-left: +32%;
+        }
+    }
+
+    .left-margin-employee-small {
+        @media (max-width: @small-width) {
+            margin-left: 0%;
+        }
+    }
+
+    .hide-td {
+        @media (max-width: @mid-width) {
+            @media (min-width: @small-width) {
+                display: none;
+            }
+        }
+    }
+
+    .text-center-small {
+        @media (min-width: @small-width) {
+            text-align: center !important;
+        }
+    }
+
+    .column-heading-small {
+        @media (max-width: @small-width) {
+            display: none;
+        }
+    }
+
+    .column-heading-mid {
+        @media (max-width: @mid-width) {
+            display: none;
+        }
+    }
+
+    .toggle-row-btn {
+        display: none;
+        @media ( max-width: @small-width){
+            position: absolute;
+            right: 8px;
+            top: 10px;
+            display: block;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border: none;
+            outline: 0;
+            background: 0 0;
+        }
+    }
+
+    .toggle-row-btn:before {
+        position: absolute;
+        top: -5px;
+        left: 10px;
+        border-radius: 50%;
+        display: block;
+        padding: 1px 2px 1px 0;
+        color: #3c434a;
+        content: "\f140";
+        font: normal 20px/1 dashicons;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .expanded .toggle-row-btn:before {
+        content: "\f142";
+    }
+
+    .toggle-row-btn:hover {
+        cursor: pointer;
+    }
+
+    .hide-additional-info {
+        @media (max-width: @small-width){
+            display: none;
+
+            &.employee-header {
+                display: block !important;
+            }
+        }
+    }
+
+    .decor-additional-info::before {
+        @media (max-width: @small-width) {
+            position: absolute;
+            right: 10px; /* match padding of regular table cell */
+            display: block;
+            overflow: hidden;
+            width: 32%; /* leave a little space for a gutter */
+            margin-left: -45%;
+            content: attr(data-columnname);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color:#3c434a !important;
+        }
+    }
+
+    .select2-selection  {
+        border-color: #F0F0F0 !important;
+        font-weight: 200 !important;
+    }
+
+    #erp-hr-filter-date {
+        margin: 8px 0 0 2px;
+        min-height: 27px;
+        height: 27px;
+        width: 98%;
+        border-radius: 4px;
+        border-color: #F0F0F0;
+        font-weight: 200;
+        font-size: inherit;
+    }
 }

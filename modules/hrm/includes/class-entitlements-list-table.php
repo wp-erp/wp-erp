@@ -121,7 +121,7 @@ class Entitlement_List_Table extends \WP_List_Table {
                                 continue;
                             }
                             $selected = $policy['policy_id'] == $selected_leave_id ? 'selected="selected"' : '';
-                            echo "<option value='{$policy['policy_id']}' $selected>{$policy['name']}</option>";
+                            echo sprintf( "<option value='%s' %s>%s</option>", esc_attr( $policy['policy_id'] ), esc_attr( $selected ), esc_html( $policy['name'] ) );
                         }
                     } ?>
                 </select>
@@ -184,8 +184,13 @@ class Entitlement_List_Table extends \WP_List_Table {
 
             if ( $available > 0 ) {
                 $str = sprintf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $available ), _n( 'day', 'days', $available + 1, 'erp' ) );
+                if ( $extra_leave > 0 ) {
+                    $str .= sprintf( '<span class="red tooltip" title="%s"> (%s %s)</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $extra_leave ), _n( 'day', 'days', $extra_leave, 'erp' ) );
+                }
             } elseif ( $extra_leave > 0 ) {
                 $str = sprintf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $extra_leave ), _n( 'day', 'days', $extra_leave, 'erp' ) );
+            } elseif ( $available < 0 ) {
+                $str = '<span> &mdash; </span>';
             }
         }
 

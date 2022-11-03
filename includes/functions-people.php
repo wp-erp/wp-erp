@@ -42,7 +42,12 @@ function erp_get_peoples( $args = [] ) {
         'no_object'  => false,
     ];
 
-    $args         = wp_parse_args( $args, $defaults );
+    $args                 = wp_parse_args( $args, $defaults );
+    $args['crm_agent_id'] = false;
+
+    if ( erp_is_module_active( 'crm' ) ) {
+        $args['crm_agent_id'] = ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) ? get_current_user_id() : false;
+    }
 
     $people_type  = is_array( $args['type'] ) ? implode( '-', $args['type'] )       : $args['type'];
     $last_changed = erp_cache_get_last_changed( 'crm', 'people' );
@@ -101,9 +106,11 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
-        if ( current_user_can( 'erp_crm_agent' ) ) {
-            $current_user_id = get_current_user_id();
-            $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+        if ( erp_is_module_active( 'crm' ) ) {
+            if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+                $current_user_id = get_current_user_id();
+                $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+            }
         }
 
         // Check if the row want to search
@@ -441,6 +448,8 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
     $existing_people = \WeDevs\ERP\Framework\Models\People::firstOrNew( [ 'id' => $args['id'] ] );
 
+    $old_email = $existing_people->email;
+
     $defaults = [
         'id'            => $existing_people->id,
         'first_name'    => $existing_people->first_name,
@@ -470,17 +479,17 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $args           = wp_parse_args( $args, $defaults );
     $errors         = [];
     $unchanged_data = [];
+    $people_type    = $args['type'];
 
-    $people_type = $args['type'];
     unset( $args['type'], $args['created'] );
 
     //sensitization
     $args['email'] = strtolower( trim( $args['email'] ) );
-    
+
     if ( ! empty( $args['phone'] ) ) {
         $args['phone'] = erp_sanitize_phone_number( $args['phone'], true );
     }
-    
+
     if ( ! empty( $args['mobile'] ) ) {
         $args['mobile'] = erp_sanitize_phone_number( $args['mobile'], true );
     }
@@ -610,9 +619,13 @@ function erp_insert_people( $args = [], $return_object = false ) {
         } elseif ( ! empty( $existing_people_by_email->email ) && ! $existing_people_by_email->hasType( $people_type ) ) {
             $is_existing_people = true;
             $people             = $existing_people_by_email;
+            $people->first_name = $args['first_name'];
+            $people->last_name  = $args['last_name'];
         } else {
             $people = \WeDevs\ERP\Framework\Models\People::create( [
                 'user_id'       => $user->ID,
+                'first_name'    => $args['first_name'],
+                'last_name'     => $args['last_name'],
                 'email'         => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
                 'website'       => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
                 'hash'          => $args['hash'],
@@ -652,9 +665,11 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
             wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
 
-            foreach ( $args as $key => $value ) {
-                if ( ! update_user_meta( $user_id, $key, $value ) ) {
-                    $unchanged_data[ $key ] = $value;
+            if ( 'employee' !== $people_type ) {
+                foreach ( $args as $key => $value ) {
+                    if ( ! update_user_meta( $user_id, $key, $value ) ) {
+                        $unchanged_data[ $key ] = $value;
+                    }
                 }
             }
         }
@@ -679,8 +694,10 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $people->update( $main_fields );
     }
 
-    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) && empty( $is_existing_people ) ) {
-        $people->assignType( $type_obj );
+    if ( ! empty( $people_type ) && ! $people->hasType( $people_type ) ) {
+        if ( empty( $is_existing_people ) || ( $people->hasType( 'employee' ) && 'contact' === $people_type ) ) {
+            $people->assignType( $type_obj );
+        }
     }
 
     //unset created_by from meta
@@ -733,6 +750,22 @@ function erp_insert_people( $args = [], $return_object = false ) {
         'type'          => $people_type,
         'erp-people-by' => [ (int) $people->id, $people->email, (int) $people->user_id ]
     ] );
+
+    if ( ! empty( $old_email ) && $old_email !== $people->email ) {
+        /**
+         * To update email in Mailchimp we need to provide the previous email too
+         *
+         * @since 1.11.0
+         */
+        do_action( 'erp_people_email_updated', $people->id, $people, $people_type, $old_email );
+    }
+
+    /*
+     * Action hook to trigger any event when a people is created.
+     *
+     * @since 1.10.3
+     */
+    do_action( 'erp_people_created', $people->id, $people, $people_type );
 
     return $return_object ? $people : $people->id;
 }
@@ -868,7 +901,7 @@ function erp_convert_to_people( $args = [] ) {
             'first_name'  => $wp_user->first_name,
             'last_name'   => $wp_user->last_name,
             'email'       => $wp_user->user_email,
-            'company'     => get_user_meta( $wp_user->ID, 'company', true ),
+            'company'     => 'contact' === $type ? get_user_meta( $wp_user->ID, 'company', true ) : $wp_user->first_name,
             'phone'       => get_user_meta( $wp_user->ID, 'phone', true ),
             'mobile'      => get_user_meta( $wp_user->ID, 'mobile', true ),
             'other'       => get_user_meta( $wp_user->ID, 'other', true ),

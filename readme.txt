@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 6.0.2
 Requires PHP: 5.6
-Stable tag: 1.8.4
+Stable tag: 1.11.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -175,6 +175,8 @@ Appsero SDK **does not gather any data by default.** The SDK only starts gatheri
 
 Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
 
+All the promotional data for marketing are fetched through REST API from the official website of [WP ERP](https://wperp.com/)
+
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
 
@@ -209,35 +211,27 @@ If you are unable to use any of the methods due to internet connectivity and fil
 == Screenshots ==
 
 1. Plugin on-boarding
-2. HR Dashboard
-3. Employee Listing
-4. Creating a new employee
-5. Employee details page.
-6. Employee profile job tab, keep track of every salary increment, status changes and department/location changes.
-7. See the leave history and balances.
-8. Analyse employee performance by rating in various metrics
-9. Manage permissions and who can do what.
-10. Departments management
-11. Designation management
-12. View detailed reports on your HR
-13. Leave policies for your company
-14. Manage leave requests from your employees.
-15. CRM dashboard
-16. Contacts list
-17. Contact details page, log calls, meetings, tasks and schedule everything from a single page.
-18. Search your contacts with an advanced search area, everything and save those searches.
-19. Filter contacts with saved searches.
-20. All the activities across your contacts and companies in a single page and filterable.
-21. Schedules page, see whom to call, have a meeting and manage them.
-22. Manage your company details, add locations if you have multiple branches/locations.
-23. We log everything whats happening across the system and log everything for easy audit logging.
-24. Accounting Dashboard
-25. Sales transactions list
-26. Expense transactions list
-27. Creating new invoice (sales)
-28. Creating a basic journal entry.
-29. Bank Accounts
-30. Chart of accounts listing
+2. Dashboard Overview- Your business overview is here
+3. Available modules and extensions that can make your growth with ease
+4. Your Company Details is here
+5. HR Dashboard- Overviewing all over your Human Resource Management
+6. Overall Company Employee list
+7. Just a single form to create/board an Employee
+8. Here is how an Employee profile looks like and to manage
+9. HR Report
+10. CRM Dashboard- Reflects your overall CRM status
+11. CRM Contact list
+12. CRM Company List
+13. CRM Contact Profile- where you can manage and interact with the contact/lead
+14. Contacts that subscribed to your list
+15. Accounting Dashboard- Your overall sales, income, expenses status
+16. Product and services- that you sell or your business is about to
+17. Sales Transections
+18. Journal Entry
+19. A complete VAT-TAX management
+20. Trial Balance
+21. Accounting Reports
+22. Audit Log- Reflects the overall operations of your business
 
 == Frequently Asked Questions ==
 
@@ -279,6 +273,191 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.11.3 -> October 13, 2022 =
+--------------------------
+
+- [fix] Fatal error due to some version incompatibility
+
+= v1.11.2 -> October 13, 2022 =
+--------------------------
+
+- [fix] Error while creating holiday. (HRM)
+- [fix] Pay rate validation inconsistencies in some cases. (HRM)
+- [fix] Year range of datepicker was limited to 50 years. It has been changed as needed. (CRM)
+- [fix] Contact activities were not being loaded when the user is both crm manager and agent. (CRM)
+
+= v1.11.1 -> August 26, 2022 =
+--------------------------
+
+- [update] Optimized holiday importing process in favor of large number of data (HRM)
+- [fix] Bulk delete was not working for Holidays (HRM)
+- [fix] Life stages, names of that are formed with non-English strings, were not supported while importing contacts from Users (CRM)
+- [fix] Text formats were not persisting while creating different activities for any contact/company (CRM)
+- [fix] Some caching issues to avoid data inconsistency
+
+= v1.11.0 -> June 15, 2022 =
+--------------------------
+
+- [update] Some package compatibilities
+- [update] Support for fractional quantity during transactions (Accounting)
+- [fix] All people were not being loaded in filter dropdown for transaction (Accounting)
+- [fix] Download link of sample csv for customer and vendor was not working (Accounting)
+- [fix] Inbound email using IMAP was not working (CRM)
+- [fix] Gravity form integration was not working properly (CRM)
+- [fix] Contact list table UI was breaking in some cases (CRM)
+- [fix] Timezone inconsistencies for contact related operations (CRM)
+- [fix] Some contact integration related issues (CRM)
+- [fix] Non alphanumeric slug was causing issue for life stages (CRM)
+- [fix] Retrieving people was throwing error when CRM module was deactivated
+- [fix] Resetting ERP was removing admin access in some cases
+
+= v1.10.6 -> May 24, 2022 =
+--------------------------
+
+- [update] Enhanced securities to avoid vulnerabilities
+- [fix] Sanitization, escaping, permission and data validation all over the plugin
+- [fix] Fixed missing translation issues
+
+= v1.10.5 -> March 15, 2022 =
+--------------------------
+
+- [notice] Limited time promotional offer on WeDevs' anniversary
+
+= v1.10.4 -> December 29, 2021 =
+--------------------------
+
+- [fix] Data synchronization and compatibility issues with PDF invoice plugin
+- [fix] Pagination was not working correctly in Employee list table
+
+= v1.10.3 -> December 24, 2021 =
+--------------------------
+
+- [update] Functionality to import Accounting customers and vendors as CRM contacts
+- [update] Restrict access of CRM agents to their own contacts only while importing/exporting csv
+- [fix] CRM agent's top navigation bar status count was showing wrong
+- [fix] CRM manager can't access all contacts if CRM Agent adds or lists contacts first after a cache invalidation
+- [fix] CRM contacts settings were not being saved and parsed properly
+- [fix] CRM contact form settings were throwing error when no contact form is available
+- [fix] Email templates settings were generating error when CRM module was not active
+- [fix] Compatibility issues of some hooks
+- [fix] Compatibility issue with PDF Invoice plugin
+- [notice] Limited time promotional offer on holiday sale
+
+= v1.10.2 -> November 16, 2021 =
+--------------------------
+
+- [new] Option to assign relevant leave policies to employees after employment type is changed
+- [update] ERP addon page backend optimization
+- [update] Attachment download links are included in single invoice view and in downloadable invoice
+- [fix] CRM Growth report labels were not translatable
+- [fix] Contact group subscriber bulk delete was not working
+- [fix] Page responsive issues on whole Accounting module
+- [fix] Action trigger and action dropdown issues on small screen
+- [notice] Promotional offer notice regarding Black Friday and Cyber Monday
+
+= v1.10.1 -> October 12, 2021 =
+--------------------------
+
+- [notice] Promotional offer notice on account of Halloween
+- [update] Some dependency package version updated to maintain compatibility
+- [update] CRM Agent will not be able to import Users as CRM contacts
+- [update] CRM Agent will not be able to import contact/company from CSV
+- [update] CRM Agent will not be able to export contact/company to CSV
+- [fix] Note section in contact/company single page was not working while adding a note for the first time
+- [fix] Department parent sorting was generating some redundant data
+
+= v1.10.0 -> August 17, 2021 =
+--------------------------
+
+- [new] Agency wise sales tax report
+- [new] Transaction wise sales tax report
+- [new] Category wise sales tax report
+- [new] Customer wise sales tax report
+- [update] Employee list table design in Accounting people
+- [update] Deactivating a module will deactivate its associated extensions
+- [update] License page redesign in the settings for separate extension
+- [update] UX for leave type actions for better usability
+- [update] Meta postbox design of employee single page
+- [update] Task description and link in email while sending email notifications for new task
+- ​​[update] Redesign of email connectivity settings page
+- [update] Mailgun email service for outgoing email
+- [update] Email template settings has been moved from CRM to Email section globally
+- [update] Support for dynamic side menu list hiding option inside Tools
+- [update] Some more admin toolbar options to hide in Tools
+- [update] Announcements list table has been integrated under people menu of HR
+- [update] Announcements filtering based on date range
+- [fix] Termination widget was not showing in terminated employees’ single page
+- [fix] Tax category was not inserting properly while adding or updating products
+- [fix] Tax agency was not inserting properly while creating or updating purchase transaction
+- [fix] Some backend issues to avoid any transaction issues in Accounting
+- [fix] Audit log filtering dropdown was not working
+- [fix] Activities filtering was not working properly in CRM
+- [fix] Some validations were generating inconsistency for employees' old data export/import
+- [fix] Leave policy delete option was not working properly
+- [fix] Leave type bulk delete was not working
+- [fix] Mobile responsiveness for requests table in HRM
+- [fix] employee permanent delete was not working
+- [fix] SMTP test email was not working properly
+- [fix] IMap enable/disable option was not working properly
+- [fix] Some backend optimizations all over the plugin
+- [fix] Some texts were not translatable
+
+= v1.9.0 -> July 15, 2021 =
+--------------------------
+
+- [notice] Limited time summer sale promotional offer
+- [new] A new tab titled ‘Danger Zone’ inside Tools
+- [new] WP ERP database can be reset and installed newly from Danger Zone
+- [new] Accounting Quick tour to demonstrate accounting module at a glance
+- [new] Import from CSV option for products in Accounting
+- [new] Export to CSV option for products in Accounting
+- [update] A brand new look all over the settings. The usability will be smoother and more comfortable with this new UI/UX
+- [update] Search option in products list table page
+- [update] Current history of employment type, compensation, and job info will be able to be edited
+- [update] In the employee list table, instead of 'Status' a new column will show the status update date for non active status filters
+- [update] Some optimization to make the performance better
+- [fix] Existing data were not parsing properly while updating job related information of employees
+- [fix] Current job history in the employee section was not showing properly in some cases
+- [fix] Mobile responsive issue in Contacts list table
+- [fix] Mobile responsive issue in Company list table
+
+= v1.8.6 -> June 30, 2021 =
+--------------------------
+
+- [update] Included all new features' info in the ERP Pro add-ons page
+- [update] Optimized some backend technicalities
+
+= v1.8.5 -> June 08, 2021 =
+--------------------------
+
+- [new] While adding people in Accounting with an email that exists in CRM, the people can be updated and imported from CRM directly at that moment
+- [new] New Request submenu under HRM People
+- [new] Real-time bubble to show pending request count in Requests
+- [new] Import csv options in Employee, Contact, Company, Vendor, and Customer list table page individually
+- [new] Export csv options in Employee, Contact, Company, Vendor, and Customer list table page individually
+- [new] Import users as contacts option in Contact list table page
+- [update] Styles upgrade for filter dropdown
+- [update] Optimized some library scripts and stylesheets
+- [update] Removed import/export tabs from Tools
+- [update] Some backend optimization in Accounting
+- [update] Filtering use case of dropdown has been improved in leave entitlement form
+- [update] Responsive design in modules and extension page
+- [update] Optimized extension icons to make the page more smooth and lightweight
+- [update] Filter dropdown buttons design upgrade
+- [fix] Employee address was unable to update
+- [fix] Adding new customer/vendor with an email that exist in CRM was showing error
+- [fix] All transaction payment chart was not showing amounts correctly
+- [fix] Some incompatible API response issues on products and customers in accounting
+- [fix] Country and state was getting reset each time a customer is updated in accounting
+- [fix] Customer and vendor address was not showing correctly on frontend
+- [fix] Outside click event for transaction filter was generating error
+- [fix] Department dropdown was not showing all departments in some cases
+- [fix] JSON datatype issue in employee education table
+- [fix] Error regarding gmail api connection with CRM when google auth api returns error
+- [fix] Accounting manager permission checkbox option was not showing in employee permissions tab
+- [fix] Leave policy list page was showing empty after updating a policy
+- [fix] Some undefined index notice issues all over the plugin
 
 = v1.8.4 -> May 07, 2021 =
 --------------------------

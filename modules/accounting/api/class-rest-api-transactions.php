@@ -481,6 +481,10 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             }
         }
 
+        if ( ! count( $chart_statuses ) ) {
+            array_push( $chart_statuses, $expense_status );
+        }
+
         $response = rest_ensure_response( $chart_statuses );
 
         $response->set_status( 200 );
@@ -649,7 +653,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_voucher_type_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_voucher_type_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $response = erp_acct_get_transaction_type( $id );
@@ -701,8 +705,14 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item['status']      = erp_acct_get_trn_status_by_id( $status );
         $item['status_code'] = $status;
-        $item['ref'] = $item['ref'] ? $item['ref'] : $item['pay_ref'];
-        $item['ref'] = $item['ref'] ? $item['ref'] : $item['exp_ref']; // for set expense reference no
+
+        $item['ref']         = isset( $item['ref'] )
+                             ? $item['ref']
+                             : ( isset( $item['pay_ref'] )
+                             ? $item['pay_ref']
+                             : ( isset( $item['exp_ref'] )
+                             ? $item['exp_ref']
+                             : '' ) );
 
         $data = array_merge( $item, $additional_fields );
 
@@ -725,7 +735,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
         $response = [

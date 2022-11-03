@@ -5,7 +5,7 @@
         <?php erp_html_form_input( [
             'label'       => __( 'Termination Date', 'erp' ),
             'name'        => 'terminate_date',
-            'value'       => '{{data.terminate_date}}',
+            'value'       => '{{ data.date }}',
             'required'    => true,
             'custom_attr' => [ 'autocomplete' => 'off' ],
             'class'       => 'erp-date-field',
@@ -53,5 +53,5 @@
 
     <?php wp_nonce_field( 'employee_update_terminate' ); ?>
     <input type="hidden" name="action" id="employee-terminate-action" value="erp-hr-emp-update-terminate-reason">
-    <input type="hidden" name="user_id" id="emp-id" value="<?php echo esc_html( $user_id ); ?>">
+    <input type="hidden" name="user_id" id="emp-id" value="<?php echo esc_attr( $user_id ); ?>">
 </div>

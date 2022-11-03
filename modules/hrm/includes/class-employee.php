@@ -288,24 +288,24 @@ class Employee {
             return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
         } else {
             if ( ! erp_is_valid_name( $data['personal']['first_name'] ) ) {
-                return new WP_Error( 'invalid-first-name', esc_attr__( 'Please provide a valid first name', 'erp' ) );
+                return new WP_Error( 'invalid-first-name', __( 'Please provide a valid first name', 'erp' ) );
             }
         }
 
         if ( ! empty( $data['personal']['middle_name'] ) && ! erp_is_valid_name( $data['personal']['middle_name'] ) ) {
-            return new WP_Error( 'invalid-middle-name', esc_attr__( 'Please provide a valid middle name', 'erp' ) );
+            return new WP_Error( 'invalid-middle-name', __( 'Please provide a valid middle name', 'erp' ) );
         }
 
         if ( empty( $data['personal']['last_name'] ) ) {
             return new WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'erp' ) );
         } else {
             if ( ! empty( $data['personal']['last_name'] ) && ! erp_is_valid_name( $data['personal']['last_name'] ) ) {
-                return new WP_Error( 'invalid-last-name', esc_attr__( 'Please provide a valid last name', 'erp' ) );
+                return new WP_Error( 'invalid-last-name', __( 'Please provide a valid last name', 'erp' ) );
             }
         }
 
         if ( ! empty( $data['personal']['employee_id'] ) && ! erp_is_valid_employee_id( $data['personal']['employee_id'] ) ) {
-            return new WP_Error( 'invalid-employee-id', esc_attr__( 'Please provide a valid employee id', 'erp' ) );
+            return new WP_Error( 'invalid-employee-id', __( 'Please provide a valid employee id', 'erp' ) );
         }
 
         if ( ! is_email( $data['user_email'] ) ) {
@@ -313,71 +313,71 @@ class Employee {
         }
 
         if ( ! empty( $data['work']['type'] ) && ! array_key_exists( $data['work']['type'], erp_hr_get_employee_types() ) ) {
-            return new WP_Error( 'invalid-type', esc_attr__( 'Please select a valid employee type', 'erp' ) );
+            return new WP_Error( 'invalid-type', __( 'Please select a valid employee type', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['end_date'] ) && ! erp_is_valid_date( $data['work']['end_date'] ) ) {
-            return new WP_Error( 'invalid-end-date', esc_attr__( 'Please select a valid employee end date', 'erp' ) );
+            return new WP_Error( 'invalid-end-date', __( 'Please select a valid employee end date', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['hiring_date'] ) && ! erp_is_valid_date( $data['work']['hiring_date'] ) ) {
-            return new WP_Error( 'invalid-hire-date', esc_attr__( 'Please select a valid employee hire date', 'erp' ) );
+            return new WP_Error( 'invalid-hire-date', __( 'Please select a valid employee hire date', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['status'] ) && ! array_key_exists( $data['work']['status'], erp_hr_get_employee_statuses() ) ) {
-            return new WP_Error( 'invalid-status', esc_attr__( 'Please select a valid employee status', 'erp' ) );
+            return new WP_Error( 'invalid-status', __( 'Please select a valid employee status', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['department'] ) && ! array_key_exists( $data['work']['department'], erp_hr_get_departments_dropdown_raw() ) ) {
-            return new WP_Error( 'invalid-department', esc_attr__( 'Please select a valid employee department', 'erp' ) );
+            return new WP_Error( 'invalid-department', __( 'Please select a valid employee department', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['designation'] ) && ! array_key_exists( $data['work']['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
-            return new WP_Error( 'invalid-designation', esc_attr__( 'Please select a valid employee designation', 'erp' ) );
+            return new WP_Error( 'invalid-designation', __( 'Please select a valid employee designation', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['location'] ) && ! array_key_exists( $data['work']['location'], erp_company_get_location_dropdown_raw() ) && $data['work']['location'] !== '-1' ) {
-            return new WP_Error( 'invalid-location', esc_attr__( 'Please select a valid employee location', 'erp' ) );
+            return new WP_Error( 'invalid-location', __( 'Please select a valid employee location', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['reporting_to'] ) && ! array_key_exists( $data['work']['reporting_to'], erp_hr_get_employees_dropdown_raw() ) ) {
-            return new WP_Error( 'invalid-reporting-to', esc_attr__( 'Please select a valid employee reporting to', 'erp' ) );
+            return new WP_Error( 'invalid-reporting-to', __( 'Please select a valid employee reporting to', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['hiring_source'] ) && ! array_key_exists( $data['work']['hiring_source'], erp_hr_get_employee_sources() ) && $data['work']['hiring_source'] !== '-1' ) {
-            return new WP_Error( 'invalid-source', esc_attr__( 'Please select a valid employee source', 'erp' ) );
+            return new WP_Error( 'invalid-source', __( 'Please select a valid employee source', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['pay_rate'] ) && ! erp_is_valid_currency_amount( $data['work']['pay_rate'] ) ) {
-            return new WP_Error( 'invalid-pay-rate', esc_attr__( 'Please provide a valid amount for pay rate', 'erp' ) );
+            return new WP_Error( 'invalid-pay-rate', __( 'Please provide a valid amount for pay rate', 'erp' ) );
         }
 
         if ( ! empty( $data['work']['pay_type'] ) && ! array_key_exists( $data['work']['pay_type'], erp_hr_get_pay_type() ) && $data['work']['pay_type'] !== '-1' ) {
-            return new WP_Error( 'invalid-pay-type', esc_attr__( 'Please select a valid pay type', 'erp' ) );
+            return new WP_Error( 'invalid-pay-type', __( 'Please select a valid pay type', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['work_phone'] ) && ! erp_is_valid_contact_no( $data['personal']['work_phone'] ) ) {
-            return new WP_Error( 'invalid-work-phone', esc_attr__( 'Please provide a valid work phone number', 'erp' ) );
+            return new WP_Error( 'invalid-work-phone', __( 'Please provide a valid work phone number', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['spouse_name'] ) && ! erp_is_valid_name( $data['personal']['spouse_name'] ) ) {
-            return new WP_Error( 'invalid-spouse-name', esc_attr__( 'Please provide a valid spouse\'s name', 'erp' ) );
+            return new WP_Error( 'invalid-spouse-name', __( 'Please provide a valid spouse\'s name', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['father_name'] ) && ! erp_is_valid_name( $data['personal']['father_name'] ) ) {
-            return new WP_Error( 'invalid-father-name', esc_attr__( 'Please provide a valid father\'s name', 'erp' ) );
+            return new WP_Error( 'invalid-father-name', __( 'Please provide a valid father\'s name', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['mother_name'] ) && ! erp_is_valid_name( $data['personal']['mother_name'] ) ) {
-            return new WP_Error( 'invalid-mother-name', esc_attr__( 'Please provide a valid mother\'s name', 'erp' ) );
+            return new WP_Error( 'invalid-mother-name', __( 'Please provide a valid mother\'s name', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['mobile'] ) && ! erp_is_valid_contact_no( $data['personal']['mobile'] ) ) {
-            return new WP_Error( 'invalid-mobile', esc_attr__( 'Please provide a valid mobile number', 'erp' ) );
+            return new WP_Error( 'invalid-mobile', __( 'Please provide a valid mobile number', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['phone'] ) && ! erp_is_valid_contact_no( $data['personal']['phone'] ) ) {
-            return new WP_Error( 'invalid-phone', esc_attr__( 'Please provide a valid phone number', 'erp' ) );
+            return new WP_Error( 'invalid-phone', __( 'Please provide a valid phone number', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['other_email'] ) && ! is_email( $data['personal']['other_email'] ) ) {
@@ -385,27 +385,34 @@ class Employee {
         }
 
         if ( ! empty( $data['work']['date_of_birth'] ) && ! erp_is_valid_date( $data['work']['date_of_birth'] ) ) {
-            return new WP_Error( 'invalid-date-of-birth', esc_attr__( 'Please provide a valid date of birth', 'erp' ) );
+            return new WP_Error( 'invalid-date-of-birth', __( 'Please provide a valid date of birth', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['gender'] ) && ! array_key_exists( $data['personal']['gender'], erp_hr_get_genders() ) ) {
-            return new WP_Error( 'invalid-gender', esc_attr__( 'Please select a valid gender', 'erp' ) );
+            return new WP_Error( 'invalid-gender', __( 'Please select a valid gender', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['marital_status'] ) && ! array_key_exists( $data['personal']['marital_status'], erp_hr_get_marital_statuses() ) ) {
-            return new WP_Error( 'invalid-marital-status', esc_attr__( 'Please select a valid marital status', 'erp' ) );
+            return new WP_Error( 'invalid-marital-status', __( 'Please select a valid marital status', 'erp' ) );
         }
 
-        if ( ! empty( $data['personal']['user_url'] ) && ! erp_is_valid_url( $data['personal']['user_url'] ) ) {
-            return new WP_Error( 'invalid-user-url', esc_attr__( 'Please provide a valid user url', 'erp' ) );
+        if ( ! empty( $data['personal']['user_url'] ) ) {
+            if ( ! erp_is_valid_url( $data['personal']['user_url'] ) ) {
+                return new WP_Error( 'invalid-user-url', __( 'Please provide a valid user url', 'erp' ) );
+            }
+
+            // Extract only the Protocol+domain from the URL as per WordPress recommendation.
+            $parsed_url = parse_url( $data['personal']['user_url'] );
+            $data['personal']['user_url'] = $parsed_url['scheme'] . '://' . $parsed_url['host'];
         }
+
 
         if ( ! empty( $data['personal']['city'] ) && erp_contains_disallowed_chars( $data['personal']['city'] ) ) {
-            return new WP_Error( 'invalid-city', esc_attr__( 'Please provide a valid city name', 'erp' ) );
+            return new WP_Error( 'invalid-city', __( 'Please provide a valid city name', 'erp' ) );
         }
 
         if ( ! empty( $data['personal']['postal_code'] ) && ! erp_is_valid_zip_code( $data['personal']['postal_code'] ) ) {
-            return new WP_Error( 'invalid-post-code', esc_attr__( 'Please provide a valid postal code', 'erp' ) );
+            return new WP_Error( 'invalid-post-code', __( 'Please provide a valid postal code', 'erp' ) );
         }
 
         $first_name  = isset( $data['personal']['first_name'] ) ? $data['personal']['first_name'] : '';
@@ -435,6 +442,8 @@ class Employee {
 
             if ( is_wp_error( $user_id ) ) {
                 return $user_id;
+            } elseif ( empty( $user_id ) ) {
+                return new WP_Error( 'cannot-create-employee', __( 'Cannot create an employee. Please check all the fields and try again.', 'erp' ) );
             }
         } elseif ( ! in_array( erp_hr_get_employee_role(), (array) $wp_user->roles ) ) {
             // set user role as employee
@@ -460,8 +469,6 @@ class Employee {
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
             $old_data = $this->get_data();
-
-            $this->update_employee( $data );
 
             do_action( 'erp_hr_employee_update', $user_id, $old_data );
         } else {
@@ -523,7 +530,10 @@ class Employee {
             ] );
         }
 
+        $data['personal']['user_email'] = $user_email;
+
         $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
+
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $employee_id ] );
@@ -1075,7 +1085,7 @@ class Employee {
      */
     public function get_hiring_date() {
         if ( isset( $this->erp_user->hiring_date )
-             && is_valid_date( $this->erp_user->hiring_date )
+             && erp_is_valid_date( $this->erp_user->hiring_date )
              && $this->erp_user->hiring_date != '0000-00-00' ) {
             return $this->erp_user->hiring_date;
         }
@@ -1095,10 +1105,12 @@ class Employee {
     public function get_date_of_birth() {
         $date = null;
 
-        if ( isset( $this->erp_user->date_of_birth )
-             && is_valid_date( $this->erp_user->date_of_birth )
-             && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
-            $date = erp_format_date( $this->erp_user->date_of_birth );
+        if (
+            isset( $this->erp_user->date_of_birth )
+            && erp_is_valid_date( $this->erp_user->date_of_birth )
+            && ( $this->erp_user->date_of_birth != '0000-00-00' )
+        ) {
+            $date = erp_current_datetime()->modify( $this->erp_user->date_of_birth )->format( 'Y-m-d' );
         }
 
         return $date;
@@ -1290,7 +1302,20 @@ class Employee {
      * @return string
      */
     public function get_birthday() {
-        return $this->get_date_of_birth();
+        $birth_date = $this->get_date_of_birth();
+
+        return erp_is_valid_date( $birth_date ) ? erp_format_date( $birth_date ) : $birth_date;
+    }
+
+    /**
+     * Get employee's job id
+     *
+     * @since 1.8.5
+     *
+     * @return string
+     */
+    public function get_job_id() {
+        return $this->employee_id;
     }
 
     /**
@@ -1419,7 +1444,7 @@ class Employee {
         }
 
         if ( isset( $args['dob'] ) && ! empty( $args['dob'] ) ) {
-            if ( ! is_valid_date( $args['dob'] ) ) {
+            if ( ! erp_is_valid_date( $args['dob'] ) ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
             $args['dob'] = gmdate( 'Y-m-d', strtotime( $args['dob'] ) );
@@ -1500,7 +1525,7 @@ class Employee {
             return new WP_Error( 'missing-required-params', __( 'Missing To Date', 'erp' ) );
         }
 
-        if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
+        if ( ! erp_is_valid_date( $args['from'] ) && $args['from'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
@@ -1550,6 +1575,7 @@ class Employee {
         }
 
         $histories = $histories->orderBy( 'date', 'desc' )
+                            ->orderBy( 'id', 'desc' )
                             ->skip( $offset )
                             ->take( $limit )
                             ->get();
@@ -1663,6 +1689,8 @@ class Employee {
             if ( empty( $args['type'] ) || ! array_key_exists( $args['type'], $types ) ) {
                 return new WP_Error( 'invalid-employment-type', __( 'Invalid Employment Type', 'erp' ) );
             }
+
+            $old_type = $this->erp_user->type;
         } else {
             if ( ! array_key_exists( $args['category'], $statuses ) ) {
                 return new WP_Error( 'invalid-employment-status', __( 'Invalid Employment Status', 'erp' ) );
@@ -1673,12 +1701,48 @@ class Employee {
 
         $args['date'] = erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' );
 
+        /**
+         * We need to check if any history exists in the future date.
+         * If exists, we will consider it as an old history and so it
+         * will not affect the executive values of the employee.
+         */
         $future_history = $this->erp_user->histories()
                                         ->where( 'module', $args['module'] )
-                                        ->where( 'date', '>', $args['date'] )
-                                        ->count();
+                                        ->where( 'date', '>', $args['date'] );
 
-        if ( (int) $future_history === 0 ) {
+        if ( ! empty( $args['id'] ) ) {
+
+            /**
+             * If we've reached at this block, that means
+             * we're editing a history. So we need to make sure
+             * the validation process, while making comparison,
+             * excludes the history which is being edited.
+             */
+            $future_history = $future_history->where( 'id', '!=', $args['id'] );
+
+            /**
+             * As we can only edit the current history,
+             * we need to make sure the given date is
+             * eligibe for the current history.
+             * If any old history exists after this date,
+             * it cannot be used for the current history
+             * and so we will abandon the process.
+             */
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
+            }
+        }
+
+        /**
+         * If no history in the future date is found,
+         * we can consider it as the current history
+         * and so we will update the executive values
+         * of employee profile.
+         */
+        if ( $future_history->count() === 0 ) {
 
             if ( ! empty( $args['type'] ) ) {
                 $this->erp_user->update( [
@@ -1687,9 +1751,13 @@ class Employee {
             }
 
             if ( ! empty( $args['category'] ) ) {
-                $this->erp_user->update( [
-                    'status' => $args['category'],
-                ] );
+                $update_data = [ 'status' => $args['category'] ];
+
+                if ( 'terminated' === $args['category'] ) {
+                    $update_data['termination_date'] = $args['date'];
+                }
+
+                $this->erp_user->update( $update_data );
 
                 do_action( 'erp_hr_employee_after_update_status', $this->erp_user->user_id, $args['category'], $args['date'] );
             }
@@ -1702,6 +1770,15 @@ class Employee {
             'comment'  => $args['comments'],
             'date'     => $args['date'],
         ] );
+
+        if (
+            ! empty( $args['type'] ) &&
+            isset( $old_type ) &&
+            $old_type !== $args['type'] &&
+            get_option( 'enable_auto_leave_policy_assignment_on_type_change', 'no' ) === 'yes'
+        ) {
+            erp_hr_manage_leave_policy_on_employee_type_change( $this->erp_user );
+        }
 
         erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $args['id'] ] );
 
@@ -1740,8 +1817,8 @@ class Employee {
             return new WP_Error( 'invalid-pay-type', __( 'Invalid Pay Type', 'erp' ) );
         }
 
-        if ( empty( $args['pay_rate'] ) ) {
-            return new WP_Error( 'invalid-pay-rate', __( 'Invalid Pay Rate', 'erp' ) );
+        if ( empty( $args['pay_rate'] ) || ! erp_is_valid_currency_amount( $args['pay_rate'] ) ) {
+            return new WP_Error( 'invalid-pay-rate', __( 'The pay rate is not valid! It should be an integer or a decimal place number with maximum 4 places.', 'erp' ) );
         }
 
         if ( ! empty( $args['reason'] ) && ! array_key_exists( $args['reason'], $reasons ) ) {
@@ -1750,12 +1827,48 @@ class Employee {
 
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
+        /**
+         * We need to check if any history exists in the future date.
+         * If exists, we will consider it as an old history and so it
+         * will not affect the executive values of the employee.
+         */
         $future_history = $this->erp_user->histories()
                                         ->where( 'module', 'compensation' )
-                                        ->where( 'date', '>', $args['date'] )
-                                        ->count();
+                                        ->where( 'date', '>', $args['date'] );
 
-        if ( (int) $future_history === 0 ) {
+        if ( ! empty( $args['id'] ) ) {
+
+            /**
+             * If we've reached at this block, that means
+             * we're editing a history. So we need to make sure
+             * the validation process, while making comparison,
+             * excludes the history which is being edited.
+             */
+            $future_history = $future_history->where( 'id', '!=', $args['id'] );
+
+            /**
+             * As we can only edit the current history,
+             * we need to make sure the given date is
+             * eligibe for the current history.
+             * If any old history exists after this date,
+             * it cannot be used for the current history
+             * and so we will abandon the process.
+             */
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
+            }
+        }
+
+        /**
+         * If no history in the future date is found,
+         * we can consider it as the current history
+         * and so we will update the executive values
+         * of employee profile.
+         */
+        if ( $future_history->count() === 0 ) {
             $this->erp_user->update( [
                 'pay_rate' => floatval( $args['pay_rate'] ),
                 'pay_type' => $args['pay_type'],
@@ -1768,7 +1881,7 @@ class Employee {
             'type'     => $args['pay_rate'],
             'comment'  => $args['comment'],
             'data'     => $args['reason'],
-            'date'     => $args['date'],
+            'date'     => erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' ),
         ] );
 
         return [
@@ -1801,26 +1914,63 @@ class Employee {
         ];
 
         $args = wp_parse_args( $args, $default );
-        // if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
-        //     return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
-        // }
 
-        // if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
-        //     return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
-        // }
+        if ( empty( $args['designation'] ) || ! array_key_exists( $args['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
+            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
+        }
 
-        // if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
-        //     return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
-        // }
+        if ( empty( $args['department'] ) || ! array_key_exists( $args['department'], erp_hr_get_departments_dropdown_raw() ) ) {
+            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
+        }
+
+        if ( empty( $args['reporting_to'] ) ) {
+            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
+        }
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
+        /**
+         * We need to check if any history exists in the future date.
+         * If exists, we will consider it as an old history and so it
+         * will not affect the executive values of the employee.
+         */
         $future_history = $this->erp_user->histories()
                                         ->where( 'module', 'job' )
-                                        ->where( 'date', '>', $args['date'] )
-                                        ->count();
+                                        ->where( 'date', '>', $args['date'] );
 
-        if ( (int) $future_history === 0 ) {
+        if ( ! empty( $args['id'] ) ) {
+
+            /**
+             * If we've reached at this block, that means
+             * we're editing a history. So we need to make sure
+             * the validation process, while making comparison,
+             * excludes the history which is being edited.
+             */
+            $future_history = $future_history->where( 'id', '!=', $args['id'] );
+
+            /**
+             * As we can only edit the current history,
+             * we need to make sure the given date is
+             * eligibe for the current history.
+             * If any old history exists after this date,
+             * it cannot be used for the current history
+             * and so we will abandon the process.
+             */
+            if ( $future_history->count() > 0 ) {
+                return new WP_Error(
+                    'invalid-date',
+                    __( 'This date cannot be used for the current history. An old history already exists after this date.', 'erp' )
+                );
+            }
+        }
+
+        /**
+         * If no history in the future date is found,
+         * we can consider it as the current history
+         * and so we will update the executive values
+         * of employee profile.
+         */
+        if ( $future_history->count() === 0 ) {
             $this->erp_user->update( [
                 'designation'  => $args['designation'],
                 'department'   => $args['department'],
@@ -1830,11 +1980,11 @@ class Employee {
         }
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
-            'date'     => $args['date'],
+            'date'     => erp_current_datetime()->modify( $args['date'] )->format( 'Y-m-d H:i:s' ),
             'data'     => $args['reporting_to'],
-            'category' => $this->get_department( 'view' ),
-            'type'     => $this->get_location( 'view' ),
-            'comment'  => $this->get_designation( 'view' ),
+            'category' => $args['department'],
+            'type'     => $args['location'],
+            'comment'  => $args['designation'],
             'module'   => 'job',
         ] );
 
@@ -1910,7 +2060,7 @@ class Employee {
             return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
         }
 
-        if ( ! is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
+        if ( ! erp_is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
             return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
 
@@ -1935,7 +2085,7 @@ class Employee {
                 return new WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
             }
 
-            if ( ! is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
+            if ( ! erp_is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
                 return new WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
             }
 
@@ -2379,11 +2529,6 @@ class Employee {
             return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
 
-        $this->erp_user->update( [
-            'status'           => 'terminated',
-            'termination_date' => $args['terminate_date'],
-        ] );
-
         $comments = sprintf( '%s: %s; %s: %s; %s: %s',
             __( 'Termination Type', 'erp' ),
             erp_hr_get_terminate_type( $args['termination_type'] ),
@@ -2401,7 +2546,8 @@ class Employee {
         }
 
         if ( ! isset( $args['date'] ) ) {
-            $args['date'] = $args['terminate_date'];
+            $args['date']           = $args['terminate_date'];
+            $args['terminate_date'] = $args['terminate_date'];
         }
 
         if ( ! isset( $args['comments'] ) ) {
