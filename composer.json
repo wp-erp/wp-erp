@@ -1,72 +1,79 @@
 {
-    "name": "wp-erp/wp-erp",
-    "description": "An ERP Solution for WordPress",
-    "keywords": ["wordpress", "plugin", "erp", "hrm", "crm", "accounting"],
-    "homepage": "https://wperp.com",
-    "type": "wordpress-plugin",
-    "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "Tareq Hasan",
-            "email": "tareq@wedevs.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.6.0",
-        "illuminate/database": "~5.6",
-        "tareq1988/wp-eloquent": "dev-master",
-        "johngrogg/ics-parser": "~1.0",
-        "google/apiclient": "^2.0",
-        "google/apiclient-services": "dev-develop",
-        "appsero/client": "^1.1",
-        "parsecsv/php-parsecsv": "^1.2",
-        "mailgun/mailgun-php": "^2.8",
-        "php-http/zend-adapter": "^0.1.0"
-    },
-    "require-dev": {
-        "squizlabs/php_codesniffer": "3.3.2",
-        "wp-coding-standards/wpcs": "dev-master",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
-        "tareq1988/wp-php-cs-fixer": "dev-master",
-        "fzaninotto/faker": "^1.9@dev",
-        "phpcompatibility/phpcompatibility-wp": "dev-master",
-        "phpunit/phpunit": "^5.7.27",
-        "lucatume/wp-browser": "^2.2"
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "includes/lib/google/apiclient-services-sdk/apiclient-services",
-            "options": {
-                "symlink": false
-            }
-        }
-    ],
-    "config": {
-        "platform": {
-            "php": "7.1.3"
-        }
-    },
-    "scripts": {
-        "phpcs": [
-            "./vendor/bin/phpcs -ps --report-file=phpcs-report.txt"
-        ],
-        "phpcbf": [
-            "./vendor/bin/phpcbf -p"
-        ],
-        "phpcsf": "php-cs-fixer --config=./.php_cs fix"
-    },
-    "autoload" : {
-        "psr-4" : {
-            "WeDevs\\ERP\\": "includes/",
-            "WeDevs\\ERP\\HRM\\": "modules/hrm/includes",
-            "WeDevs\\ERP\\CRM\\": "modules/crm/includes",
-            "WeDevs\\ERP\\Accounting\\": "modules/accounting/includes"
-        },
-        "classmap": [
-            "modules/hrm/hrm.php",
-            "modules/crm/crm.php",
-            "modules/accounting/accounting.php"
-        ]
+  "name": "wp-erp/wp-erp",
+  "description": "An ERP Solution for WordPress",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "erp",
+    "hrm",
+    "crm",
+    "accounting"
+  ],
+  "homepage": "https://wperp.com",
+  "type": "wordpress-plugin",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Tareq Hasan",
+      "email": "tareq@wedevs.com"
     }
+  ],
+  "require": {
+    "php": ">=5.6.0",
+    "illuminate/support": "~6.20.44",
+    "illuminate/database": "~6.20.44",
+    "illuminate/contracts": "~6.20.44",
+    "johngrogg/ics-parser": "~1.0",
+    "google/apiclient": "^2.0",
+    "google/apiclient-services": "*",
+    "appsero/client": "^1.1",
+    "parsecsv/php-parsecsv": "^1.2",
+    "mailgun/mailgun-php": "^3.5.5"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "3.3.2",
+    "wp-coding-standards/wpcs": "dev-master",
+    "dealerdirect/phpcodesniffer-composer-installer": "^v0.7.2",
+    "tareq1988/wp-php-cs-fixer": "dev-master",
+    "fzaninotto/faker": "^1.9@dev",
+    "phpcompatibility/phpcompatibility-wp": "dev-master",
+    "phpunit/phpunit": "^9.5.26",
+    "lucatume/wp-browser": "^2.2"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "includes/lib/google/apiclient-services",
+      "options": {
+        "symlink": false
+      }
+    }
+  ],
+  "config": {
+    "platform": {
+      "php": "8.1"
+    }
+  },
+  "scripts": {
+    "phpcs": [
+      "./vendor/bin/phpcs -ps --report-file=phpcs-report.txt"
+    ],
+    "phpcbf": [
+      "./vendor/bin/phpcbf -p"
+    ],
+    "phpcsf": "php-cs-fixer --config=./.php_cs fix"
+  },
+  "autoload": {
+    "psr-4": {
+      "WeDevs\\ERP\\": "includes/",
+      "WeDevs\\ERP\\HRM\\": "modules/hrm/includes",
+      "WeDevs\\ERP\\CRM\\": "modules/crm/includes",
+      "WeDevs\\ERP\\Accounting\\": "modules/accounting/includes"
+    },
+    "classmap": [
+      "modules/hrm/hrm.php",
+      "modules/crm/crm.php",
+      "modules/accounting/accounting.php"
+    ]
+  }
 }
