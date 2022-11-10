@@ -1180,7 +1180,7 @@ Account Manager
                 slug varchar(255) DEFAULT NULL,
                 chart_id int(11) DEFAULT NULL,
                 parent_id int(11) DEFAULT NULL,
-                system tinyint(1) DEFAULT NULL,
+                `system` tinyint(1) DEFAULT NULL,
                 created_at date DEFAULT NULL,
                 created_by varchar(50) DEFAULT NULL,
                 updated_at date DEFAULT NULL,
