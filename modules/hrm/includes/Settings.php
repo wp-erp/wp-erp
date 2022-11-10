@@ -160,5 +160,3 @@ class Settings extends Template {
         return $section;
     }
 }
-
-return new Settings();

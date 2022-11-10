@@ -36,6 +36,10 @@
  */
 
 // don't call the file directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 use WeDevs\ERP\Emailer;
 use WeDevs\ERP\Scripts;
 use WeDevs\ERP\Tracker;
@@ -54,10 +58,6 @@ use WeDevs\ERP\API\ApiRegistrar;
 use WeDevs\ERP\Framework\Modules;
 use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
-
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
 
 /**
  * WeDevs_ERP class
