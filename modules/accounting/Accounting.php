@@ -228,7 +228,6 @@ final class Accounting {
     public function include_classes() {
         new REST_API();
         new Assets();
-        LedgerMap::get_instance();
         new SendEmail();
         new UserProfile();
     }
