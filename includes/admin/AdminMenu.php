@@ -137,6 +137,11 @@ class AdminMenu {
             'callback'      => [ $this, 'settings_page' ],
             'position'      => 5,
         ] );
+
+        if ( ! class_exists( 'WP_ERP_Pro' ) ) {
+            $pro_menu = new AddProMenu();
+            $pro_menu->add_pro_menu();
+        }
     }
 
     /**
