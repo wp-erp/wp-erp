@@ -1176,8 +1176,8 @@
         },
 
         customLeaveFilterEndData: function() {
-            let startDate = new Date($("#start_date").val());
-            let endDate = new Date($("#end_date").val());
+            var startDate = new Date($("#start_date").val());
+            var endDate = new Date($("#end_date").val());
             if(Date.parse(startDate) > Date.parse(endDate)){
                 alert("Invalid Date Range");
                 document.getElementById('filter_employee_search').disabled = 'disabled'
