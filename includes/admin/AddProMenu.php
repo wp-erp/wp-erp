@@ -4,6 +4,34 @@ namespace WeDevs\ERP\Admin;
 
 class AddProMenu {
 
+    public function __construct() {
+        add_filter( 'erp_hr_people_menu_items', [ $this, 'add_org_chart_section' ] );
+    }
+
+    /**
+     * Registers Org chart section in people submenu
+     *
+     * @param array $sections
+     *
+     * @return array
+     */
+    public function add_org_chart_section( $sections ) {
+        $index = array_search( 'announcement', array_keys( $sections ), true );
+
+        if ( false === $index ) {
+            $index = count( $sections );
+        }
+
+        $sections = array_slice( $sections, 0, $index ) + [
+			'org-chart' => [
+				'title'     => esc_html__( 'Org Chart', 'erp' ),
+				'cap'       => 'erp_list_employee',
+				'pro_popup' => true,
+			],
+		] + array_slice( $sections, $index );
+
+        return $sections;
+    }
 
     /**
      * Add pro menu popup in core plugins.
@@ -23,7 +51,7 @@ class AddProMenu {
             'title'      => __( 'Assets', 'erp' ),
             'slug'       => 'asset',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'assets_page' ],
+            'callback'   => '',
             'position'   => 35,
             'pro_popup'  => true,
         ] );
@@ -32,7 +60,7 @@ class AddProMenu {
             'title'      => __( 'Assets', 'erp' ),
             'slug'       => 'asset',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'assets_page' ],
+            'callback'   => '',
             'position'   => 1,
             'pro_popup'  => true,
         ] );
@@ -40,7 +68,7 @@ class AddProMenu {
             'title'      => __( 'Allotments', 'erp' ),
             'slug'       => 'asset-allottment',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'allotment_page' ],
+            'callback'   => '',
             'position'   => 5,
             'pro_popup'  => true,
         ] );
@@ -49,7 +77,7 @@ class AddProMenu {
             'title'      => __( 'Requests', 'erp' ),
             'slug'       => 'asset-request',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'request_page' ],
+            'callback'   => '',
             'position'   => 10,
             'pro_popup'  => true,
         ] );
@@ -147,7 +175,7 @@ class AddProMenu {
             'title'      => __( 'Payroll', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'payroll',
-            'callback'   => [ $this, 'dashboard_page' ],
+            'callback'   => '',
             'position'   => 11,
             'pro_popup'  => true,
         ] );
@@ -156,7 +184,7 @@ class AddProMenu {
             'title'      => __( 'Dashboard', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'dashboard',
-            'callback'   => [ $this, 'dashboard_page' ],
+            'callback'   => '',
             'position'   => 1,
             'pro_popup'  => true,
         ] );
@@ -165,7 +193,7 @@ class AddProMenu {
             'title'      => __( 'Pay Calendar', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'calendar',
-            'callback'   => [ $this, 'pay_calendar_page' ],
+            'callback'   => '',
             'position'   => 5,
             'pro_popup'  => true,
         ] );
@@ -174,7 +202,7 @@ class AddProMenu {
             'title'      => __( 'Pay Run List', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'payrun',
-            'callback'   => [ $this, 'pay_run_page' ],
+            'callback'   => '',
             'position'   => 10,
             'pro_popup'  => true,
         ] );
@@ -183,7 +211,7 @@ class AddProMenu {
             'title'      => __( 'Bulk pay item edit', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'bulk-pay-item-edit',
-            'callback'   => [ $this, 'bulk_edit_item' ],
+            'callback'   => '',
             'position'   => 11,
             'pro_popup'  => true,
         ] );
@@ -192,7 +220,7 @@ class AddProMenu {
             'title'      => __( 'Reports', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'reports',
-            'callback'   => [ $this, 'reports_page' ],
+            'callback'   => '',
             'position'   => 15,
             'pro_popup'  => true,
         ] );
@@ -212,7 +240,7 @@ class AddProMenu {
             'title'      => __( 'Recruitment', 'erp' ),
             'slug'       => 'recruitment',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'job_opening_list_page' ],
+            'callback'   => '',
             'position'   => 35,
             'pro_popup'  => true,
         ] );
@@ -221,7 +249,7 @@ class AddProMenu {
             'title'      => __( 'Job Opening', 'erp' ),
             'slug'       => 'job-opening',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'job_opening_list_page' ],
+            'callback'   => '',
             'position'   => 1,
             'pro_popup'  => true,
         ] );
@@ -230,7 +258,7 @@ class AddProMenu {
             'title'      => __( 'Add Opening', 'erp' ),
             'slug'       => 'add-opening',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'job_description_step' ],
+            'callback'   => '',
             'position'   => 5,
             'pro_popup'  => true,
         ] );
@@ -249,7 +277,7 @@ class AddProMenu {
             'title'      => __( 'Candidates', 'erp' ),
             'slug'       => 'jobseeker_list',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'candidate_page' ],
+            'callback'   => '',
             'position'   => 15,
             'pro_popup'  => true,
         ] );
@@ -258,7 +286,7 @@ class AddProMenu {
             'title'      => __( 'Calendar', 'erp' ),
             'slug'       => 'todo-calendar',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'todo_calendar_page' ],
+            'callback'   => '',
             'position'   => 20,
             'pro_popup'  => true,
         ] );
@@ -267,7 +295,7 @@ class AddProMenu {
             'title'      => __( 'Reports', 'erp' ),
             'slug'       => 'reports',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'opening_reports_page' ],
+            'callback'   => '',
             'position'   => 25,
             'pro_popup'  => true,
         ] );
@@ -276,7 +304,7 @@ class AddProMenu {
             'title'      => __( 'Add candidate', 'erp' ),
             'slug'       => 'add_candidate',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'add_candidate' ],
+            'callback'   => '',
             'position'   => 16,
             'pro_popup'  => true,
         ] );
@@ -286,7 +314,7 @@ class AddProMenu {
             'title'      => __( 'Documents', 'erp' ),
             'slug'       => 'documents',
             'capability' => 'erp_hr_manager',
-            'callback'   => [ $this, 'erp_hr_company_document_tab' ],
+            'callback'   => '',
             'position'   => 35,
             'pro_popup'  => true,
         ] );
