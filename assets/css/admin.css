@@ -2002,14 +2002,58 @@ table.leaves td.column-status .status-1 {
   background: #7ad03a;
   color: #fff;
 }
-table.leaves td.column-status .status-2 {
-  background: #ffba00;
-  color: #fff;
+
+table.leave-requests td.column-status span {
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-top: 10px;
+    display: inline !important;
 }
-table.leaves td.column-status .status-3 {
-  background: #dd3d36;
-  color: #fff;
+table.leave-requests td.column-status .status-1 {
+    width: 90px;
+    height: 27px;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    color: #0D3A26;
+    padding: 5px 15px;
+    background: #CEF4E4;
+    border-radius: 3px;
 }
+table.leave-requests td.column-status .status-2 {
+    width: 90px;
+    height: 27px;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    color: #3A180D;
+    padding: 5px 15px;
+    background: #FFE9C9;
+    border-radius: 3px;
+}
+table.leave-requests td.column-status .status-3 {
+    width: 90px;
+    height: 27px;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    color: #3A0D0D;
+    padding: 5px 15px;
+    background: #FEE2E2;
+    border-radius: 3px;
+}
+
+/*table.leaves td.column-status .status-2 {*/
+/*  background: #ffba00;*/
+/*  color: #fff;*/
+/*}*/
+/*table.leaves td.column-status .status-3 {*/
+/*  background: #dd3d36;*/
+/*  color: #fff;*/
+/*}*/
 table.leaves td.column-status .status-4 {
   background: #3E87D0;
   color: #fff;

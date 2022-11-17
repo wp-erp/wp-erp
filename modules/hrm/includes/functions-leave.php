@@ -162,8 +162,8 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
         return false;
     }
 
-    if (    ( $start_date < $current_f_year->start_date || $start_date > $current_f_year->end_date )
-         || ( $end_date < $current_f_year->start_date || $end_date > $current_f_year->end_date )  ) {
+    if ( ( $start_date < $current_f_year->start_date || $start_date > $current_f_year->end_date )
+         || ( $end_date < $current_f_year->start_date || $end_date > $current_f_year->end_date ) ) {
         return false;
     }
 
@@ -238,7 +238,10 @@ function erp_hr_leave_insert_policy( $args = [] ) {
         do_action( 'erp_hr_leave_update_policy', $args['id'] );
         do_action( 'erp_hr_leave_before_policy_updated', $args['id'], $old_policy );
 
-        erp_hrm_purge_cache( ['list' => 'leave_policy', 'leave_policy_id' => $args['id'] ] );
+        erp_hrm_purge_cache( [
+			'list' => 'leave_policy',
+			'leave_policy_id' => $args['id'],
+		] );
 
         return $leave_policy->id;
     }
@@ -261,7 +264,10 @@ function erp_hr_leave_insert_policy( $args = [] ) {
 
     do_action( 'erp_hr_leave_insert_policy', $leave_policy->id );
 
-    erp_hrm_purge_cache( ['list' => 'leave_policy', 'leave_policy_id' => $leave_policy->id ] );
+    erp_hrm_purge_cache( [
+		'list' => 'leave_policy',
+		'leave_policy_id' => $leave_policy->id,
+	] );
 
     return $leave_policy->id;
 }
@@ -460,7 +466,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         }
 
         // check policy filter is same as employee filters
-        if (    ( $policy->department_id != '-1' && $employee->get_department() != $policy->department_id )
+        if ( ( $policy->department_id != '-1' && $employee->get_department() != $policy->department_id )
              || ( $policy->designation_id != '-1' && $employee->get_designation() != $policy->designation_id )
              || ( $policy->location_id != '-1' && $employee->get_location() != $policy->location_id )
              || ( $policy->gender != '-1' && $employee->get_gender() != $policy->gender )
@@ -521,7 +527,7 @@ function erp_hr_leave_insert_entitlement( $args = [] ) {
         do_action( 'erp_hr_leave_insert_new_entitlement', $entitlement->id, $fields );
     }
 
-    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
 
     return $entitlement->id;
 }
@@ -569,7 +575,7 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
         $inserted = erp_hr_leave_insert_entitlement( $data );
     } );
 
-    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
 }
 
 /**
@@ -683,7 +689,7 @@ function erp_hr_leave_insert_holiday( $args = [] ) {
 
     $holiday = new LeaveHoliday();
 
-    erp_hrm_purge_cache( ['list' => 'leave_holiday'] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_holiday' ] );
 
     if ( ! $holiday_id ) {
         // insert a new
@@ -764,8 +770,9 @@ function erp_hr_leave_get_policies( $args = [] ) {
     $cache_key    = 'erp-get-policies-' . md5( serialize( $args ) ) . ": $last_changed";
     $policies     = wp_cache_get( $cache_key, 'erp' );
 
-    $total_policies_cache_key = 'erp-policies-count-'. md5( serialize( $args ) ) . ": $last_changed";;
-    $total_row_found          = wp_cache_get( $total_policies_cache_key, 'erp' );
+    $total_policies_cache_key = 'erp-policies-count-' . md5( serialize( $args ) ) . ": $last_changed";
+
+    $total_row_found = wp_cache_get( $total_policies_cache_key, 'erp' );
 
     if ( false === $policies ) {
         $policies = LeavePolicy::select( \WeDevs\ORM\Eloquent\Facades\DB::raw( 'SQL_CALC_FOUND_ROWS *' ) )
@@ -773,7 +780,7 @@ function erp_hr_leave_get_policies( $args = [] ) {
         ->take( $args['number'] );
 
         // If filtered by name, Get the ID of this leave type by name and do ordering
-        if( $args['orderby'] === 'name' ) {
+        if ( $args['orderby'] === 'name' ) {
             $policies = $policies->join( "{$wpdb->prefix}erp_hr_leaves as leave", 'leave.id', '=', "{$wpdb->prefix}erp_hr_leave_policies.leave_id" )
                         ->orderBy( 'leave.name', $args['order'] );
         } else {
@@ -825,28 +832,31 @@ function erp_hr_leave_get_policies( $args = [] ) {
             $location      = $policy->location_id == '-1' ? esc_attr__( 'All', 'erp' ) : $policy->location->name;
             $employee_type = array_key_exists( $policy->employee_type, $employee_types ) ? $employee_types[ $policy->employee_type ] : __( 'All', 'erp' );
 
-            $formatted_data[$key]['id']             = $policy->id;
-            $formatted_data[$key]['leave_id']       = $policy->leave_id;
-            $formatted_data[$key]['name']           = $policy->leave->name;
-            $formatted_data[$key]['description']    = $policy->description;
-            $formatted_data[$key]['days']           = $policy->days;
-            $formatted_data[$key]['color']          = $policy->color;
-            $formatted_data[$key]['department_id']  = $policy->department_id;
-            $formatted_data[$key]['department']     = $department;
-            $formatted_data[$key]['designation_id'] = $policy->designation_id;
-            $formatted_data[$key]['designation']    = $designation;
-            $formatted_data[$key]['location']       = $location;
-            $formatted_data[$key]['f_year']         = $policy->financial_year->fy_name;
-            $formatted_data[$key]['gender']         = $gender;
-            $formatted_data[$key]['marital']        = $marital;
-            $formatted_data[$key]['employee_type']  = $employee_type;
+            $formatted_data[ $key ]['id']             = $policy->id;
+            $formatted_data[ $key ]['leave_id']       = $policy->leave_id;
+            $formatted_data[ $key ]['name']           = $policy->leave->name;
+            $formatted_data[ $key ]['description']    = $policy->description;
+            $formatted_data[ $key ]['days']           = $policy->days;
+            $formatted_data[ $key ]['color']          = $policy->color;
+            $formatted_data[ $key ]['department_id']  = $policy->department_id;
+            $formatted_data[ $key ]['department']     = $department;
+            $formatted_data[ $key ]['designation_id'] = $policy->designation_id;
+            $formatted_data[ $key ]['designation']    = $designation;
+            $formatted_data[ $key ]['location']       = $location;
+            $formatted_data[ $key ]['f_year']         = $policy->financial_year->fy_name;
+            $formatted_data[ $key ]['gender']         = $gender;
+            $formatted_data[ $key ]['marital']        = $marital;
+            $formatted_data[ $key ]['employee_type']  = $employee_type;
         }
 
         $policies = erp_array_to_object( $formatted_data );
         wp_cache_set( $cache_key, $policies, 'erp' );
     }
 
-    return [ 'data' => $policies, 'total' => $total_row_found ];
+    return [
+		'data' => $policies,
+		'total' => $total_row_found,
+	];
 }
 
 /**
@@ -922,7 +932,7 @@ function erp_hr_get_holidays( $args = [] ) {
     $cache_key       = 'erp-get-holidays-' . md5( serialize( $args ) ) . "  : $last_changed";
     $cache_key_count = 'erp-holidays-count-' . md5( serialize( $args ) ) . ": $last_changed";
 
-    $holidays  = wp_cache_get( $cache_key, 'erp' );
+    $holidays = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $holidays ) {
         if ( $args['number'] == '-1' ) {
@@ -938,7 +948,7 @@ function erp_hr_get_holidays( $args = [] ) {
         }
 
         wp_cache_set( $cache_key, $holidays, 'erp' );
-        wp_cache_set( $cache_key_count, count($holidays), 'erp' );
+        wp_cache_set( $cache_key_count, count( $holidays ), 'erp' );
     }
 
     return $holidays;
@@ -953,12 +963,11 @@ function erp_hr_get_holidays( $args = [] ) {
  * @return \stdClass
  */
 function erp_hr_count_holidays( $args ) {
-
     $last_changed   = erp_cache_get_last_changed( 'hrm', 'leave_holiday' );
     $cache_key      = 'erp-holidays-count-' . md5( serialize( $args ) ) . ": $last_changed";
     $holidays_count = wp_cache_get( $cache_key, 'erp' );
 
-    if( false === $holidays_count ) {
+    if ( false === $holidays_count ) {
         $holiday = new LeaveHoliday();
         $holiday = erp_hr_holiday_filter_param( $holiday, $args );
 
@@ -1009,8 +1018,7 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
  * @return \stdClass
  */
 function erp_hr_delete_holidays( $holidays_id ) {
-
-    erp_hrm_purge_cache( ['list' => 'leave_holiday'] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_holiday' ] );
 
     if ( is_array( $holidays_id ) ) {
         foreach ( $holidays_id as $key => $holiday_id ) {
@@ -1213,10 +1221,10 @@ function erp_hr_leave_insert_request( $args = [] ) {
 
     // check start_date and end_date are in the same f_year
     $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' );
-    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59,59 )->format( 'Y-m-d H:i:s' );
+    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' );
 
-    if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end )  ) {
-        return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+    if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end ) ) {
+        return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
     }
 
     // handle overlapped leaves
@@ -1268,7 +1276,7 @@ function erp_hr_leave_insert_request( $args = [] ) {
 
             do_action( 'erp_hr_leave_new', $request_id, $request, $leaves );
 
-            erp_hrm_purge_cache( ['list' => 'leave_request'] );
+            erp_hrm_purge_cache( [ 'list' => 'leave_request' ] );
 
             return $request_id;
         }
@@ -1327,7 +1335,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         's'              => '',
     ];
 
-    $args  = wp_parse_args( $args, $defaults );
+    $args = wp_parse_args( $args, $defaults );
 
     array_walk_recursive( $args, function ( &$value, $key ) {
         $value = wp_unslash( $value );
@@ -1443,8 +1451,17 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $where .= " AND u.display_name like '%" . esc_sql( $args['s'] ) . "%'";
     }
 
-    if ( 'all' != $args['status'] && $args['status'] != '' ) {
-        $where .= ' AND request.last_status = ' . absint( $args['status'] );
+    if ( is_array( $args['status'] ) ) {
+        $wh = [];
+        foreach ( $args['status'] as $status ) {
+            $wh[] = 'request.last_status = ' . $status;
+        }
+
+        $where .= ' AND (' . implode( ' OR ', $wh ) . ')';
+    } else {
+        if ( $args['status'] !== 'all' ) {
+            $where .= ' AND request.last_status = ' . absint( $args['status'] );
+        }
     }
 
     if ( $args['user_id'] ) {
@@ -1548,11 +1565,15 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $temp_data['day_status_id']  = $request->day_status_id;
             $temp_data['f_year']         = $request->entitlement->f_year;
 
-            $formatted_data[] =  $temp_data;
+            $formatted_data[] = $temp_data;
         }
     }
 
-    $requests_data = [ 'data' => erp_array_to_object( $formatted_data ), 'total' => $total_row_found, 'sql' => $query ];
+    $requests_data = [
+		'data' => erp_array_to_object( $formatted_data ),
+		'total' => $total_row_found,
+		'sql' => $query,
+	];
     wp_cache_set( $cache_key, $requests_data, 'erp', HOUR_IN_SECONDS );
 
     return $requests_data;
@@ -1579,7 +1600,10 @@ function erp_hr_leave_get_requests_count( $f_year ) {
         $total    = 0;
 
         foreach ( $statuses as $status => $label ) {
-            $counts[ $status ] = [ 'count' => 0, 'label' => $label ];
+            $counts[ $status ] = [
+				'count' => 0,
+				'label' => $label,
+			];
         }
 
         $total_leave_count = $wpdb->get_results( $wpdb->prepare( "
@@ -1764,8 +1788,8 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                 $f_year_start = $request->entitlement->financial_year->start_date;
                 $f_year_end   = $request->entitlement->financial_year->end_date;
 
-                if ( ( $request->start_date < $f_year_start || $request->start_date > $f_year_end ) || ( $request->end_date < $f_year_start || $request->end_date > $f_year_end )  ) {
-                    return new WP_Error( 'invalid-date-range', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %s and %s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+                if ( ( $request->start_date < $f_year_start || $request->start_date > $f_year_end ) || ( $request->end_date < $f_year_start || $request->end_date > $f_year_end ) ) {
+                    return new WP_Error( 'invalid-date-range', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
                 }
 
                 // 1. check if we got same date range already approved
@@ -1885,7 +1909,10 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
     do_action( 'erp_hr_leave_update', $request_id, $old_data );
 
-    erp_hrm_purge_cache( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
+    erp_hrm_purge_cache( [
+		'list' => 'leave_request',
+		'request_id' => $request_id,
+	] );
 
     return $request;
 }
@@ -1934,7 +1961,10 @@ function erp_hr_delete_leave_request( $request_id ) {
 
     $request->delete();
 
-    erp_hrm_purge_cache( [ 'list' => 'leave_request', 'request_id' => $request_id ] );
+    erp_hrm_purge_cache( [
+		'list' => 'leave_request',
+		'request_id' => $request_id,
+	] );
 
     return $request_id;
 }
@@ -2075,7 +2105,7 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
         'employee_type' => '',
     ];
 
-    $args  = wp_parse_args( $args, $defaults );
+    $args = wp_parse_args( $args, $defaults );
 
     $last_changed       = erp_cache_get_last_changed( 'hrm', 'leave_entitlement' );
     $cache_key          = 'erp-get-leave-entitlements-' . md5( serialize( $args ) ) . ": $last_changed";
@@ -2086,7 +2116,7 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
     $total_row_found        = wp_cache_get( $cache_key_total, 'erp' );
     $leave_entitlements_sql = wp_cache_get( $cache_key_sql, 'erp' );
 
-    if( false === $leave_entitlements ) {
+    if ( false === $leave_entitlements ) {
         $where = "WHERE 1 = 1 AND en.trn_type = 'leave_policies'";
 
         if ( absint( $args['year'] ) ) {
@@ -2141,7 +2171,11 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
         wp_cache_set( $cache_key_sql, $query, 'erp' );
     }
 
-    return [ 'data' => $leave_entitlements, 'total' => $total_row_found, 'sql' => $leave_entitlements_sql ];
+    return [
+		'data' => $leave_entitlements,
+		'total' => $total_row_found,
+		'sql' => $leave_entitlements_sql,
+	];
 }
 
 /**
@@ -2233,7 +2267,7 @@ function erp_hr_delete_entitlement( $id, $user_id, $entitlement_id ) {
         }
     }
 
-    erp_hrm_purge_cache( ['list' => 'leave_entitlement'] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_entitlement' ] );
 
     return $entitlement->delete();
 }
@@ -2281,7 +2315,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 
     $balance = [];
 
-    if ( !empty( $results ) ) {
+    if ( ! empty( $results ) ) {
         foreach ( $results as $result ) {
             $balance[ $result->leave_id ] = [
                 'entitlement_id' => $result->id,
@@ -2732,14 +2766,14 @@ function import_holidays_csv( $file ) {
             $line_error .= __( 'Title, Start & End must be', 'erp' ) . '<br>';
         }
 
-        if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $start ) ) {
+        if ( ! preg_match ( '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $start ) ) {
             $line_error .= __( 'Start date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $start ) === false ) {
             $start = erp_current_datetime()->modify( $start )->format( 'Y-m-d 00:00:00' );
             $csv->data[ $data_key ]['start'] = $start;
         }
 
-        if ( ! preg_match ( "/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $end )  ) {
+        if ( ! preg_match ( '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $end ) ) {
             $line_error .= __( 'End date should be valid format. Ex YYYY-MM-DD', 'erp' ) . '<br>';
         } elseif ( DateTime::createFromFormat( 'Y-m-d H:i:s', $end ) === false ) {
             $end = erp_current_datetime()->modify( $end )->format( 'Y-m-d 23:59:59' );
@@ -2776,7 +2810,7 @@ function import_holidays_csv( $file ) {
         return __( 'No data found.', 'erp' );
     }
 
-    erp_hrm_purge_cache( ['list' => 'leave_holiday'] );
+    erp_hrm_purge_cache( [ 'list' => 'leave_holiday' ] );
 
     return $parsed_data;
 }
@@ -2816,7 +2850,7 @@ function erp_hr_leave_days_get_statuses( $status = false ) {
  */
 function erp_hr_get_leave_policy_names( $args = [] ) {
     $defaults = [
-        'count' => false
+        'count' => false,
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -2828,17 +2862,17 @@ function erp_hr_get_leave_policy_names( $args = [] ) {
     $policy_name_counts_cache_key = 'policy-names-counts';
     $policy_names_counts          = wp_cache_get( $policy_name_counts_cache_key, 'erp' );
 
-    if( false === $policy_names ) {
+    if ( false === $policy_names ) {
         $policy_names = \WeDevs\ERP\HRM\Models\Leave::all();
         wp_cache_set( $cache_key, $policy_names, 'erp' );
 
-        if( $args['count'] ) {
+        if ( $args['count'] ) {
             $policy_names_counts = \WeDevs\ERP\HRM\Models\Leave::count();
             wp_cache_set( $policy_name_counts_cache_key, $policy_names_counts, 'erp' );
         }
     }
 
-    if( $args['count'] ) {
+    if ( $args['count'] ) {
         return $policy_names_counts;
     } else {
         return $policy_names;
@@ -3093,9 +3127,12 @@ function erp_hr_get_financial_year_from_date( $date = null ) {
                     OR (end_date >= %d and end_date <= %d)
                     ",
         [
-            $date, $date,
-            $date, $date,
-            $date, $date,
+            $date,
+			$date,
+            $date,
+			$date,
+            $date,
+			$date,
         ]
     );
 
@@ -3155,10 +3192,14 @@ function erp_hr_get_financial_year_from_date_range( $start_date, $end_date ) {
                     OR (end_date >= %d and end_date <= %d)
                     ",
             [
-                $start_date, $start_date,
-                $end_date, $end_date,
-                $start_date, $end_date,
-                $start_date, $end_date,
+                $start_date,
+				$start_date,
+                $end_date,
+				$end_date,
+                $start_date,
+				$end_date,
+                $start_date,
+				$end_date,
             ]
         )
     );

@@ -61,7 +61,7 @@ class EntitlementListTable extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-        $entitlement_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
+        $entitlement_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get()->toArray(), 'fy_name', 'id' );
 
         if ( empty( $entitlement_years ) ) {
             return;
