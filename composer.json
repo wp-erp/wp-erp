@@ -36,7 +36,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "includes/lib/google/apiclient-services-sdk/apiclient-services",
+            "url": "includes/lib/google/apiclient-services",
             "options": {
                 "symlink": false
             }
