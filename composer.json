@@ -17,7 +17,7 @@
         "tareq1988/wp-eloquent": "dev-master",
         "johngrogg/ics-parser": "~1.0",
         "google/apiclient": "^2.0",
-        "google/apiclient-services": "^0.64",
+        "google/apiclient-services": "dev-develop",
         "appsero/client": "^1.1",
         "parsecsv/php-parsecsv": "^1.2",
         "mailgun/mailgun-php": "^2.8",
@@ -33,6 +33,15 @@
         "phpunit/phpunit": "^5.7.27",
         "lucatume/wp-browser": "^2.2"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "includes/lib/google/apiclient-services-sdk/apiclient-services",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
     "config": {
         "platform": {
             "php": "5.6.40"

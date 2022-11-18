@@ -1604,15 +1604,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         };
 
         add_action( 'phpmailer_init', $callback );
-
-        ob_start();
         $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
-        $debug_log    = ob_get_clean();
-
-        if ( ! $is_mail_sent ) {
-            error_log( print_r( $debug_log, true ) );
-        }
-
         remove_action( 'phpmailer_init', $callback );
     } else if ( erp_is_mailgun_enabled() ) {
         $erp_mailgun_settings = get_option( 'erp_settings_erp-email_mailgun', [] );
@@ -3374,7 +3366,7 @@ function erp_is_valid_employee_id( $emp_id ) {
  * @return bool
  */
 function erp_is_valid_currency_amount( $amount ) {
-    return preg_match( '/^[0-9]+(\.[0-9]{1,2})?$/', $amount );
+    return preg_match( '/^[0-9]+(\.[0-9]{1,4})?$/', $amount );
 }
 
 /**

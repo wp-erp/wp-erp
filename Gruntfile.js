@@ -98,6 +98,7 @@ module.exports = function(grunt) {
                     '!bin/**',
                     '!.git/**',
                     '!Gruntfile.js',
+                    '!appsero.json',
                     '!package.json',
                     '!package-lock.json',
                     '!composer.json',
@@ -122,11 +123,10 @@ module.exports = function(grunt) {
                     '!codeception.yml',
                     '!eslintrc.js',
                     '!webpack.config.js',
+                    '!includes/Settings/assets/**',
                     '!modules/accounting/assets/less/**',
                     '!modules/accounting/assets/src/**',
-                    '!vendor/google/apiclient-services/src/Google/Service/**',
-                    'vendor/google/apiclient-services/src/Google/Service/Gmail.php',
-                    'vendor/google/apiclient-services/src/Google/Service/Gmail/**'
+                    '!modules/crm/assets/less/**',
                 ],
                 dest: 'build/'
             }

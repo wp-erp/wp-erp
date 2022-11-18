@@ -240,6 +240,12 @@
                 changeYear: true,
                 yearRange: '-100:+100',
             });
+            $( '.erp-hr-date-field').datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-100:-2',
+            });
         },
 
         reloadPage: function() {

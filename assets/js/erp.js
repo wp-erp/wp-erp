@@ -306,7 +306,7 @@ window.wperp = window.wperp || {};
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
-                yearRange: '-50:+5',
+                yearRange: '-100:+5',
             });
 
             $( ".erp-date-picker-from" ).datepicker({
