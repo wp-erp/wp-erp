@@ -259,6 +259,7 @@ window.wperp = window.wperp || {};
          * @return {void}
          */
         initialize: function() {
+            $( 'body').on( 'click', '.pro-popup-main', this.proPopup );
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
 
@@ -295,6 +296,19 @@ window.wperp = window.wperp || {};
             this.initFields();
         },
 
+        proPopup: function (e){
+            e.preventDefault();
+            $.erpPopup({
+                title: '',
+                button: '',
+                id: 'erp-pro-popup-modal',
+                content: wperp.template('erp-pro-popup-modal'),
+                // content: wperp.template('erp-pro-popup-modal')( wpErpHr.employee_empty ).trim(),
+                // extraClass: 'smaller',
+                extraClass: 'medium',
+                footer: false
+            });
+        },
         afterNewLocation: function(e, res) {
             wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
             $('.erp-hr-location-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');

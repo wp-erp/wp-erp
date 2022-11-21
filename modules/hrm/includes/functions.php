@@ -600,6 +600,7 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
                 $pro_popup = '';
                 $tooltip = '';
                 if ( ! empty( $value['pro_popup'] ) ) {
+                    // pro-popup-main
                     $pro_popup = '<span class="pro-popup-sub-nav erp-pro-tooltip">Pro</span>';
                     $tooltip = '<div class="erp-pro-tooltip-wrapper"><div class="erp-pro-tooltip-inner">
                         <h4>Available in Pro. Also enjoy:</h4>
@@ -618,7 +619,7 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
 
                 if ( current_user_can( $value['cap'] ) ) :
 					?>
-                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?> <?php echo $pro_popup; ?></a> <?php echo $tooltip; ?></li>
+                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo ! empty( $value['pro_popup'] ) ? '#' : esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?> <?php echo $pro_popup; ?></a> <?php echo $tooltip; ?></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
