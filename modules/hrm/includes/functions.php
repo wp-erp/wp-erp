@@ -601,7 +601,7 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
                 $tooltip = '';
                 if ( ! empty( $value['pro_popup'] ) ) {
                     // pro-popup-main
-                    $pro_popup = '<span class="pro-popup-sub-nav erp-pro-tooltip">Pro</span>';
+                    $pro_popup = '<span class="pro-popup-sub-nav erp-pro-tooltip pro-popup">Pro</span>';
                     $tooltip = '<div class="erp-pro-tooltip-wrapper"><div class="erp-pro-tooltip-inner">
                         <h4>Available in Pro. Also enjoy:</h4>
                         <ul>

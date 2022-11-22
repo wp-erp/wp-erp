@@ -1,3 +1,6 @@
+.pro-popup{
+    cursor: pointer;
+}
 .pro-popup, .pro-popup-nav, .pro-popup-sub-nav{
     font-weight: 400;
     font-size: 11px;

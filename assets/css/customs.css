@@ -919,3 +919,78 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .text-green {
     color: rgb(33, 131, 33) !important;
 }
+
+.erp-pro-tooltip-wrapper {
+    position: absolute;
+    /*opacity: 0;*/
+    /*visibility: hidden;*/
+}
+
+.erp-pro-tooltip:hover, div.erp-custom-menu-container:not(.--jsfied) {
+    overflow-x: inherit;
+    -webkit-overflow-scrolling: touch;
+    visibility: visible;
+}
+
+.erp-pro-tooltip-wrapper .erp-pro-tooltip-inner {
+    background: #000000;
+    border-radius: 5px;
+    padding: 15px 20px 25px;
+    width: 261px;
+    position: relative;
+    margin-top: 11px;
+}
+
+.erp-pro-tooltip-wrapper .erp-pro-tooltip-inner:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 18px;
+    background: #000;
+    width: 13px;
+    height: 13px;
+    transform: rotate(45deg);
+}
+
+.erp-pro-tooltip-wrapper h4 {
+    margin: 13px 0 30px;
+    font-weight: 700;
+
+}
+
+.erp-pro-tooltip-wrapper h4, .erp-pro-tooltip-wrapper ul li {
+    font-size: 15px;
+    line-height: 10px;
+    letter-spacing: 0.0909091px;
+    color: #FFFFFF;
+
+}
+.erp-pro-tooltip-wrapper[class] ul {
+    padding-bottom: 23px;
+}
+.erp-pro-tooltip-wrapper ul li {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+}
+.erp-pro-tooltip-wrapper ul li span {
+    color: #139F84;
+}
+
+.erp-pro-tooltip-wrapper .tooltip-btn {
+    text-align: center;
+}
+.erp-pro-tooltip-wrapper .tooltip-btn[class] a {
+    background: #FF9000;
+    box-shadow: 0px 5px 10px rgb(0 0 0 / 25%);
+    border-radius: 5px;
+    text-align: center;
+    color: #fff;
+    width: 164px;
+    height: 36px;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 15px 6px;
+}
