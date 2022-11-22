@@ -426,12 +426,24 @@ class AddProMenu {
         erp_add_submenu( 'accounting', 'transactions', [
             'title'      => __( 'Reimbursement', 'erp' ),
             'capability' => 'manage_options',
-            'slug'       => '#',
+            'slug'       => 'transactions',
             'callback'   => [ $this, 'reimbursement_page' ],
             'position'   => 190,
             'pro_popup'   => true,
-            'direct_link' => '#',
+            'direct_link' => 'transactions',
         ] );
+
+        // Products > Inventory
+        erp_add_submenu(
+            'accounting', 'products', [
+                'title'      => __( 'Inventory', 'erp' ),
+                'capability' => 'manage_options',
+                'slug'       => 'products',
+                'position'   => 15,
+                'pro_popup'   => true,
+                'direct_link' => 'products',
+            ]
+        );
     }
 
 
