@@ -33,14 +33,14 @@
         </div>
         <div class="pro-popup-right-content">
             <div class='container'>
-                <span id='slide-2'></span>
-                <span id='slide-3'></span>
-                <span id='slide-4'></span>
+<!--                <span id='slide-2'></span>-->
+<!--                <span id='slide-3'></span>-->
+<!--                <span id='slide-4'></span>-->
                 <div class='wrapper'>
-                    <img src=<?php echo WPERP_ASSETS . '/images/pro-popup/erp-pro.svg'; ?>>
-                    <img src=<?php echo WPERP_ASSETS . '/images/pro-popup/crm.svg'; ?>>
-                    <img src=<?php echo WPERP_ASSETS . '/images/pro-popup/accounting.svg'; ?>>
-                    <img src=<?php echo WPERP_ASSETS . '/images/pro-popup/woo.svg'; ?>>
+                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/erp-pro.svg'; ?>" id="slide-1">
+                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/crm.svg'; ?>" id="slide-2">
+                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/accounting.svg'; ?>" id="slide-3">
+                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/woo.svg'; ?>" id="slide-4">
                 </div>
                 <div class='buttons'>
                     <a href='#slide-1'></a>

@@ -133,6 +133,10 @@ class Scripts {
         wp_register_style( 'erp-nprogress', $vendor . '/nprogress/nprogress.css', false, $this->version );
         wp_register_style( 'erp-jvectormap', $vendor . '/jvectormap/jvectormap.css', false, $this->version );
 
+        // Register Pro Popup style.
+        if ( ! class_exists( 'WP_ERP_Pro' ) ) {
+            wp_register_style( 'add-pro-popup', $css . '/pro-popup.css', false, $this->version );
+        }
         // jquery UI
         wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.9.1.custom.css' );
 
