@@ -311,7 +311,7 @@ window.wperp = window.wperp || {};
             });
             var count = 2;
             setInterval(function () {
-                let next = $("#img-" + count);
+                var next = $("#img-" + count);
                 if(count === 4){
                     count = 1;
                 }else {
