@@ -32,24 +32,42 @@
             </ul>
         </div>
         <div class="pro-popup-right-content">
-            <div class='container'>
-<!--                <span id='slide-1'></span>-->
-<!--                <span id='slide-2'></span>-->
-<!--                <span id='slide-3'></span>-->
-<!--                <span id='slide-4'></span>-->
-                <div class='wrapper'>
-                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/erp-pro.svg'; ?>" id="slide-1" />
-                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/crm.svg'; ?>" id="slide-2" />
-                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/accounting.svg'; ?>" id="slide-3" />
-                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/woo.svg'; ?>" id="slide-4" />
-                </div>
-                <div class='buttons'>
-                    <a href='#slide-1'></a>
-                    <a href='#slide-2'></a>
-                    <a href='#slide-3'></a>
-                    <a href='#slide-4'></a>
-                </div>
-            </div>
+            <ul class='slides'>
+                <input type='radio' name='radio-btn' id='img-1' checked />
+                <li class='slide-container'>
+                    <div class='slide'>
+                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/erp-pro.svg'; ?>" id='slide-1' />
+                    </div>
+                </li>
+
+                <input type='radio' name='radio-btn' id='img-2' />
+                <li class='slide-container'>
+                    <div class='slide'>
+                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/crm.svg'; ?>" id='slide-2' />
+                    </div>
+                </li>
+
+                <input type='radio' name='radio-btn' id='img-3' />
+                <li class='slide-container'>
+                    <div class='slide'>
+                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/accounting.svg'; ?>" id='slide-3' />
+                    </div>
+                </li>
+
+                <input type='radio' name='radio-btn' id='img-4' />
+                <li class='slide-container'>
+                    <div class='slide'>
+                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/woo.svg'; ?>" id='slide-4' />
+                    </div>
+                </li>
+
+                <li class='nav-dots'>
+                    <label for='img-1' class='nav-dot' id='img-dot-1'></label>
+                    <label for='img-2' class='nav-dot' id='img-dot-2'></label>
+                    <label for='img-3' class='nav-dot' id='img-dot-3'></label>
+                    <label for='img-4' class='nav-dot' id='img-dot-4'></label>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="pro-popup-footer">

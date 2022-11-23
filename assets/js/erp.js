@@ -309,6 +309,17 @@ window.wperp = window.wperp || {};
                 extraClass: 'medium',
                 footer: false
             });
+            var count = 2;
+            setInterval(function () {
+                let next = $("#img-" + count);
+                if(count === 4){
+                    count = 1;
+                }else {
+                    count++;
+                }
+
+                next.click()
+            }, 2000)
         },
         afterNewLocation: function(e, res) {
             wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
