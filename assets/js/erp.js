@@ -304,14 +304,12 @@ window.wperp = window.wperp || {};
                 button: '',
                 id: 'erp-pro-popup-modal',
                 content: wperp.template('erp-pro-popup-modal'),
-                // content: wperp.template('erp-pro-popup-modal')( wpErpHr.employee_empty ).trim(),
-                // extraClass: 'smaller',
                 extraClass: 'medium',
                 footer: false
             });
             var count = 2;
             setInterval(function () {
-                let next = $("#img-" + count);
+                var next = $("#img-" + count);
                 if(count === 4){
                     count = 1;
                 }else {
@@ -319,7 +317,7 @@ window.wperp = window.wperp || {};
                 }
 
                 next.click()
-            }, 2000)
+            }, 4000)
         },
         afterNewLocation: function(e, res) {
             wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
