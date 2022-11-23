@@ -17,6 +17,7 @@
     background: #FF9000;
     border-radius: 3px;
     color: #FFFFFF;
+    box-sizing: unset;
 }
 .pro-popup-nav{
     margin: 0;
@@ -118,6 +119,9 @@
 .pro-popup-body{
     display: flex;
     justify-content: space-between;
+}
+.pro-popup-footer{
+    margin-top: 15px;
 }
 .pro-popup-left-content{
     width: 55%;
@@ -264,6 +268,7 @@
         transform: translateX(-300%);
     }
 }
+/*============= Slider=============*/
 
 #erp-pro-popup-modal{
     height: 780px;
@@ -293,3 +298,87 @@
     border-radius: 50px;
     background-color: #D7DEE7;
 }
+
+
+
+/*New SLIDE*/
+
+.slides {
+    padding: 0;
+    width: 381px;
+    height: 407px;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+}
+
+.slides * {
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.slides input { display: none; }
+
+.slide-container { display: block; }
+
+.slide {
+    top: 0;
+    opacity: 0;
+    width: 381px;
+    height: 407px;
+    display: block;
+    position: absolute;
+    transform: translate(1,0);
+    transition: all .7s ease-in-out;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    animation: .6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s left;
+    animation-fill-mode: forwards;
+    background-size: cover !important;
+    background-position: 50% !important;
+}
+
+input:checked + .slide-container  .slide {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+
+.nav-dots {
+    width: 100%;
+    bottom: -50px;
+    height: 11px;
+    display: block;
+    position: absolute;
+    text-align: center;
+}
+
+.nav-dots .nav-dot {
+    top: -5px;
+    width: 11px;
+    height: 11px;
+    margin: 0 4px;
+    position: relative;
+    border-radius: 100%;
+    display: inline-block;
+    background-color: #D7DEE7;
+}
+
+.nav-dots .nav-dot:hover {
+    cursor: pointer;
+}
+
+input#img-1:checked ~ .nav-dots label#img-dot-1,
+input#img-2:checked ~ .nav-dots label#img-dot-2,
+input#img-3:checked ~ .nav-dots label#img-dot-3,
+input#img-4:checked ~ .nav-dots label#img-dot-4
+{background: #2271B1}
+
+
