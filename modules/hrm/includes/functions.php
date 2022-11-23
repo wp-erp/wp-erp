@@ -602,19 +602,19 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
                 if ( ! empty( $value['pro_popup'] ) ) {
                     // pro-popup-main
                     $pro_popup = '<span class="pro-popup-sub-nav erp-pro-tooltip pro-popup">Pro</span>';
-                    $tooltip = '<div class="erp-pro-tooltip-wrapper"><div class="erp-pro-tooltip-inner">
-                        <h4>Available in Pro. Also enjoy:</h4>
-                        <ul>
-                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
-                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
-                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
-                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
-                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
-                        </ul>
-                        <div class="tooltip-btn">
-                            <a href="#">Upgrade to PRO</a>
-                        </div>
-                    </div></div>';
+//                    $tooltip = '<div class="erp-pro-tooltip-wrapper"><div class="erp-pro-tooltip-inner">
+//                        <h4>Available in Pro. Also enjoy:</h4>
+//                        <ul>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                        </ul>
+//                        <div class="tooltip-btn">
+//                            <a href="#">Upgrade to PRO</a>
+//                        </div>
+//                    </div></div>';
                 }
 
                 if ( current_user_can( $value['cap'] ) ) :
