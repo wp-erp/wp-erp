@@ -319,7 +319,7 @@ window.wperp = window.wperp || {};
                 }
 
                 next.click()
-            }, 2000)
+            }, 4000)
         },
         afterNewLocation: function(e, res) {
             wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
