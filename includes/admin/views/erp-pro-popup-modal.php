@@ -23,7 +23,7 @@
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . __( 'From <b>creating invoice to calculating taxes;</b> take<br /> full control of your company’s finances with the<br /> <b>Accounting module</b>', 'erp' ) . '</div>'; ?>
+                    <?php echo '<div>' . __( 'From <b>creating invoice to calculating taxes</b>; take<br /> full control of your company’s finances with the<br /> <b>Accounting module</b>', 'erp' ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
