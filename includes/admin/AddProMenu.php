@@ -11,6 +11,7 @@ class AddProMenu {
 
         add_filter( 'erp_hr_people_menu_items', [ $this, 'add_org_chart_section' ] );
         add_action( 'admin_footer', [ $this, 'pro_popup_js_templates' ] );
+        add_filter( 'erp_hr_reports', [ $this, 'add_reports' ] );
         wp_enqueue_style( 'add-pro-popup' );
     }
 
@@ -29,15 +30,44 @@ class AddProMenu {
         }
 
         $sections = array_slice( $sections, 0, $index ) + [
-			'org-chart' => [
-				'title'     => esc_html__( 'Org Chart', 'erp' ),
-				'cap'       => 'erp_list_employee',
-				'pro_popup' => true,
-			],
-		] + array_slice( $sections, $index );
+                'org-chart' => [
+                    'title'     => esc_html__( 'Org Chart', 'erp' ),
+                    'cap'       => 'erp_list_employee',
+                    'pro_popup' => true,
+                ],
+            ] + array_slice( $sections, $index );
 
         return $sections;
     }
+
+    /**
+     * Add reports tab.
+     *
+     * @param $reports
+     *
+     * @return mixed
+     */
+    public function add_reports( $reports ) {
+        $reports['asset-report'] = [
+            'title'       => __( 'Assets', 'erp' ),
+            'description' => __( 'Detailed report on Assets', 'erp' ),
+            'pro_popup'   => true,
+        ];
+        $reports['attendance-report'] = [
+            'title'       => __( 'Attendance (Date Based)', 'erp' ),
+            'description' => __( 'Reporting on employee attendance', 'erp' ),
+            'pro_popup'   => true,
+        ];
+
+        $reports['att-report-employee'] = [
+            'title'       => __( 'Attendance (Employee Based)', 'erp' ),
+            'description' => __( 'Reporting on employee attendance', 'erp' ),
+            'pro_popup'   => true,
+        ];
+
+        return $reports;
+    }
+
 
     /**
      * Add pro menu popup in core plugins.
@@ -424,11 +454,11 @@ class AddProMenu {
 
         // Reimbursement
         erp_add_submenu( 'accounting', 'transactions', [
-            'title'      => __( 'Reimbursement', 'erp' ),
-            'capability' => 'manage_options',
-            'slug'       => 'transactions',
-            'callback'   => [ $this, 'reimbursement_page' ],
-            'position'   => 190,
+            'title'       => __( 'Reimbursement', 'erp' ),
+            'capability'  => 'manage_options',
+            'slug'        => 'transactions',
+            'callback'    => [ $this, 'reimbursement_page' ],
+            'position'    => 190,
             'pro_popup'   => true,
             'direct_link' => 'transactions',
         ] );
@@ -436,10 +466,10 @@ class AddProMenu {
         // Products > Inventory
         erp_add_submenu(
             'accounting', 'products', [
-                'title'      => __( 'Inventory', 'erp' ),
-                'capability' => 'manage_options',
-                'slug'       => 'products',
-                'position'   => 15,
+                'title'       => __( 'Inventory', 'erp' ),
+                'capability'  => 'manage_options',
+                'slug'        => 'products',
+                'position'    => 15,
                 'pro_popup'   => true,
                 'direct_link' => 'products',
             ]
