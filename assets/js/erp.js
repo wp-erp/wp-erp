@@ -304,8 +304,6 @@ window.wperp = window.wperp || {};
                 button: '',
                 id: 'erp-pro-popup-modal',
                 content: wperp.template('erp-pro-popup-modal'),
-                // content: wperp.template('erp-pro-popup-modal')( wpErpHr.employee_empty ).trim(),
-                // extraClass: 'smaller',
                 extraClass: 'medium',
                 footer: false
             });
