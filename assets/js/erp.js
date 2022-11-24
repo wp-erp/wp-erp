@@ -305,7 +305,7 @@ window.wperp = window.wperp || {};
                 button: '',
                 id: 'erp-pro-popup-modal',
                 content: wperp.template('erp-pro-popup-modal'),
-                extraClass: 'medium',
+                extraClass: 'larger',
                 footer: false
             });
             var count = 2;

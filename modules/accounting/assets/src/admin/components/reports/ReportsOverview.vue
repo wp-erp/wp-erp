@@ -86,25 +86,25 @@
         </li>
         <li v-if="!proActivated" class="reports-popup">
             <h3 class="pro-popup-reports-main">
-                {{ __('Product Purchase', 'erp-pro') }}
+                {{ __('Product Purchase', 'erp') }}
                 <span class="pro-popup-nav">Pro</span>
             </h3>
-            <p>{{ __('Product Purchases history will be shown here with date between facility', 'erp-pro') }}.</p>
+            <p>{{ __('Product Purchases history will be shown here with date between facility', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'InventoryPurchaseReport' }">{{ __('View Report',
-                'erp-pro') }}
+                'erp') }}
             </router-link>
         </li>
         <li v-if="!proActivated" class="reports-popup">
             <h3 class="pro-popup-reports-main">
-                {{ __('Inventory Report', 'erp-pro') }}
+                {{ __('Inventory Report', 'erp') }}
                 <span class="pro-popup-nav">Pro</span>
             </h3>
-            <p>{{ __('Product purchase and sales history will be shown here with date between facility.', 'erp-pro')
+            <p>{{ __('Product purchase and sales history will be shown here with date between facility.', 'erp')
                }}</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'InventoryHistoryReport' }">
-                {{ __('View Report', 'erp-pro') }}
+                {{ __('View Report', 'erp') }}
             </router-link>
         </li>
         <li v-if="!proActivated" class="reports-popup">
@@ -140,11 +140,11 @@ export default {
         }
     },
 
-    // watch:{
-    //   '$store.state..common.erp_pro_activated' : function() {
-    //       console.log(this.$store.state.erp_pro_activated + 'ok')
-    //   }
-    // },
+    watch:{
+      '$store.state..common.erp_pro_activated' : function() {
+          console.log(this.$store.state.erp_pro_activated + 'ok')
+      }
+    },
 
     mounted () {
         setTimeout(() => {
