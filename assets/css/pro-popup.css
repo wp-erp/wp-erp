@@ -1,4 +1,4 @@
-.pro-popup{
+.pro-popup, .reports-popup{
     cursor: pointer;
 }
 .pro-popup, .pro-popup-nav, .pro-popup-sub-nav{
@@ -36,6 +36,16 @@
     display: flex !important;
     justify-content: space-between;
 }
+
+
+.pro-popup-reports-main{
+    display: flex !important;
+}
+
+.pro-popup-reports-main > .pro-popup-nav{
+    margin-left: 10px;
+}
+
 
 .erp-pro-tooltip:hover {
 
