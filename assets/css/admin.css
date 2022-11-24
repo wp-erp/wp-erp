@@ -1,3 +1,6 @@
+.wperp-stats .wperp-chart-block.has-separator:after{
+    z-index: 1 !important;
+}
 .erp-remove-image {
   cursor: pointer;
   color: #f44336;

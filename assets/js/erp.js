@@ -260,6 +260,7 @@ window.wperp = window.wperp || {};
          */
         initialize: function() {
             $( 'body').on( 'click', '.pro-popup-main', this.proPopup );
+            $( 'body').on( 'click', '.reports-popup', this.proPopup );
             $( 'body').on( 'click', '.org-chart', this.proPopup );
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
@@ -304,7 +305,7 @@ window.wperp = window.wperp || {};
                 button: '',
                 id: 'erp-pro-popup-modal',
                 content: wperp.template('erp-pro-popup-modal'),
-                extraClass: 'medium',
+                extraClass: 'larger',
                 footer: false
             });
             var count = 2;
