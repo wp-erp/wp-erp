@@ -638,7 +638,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
-.erp-leave-dropdown-content, #erp-leave-dropdown-content {
+.erp-dropdown-filter-content, #erp-leave-dropdown-content {
     display: none;
     position: absolute;
     background-color: #f6f6f6;
@@ -1001,6 +1001,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     padding: 5px 15px;
     background: #F4F4F4;
     border-radius: 3px;
+    border: 1px solid #F4F4F4;
 }
 
 .input-component label span {

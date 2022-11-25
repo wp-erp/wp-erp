@@ -677,7 +677,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmDept ) ) {
+                if ( confirm( wpErpHr.delConfirmDesignation ) ) {
                     wp.ajax.send( 'erp-hr-del-desig', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,

@@ -1186,6 +1186,7 @@
         },
 
         customLeaveFilter: function() {
+            document.getElementById('filter_employee_search').disabled = false
             if ( 'custom' !== this.value ) {
                 $('#custom-input').remove();
             } else {
@@ -1209,7 +1210,7 @@
             var endDate = new Date($("#end_date").val());
             if(Date.parse(startDate) > Date.parse(endDate)){
                 alert("Invalid Date Range");
-                document.getElementById('filter_employee_search').disabled = 'disabled'
+                $("#filter_employee_search").attr( 'disabled', 'disable' );
             }else{
                 document.getElementById('filter_employee_search').disabled = false
             }
