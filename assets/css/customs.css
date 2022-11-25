@@ -387,7 +387,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body select, .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body input {
     width: 180px !important;
-    margin: 7px 5px !important;
+    margin: 7px 0px !important;
     border: 0.5px solid rgb(231, 231, 231);
     font-weight: 300;
     height: 35px;
@@ -413,8 +413,13 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 }
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body #employee_name {
     border-radius: 3px;
-    padding: 0 0 0 10px;
     height: 35px;
+    width: 100% !important;
+}
+.erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body #filter_leave_year {
+    border-radius: 3px;
+    height: 35px;
+    width: 100% !important;
 }
 
 .erp-dropdown-filter-content .wperp-filter-panel .wperp-filter-panel-body .select2-container {
@@ -633,7 +638,7 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     }
 }
 
-.erp-dropdown-filter-content {
+.erp-leave-dropdown-content, #erp-leave-dropdown-content {
     display: none;
     position: absolute;
     background-color: #f6f6f6;
@@ -645,6 +650,10 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     padding: 0;
     left: inherit !important;
     right: 0 !important;
+}
+
+#erp-leave-dropdown-content {
+    overflow: inherit;
 }
 
 .show:before {

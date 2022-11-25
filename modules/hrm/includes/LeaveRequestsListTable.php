@@ -572,6 +572,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         </div>
                         <div class='input-component'>
                             <label for='filter_leave_year'><?php esc_html_e( 'Date range', 'erp' ); ?></label>
+                            <div>
                             <select name='filter_leave_year' id='filter_leave_year'>
                                 <option value=''><?php echo esc_html__( 'Filter by date', 'erp' ); ?></option>
                                 <option value='1'><?php echo esc_html__( 'Last week', 'erp' ); ?></option>
@@ -580,6 +581,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                 <option value="custom"><?php echo esc_html__( 'Custom', 'erp' ); ?></option>
                             </select>
                             <span id="custom-date-range-leave-filter"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -632,7 +634,13 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         unset( $build_url['end_date'] );
                         $build_url['filter_leave_year'] = '';
                     }
-                    $build_url[ $key ] = '';
+
+                    if ( 'filter_leave_status' === $key ) {
+                        $build_url[ $key ] = 'all';
+                    }else{
+                        $build_url[ $key ] = '';
+                    }
+
                     $url               = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
                     // phpcs:enable
                     ?>
