@@ -145,25 +145,10 @@ class AjaxHandler {
         $this->verify_hrm_nonce();
 
         $employee_name = isset( $_POST['employee_name'] ) ? sanitize_text_field( wp_unslash( $_POST['employee_name'] ) ) : ''; // phpcs:ignore.
-        $users         = new \WP_User_Query( [
-            'search'         => '*' . esc_attr( $employee_name ) . '*',
-            'search_columns' => [
-                'user_login',
-                'user_nicename',
-                'user_email',
-                'display_name',
-            ],
-        ] );
-
-        $users_found = $users->get_results();
-
-        $employees = [];
-        foreach ( $users_found as $user ) {
-            $employee = ( new Employee( $user ) )->to_array();
-            if ( null === $employee['employee_id'] ) {
-                continue;
-            }
-
+        $users_found = erp_hr_get_employees( [ 's' => $employee_name ] );
+        $employees   = [];
+        foreach ( $users_found as $employee ) {
+            $employee = ( new Employee( $employee->get_data()['user_id'] ) )->to_array();
             $designation = erp_hr_get_single_designation( (int) $employee['work']['designation'] );
             $employee['work']['designation'] = $designation->data;
             $employees[] = $employee;

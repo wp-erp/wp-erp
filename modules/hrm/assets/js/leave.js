@@ -1247,12 +1247,14 @@
                     employee_name: employee_name
                 },
                 success: function(response) {
+                    console.log(response)
                     var element = '<ul id="live-search"> ';
                     for (var i = 0; i < response.length; i++){
+                        var designation = response[i]['work']['designation'] ? response[i]['work']['designation']['title'] : '';
                         element += '<li><span class="employee_name">' +
                             '<div class="list-main">'+ response[i]['avatar']['image'] +
                             '<div class="list-employee-name" data-employee_full_name="'+ response[i]['name']['full_name'] +'">'+ response[i]['name']['full_name']
-                            +'<div class="list-employee-designation">'+ response[i]['work']['designation']['title'] +
+                            +'<div class="list-employee-designation">'+ designation +
                             '</div>' +
                             '</div>' +
                             '</div>' +
