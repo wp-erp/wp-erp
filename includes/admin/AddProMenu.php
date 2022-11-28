@@ -76,7 +76,7 @@ class AddProMenu {
      */
     public function add_pro_menu() {
         // License menu page
-        add_submenu_page( 'erp', __( 'License', 'erp' ), sprintf( '<span class="pro-popup-main">%s<span class="pro-popup-nav">%s</span></span>', __( 'License', 'erp' ), __( 'Pro', 'erp' ) ), 'manage_options', '#', [ $this, 'license_menu' ] );
+//        add_submenu_page( 'erp', __( 'License', 'erp' ), sprintf( '<span class="pro-popup-main">%s<span class="pro-popup-nav">%s</span></span>', __( 'License', 'erp' ), __( 'Pro', 'erp' ) ), 'manage_options', '#', [ $this, 'license_menu' ] );
 
         // Asset module.
         erp_add_menu( 'hr', [
