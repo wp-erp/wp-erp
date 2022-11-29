@@ -2049,6 +2049,11 @@ table.leave-requests td.column-status .status-3 {
     border-radius: 3px;
 }
 
+table.leave-requests td.column-status {
+    vertical-align: middle;
+}
+
+
 /*table.leaves td.column-status .status-2 {*/
 /*  background: #ffba00;*/
 /*  color: #fff;*/
