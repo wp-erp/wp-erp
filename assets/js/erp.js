@@ -262,7 +262,7 @@ window.wperp = window.wperp || {};
             $( 'body').on( 'mouseover', '.pro-popup', this.proPopupTooltip );
             $( 'body').on( 'click', '.pro-popup-main', this.proPopup );
             $( 'body').on( 'click', '.reports-popup', this.proPopup );
-            $( 'body').on( 'click', '.org-chart', this.proPopup );
+            $( '.org-chart').on( 'click', '.pro-popup', this.proPopup );
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
 
