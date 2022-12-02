@@ -446,7 +446,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             }
             $policy_data[ $policy['f_year'] ][] = [
                 'name'          => $policy->leave->name,
-                'policy_id'     => $policy['id'],
+                'policy_id'     => $policy['leave_id'],
                 'employee_type' => $policy['employee_type'],
             ];
         }
@@ -543,13 +543,6 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                 <label for="leave_policy"><?php esc_html_e( 'Leave Policy', 'erp' ); ?></label>
                                 <select name='leave_policy' id='leave_policy'>
                                     <option value=''><?php echo esc_attr__( 'All Policy', 'erp' ); ?></option>
-                                    <?php
-                                    if ( array_key_exists( $selected_f_year, $policy_data ) ) {
-                                        foreach ( $policy_data[ $selected_f_year ] as $policy ) {
-                                            echo sprintf( "<option value='%s'>%s</option>", esc_attr( $policy['policy_id'] ), esc_html( $policy['name'] ) );
-                                        }
-                                    }
-                                    ?>
                                 </select>
                             </div>
                         </div>
