@@ -393,8 +393,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of previous month' ) );
                 $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
             } elseif ( 3 === (int) $_GET['filter_leave_year'] ) {
-                $args['start_date'] = date( 'Y-m-01', strtotime( '-3 month' ) );
-                $args['end_date']   = date( 'Y-m-t' );
+                $today = date('d');
+                $args['start_date'] = date( 'Y-m-' . $today, strtotime( '-3 month' ) );
+                $args['end_date']   = date( 'Y-m-'. $today );
             }
         }
 
