@@ -1279,7 +1279,7 @@
   color: #fafafa;
   font-weight: 700;
   opacity: 1;
-  height: 100%;
+  height: auto;
   margin: 0;
   text-decoration: none;
   text-align: center;
@@ -2828,7 +2828,7 @@ table.erp-table.full-width {
 .vtable-wrap .vtbale-table-wrapper table.vtable {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 .vtable-wrap .vtbale-table-wrapper table.vtable tbody.vtbale-tbody tr.vtable-ajax-loading {
   height: 50px;

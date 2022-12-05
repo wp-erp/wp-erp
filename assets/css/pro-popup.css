@@ -118,18 +118,19 @@
 .erp-pro-tooltip-wrapper .tooltip-btn {
     text-align: center;
 }
-.erp-pro-tooltip-wrapper .tooltip-btn[class] a {
+.erp-pro-tooltip-wrapper .tooltip-btn[class] .tooltip_button {
     background: #FF9000;
     box-shadow: 0px 5px 10px rgb(0 0 0 / 25%);
     border-radius: 5px;
     text-align: center;
     color: #fff;
     width: 164px !important;
-    height: 36px !important;
+    height: 35px !important;
     display: inline-block;
     align-items: center;
     justify-content: center;
-    padding: 0 15px 6px;
+    padding: 0 15px 10px;
+    line-height: 45px !important;
 }
 
 .pro-popup-body{

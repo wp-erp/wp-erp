@@ -516,7 +516,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
             <div class="erp-dropdown-filter-content" id="erp-leave-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default" style="width: 450px !important;">
-                    <h2><?php esc_html_e( 'Filter Leave Request', 'erp' ); ?></h2>
+                    <h2 class="leave_request_title"><?php esc_html_e( 'Filter Leave Request', 'erp' ); ?></h2>
                     <div class="wperp-filter-panel-body">
                         <div class="input-component">
                             <label for="employee_name"><?php esc_html_e( 'Employee name', 'erp' ); ?></label>

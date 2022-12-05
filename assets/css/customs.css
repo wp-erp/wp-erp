@@ -370,8 +370,8 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     margin-bottom: 10px;
 }
 
-.erp-dropdown-filter-content .wperp-filter-panel h2 {
-    padding: 17px 0 0 20px !important;
+.erp-dropdown-filter-content .wperp-filter-panel .leave_request_title {
+    padding: 17px 0 0 15px !important;
     margin: 0 !important;
     color: #64748B !important;
     font-weight: 700;
