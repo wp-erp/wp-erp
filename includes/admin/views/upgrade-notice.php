@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="erp-message">
-            <h3 class='title'><?php _e( 'Please update <b>WP ERP PRO</b>', 'erp' ); ?></h3>
+            <h3 class='title'><?php echo __( 'Please update <b>WP ERP PRO</b>', 'erp' ); ?></h3>
             <div><?php echo __( 'We’ve pushed a major update on both <b>WP ERP Free</b> and <b>WP ERP Pro</b> that requires you to use latest version of both. Please update your <b>ERP Pro</b> to the latest version', 'erp' ); ?></div>
             <div class='notice-button'>
                 <a href="<?php echo esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=erp-pro' ), 'upgrade-plugin_erp-pro' ) ); ?>" class='erp-btn erp-btn-primary install-erp-core'><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></a>
