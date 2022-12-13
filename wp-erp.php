@@ -80,8 +80,7 @@ final class WeDevs_ERP {
      */
     private $min_php = '5.6.0';
 
-    public $composer_update_in_pro_version = '1.3.0';
-    public $composer_update_in_core_version = '1.11.3';
+    private $composer_update_in_pro_version = '1.3.0';
 
     /**
      * Holds various class instances
@@ -164,10 +163,8 @@ final class WeDevs_ERP {
     public function is_supported_version() {
         if ( class_exists( 'WP_ERP_Pro' ) && version_compare( ERP_PRO_PLUGIN_VERSION, $this->composer_update_in_pro_version, '<' ) ) {
             set_transient( 'erp_pro_version_compare_failed', true );
-        }
-
-        if ( version_compare( WPERP_VERSION, $this->composer_update_in_core_version, '<' ) ) {
-            set_transient( 'erp_core_version_compare_failed', true );
+        }else{
+            delete_transient( 'erp_pro_version_compare_failed');
         }
     }
 
@@ -262,7 +259,7 @@ final class WeDevs_ERP {
         include __DIR__ . '/vendor/autoload.php';
 
         // Check, if update notice is necessary to show.
-        if ( get_transient( 'erp_pro_version_compare_failed' ) || get_transient( 'erp_core_version_compare_failed' ) ) {
+        if ( get_transient( 'erp_pro_version_compare_failed' ) ) {
             new \WeDevs\ERP\Admin\Notice();
         }
 

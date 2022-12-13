@@ -12,7 +12,6 @@ class Notice {
      */
     public function __construct() {
         add_action( 'admin_notices', [ $this, 'activation_notice' ] );
-        add_action( 'wp_ajax_update_erp_core', [ $this, 'update_erp_core' ] );
     }
 
     /**
@@ -25,7 +24,6 @@ class Notice {
     public function activation_notice() {
         $screen = get_current_screen();
         if ( 'erp' === $screen->parent_base && current_user_can( 'activate_plugins' ) ) {
-            $core_version_need_to_update = get_transient( 'erp_core_version_compare_failed' );
             $pro_version_need_to_update = get_transient( 'erp_pro_version_compare_failed' );
             include_once WPERP_VIEWS . '/upgrade-notice.php';
             exit();

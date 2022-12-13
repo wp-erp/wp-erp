@@ -3,11 +3,6 @@
  * @var bool $is_erp_installed
  * $var string $core_plugin_file
  */
-
-$free_or_pro_title = $core_version_need_to_update ? __( 'CORE', 'erp' ) : __( 'PRO', 'erp' );
-$free_or_pro_desc = $core_version_need_to_update ? sprintf( __( 'We’ve pushed a major update on both %1$s and %2$s that requires you to use latest version of both. Please update your %3$s to the latest version', 'erp' ), '<b>WP ERP Free</b>', '<b>WP ERP</b>', '<b>WP ERP Free</b>' )
-    : sprintf( __( 'We’ve pushed a major update on both %1$s and %2$s Pro that requires you to use latest version of both. Please update your %3$s to the latest version', 'erp' ), '<b>WP ERP Free</b>', '<b>WP ERP</b>', '<b>ERP Pro</b>' );
-$plugin = $core_version_need_to_update ? 'erp' : 'erp-pro';
 ?>
 <div class="erp-core-missing-notice erp-alert notice">
     <div class="notice-content">
@@ -17,19 +12,11 @@ $plugin = $core_version_need_to_update ? 'erp' : 'erp-pro';
             </div>
         </div>
         <div class="erp-message">
-            <h3 class='title'><?php esc_html_e( 'Please update WP ERP ' . $free_or_pro_title, 'erp' ); ?></h3>
-            <div><?php echo $free_or_pro_desc; ?></div>
-            <?php
-            if ( $core_version_need_to_update ) {
-                ?>
-                <button class="erp-btn erp-btn-primary install-erp-core"><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></button>
-                <?php
-            } else {
-                ?>
-                <a href="<?php echo esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=erp-pro' ), 'upgrade-plugin_erp-pro' ) ); ?>" class="erp-btn erp-btn-primary"><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></a>
-                <?php
-            }
-            ?>
+            <h3 class='title'><?php _e( 'Please update <b>WP ERP PRO</b>', 'erp' ); ?></h3>
+            <div><?php echo __( 'We’ve pushed a major update on both <b>WP ERP Free</b> and <b>WP ERP Pro</b> that requires you to use latest version of both. Please update your <b>ERP Pro</b> to the latest version', 'erp' ); ?></div>
+            <div class='notice-button'>
+                <a href="<?php echo esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=erp-pro' ), 'upgrade-plugin_erp-pro' ) ); ?>" class='erp-btn erp-btn-primary'><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></a>
+            </div>
         </div>
     </div>
 </div>
@@ -44,21 +31,39 @@ $plugin = $core_version_need_to_update ? 'erp' : 'erp-pro';
         width: 100%;
     }
 
+    .notice-button{
+        margin-top: 30px;
+        text-align: end;
+    }
+    .notice{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        margin: 0 0 0 -11% !important;
+    }
     .erp-core-missing-notice.notice {
         border-width: 0;
         padding: 0;
         box-shadow: none;
     }
 
-    .erp-core-missing-notice.erp-alert {
-        border-left: 2px solid #b44445;
-    }
-
     .erp-core-missing-notice .notice-content {
         display: flex;
-        padding: 16px 20px;
-        border-radius: 0 5px 5px 0;
+        padding: 30px 30px 0px;
         background: #fff;
+
+        z-index: 1;
+        position: fixed;
+        max-width: 570px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        border-radius: 8px;
+        height: 200px;
     }
 
     .erp-core-missing-notice .logo-wrap {
@@ -74,7 +79,7 @@ $plugin = $core_version_need_to_update ? 'erp' : 'erp-pro';
     }
 
     .erp-core-missing-notice .erp-message {
-        margin: 0 23px;
+        margin: 0 5px;
     }
 
     .erp-core-missing-notice .erp-message h3 {
@@ -159,33 +164,3 @@ $plugin = $core_version_need_to_update ? 'erp' : 'erp-pro';
         border-color: #f16982;
     }
 </style>
-
-<script type="text/javascript">
-    (function ($) {
-        $('.erp-core-missing-notice button.install-erp-core').on('click', function (e) {
-            e.preventDefault();
-
-            const self = $(this);
-
-            self.attr('disabled', 'disabled');
-
-            const data = {
-                action: 'update_erp_core',
-                plugin: "<?php echo $plugin; ?>",
-                _wpnonce: '<?php echo wp_create_nonce( 'erp-pro-updater-nonce' ); ?>'
-            };
-
-            self.text('<?php echo esc_js( 'Upgrading...', 'erp' ); ?>');
-
-            $.post(ajaxurl, data, function (response) {
-                if (response.success) {
-                    self.text('<?php echo esc_js( 'Installed', 'erp' ); ?>');
-                    window.location.reload();
-                }else{
-                    alert('Something went wrong');
-                    window.location.reload();
-                }
-            });
-        });
-    })(jQuery);
-</script>
