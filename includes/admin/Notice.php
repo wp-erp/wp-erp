@@ -11,7 +11,7 @@ class Notice {
      * Class constructor
      */
     public function __construct() {
-        add_action( 'admin_notices', [ $this, 'activation_notice' ] );
+//        add_action( 'admin_notices', [ $this, 'activation_notice' ] );
     }
 
     /**

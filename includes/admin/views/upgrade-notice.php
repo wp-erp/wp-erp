@@ -15,7 +15,7 @@
             <h3 class='title'><?php _e( 'Please update <b>WP ERP PRO</b>', 'erp' ); ?></h3>
             <div><?php echo __( 'We’ve pushed a major update on both <b>WP ERP Free</b> and <b>WP ERP Pro</b> that requires you to use latest version of both. Please update your <b>ERP Pro</b> to the latest version', 'erp' ); ?></div>
             <div class='notice-button'>
-                <a href="<?php echo esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=erp-pro' ), 'upgrade-plugin_erp-pro' ) ); ?>" class='erp-btn erp-btn-primary'><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></a>
+                <a href="<?php echo esc_url( wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=erp-pro' ), 'upgrade-plugin_erp-pro' ) ); ?>" class='erp-btn erp-btn-primary install-erp-core'><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></a>
             </div>
         </div>
     </div>
@@ -164,3 +164,10 @@
         border-color: #f16982;
     }
 </style>
+<script type='text/javascript'>
+    (function ($) {
+        $('.erp-core-missing-notice .install-erp-core').on('click', function (e) {
+            return confirm('<?php echo esc_html__( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'erp' ); ?>');
+        });
+    })(jQuery);
+</script>
