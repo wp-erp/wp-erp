@@ -80,6 +80,9 @@ final class WeDevs_ERP {
      */
     private $min_php = '5.6.0';
 
+    public $composer_update_in_pro_version = '1.3.0';
+    public $composer_update_in_core_version = '1.11.3';
+
     /**
      * Holds various class instances
      *
@@ -134,6 +137,9 @@ final class WeDevs_ERP {
         // Define constants
         $this->define_constants();
 
+        // Version check
+        $this->is_supported_version();
+
         // Include required files
         $this->includes();
 
@@ -148,6 +154,21 @@ final class WeDevs_ERP {
 
         // Loaded action
         do_action( 'erp_loaded' );
+    }
+
+    /**
+     * Check if the PHP version is supported
+     *
+     * @return void
+     */
+    public function is_supported_version() {
+        if ( class_exists( 'WP_ERP_Pro' ) && version_compare( ERP_PRO_PLUGIN_VERSION, $this->composer_update_in_pro_version, '<' ) ) {
+            set_transient( 'erp_pro_version_compare_failed', true );
+        }
+
+        if ( version_compare( WPERP_VERSION, $this->composer_update_in_core_version, '<' ) ) {
+            set_transient( 'erp_core_version_compare_failed', true );
+        }
     }
 
     /**
@@ -239,6 +260,12 @@ final class WeDevs_ERP {
      */
     private function includes() {
         include __DIR__ . '/vendor/autoload.php';
+
+        // Check, if update notice is necessary to show.
+        if ( get_transient( 'erp_pro_version_compare_failed' ) || get_transient( 'erp_core_version_compare_failed' ) ) {
+            new \WeDevs\ERP\Admin\Notice();
+        }
+
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
