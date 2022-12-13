@@ -43,6 +43,7 @@
         bottom: 0;
         background: rgba(0, 0, 0, 0.4);
         margin: 0 0 0 -11% !important;
+        z-index: 99;
     }
     .erp-core-missing-notice.notice {
         border-width: 0;
