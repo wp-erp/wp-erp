@@ -17,7 +17,7 @@ class ComposerUpgradeNotice {
     }
 
     /**
-     * Check if the PHPComposer  version needs to be updated.
+     * Check if the PHP Composer version needs to be updated.
      *
      * @return bool
      */
@@ -30,7 +30,7 @@ class ComposerUpgradeNotice {
     }
 
     /**
-     * Dokan main plugin activation notice
+     * ERP Pro plugin upgrade notice
      *
      * @since 2.5.2
      *
