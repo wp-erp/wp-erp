@@ -229,7 +229,7 @@ final class WeDevs_ERP {
         define( 'WPERP_MODULES', WPERP_PATH . '/modules' );
         define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
         define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
-        define( 'WPERP_VIEWS', WPERP_INCLUDES . '/admin/views' );
+        define( 'WPERP_VIEWS', WPERP_INCLUDES . '/Admin/views' );
     }
 
     /**
