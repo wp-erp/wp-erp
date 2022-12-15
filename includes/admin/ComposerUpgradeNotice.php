@@ -37,6 +37,9 @@ class ComposerUpgradeNotice {
      * @return void
      * */
     public function activation_notice() {
+        if ( 'erp-license' === $_GET['page'] ) { // phpcs:ignore
+            return;
+        }
         $screen = get_current_screen();
         if ( 'erp' === $screen->parent_base && current_user_can( 'activate_plugins' ) ) {
             include_once WPERP_VIEWS . '/upgrade-notice.php';
