@@ -37,7 +37,7 @@ class ComposerUpgradeNotice {
      * @return void
      * */
     public function activation_notice() {
-        if ( 'erp-license' === $_GET['page'] ) { // phpcs:ignore
+        if ( !empty( $_GET['page'] ) && 'erp-license' === $_GET['page'] ) { // phpcs:ignore
             return;
         }
         $screen = get_current_screen();
