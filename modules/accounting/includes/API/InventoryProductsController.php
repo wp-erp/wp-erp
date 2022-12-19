@@ -456,14 +456,14 @@ class InventoryProductsController extends \WeDevs\ERP\API\REST_Controller {
             'name'              => $item->name,
             'product_type_id'   => $item->product_type_id,
             'product_type_name' => ! empty( $item->product_type_name ) ? $item->product_type_name : '',
-            'category_id'       => $item->category_id,
-            'tax_cat_id'        => $item->tax_cat_id,
+            'category_id'       => ! empty( $item->category_id ) ? $item->category_id : 0,
+            'tax_cat_id'        => ! empty( $item->tax_cat_id ) ? $item->tax_cat_id : 0,
             'vendor'            => ! empty( $item->vendor ) ? $item->vendor : '',
-            'cost_price'        => $item->cost_price,
-            'sale_price'        => $item->sale_price,
+            'cost_price'        => ! empty( $item->cost_price ) ? $item->cost_price : 0,
+            'sale_price'        => ! empty( $item->sale_price ) ? $item->sale_price : 0,
             'vendor_name'       => ! empty( $item->vendor_name ) ? $item->vendor_name : '',
             'cat_name'          => ! empty( $item->cat_name ) ? $item->cat_name : '',
-            'tax_cat_name'      => erp_acct_get_tax_category_by_id( $item->tax_cat_id ),
+            'tax_cat_name'      => ! empty( $item->tax_cat_id ) ? erp_acct_get_tax_category_by_id( $item->tax_cat_id ) : '',
         ];
 
         $data = array_merge( $data, $additional_fields );
