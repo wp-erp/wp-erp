@@ -323,8 +323,8 @@ class AjaxHandler {
 
         $data = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
-        $data['first_name'] = stripslashes( $data['first_name'] );
-        $data['last_name']  = stripslashes( $data['last_name'] );
+        $data['first_name'] = ! empty( $data['first_name'] ) ? stripslashes( $data['first_name'] ) : '';
+        $data['last_name'] = ! empty( $data['last_name'] ) ? stripslashes( $data['last_name'] ) : '';
 
         if ( ! $data['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
             $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
