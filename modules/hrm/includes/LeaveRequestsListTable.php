@@ -441,7 +441,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
         $policy_data       = [];
         $leave_policy_name = '';
         foreach ( $policies as $policy ) {
-            if ( ! empty( $_GET['leave_policy'] ) && $policy['id'] === (int) $_GET['leave_policy'] ) {
+            if ( ! empty( $_GET['leave_policy'] ) && (int) $policy['leave_id'] === (int) $_GET['leave_policy'] ) {
                 $leave_policy_name = $policy->leave->name;
             }
             $policy_data[ $policy['f_year'] ][] = [

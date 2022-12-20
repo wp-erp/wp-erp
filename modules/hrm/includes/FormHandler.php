@@ -1160,7 +1160,7 @@ class FormHandler {
         ];
 
         if ( ! empty( $_GET['action'] ) ) {
-            $redirect_args['id'] = absint( wp_unslash( $_GET['id'] ) );
+            $redirect_args['id'] = ! empty( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
         }
 
         if ( ! empty( $_GET['action'] ) ) {
