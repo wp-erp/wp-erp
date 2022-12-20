@@ -37,12 +37,12 @@
     }
     .notice{
         position: fixed;
-        width: 100%;
+        width: 150%;
         height: 100%;
         top: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.4);
-        margin: 0 0 0 -11% !important;
+        margin: 0 0 0 -50% !important;
         z-index: 99;
     }
     .erp-core-missing-notice.notice {
