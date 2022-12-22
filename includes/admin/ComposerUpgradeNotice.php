@@ -4,7 +4,10 @@ namespace WeDevs\ERP\Admin;
 
 class ComposerUpgradeNotice {
 
+	// From these versions we introduced composer v2 both core and pro.
     private $composer_update_in_pro_version = '1.3.0';
+	private $composer_update_in_core_version = '1.2.0';
+
 
     /**
      * Class constructor
@@ -24,7 +27,9 @@ class ComposerUpgradeNotice {
     public function need_to_upgrade() {
         if ( class_exists( 'WP_ERP_Pro' ) && version_compare( ERP_PRO_PLUGIN_VERSION, $this->composer_update_in_pro_version, '<' ) ) {
             return true;
-        }
+        } elseif ( class_exists( 'WeDevs_ERP' ) && version_compare( WPERP_VERSION, $this->composer_update_in_core_version, '<' ) ) {
+		    return true;
+	    }
 
         return false;
     }

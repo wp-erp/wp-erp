@@ -140,6 +140,10 @@ final class WeDevs_ERP {
         // instantiate classes
         $this->instantiate();
 
+	    $update_notice = new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
+	    if ( $update_notice->need_to_upgrade() ) {
+		    return;
+	    }
         // Initialize the action hooks
         $this->init_actions();
 
@@ -272,8 +276,6 @@ final class WeDevs_ERP {
      */
     private function instantiate() {
         $this->setup_database();
-
-        new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
 
         new WeDevsERPInstaller();
         new AdminMenu();
