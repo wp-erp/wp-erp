@@ -281,6 +281,12 @@ final class WeDevs_ERP {
         new AdminMenu();
         new AdminPage();
 
+		// Erp pro is loaded in erp-mail action hook. Not to load that if upgrade is needed, we check in this place (along with L-143) too.
+		$update_notice = new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
+	    if ( $update_notice->need_to_upgrade() ) {
+		    return;
+	    }
+
         new UserProfile();
         new Scripts();
         new Updates();
