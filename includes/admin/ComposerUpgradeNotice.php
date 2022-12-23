@@ -6,7 +6,7 @@ class ComposerUpgradeNotice {
 
 	// From these versions we introduced composer v2 both core and pro.
     private $composer_update_in_pro_version = '1.3.0';
-	private $composer_update_in_core_version = '1.2.0';
+	private $composer_update_in_core_version = '1.12.0';
 
 
     /**
