@@ -148,10 +148,10 @@ class AjaxHandler {
         $users_found = erp_hr_get_employees( [ 's' => $employee_name ] );
         $employees   = [];
         foreach ( $users_found as $employee ) {
-            $employee = ( new Employee( $employee->get_data()['user_id'] ) )->to_array();
-            $designation = erp_hr_get_single_designation( (int) $employee['work']['designation'] );
-            $employee['work']['designation'] = $designation->data;
-            $employees[] = $employee;
+	        $employee                        = ( new Employee( $employee->get_data()['user_id'] ) )->to_array();
+	        $designation                     = ! empty( $employee['work']['designation'] ) ? erp_hr_get_single_designation( (int) $employee['work']['designation'] ) : [];
+	        $employee['work']['designation'] = ! empty( $designation ) ? $designation->data : '';
+	        $employees[]                     = $employee;
         }
 
         if ( empty( $employees ) ) {
