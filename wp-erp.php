@@ -254,7 +254,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
         if ( is_admin() ) {
-            require_once WPERP_INCLUDES . '/admin/functions.php';
+            require_once WPERP_INCLUDES . '/Admin/functions.php';
             // Includes background process libs
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
