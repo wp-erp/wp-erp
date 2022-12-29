@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36f175b954426fc55e68ebd7c11c433f",
+    "content-hash": "5b13fab1e11bbfb9e59371668b8aef84",
     "packages": [
         {
             "name": "appsero/client",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "d110c537f4ca92ac7f3398eee67cc6bdf506a4fb"
+                "reference": "fba140030f7141ed71eeba192b5437b2f30d81a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/d110c537f4ca92ac7f3398eee67cc6bdf506a4fb",
-                "reference": "d110c537f4ca92ac7f3398eee67cc6bdf506a4fb",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/fba140030f7141ed71eeba192b5437b2f30d81a8",
+                "reference": "fba140030f7141ed71eeba192b5437b2f30d81a8",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Appsero/client/issues",
-                "source": "https://github.com/Appsero/client/tree/v1.2.1"
+                "source": "https://github.com/Appsero/client/tree/v1.2.2"
             },
-            "time": "2022-06-30T12:01:38+00:00"
+            "time": "2022-12-20T10:46:35+00:00"
         },
         {
             "name": "clue/stream-filter",
