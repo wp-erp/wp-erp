@@ -483,7 +483,7 @@ class AddProMenu {
      * @return void
      */
     public function pro_popup_js_templates() {
-        erp_get_js_template( WPERP_INCLUDES . '/admin/views/erp-pro-popup-modal.php', 'erp-pro-popup-modal' );
+        erp_get_js_template( WPERP_INCLUDES . '/Admin/views/erp-pro-popup-modal.php', 'erp-pro-popup-modal' );
     }
 
 }

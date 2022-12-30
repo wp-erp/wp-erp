@@ -2148,8 +2148,8 @@ function erp_generate_key() {
  * @return void
  */
 function erp_include_popup_markup() {
-    include_once WPERP_INCLUDES . '/admin/views/erp-modal.php';
-    erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
+    include_once WPERP_INCLUDES . '/Admin/views/erp-modal.php';
+    erp_get_js_template( WPERP_INCLUDES . '/Admin/views/address.php', 'erp-address' );
 }
 
 /**

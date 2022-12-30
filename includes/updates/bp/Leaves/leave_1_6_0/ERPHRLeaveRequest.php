@@ -535,7 +535,7 @@ class ERPHRLeaveRequest extends WP_Background_Process {
         parent::complete();
 
         if ( ! class_exists( '\WeDevs\ERP\HRM\Update\ERP_1_6_0' ) ) {
-            require_once WPERP_INCLUDES . '/updates/update-1.6.0.php';
+            require_once WPERP_INCLUDES . '/Updates/update-1.6.0.php';
         }
 
         // now delete all old db tables and data.
