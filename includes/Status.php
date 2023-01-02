@@ -13,7 +13,7 @@ class Status {
     public function __construct() {
         $this->status_scripts();
 
-        include __DIR__ . '/framework/views/status-page.php';
+        include __DIR__ . '/Framework/views/status-page.php';
     }
 
     /**
@@ -31,7 +31,7 @@ class Status {
      * @return void
      */
     public static function status_report() {
-        include_once __DIR__ . '/framework/views/status-report.php';
+        include_once __DIR__ . '/Framework/views/status-report.php';
     }
 
     /**

@@ -45,6 +45,6 @@ class DangerZone {
      * @return void
      */
     public function get_views() {
-        include __DIR__ . '/admin/views/tools/danger-zone.php';
+        include __DIR__ . '/Admin/views/tools/danger-zone.php';
     }
 }
