@@ -2662,14 +2662,14 @@ function erp_hr_get_custom_leave_report( $user_id, $f_year = null, $start_date =
     if ( ! empty( $results ) ) {
 
         // fix start date
-        if ( null === $start_date ) {
+        if ( null === $start_date || '' === $start_date ) {
             $start_date = $financial_year->start_date;
         } else {
             $start_date = current_datetime()->modify( $start_date )->setTime( 0, 0, 0 )->getTimestamp();
         }
 
         // fix end date
-        if ( null === $end_date ) {
+        if ( null === $end_date || '' === $end_date ) {
             $end_date = $financial_year->end_date;
         } else {
             $end_date = current_datetime()->modify( $end_date )->setTime( 23, 59, 59 )->getTimestamp();
