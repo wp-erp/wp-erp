@@ -46,7 +46,7 @@ class License {
      */
     private function includes() {
         if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
-            require_once __DIR__ . '/lib/EDD_SL_Plugin_Updater.php';
+            require_once __DIR__ . '/Lib/EDD_SL_Plugin_Updater.php';
         }
     }
 

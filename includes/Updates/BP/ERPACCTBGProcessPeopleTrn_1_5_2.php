@@ -5,11 +5,11 @@ namespace WeDevs\ERP\Updates\BP;
 use WP_Background_Process;
 
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
-    require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
+    require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-async-request.php';
 }
 
 if ( ! class_exists( 'WP_Background_Process', false ) ) {
-    require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
+    require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-background-process.php';
 }
 
 class ERPACCTBGProcessPeopleTrn_1_5_2 extends WP_Background_Process {

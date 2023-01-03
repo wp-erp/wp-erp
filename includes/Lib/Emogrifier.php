@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\lib;
+namespace WeDevs\ERP\Lib;
 
 use DOMDocument;
 use DOMXPath;

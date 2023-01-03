@@ -3,11 +3,11 @@
 namespace WeDevs\ERP\Updates\BP;
 
 if ( ! class_exists( 'WP_Async_Request', false ) ) {
-    require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
+    require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-async-request.php';
 }
 
 if ( ! class_exists( 'WP_Background_Process', false ) ) {
-    require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
+    require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-background-process.php';
 }
 
 // don't call the file directly
