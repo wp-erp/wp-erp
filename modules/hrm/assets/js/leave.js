@@ -1248,7 +1248,6 @@
                     employee_name: employee_name
                 },
                 success: function(response) {
-                    console.log(response)
                     var element = '<ul id="live-search"> ';
                     for (var i = 0; i < response.length; i++){
                         var designation = response[i]['work']['designation'] ? response[i]['work']['designation']['title'] : '';
