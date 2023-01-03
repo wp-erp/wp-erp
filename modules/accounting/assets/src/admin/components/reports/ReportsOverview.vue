@@ -150,7 +150,6 @@ export default {
         setTimeout(() => {
             this.proActivated = this.$store.state.erp_pro_activated
         }, 200)
-        console.log(this.reportLists)
     },
 }
 </script>
