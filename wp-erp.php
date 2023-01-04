@@ -256,8 +256,8 @@ final class WeDevs_ERP {
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/Admin/functions.php';
             // Includes background process libs
-            require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
-            require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
+            require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-async-request.php';
+            require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-background-process.php';
         }
 
         // cli command
