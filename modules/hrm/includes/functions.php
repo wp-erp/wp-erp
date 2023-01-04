@@ -59,7 +59,10 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id 
         $between_dates = array_merge( $sandwich_rules_applied, $between_dates );
     }
 
-    $dates         = [ 'days' => [], 'total' => 0 ];
+    $dates         = [
+		'days' => [],
+		'total' => 0,
+	];
     $work_days     = erp_hr_get_work_days();
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
 
@@ -71,7 +74,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id 
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
         }
 
-        if ( class_exists( '\WeDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '' ) === 'yes'  ) {
+        if ( class_exists( '\WeDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '' ) === 'yes' ) {
             $dates['days'][] = [
                 'date'  => $date,
                 'count' => (int) ! $is_holidy,
@@ -119,7 +122,11 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
         return $between_dates;
     }
 
-    $dates         = [ 'days' => [], 'total' => 0, 'sandwich' => 0 ];
+    $dates         = [
+		'days' => [],
+		'total' => 0,
+		'sandwich' => 0,
+	];
     $work_days     = erp_hr_get_work_days();
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
 
@@ -142,7 +149,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
             'count' => (int) ! $is_holidy,
         ];
 
-        if ( class_exists( '\WeDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '' ) === 'yes'  ) {
+        if ( class_exists( '\WeDevs\ERP_PRO\PRO\AdvancedLeave\Module' ) && get_option( 'erp_pro_sandwich_leave', '' ) === 'yes' ) {
             ++$dates['total'];
 
             // mark sandwich rule to true
@@ -174,7 +181,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
     }
 
     global $wpdb;
-    $work_days     = erp_hr_get_work_days();
+    $work_days = erp_hr_get_work_days();
 
     $previous_dates = [];
     $next_dates     = [];
@@ -193,7 +200,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
         if ( is_array( $last_leave_request ) && ! empty( $last_leave_request ) ) {
             // proceed further for pending or accepted request
-            if ( $last_leave_request['last_status'] != 3  ) {
+            if ( $last_leave_request['last_status'] != 3 ) {
                 $last_req_end_date  = erp_current_datetime()->setTimestamp( $last_leave_request['end_date'] )->modify( '+1 days' )->format( 'Y-m-d' );
                 $start_day_previous = erp_current_datetime()->modify( $start_date )->modify( '-1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
@@ -233,7 +240,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
 
         if ( is_array( $next_leave_request ) && ! empty( $next_leave_request ) ) {
             // proceed further for pending or accepted request
-            if ( $next_leave_request['last_status'] != 3  ) {
+            if ( $next_leave_request['last_status'] != 3 ) {
                 $last_req_start_date = erp_current_datetime()->setTimestamp( $next_leave_request['start_date'] )->modify( '-1 days' )->format( 'Y-m-d' );
                 $end_date_next_day   = erp_current_datetime()->modify( $end_date )->modify( '+1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
@@ -330,7 +337,7 @@ function erp_hr_schedule_check_todays_birthday() {
  * @return array
  */
 function erp_hr_schedule_check_todays_work_anniversary() {
-    $anniversary_wish_email = wperp()->emailer->get_email( 'Hiring_Anniversary_Wish' );
+    $anniversary_wish_email = wperp()->emailer->get_email( 'HiringAnniversaryWish' );
 
     if ( is_a( $anniversary_wish_email, '\WeDevs\ERP\Email' ) ) {
         $db = new \WeDevs\ORM\Eloquent\Database();
@@ -483,7 +490,7 @@ function erp_hr_exclude_recipients( $recipients ) {
  * @return mixed
  */
 function erp_hr_send_birthday_wish_email( $user_id ) {
-    $birthday_wish_email = wperp()->emailer->get_email( 'Birthday_Wish' );
+    $birthday_wish_email = wperp()->emailer->get_email( 'BirthdayWish' );
 
     if ( is_a( $birthday_wish_email, '\WeDevs\ERP\Email' ) ) {
         $birthday_wish_email->trigger( $user_id );
@@ -502,7 +509,7 @@ function erp_hr_holiday_reminder_to_employees() {
     $start_date = erp_current_datetime()->format( 'Y-m-d H:i:s' );
     $end_date   = erp_current_datetime()->modify( 'next day' )->format( 'Y-m-d H:i:s' );
 
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = new \WeDevs\ERP\HRM\Models\LeaveHoliday();
     $holiday = $holiday->where(
         function ( $condition ) use ( $start_date, $end_date ) {
             $condition->whereBetween( 'start', [ $start_date, $end_date ] );
@@ -511,7 +518,7 @@ function erp_hr_holiday_reminder_to_employees() {
     $holidays        = $holiday->get()->toArray();
     $employees       = erp_hr_get_employees( [ 'number' => -1 ] );
 
-    $emailer         = wperp()->emailer->get_email( 'Govt_Holiday_Reminder' );
+    $emailer = wperp()->emailer->get_email( 'GovtHolidayReminder' );
 
     if ( ! is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
         return;
@@ -555,23 +562,23 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
     $dropdown = [
         'employee'     => [
             'title' => esc_html__( 'Employees', 'erp' ),
-            'cap'   => 'erp_list_employee'
+            'cap'   => 'erp_list_employee',
         ],
         'requests'     => [
             'title' => esc_html__( 'Requests', 'erp' ),
-            'cap'   => 'erp_hr_manager'
+            'cap'   => 'erp_hr_manager',
         ],
         'department'   => [
             'title' => esc_html__( 'Departments', 'erp' ),
-            'cap'   => 'erp_manage_department'
+            'cap'   => 'erp_manage_department',
         ],
         'designation'  => [
             'title' => esc_html__( 'Designations', 'erp' ),
-            'cap'   => 'erp_manage_designation'
+            'cap'   => 'erp_manage_designation',
         ],
         'announcement' => [
             'title' => esc_html__( 'Announcements', 'erp' ),
-            'cap'   => 'erp_manage_announcement'
+            'cap'   => 'erp_manage_announcement',
         ],
     ];
 
@@ -589,8 +596,30 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
     <div class="erp-custom-menu-container">
         <ul class="erp-nav">
             <?php foreach ( $dropdown as $key => $value ) : ?>
-                <?php if ( current_user_can( $value['cap'] ) ) : ?>
-                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?></a></li>
+                <?php
+                $pro_popup = '';
+                $tooltip = '';
+                if ( ! empty( $value['pro_popup'] ) ) {
+                    // pro-popup-main
+                    $pro_popup = '<span class="pro-popup-sub-nav erp-pro-tooltip pro-popup">Pro</span>';
+//                    $tooltip = '<div class="erp-pro-tooltip-wrapper"><div class="erp-pro-tooltip-inner">
+//                        <h4>Available in Pro. Also enjoy:</h4>
+//                        <ul>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                            <li><span class="dashicons dashicons-yes"></span>23+ premium extensions</li>
+//                        </ul>
+//                        <div class="tooltip-btn">
+//                            <a href="#">Upgrade to PRO</a>
+//                        </div>
+//                    </div></div>';
+                }
+
+                if ( current_user_can( $value['cap'] ) ) :
+					?>
+                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo ! empty( $value['pro_popup'] ) ? '#' : esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?> <?php echo $pro_popup; ?></a> <?php echo $tooltip; ?></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -608,13 +637,13 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
  * @return array
  */
 function erp_hr_get_employee_requests_types() {
-    $results  = erp_hr_get_leave_requests();
+    $results = erp_hr_get_leave_requests();
 
-    $types    = [
+    $types = [
         'leave' => [
             'count'   => $results['total'],
             'label'   => __( 'Leave', 'erp' ),
-        ]
+        ],
     ];
 
     return apply_filters( 'erp_hr_employee_request_types', $types );
@@ -628,7 +657,10 @@ function erp_hr_get_employee_requests_types() {
  * @return array
  */
 function erp_hr_get_employee_pending_requests_count() {
-    $leave_requests    = erp_hr_get_leave_requests( [ 'number' => -1, 'status' => 2 ] );
+    $leave_requests = erp_hr_get_leave_requests( [
+		'number' => -1,
+		'status' => 2,
+	] );
 
     $requests['leave'] = $leave_requests['total'];
 
@@ -660,8 +692,7 @@ function erp_get_hr_financial_years() {
  *
  * @return object|boolean WP_Error or true
  */
-function erp_settings_save_leave_years ( $post_data = [] ) {
-
+function erp_settings_save_leave_years( $post_data = [] ) {
     $year_names = [];
 
     // Error handles
@@ -676,7 +707,7 @@ function erp_settings_save_leave_years ( $post_data = [] ) {
             return new WP_Error( 'errors', __( 'Please give a financial year end date on row #' . ( $key + 1 ), 'erp' ) );
         }
         if ( ( strtotime( $data['end_date'] ) < strtotime( $data['start_date'] ) ) || strtotime( $data['end_date'] ) === strtotime( $data['start_date'] ) ) {
-            return new WP_Error( 'errors', __( 'End date must be greater than the start date on row #' . ( $key + 1 ), "erp" ) );
+            return new WP_Error( 'errors', __( 'End date must be greater than the start date on row #' . ( $key + 1 ), 'erp' ) );
         }
 
         if ( in_array( $data['fy_name'], $year_names ) ) {
@@ -693,7 +724,6 @@ function erp_settings_save_leave_years ( $post_data = [] ) {
 
     // Insert leave years
     foreach ( $post_data as $data ) {
-
         $data['fy_name']     = sanitize_text_field( wp_unslash( $data['fy_name'] ) );
         $data['start_date']  = strtotime( sanitize_text_field( wp_unslash( $data['start_date'] ) ) );
         $data['end_date']    = strtotime( sanitize_text_field( wp_unslash( $data['end_date'] ) ) );
@@ -704,7 +734,7 @@ function erp_settings_save_leave_years ( $post_data = [] ) {
         $wpdb->insert(
             $wpdb->prefix . 'erp_hr_financial_years',
             $data,
-            ['%s', '%s', '%s', '%s', '%d', '%s']
+            [ '%s', '%s', '%s', '%s', '%d', '%s' ]
         );
     }
 

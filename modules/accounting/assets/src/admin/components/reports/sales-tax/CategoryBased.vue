@@ -150,6 +150,8 @@
                         this.taxCategory = this.taxCategories[0];
                         this.getReport();
                     }
+
+                  this.$store.dispatch('spinner/setSpinner', false);
                 });
             },
 

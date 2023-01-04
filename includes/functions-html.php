@@ -315,6 +315,7 @@ function erp_html_generate_dropdown( $values = [], $selected = null ) {
 
     if ( $values ) {
         foreach ( $values as $key => $label ) {
+            $label = ucwords( $label );
             $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $label );
         }
     }

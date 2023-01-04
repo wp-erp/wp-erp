@@ -76,7 +76,7 @@ if ( $id ) {
                         <input type="hidden" name="section" value="leave">
                         <input type="hidden" name="sub-section" value="policies"> -->
                         <?php
-                        $requests_table = new \WeDevs\ERP\HRM\Leave_Policy_Name_List_Table();
+                        $requests_table = new \WeDevs\ERP\HRM\LeavePolicyNameListTable();
                         $requests_table->prepare_items();
                         $requests_table->views();
 

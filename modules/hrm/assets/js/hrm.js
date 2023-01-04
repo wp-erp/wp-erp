@@ -101,6 +101,9 @@
             });
 
             $('body').on( 'click', '.wperp-filter-dropdown a', this.employee.toggleFilterDropdown );
+            $('.wperp-filter-dropdown').on( 'click', '#wperp-leave-filter-dropdown', this.employee.toggleLeaveFilterDropdown );
+            $('.wperp-filter-panel-footer').on( 'click', 'input[name="hide_filter"]', this.employee.toggleLeaveFilterDropdown );
+            $('.wperp-filter-panel-footer').on( 'click', 'input[name="leave_filter_reset"]', this.employee.resetLeaveFilterDropdown );
 
             $( 'body' ).on( 'click', 'input[name="hide_filter"]', function(e) {
                 e.preventDefault();
@@ -674,7 +677,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmDept ) ) {
+                if ( confirm( wpErpHr.delConfirmDesignation ) ) {
                     wp.ajax.send( 'erp-hr-del-desig', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
@@ -1279,7 +1282,22 @@
             },
 
             toggleFilterDropdown: function() {
-                document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
+                $("#erp-dropdown-content").toggleClass( 'show' );
+                // document.getElementById( 'erp-dropdown-content' ).classList.toggle( 'show' );
+            },
+
+            toggleLeaveFilterDropdown: function() {
+                $("#erp-leave-dropdown-content").toggleClass( 'show' );
+                // document.getElementById( 'erp-leave-dropdown-content' ).classList.toggle( 'show' );
+            },
+
+            resetLeaveFilterDropdown: function() {
+                $( '#employee_name' ).val('');
+                $( '#financial_year' ).val('');
+                $( '#leave_policy' ).val('');
+                $( '#filter_leave_year' ).val('');
+                $('#custom-input').remove();
+                $( '.filter_leave_status' ).removeAttr('checked');
             },
 
             general: {

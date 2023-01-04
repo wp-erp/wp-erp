@@ -682,7 +682,7 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
 function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
     global $wpdb;
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
     $purchase_ledger_id  = $ledger_map->get_ledger_id_by_slug( 'purchase' );
 
     if ( ! $purchase_ledger_id ) {
@@ -746,7 +746,7 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
 function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no ) {
     global $wpdb;
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'purchase' );
 
     if ( ! $ledger_id ) {
