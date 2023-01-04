@@ -2,6 +2,7 @@
 
 namespace WeDevs\ERP\Lib;
 
+use BadMethodCallException;
 use DOMDocument;
 use DOMXPath;
 
