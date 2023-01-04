@@ -1,6 +1,6 @@
 <?php
 
-use WeDevs\ERP\HRM\Models\Financial_Year;
+use WeDevs\ERP\HRM\Models\FinancialYear;
 
 $employee_types     = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
 $types              = $employee_types ? array_unique( $employee_types ) : [];
@@ -14,7 +14,7 @@ if ( null === $current_f_year ) {
     return;
 }
 
-foreach ( Financial_Year::all() as $f_year ) {
+foreach ( FinancialYear::all() as $f_year ) {
     if ( $f_year['start_date'] < $current_f_year->start_date ) {
         continue;
     }

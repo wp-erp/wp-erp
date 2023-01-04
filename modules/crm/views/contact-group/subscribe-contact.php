@@ -14,7 +14,7 @@
                 <input type="hidden" name="sub-section" value="contact-groups">
                 <input type="hidden" name="groupaction" value="view-subscriber">
                 <?php
-                $customer_table = new \WeDevs\ERP\CRM\Contact_Subscriber_List_Table();
+                $customer_table = new \WeDevs\ERP\CRM\ContactSubscriberListTable();
                 $customer_table->prepare_items();
                 // $customer_table->search_box( __( 'Search Contact Group', 'erp' ), 'erp-crm-contact-group-search' );
                 $customer_table->views();

@@ -138,7 +138,7 @@ function erp_crm_purge_cache( $args = [] ) {
             wp_cache_delete( 'erp-crm-customer-status-counts-' . $args['type'], $group );
 
             // @todo: This process needs to be improved. Now It's left like this on emergency basis.
-            if ( erp_is_module_active( 'crm' ) ) {
+            if ( erp_is_module_active( 'CRM' ) ) {
                 if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
                     wp_cache_delete( 'erp-crm-customer-status-counts-' . $args['type'] . '-agent-id-' . get_current_user_id(), $group );
                 } elseif ( erp_crm_is_current_user_manager() ) {

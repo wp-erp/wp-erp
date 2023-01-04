@@ -18,15 +18,15 @@
         "johngrogg/ics-parser": "~1.0",
         "google/apiclient": "^2.0",
         "google/apiclient-services": "dev-develop",
-        "appsero/client": "^1.1",
+        "appsero/client": "^1.2",
         "parsecsv/php-parsecsv": "^1.2",
         "mailgun/mailgun-php": "^2.8",
         "php-http/zend-adapter": "^0.1.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "3.3.2",
-        "wp-coding-standards/wpcs": "dev-master",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+      "squizlabs/php_codesniffer": "^3.7",
+      "wp-coding-standards/wpcs": "dev-master",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
         "tareq1988/wp-php-cs-fixer": "dev-master",
         "fzaninotto/faker": "^1.9@dev",
         "phpcompatibility/phpcompatibility-wp": "dev-master",
@@ -36,7 +36,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "includes/lib/google/apiclient-services-sdk/apiclient-services",
+            "url": "includes/lib/google/apiclient-services",
             "options": {
                 "symlink": false
             }
@@ -45,6 +45,10 @@
     "config": {
         "platform": {
             "php": "5.6.40"
+        },
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "scripts": {
@@ -59,14 +63,17 @@
     "autoload" : {
         "psr-4" : {
             "WeDevs\\ERP\\": "includes/",
+            "WeDevs\\ERP\\HRM\\Main\\": "modules/hrm",
             "WeDevs\\ERP\\HRM\\": "modules/hrm/includes",
+            "WeDevs\\ERP\\CRM\\Main\\": "modules/crm",
             "WeDevs\\ERP\\CRM\\": "modules/crm/includes",
+            "WeDevs\\ERP\\Accounting\\Main\\": "modules/accounting",
             "WeDevs\\ERP\\Accounting\\": "modules/accounting/includes"
         },
         "classmap": [
-            "modules/hrm/hrm.php",
-            "modules/crm/crm.php",
-            "modules/accounting/accounting.php"
+            "modules/hrm/HRM.php",
+            "modules/crm/CRM.php",
+            "modules/accounting/Accounting.php"
         ]
     }
 }
