@@ -1,5 +1,5 @@
 <?php
-$customer_table = new \WeDevs\ERP\CRM\Contact_Group_List_Table();
+$customer_table = new \WeDevs\ERP\CRM\ContactGroupListTable();
 $customer_table->prepare_items();
 ?>
 
@@ -31,7 +31,7 @@ $customer_table->prepare_items();
                 <input type="hidden" name="section" value="contact">
                 <input type="hidden" name="sub-section" value="contact-groups">
                 <?php
-                // $customer_table = new \WeDevs\ERP\CRM\Contact_Group_List_Table();
+                // $customer_table = new \WeDevs\ERP\CRM\ContactGroupListTable();
                 // $customer_table->prepare_items();
                 // $customer_table->search_box( __( 'Search Contact Group', 'erp' ), 'erp-crm-contact-group-search' );
                 $customer_table->views();

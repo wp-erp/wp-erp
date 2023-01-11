@@ -27,14 +27,14 @@ $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employ
                         $line = 0;
 
                         foreach ( $compensations['compensation'] as $compensation ) {
-                            $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';                            
+                            $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
                             $emp_url      = ( 0 == $line ? wp_kses_post( $employee_url ) : '' );
                             echo '<tr>';
                             echo '<td>' . wp_kses_post( $emp_url ) . '</td>';
                             echo '<td>' . erp_format_date( esc_attr( $compensation['date'] ) ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_rate'] ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_type'] ) . '</td>';
-                            echo '<td>' . esc_attr( $employee->get_user_id() ) . '</td>';
+                            echo '<td>' . esc_attr( $employee->employee_id ) . '</td>';
                             echo '</tr>';
 
                             $line++;

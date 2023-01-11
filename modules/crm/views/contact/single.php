@@ -100,7 +100,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                                 <li><?php erp_print_key_value( __( 'Country', 'erp' ), $customer->get_country() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $customer->get_postal_code() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Source', 'erp' ), $customer->get_source() ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Life stage', 'erp' ), $life_stages[ $customer->get_life_stage() ] ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Life stage', 'erp' ), ! empty( $life_stages[ $customer->get_life_stage() ] ) ? $life_stages[ $customer->get_life_stage() ] : '' ); ?></li>
 
                                 <?php do_action( 'erp_crm_single_contact_basic_info', $customer ); ?>
                             </ul>

@@ -924,7 +924,7 @@ function erp_financial_end_date() {
  * @return array
  */
 function erp_get_audit_log_modules() {
-    return \WeDevs\ERP\Admin\Models\Audit_Log::select( 'component' )->distinct()->get()->toArray();
+    return \WeDevs\ERP\Admin\Models\AuditLog::select( 'component' )->distinct()->get()->toArray();
 }
 
 /**
@@ -935,7 +935,7 @@ function erp_get_audit_log_modules() {
  * @return array
  */
 function erp_get_audit_log_sub_component() {
-    return \WeDevs\ERP\Admin\Models\Audit_Log::select( 'sub_component' )->distinct()->get()->toArray();
+    return \WeDevs\ERP\Admin\Models\AuditLog::select( 'sub_component' )->distinct()->get()->toArray();
 }
 
 /**
@@ -1132,7 +1132,7 @@ function erp_get_license_status( $addon ) {
         switch ( $license->error ) {
             case 'expired':
                 $messages[] = sprintf(
-                    __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
+                    __( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
                     date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) ),
                     'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
                 );
@@ -1148,7 +1148,7 @@ function erp_get_license_status( $addon ) {
             case 'invalid':
             case 'site_inactive':
                 $messages[] = sprintf(
-                    __( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'erp' ),
+                    __( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'erp' ),
                     $addon['name'],
                     'https://wperp.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
                 );
@@ -1161,13 +1161,12 @@ function erp_get_license_status( $addon ) {
             case 'no_activations_left':
                 $messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'erp' ), 'https://wperp.com/my-account/' );
                 break;
-
         }
     } else {
         switch ( $license->license ) {
             case 'expired':
                 $messages[] = sprintf(
-                    __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
+                    __( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
                     date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) ),
                     'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
                 );
@@ -1182,7 +1181,7 @@ function erp_get_license_status( $addon ) {
                     $messages[] = __( 'License key never expires.', 'erp' );
                 } elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
                     $messages[] = sprintf(
-                        __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
+                        __( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
                         date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'mysql' ) ) ),
                         'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
                     );
@@ -1482,7 +1481,7 @@ function erp_process_csv_export() {
                         } else {
                             $csv_items[ $index ][ $field ] = $item->{$field};
                         }
-                    } else if ( $is_people ) {
+                    } elseif ( $is_people ) {
                         if ( in_array( $field, $custom_fields, true ) ) {
                             $csv_items[ $index ][ $field ] = erp_people_get_meta( $item->id, $field, true );
                         } else {
@@ -1504,7 +1503,7 @@ function erp_process_csv_export() {
 /**
  * Merge user defined arguments into defaults array.
  *
- * This function is similiar to wordpress wp_parse_args().
+ * This function is similiar to WordPress wp_parse_args().
  * It's support multidimensional array.
  *
  * @param array $args
@@ -1554,7 +1553,6 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
     if ( erp_is_smtp_enabled() ) {
         $callback = function ( $phpmailer ) use ( $custom_headers, $erp_email_settings ) {
-
             $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
             if ( ! isset( $erp_email_settings['from_email'] ) ) {
@@ -1606,7 +1604,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         add_action( 'phpmailer_init', $callback );
         $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
         remove_action( 'phpmailer_init', $callback );
-    } else if ( erp_is_mailgun_enabled() ) {
+    } elseif ( erp_is_mailgun_enabled() ) {
         $erp_mailgun_settings = get_option( 'erp_settings_erp-email_mailgun', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
@@ -1632,17 +1630,26 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         $region          = ! empty( $erp_mailgun_settings['region'] ) ? $erp_mailgun_settings['region'] : '';
 
         if ( ! empty( $private_api_key ) && ! empty( $domain ) && ! empty( $region ) ) {
-            $mailgun = new \WeDevs\ERP\Email_Mailgun( $private_api_key, $region, $domain );
+            $mailgun = new \WeDevs\ERP\EmailMailgun( $private_api_key, $region, $domain );
 
             $data = [
                 'subject'         => $subject,
-                'from_address'    => ['email' => $from_email, 'name' => $from_name],
-                'to_address'      => ['email' => $to, 'name' => ''],
-                'cc_address'      => ['email' => '', 'name' => ''],
+                'from_address'    => [
+					'email' => $from_email,
+					'name' => $from_name,
+				],
+                'to_address'      => [
+					'email' => $to,
+					'name' => '',
+				],
+                'cc_address'      => [
+					'email' => '',
+					'name' => '',
+				],
                 'headers'         => $headers,
                 'customer_header' => $custom_headers,
                 'attachment'      => $attachments,
-                'message'         => $message
+                'message'         => $message,
             ];
 
             $mailgun->send_email( $data );
@@ -1723,7 +1730,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
                             $from_email = str_replace( '>', '', $from_email );
                             $from_email = trim( $from_email );
 
-                        // Avoid setting an empty $from_email.
+							// Avoid setting an empty $from_email.
                         } elseif ( '' !== trim( $content ) ) {
                             $from_email = trim( $content );
                         }
@@ -2112,7 +2119,7 @@ function enqueue_fullcalendar_locale() {
     }
 
     if ( file_exists( WPERP_PATH . "/assets/vendor/fullcalendar/lang/{$script}.js" ) ) {
-        wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", [ 'erp-fullcalendar' ], gmdate('Ymd'), true );
+        wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", [ 'erp-fullcalendar' ], gmdate( 'Ymd' ), true );
     }
 }
 
@@ -2141,8 +2148,8 @@ function erp_generate_key() {
  * @return void
  */
 function erp_include_popup_markup() {
-    include_once WPERP_INCLUDES . '/admin/views/erp-modal.php';
-    erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
+    include_once WPERP_INCLUDES . '/Admin/views/erp-modal.php';
+    erp_get_js_template( WPERP_INCLUDES . '/Admin/views/address.php', 'erp-address' );
 }
 
 /**
@@ -2602,9 +2609,17 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
     }
 
     foreach ( $items as $item ) {
-        $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+        $link = add_query_arg( [
+			'page' => 'erp-' . $component,
+			'section' => $item['slug'],
+		], admin_url( 'admin.php' ) );
 
         $class = $active === $item['slug'] ? 'active ' : '';
+        $pro_popup = '';
+        if ( ! empty( $item['pro_popup'] ) ) {
+            $pro_popup = '<span class="pro-popup">Pro</span>';
+            $class .= ' pro-popup-main ';
+        }
 
         if ( $dropdown ) {
             $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
@@ -2622,7 +2637,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
             $submenu .= erp_build_menu( $item['submenu'], $active, $component, true );
         }
 
-        $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, $item['title'], $submenu );
+        $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s%s</li>', $class, $link, $item['title'], $submenu, $pro_popup );
     }
 
     $html .= '</ul>';
@@ -2700,7 +2715,10 @@ function erp_get_menu_headers() {
  */
 function erp_add_menu_header( $component, $title, $icon = '' ) {
     add_filter( 'erp_menu_headers', function ( $menu ) use ( $component, $title, $icon ) {
-        $menu[ $component ] = [ 'title' => $title, 'icon' => $icon ];
+        $menu[ $component ] = [
+			'title' => $title,
+			'icon' => $icon,
+		];
 
         return $menu;
     } );
@@ -2792,13 +2810,20 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
         if ( $component === 'accounting' ) {
             $link = add_query_arg( [ 'page' => 'erp-' . $component . '#/' . $item['slug'] ], admin_url( 'admin.php' ) );
         } else {
-            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $link = add_query_arg( [
+				'page' => 'erp-' . $component,
+				'section' => $item['slug'],
+			], admin_url( 'admin.php' ) );
         }
 
         $class = $active === $item['slug'] ? 'active ' : '';
 
         if ( $dropdown ) {
-            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $link = add_query_arg( [
+				'page' => 'erp-' . $component,
+				'section' => $item['parent'],
+				'sub-section' => $item['slug'],
+			], admin_url( 'admin.php' ) );
             $class .= ( ! empty( $_GET['sub-section'] ) && $_GET['sub-section'] === $item['slug'] ) ? 'active ' : '';
         }
 
@@ -3384,8 +3409,8 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
     $changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
 
     foreach ( $changes_key as $key => $change_field_key ) {
-        $old_value[$change_field_key] = $old_data[$change_field_key];
-        $new_value[$change_field_key] = $new_data[$change_field_key];
+        $old_value[ $change_field_key ] = $old_data[ $change_field_key ];
+        $new_value[ $change_field_key ] = $new_data[ $change_field_key ];
     }
 
     if ( ! $is_seriazie ) {
@@ -3468,7 +3493,7 @@ function erp_disable_mysql_strict_mode() {
     global $wpdb;
 
     $wpdb->query( "SET SESSION SQL_MODE=''" );
-    $wpdb->query( "SET SQL_BIG_SELECTS=1" );
+    $wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 }
 
 /**
@@ -3534,10 +3559,9 @@ function erp_reset_data() {
     global $wpdb;
 
     try {
-
         @ini_set( 'max_execution_time', '0' );
 
-        $wpdb->query('START TRANSACTION');
+        $wpdb->query( 'START TRANSACTION' );
 
         $erp_roles = [
             'erp_hr_manager',
@@ -3545,7 +3569,7 @@ function erp_reset_data() {
             'erp_crm_manager',
             'erp_crm_agent',
             'erp_ac_manager',
-            'erp_ac_agency'
+            'erp_ac_agency',
         ];
 
         // Delete users table data related to the employees/people
@@ -3603,7 +3627,7 @@ function erp_reset_data() {
             'created_by'    => get_current_user_id(),
             'old_value'     => base64_encode( maybe_serialize( $tables ) ),
             'new_value'     => base64_encode( maybe_serialize( [ $wpdb->prefix . 'erp_audit_log' ] ) ),
-            'message'       => __('ERP data reset completed', 'erp')
+            'message'       => __( 'ERP data reset completed', 'erp' ),
         ];
 
         erp_log()->insert_log( $log_data );
@@ -3680,8 +3704,8 @@ function erp_reset_data() {
         }
 
         return true;
-    } catch (\Exception $e) {
-        $wpdb->query('ROLLBACK');
+    } catch ( \Exception $e ) {
+        $wpdb->query( 'ROLLBACK' );
         return new WP_Error( 'error', __( 'Something went wrong when resetting. Please try again.', 'erp' ) );
     }
 }
@@ -3696,18 +3720,16 @@ function erp_reset_data() {
  * @return string
  */
 function erp_get_message( $args = [] ) {
-
     $defaults = [
         'type'         => '',
         'message'      => '',
         'additional'   => null,
-        'append_first' => true
+        'append_first' => true,
     ];
 
     $args = wp_parse_args( $args, $defaults );
 
     switch ( $args['type'] ) {
-
         case 'error_nonce':
             $args['message'] = 'Nonce verification failed!';
             break;

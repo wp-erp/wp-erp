@@ -1,7 +1,7 @@
 <div class="wrap erp-hr-depts">
 
     <h2>
-        <?php esc_html_e( 'People', 'erp' ); ?>
+        <?php esc_html_e( 'People > Departments', 'erp' ); ?>
         <a href="#" id="erp-new-dept" class="add-new-h2" data-single="1"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
 
         <form method="get">
@@ -30,7 +30,7 @@
                 <input type="hidden" name="section" value="people">
                 <input type="hidden" name="sub-section" value="department">
                 <?php
-                $department_table = new \WeDevs\ERP\HRM\Department_List_Table();
+                $department_table = new \WeDevs\ERP\HRM\DepartmentListTable();
                 $department_table->prepare_items();
                 $department_table->views();
                 $department_table->display();

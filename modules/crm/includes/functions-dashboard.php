@@ -377,7 +377,7 @@ function customer_statics() {
     wp_enqueue_style( 'erp-jvectormap' );
 
     echo '<div id="erp-hr-customer-statics" style="width: 100%; height: 300px;"></div>';
-    
+
     $customer_countries = get_transient( 'erp_customer_countries_widget' );
 
     if ( false === $customer_countries ) {

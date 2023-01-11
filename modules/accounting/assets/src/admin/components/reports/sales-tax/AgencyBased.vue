@@ -174,6 +174,8 @@
                         this.selectedAgency = this.taxAgencies[0];
                         this.getReport();
                     }
+
+                  this.$store.dispatch('spinner/setSpinner', false);
                 });
             },
 

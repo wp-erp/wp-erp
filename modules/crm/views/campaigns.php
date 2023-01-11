@@ -10,7 +10,7 @@
             <form method="get">
                 <input type="hidden" name="page" value="erp-sales-campaigns">
                 <?php
-                $customer_table = new \WeDevs\ERP\CRM\Campaign_List_Table( 'contact' );
+                $customer_table = new \WeDevs\ERP\CRM\CampaignListTable( 'contact' );
                 $customer_table->prepare_items();
                 $customer_table->search_box( __( 'Search Contact', 'erp' ), 'erp-customer-search' );
                 $customer_table->views();

@@ -19,8 +19,9 @@
                     <router-link :to="'/' + menu.slug">{{ menu.title }}</router-link>
 
                     <ul :class="dropDownClass">
-                        <li :key="index" v-for="(item, index) in menu.submenu">
+                        <li :class="{'pro-popup-main' : item.pro_popup}" :key="index" v-for="(item, index) in menu.submenu">
                             <router-link :to="'/' + item.slug">{{ item.title }}</router-link>
+                            <span v-if="item.pro_popup" class="pro-popup">Pro</span>
                         </li>
                     </ul>
                 </li>

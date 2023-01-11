@@ -1,0 +1,20 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="40" height="40" rx="6.06061" fill="url(#paint0_linear_66_3096)"/>
+<path d="M25.6946 21L20.0001 35L34.0001 21H25.6946Z" fill="#FBDD7E"/>
+<path d="M11.8775 13L6 20.3469H14.4265L11.8775 13Z" fill="#FFCD73"/>
+<path d="M25.9816 20.3469H34.4081L28.5306 13L25.9816 20.3469Z" fill="#FCC471"/>
+<path d="M25.9817 20.3469L20.2041 13L14.4266 20.3469H25.9817Z" fill="#FCC471"/>
+<path d="M20.204 13H11.8775L14.4265 20.3469L20.204 13Z" fill="#FFAA64"/>
+<path d="M28.5306 13H20.204L25.9816 20.3469L28.5306 13Z" fill="#FBDD7E"/>
+<path d="M14.0001 21L20.0001 35L26.0001 21H14.0001Z" fill="#FFAA64"/>
+<path d="M6 21L20 35L14.3054 21H6Z" fill="#FF8C5A"/>
+<path d="M19.8284 6V10" stroke="#FF8C5A" stroke-linecap="round"/>
+<path d="M13.0001 7L15.8285 9.82843" stroke="#FF8C5A" stroke-linecap="round"/>
+<path d="M26.6568 7L23.8284 9.82843" stroke="#FF8C5A" stroke-linecap="round"/>
+<defs>
+<linearGradient id="paint0_linear_66_3096" x1="22" y1="14" x2="1" y2="39" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FFF3DD"/>
+<stop offset="1" stop-color="#FFE3AD"/>
+</linearGradient>
+</defs>
+</svg>
