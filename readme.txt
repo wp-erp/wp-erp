@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 4.4
-Tested up to: 6.0.2
+Tested up to: 6.1.1
 Requires PHP: 5.6
-Stable tag: 1.11.3
+Stable tag: 1.12.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,15 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.12.0 -> January 04, 2023 =
+--------------------------
+
+- [Feature] - Implement Advanced Filtering & Live Search on Leave Request.
+- [Feature] - Upgrade prompts design revamp.
+- [Update] - Update project in composer version 2.
+- [Enhancement] - Update Appsero SDK
+- [Enhancement] - Bug fix and reliability improvements across all ERP core
 
 = v1.11.3 -> October 13, 2022 =
 --------------------------
