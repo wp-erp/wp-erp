@@ -55,12 +55,12 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-        $selected_desingnation = ( isset( $_POST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_designation'] ) ) : 0;
-        $selected_department   = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
-        $selected_type         = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
+        $selected_desingnation = ( isset( $_REQUEST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_designation'] ) ) : 0;
+        $selected_department   = ( isset( $_REQUEST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_department'] ) ) : 0;
+        $selected_type         = ( isset( $_REQUEST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_employment_type'] ) ) : '';
 
-        $financial_years       =  [ '' => esc_attr__( 'Select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all(), 'fy_name', 'id' );
-        $selected_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
+        $financial_years       =  [ '' => esc_attr__( 'Select year', 'erp' ) ] + wp_list_pluck( FinancialYear::all()->toArray(), 'fy_name', 'id' );
+        $selected_year         = ( isset( $_REQUEST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_year'] ) ) : $this->current_f_year;
         $date_range_start      = isset( $_REQUEST['start'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['start'] ) ) : '';
         $date_range_end        = isset( $_REQUEST['end'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['end'] ) ) : ''; ?>
         <div class="actions alignleft">
@@ -70,14 +70,17 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
                 foreach ( $financial_years as $f_id => $f_name ) {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $f_id ), selected( $selected_year, $f_id, false ), esc_html( $f_name ) );
                 }
-        $selected = ( $selected_year == 'custom' ) ? 'selected' : ''; ?>
+                $selected = ( $selected_year == 'custom' ) ? 'selected' : ''; ?>
                 <option value="custom" <?php echo esc_attr( $selected ); ?>><?php esc_html_e( 'Custom', 'erp' ); ?></option>
             </select>
             <span id="custom-date-range"></span>
             <?php if ( $selected ) { ?>
                 <span id="custom-input" style="float:left">
-                    <span><?php esc_html_e( 'From', 'erp' ); ?> </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_attr( $date_range_start ); ?>">&nbsp;<span><?php esc_html_e( 'To', 'erp' ); ?> </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_attr( $date_range_end ); ?>">
-                </span>
+        <span><?php esc_html_e( 'From', 'erp' ); ?> </span>
+            <input name="start" class="erp-leave-date-field" type="text" value="<?php echo esc_attr( $date_range_start ); ?>">&nbsp;
+            <span><?php esc_html_e( 'To', 'erp' ); ?></span>
+            <input name="end" class="erp-leave-date-field" type="text" value="<?php echo esc_attr( $date_range_end ); ?>">
+    </span>
             <?php } ?>
             <select name="filter_designation" id="filter_designation">
                 <?php echo wp_kses( erp_hr_get_designation_dropdown( $selected_desingnation ), [
@@ -99,11 +102,11 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
                 <?php
                 $types = erp_hr_get_employee_types();
 
-        foreach ( $types as $key => $title ) {
-            echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, $key, false ), esc_html( $title ) );
-        } ?>
+                foreach ( $types as $key => $title ) {
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", esc_html( $key ), selected( $selected_type, $key, false ), esc_html( $title ) );
+                } ?>
             </select>
-            <?php submit_button( __( 'Filter' ), 'apply', 'filter_leave_report', false ); ?>
+            <?php submit_button( __( 'Filter', 'erp' ), 'apply', 'filter_leave_report', false ); ?>
         </div>
         <?php
     }
@@ -194,14 +197,14 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = [ $columns, $hidden, $sortable ];
 
-        $per_page     = 20;
+        $per_page     = 2;
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
 
-        $selected_desingnation   = ( isset( $_POST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_designation'] ) ) : 0;
-        $selected_department     = ( isset( $_POST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_department'] ) ) : 0;
-        $selected_type           = ( isset( $_POST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_employment_type'] ) ) : '';
-        $selected_f_year         = ( isset( $_POST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filter_year'] ) ) : $this->current_f_year;
+        $selected_desingnation   = ( isset( $_REQUEST['filter_designation'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_designation'] ) ) : 0;
+        $selected_department     = ( isset( $_REQUEST['filter_department'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_department'] ) ) : 0;
+        $selected_type           = ( isset( $_REQUEST['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_employment_type'] ) ) : '';
+        $selected_f_year         = ( isset( $_REQUEST['filter_year'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_year'] ) ) : $this->current_f_year;
         $start_date              = null;
         $end_date                = null;
 
