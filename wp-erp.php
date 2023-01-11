@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.11.3
+ * Version: 1.12.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -40,6 +40,25 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use WeDevs\ERP\Emailer;
+use WeDevs\ERP\Scripts;
+use WeDevs\ERP\Tracker;
+use WeDevs\ERP\Updates;
+use WeDevs\ERP\ERP_i18n;
+use WeDevs\ERP\Promotion;
+use WeDevs\ERP\AddonTask;
+use WeDevs\ERP\Integration;
+use WeDevs\ERP\ValidateData;
+use WeDevs\ERP\Settings\Ajax;
+use WeDevs\ERP\CRM\GmailSync;
+use WeDevs\ERP\CRM\GoogleAuth;
+use WeDevs\ERP\Admin\AdminMenu;
+use WeDevs\ERP\Admin\AdminPage;
+use WeDevs\ERP\API\ApiRegistrar;
+use WeDevs\ERP\Framework\Modules;
+use WeDevs\ERP\Admin\UserProfile;
+use WeDevs\ERP\WeDevsERPInstaller;
+
 /**
  * WeDevs_ERP class
  *
@@ -52,7 +71,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.11.3';
+    public $version = '1.12.0';
 
     /**
      * Minimum PHP version required
@@ -121,6 +140,10 @@ final class WeDevs_ERP {
         // instantiate classes
         $this->instantiate();
 
+        if ( $this->is_need_to_upgrade() ) {
+            return;
+        }
+
         // Initialize the action hooks
         $this->init_actions();
 
@@ -171,6 +194,20 @@ final class WeDevs_ERP {
     }
 
     /**
+     * Check if this version needs to upgrade in composer version 2.
+     *
+     * @return bool
+     */
+    public function is_need_to_upgrade() {
+        $update_notice = new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
+        if ( $update_notice->need_to_upgrade() ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Bail out if the php version is lower than
      *
      * @return void
@@ -210,7 +247,7 @@ final class WeDevs_ERP {
         define( 'WPERP_MODULES', WPERP_PATH . '/modules' );
         define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
         define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
-        define( 'WPERP_VIEWS', WPERP_INCLUDES . '/admin/views' );
+        define( 'WPERP_VIEWS', WPERP_INCLUDES . '/Admin/views' );
     }
 
     /**
@@ -220,41 +257,22 @@ final class WeDevs_ERP {
      */
     private function includes() {
         include __DIR__ . '/vendor/autoload.php';
+
         require_once WPERP_INCLUDES . '/functions.php';
-        require_once WPERP_INCLUDES . '/class-install.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
-        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
-        require_once WPERP_INCLUDES . '/class-i18n.php';
+//        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
+//        require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
 
         if ( is_admin() ) {
-            require_once WPERP_INCLUDES . '/admin/functions.php';
-            require_once WPERP_INCLUDES . '/admin/class-menu.php';
-            require_once WPERP_INCLUDES . '/admin/class-admin.php';
-
+            require_once WPERP_INCLUDES . '/Admin/functions.php';
             // Includes background process libs
-            require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
-            require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
-
-            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
-            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.2.php';
+            require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-async-request.php';
+            require_once WPERP_INCLUDES . '/Lib/bgprocess/wp-background-process.php';
         }
-
-        // `Leave` related background process files
-        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-entitlements.php';
-        require_once WPERP_INCLUDES . '/updates/bp/leave_1_6_0/class-erp-hr-leave-request.php';
-
-        // Version 1.6.5 background files
-        require_once WPERP_INCLUDES . '/updates/bp/class-erp-bg-process-1.6.5.php';
-
-        // Version 1.10.0 background files
-        require_once WPERP_INCLUDES . '/updates/bp/class-erp-hr-bg-process-1.10.0.php';
-
-        // Validates data
-        require_once WPERP_INCLUDES . '/class-validate-data.php';
 
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -273,24 +291,33 @@ final class WeDevs_ERP {
     private function instantiate() {
         $this->setup_database();
 
-        new \WeDevs\ERP\Admin\User_Profile();
-        new \WeDevs\ERP\Scripts();
-        new \WeDevs\ERP\Updates();
-        new \WeDevs\ERP\API\API_Registrar();
-        new \WeDevs\ERP\Promotion();
-        new \WeDevs\ERP\AddonTask();
-        new \WeDevs\ERP\ERP_i18n();
-        new \WeDevs\ERP\Validate_Data();
-        new \WeDevs\ERP\Settings\Ajax();
+        new WeDevsERPInstaller();
+        new AdminMenu();
+
+        $this->container['modules'] = new Modules();
+		// Erp pro is loaded in erp-mail action hook. Not to load that if upgrade is needed, we check in this place (along with L-143) too.
+        if ( $this->is_need_to_upgrade() ) {
+            return;
+        }
+
+        new AdminPage();
+        new UserProfile();
+        new Scripts();
+        new Updates();
+        new ApiRegistrar();
+        new Promotion();
+        new AddonTask();
+        new ERP_i18n();
+        new ValidateData();
+        new Ajax();
 
         // Appsero Tracker
-        \WeDevs\ERP\Tracker::get_instance()->init();
+        Tracker::get_instance()->init();
 
-        $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
-        $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
-        $this->container['integration'] = \WeDevs\ERP\Integration::init();
-        $this->container['google_auth'] = \WeDevs\ERP\CRM\Google_Auth::init();
-        $this->container['google_sync'] = \WeDevs\ERP\CRM\Gmail_Sync::init();
+        $this->container['emailer']     = Emailer::init();
+        $this->container['integration'] = Integration::init();
+        $this->container['google_auth'] = GoogleAuth::init();
+        $this->container['google_sync'] = GmailSync::init();
     }
 
     /**

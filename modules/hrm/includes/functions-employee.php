@@ -355,7 +355,7 @@ function erp_employee_delete( $employee_ids, $force = false ) {
         if ( $force ) {
 
             // find leave entitlements and leave requests and delete them as well
-            $leave_requests = \WeDevs\ERP\HRM\Models\Leave_Request::where( 'user_id', '=', $employee_wp_user_id )->get()->toArray();
+            $leave_requests = \WeDevs\ERP\HRM\Models\LeaveRequest::where( 'user_id', '=', $employee_wp_user_id )->get()->toArray();
 
             foreach ( $leave_requests as $lr ) {
                 // deleting leave requests and entitlements with approval_status
@@ -363,12 +363,12 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             }
 
             // deleting rest of the leave entitlements
-            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\LeaveEntitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
             \WeDevs\ERP\HRM\Models\Education::where( 'employee_id', '=', $employee_wp_user_id )->delete();
             \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', '=', $employee_wp_user_id )->delete();
-            \WeDevs\ERP\HRM\Models\Work_Experience::where( 'employee_id', '=', $employee_wp_user_id )->delete();
-            \WeDevs\ERP\HRM\Models\Employee_History::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\WorkExperience::where( 'employee_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\EmployeeHistory::where( 'user_id', '=', $employee_wp_user_id )->delete();
             \WeDevs\ERP\HRM\Models\Employee_Note::where( 'user_id', '=', $employee_wp_user_id )->delete();
             \WeDevs\ERP\HRM\Models\Announcement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 

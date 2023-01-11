@@ -42,7 +42,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         )
     );
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
 
     // ledgers
     $sql     = "SELECT id, chart_id, name, slug FROM {$wpdb->prefix}erp_acct_ledgers";
@@ -125,7 +125,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     } // ledger loop
 
     $chart_id_bank  = 7;
-    $final_accounts = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
+    $final_accounts = new \WeDevs\ERP\Accounting\Classes\FinalAccounts( $args );
 
     foreach ( $final_accounts->cash_at_bank_breakdowns as $cash_at_bank ) {
         erp_acct_clsbl_insert_into_opening_balance(

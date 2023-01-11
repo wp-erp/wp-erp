@@ -538,7 +538,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows2'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data2, $sql2, 2 );
     $results['rows3'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data3, $sql3, 3 );
 
-    $final_accounts   = new \WeDevs\ERP\Accounting\Includes\Classes\Final_Accounts( $args );
+    $final_accounts   = new \WeDevs\ERP\Accounting\Classes\FinalAccounts( $args );
 
     $results['rows1'][] = [
         'name'    => 'Accounts Receivable',
@@ -574,7 +574,7 @@ function erp_acct_get_balance_sheet( $args ) {
         'balance' => erp_acct_sales_tax_query( $args, 'payable' ),
     ];
 
-    $ledger_map        = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map        = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
     $owner_s_equity_id = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
 
     $capital     = erp_acct_get_owners_equity( $args, 'capital' );

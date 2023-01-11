@@ -126,7 +126,7 @@ function format_data_as_employee( $data ) {
  * @return void
  */
 function erp_hr_send_announcement_email( $employee_ids, $post_id ) {
-    $announcement_email = new \WeDevs\ERP\HRM\Emails\HR_Announcement_Email();
+    $announcement_email = new \WeDevs\ERP\HRM\Emails\HRAnnouncementEmail();
 
     $announcement_email->trigger( $employee_ids, $post_id );
 }

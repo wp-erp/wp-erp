@@ -18,7 +18,7 @@
                 <input type="hidden" name="sub-section" value="policies">
 
                 <?php
-                $leave_policy = new \WeDevs\ERP\HRM\Leave_Policies_List_Table();
+                $leave_policy = new \WeDevs\ERP\HRM\LeavePoliciesListTable();
                 $leave_policy->prepare_items();
                 $leave_policy->views();
 

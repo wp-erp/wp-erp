@@ -814,7 +814,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     $user_id = get_current_user_id();
     $date    = date( 'Y-m-d H:i:s' );
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
 
     $sales_ledger_id              = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
     $sales_discount_ledger_id     = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );

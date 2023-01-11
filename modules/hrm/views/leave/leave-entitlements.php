@@ -1,7 +1,7 @@
 <?php
 
-use WeDevs\ERP\ERP_Errors;
-use WeDevs\ERP\HRM\Models\Financial_Year;
+use WeDevs\ERP\ErpErrors;
+use WeDevs\ERP\HRM\Models\FinancialYear;
 
 $cur_year   = date( 'Y' );
 $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
@@ -22,7 +22,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
         $financial_years = [];
         $current_f_year  = erp_hr_get_financial_year_from_date();
 
-        foreach ( Financial_Year::all() as $f_year ) {
+        foreach ( FinancialYear::all() as $f_year ) {
             if ( $f_year['start_date'] < $current_f_year->start_date ) {
                 continue;
             }
@@ -35,7 +35,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
 
         if ( isset( $_GET['error'] ) ) {
             $error_key = sanitize_text_field( wp_unslash( $_GET['error'] ) );
-            $errors    = new ERP_Errors( $error_key );
+            $errors    = new ErpErrors( $error_key );
             $form_data = $errors->get_form_data();
 
             echo wp_kses_post( $errors->display() );
@@ -210,7 +210,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
                     <input type="hidden" name="section" value="leave">
                     <input type="hidden" name="sub-section" value="leave-entitlements">
                     <?php
-                    $entitlement = new \WeDevs\ERP\HRM\Entitlement_List_Table();
+                    $entitlement = new \WeDevs\ERP\HRM\EntitlementListTable();
                     $entitlement->prepare_items();
                     $entitlement->search_box( 'Search Employee', 'search' );
                     $entitlement->views();
@@ -225,7 +225,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
             ;jQuery(function( $ ) {
                 var select_string = '<?php echo esc_attr__( 'All Policy', 'erp' ); ?>';
                 var policies = <?php
-                    $policies = \WeDevs\ERP\HRM\Models\Leave_Policy::all();
+                    $policies = \WeDevs\ERP\HRM\Models\LeavePolicy::all();
                     $result   = [];
 
                     foreach ( $policies as $policy ) {

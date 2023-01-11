@@ -2,9 +2,10 @@
 
 namespace WeDevs\ERP\Settings;
 
+use WeDevs\ERP\CRM\Admin\CRMSettings;
 use WeDevs\ERP\Framework\Traits\Ajax as Trait_Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
-use WeDevs\ERP\Email_Mailgun;
+use WeDevs\ERP\EmailMailgun;
 
 /**
  * Ajax handler class
@@ -67,12 +68,12 @@ class Ajax {
                 break;
 
             case 'erp-ac':
-                $settings = ( new \WeDevs\ERP\Accounting\Includes\Classes\Settings() );
+                $settings = ( new \WeDevs\ERP\Accounting\Classes\Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_ac_manager' );
                 break;
 
             case 'erp-crm':
-                $settings = ( new \WeDevs\ERP\CRM\CRM_Settings() );
+                $settings = ( new \WeDevs\ERP\CRM\Admin\Settings() );
                 $has_not_permission = $has_not_permission && ! current_user_can( 'erp_crm_manager' );
                 break;
 
@@ -481,7 +482,7 @@ class Ajax {
         }
 
         try {
-            $mailgun = new Email_Mailgun( $private_api_key, $region, $domain );
+            $mailgun = new EmailMailgun( $private_api_key, $region, $domain );
 
             $data = [
                 'subject'      => $subject,

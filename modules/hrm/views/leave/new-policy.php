@@ -1,8 +1,8 @@
 <?php
 
-use WeDevs\ERP\ERP_Errors;
-use WeDevs\ERP\HRM\Models\Financial_Year;
-use WeDevs\ERP\HRM\Models\Leave_Policy;
+use WeDevs\ERP\ErpErrors;
+use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeavePolicy;
 
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $action        = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
@@ -16,7 +16,7 @@ $leave_names   = [
 
 // edit / copy
 if ( $id ) {
-    $leave_policy = Leave_Policy::find( $id );
+    $leave_policy = LeavePolicy::find( $id );
 
     if ( $action === 'edit' ) {
         $disabled      = true;
@@ -30,7 +30,7 @@ if ( $id ) {
 $financial_years = [];
 $current_f_year  = erp_hr_get_financial_year_from_date();
 
-foreach ( Financial_Year::all() as $f_year ) {
+foreach ( FinancialYear::all() as $f_year ) {
     if ( $f_year['start_date'] < $current_f_year->start_date ) {
         continue;
     }
@@ -42,7 +42,7 @@ $leave_help_text = esc_html__( 'Select A Leave Type', 'erp' ) . ' ' . esc_attr__
 $f_year_help_text = __( 'Select Year', 'erp' ) . ' ' . esc_attr__( 'Or', 'erp' ) . ' ' . sprintf( '<a href="?page=erp-settings#/erp-hr/financial">%s</a>', __( 'Add New', 'erp' ) );
 
 // get error data
-$errors         = new ERP_Errors( 'policy_create_error' );
+$errors         = new ErpErrors( 'policy_create_error' );
 $error_messages = '';
 $form_data      = [];
 
@@ -78,7 +78,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
                     'help'     => $f_year_help_text,
                     'value'    => $f_year,
                     'options'  => [
-                                      '' => '&mdash; ' . esc_attr__( 'select year', 'erp' ) . ' &mdash;',
+                                      '' => '&mdash; ' . esc_attr__( 'Select year', 'erp' ) . ' &mdash;',
                                   ] + $financial_years,
                     'disabled' => $disabled,
                 ] ); ?>

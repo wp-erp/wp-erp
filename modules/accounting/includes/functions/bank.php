@@ -86,7 +86,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $bank_accts = [];
     $uniq_accts = [];
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
 
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
@@ -140,7 +140,7 @@ function erp_acct_get_dashboard_banks() {
 
     $results = [];
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
+    $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
 
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
