@@ -67,7 +67,7 @@ class LeavePoliciesListTable extends \WP_List_Table {
             return;
         }
 
-        $financial_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get(), 'fy_name', 'id' );
+        $financial_years = wp_list_pluck( FinancialYear::orderBy( 'start_date', 'desc' )->get()->toArray(), 'fy_name', 'id' );
 
         if ( empty( $financial_years ) ) {
             return;

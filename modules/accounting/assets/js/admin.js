@@ -8377,6 +8377,7 @@ if (false) {
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'AccountingMenu',
   props: {},
@@ -13954,6 +13955,91 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -28447,6 +28533,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
           _this2.getReport();
         }
+
+        _this2.$store.dispatch('spinner/setSpinner', false);
       });
     },
     getReport: function getReport() {
@@ -28645,6 +28733,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
           _this2.getReport();
         }
+
+        _this2.$store.dispatch('spinner/setSpinner', false);
       });
     },
     getReport: function getReport() {
@@ -29461,13 +29551,22 @@ var render = function() {
                       _vm._l(menu.submenu, function(item, index) {
                         return _c(
                           "li",
-                          { key: index },
+                          {
+                            key: index,
+                            class: { "pro-popup-main": item.pro_popup }
+                          },
                           [
                             _c(
                               "router-link",
                               { attrs: { to: "/" + item.slug } },
                               [_vm._v(_vm._s(item.title))]
-                            )
+                            ),
+                            _vm._v(" "),
+                            item.pro_popup
+                              ? _c("span", { staticClass: "pro-popup" }, [
+                                  _vm._v("Pro")
+                                ])
+                              : _vm._e()
                           ],
                           1
                         )
@@ -37496,6 +37595,302 @@ var render = function() {
         ],
         1
       ),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Purchase VAT", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "It generates report based on the VAT on purchases charged or paid for the current financial cycle/year",
+                      "erp"
+                    )
+                  ) + "."
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "ReportsOverview" } }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.__("View Report", "erp")) +
+                      "\n        "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Purchase Return", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "It generates report based on the purchases that have been returned for the current financial cycle/year",
+                      "erp"
+                    )
+                  ) + "."
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "ReportsOverview" } }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.__("View Report", "erp")) +
+                      "\n        "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Sales Return", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "It generates report based on the sales that have been returned for the current financial cycle/year",
+                      "erp"
+                    )
+                  ) + "."
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "ReportsOverview" } }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.__("View Report", "erp")) +
+                      "\n        "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Product Sales", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "Product Sales history will be shown here with date between facility",
+                      "erp"
+                    )
+                  ) + "."
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "InventorySalesReport" } }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.__("View Report", "erp")) +
+                      "\n        "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Product Purchase", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "Product Purchases history will be shown here with date between facility",
+                      "erp"
+                    )
+                  ) + "."
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "InventoryPurchaseReport" } }
+                },
+                [_vm._v(_vm._s(_vm.__("View Report", "erp")) + "\n        ")]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Inventory Report", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "Product purchase and sales history will be shown here with date between facility.",
+                      "erp"
+                    )
+                  )
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "InventoryHistoryReport" } }
+                },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.__("View Report", "erp")) +
+                      "\n        "
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.proActivated
+        ? _c(
+            "li",
+            { staticClass: "reports-popup" },
+            [
+              _c("h3", { staticClass: "pro-popup-reports-main" }, [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.__("Reimbursements", "erp")) +
+                    "\n            "
+                ),
+                _c("span", { staticClass: "pro-popup-nav" }, [_vm._v("Pro")])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  _vm._s(
+                    _vm.__(
+                      "This is a report provides you the transactions of a particular people at a specified date",
+                      "erp"
+                    )
+                  ) + "."
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "PeopleTrnReport" } }
+                },
+                [_vm._v(_vm._s(_vm.__("View Report", "erp")) + "\n        ")]
+              )
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _vm._l(_vm.reportLists, function(component, index) {
         return _c(component, { key: index, tag: "component" })

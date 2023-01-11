@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.11.3
+ * Version: 1.12.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -71,7 +71,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.11.3';
+    public $version = '1.12.0';
 
     /**
      * Minimum PHP version required
@@ -140,10 +140,10 @@ final class WeDevs_ERP {
         // instantiate classes
         $this->instantiate();
 
-	    $update_notice = new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
-	    if ( $update_notice->need_to_upgrade() ) {
-		    return;
-	    }
+        if ( $this->is_need_to_upgrade() ) {
+            return;
+        }
+
         // Initialize the action hooks
         $this->init_actions();
 
@@ -191,6 +191,20 @@ final class WeDevs_ERP {
         }
 
         return true;
+    }
+
+    /**
+     * Check if this version needs to upgrade in composer version 2.
+     *
+     * @return bool
+     */
+    public function is_need_to_upgrade() {
+        $update_notice = new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
+        if ( $update_notice->need_to_upgrade() ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -279,14 +293,14 @@ final class WeDevs_ERP {
 
         new WeDevsERPInstaller();
         new AdminMenu();
-        new AdminPage();
 
+        $this->container['modules'] = new Modules();
 		// Erp pro is loaded in erp-mail action hook. Not to load that if upgrade is needed, we check in this place (along with L-143) too.
-		$update_notice = new \WeDevs\ERP\Admin\ComposerUpgradeNotice();
-	    if ( $update_notice->need_to_upgrade() ) {
-		    return;
-	    }
+        if ( $this->is_need_to_upgrade() ) {
+            return;
+        }
 
+        new AdminPage();
         new UserProfile();
         new Scripts();
         new Updates();
@@ -300,7 +314,6 @@ final class WeDevs_ERP {
         // Appsero Tracker
         Tracker::get_instance()->init();
 
-        $this->container['modules']     = new Modules();
         $this->container['emailer']     = Emailer::init();
         $this->container['integration'] = Integration::init();
         $this->container['google_auth'] = GoogleAuth::init();
