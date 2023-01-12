@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
-        "illuminate/database": "~5.0",
+        "php": ">=7.2",
+        "illuminate/database": "5.8.*",
         "tareq1988/wp-eloquent": "dev-master",
         "johngrogg/ics-parser": "~1.0",
         "google/apiclient": "^2.0",
@@ -24,8 +24,8 @@
         "php-http/zend-adapter": "^0.1.0"
     },
     "require-dev": {
-      "squizlabs/php_codesniffer": "^3.7",
-      "wp-coding-standards/wpcs": "dev-master",
+        "squizlabs/php_codesniffer": "^3.7",
+        "wp-coding-standards/wpcs": "dev-master",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
         "tareq1988/wp-php-cs-fixer": "dev-master",
         "fzaninotto/faker": "^1.9@dev",
@@ -44,7 +44,7 @@
     ],
     "config": {
         "platform": {
-            "php": "5.6.40"
+            "php": "7.2"
         },
         "allow-plugins": {
             "kylekatarnls/update-helper": true,
