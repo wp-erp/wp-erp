@@ -1999,16 +1999,40 @@ table.leaves td.column-status span {
   display: inline-block;
 }
 table.leaves td.column-status .status-1 {
-  background: #7ad03a;
-  color: #fff;
+  background: #DCFCE7;
+  color: #0D3A26;
+  font-family: 'SF Pro Text';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 3px;
+  padding: 5px 15px;
 }
 table.leaves td.column-status .status-2 {
-  background: #ffba00;
-  color: #fff;
+  background: #FFEDD5;
+  color: #3A180D;
+  font-family: 'SF Pro Text';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 3px;
+  padding: 5px 15px;
 }
 table.leaves td.column-status .status-3 {
-  background: #dd3d36;
-  color: #fff;
+  background: #FEE2E2;
+  color: #3A0D0D;
+  font-family: 'SF Pro Text';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 3px;
+  padding: 5px 15px;
 }
 table.leaves td.column-status .status-4 {
   background: #3E87D0;
