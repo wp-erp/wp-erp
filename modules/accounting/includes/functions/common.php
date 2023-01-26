@@ -626,7 +626,7 @@ function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) 
             $data['is_wp_user'] = false;
             $data['wp_user_id'] = '';
             $data['people_id'] = $customer_id;
-            $data['type']      = 'customer';
+	        $data['type']      = ! empty( $people_type ) ? $people_type : 'customer';
 
             erp_convert_to_people( $data );
          }
