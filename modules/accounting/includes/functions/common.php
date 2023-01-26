@@ -611,25 +611,25 @@ add_action( 'erp_people_created', 'erp_acct_customer_create_from_crm', 10, 3 );
  * @param array      $data        Data of the newly created people
  * @param string     $people_type Type of the newly created people
  *
- * @return mixed
+ * @return void
  */
 function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) {
-    if ( 'contact' === $people_type || 'company' === $people_type ) {
-        $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
-        $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
-        // Check whether the email already exists in Accounting
-        $exists_people        = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
+	if ( 'contact' === $people_type || 'company' === $people_type ) {
+		$customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
+		$crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
+		// Check whether the email already exists in Accounting
+		$exists_people = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
 
-        if ( ! $exists_people && $customer_auto_import && count( $crm_user_type ) ) {
-            // No need to add wordpress `user id` again
-            // `user id` already added when contact is created
-            $data['is_wp_user'] = false;
-            $data['wp_user_id'] = '';
-            $data['people_id'] = $customer_id;
-	        $data['type']      = ! empty( $people_type ) ? $people_type : 'customer';
+		if ( ! $exists_people && $customer_auto_import && count( $crm_user_type ) ) {
+			// No need to add WordPress `user id` again
+			// `user id` already added when contact is created
+			$data['is_wp_user'] = false;
+			$data['wp_user_id'] = '';
+			$data['people_id']  = $customer_id;
+			$data['type']       = ! empty( $people_type ) ? $people_type : 'customer';
 
-            erp_convert_to_people( $data );
-         }
+			erp_convert_to_people( $data );
+		}
     }
 }
 
