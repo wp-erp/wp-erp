@@ -475,7 +475,7 @@ function erp_acct_quick_access_menu() {
             'url'   => 'pay-bills/new',
         ],
         'purchase-order'  => [
-            'title' => 'Purchase Order', 'erp' ),
+            'title' => __( 'Purchase Order', 'erp' ),
             'slug'  => 'purchase-orders',
             'url'   => 'purchase-orders/new',
         ],
