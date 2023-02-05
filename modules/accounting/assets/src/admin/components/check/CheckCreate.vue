@@ -84,7 +84,7 @@
                     </tr>
                     <tr class="add-new-line inline-edit-row">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
                         </td>
                     </tr>
 
