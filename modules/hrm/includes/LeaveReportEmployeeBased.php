@@ -121,7 +121,7 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        esc_html_e( 'No Record Found', 'erp-attendance' );
+        esc_html_e( 'No Record Found', 'erp' );
     }
 
     /**
@@ -130,7 +130,7 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
      * @return array
      */
     public function get_columns() {
-        $columns = [ 'name' => 'Name' ];
+        $columns = [ 'name' => __( 'Name', 'erp' ) ];
 
         foreach ( $this->policies as $policy ) {
             $columns[ $policy->leave_id ] = __( $policy->name, 'erp' );
