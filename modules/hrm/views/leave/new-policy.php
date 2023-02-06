@@ -171,7 +171,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
                     'name'    => 'apply-for-new-users',
                     'type'    => 'checkbox',
                     'value'   => ! empty( $leave_policy ) && $leave_policy->apply_for_new_users == '1' ? 'on' : '0',
-                    'help'    => esc_attr__( 'Entitle new employees to this policy after hiring?' ),
+                    'help'    => esc_attr__( 'Entitle new employees to this policy after hiring?', 'erp' ),
                     'tooltip' => esc_attr__( 'Check this checkbox if you want to entitle new employees to this policy after hiring.', 'erp' ),
                 ] );
                 ?>
