@@ -162,7 +162,7 @@
 
                     <p class="advanced-fields">
                         <input type="checkbox" id="advanced_fields">
-                        <label for="advanced_fields">{{ __('Show Advanced Fields', 'erp') }}</label>
+                        <label for="advanced_fields"><?php esc_html_e( 'Show Advanced Fields', 'erp' ); ?></label>
                     </p>
 
                     <?php if ( current_user_can( 'erp_edit_employee' ) ) { ?>
