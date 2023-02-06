@@ -123,7 +123,7 @@
                                         'type'        => 'select',
                                         'id'          => 'erp-crm-contact-owner-id',
                                         'class'       => 'erp-select2 erp-crm-contact-owner-class',
-                                        'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] ),
+                                        'options'     => erp_crm_get_crm_user_dropdown( [ '' => __( '--Select--', 'erp' ) ] ),
                                     ] ); ?>
                                 </div>
                             <?php } elseif ( current_user_can( 'erp_crm_agent' ) ) { ?>
