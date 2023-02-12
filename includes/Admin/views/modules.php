@@ -656,7 +656,7 @@
                     <?php endif; ?>
                 </ul>
                 <div class="search-box">
-                    <input type="search" id="plugin-search-input" class="wp-filter-search" name="s" value="" placeholder="Search extensions" aria-describedby="live-search-desc" />
+                    <input type="search" id="plugin-search-input" class="wp-filter-search" name="s" value="" placeholder="<?php esc_attr_e( 'Search extensions', 'erp' ); ?>" aria-describedby="live-search-desc" />
                     <i class="fa fa-search"></i>
                 </div>
             </div>
