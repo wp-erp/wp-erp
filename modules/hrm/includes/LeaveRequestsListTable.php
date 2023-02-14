@@ -534,9 +534,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     <?php
                                     foreach ( $financial_years as $key => $year ) {
                                         if ( ! empty( $filters['financial_year'] ) && (int) $filters['financial_year'] === (int) $year ) {
-                                            $selected_f_year = 'selected';
+                                            $selected_f_year = 'selected=selected';
                                         }
-                                        echo sprintf( "<option selected='%s' value='%s'>%s</option>\n", esc_attr( $selected_f_year ), esc_html( $key ), esc_html( $year ) );
+                                        echo sprintf( "<option '%s' value='%s'>%s</option>\n", esc_attr( $selected_f_year ), esc_html( $key ), esc_html( $year ) );
                                     }
                                     ?>
                                 </select>
@@ -629,11 +629,12 @@ class LeaveRequestsListTable extends \WP_List_Table {
             $clear_all_url = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
             if ( ! empty( $filters ) ) {
                 foreach ( $filters as $key => $filter ) {
-                    $build_url['employee_name']       = '';
-                    $build_url['financial_year']      = '';
-                    $build_url['leave_policy']        = '';
-                    $build_url['filter_leave_status'] = '';
-                    $build_url['filter_leave_year']   = '';
+                    $build_url['employee_name']          = '';
+                    $build_url['financial_year']         = '';
+                    $build_url['leave_policy']           = '';
+                    $build_url['filter_leave_status']    = '';
+                    $build_url['filter_leave_year']      = '';
+                    $build_url['filter_employee_search'] = 'Apply';
                     $build_url                        = wp_parse_args( $filters, $build_url );
                     if ( ! empty( $filters['filter_leave_year'] ) ) {
                         if ( 'custom' === $_GET['filter_leave_year'] ) {
