@@ -425,7 +425,7 @@ final class WeDevs_ERP {
             $text = sprintf(
                 /* translators: %s: review url */
                 __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!', 'erp' ),
-                __( 'https://wordpress.org/support/plugin/erp/reviews/?filter=5', 'erp' )
+                'https://wordpress.org/support/plugin/erp/reviews/?filter=5'
             );
         }
 
