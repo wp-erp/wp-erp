@@ -533,10 +533,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     <option value=''><?php echo esc_attr__( 'Select year', 'erp' ); ?></option>
                                     <?php
                                     foreach ( $financial_years as $key => $year ) {
+                                        $selected_f_year = '';
                                         if ( ! empty( $filters['financial_year'] ) && (int) $filters['financial_year'] === (int) $year ) {
                                             $selected_f_year = 'selected=selected';
                                         }
-                                        echo sprintf( "<option '%s' value='%s'>%s</option>\n", esc_attr( $selected_f_year ), esc_html( $key ), esc_html( $year ) );
+                                        echo sprintf( "<option %s value='%s'>%s</option>\n", esc_attr( $selected_f_year ), esc_html( $key ), esc_html( $year ) );
                                     }
                                     ?>
                                 </select>
@@ -546,10 +547,13 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                 <select name='leave_policy' id='leave_policy'>
                                     <option value=''><?php echo esc_attr__( 'All Policy', 'erp' ); ?></option>
                                     <?php
-                                    if ( ! empty( $_GET['financial_year'] ) ) {
-	                                    $leave_policy_select = !empty( $_GET['leave_policy'] ) ? $policy_data[ $_GET['financial_year'] ][$_GET['leave_policy']] : [];
-	                                    echo sprintf( "<option selected='selected' value='%s'>%s</option>\n", esc_attr( $leave_policy_select['policy_id'] ), esc_html( $leave_policy_select['name']) );
+                                    // phpcs:disable
+                                    if ( ! empty( $_GET['financial_year'] ) && empty( $_GET['leave_policy'] ) ) {
+                                        foreach ( $policy_data[$_GET['financial_year']] as $policy ) {
+                                            echo sprintf( "<option value='%s'>%s</option>\n", esc_html( $policy['policy_id'] ), esc_html( $policy['name'] ) );
+                                        }
                                     }
+                                    // phpcs:enable
                                     ?>
                                 </select>
                             </div>
@@ -568,7 +572,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                         continue;
                                     }
 	                                $checked = '';
-	                                if( !empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status']) ){
+	                                if ( ! empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
 		                                $checked = 'checked';
 	                                }
                                     echo sprintf( "<input name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", $checked, esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
@@ -585,7 +589,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
 		                            '1'      => 'Last week',
 		                            '2'      => 'Last month',
 		                            '3'      => 'Last 3 months',
-		                            'custom' => 'Custom'
+		                            'custom' => 'Custom',
                                 ];
 	                            ?>
                             <select name='filter_leave_year' id='filter_leave_year'>
@@ -595,7 +599,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
 			                            continue;
 		                            }
 		                            $selected = '';
-		                            if( !empty( $_GET['filter_leave_year'] ) && $key == $_GET['filter_leave_year'] ){
+		                            if ( ! empty( $_GET['filter_leave_year'] ) && $key == $_GET['filter_leave_year'] ) {
 			                            $selected = 'selected';
 		                            }
 		                            echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $key ), esc_html( $title ) );
