@@ -561,7 +561,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         <div class='input-component'>
                             <label for="filter_leave_status">
                                 <?php esc_html_e( 'Leave status', 'erp' ); ?>
-                                <span>
+                                <span class="leave-tool-tip">
                                     <?php echo erp_help_tip( esc_html__( 'Select the leave request states as per your preference. Selecting none would show all leave states including Approved, Pending and Rejected.', 'erp' ) ); ?>
                                 </span>
                             </label>
