@@ -1193,11 +1193,11 @@
                 var element = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">' +
                     '<div style="display: flex">' +
                     '<label for="start_date">From ' +
-                    '<input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text">&nbsp;' +
+                    '<input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required>&nbsp;' +
                     '</div>' +
                     '<div>' +
                     '<label for="end_date">To ' +
-                    '<input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text">' +
+                    '<input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required>' +
                     ' </div>' +
                     '</div>';
                 $('#custom-date-range-leave-filter').append( element );
