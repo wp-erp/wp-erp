@@ -444,7 +444,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             if ( ! empty( $_GET['leave_policy'] ) && (int) $policy['leave_id'] === (int) $_GET['leave_policy'] ) {
                 $leave_policy_name = $policy->leave->name;
             }
-            $policy_data[ $policy['f_year'] ][] = [
+            $policy_data[ $policy['f_year'] ][$policy['leave_id']] = [
                 'name'          => $policy->leave->name,
                 'policy_id'     => $policy['leave_id'],
                 'employee_type' => $policy['employee_type'],
@@ -482,6 +482,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $filters['filter_leave_status'] = $this->counts[ $_GET['filter_leave_status'] ]['label'];
             }
         }
+        $custom_date_html = '';
         if ( ! empty( $_GET['filter_leave_year'] ) ) {
             if ( 1 === (int) $_GET['filter_leave_year'] ) {
                 $filters['filter_leave_year'] = esc_html__( 'Last week', 'erp' );
@@ -491,11 +492,23 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $filters['filter_leave_year'] = esc_html__( 'Last 3 months', 'erp' );
             } elseif ( 'custom' === $_GET['filter_leave_year'] ) {
                 $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $_GET['start_date'] ) ) . ' - ' . date( 'M d, Y', strtotime( $_GET['end_date'] ) );
+                $custom_date_html = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">
+                                     <div style="display: flex">
+                                     <label for="start_date">From
+                                     <input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required value='. $_GET['start_date'] .'>&nbsp;
+                                     </div>
+                                     <div>
+                                     <label for="end_date">To
+                                     <input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required value='. $_GET['end_date'] .'>
+                                     </div>
+                                     </div>';
             }
         }
 
         // phpcs:enable
         wp_localize_script( 'wp-erp-hr', 'wpErpLeavePolicies', $policy_data );
+
+        $employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_unslash( $_GET['employee_name'] ) ) : '';
         ?>
 
         <div id="wperp-filter-dropdown" class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
@@ -520,7 +533,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                     <div class="wperp-filter-panel-body">
                         <div class="input-component">
                             <label for="employee_name"><?php esc_html_e( 'Employee name', 'erp' ); ?></label>
-                            <input autocomplete="off" type="text" name="employee_name" id="employee_name" placeholder="<?php esc_attr_e( 'Search by employee name', 'erp' ); ?>" />
+                            <input value="<?php echo $employee_name; ?>" autocomplete="off" type="text" name="employee_name" id="employee_name" placeholder="<?php esc_attr_e( 'Search by employee name', 'erp' ); ?>" />
                             <span id='live-employee-search'></span>
                         </div>
 
@@ -531,10 +544,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     <option value=''><?php echo esc_attr__( 'Select year', 'erp' ); ?></option>
                                     <?php
                                     foreach ( $financial_years as $key => $year ) {
+                                        $selected_f_year = '';
                                         if ( ! empty( $filters['financial_year'] ) && (int) $filters['financial_year'] === (int) $year ) {
-                                            $selected_f_year = $key;
+                                            $selected_f_year = 'selected=selected';
                                         }
-                                        echo sprintf( "<option value='%s'>%s</option>\n", esc_html( $key ), esc_html( $year ) );
+                                        echo sprintf( "<option %s value='%s'>%s</option>\n", esc_attr( $selected_f_year ), esc_html( $key ), esc_html( $year ) );
                                     }
                                     ?>
                                 </select>
@@ -543,13 +557,26 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                 <label for="leave_policy"><?php esc_html_e( 'Leave Policy', 'erp' ); ?></label>
                                 <select name='leave_policy' id='leave_policy'>
                                     <option value=''><?php echo esc_attr__( 'All Policy', 'erp' ); ?></option>
+                                    <?php
+                                    // phpcs:disable
+                                    if ( ! empty( $_GET['financial_year'] ) ) {
+                                        foreach ( $policy_data[$_GET['financial_year']] as $policy ) {
+                                            $selected = '';
+                                            if ( ! empty( $filters['leave_policy'] ) && (int) $_GET['leave_policy'] === (int) esc_attr( $policy['policy_id'] ) ) {
+                                                $selected = 'selected=selected';
+                                            }
+                                            echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $policy['policy_id'] ), esc_html( $policy['name'] ) );
+                                        }
+                                    }
+                                    // phpcs:enable
+                                    ?>
                                 </select>
                             </div>
                         </div>
                         <div class='input-component'>
                             <label for="filter_leave_status">
                                 <?php esc_html_e( 'Leave status', 'erp' ); ?>
-                                <span>
+                                <span class="leave-tool-tip">
                                     <?php echo erp_help_tip( esc_html__( 'Select the leave request states as per your preference. Selecting none would show all leave states including Approved, Pending and Rejected.', 'erp' ) ); ?>
                                 </span>
                             </label>
@@ -559,7 +586,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     if ( 'all' === $key ) {
                                         continue;
                                     }
-                                    echo sprintf( "<input name='filter_leave_status[]' class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
+	                                $checked = '';
+	                                if ( ! empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
+		                                $checked = 'checked';
+	                                }
+                                    echo sprintf( "<input name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", $checked, esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
                             </div>
@@ -567,13 +598,34 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         <div class='input-component'>
                             <label for='filter_leave_year'><?php esc_html_e( 'Date range', 'erp' ); ?></label>
                             <div>
+	                            <?php
+	                            $filter_leave_years = [
+		                            ''       => 'Filter by date',
+		                            '1'      => 'Last week',
+		                            '2'      => 'Last month',
+		                            '3'      => 'Last 3 months',
+		                            'custom' => 'Custom',
+                                ];
+	                            ?>
                             <select name='filter_leave_year' id='filter_leave_year'>
-                                <option value=''><?php echo esc_html__( 'Filter by date', 'erp' ); ?></option>
-                                <option value='1'><?php echo esc_html__( 'Last week', 'erp' ); ?></option>
-                                <option value='2'><?php echo esc_html__( 'Last month', 'erp' ); ?></option>
-                                <option value='3'><?php echo esc_html__( 'Last 3 months', 'erp' ); ?></option>
-                                <option value="custom"><?php echo esc_html__( 'Custom', 'erp' ); ?></option>
+	                            <?php
+	                            foreach ( $filter_leave_years as $key => $title ) {
+		                            if ( 'all' === $key ) {
+			                            continue;
+		                            }
+		                            $selected = '';
+		                            if ( ! empty( $_GET['filter_leave_year'] ) && $key == $_GET['filter_leave_year'] ) {
+			                            $selected = 'selected';
+		                            }
+		                            echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $key ), esc_html( $title ) );
+	                            }
+	                            ?>
                             </select>
+                                <?php
+                                if ( !empty( $_GET[ 'filter_leave_year' ] ) && 'custom' === $_GET[ 'filter_leave_year' ] ) {
+                                    echo $custom_date_html;
+                                }
+                                ?>
                             <span id="custom-date-range-leave-filter"></span>
                             </div>
                         </div>
@@ -601,11 +653,12 @@ class LeaveRequestsListTable extends \WP_List_Table {
             $clear_all_url = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
             if ( ! empty( $filters ) ) {
                 foreach ( $filters as $key => $filter ) {
-                    $build_url['employee_name']       = '';
-                    $build_url['financial_year']      = '';
-                    $build_url['leave_policy']        = '';
-                    $build_url['filter_leave_status'] = '';
-                    $build_url['filter_leave_year']   = '';
+                    $build_url['employee_name']          = '';
+                    $build_url['financial_year']         = '';
+                    $build_url['leave_policy']           = '';
+                    $build_url['filter_leave_status']    = '';
+                    $build_url['filter_leave_year']      = '';
+                    $build_url['filter_employee_search'] = 'Apply';
                     $build_url                        = wp_parse_args( $filters, $build_url );
                     if ( ! empty( $filters['filter_leave_year'] ) ) {
                         if ( 'custom' === $_GET['filter_leave_year'] ) {
@@ -635,7 +688,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         $build_url[ $key ] = '';
                     }
 
-                    $url               = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
+                    $url = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
                     // phpcs:enable
                     ?>
                     <div class="single-filter">

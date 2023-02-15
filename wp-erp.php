@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.12.0
+ * Version: 1.12.1
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -71,14 +71,14 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.12.0';
+    public $version = '1.12.1';
 
     /**
      * Minimum PHP version required
      *
      * @var string
      */
-    private $min_php = '5.6.0';
+    private $min_php = '7.2';
 
     /**
      * Holds various class instances
@@ -424,8 +424,8 @@ final class WeDevs_ERP {
         if ( 'erp' === $page ) {
             $text = sprintf(
                 /* translators: %s: review url */
-                __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!' ),
-                __( 'https://wordpress.org/support/plugin/erp/reviews/?filter=5' )
+                __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!', 'erp' ),
+                'https://wordpress.org/support/plugin/erp/reviews/?filter=5'
             );
         }
 
