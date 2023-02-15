@@ -8,10 +8,10 @@ Vue.component('vtable', {
         +'<div class="content-header-section">'
             +'<template v-if="hasExtraBulkAction()">'
                 +'<div class="wperp-filter-dropdown">'
-                    +'<a @click.prevent="toggleDropdown()" class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>'
+                    +'<a @click.prevent="toggleDropdown()" class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>{{ filtersText }}<span class="dashicons dashicons-arrow-down-alt2"></span></a>'
                     +'<div class="erp-dropdown-filter-content" id="erp-dropdown-content" id="filterArea">'
                         +'<div class="wperp-filter-panel wperp-filter-panel-default">'
-                            +'<h3>Filter</h3>'
+                            +'<h3>{{ filterText }}</h3>'
                             +'<div class="wperp-filter-panel-body">'
                                 +'<template v-for="extraActions in extraBulkAction">'
                                     +'<select v-if="( extraActions.type == \'select\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}">'
@@ -396,6 +396,7 @@ Vue.component('vtable', {
             additionalUrlString      : {},
             noResultText             : __('No result found', 'erp'),
             bulkActions              : __('Bulk Actions', 'erp'),
+            filtersText              : __('Filters', 'erp'),
             filterText               : __('Filter', 'erp'),
             applyText                : __('Apply', 'erp'),
             cancelText               : __('Cancel', 'erp'),

@@ -13,7 +13,7 @@ $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect
     <?php endif; ?>
 
     <p class="email-templates">
-        <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a template...">
+        <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Select a template...', 'erp' ); ?>">
             <option value=""><?php esc_attr_e( 'Select a template', 'erp' ); ?></option>
             <?php foreach ( $save_replies as $save_reply ) : ?>
                 <option value="<?php echo esc_attr( $save_reply->id ); ?>"><?php echo esc_html( $save_reply->name ); ?></option>

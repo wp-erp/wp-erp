@@ -450,62 +450,62 @@ function erp_acct_get_invoice_items_agency_wise_tax_rate( $invoice_details_id ) 
 function erp_acct_quick_access_menu() {
     $menus = [
         'invoice'         => [
-            'title' => 'Invoice',
+            'title' => __( 'Invoice', 'erp' ),
             'slug'  => 'invoice',
             'url'   => 'invoices/new',
         ],
         'estimate'        => [
-            'title' => 'Estimate',
+            'title' => __( 'Estimate', 'erp' ),
             'slug'  => 'estimate',
             'url'   => 'estimates/new',
         ],
         'rec_payment'     => [
-            'title' => 'Receive Payment',
+            'title' => __( 'Receive Payment', 'erp' ),
             'slug'  => 'payment',
             'url'   => 'payments/new',
         ],
         'bill'            => [
-            'title' => 'Bill',
+            'title' => __( 'Bill', 'erp' ),
             'slug'  => 'bill',
             'url'   => 'bills/new',
         ],
         'pay_bill'        => [
-            'title' => 'Pay Bill',
+            'title' => __( 'Pay Bill', 'erp' ),
             'slug'  => 'pay_bill',
             'url'   => 'pay-bills/new',
         ],
         'purchase-order'  => [
-            'title' => 'Purchase Order',
+            'title' => __( 'Purchase Order', 'erp' ),
             'slug'  => 'purchase-orders',
             'url'   => 'purchase-orders/new',
         ],
         'purchase'        => [
-            'title' => 'Purchase',
+            'title' => __( 'Purchase', 'erp' ),
             'slug'  => 'purchase',
             'url'   => 'purchases/new',
         ],
         'pay_purchase'    => [
-            'title' => 'Pay Purchase',
+            'title' => __( 'Pay Purchase', 'erp' ),
             'slug'  => 'pay_purchase',
             'url'   => 'pay-purchases/new',
         ],
         'expense'         => [
-            'title' => 'Expense',
+            'title' => __( 'Expense', 'erp' ),
             'slug'  => 'expense',
             'url'   => 'expenses/new',
         ],
         'check'           => [
-            'title' => 'Check',
+            'title' => __( 'Check', 'erp' ),
             'slug'  => 'check',
             'url'   => 'checks/new',
         ],
         'journal'         => [
-            'title' => 'Journal',
+            'title' => __( 'Journal', 'erp' ),
             'slug'  => 'journal',
             'url'   => 'transactions/journals/new',
         ],
         'tax_rate'        => [
-            'title' => 'Tax Payment',
+            'title' => __( 'Tax Payment', 'erp' ),
             'slug'  => 'pay_tax',
             'url'   => 'settings/pay-tax',
         ],
@@ -611,25 +611,25 @@ add_action( 'erp_people_created', 'erp_acct_customer_create_from_crm', 10, 3 );
  * @param array      $data        Data of the newly created people
  * @param string     $people_type Type of the newly created people
  *
- * @return mixed
+ * @return void
  */
 function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) {
     if ( 'contact' === $people_type || 'company' === $people_type ) {
         $customer_auto_import = (int) erp_get_option( 'customer_auto_import', false, 0 );
         $crm_user_type        = erp_get_option( 'crm_user_type', false, [] ); // Contact or Company
         // Check whether the email already exists in Accounting
-        $exists_people        = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
+        $exists_people = erp_acct_exist_people( $data['email'], [ 'customer', 'vendor' ] );
 
         if ( ! $exists_people && $customer_auto_import && count( $crm_user_type ) ) {
-            // No need to add wordpress `user id` again
+            // No need to add WordPress `user id` again
             // `user id` already added when contact is created
             $data['is_wp_user'] = false;
             $data['wp_user_id'] = '';
-            $data['people_id'] = $customer_id;
-            $data['type']      = 'customer';
+            $data['people_id']  = $customer_id;
+            $data['type']       = ! empty( $people_type ) ? $people_type : 'customer';
 
             erp_convert_to_people( $data );
-         }
+        }
     }
 }
 

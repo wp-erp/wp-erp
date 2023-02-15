@@ -2,7 +2,7 @@
 <template>
 	<div>
 		<div class="search-area">
-			<input type="search" placeholder="Search" class="input-searchbar" v-model="searchText" />
+			<input type="search" :placeholder="__('Search', 'erp')" class="input-searchbar" v-model="searchText" />
 
 			<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

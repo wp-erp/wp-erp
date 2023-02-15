@@ -34,7 +34,7 @@
 
             <div class="wperp-form-group">
                 <button class="wperp-btn wperp-btn-default" type="button" @click="addNewYear">
-                    + Add New
+                    + {{  __('Add New', 'erp') }}
                 </button>
             </div>
 
