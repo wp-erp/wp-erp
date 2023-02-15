@@ -4189,6 +4189,9 @@ kbd {
   font-variant: normal normal;
   margin: 0px;
 }
+.leave-tool-tip>.erp-help-tip::after{
+  line-height: 1.5 !important;
+}
 .erp-mini-title {
   font-size: 14px;
   color: #03a9f4;
