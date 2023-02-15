@@ -482,6 +482,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $filters['filter_leave_status'] = $this->counts[ $_GET['filter_leave_status'] ]['label'];
             }
         }
+        $custom_date_html = '';
         if ( ! empty( $_GET['filter_leave_year'] ) ) {
             if ( 1 === (int) $_GET['filter_leave_year'] ) {
                 $filters['filter_leave_year'] = esc_html__( 'Last week', 'erp' );
@@ -491,6 +492,16 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $filters['filter_leave_year'] = esc_html__( 'Last 3 months', 'erp' );
             } elseif ( 'custom' === $_GET['filter_leave_year'] ) {
                 $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $_GET['start_date'] ) ) . ' - ' . date( 'M d, Y', strtotime( $_GET['end_date'] ) );
+                $custom_date_html = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">
+                                     <div style="display: flex">
+                                     <label for="start_date">From
+                                     <input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required value='. $_GET['start_date'] .'>&nbsp;
+                                     </div>
+                                     <div>
+                                     <label for="end_date">To
+                                     <input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required value='. $_GET['end_date'] .'>
+                                     </div>
+                                     </div>';
             }
         }
 
@@ -548,9 +559,13 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     <option value=''><?php echo esc_attr__( 'All Policy', 'erp' ); ?></option>
                                     <?php
                                     // phpcs:disable
-                                    if ( ! empty( $_GET['financial_year'] ) && empty( $_GET['leave_policy'] ) ) {
+                                    if ( ! empty( $_GET['financial_year'] ) ) {
                                         foreach ( $policy_data[$_GET['financial_year']] as $policy ) {
-                                            echo sprintf( "<option value='%s'>%s</option>\n", esc_html( $policy['policy_id'] ), esc_html( $policy['name'] ) );
+                                            $selected = '';
+                                            if ( ! empty( $filters['leave_policy'] ) && (int) $_GET['leave_policy'] === (int) esc_attr( $policy['policy_id'] ) ) {
+                                                $selected = 'selected=selected';
+                                            }
+                                            echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $policy['policy_id'] ), esc_html( $policy['name'] ) );
                                         }
                                     }
                                     // phpcs:enable
@@ -606,6 +621,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
 	                            }
 	                            ?>
                             </select>
+                                <?php
+                                if ( !empty( $_GET[ 'filter_leave_year' ] ) && 'custom' === $_GET[ 'filter_leave_year' ] ) {
+                                    echo $custom_date_html;
+                                }
+                                ?>
                             <span id="custom-date-range-leave-filter"></span>
                             </div>
                         </div>
