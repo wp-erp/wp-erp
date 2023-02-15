@@ -6549,7 +6549,7 @@ var render = function() {
           }
         ],
         staticClass: "input-searchbar",
-        attrs: { type: "search", placeholder: "Search" },
+        attrs: { type: "search", placeholder: _vm.__("Search", "erp") },
         domProps: { value: _vm.searchText },
         on: {
           input: function($event) {
@@ -7961,7 +7961,13 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.addNewYear }
               },
-              [_vm._v("\n                + Add New\n            ")]
+              [
+                _vm._v(
+                  "\n                + " +
+                    _vm._s(_vm.__("Add New", "erp")) +
+                    "\n            "
+                )
+              ]
             )
           ]),
           _vm._v(" "),

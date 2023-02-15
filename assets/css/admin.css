@@ -1999,40 +1999,16 @@ table.leaves td.column-status span {
   display: inline-block;
 }
 table.leaves td.column-status .status-1 {
-  background: #DCFCE7;
-  color: #0D3A26;
-  font-family: 'SF Pro Text';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 16px;
-  text-align: center;
-  border-radius: 3px;
-  padding: 5px 15px;
+  background: #7ad03a;
+  color: #fff;
 }
 table.leaves td.column-status .status-2 {
-  background: #FFEDD5;
-  color: #3A180D;
-  font-family: 'SF Pro Text';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 16px;
-  text-align: center;
-  border-radius: 3px;
-  padding: 5px 15px;
+  background: #ffba00;
+  color: #fff;
 }
 table.leaves td.column-status .status-3 {
-  background: #FEE2E2;
-  color: #3A0D0D;
-  font-family: 'SF Pro Text';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 16px;
-  text-align: center;
-  border-radius: 3px;
-  padding: 5px 15px;
+  background: #dd3d36;
+  color: #fff;
 }
 table.leaves td.column-status .status-4 {
   background: #3E87D0;
@@ -4188,9 +4164,6 @@ kbd {
   cursor: help;
   font-variant: normal normal;
   margin: 0px;
-}
-.leave-tool-tip>.erp-help-tip::after{
-  line-height: 1.5 !important;
 }
 .erp-mini-title {
   font-size: 14px;

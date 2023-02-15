@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.12.0\n"
+"Project-Id-Version: WP ERP 1.12.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2023-01-12 10:14:25+00:00\n"
+"POT-Creation-Date: 2023-02-15 09:44:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,8 +45,8 @@ msgstr ""
 #: assets/js/erp-settings-bootstrap.js:1256
 #: assets/js/erp-settings-bootstrap.js:1355 assets/js/erp-settings.js:6426
 #: assets/js/erp-settings.js:6540 assets/js/erp-settings.js:6774
-#: assets/js/erp-settings.js:8340 assets/js/erp-settings.js:8893
-#: assets/js/erp-settings.js:10709 assets/js/erp-settings.js:11054
+#: assets/js/erp-settings.js:8346 assets/js/erp-settings.js:8899
+#: assets/js/erp-settings.js:10715 assets/js/erp-settings.js:11060
 #: assets/js/vendor.js:13179 assets/js/vendor.js:19578
 #: assets/js/vendor.js:31194 modules/accounting/assets/js/admin.js:29504
 #: modules/accounting/assets/js/admin.js:29757
@@ -196,7 +196,6 @@ msgstr ""
 
 #: assets/js/erp-settings-bootstrap.js:2418 assets/js/erp-settings.js:685
 #: build/i18n/languages/erp.php:35
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
 #: includes/Settings/assets/src/components/base/SubmitButton.vue:14
 #: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:71
@@ -337,7 +336,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:158
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:67
 #: modules/crm/assets/js/crm-contacts.js:742
-#: modules/crm/assets/js/vue-table.js:401
+#: modules/crm/assets/js/vue-table.js:402
 #: modules/crm/views/company/single.php:154
 #: modules/crm/views/contact/single.php:161
 #: modules/crm/views/js-templates/customer-email-note.php:66
@@ -348,7 +347,7 @@ msgstr ""
 #: modules/hrm/HRM.php:238 modules/hrm/assets/js/requests.js:582
 #: modules/hrm/includes/AnnouncementListTable.php:259
 #: modules/hrm/includes/EmployeeListTable.php:93
-#: modules/hrm/includes/LeaveRequestsListTable.php:583
+#: modules/hrm/includes/LeaveRequestsListTable.php:635
 #: modules/hrm/views/requests.php:42
 msgid "Cancel"
 msgstr ""
@@ -468,16 +467,16 @@ msgstr ""
 #: assets/js/erp-settings.js:7250 assets/js/erp-settings.js:7330
 #: assets/js/erp-settings.js:7577 assets/js/erp-settings.js:7657
 #: assets/js/erp-settings.js:7737 assets/js/erp-settings.js:7817
-#: assets/js/erp-settings.js:8058 assets/js/erp-settings.js:8191
-#: assets/js/erp-settings.js:8812 assets/js/erp-settings.js:9022
-#: assets/js/erp-settings.js:9102 assets/js/erp-settings.js:9253
-#: assets/js/erp-settings.js:9385 assets/js/erp-settings.js:9499
-#: assets/js/erp-settings.js:9599 assets/js/erp-settings.js:9810
-#: assets/js/erp-settings.js:10233
+#: assets/js/erp-settings.js:8064 assets/js/erp-settings.js:8197
+#: assets/js/erp-settings.js:8818 assets/js/erp-settings.js:9028
+#: assets/js/erp-settings.js:9108 assets/js/erp-settings.js:9259
+#: assets/js/erp-settings.js:9391 assets/js/erp-settings.js:9505
+#: assets/js/erp-settings.js:9605 assets/js/erp-settings.js:9816
+#: assets/js/erp-settings.js:10239
 msgid "base-layout"
 msgstr ""
 
-#: assets/js/erp-settings.js:8706
+#: assets/js/erp-settings.js:8712
 msgid "crm-contact-form-layout"
 msgstr ""
 
@@ -1591,6 +1590,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:89
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/hrm/includes/Employee.php:1436
+#: modules/hrm/includes/LeaveReportEmployeeBased.php:133
 #: modules/hrm/views/employee/tab-general.php:291
 #: modules/hrm/views/js-templates/dependents.php:5
 #: modules/hrm/views/reporting/headcount.php:146
@@ -1668,10 +1668,10 @@ msgstr ""
 #: build/modules/hrm/views/requests.php:47
 #: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:90
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:69
-#: modules/crm/assets/js/vue-table.js:402
+#: modules/crm/assets/js/vue-table.js:403
 #: modules/hrm/includes/AnnouncementListTable.php:260
 #: modules/hrm/includes/EmployeeListTable.php:94
-#: modules/hrm/includes/LeaveRequestsListTable.php:584
+#: modules/hrm/includes/LeaveRequestsListTable.php:636
 #: modules/hrm/views/requests.php:47
 msgid "Reset"
 msgstr ""
@@ -1848,6 +1848,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/new-policy.php:42
 #: build/modules/hrm/views/leave/new-request.php:29
 #: includes/Admin/SetupWizard.php:690 includes/Admin/SetupWizard.php:772
+#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:37
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:11
 #: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:36
 #: modules/accounting/assets/js/admin.js:13708
@@ -2084,6 +2085,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:56
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:269
 #: modules/accounting/includes/API/BillsController.php:405
+#: modules/accounting/includes/functions/common.php:468
 msgid "Bill"
 msgstr ""
 
@@ -2327,6 +2329,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:95
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:84
+#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:87
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:102
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:73
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:82
@@ -2585,6 +2588,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:9
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:9
 #: modules/crm/views/reports/activity-report.php:34
+#: modules/crm/views/reports/customer-report.php:14
 #: modules/crm/views/reports/growth-report.php:14
 #: modules/hrm/views/employee/single.php:97
 msgid "Print"
@@ -3011,6 +3015,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:48
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:58
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:312
+#: modules/accounting/includes/functions/common.php:498
 msgid "Check"
 msgstr ""
 
@@ -3108,6 +3113,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:55
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:292
 #: modules/accounting/includes/API/ExpensesController.php:347
+#: modules/accounting/includes/functions/common.php:493
 msgid "Expense"
 msgstr ""
 
@@ -3223,6 +3229,7 @@ msgstr ""
 #: modules/crm/includes/functions-reporting.php:58
 #: modules/crm/includes/functions-reporting.php:102
 #: modules/crm/includes/functions-reporting.php:183
+#: modules/crm/views/contact/feeds.php:47
 #: modules/crm/views/js-templates/customer-email-note.php:33
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:81
 #: modules/hrm/views/employee/tab-general.php:143
@@ -3620,6 +3627,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:54
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:354
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:137
+#: modules/accounting/includes/functions/common.php:458
 #: modules/accounting/includes/functions/transactions.php:915
 msgid "Estimate"
 msgstr ""
@@ -3636,6 +3644,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:357
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:139
 #: modules/accounting/includes/API/InvoicesController.php:488
+#: modules/accounting/includes/functions/common.php:453
 msgid "Invoice"
 msgstr ""
 
@@ -3837,6 +3846,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:5
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:31
 #: modules/accounting/includes/API/JournalsController.php:221
+#: modules/accounting/includes/functions/common.php:503
 msgid "Journal"
 msgstr ""
 
@@ -4057,6 +4067,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:51
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:249
 #: modules/accounting/includes/API/PayBillsController.php:300
+#: modules/accounting/includes/functions/common.php:473
 msgid "Pay Bill"
 msgstr ""
 
@@ -4828,6 +4839,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:356
 #: build/modules/crm/views/contact-groups.php:20
 #: build/modules/hrm/views/employee.php:33
+#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
 #: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
 #: modules/accounting/assets/src/admin/components/products/Search.vue:9
 #: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:33
@@ -4847,7 +4859,9 @@ msgstr ""
 #: build/modules/hrm/views/requests.php:11
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:12
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:11
+#: modules/crm/assets/js/vue-table.js:399
 #: modules/hrm/includes/AnnouncementListTable.php:241
+#: modules/hrm/includes/EmployeeListTable.php:45
 #: modules/hrm/views/requests.php:11
 msgid "Filters"
 msgstr ""
@@ -4880,7 +4894,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/CustomerBased.vue:24
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/TransactionBased.vue:20
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:16
-#: modules/crm/assets/js/vue-table.js:399
+#: modules/crm/assets/js/vue-table.js:400
 #: modules/crm/includes/ContactSubscriberListTable.php:58
 #: modules/crm/includes/functions-reporting.php:65
 #: modules/crm/includes/functions-reporting.php:127
@@ -5153,6 +5167,7 @@ msgstr ""
 #: modules/accounting/assets/js/admin.js:22845
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:307
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:351
+#: modules/accounting/includes/functions/common.php:478
 msgid "Purchase Order"
 msgstr ""
 
@@ -5167,6 +5182,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:53
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:354
 #: modules/accounting/includes/API/PurchasesController.php:370
+#: modules/accounting/includes/functions/common.php:483
 msgid "Purchase"
 msgstr ""
 
@@ -5832,6 +5848,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/TaxRatesController.php:707
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:5
 #: modules/accounting/includes/API/TaxRatesController.php:707
+#: modules/accounting/includes/functions/common.php:508
 msgid "Tax Payment"
 msgstr ""
 
@@ -6218,6 +6235,7 @@ msgstr ""
 #: modules/accounting/assets/js/admin.js:22262
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:49
 #: modules/accounting/includes/API/PayPurchasesController.php:292
+#: modules/accounting/includes/functions/common.php:488
 msgid "Pay Purchase"
 msgstr ""
 
@@ -6299,6 +6317,7 @@ msgstr ""
 #: modules/accounting/assets/js/admin.js:20547
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:46
 #: modules/accounting/includes/API/PaymentsController.php:294
+#: modules/accounting/includes/functions/common.php:463
 msgid "Receive Payment"
 msgstr ""
 
@@ -6740,10 +6759,10 @@ msgstr ""
 #: build/modules/hrm/views/requests.php:52
 #: build/modules/hrm/views/requests.php:179
 #: build/modules/hrm/views/requests.php:314
-#: modules/crm/assets/js/vue-table.js:400
+#: modules/crm/assets/js/vue-table.js:401
 #: modules/hrm/includes/AnnouncementListTable.php:261
 #: modules/hrm/includes/EmployeeListTable.php:95
-#: modules/hrm/includes/LeaveRequestsListTable.php:585
+#: modules/hrm/includes/LeaveRequestsListTable.php:637
 #: modules/hrm/views/requests.php:52 modules/hrm/views/requests.php:179
 #: modules/hrm/views/requests.php:314
 msgid "Apply"
@@ -6753,14 +6772,14 @@ msgstr ""
 #: build/modules/crm/assets/js/vue-table.js:403
 #: build/modules/hrm/views/requests.php:159
 #: build/modules/hrm/views/requests.php:294
-#: includes/Admin/views/modules.php:672 modules/crm/assets/js/vue-table.js:403
+#: includes/Admin/views/modules.php:672 modules/crm/assets/js/vue-table.js:404
 #: modules/hrm/views/requests.php:159 modules/hrm/views/requests.php:294
 msgid "Select All"
 msgstr ""
 
 #: build/i18n/languages/erp.php:634
 #: build/modules/crm/assets/js/vue-table.js:404
-#: modules/crm/assets/js/vue-table.js:404
+#: modules/crm/assets/js/vue-table.js:405
 msgid "Loading..."
 msgstr ""
 
@@ -23000,7 +23019,6 @@ msgstr ""
 #: includes/Admin/AuditlogListTable.php:107
 #: modules/crm/includes/functions-reporting.php:159
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:74
-#: modules/hrm/includes/LeaveRequestsListTable.php:575
 msgid "Custom"
 msgstr ""
 
@@ -23229,38 +23247,47 @@ msgid "select"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:315 includes/Admin/SetupWizard.php:315
+#: includes/Admin/views/company-editor.php:177
 msgid "Freelance"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:316 includes/Admin/SetupWizard.php:316
+#: includes/Admin/views/company-editor.php:178
 msgid "Freelance (Developer)"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:317 includes/Admin/SetupWizard.php:317
+#: includes/Admin/views/company-editor.php:179
 msgid "Freelance (Design)"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:318 includes/Admin/SetupWizard.php:318
+#: includes/Admin/views/company-editor.php:180
 msgid "Small Business: Local Service (e.g. Hairdresser)"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:319 includes/Admin/SetupWizard.php:319
+#: includes/Admin/views/company-editor.php:181
 msgid "Small Business: Web Business"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:320 includes/Admin/SetupWizard.php:320
+#: includes/Admin/views/company-editor.php:182
 msgid "Small Business (Other)"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:321 includes/Admin/SetupWizard.php:321
+#: includes/Admin/views/company-editor.php:183
 msgid "eCommerce (WooCommerce)"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:322 includes/Admin/SetupWizard.php:322
+#: includes/Admin/views/company-editor.php:184
 msgid "eCommerce (Shopify)"
 msgstr ""
 
 #: build/includes/Admin/SetupWizard.php:323 includes/Admin/SetupWizard.php:323
+#: includes/Admin/views/company-editor.php:185
 msgid "eCommerce (Other)"
 msgstr ""
 
@@ -23270,6 +23297,7 @@ msgstr ""
 #: build/modules/hrm/includes/functions-employee.php:686
 #: build/modules/hrm/includes/functions-employee.php:692
 #: includes/Admin/SetupWizard.php:324
+#: includes/Admin/views/company-editor.php:186
 #: modules/crm/views/reports/customer-report.php:112
 #: modules/hrm/includes/functions-employee.php:553
 #: modules/hrm/includes/functions-employee.php:686
@@ -23840,7 +23868,6 @@ msgstr ""
 #: build/modules/hrm/views/leave/leave-entitlements.php:147
 #: build/modules/hrm/views/leave/leave-entitlements.php:159
 #: build/modules/hrm/views/leave/leave-entitlements.php:181
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
 #: includes/Admin/views/address.php:56
 #: includes/Admin/views/company-editor.php:103 includes/Countries.php:60
 #: includes/Countries.php:131
@@ -24304,6 +24331,7 @@ msgstr ""
 #: includes/Admin/views/tools/misc.php:35
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:64
 #: modules/crm/includes/functions-reporting.php:171
+#: modules/crm/views/contact/feeds.php:46
 #: modules/crm/views/js-templates/customer-email-note.php:26
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:79
 #: modules/hrm/views/employee/tab-general.php:142
@@ -31954,6 +31982,7 @@ msgstr ""
 #: modules/crm/views/js-templates/customer-add-schedules.php:90
 #: modules/crm/views/js-templates/customer-schedule-note.php:65
 #: modules/crm/views/js-templates/customer-schedule-note.php:84
+#: modules/crm/views/js-templates/new-customer.php:126
 #: modules/crm/views/js-templates/save-search-fields.php:20
 #: modules/crm/views/js-templates/save-search-fields.php:34
 #: modules/crm/views/js-templates/save-search-fields.php:41
@@ -32570,7 +32599,7 @@ msgstr ""
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:543
 #: build/modules/hrm/views/leave/leave-entitlements.php:154
 #: modules/hrm/HRM.php:189 modules/hrm/includes/EntitlementListTable.php:36
-#: modules/hrm/includes/LeaveRequestsListTable.php:543
+#: modules/hrm/includes/LeaveRequestsListTable.php:557
 #: modules/hrm/views/leave/leave-entitlements.php:154
 msgid "Leave Policy"
 msgstr ""
@@ -34247,7 +34276,7 @@ msgstr ""
 #: build/modules/hrm/views/employee/tab-leave.php:147
 #: build/modules/hrm/views/leave/leave-entitlements.php:226
 #: modules/hrm/includes/EntitlementListTable.php:117
-#: modules/hrm/includes/LeaveRequestsListTable.php:545
+#: modules/hrm/includes/LeaveRequestsListTable.php:559
 #: modules/hrm/views/employee/tab-leave.php:119
 #: modules/hrm/views/employee/tab-leave.php:147
 #: modules/hrm/views/leave/leave-entitlements.php:226
@@ -34579,6 +34608,7 @@ msgstr ""
 #: modules/hrm/includes/LeavePoliciesListTable.php:166
 #: modules/hrm/views/employee/tab-leave.php:14
 #: modules/hrm/views/leave/new-policy.php:134
+#: modules/hrm/views/leave/new-policy.php:153
 msgid "Days"
 msgstr ""
 
@@ -34650,7 +34680,7 @@ msgstr ""
 #: build/modules/hrm/views/employee/tab-leave.php:94
 #: build/modules/hrm/views/leave/new-policy.php:81
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:62
-#: modules/hrm/includes/LeaveRequestsListTable.php:531
+#: modules/hrm/includes/LeaveRequestsListTable.php:544
 #: modules/hrm/views/employee/tab-leave.php:94
 #: modules/hrm/views/leave/new-policy.php:81
 msgid "Select year"
@@ -34706,59 +34736,56 @@ msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:487
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:572
-#: modules/hrm/includes/LeaveRequestsListTable.php:487
-#: modules/hrm/includes/LeaveRequestsListTable.php:572
+#: modules/hrm/includes/LeaveRequestsListTable.php:488
 msgid "Last week"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:489
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:573
-#: modules/hrm/includes/LeaveRequestsListTable.php:489
-#: modules/hrm/includes/LeaveRequestsListTable.php:573
+#: modules/hrm/includes/LeaveRequestsListTable.php:490
 msgid "Last month"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:491
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:574
-#: modules/hrm/includes/LeaveRequestsListTable.php:491
-#: modules/hrm/includes/LeaveRequestsListTable.php:574
+#: modules/hrm/includes/LeaveRequestsListTable.php:492
 msgid "Last 3 months"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:512
 #: build/modules/hrm/views/leave/zero_request.php:12
-#: modules/hrm/includes/LeaveRequestsListTable.php:512
+#: modules/hrm/includes/LeaveRequestsListTable.php:525
 #: modules/hrm/views/leave/zero_request.php:12
 msgid "Filter Leave Requests"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:519
-#: modules/hrm/includes/LeaveRequestsListTable.php:519
+#: modules/hrm/includes/LeaveRequestsListTable.php:532
 msgid "Filter Leave Request"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:522
-#: modules/hrm/includes/LeaveRequestsListTable.php:522
+#: modules/hrm/includes/LeaveRequestsListTable.php:535
 msgid "Employee name"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:523
-#: modules/hrm/includes/LeaveRequestsListTable.php:523
+#: modules/hrm/includes/LeaveRequestsListTable.php:536
 msgid "Search by employee name"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:529
-#: modules/hrm/includes/LeaveRequestsListTable.php:529
+#: modules/hrm/includes/LeaveRequestsListTable.php:542
 msgid "Financial year"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:551
-#: modules/hrm/includes/LeaveRequestsListTable.php:551
+#: modules/hrm/includes/LeaveRequestsListTable.php:578
 msgid "Leave status"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:553
-#: modules/hrm/includes/LeaveRequestsListTable.php:553
+#: modules/hrm/includes/LeaveRequestsListTable.php:580
 msgid ""
 "Select the leave request states as per your preference. Selecting none "
 "would show all leave states including Approved, Pending and Rejected."
@@ -34766,18 +34793,17 @@ msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:568
 #: build/modules/hrm/views/requests.php:35
-#: modules/hrm/includes/LeaveRequestsListTable.php:568
+#: modules/hrm/includes/LeaveRequestsListTable.php:599
 #: modules/hrm/views/requests.php:35
 msgid "Date range"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:571
-#: modules/hrm/includes/LeaveRequestsListTable.php:571
 msgid "Filter by date"
 msgstr ""
 
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:656
-#: modules/hrm/includes/LeaveRequestsListTable.php:656
+#: modules/hrm/includes/LeaveRequestsListTable.php:709
 msgid "Clear filter"
 msgstr ""
 
@@ -37108,314 +37134,6 @@ msgstr ""
 msgid "Select bulk action"
 msgstr ""
 
-#: build/vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
-#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
-msgid "This is a dummy plugin"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
-msgid "There was an error when reading this WXR file"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
-msgid ""
-"Details are shown above. The importer will now try again with a different "
-"parser..."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
-msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
-msgid "Sorry, there has been an error."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
-msgid "The file does not exist, please try again."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-msgid "All done."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-msgid "Have fun!"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
-msgid "Remember to update the passwords and roles of imported users."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
-msgid ""
-"The export file could not be found at <code>%s</code>. It is likely that "
-"this was caused by a permissions problem."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
-msgid ""
-"This WXR file (version %s) may not be supported by this version of the "
-"importer. Please consider updating."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
-msgid ""
-"Failed to import author %s. Their posts will be attributed to the current "
-"user."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
-msgid "Assign Authors"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
-msgid ""
-"To make it easier for you to edit and save the imported content, you may "
-"want to reassign the author of the imported item to an existing user of "
-"this site. For example, you may want to import all the entries as "
-"<code>admin</code>s entries."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
-msgid ""
-"If a new user is created by WordPress, a new password will be randomly "
-"generated and the new user&#8217;s role will be set as %s. Manually "
-"changing the new user&#8217;s details will be necessary."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
-msgid "Import Attachments"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
-msgid "Download and import file attachments"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
-msgid "Import author:"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
-msgid "or create new user with login name:"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
-msgid "as a new user:"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
-msgid "assign posts to an existing user:"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
-msgid "or assign posts to an existing user:"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
-msgid ""
-"Failed to create new user for %s. Their posts will be attributed to the "
-"current user."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
-msgid "Failed to import category %s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
-msgid "Failed to import post tag %s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
-msgid "Failed to import %s %s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
-msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
-msgid "%s &#8220;%s&#8221; already exists."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
-msgid "Failed to import %s &#8220;%s&#8221;"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
-msgid "Menu item skipped due to missing menu slug"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
-msgid "Menu item skipped due to invalid menu slug: %s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
-msgid "Fetching attachments is not enabled"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
-msgid "Invalid file type"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
-msgid "Remote server did not respond"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
-msgid "Remote server returned error response %1$d %2$s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
-msgid "Remote file is incorrect size"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
-msgid "Zero size file downloaded"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
-msgid "Remote file is too large, limit is %s"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
-msgid "Import WordPress"
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
-msgid ""
-"A new version of this importer is available. Please update to version %s to "
-"ensure compatibility with newer export files."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
-msgid ""
-"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
-"the posts, pages, comments, custom fields, categories, and tags into this "
-"site."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
-msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
-msgid ""
-"Import <strong>posts, pages, comments, custom fields, categories, and "
-"tags</strong> from a WordPress export file."
-msgstr ""
-
-#: build/vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
-#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
-msgid "This is a dummy theme"
-msgstr ""
-
-#: build/vendor/wp-cli/core-command/src/Core_Command.php:730
-#: vendor/wp-cli/core-command/src/Core_Command.php:730
-msgid "Wildcard DNS may not be configured correctly."
-msgstr ""
-
-#: build/vendor/wp-cli/entity-command/src/Site_Command.php:153
-#: vendor/wp-cli/entity-command/src/Site_Command.php:153
-msgid "Uncategorized"
-msgstr ""
-
-#: build/vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
-#: build/vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
-#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
-#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
-msgid "Export Error"
-msgstr ""
-
-#: build/vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:687
-#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:687
-msgid " Try again"
-msgstr ""
-
-#: build/vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:693
-#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:693
-msgid "API error. Try Again."
-msgstr ""
-
-#: build/vendor/wp-cli/media-command/src/Media_Command.php:145
-#: vendor/wp-cli/media-command/src/Media_Command.php:145
-msgid "image"
-msgid_plural "images"
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/vendor/wp-cli/wp-cli/php/utils-wp.php:230
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:230
-msgid "Inactive Widgets"
-msgstr ""
-
-#: build/vendor/wp-cli/wp-cli/php/utils-wp.php:233
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:233
-msgid "Drag widgets here to remove them from the sidebar but keep their settings."
-msgstr ""
-
 #: build/wp-erp.php:222 wp-erp.php:222
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
@@ -37458,8 +37176,16 @@ msgid ""
 "of WPERP in advance!"
 msgstr ""
 
-#: build/wp-erp.php:428 wp-erp.php:428
+#: build/wp-erp.php:428
 msgid "https://wordpress.org/support/plugin/erp/reviews/?filter=5"
+msgstr ""
+
+#: includes/Admin/views/company-editor.php:176
+msgid "-- select --"
+msgstr ""
+
+#: includes/Admin/views/modules.php:659
+msgid "Search extensions"
 msgstr ""
 
 #: modules/accounting/assets/js/admin.js:9714
@@ -37523,6 +37249,264 @@ msgstr ""
 msgid "modal"
 msgstr ""
 
+#: modules/crm/views/js-templates/customer-email-note.php:16
+msgid "Select a template..."
+msgstr ""
+
+#: modules/crm/views/js-templates/new-customer.php:144
+#: modules/hrm/views/js-templates/new-employee.php:165
+msgid "Show Advanced Fields"
+msgstr ""
+
+#: modules/hrm/views/dashboard-badge.php:21
+msgid "No announcement found."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
+msgid "This is a dummy plugin"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "All done."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "Have fun!"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
+msgid "Assign Authors"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of "
+"this site. For example, you may want to import all the entries as "
+"<code>admin</code>s entries."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually "
+"changing the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
+msgid "Import Attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
+msgid "Download and import file attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
+msgid "Import author:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
+msgid "or create new user with login name:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
+msgid "as a new user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
+msgid "Failed to import category %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
+msgid "Invalid file type"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
+msgid "Remote server did not respond"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
+msgid "Import WordPress"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
+msgid ""
+"Import <strong>posts, pages, comments, custom fields, categories, and "
+"tags</strong> from a WordPress export file."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
+msgid "This is a dummy theme"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:730
+msgid "Wildcard DNS may not be configured correctly."
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:153
+msgid "Uncategorized"
+msgstr ""
+
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
+msgid "Export Error"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:692
+msgid " Try again"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:698
+msgid "API error. Try Again."
+msgstr ""
+
+#: vendor/wp-cli/media-command/src/Media_Command.php:145
+msgid "image"
+msgid_plural "images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:230
+msgid "Inactive Widgets"
+msgstr ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:233
+msgid "Drag widgets here to remove them from the sidebar but keep their settings."
+msgstr ""
+
 #. Plugin URI of the plugin/theme
 msgid "https://wperp.com"
 msgstr ""
@@ -37552,8 +37536,6 @@ msgctxt "US state of Georgia"
 msgid "Georgia"
 msgstr ""
 
-#: build/vendor/wp-cli/core-command/src/Core_Command.php:470
-#: build/vendor/wp-cli/core-command/src/Core_Command.php:544
 #: vendor/wp-cli/core-command/src/Core_Command.php:470
 #: vendor/wp-cli/core-command/src/Core_Command.php:544
 #. translators: placeholder is blog name
@@ -37562,7 +37544,6 @@ msgctxt "Default network name"
 msgid "%s Sites"
 msgstr ""
 
-#: build/vendor/wp-cli/entity-command/src/Site_Command.php:156
 #: vendor/wp-cli/entity-command/src/Site_Command.php:156
 #. translators: Default category slug
 msgctxt "Default category slug"

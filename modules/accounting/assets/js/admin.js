@@ -52632,7 +52632,7 @@ var render = function() {
                             _c("i", {
                               staticClass: "flaticon-add-plus-button"
                             }),
-                            _vm._v("Add Line")
+                            _vm._v(_vm._s(_vm.__("Add Line", "erp")))
                           ]
                         )
                       ]
