@@ -78,7 +78,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    private $min_php = '5.6.0';
+    private $min_php = '7.2';
 
     /**
      * Holds various class instances
