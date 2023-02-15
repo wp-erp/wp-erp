@@ -18,7 +18,7 @@ $announcements = get_posts( [
     </h2>
 
     <?php if ( ! $announcements ) { ?>
-        <p class="erp-no-announce">No announcement found.</p>
+        <p class="erp-no-announce"><?php esc_html_e( 'No announcement found.', 'erp' ); ?></p>
     <?php } else { ?>
     <ul class="erp-badge-announce">
         <?php

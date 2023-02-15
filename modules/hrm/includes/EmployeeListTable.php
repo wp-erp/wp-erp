@@ -42,7 +42,7 @@ class EmployeeListTable extends \WP_List_Table {
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['filter_employment_type'] ) ) : ''; ?>
 
         <div class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
-            <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span>Filters<span class="dashicons dashicons-arrow-down-alt2"></span></a>
+            <a class="wperp-btn btn--default"><span class="dashicons dashicons-filter"></span><?php esc_html_e( 'Filters', 'erp' ); ?><span class="dashicons dashicons-arrow-down-alt2"></span></a>
 
             <div class="erp-dropdown-filter-content" id="erp-dropdown-content">
                 <div class="wperp-filter-panel wperp-filter-panel-default">

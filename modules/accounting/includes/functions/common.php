@@ -450,62 +450,62 @@ function erp_acct_get_invoice_items_agency_wise_tax_rate( $invoice_details_id ) 
 function erp_acct_quick_access_menu() {
     $menus = [
         'invoice'         => [
-            'title' => 'Invoice',
+            'title' => __( 'Invoice', 'erp' ),
             'slug'  => 'invoice',
             'url'   => 'invoices/new',
         ],
         'estimate'        => [
-            'title' => 'Estimate',
+            'title' => __( 'Estimate', 'erp' ),
             'slug'  => 'estimate',
             'url'   => 'estimates/new',
         ],
         'rec_payment'     => [
-            'title' => 'Receive Payment',
+            'title' => __( 'Receive Payment', 'erp' ),
             'slug'  => 'payment',
             'url'   => 'payments/new',
         ],
         'bill'            => [
-            'title' => 'Bill',
+            'title' => __( 'Bill', 'erp' ),
             'slug'  => 'bill',
             'url'   => 'bills/new',
         ],
         'pay_bill'        => [
-            'title' => 'Pay Bill',
+            'title' => __( 'Pay Bill', 'erp' ),
             'slug'  => 'pay_bill',
             'url'   => 'pay-bills/new',
         ],
         'purchase-order'  => [
-            'title' => 'Purchase Order',
+            'title' => __( 'Purchase Order', 'erp' ),
             'slug'  => 'purchase-orders',
             'url'   => 'purchase-orders/new',
         ],
         'purchase'        => [
-            'title' => 'Purchase',
+            'title' => __( 'Purchase', 'erp' ),
             'slug'  => 'purchase',
             'url'   => 'purchases/new',
         ],
         'pay_purchase'    => [
-            'title' => 'Pay Purchase',
+            'title' => __( 'Pay Purchase', 'erp' ),
             'slug'  => 'pay_purchase',
             'url'   => 'pay-purchases/new',
         ],
         'expense'         => [
-            'title' => 'Expense',
+            'title' => __( 'Expense', 'erp' ),
             'slug'  => 'expense',
             'url'   => 'expenses/new',
         ],
         'check'           => [
-            'title' => 'Check',
+            'title' => __( 'Check', 'erp' ),
             'slug'  => 'check',
             'url'   => 'checks/new',
         ],
         'journal'         => [
-            'title' => 'Journal',
+            'title' => __( 'Journal', 'erp' ),
             'slug'  => 'journal',
             'url'   => 'transactions/journals/new',
         ],
         'tax_rate'        => [
-            'title' => 'Tax Payment',
+            'title' => __( 'Tax Payment', 'erp' ),
             'slug'  => 'pay_tax',
             'url'   => 'settings/pay-tax',
         ],
