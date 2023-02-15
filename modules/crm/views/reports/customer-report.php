@@ -11,7 +11,7 @@ $life_stages  = erp_crm_get_life_stages_dropdown_raw();
     <h2 class="report-title"><?php esc_html_e( 'Customer Report', 'erp' ); ?></h2>
     <div class="erp-crm-report-header-wrap">
         <?php erp_crm_customer_report_filter_form(); ?>
-        <button class="print" onclick="window.print()">Print</button>
+        <button class="print" onclick="window.print()"><?php esc_html_e( 'Print', 'erp' ); ?></button>
     </div>
     <table class="table widefat striped">
         <thead>

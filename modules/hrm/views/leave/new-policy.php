@@ -150,7 +150,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
                     'value' => ! empty( $leave_policy ) ? $leave_policy->applicable_from_days : '0',
                     'type'  => 'number',
                 ] ); ?>
-                <span>Days</span>
+                <span><?php esc_html_e( 'Days', 'erp' ); ?></span>
                 <p class="description"><?php echo esc_html__( 'Based on employee joining date.', 'erp' ); ?></p>
             </div>
 
@@ -171,7 +171,7 @@ $f_year = ! empty( $form_data ) ? $form_data['f-year'] : ( ! empty( $leave_polic
                     'name'    => 'apply-for-new-users',
                     'type'    => 'checkbox',
                     'value'   => ! empty( $leave_policy ) && $leave_policy->apply_for_new_users == '1' ? 'on' : '0',
-                    'help'    => esc_attr__( 'Entitle new employees to this policy after hiring?' ),
+                    'help'    => esc_attr__( 'Entitle new employees to this policy after hiring?', 'erp' ),
                     'tooltip' => esc_attr__( 'Check this checkbox if you want to entitle new employees to this policy after hiring.', 'erp' ),
                 ] );
                 ?>

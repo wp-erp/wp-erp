@@ -43,8 +43,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 <option value="log_activity"><?php esc_html_e( 'Schedule', 'erp' ); ?></option>
                 <option value="new_note"><?php esc_html_e( 'Note', 'erp' ); ?></option>
             </select>
-            <input type="text" placeholder="From" class="erp-date-field" v-model="findFeeds.created_from">
-            <input type="text" placeholder="To" class="erp-date-field" v-model="findFeeds.created_to">
+            <input type="text" placeholder="<?php esc_attr_e( 'From', 'erp' ); ?>" class="erp-date-field" v-model="findFeeds.created_from">
+            <input type="text" placeholder="<?php esc_attr_e( 'To', 'erp' ); ?>" class="erp-date-field" v-model="findFeeds.created_to">
             <input type="submit" value="<?php esc_attr_e( 'Filter', 'erp' ); ?>" class="button action" @click="searchFeeds">
         </div>
         <ul class="timeline" v-if = "feeds.length">
