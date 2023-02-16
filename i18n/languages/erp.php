@@ -668,4 +668,7 @@ return [
 	__( 'Transfer Date', 'erp' ),
 	__( 'Type Here', 'erp' ),
 	__( 'Created By', 'erp' ),
+    __( 'For the period of (Transaction date)', 'erp' ),
+    __( 'For the period of ( Transaction date )', 'erp' ),
+    __( 'For the period of ( Opening Balance date )', 'erp' ),
 ];
