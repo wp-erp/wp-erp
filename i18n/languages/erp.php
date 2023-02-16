@@ -671,4 +671,5 @@ return [
     __( 'For the period of (Transaction date)', 'erp' ),
     __( 'For the period of ( Transaction date )', 'erp' ),
     __( 'For the period of ( Opening Balance date )', 'erp' ),
+    __( 'Selecting tax category is important if you want to have tax on that product while selling.', 'erp' ),
 ];
