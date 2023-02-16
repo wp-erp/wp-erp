@@ -673,4 +673,8 @@ return [
     __( 'For the period of ( Opening Balance date )', 'erp' ),
     __( 'Selecting tax category is important if you want to have tax on that product while selling.', 'erp' ),
     __( 'Code (optional)', 'erp' ),
+    __( 'Sales Tax Report (Customer Based)', 'erp' ),
+    __( 'Sales Tax Report (Transaction Based)', 'erp' ),
+    __( 'Sales Tax Report (Agency Based)', 'erp' ),
+    __( 'Save Conversion', 'erp' ),
 ];
