@@ -677,4 +677,5 @@ return [
     __( 'Sales Tax Report (Transaction Based)', 'erp' ),
     __( 'Sales Tax Report (Agency Based)', 'erp' ),
     __( 'Save Conversion', 'erp' ),
+    __( 'Want to help make <strong>%1$s</strong> even more awesome? Allow %1$s to collect non-sensitive diagnostic data and usage information.', 'erp' ),
 ];
