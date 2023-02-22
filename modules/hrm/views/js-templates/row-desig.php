@@ -7,7 +7,7 @@
         <strong><a href="#">{{ data.title }}</a></strong>
 
         <div class="row-actions">
-            <span class="edit"><a href="#" title="Edit this item" data-id="{{ data.id }}"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+            <span class="edit"><a href="#" title="<?php esc_attr_e( 'Edit this item', 'erp' ); ?>" data-id="{{ data.id }}"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
             <span class="trash"><a class="submitdelete" data-id="{{ data.id }}" title="<?php esc_attr_e( 'Delete this item', 'erp' ); ?>" href="#"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
         </div>
     </td>
