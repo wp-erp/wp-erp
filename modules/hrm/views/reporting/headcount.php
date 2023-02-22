@@ -181,7 +181,7 @@
               tickSize: [1, 'month'],
               min: <?php echo esc_html( $js_year_before ); ?>,
               max: <?php echo esc_html( $js_this_month ); ?>,
-              axisLabel: "Headcount by Month",
+              axisLabel: <?php esc_html_e( 'Headcount by Month', 'erp' ); ?>,
             axisLabelUseCanvas: true,
             axisLabelFontSizePixels: 14,
             axisLabelFontFamily: 'Verdana, Arial',
