@@ -2082,7 +2082,7 @@
                             columnNames     = columnNamesLine.split(','),
                             html            = '';
 
-                        html += '<option value="">&mdash; Select Field &mdash;</option>';
+                        html += '<option value="">' + __('&mdash; Select Field &mdash;', 'erp') + '</option>';
 
                         columnNames.forEach(function (item, index) {
                             item = item.replace(/"/g, "");
