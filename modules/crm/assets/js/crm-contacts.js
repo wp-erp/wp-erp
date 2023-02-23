@@ -1243,7 +1243,7 @@
                 },
 
                 contact_view_link: function( action, item ) {
-                    return '<span class="view"><a href="' + item.details_url + '" title="View this contact">'+
+                    return '<span class="view"><a href="' + item.details_url + '" title="' + __('View this contact', 'erp') +'">'+
                     __('View', 'erp') +'</a><span> | </span></span>';
                 },
 
