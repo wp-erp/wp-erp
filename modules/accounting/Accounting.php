@@ -365,10 +365,22 @@ final class Accounting {
         }
 
         if ( $verified ) {
+            add_action( 'erp_readonly_invoice_header', [ $this, 'invoice_frontend_style' ] );
             include ERP_ACCOUNTING_VIEWS . '/transactions/invoice-readonly.php';
             exit();
         }
 
         return;
+    }
+
+    /**
+     * Handles CSS styling for invoice frontend css
+     *
+     * @return void
+     */
+    public function invoice_frontend_style() {
+        ?>
+        <link rel='stylesheet' href="<?php echo WPERP_ASSETS . '/css/invoice-front.css' ?>">
+        <?php
     }
 } // ERP_Accounting
