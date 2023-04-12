@@ -253,8 +253,7 @@ class Admin {
         erp_add_menu(
             'accounting',
             [
-                /*'title'      => sprintf( '<span class="erp-help">%s</span>', __( 'Help', 'erp' ) ),*/
-                'title'      => sprintf( '%s', __( 'Help', 'erp' ) ),
+                'title'      => sprintf( '<span class="erp-help">%s</span>', __( 'Help', 'erp' ) ),
                 'capability' => $dashboard,
                 'slug'       => 'erp-ac-help',
                 'position'   => 200,

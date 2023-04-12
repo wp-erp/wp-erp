@@ -26,7 +26,7 @@
                     </ul>
                 </li>
                 <li :key="index" v-else>
-                    <router-link :to="'/' + menu.slug">{{ menu.title }}</router-link>
+                    <router-link :to="'/' + menu.slug" v-html="menu.title">{{ menu.title }}</router-link>
                 </li>
             </template>
         </ul>
