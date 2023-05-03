@@ -365,7 +365,7 @@ final class Accounting {
         }
 
         if ( $verified ) {
-            wp_enqueue_style( 'erp-acct-readonly-invoice-styles', WPERP_ASSETS . '/css/invoice-front.css', [], WPERP_VERSION );
+            add_action( 'erp_readonly_invoice_header', [ $this, 'invoice_frontend_style' ] );
             include ERP_ACCOUNTING_VIEWS . '/transactions/invoice-readonly.php';
             exit();
         }
