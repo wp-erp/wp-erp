@@ -626,7 +626,6 @@ function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) 
             $data['is_wp_user'] = false;
             $data['wp_user_id'] = '';
             $data['people_id']  = $customer_id;
-            // No need to check ! empty( $people_type ) ? $people_type : 'customer'. Because we want to insert customer in erp_people_type_relations table
             $data['type'] = 'customer';
 
             erp_convert_to_people( $data );
