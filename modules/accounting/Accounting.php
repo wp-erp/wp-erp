@@ -378,7 +378,7 @@ final class Accounting {
      */
     public function invoice_frontend_style() {
         ?>
-        <link rel='stylesheet' href="<?php echo WPERP_ASSETS . '/css/invoice-front.css' ; ?>">
+        <link rel='stylesheet' href="<?php echo WPERP_ASSETS . '/css/invoice-front.css'; ?>">
         <?php
     }
 } // ERP_Accounting
