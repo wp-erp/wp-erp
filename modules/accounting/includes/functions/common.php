@@ -96,8 +96,8 @@ function erp_acct_get_payables( $from, $to ) {
  */
 function erp_acct_get_payables_overview() {
     // get dates till coming 90 days
-    $from_date = date( 'Y-m-d' );
-    $to_date   = date( 'Y-m-d', strtotime( '+90 day', strtotime( $from_date ) ) );
+    $from_date = gmdate( 'Y-m-d' );
+    $to_date   = gmdate( 'Y-m-d', strtotime( '+90 day', strtotime( $from_date ) ) );
 
     $data   = [];
     $amount = [
@@ -118,22 +118,22 @@ function erp_acct_get_payables_overview() {
 
             //segment by date difference
             switch ( $diff ) {
-                case  0 === $diff:
+                case 0 === $diff:
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + abs( $item->due );
                     break;
 
-                case  $diff <= 30:
+                case $diff <= 30:
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + abs( $item->due );
                     break;
 
-                case  $diff <= 60:
+                case $diff <= 60:
                     $data['second'][] = $item_data;
                     $amount['second'] = $amount['second'] + abs( $item->due );
                     break;
 
-                case  $diff <= 90:
+                case $diff <= 90:
                     $data['third'][] = $item_data;
                     $amount['third'] = $amount['third'] + abs( $item->due );
                     break;
@@ -626,7 +626,7 @@ function erp_acct_customer_create_from_crm( $customer_id, $data, $people_type ) 
             $data['is_wp_user'] = false;
             $data['wp_user_id'] = '';
             $data['people_id']  = $customer_id;
-            $data['type'] = 'customer';
+            $data['type']       = 'customer';
 
             erp_convert_to_people( $data );
         }
