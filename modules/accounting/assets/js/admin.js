@@ -29580,9 +29580,14 @@ var render = function() {
                   "li",
                   { key: index },
                   [
-                    _c("router-link", { attrs: { to: "/" + menu.slug } }, [
-                      _vm._v(_vm._s(menu.title))
-                    ])
+                    _c(
+                      "router-link",
+                      {
+                        attrs: { to: "/" + menu.slug },
+                        domProps: { innerHTML: _vm._s(menu.title) }
+                      },
+                      [_vm._v(_vm._s(menu.title))]
+                    )
                   ],
                   1
                 )
