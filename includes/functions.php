@@ -3352,7 +3352,7 @@ function erp_is_valid_contact_no( $contact_no ) {
  * @return bool
  */
 function erp_is_valid_zip_code( $zip_code ) {
-    return preg_match( '/^[A-Z0-9][ \-A-Z0-9]{3,8}+$/', $zip_code );
+    return preg_match( '/^[A-Z0-9][ \-A-Z0-9]{3,12}+$/', $zip_code );
 }
 
 /**
