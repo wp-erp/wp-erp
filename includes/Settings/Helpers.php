@@ -212,22 +212,25 @@ class Helpers {
                               : ( ! empty( $single_option_data[ $option['id'] ] )
                               ? $single_option_data[ $option['id'] ] : '' );
 
-                if ( empty ( $option_value ) && $option['type'] !== 'select' ) {
+                if (empty($option_value) && isset($option['type']) && $option['type'] !== 'select') {
                     $option_value = ! empty ( $option['default'] ) ? $option['default'] : '';
                 }
 
                 // Process option value for different type input
-                switch ( $option['type'] ) {
-                    case 'checkbox':
-                        $option_value = $option_value === 'yes' ? true : false;
-                        break;
+                if (isset($option['type'])) {
+                    switch ($option['type']) {
+                        case 'checkbox':
+                            $option_value = $option_value === 'yes' ? true : false;
+                            break;
 
-                    case 'image':
-                        $option_value = (int) $option_value;
-                        $option_value = $option_value ? wp_get_attachment_url( $option_value ) : '';
+                        case 'image':
+                            $option_value = (int) $option_value;
+                            $option_value = $option_value ? wp_get_attachment_url($option_value) : '';
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
 
                 $option['value'] = $option_value;
