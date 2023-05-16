@@ -3409,7 +3409,11 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
     $changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
 
     foreach ( $changes_key as $key => $change_field_key ) {
-        $old_value[ $change_field_key ] = $old_data[ $change_field_key ];
+        // To avoid the error when the key is not set in the old data, we need to check if the key is set or not.
+        if (isset($old_data[$change_field_key])) {
+            $old_value[$change_field_key] = $old_data[$change_field_key];
+        }
+
         $new_value[ $change_field_key ] = $new_data[ $change_field_key ];
     }
 
