@@ -500,14 +500,12 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $args['last_name']  = '(company)';
     }
 
+    $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
     if ( ! $existing_people->id ) {
         // if an empty type provided
         if ( '' === $people_type ) {
             return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
         }
-
-        // Some validation
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
 
         // check if a valid people type exists in the database
         if ( null === $type_obj ) {
