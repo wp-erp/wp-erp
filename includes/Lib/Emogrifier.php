@@ -2,7 +2,6 @@
 
 namespace WeDevs\ERP\Lib;
 
-use BadMethodCallException;
 use DOMDocument;
 use DOMXPath;
 
@@ -232,7 +231,7 @@ class Emogrifier {
      */
     public function emogrify() {
         if ( $this->html === '' ) {
-            throw new BadMethodCallException( 'Please set some HTML first before calling emogrify.', 1390393096 );
+            throw new \BadMethodCallException( 'Please set some HTML first before calling emogrify.', 1390393096 );
         }
 
         $xmlDocument = $this->createXmlDocument();

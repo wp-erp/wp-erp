@@ -130,9 +130,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
             case 'request':
                 $request_days = $item->start_date === $item->end_date
-                    ? erp_format_date( $item->start_date, 'M d' )
-                    : erp_format_date( $item->start_date, 'M d' ) . ' &mdash; ' . erp_format_date( $item->end_date, 'M d' );
-
+                    ? erp_format_date( $item->start_date, 'M d, Y' )
+                    : erp_format_date( $item->start_date, 'M d, Y' ) . ' - ' . erp_format_date( $item->end_date, 'M d, Y' );
                 $str = '<p><strong>' . $request_days . '</strong></p>';
 
                 if ( $item->day_status_id != '1' ) {
