@@ -88,6 +88,7 @@ function erp_acct_get_invoice( $invoice_no ) {
             invoice.attachments,
             invoice.status,
             invoice.particulars,
+            invoice.custom_text,
             invoice.created_at,
 
             inv_acc_detail.debit,
@@ -237,6 +238,7 @@ function erp_acct_insert_invoice( $data ) {
                 'attachments'     => $invoice_data['attachments'],
                 'status'          => $invoice_data['status'],
                 'particulars'     => $invoice_data['particulars'],
+                'custom_text'     => $invoice_data['custom_text'],
                 'created_at'      => $invoice_data['created_at'],
                 'created_by'      => $invoice_data['created_by'],
             ]
@@ -737,6 +739,7 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['attachments']     = ! empty( $data['attachments'] ) ? $data['attachments'] : '';
     $invoice_data['status']          = isset( $data['status'] ) ? $data['status'] : 1;
     $invoice_data['particulars']     = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no );
+    $invoice_data['custom_text']     = ! empty( $data['custom_text'] ) ? $data['custom_text'] : '';
     $invoice_data['estimate']        = isset( $data['estimate'] ) ? $data['estimate'] : 0;
     $invoice_data['created_at']      = isset( $data['created_at'] ) ? $data['created_at'] : null;
     $invoice_data['created_by']      = isset( $data['created_by'] ) ? $data['created_by'] : null;

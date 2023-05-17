@@ -137,7 +137,7 @@
                             <tr class="add-attachment-row inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <label>{{ __('Custom text', 'erp') }}</label>
-                                    <textarea v-model="custom_text" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Custom text', 'erp')"></textarea>
+                                    <VueTrix v-model="custom_text" :placeholder="__('Enter content', 'erp')" localStorage/>
                                 </td>
                             </tr>
                             <component
@@ -178,6 +178,8 @@ import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue';
 import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
 import MultiSelect from 'admin/components/select/MultiSelect.vue';
 import ShowErrors from 'admin/components/base/ShowErrors.vue';
+import VueTrix from "vue-trix";
+import { __ } from '@wordpress/i18n'
 
 /* global erp_acct_var */
 export default {
@@ -190,7 +192,8 @@ export default {
         ComboButton,
         InvoiceTrnRow,
         SelectCustomers,
-        ShowErrors
+        ShowErrors,
+        VueTrix
     },
 
     data() {
@@ -595,6 +598,7 @@ export default {
                 line_items     : this.formatLineItems(),
                 attachments    : this.attachments,
                 particulars    : this.particulars,
+                custom_text    : this.custom_text,
                 type           : 'invoice',
                 status         : parseInt(this.status),
                 estimate       : this.inv_type.id,

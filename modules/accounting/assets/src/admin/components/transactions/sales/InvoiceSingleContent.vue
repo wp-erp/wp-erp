@@ -115,6 +115,8 @@
                 {{ attachment }}
             </a>
         </div>
+
+        <trans-particulars :particulars="invoice.custom_text" />
     </div>
 </template>
 
@@ -198,7 +200,7 @@ export default {
             }
         }
     }
-    
+
     .d-print-block {
         display: none;
     }
