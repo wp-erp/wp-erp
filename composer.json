@@ -21,7 +21,8 @@
         "appsero/client": "^1.2",
         "parsecsv/php-parsecsv": "^1.2",
         "mailgun/mailgun-php": "^2.8",
-        "php-http/zend-adapter": "^0.1.0"
+        "php-http/zend-adapter": "^0.1.0",
+        "http-interop/http-factory-guzzle": "^1.1"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.7",
