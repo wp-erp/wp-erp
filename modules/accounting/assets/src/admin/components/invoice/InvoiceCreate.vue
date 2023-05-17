@@ -134,6 +134,12 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="add-attachment-row inline-edit-row">
+                                <td colspan="9" style="text-align: left;">
+                                    <label>{{ __('Custom text', 'erp') }}</label>
+                                    <textarea v-model="custom_text" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Custom text', 'erp')"></textarea>
+                                </td>
+                            </tr>
                             <component
                                 v-for="(component, compKey) in extraFields"
                                 :key="'key-' + compKey"
@@ -220,6 +226,7 @@ export default {
             taxSummary      : null,
             products        : [],
             particulars     : '',
+            custom_text     : '',
             attachments     : [],
             transactionLines: [],
             taxRates        : [],
