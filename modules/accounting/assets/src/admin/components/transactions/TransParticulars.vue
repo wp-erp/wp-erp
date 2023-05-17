@@ -1,6 +1,6 @@
 <template>
     <div class="particulars" v-if="particulars">
-        <h4>{{ __('Particulars', 'erp') }}</h4>
+        <h4>{{ heading ? heading : __('Particulars', 'erp') }}</h4>
         <p v-for="(particular, par) in particulars.split(/\r?\n/)" :key="par" v-html="shouldRenderHTML(particular)"></p>
     </div>
 </template>
@@ -10,7 +10,8 @@ export default {
     name: 'TransParticulars',
 
     props: {
-        particulars: String
+        particulars: String,
+        heading: String
     },
     methods: {
         shouldRenderHTML(particular) {
