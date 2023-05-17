@@ -2379,8 +2379,8 @@ class AjaxHandler {
                             'id'     => $result['reason'],
                             'title'  => $result['reason'],
                         ],
-                        'start_date' => gmdate( $date_format, $result['start_date'] ),
-                        'end_date'   => gmdate( $date_format, $result['end_date'] ),
+                        'start_date' => erp_format_date( $result['start_date'], $date_format ),
+                        'end_date'   => erp_format_date( $result['end_date'], $date_format ),
                     ];
                 }
 

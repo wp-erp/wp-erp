@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 1.12.2
+Stable tag: 1.12.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,15 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.12.3 -> May 17, 2023 =
+--------------------------
+* [Enhancement] Added the year in the leave request list table.
+* [FIX] Fatal error on HR > Leave - Holidays.
+* [FIX] Leave date mismatch on the "Leave Request" page.
+* [FIX] Handled log error on CRM Contact and/or Company.
+* [FIX] Handled php notice in Mailchimp Configuration.
+* [FIX] Handle log error on accounting module’s vendor creation.
 
 = v1.12.2 -> May 05, 2023 =
 --------------------------
