@@ -31,7 +31,7 @@ class ERP_Update_1_12_4 {
             return;
         }
 
-        $wpdb->query( "ALTER TABLE `{$wpdb->prefix}erp_acct_invoices` ADD COLUMN IF NOT EXISTS `custom_text` VARCHAR(255) NULL DEFAULT NULL AFTER `particulars`;" );
+        $wpdb->query( "ALTER TABLE `{$wpdb->prefix}erp_acct_invoices` ADD `custom_text` TEXT NULL DEFAULT NULL AFTER `particulars`;" );
     }
 
     /**
