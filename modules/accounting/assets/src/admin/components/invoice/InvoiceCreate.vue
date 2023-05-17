@@ -137,7 +137,7 @@
                             <tr class="add-attachment-row inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <label>{{ __('Custom text', 'erp') }}</label>
-                                    <VueTrix v-model="custom_text" :placeholder="__('Enter content', 'erp')" localStorage/>
+                                    <VueTrix v-model="custom_text" :placeholder="__('Enter content', 'erp')"/>
                                 </td>
                             </tr>
                             <component
