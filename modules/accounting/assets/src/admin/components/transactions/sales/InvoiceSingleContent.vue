@@ -116,7 +116,7 @@
             </a>
         </div>
 
-        <trans-particulars :particulars="invoice.custom_text" :heading="__('Custom text')" />
+        <trans-particulars :particulars="invoice.custom_text" :heading="__('Additional Notes', 'erp')" />
     </div>
 </template>
 
