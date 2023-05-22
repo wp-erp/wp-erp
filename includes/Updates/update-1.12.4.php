@@ -31,7 +31,7 @@ class ERP_Update_1_12_4 {
             return;
         }
 
-        $wpdb->query( "ALTER TABLE `{$wpdb->prefix}erp_acct_invoices` ADD `custom_text` TEXT NULL DEFAULT NULL AFTER `particulars`;" );
+        $wpdb->query( "ALTER TABLE `{$wpdb->prefix}erp_acct_invoices` ADD `additional_notes` TEXT NULL DEFAULT NULL AFTER `particulars`;" );
     }
 
     /**
@@ -44,7 +44,7 @@ class ERP_Update_1_12_4 {
     private function is_column_already_exists() {
         global $wpdb;
 
-        $result = $wpdb->get_results( "SHOW COLUMNS FROM `{$wpdb->prefix}erp_acct_invoices` LIKE 'custom_text'" );
+        $result = $wpdb->get_results( "SHOW COLUMNS FROM `{$wpdb->prefix}erp_acct_invoices` LIKE 'additional_notes'" );
 
         if ( ! empty( $result ) ) {
             return true;

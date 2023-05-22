@@ -549,8 +549,8 @@ class InvoicesController extends REST_Controller {
             $prepared_item['particulars'] = $request['particulars'];
         }
 
-        if ( isset( $request['custom_text'] ) ) {
-            $prepared_item['custom_text'] = $request['custom_text'];
+        if ( isset( $request['additional_notes'] ) ) {
+            $prepared_item['additional_notes'] = $request['additional_notes'];
         }
 
         if ( isset( $request['transaction_by'] ) ) {
@@ -718,7 +718,7 @@ class InvoicesController extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'custom_text'          => [
+                'additional_notes'          => [
                     'description' => __( 'Custom text for invoice', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
