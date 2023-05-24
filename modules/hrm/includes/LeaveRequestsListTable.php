@@ -661,67 +661,66 @@ class LeaveRequestsListTable extends \WP_List_Table {
             <?php
             // phpcs:disable
             $clear_all_url = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
-            if ( ! empty( $filters ) ) {
-                foreach ( $filters as $key => $filter ) {
-                    $build_url['employee_name']          = '';
-                    $build_url['financial_year']         = '';
-                    $build_url['leave_policy']           = '';
-                    $build_url['filter_leave_status']    = '';
-                    $build_url['filter_leave_year']      = '';
-                    $build_url['filter_employee_search'] = 'Apply';
-                    $build_url                        = wp_parse_args( $filters, $build_url );
-                    if ( ! empty( $filters['filter_leave_year'] ) ) {
-                        if ( 'custom' === $_GET['filter_leave_year'] ) {
-                            $build_url['start_date'] = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
-                            $build_url['end_date']   = isset( $_GET['end_date'] ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
-                        }
-                        $build_url['filter_leave_year'] = $_GET['filter_leave_year'];
-                    }
-                    if ( ! empty( $filters['financial_year'] ) ) {
-                        $build_url['financial_year'] = $_GET['financial_year'];
-                    }
-                    if ( ! empty( $filters['leave_policy'] ) ) {
-                        $build_url['leave_policy'] = $_GET['leave_policy'];
-                    }
-                    if ( ! empty( $filters['filter_leave_status'] ) ) {
-                        $build_url['filter_leave_status'] = $_GET['filter_leave_status'];
-                    }
-                    if ( 'filter_leave_year' === $key && 'custom' === $_GET['filter_leave_year'] ) {
-                        unset( $build_url['start_date'] );
-                        unset( $build_url['end_date'] );
-                        $build_url['filter_leave_year'] = '';
-                    }
-
-                    if ( 'filter_leave_status' === $key ) {
-                        $build_url[ $key ] = 'all';
-                    }else{
-                        $build_url[ $key ] = '';
-                    }
-
-                    $url = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
-                    // phpcs:enable
-                    ?>
-                    <div class="single-filter">
-                        <div class="filter-text">
-                            <?php
-                            echo esc_html( $filter );
-                            ?>
-                        </div>
-                        <a href="<?php echo esc_url( $url ); ?>" class="filter-close">
-                            X
-                        </a>
-                    </div>
-                    <?php
+            foreach ( $filters as $key => $filter ) {
+                if( empty( $filter ) ){
+                    continue;
                 }
+                $build_url['employee_name']          = '';
+                $build_url['financial_year']         = '';
+                $build_url['leave_policy']           = '';
+                $build_url['filter_leave_status']    = '';
+                $build_url['filter_leave_year']      = '';
+                $build_url['filter_employee_search'] = 'Apply';
+                $build_url                        = wp_parse_args( $filters, $build_url );
+                if ( ! empty( $filters['filter_leave_year'] ) ) {
+                    if ( 'custom' === $_GET['filter_leave_year'] ) {
+                        $build_url['start_date'] = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
+                        $build_url['end_date']   = isset( $_GET['end_date'] ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
+                    }
+                    $build_url['filter_leave_year'] = $_GET['filter_leave_year'];
+                }
+                if ( ! empty( $filters['financial_year'] ) ) {
+                    $build_url['financial_year'] = $_GET['financial_year'];
+                }
+                if ( ! empty( $filters['leave_policy'] ) ) {
+                    $build_url['leave_policy'] = $_GET['leave_policy'];
+                }
+                if ( ! empty( $filters['filter_leave_status'] ) ) {
+                    $build_url['filter_leave_status'] = $_GET['filter_leave_status'];
+                }
+                if ( 'filter_leave_year' === $key && 'custom' === $_GET['filter_leave_year'] ) {
+                    unset( $build_url['start_date'] );
+                    unset( $build_url['end_date'] );
+                    $build_url['filter_leave_year'] = '';
+                }
+
+                if ( 'filter_leave_status' === $key ) {
+                    $build_url[ $key ] = 'all';
+                }else{
+                    $build_url[ $key ] = '';
+                }
+
+                $url = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
+                // phpcs:enable
                 ?>
-                <div class="clear-filter">
-                    <a href="<?php echo esc_url( $clear_all_url ); ?>">
-                        <?php echo __( 'Clear filter', 'erp' ); ?>
+                <div class="single-filter">
+                    <div class="filter-text">
+                        <?php
+                        echo esc_html( $filter );
+                        ?>
+                    </div>
+                    <a href="<?php echo esc_url( $url ); ?>" class="filter-close">
+                        X
                     </a>
                 </div>
                 <?php
             }
             ?>
+            <div class="clear-filter">
+                <a href="<?php echo esc_url( $clear_all_url ); ?>">
+                    <?php echo __( 'Clear filter', 'erp' ); ?>
+                </a>
+            </div>
         </div>
         <?php
     }
