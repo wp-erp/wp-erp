@@ -1,9 +1,9 @@
 <?php
 $requests_table = new \WeDevs\ERP\HRM\LeaveRequestsListTable();
-$title_text = esc_html__( 'Sit back and relax', 'erp' );
-$desc = esc_html__( 'You don’t have any pending leave request at this moment', 'erp' );
-$img = esc_url( WPERP_ASSETS . '/images/zero_request.svg' );
-$button = "<div id='wperp-filter-dropdown' class='wperp-filter-dropdown' style='margin: -46px 0 0 0;'>
+$title_text     = esc_html__( 'Sit back and relax', 'erp' );
+$desc           = esc_html__( 'You don’t have any pending leave request at this moment', 'erp' );
+$img            = esc_url( WPERP_ASSETS . '/images/zero_request.svg' );
+$button         = "<div id='wperp-filter-dropdown' class='wperp-filter-dropdown' style='margin: -46px 0 0 0;'>
             <div id='search-main'>
                 <div class='filter-right'>
                     <a id='wperp-leave-filter-dropdown' class='wperp-btn btn--filter'>
@@ -14,11 +14,11 @@ $button = "<div id='wperp-filter-dropdown' class='wperp-filter-dropdown' style='
                 </div>
             </div>
         </div>";
-$get = wp_unslash( $_GET ); // phpcs:ignore
+$get            = wp_unslash( $_GET ); // phpcs:ignore
 if ( ! empty( $get['financial_year'] ) || ! empty( $get['employee_name'] ) || ! empty( $get['leave_policy'] ) || ! empty( $get['filter_leave_status'] ) || ! empty( $get['filter_leave_year'] ) ) {
     $title_text = esc_html__( 'No requests found!', 'erp' );
-    $desc = esc_html__( 'Try different search filters to filter leave requests as per your preference', 'erp' );
-    $img = esc_url( WPERP_ASSETS . '/images/no_request.svg' );
+    $desc       = esc_html__( 'Try different search filters to filter leave requests as per your preference', 'erp' );
+    $img        = esc_url( WPERP_ASSETS . '/images/no_request.svg' );
 }
 ?>
 <div class="zero-request">
@@ -34,27 +34,27 @@ if ( ! empty( $get['financial_year'] ) || ! empty( $get['employee_name'] ) || ! 
         </p>
     </div>
     <div class="filter-button">
-        <?php echo wp_kses($button, [
-            'div' => [
-                'id' => [],
+        <?php echo wp_kses( $button, [
+            'div'  => [
+                'id'    => [],
                 'class' => [],
                 'style' => [],
             ],
-            'a' => [
-                'id' => [],
+            'a'    => [
+                'id'    => [],
                 'class' => [],
-                'href' => [],
+                'href'  => [],
             ],
-            'svg' => [
-                'style' => [],
-                'width' => [],
-                'height' => [],
+            'svg'  => [
+                'style'   => [],
+                'width'   => [],
+                'height'  => [],
                 'viewBox' => [],
-                'fill' => [],
-                'xmlns' => [],
+                'fill'    => [],
+                'xmlns'   => [],
             ],
             'path' => [
-                'd' => [],
+                'd'    => [],
                 'fill' => [],
             ],
         ] ); ?>
