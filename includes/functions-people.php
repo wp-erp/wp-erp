@@ -65,9 +65,9 @@ function erp_get_peoples( $args = [] ) {
         $trashed_sql = $trashed ? '`deleted_at` is not null' : '`deleted_at` is null';
 
         if ( is_array( $type ) ) {
-            $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
+            $type_sql = "and `name` IN ( '" . implode( "','", esc_sql( $type ) ) . "' )";
         } else {
-            $type_sql = ( $type !== 'all' ) ? "and `name` = '" . $type . "'" : '';
+            $type_sql = ( $type !== 'all' ) ? "and `name` = '" . esc_sql( $type ) . "'" : '';
         }
 
         $wrapper_select = 'SELECT people.*, ';
