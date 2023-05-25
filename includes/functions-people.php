@@ -167,13 +167,10 @@ function erp_get_peoples( $args = [] ) {
         $post_where_queries = '';
 
         if ( ! empty( $sql['post_where_queries'] ) ) {
-            $post_where_queries = 'AND ( 1 = 1 '
-                                  . implode( ' ', $sql['post_where_queries'] )
-                                  . ' )';
+            $post_where_queries = 'AND ( 1 = 1 ' . implode( ' ', $sql['post_where_queries'] ) . ' )';
         }
 
-        $final_query = $wpdb->prepare(
-            $wrapper_select . ' '
+        $final_query = $wrapper_select . ' '
             . implode( ' ', $sql['select'] ) . ' '
             . $sql_from_tb . ' '
             . implode( ' ', $sql['join'] ) . ' '
@@ -184,8 +181,7 @@ function erp_get_peoples( $args = [] ) {
             . $post_where_queries
             . $sql_group_by . ' '
             . $sql_order_by . ' '
-            . $sql_limit
-        );
+            . $sql_limit;
         if ( $count ) {
             // Only filtered total count of people
             $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
