@@ -808,36 +808,52 @@
         $( '.erp_addon_col.purchased' ).show();
         <?php endif; ?>
 
+        function filterAddons(filterId, isActiveInactivePressed) {
+            $( '.nav_left button' ).removeClass( 'active' );
+            $( `#${filterId}` ).addClass( 'active' );
+
+            $( '.erp_addon_wrap' ).animate({ opacity: 0.1 }, 'fast', function() {
+                $( '.erp_addon_col' ).hide();
+
+                if (filterId === 'all') {
+                    if (isActiveInactivePressed === 'all') {
+                        $( '.erp_addon_col' ).show();
+                    } else {
+                        $( '.erp_addon_col.' + isActiveInactivePressed ).show();
+                    }
+                } else {
+                    if (isActiveInactivePressed === 'all') {
+                        $( '.erp_addon_col.' + filterId ).show();
+                    } else {
+                        $( '.erp_addon_col.' + filterId + '.' + isActiveInactivePressed ).show();
+                    }
+                }
+
+                $( '.erp_addon_wrap' ).animate({ opacity: 1 }, 'fast' );
+            });
+        }
+
+        function updateUrlHash(filterId) {
+            history.pushState(null, null, location.href.split('#')[0] + '#left_tab=' + filterId);
+        }
         // by default uncheck all checkbox
         $( '.item_check' ).prop( 'checked', false );
 
-        $( '.nav_left button' ).click( function() {
-                $( '.nav_left button' ).removeClass( 'active' );
-                $( this ).addClass( 'active' );
-                var filter_id = $( this ).attr( 'id' );
-                var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
+        $( '.nav_left button' ).click(function() {
+            var filterId = $( this ).attr( 'id' );
+            var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
 
-                $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
-                    if ( filter_id == 'all' ) {
-                        if ( isActiveInactivePressed == 'all' ) {
-                            $( '.erp_addon_col' ).show();
-                        } else {
-                            $( '.erp_addon_col' ).hide();
-                            $( '.erp_addon_col.' + isActiveInactivePressed ).show();
-                        }
-
-                    } else {
-                        $( '.erp_addon_col' ).hide();
-                        if ( isActiveInactivePressed == 'all' ) {
-                            $( '.erp_addon_col.' + filter_id ).show();
-                        } else {
-                            $( '.erp_addon_col.' + filter_id + '.' + isActiveInactivePressed ).show();
-                        }
-                    }
-                });
-
-            $( '.erp_addon_wrap' ).animate({opacity: 1}, 'fast' );
+            updateUrlHash(filterId);
+            filterAddons(filterId, isActiveInactivePressed);
         });
+
+        const hash = location.href.split('#')[1];
+        if (hash) {
+            var filterId = hash.split('=')[1];
+            var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
+
+            filterAddons(filterId, isActiveInactivePressed);
+        }
 
         $( '.nav_right button' ).click( function() {
                 $( '.nav_right button' ).removeClass( 'active' );
