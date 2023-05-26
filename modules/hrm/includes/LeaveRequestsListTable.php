@@ -378,20 +378,20 @@ class LeaveRequestsListTable extends \WP_List_Table {
         ];
 
         if ( ! empty( $_GET['leave_policy'] ) ) {
-            $args['policy_id'] = $_GET['leave_policy'];
+            $args['policy_id'] = sanitize_text_field( wp_unslash( $_GET['leave_policy'] ) );
         }
         if ( ! empty( $_GET['filter_leave_status'] ) ) {
-            $args['status'] = $_GET['filter_leave_status'];
+            $args['status'] = sanitize_text_field( wp_unslash( $_GET['filter_leave_status'] ) );
         }
 
         if ( ! empty( $_GET['filter_leave_year'] ) && 4 !== $_GET['filter_leave_year'] ) {
-            if ( 1 === (int) $_GET['filter_leave_year'] ) {
+            if ( 1 === absint($_GET['filter_leave_year'] ) ) {
                 $args['start_date'] = date( 'Y-m-d', strtotime( '-7 days' ) );
                 $args['end_date']   = date( 'Y-m-d' );
-            } elseif ( 2 === (int) $_GET['filter_leave_year'] ) {
+            } elseif ( 2 === absint( $_GET['filter_leave_year'] ) ) {
                 $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of previous month' ) );
                 $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
-            } elseif ( 3 === (int) $_GET['filter_leave_year'] ) {
+            } elseif ( 3 === absint( $_GET['filter_leave_year'] ) ) {
                 $today = date('d');
                 $args['start_date'] = date( 'Y-m-' . $today, strtotime( '-3 month' ) );
                 $args['end_date']   = date( 'Y-m-'. $today );
@@ -399,10 +399,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
         }
 
         if ( ! empty( $_GET['start_date'] ) ) {
-            $args['start_date'] = $_GET['start_date'];
+            $args['start_date'] = sanitize_text_field( wp_unslash( $_GET['start_date'] ) );
         }
         if ( ! empty( $_GET['end_date'] ) ) {
-            $args['end_date'] = $_GET['end_date'];
+            $args['end_date'] = sanitize_text_field( wp_unslash( $_GET['end_date'] ) );
         }
 
         // phpcs:enable
@@ -435,7 +435,6 @@ class LeaveRequestsListTable extends \WP_List_Table {
      * @return void
      */
     public function filter_option( $filtered_option = true ) {
-        // phpcs:disable
         $policies          = LeavePolicy::all();
         $policy_data       = [];
         $leave_policy_name = '';
@@ -458,10 +457,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
         $filters         = [];
         $selected_f_year = '';
         if ( ! empty( $_GET['employee_name'] ) ) {
-            $filters['employee_name'] = $_GET['employee_name'];
+            $filters['employee_name'] = sanitize_text_field( wp_unslash( $_GET['employee_name'] ) );
         }
         if ( ! empty( $_GET['financial_year'] ) ) {
-            $filters['financial_year'] = $financial_years[ $_GET['financial_year'] ];
+            $filters['financial_year'] = $financial_years[ sanitize_text_field( wp_unslash( $_GET['financial_year'] ) ) ];
         }
         if ( ! empty( $leave_policy_name ) ) {
             $filters['leave_policy'] = $leave_policy_name;
@@ -473,12 +472,12 @@ class LeaveRequestsListTable extends \WP_List_Table {
             if ( is_array( $_GET['filter_leave_status'] ) ) {
                 $status = [];
                 foreach ( $_GET['filter_leave_status'] as $filter_leave_status ) {
-                    $status[] = $this->counts[ $filter_leave_status ]['label'];
+                    $status[] = $this->counts[ sanitize_text_field( wp_unslash( $filter_leave_status ) ) ]['label'];
                 }
 
                 $filters['filter_leave_status'] = implode( ', ', $status);
             } else {
-                $filters['filter_leave_status'] = $this->counts[ $_GET['filter_leave_status'] ]['label'];
+                $filters['filter_leave_status'] = $this->counts[ sanitize_text_field( wp_unslash( $_GET['filter_leave_status'] ) ) ]['label'];
             }
         }
         $custom_date_html = '';
@@ -490,21 +489,22 @@ class LeaveRequestsListTable extends \WP_List_Table {
             } elseif ( 3 === (int) $_GET['filter_leave_year'] ) {
                 $filters['filter_leave_year'] = esc_html__( 'Last 3 months', 'erp' );
             } elseif ( 'custom' === $_GET['filter_leave_year'] ) {
-                $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $_GET['start_date'] ) ) . ' - ' . date( 'M d, Y', strtotime( $_GET['end_date'] ) );
+                $start_date = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
+                $end_date = isset( $_GET['end_date'] ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
+                $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $start_date ) ) . ' - ' . date( 'M d, Y', strtotime( $end_date ) );
                 $custom_date_html = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">
                                      <div style="display: flex">
                                      <label for="start_date">From
-                                     <input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required value='. $_GET['start_date'] .'>&nbsp;
+                                     <input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required value='. esc_attr( $start_date ) .'>&nbsp;
                                      </div>
                                      <div>
                                      <label for="end_date">To
-                                     <input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required value='. $_GET['end_date'] .'>
+                                     <input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required value='. esc_attr( $end_date ) .'>
                                      </div>
                                      </div>';
             }
         }
 
-        // phpcs:enable
         wp_localize_script( 'wp-erp-hr', 'wpErpLeavePolicies', $policy_data );
 
         $employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_unslash( $_GET['employee_name'] ) ) : '';
@@ -532,7 +532,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                     <div class="wperp-filter-panel-body">
                         <div class="input-component">
                             <label for="employee_name"><?php esc_html_e( 'Employee name', 'erp' ); ?></label>
-                            <input value="<?php echo $employee_name; ?>" autocomplete="off" type="text" name="employee_name" id="employee_name" placeholder="<?php esc_attr_e( 'Search by employee name', 'erp' ); ?>" />
+                            <input value="<?php echo esc_attr( $employee_name ); ?>" autocomplete="off" type="text" name="employee_name" id="employee_name" placeholder="<?php esc_attr_e( 'Search by employee name', 'erp' ); ?>" />
                             <span id='live-employee-search'></span>
                         </div>
 
@@ -557,7 +557,6 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                 <select name='leave_policy' id='leave_policy'>
                                     <option value=''><?php echo esc_attr__( 'All Policy', 'erp' ); ?></option>
                                     <?php
-                                    // phpcs:disable
                                     if ( ! empty( $_GET['financial_year'] ) ) {
                                         foreach ( $policy_data[$_GET['financial_year']] as $policy ) {
                                             $selected = '';
@@ -567,7 +566,6 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                             echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $policy['policy_id'] ), esc_html( $policy['name'] ) );
                                         }
                                     }
-                                    // phpcs:enable
                                     ?>
                                 </select>
                             </div>
@@ -585,10 +583,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     if ( 'all' === $key ) {
                                         continue;
                                     }
-	                                $checked = '';
-	                                if ( ! empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
-		                                $checked = 'checked';
-	                                }
+                                    $checked = '';
+                                    if ( ! empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
+                                        $checked = 'checked';
+                                    }
                                     echo sprintf( "<input name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", $checked, esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
@@ -597,32 +595,45 @@ class LeaveRequestsListTable extends \WP_List_Table {
                         <div class='input-component'>
                             <label for='filter_leave_year'><?php esc_html_e( 'Date range', 'erp' ); ?></label>
                             <div>
-	                            <?php
-	                            $filter_leave_years = [
-		                            ''       => 'Filter by date',
-		                            '1'      => 'Last week',
-		                            '2'      => 'Last month',
-		                            '3'      => 'Last 3 months',
-		                            'custom' => 'Custom',
+                                <?php
+                                $filter_leave_years = [
+                                    ''       => 'Filter by date',
+                                    '1'      => 'Last week',
+                                    '2'      => 'Last month',
+                                    '3'      => 'Last 3 months',
+                                    'custom' => 'Custom',
                                 ];
-	                            ?>
-                            <select name='filter_leave_year' id='filter_leave_year'>
-	                            <?php
-	                            foreach ( $filter_leave_years as $key => $title ) {
-		                            if ( 'all' === $key ) {
-			                            continue;
-		                            }
-		                            $selected = '';
-		                            if ( ! empty( $_GET['filter_leave_year'] ) && $key == $_GET['filter_leave_year'] ) {
-			                            $selected = 'selected';
-		                            }
-		                            echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $key ), esc_html( $title ) );
-	                            }
-	                            ?>
-                            </select>
+                                ?>
+                                <select name='filter_leave_year' id='filter_leave_year'>
+                                    <?php
+                                    foreach ( $filter_leave_years as $key => $title ) {
+                                        if ( 'all' === $key ) {
+                                            continue;
+                                        }
+                                        $selected = '';
+                                        if ( ! empty( $_GET['filter_leave_year'] ) && $key == $_GET['filter_leave_year'] ) {
+                                            $selected = 'selected';
+                                        }
+                                        echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $key ), esc_html( $title ) );
+                                    }
+                                    ?>
+                                </select>
                                 <?php
                                 if ( !empty( $_GET[ 'filter_leave_year' ] ) && 'custom' === $_GET[ 'filter_leave_year' ] ) {
-                                    echo $custom_date_html;
+                                    echo wp_kses($custom_date_html, array(
+                                        'input' => array(
+                                            'type' => array(),
+                                            'name' => array(),
+                                            'id' => array(),
+                                            'value' => array(),
+                                            'class' => array(),
+                                            'placeholder' => array(),
+                                            'autocomplete' => array(),
+                                        ),
+                                        'span' => array(
+                                            'id' => array(),
+                                        ),
+                                    )) ;
                                 }
                                 ?>
                             <span id="custom-date-range-leave-filter"></span>
@@ -650,67 +661,66 @@ class LeaveRequestsListTable extends \WP_List_Table {
             <?php
             // phpcs:disable
             $clear_all_url = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
-            if ( ! empty( $filters ) ) {
-                foreach ( $filters as $key => $filter ) {
-                    $build_url['employee_name']          = '';
-                    $build_url['financial_year']         = '';
-                    $build_url['leave_policy']           = '';
-                    $build_url['filter_leave_status']    = '';
-                    $build_url['filter_leave_year']      = '';
-                    $build_url['filter_employee_search'] = 'Apply';
-                    $build_url                        = wp_parse_args( $filters, $build_url );
-                    if ( ! empty( $filters['filter_leave_year'] ) ) {
-                        if ( 'custom' === $_GET['filter_leave_year'] ) {
-                            $build_url['start_date'] = $_GET['start_date'];
-                            $build_url['end_date']   = $_GET['end_date'];
-                        }
-                        $build_url['filter_leave_year'] = $_GET['filter_leave_year'];
-                    }
-                    if ( ! empty( $filters['financial_year'] ) ) {
-                        $build_url['financial_year'] = $_GET['financial_year'];
-                    }
-                    if ( ! empty( $filters['leave_policy'] ) ) {
-                        $build_url['leave_policy'] = $_GET['leave_policy'];
-                    }
-                    if ( ! empty( $filters['filter_leave_status'] ) ) {
-                        $build_url['filter_leave_status'] = $_GET['filter_leave_status'];
-                    }
-                    if ( 'filter_leave_year' === $key && 'custom' === $_GET['filter_leave_year'] ) {
-                        unset( $build_url['start_date'] );
-                        unset( $build_url['end_date'] );
-                        $build_url['filter_leave_year'] = '';
-                    }
-
-                    if ( 'filter_leave_status' === $key ) {
-                        $build_url[ $key ] = 'all';
-                    }else{
-                        $build_url[ $key ] = '';
-                    }
-
-                    $url = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
-                    // phpcs:enable
-                    ?>
-                    <div class="single-filter">
-                        <div class="filter-text">
-                            <?php
-                            echo esc_html( $filter );
-                            ?>
-                        </div>
-                        <a href="<?php echo esc_url( $url ); ?>" class="filter-close">
-                            X
-                        </a>
-                    </div>
-                    <?php
+            foreach ( $filters as $key => $filter ) {
+                if( empty( $filter ) ){
+                    continue;
                 }
+                $build_url['employee_name']          = '';
+                $build_url['financial_year']         = '';
+                $build_url['leave_policy']           = '';
+                $build_url['filter_leave_status']    = '';
+                $build_url['filter_leave_year']      = '';
+                $build_url['filter_employee_search'] = 'Apply';
+                $build_url                        = wp_parse_args( $filters, $build_url );
+                if ( ! empty( $filters['filter_leave_year'] ) ) {
+                    if ( 'custom' === $_GET['filter_leave_year'] ) {
+                        $build_url['start_date'] = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
+                        $build_url['end_date']   = isset( $_GET['end_date'] ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
+                    }
+                    $build_url['filter_leave_year'] = $_GET['filter_leave_year'];
+                }
+                if ( ! empty( $filters['financial_year'] ) ) {
+                    $build_url['financial_year'] = $_GET['financial_year'];
+                }
+                if ( ! empty( $filters['leave_policy'] ) ) {
+                    $build_url['leave_policy'] = $_GET['leave_policy'];
+                }
+                if ( ! empty( $filters['filter_leave_status'] ) ) {
+                    $build_url['filter_leave_status'] = $_GET['filter_leave_status'];
+                }
+                if ( 'filter_leave_year' === $key && 'custom' === $_GET['filter_leave_year'] ) {
+                    unset( $build_url['start_date'] );
+                    unset( $build_url['end_date'] );
+                    $build_url['filter_leave_year'] = '';
+                }
+
+                if ( 'filter_leave_status' === $key ) {
+                    $build_url[ $key ] = 'all';
+                }else{
+                    $build_url[ $key ] = '';
+                }
+
+                $url = count( $filters ) > 1 ? admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests&' . http_build_query( $build_url ) ) : $clear_all_url;
+                // phpcs:enable
                 ?>
-                <div class="clear-filter">
-                    <a href="<?php echo esc_url( $clear_all_url ); ?>">
-                        <?php echo __( 'Clear filter', 'erp' ); ?>
+                <div class="single-filter">
+                    <div class="filter-text">
+                        <?php
+                        echo esc_html( $filter );
+                        ?>
+                    </div>
+                    <a href="<?php echo esc_url( $url ); ?>" class="filter-close">
+                        X
                     </a>
                 </div>
                 <?php
             }
             ?>
+            <div class="clear-filter">
+                <a href="<?php echo esc_url( $clear_all_url ); ?>">
+                    <?php echo __( 'Clear filter', 'erp' ); ?>
+                </a>
+            </div>
         </div>
         <?php
     }
