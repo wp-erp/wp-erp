@@ -324,7 +324,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
-= v1.12.3 -> May 26, 2023 =
+= v1.12.4 -> May 26, 2023 =
 --------------------------
 * 🐛 [FIX] SQL injection and HTML vulnerability.
 
