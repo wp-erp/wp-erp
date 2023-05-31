@@ -638,7 +638,7 @@
             <div class="nav_right">
                 <ul>
                     <li>
-                        <button id="all" class="btn active">
+                        <button id="right_all" class="btn active">
                             <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
@@ -808,21 +808,28 @@
         $( '.erp_addon_col.purchased' ).show();
         <?php endif; ?>
 
-        function filterAddons(filterId, isActiveInactivePressed) {
+        function filterAddonsLeftTab(filterId, isActiveInactivePressed) {
+            console.log(isActiveInactivePressed)
+            if(null === isActiveInactivePressed){
+                isActiveInactivePressed = 'right_all'
+            }
             $( '.nav_left button' ).removeClass( 'active' );
             $( `#${filterId}` ).addClass( 'active' );
+
+            $( '.nav_right button' ).removeClass( 'active' );
+            $( `#${isActiveInactivePressed}` ).addClass( 'active' );
 
             $( '.erp_addon_wrap' ).animate({ opacity: 0.1 }, 'fast', function() {
                 $( '.erp_addon_col' ).hide();
 
                 if (filterId === 'all') {
-                    if (isActiveInactivePressed === 'all') {
+                    if (isActiveInactivePressed === 'right_all') {
                         $( '.erp_addon_col' ).show();
                     } else {
                         $( '.erp_addon_col.' + isActiveInactivePressed ).show();
                     }
                 } else {
-                    if (isActiveInactivePressed === 'all') {
+                    if (isActiveInactivePressed === 'right_all') {
                         $( '.erp_addon_col.' + filterId ).show();
                     } else {
                         $( '.erp_addon_col.' + filterId + '.' + isActiveInactivePressed ).show();
@@ -833,8 +840,19 @@
             });
         }
 
-        function updateUrlHash(filterId) {
-            history.pushState(null, null, location.href.split('#')[0] + '#left_tab=' + filterId);
+        function updateUrlHash(filterId, tab) {
+            var url = location.href.split('#')[0];
+            var fragment = location.hash.substring(1); // Get the current fragment identifier without the '#'
+
+            if (fragment.includes(tab + '=')) {
+                // If the tab parameter exists, replace its value with the new one
+                fragment = fragment.replace(new RegExp(tab + '=[^&]+'), tab + '=' + filterId);
+            } else {
+                // If the tab parameter doesn't exist, add it with the new value
+                fragment += '&' + tab + '=' + filterId;
+            }
+
+            history.pushState(null, null, url + '#' + fragment);
         }
         // by default uncheck all checkbox
         $( '.item_check' ).prop( 'checked', false );
@@ -843,42 +861,54 @@
             var filterId = $( this ).attr( 'id' );
             var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
 
-            updateUrlHash(filterId);
-            filterAddons(filterId, isActiveInactivePressed);
+            updateUrlHash(filterId, 'left_tab');
+            filterAddonsLeftTab(filterId, isActiveInactivePressed);
         });
 
-        const hash = location.href.split('#')[1];
-        if (hash) {
-            var filterId = hash.split('=')[1];
-            var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
+        if (location.hash) {
+            var hash = location.hash.substring(1); // Get the fragment identifier without the '#'
+            var params = hash.split('&');
+            var leftTabValue = null;
+            var rightTabValue = null;
 
-            filterAddons(filterId, isActiveInactivePressed);
+            for (var i = 0; i < params.length; i++) {
+                var param = params[i].split('=');
+                if (param[0] === 'left_tab') {
+                    leftTabValue = param[1];
+                } else if (param[0] === 'right_tab') {
+                    rightTabValue = param[1];
+                }
+            }
+
+            filterAddonsLeftTab(leftTabValue, rightTabValue);
         }
 
         $( '.nav_right button' ).click( function() {
-                $( '.nav_right button' ).removeClass( 'active' );
-                $( this ).addClass( 'active' );
-                var filter_id = $( this ).attr( 'id' );
-                var isTabPressed = $( '.nav_left button.active' ).attr( 'id' );
+            var filterId = $( this ).attr( 'id' );
+            updateUrlHash(filterId, 'right_tab');
+            $( '.nav_right button' ).removeClass( 'active' );
+            $( this ).addClass( 'active' );
+            var filter_id = $( this ).attr( 'id' );
+            var isTabPressed = $( '.nav_left button.active' ).attr( 'id' );
 
-                $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
-                    if ( filter_id == 'all' ) {
-                        if ( isTabPressed == 'all' ) {
-                            $( '.erp_addon_col' ).show();
-                        } else {
-                            $( '.erp_addon_col' ).hide();
-                            $( '.erp_addon_col.' + isTabPressed ).show();
-                        }
+            $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
+                if ( filter_id == 'all' ) {
+                    if ( isTabPressed == 'right_all' ) {
+                        $( '.erp_addon_col' ).show();
                     } else {
                         $( '.erp_addon_col' ).hide();
-                        if ( isTabPressed == 'all' ) {
-                            $( '.erp_addon_col.' + filter_id ).show();
-                        } else {
-                            $( '.erp_addon_col.' + filter_id + '.' + isTabPressed ).show();
-                        }
-
+                        $( '.erp_addon_col.' + isTabPressed ).show();
                     }
-                });
+                } else {
+                    $( '.erp_addon_col' ).hide();
+                    if ( isTabPressed == 'right_all' ) {
+                        $( '.erp_addon_col.' + filter_id ).show();
+                    } else {
+                        $( '.erp_addon_col.' + filter_id + '.' + isTabPressed ).show();
+                    }
+
+                }
+            });
 
             $( '.erp_addon_wrap' ).animate({opacity: 1}, 'fast' );
         });
