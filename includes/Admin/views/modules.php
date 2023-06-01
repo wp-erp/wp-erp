@@ -638,7 +638,7 @@
             <div class="nav_right">
                 <ul>
                     <li>
-                        <button id="right_all" class="btn active">
+                        <button id="right_all" class="btn">
                             <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
@@ -890,8 +890,8 @@
             filterAddonsLeftTab(leftTabValue, rightTabValue);
         }else{
             $( '.nav_left button' ).removeClass( 'active' );
+            $( '#right_all button' ).removeClass( 'active' );
             $( '#purchased' ).addClass( 'active' );
-            $( '.nav_right button' ).removeClass( 'active' );
             $( '#all' ).addClass( 'active' );
         }
 
