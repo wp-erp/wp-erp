@@ -5,7 +5,7 @@
  *
  * @since 1.11.0
  */
-class ERP_Update_1_12_4 {
+class ERP_Update_1_12_5 {
 
     /**
      * Class constructor.
@@ -54,4 +54,4 @@ class ERP_Update_1_12_4 {
 	}
 }
 
-new ERP_Update_1_12_4();
+new ERP_Update_1_12_5();
