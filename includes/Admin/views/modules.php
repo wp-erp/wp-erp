@@ -696,7 +696,7 @@
         </div>
     </div>
 
-    <div class="erp_addon_wrap">
+    <div id="erp_addon_wrap" class="erp_addon_wrap">
     <?php
         $all_modules  = wperp()->modules->get_modules_extensions();
         $purchase_url = 'https://utm.guru/udfBI'; // URL with UTM for tracking
@@ -803,13 +803,20 @@
 
 <script type="text/javascript">
     jQuery( function( $ ) {
+        $('#filter').hide();
+        $('#erp_addon_wrap').hide();
+        $(window).on('load', function() {
+            $('#erp_addon_wrap').fadeIn();
+            $('#filter').fadeIn();
+        });
+
+
         <?php if ( $is_pro_active ) : ?>
         $( '.erp_addon_col' ).hide();
         $( '.erp_addon_col.purchased' ).show();
         <?php endif; ?>
 
         function filterAddonsLeftTab(filterId, isActiveInactivePressed) {
-            console.log(isActiveInactivePressed)
             if(null === isActiveInactivePressed){
                 isActiveInactivePressed = 'right_all'
             }
