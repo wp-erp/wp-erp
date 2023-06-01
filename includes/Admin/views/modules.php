@@ -596,7 +596,7 @@
                 <ul>
                     <?php if ( ! $is_pro_active ) : ?>
                     <li>
-                        <button id="all" class="btn active">
+                        <button id="all" class="btn">
                             <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
@@ -607,7 +607,7 @@
                         </button>
                     </li>
                     <li>
-                        <button id="purchased" class="btn active">
+                        <button id="purchased" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/purchaged.svg' ); ?>" alt="<?php echo esc_attr( 'Purchased' ); ?>" />
                             <span><?php esc_html_e( 'Purchased', 'erp' ); ?></span>
                         </button>
@@ -888,6 +888,11 @@
             }
 
             filterAddonsLeftTab(leftTabValue, rightTabValue);
+        }else{
+            $( '.nav_left button' ).removeClass( 'active' );
+            $( '#purchased' ).addClass( 'active' );
+            $( '.nav_right button' ).removeClass( 'active' );
+            $( '#all' ).addClass( 'active' );
         }
 
         $( '.nav_right button' ).click( function() {
