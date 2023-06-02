@@ -133,6 +133,14 @@ $transaction = erp_acct_get_transaction( $transaction_id );
                     <?php endforeach; ?>
 
                 <?php endif; ?>
+                <?php if ( ! empty( $transaction['particulars'] ) ): ?>
+                    <h4><?php esc_html_e( 'Particulars', 'erp' ); ?></h4>
+                    <?php echo esc_attr( $transaction['particulars'] ); ?>
+                <?php endif; ?>
+                <?php if ( ! empty( $transaction['additional_notes'] ) ): ?>
+                    <h4><?php esc_html_e( 'Additional notes', 'erp' ); ?></h4>
+                    <?php echo wp_kses_post( $transaction['additional_notes'] ); ?>
+                <?php endif; ?>
             </div>
         </div>
 
