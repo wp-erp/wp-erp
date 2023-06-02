@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .particulars {
     padding: 15px 0 15px 0;
     border: 1px solid rgba(38,50,56, .1);
@@ -43,6 +43,32 @@ export default {
 
     p {
         margin-bottom: 0;
+    }
+    blockquote {
+        background: #f9f9f9;
+        border: 0 solid #ccc;
+        border-left-width: 0.3em;
+        margin-left: 0.3em;
+        padding-left: 0.6em;
+    }
+    ul {
+        list-style-type: decimal;
+        margin-left: 2em;
+    }
+    ul li {
+        list-style-type: circle;
+    }
+    blockquote:before {
+        color: #ccc;
+        content: open-quote;
+        font-size: 4em;
+        line-height: 0.1em;
+        margin-right: 0.25em;
+        vertical-align: -0.4em;
+    }
+
+    blockquote p {
+        display: inline;
     }
 }
 </style>
