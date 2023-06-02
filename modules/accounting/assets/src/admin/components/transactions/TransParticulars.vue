@@ -44,12 +44,37 @@ export default {
     p {
         margin-bottom: 0;
     }
+    pre {
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        border-left: 3px solid #f36d33;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
+    }
     blockquote {
         background: #f9f9f9;
-        border: 0 solid #ccc;
-        border-left-width: 0.3em;
-        margin-left: 0.3em;
-        padding-left: 0.6em;
+        border: 1px solid #ddd;
+        border-left: 10px solid #ccc;
+        color: #666;
+        page-break-inside: avoid;
+        font-family: monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
+        display: block;
+        word-wrap: break-word;
     }
     ul {
         list-style-type: decimal;
@@ -57,18 +82,6 @@ export default {
     }
     ul li {
         list-style-type: circle;
-    }
-    blockquote:before {
-        color: #ccc;
-        content: open-quote;
-        font-size: 4em;
-        line-height: 0.1em;
-        margin-right: 0.25em;
-        vertical-align: -0.4em;
-    }
-
-    blockquote p {
-        display: inline;
     }
 }
 </style>
