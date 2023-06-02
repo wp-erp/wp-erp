@@ -41,10 +41,10 @@ $transaction = erp_acct_get_transaction( $transaction_id );
             padding: 1em 1.5em;
             display: block;
             word-wrap: break-word;
+            margin-left: 0;
         }
         ul {
             list-style-type: decimal;
-            margin-left: 2em;
         }
         ul li {
             list-style-type: circle;
