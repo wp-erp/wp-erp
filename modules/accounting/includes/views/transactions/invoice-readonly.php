@@ -135,7 +135,7 @@ $transaction = erp_acct_get_transaction( $transaction_id );
                 <?php endif; ?>
                 <?php if ( ! empty( $transaction['particulars'] ) ): ?>
                     <h4><?php esc_html_e( 'Particulars', 'erp' ); ?></h4>
-                    <?php echo esc_attr( $transaction['particulars'] ); ?>
+                    <?php echo esc_html( $transaction['particulars'] ); ?>
                 <?php endif; ?>
                 <?php if ( ! empty( $transaction['additional_notes'] ) ): ?>
                     <h4><?php esc_html_e( 'Additional notes', 'erp' ); ?></h4>
