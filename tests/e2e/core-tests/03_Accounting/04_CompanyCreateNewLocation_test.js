@@ -1,10 +1,11 @@
 const helpers = require('../../pages/helpers');
 Feature('Location');
 
-Scenario('@Accounting Create new location',({ I, loginAs }) => {
+Scenario('@Accounting @Config Create new location',({ I, loginAs }) => {
     loginAs('admin');
-    	I.click('WP ERP');
-    	I.click('Company');
+    	// I.click('WP ERP');
+    	// I.click('Company');
+		I.amOnPage('/wp-admin/admin.php?page=erp-company');
     	I.click('#erp-company-new-location');
     	I.fillField('#location_name', 'Mirpur');
     	I.fillField('#address_1', 'Kazi Para');

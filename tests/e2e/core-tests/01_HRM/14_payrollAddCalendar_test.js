@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Payroll');
 
-Scenario('addPayrollCalendar',({ I, loginAs}) => {
+Scenario('@HRM @Payroll addPayrollCalendar',({ I, loginAs}) => {
     loginAs('admin');
     helpers.proActivate();
     helpers.hrmDashboard();

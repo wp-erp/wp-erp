@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Leave');
 
-Scenario('@HRM approveLeaveRequest', async ({ I, loginAs}) => {
+Scenario('@HRM @Leave approveLeaveRequest', async ({ I, loginAs}) => {
     loginAs('admin');
         helpers.hrmDashboard();
         helpers.leave();

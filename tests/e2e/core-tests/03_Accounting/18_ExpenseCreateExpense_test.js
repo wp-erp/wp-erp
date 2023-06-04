@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Expense');
 
-Scenario('@Accounting createExpense',({ I, loginAs }) => {
+Scenario('@Accounting @Expense createExpense',({ I, loginAs }) => {
     loginAs('admin');
         helpers.accDashboard();
         helpers.previewTransactions();
@@ -21,7 +21,8 @@ Scenario('@Accounting createExpense',({ I, loginAs }) => {
         I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]/div/form/div/div[3]/div/div/input')
         I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]/div/form/div/div[3]/div/div/div/div[2]/div/div[3]/div/div/div[3]/div[2]/div/div[2]/div')
         I.fillField('//td[4]/input', 40);
-        I.click('//tfoot/tr/td/div/div/div');
+        // I.click('//tfoot/tr/td/div/div/div');
+        I.click('Save');
         I.wait(5);
         I.seeInCurrentUrl('/wp-admin/admin.php?page=erp-accounting#/transactions/expenses/');
 });

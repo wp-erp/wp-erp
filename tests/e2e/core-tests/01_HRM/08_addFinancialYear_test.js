@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Financial Year');
 
-Scenario('Add financial year', ({ I, loginAs}) => {
+Scenario('@HRM @Leave Add financial year', ({ I, loginAs}) => {
     loginAs('admin');
         I.click('WP ERP');
         I.click('Settings');

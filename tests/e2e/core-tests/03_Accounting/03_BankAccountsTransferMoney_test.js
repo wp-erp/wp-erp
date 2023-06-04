@@ -1,11 +1,12 @@
 const helpers = require('../../pages/helpers');
 Feature('Bank Accounts');
 
-Scenario('@Accounting Bank transfer money',({ I, loginAs }) => {
+Scenario('@Accounting @Config Bank transfer money',({ I, loginAs }) => {
     loginAs('admin');
 		helpers.accDashboard();
-		helpers.previewSettings();
-		I.click('Bank Accounts')
+		// helpers.previewSettings();
+		// I.click('Bank Accounts')
+		I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/settings/banks');
 		I.wait('2');
     	I.click({ css : '.wperp-selected-option'});
     	I.click('Transfer Money');

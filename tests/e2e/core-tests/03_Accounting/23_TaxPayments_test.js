@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Tax');
 
-Scenario('@Accounting addTaxPayments',({ I, loginAs }) => {
+Scenario('@Accounting @Tax addTaxPayments',({ I, loginAs }) => {
     loginAs('admin');
         helpers.accDashboard();
         helpers.previewSettings();

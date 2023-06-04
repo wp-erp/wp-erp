@@ -1,6 +1,6 @@
 const helpers = require('../../pages/helpers');
 Feature('Deals');
-Scenario('Add Lost Deals',({ I, loginAs }) => {
+Scenario('@CRM @Deals Add Lost Deals',({ I, loginAs }) => {
     loginAs('admin');
     helpers.crmDashboard();
     helpers.dealsPage();

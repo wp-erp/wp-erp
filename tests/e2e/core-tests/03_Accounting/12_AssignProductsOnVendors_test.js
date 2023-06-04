@@ -1,11 +1,12 @@
 const helpers = require('../../pages/helpers');
 Feature('Purchase');
 
-Scenario('@Accounting Assign products',({ I, loginAs }) => {
+Scenario('@Accounting @Purchases Assign products',({ I, loginAs }) => {
     loginAs('admin');
         helpers.accDashboard();
         helpers.previewProducts();
-        I.click('Products & Services');
+        // I.click('Products & Services');
+        I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/products/product-service');
         I.wait(3);
         I.click('//*[@id="erp-accounting"]//tr[1]/td[8]/div/div/a');
         I.click('//*[@id="erp-accounting"]//tr[1]/td[8]//ul/li[1]/a');

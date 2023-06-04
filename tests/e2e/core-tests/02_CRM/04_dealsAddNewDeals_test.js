@@ -1,6 +1,6 @@
 const helpers = require('../../pages/helpers');
 Feature('Deals');
-Scenario('Add new Deals',({ I, loginAs }) => {
+Scenario('@CRM @Deals Add new Deals',({ I, loginAs }) => {
     loginAs('admin');
     helpers.crmDashboard();
     helpers.dealsPage();
@@ -24,5 +24,7 @@ Scenario('Add new Deals',({ I, loginAs }) => {
     I.type('1500');
     I.click('//*[@id="new-deal-modal-body"]/div[5]/div/ul/li[2]');
     I.click('Save');
-    I.click('OK');
+    // I.acceptPopup();
+    I.wait(2);
+    I.forceClick('button.confirm');
 });

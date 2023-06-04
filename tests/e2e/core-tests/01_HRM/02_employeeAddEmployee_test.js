@@ -2,7 +2,10 @@ const helpers = require('../../pages/helpers');
 Feature('Employee');
 Scenario('@HRM addEmployee', ({ I, loginAs}) => {
     loginAs('admin');
-    helpers.hrmDashboard();
-    helpers.peoplePage();
-    helpers.addEmployee();
+    // for(x=0; x<=5; x++){
+        helpers.hrmDashboard();
+        helpers.peoplePage();
+        helpers.addEmployee();
+    // }
+    
 });
