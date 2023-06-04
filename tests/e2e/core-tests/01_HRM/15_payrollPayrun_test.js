@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Payroll');
 
-Scenario('Payrun', ({ I, loginAs}) => {
+Scenario('@HRM @Payroll Payrun', ({ I, loginAs}) => {
     loginAs('admin');
     helpers.proActivate();
     helpers.payroll();

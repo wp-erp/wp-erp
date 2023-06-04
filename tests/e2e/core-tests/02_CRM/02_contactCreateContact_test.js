@@ -2,7 +2,9 @@ const helpers = require('../../pages/helpers');
 Feature('Contact');
 Scenario('@CRM Create Contact',({ I, loginAs }) => {
    loginAs('admin');
-   helpers.crmDashboard();
-   helpers.contactPage();
-   helpers.addNewContact();      
+   // for(x=0; x<=15; x++){
+      helpers.crmDashboard();
+      helpers.contactPage();
+      helpers.addNewContact(); 
+   // }     
 });

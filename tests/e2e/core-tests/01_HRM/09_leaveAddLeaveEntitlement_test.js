@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Leave');
 
-Scenario('@HRM addLeaveEntitlement',({ I, loginAs}) => {
+Scenario('@HRM @Leave addLeaveEntitlement',({ I, loginAs}) => {
     loginAs('admin');
         helpers.hrmDashboard();
         helpers.leave();

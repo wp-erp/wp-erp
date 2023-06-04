@@ -3,7 +3,7 @@ const helpers = require('../../pages/helpers');
 
 Feature('Leave');
 
-Scenario('@HRM requestForLeaveAdmin',({ I, loginAs}) => {
+Scenario('@HRM @Leave requestForLeaveAdmin',({ I, loginAs}) => {
     loginAs('admin');
         helpers.hrmDashboard();
         helpers.leave();

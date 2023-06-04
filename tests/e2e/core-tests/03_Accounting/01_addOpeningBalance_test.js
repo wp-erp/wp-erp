@@ -2,7 +2,7 @@ const { default: getValue } = require('webdriverio/build/commands/element/getVal
 const helpers = require('../../pages/helpers');
 Feature('Opening Balance');
 
-Scenario('Add Opening Balance',async ({ I, loginAs }) => {
+Scenario('@Accounting @Config Add Opening Balance',async ({ I, loginAs }) => {
     loginAs('admin');
 		helpers.accDashboard();
         I.click('//*[@id="wp-admin-bar-wp-erp-acct"]/div[1]');

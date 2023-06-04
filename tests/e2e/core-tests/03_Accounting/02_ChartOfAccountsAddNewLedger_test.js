@@ -1,12 +1,13 @@
 const helpers = require('../../pages/helpers');
 Feature('Chart of accounts');
 
-Scenario('@Accounting Add new ledger',({ I, loginAs }) => {
+Scenario('@Accounting @Config Add new ledger',({ I, loginAs }) => {
     loginAs('admin');
 		helpers.accDashboard();
-		helpers.previewSettings();
-    	I.click('Chart of Accounts');
-    	I.wait(2);
+		// helpers.previewSettings();
+    	// I.click('Chart of Accounts');
+    	// I.wait(2);
+		I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/settings/charts');
     	I.click({css : '.wperp-btn'});
     	I.click('.vue-treeselect__input');
     	I.wait(5);

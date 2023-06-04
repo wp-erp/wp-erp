@@ -1,13 +1,14 @@
 const helpers = require('../../pages/helpers');
 Feature('Expense');
 
-Scenario('@Accounting payBill',({ I, loginAs }) => {
+Scenario('@Accounting @Expense payBill',({ I, loginAs }) => {
     loginAs('admin');
         helpers.accDashboard();
         helpers.previewTransactions();
         helpers.Expense();
         I.click('//*[@id="erp-accounting"]/div[2]/div[1]/div/div/div/ul/li[4]/a');
-        I.click('div.multiselect');
+        // I.click('div.multiselect');
+        I.click('form > div > div:nth-child(1) > div');
         I.click('//div[3]/ul/li/span/span');
         I.wait(5);
         I.click('//*[@id="erp-accounting"]/div[2]/form/div[1]/div/div/div[4]/div/div[2]');

@@ -1,7 +1,7 @@
 const helpers = require('../../pages/helpers');
 Feature('Expense');
 
-Scenario('@Accounting createBill',({ I, loginAs }) => {
+Scenario('@Accounting @Expense createBill',({ I, loginAs }) => {
     loginAs('admin');
         helpers.accDashboard();
         helpers.previewTransactions();

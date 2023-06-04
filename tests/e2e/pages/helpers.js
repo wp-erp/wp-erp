@@ -7,6 +7,7 @@ const {
 const {
     helpers
 } = require("faker");
+const Faker = require('faker/lib');
 const {
     I
 } = inject();
@@ -241,6 +242,7 @@ module.exports = {
 
     previewUsers() {
         I.moveCursorTo('//div/div/div[2]/div/div[1]/ul/li[2]/a');
+        I.wait(2);
         // I.moveCursorTo('//*[@id="erp-act-menu-users"]/a');
         //I.moveCursorTo('//div[2]/div/div[2]/div/div/ul/li[2]/a');
       },
@@ -273,11 +275,14 @@ module.exports = {
 
       previewProducts() {
         I.moveCursorTo('//*[@id="erp-accounting"]/div[1]/ul/li[4]/a');
+        I.wait(2);
+        // I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/products/product-service');
          
       },
 
       addProducts(){
-        I.click('Products & Services');
+        // I.click('Products & Services');
+        I.click('#erp-act-menu-products > ul > li:nth-child(1) > a');
         I.wait(3);
         I.click('#erp-product-new');
         I.wait(3);
@@ -389,7 +394,8 @@ module.exports = {
       },
 
       Tax(){
-        I.click('Tax Rates');
+        // I.click('Tax Rates');
+        I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/settings/taxes/tax-rates');
       },
       
       addTaxRate(){
@@ -411,16 +417,20 @@ module.exports = {
       },
 
       addTaxZone(){
-        I.click('View Tax Zones');
-        I.click('Add Tax Zone');
-        I.fillField('//*[@id="wperp-tax-agency-modal"]/div/div/form/div[1]/div[1]/input', 'Noakhali');
-        I.fillField('//*[@id="wperp-tax-agency-modal"]/div/div/form/div[1]/div[2]/input','12345')
+        // I.click('View Tax Zones');
+        I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/settings/taxes/rate-names');
+        I.click('div.content-header-section.separator > div > div > a');
+        I.wait(5);
+        I.fillField('form > div.wperp-modal-body > div:nth-child(1) > input', 'Jessore');
+        I.fillField('form > div.wperp-modal-body > div:nth-child(1) > input', '4656545')
         I.click('Save')
       },
 
       addTaxCategory(){
         I.click('View Tax Categories');
         I.click('Add Tax Category');
+        // I.amOnPage('/wp-admin/admin.php?page=erp-accounting#/settings/taxes/categories');
+        // I.click('#erp-accounting > div.app-tax-categories > div.content-header-section.separator > div > div > a');
         I.fillField('//input[@type="text"]', 'Standard');
         I.fillField('//textarea', 'Listing basic tax category');
         I.click('Save'); 
