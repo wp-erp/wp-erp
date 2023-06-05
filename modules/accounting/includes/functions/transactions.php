@@ -856,9 +856,6 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         return;
     }
 
-    error_log( print_r( $transaction, 1 ) );
-    error_log( print_r( "=======================================================================", 1 ) );
-    error_log( print_r( $request, 1 ) );
     if ( is_array( $transaction ) ) {
         $transaction = (object) $transaction;
     }
