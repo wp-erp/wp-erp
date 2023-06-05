@@ -596,7 +596,7 @@
                 <ul>
                     <?php if ( ! $is_pro_active ) : ?>
                     <li>
-                        <button id="all" class="btn active">
+                        <button id="all" class="btn">
                             <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
@@ -607,7 +607,7 @@
                         </button>
                     </li>
                     <li>
-                        <button id="purchased" class="btn active">
+                        <button id="purchased" class="btn">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/purchaged.svg' ); ?>" alt="<?php echo esc_attr( 'Purchased' ); ?>" />
                             <span><?php esc_html_e( 'Purchased', 'erp' ); ?></span>
                         </button>
@@ -638,7 +638,7 @@
             <div class="nav_right">
                 <ul>
                     <li>
-                        <button id="all" class="btn active">
+                        <button id="right_all" class="btn">
                             <span><?php esc_html_e( 'All', 'erp' ); ?></span>
                         </button>
                     </li>
@@ -696,7 +696,7 @@
         </div>
     </div>
 
-    <div class="erp_addon_wrap">
+    <div id="erp_addon_wrap" class="erp_addon_wrap">
     <?php
         $all_modules  = wperp()->modules->get_modules_extensions();
         $purchase_url = 'https://utm.guru/udfBI'; // URL with UTM for tracking
@@ -803,66 +803,124 @@
 
 <script type="text/javascript">
     jQuery( function( $ ) {
+        $('#filter').hide();
+        $('#erp_addon_wrap').hide();
+        $(window).on('load', function() {
+            $('#erp_addon_wrap').fadeIn();
+            $('#filter').fadeIn();
+        });
+
+
         <?php if ( $is_pro_active ) : ?>
         $( '.erp_addon_col' ).hide();
         $( '.erp_addon_col.purchased' ).show();
         <?php endif; ?>
 
+        function filterAddonsLeftTab(filterId, isActiveInactivePressed) {
+            if(null === isActiveInactivePressed){
+                isActiveInactivePressed = 'right_all'
+            }
+            $( '.nav_left button' ).removeClass( 'active' );
+            $( `#${filterId}` ).addClass( 'active' );
+
+            $( '.nav_right button' ).removeClass( 'active' );
+            $( `#${isActiveInactivePressed}` ).addClass( 'active' );
+
+            $( '.erp_addon_wrap' ).animate({ opacity: 0.1 }, 'fast', function() {
+                $( '.erp_addon_col' ).hide();
+
+                if (filterId === 'all') {
+                    if (isActiveInactivePressed === 'right_all') {
+                        $( '.erp_addon_col' ).show();
+                    } else {
+                        $( '.erp_addon_col.' + isActiveInactivePressed ).show();
+                    }
+                } else {
+                    if (isActiveInactivePressed === 'right_all') {
+                        $( '.erp_addon_col.' + filterId ).show();
+                    } else {
+                        $( '.erp_addon_col.' + filterId + '.' + isActiveInactivePressed ).show();
+                    }
+                }
+
+                $( '.erp_addon_wrap' ).animate({ opacity: 1 }, 'fast' );
+            });
+        }
+
+        function updateUrlHash(filterId, tab) {
+            var url = location.href.split('#')[0];
+            var fragment = location.hash.substring(1); // Get the current fragment identifier without the '#'
+
+            if (fragment.includes(tab + '=')) {
+                // If the tab parameter exists, replace its value with the new one
+                fragment = fragment.replace(new RegExp(tab + '=[^&]+'), tab + '=' + filterId);
+            } else {
+                // If the tab parameter doesn't exist, add it with the new value
+                fragment += '&' + tab + '=' + filterId;
+            }
+
+            history.pushState(null, null, url + '#' + fragment);
+        }
         // by default uncheck all checkbox
         $( '.item_check' ).prop( 'checked', false );
 
-        $( '.nav_left button' ).click( function() {
-                $( '.nav_left button' ).removeClass( 'active' );
-                $( this ).addClass( 'active' );
-                var filter_id = $( this ).attr( 'id' );
-                var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
+        $( '.nav_left button' ).click(function() {
+            var filterId = $( this ).attr( 'id' );
+            var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
 
-                $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
-                    if ( filter_id == 'all' ) {
-                        if ( isActiveInactivePressed == 'all' ) {
-                            $( '.erp_addon_col' ).show();
-                        } else {
-                            $( '.erp_addon_col' ).hide();
-                            $( '.erp_addon_col.' + isActiveInactivePressed ).show();
-                        }
-
-                    } else {
-                        $( '.erp_addon_col' ).hide();
-                        if ( isActiveInactivePressed == 'all' ) {
-                            $( '.erp_addon_col.' + filter_id ).show();
-                        } else {
-                            $( '.erp_addon_col.' + filter_id + '.' + isActiveInactivePressed ).show();
-                        }
-                    }
-                });
-
-            $( '.erp_addon_wrap' ).animate({opacity: 1}, 'fast' );
+            updateUrlHash(filterId, 'left_tab');
+            filterAddonsLeftTab(filterId, isActiveInactivePressed);
         });
 
-        $( '.nav_right button' ).click( function() {
-                $( '.nav_right button' ).removeClass( 'active' );
-                $( this ).addClass( 'active' );
-                var filter_id = $( this ).attr( 'id' );
-                var isTabPressed = $( '.nav_left button.active' ).attr( 'id' );
+        if (location.hash) {
+            var hash = location.hash.substring(1); // Get the fragment identifier without the '#'
+            var params = hash.split('&');
+            var leftTabValue = null;
+            var rightTabValue = null;
 
-                $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
-                    if ( filter_id == 'all' ) {
-                        if ( isTabPressed == 'all' ) {
-                            $( '.erp_addon_col' ).show();
-                        } else {
-                            $( '.erp_addon_col' ).hide();
-                            $( '.erp_addon_col.' + isTabPressed ).show();
-                        }
+            for (var i = 0; i < params.length; i++) {
+                var param = params[i].split('=');
+                if (param[0] === 'left_tab') {
+                    leftTabValue = param[1];
+                } else if (param[0] === 'right_tab') {
+                    rightTabValue = param[1];
+                }
+            }
+
+            filterAddonsLeftTab(leftTabValue, rightTabValue);
+        }else{
+            $( '.nav_left button' ).removeClass( 'active' );
+            $( '#right_all button' ).removeClass( 'active' );
+            $( '#purchased' ).addClass( 'active' );
+            $( '#all' ).addClass( 'active' );
+        }
+
+        $( '.nav_right button' ).click( function() {
+            var filterId = $( this ).attr( 'id' );
+            updateUrlHash(filterId, 'right_tab');
+            $( '.nav_right button' ).removeClass( 'active' );
+            $( this ).addClass( 'active' );
+            var filter_id = $( this ).attr( 'id' );
+            var isTabPressed = $( '.nav_left button.active' ).attr( 'id' );
+
+            $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
+                if ( filter_id == 'all' ) {
+                    if ( isTabPressed == 'right_all' ) {
+                        $( '.erp_addon_col' ).show();
                     } else {
                         $( '.erp_addon_col' ).hide();
-                        if ( isTabPressed == 'all' ) {
-                            $( '.erp_addon_col.' + filter_id ).show();
-                        } else {
-                            $( '.erp_addon_col.' + filter_id + '.' + isTabPressed ).show();
-                        }
-
+                        $( '.erp_addon_col.' + isTabPressed ).show();
                     }
-                });
+                } else {
+                    $( '.erp_addon_col' ).hide();
+                    if ( isTabPressed == 'right_all' ) {
+                        $( '.erp_addon_col.' + filter_id ).show();
+                    } else {
+                        $( '.erp_addon_col.' + filter_id + '.' + isTabPressed ).show();
+                    }
+
+                }
+            });
 
             $( '.erp_addon_wrap' ).animate({opacity: 1}, 'fast' );
         });
