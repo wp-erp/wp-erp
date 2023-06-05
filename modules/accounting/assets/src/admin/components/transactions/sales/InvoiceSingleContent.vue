@@ -115,11 +115,14 @@
                 {{ attachment }}
             </a>
         </div>
+
+        <trans-particulars :particulars="invoice.additional_notes" :heading="__('Additional Notes', 'erp')" />
     </div>
 </template>
 
 <script>
 import TransParticulars from 'admin/components/transactions/TransParticulars.vue';
+import { __ } from '@wordpress/i18n'
 
 export default {
     name: 'InvoiceSingleContent',
@@ -164,6 +167,7 @@ export default {
     },
 
     methods: {
+        __,
         getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
                 return __('Estimate', 'erp');
@@ -198,7 +202,7 @@ export default {
             }
         }
     }
-    
+
     .d-print-block {
         display: none;
     }

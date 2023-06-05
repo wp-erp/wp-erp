@@ -134,6 +134,12 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="add-attachment-row inline-edit-row">
+                                <td colspan="9" style="text-align: left;">
+                                    <label>{{ __('Additional Notes', 'erp') }}</label>
+                                    <VueTrix v-model="additional_notes" :placeholder="__('Enter content', 'erp')"/>
+                                </td>
+                            </tr>
                             <component
                                 v-for="(component, compKey) in extraFields"
                                 :key="'key-' + compKey"
@@ -172,6 +178,8 @@ import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue';
 import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
 import MultiSelect from 'admin/components/select/MultiSelect.vue';
 import ShowErrors from 'admin/components/base/ShowErrors.vue';
+import VueTrix from "vue-trix";
+import { __ } from '@wordpress/i18n'
 
 /* global erp_acct_var */
 export default {
@@ -184,7 +192,8 @@ export default {
         ComboButton,
         InvoiceTrnRow,
         SelectCustomers,
-        ShowErrors
+        ShowErrors,
+        VueTrix
     },
 
     data() {
@@ -210,25 +219,26 @@ export default {
                 { id: 'draft', text: __('Save as Draft', 'erp') }
             ],
 
-            extraFields     : window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
-            editMode        : false,
-            voucherNo       : 0,
-            discountType    : 'discount-percent',
-            discount        : 0,
-            status          : null,
-            taxRate         : null,
-            taxSummary      : null,
-            products        : [],
-            particulars     : '',
-            attachments     : [],
-            transactionLines: [],
-            taxRates        : [],
-            taxTotalAmount  : 0,
-            finalTotalAmount: 0,
-            inv_title       : '',
-            inv_type        : {},
-            erp_acct_assets : erp_acct_var.acct_assets,
-            form_errors     : []
+            extraFields         : window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
+            editMode            : false,
+            voucherNo           : 0,
+            discountType        : 'discount-percent',
+            discount            : 0,
+            status              : null,
+            taxRate             : null,
+            taxSummary          : null,
+            products            : [],
+            particulars         : '',
+            additional_notes    : '',
+            attachments         : [],
+            transactionLines    : [],
+            taxRates            : [],
+            taxTotalAmount      : 0,
+            finalTotalAmount    : 0,
+            inv_title           : '',
+            inv_type            : {},
+            erp_acct_assets     : erp_acct_var.acct_assets,
+            form_errors         : []
         };
     },
 
@@ -354,6 +364,7 @@ export default {
             this.taxTotalAmount               = invoice.tax;
             this.finalTotalAmount             = invoice.debit;
             this.particulars                  = invoice.particulars;
+            this.additional_notes             = invoice.additional_notes;
             this.attachments                  = invoice.attachments;
             this.discountType                 = invoice.discount_type;
 
@@ -588,6 +599,7 @@ export default {
                 line_items     : this.formatLineItems(),
                 attachments    : this.attachments,
                 particulars    : this.particulars,
+                additional_notes    : this.additional_notes,
                 type           : 'invoice',
                 status         : parseInt(this.status),
                 estimate       : this.inv_type.id,
