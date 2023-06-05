@@ -549,6 +549,10 @@ class InvoicesController extends REST_Controller {
             $prepared_item['particulars'] = $request['particulars'];
         }
 
+        if ( isset( $request['additional_notes'] ) ) {
+            $prepared_item['additional_notes'] = $request['additional_notes'];
+        }
+
         if ( isset( $request['transaction_by'] ) ) {
             $prepared_item['transaction_by'] = $request['transaction_by'];
         }
@@ -708,6 +712,14 @@ class InvoicesController extends REST_Controller {
                 ],
                 'particulars'          => [
                     'description' => __( 'Status for the resource.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'additional_notes'          => [
+                    'description' => __( 'Custom text for invoice', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
