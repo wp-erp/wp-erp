@@ -36761,7 +36761,9 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "tr",
-                        { staticClass: "add-attachment-row inline-edit-row" },
+                        {
+                          staticClass: "add-additional-note-row inline-edit-row"
+                        },
                         [
                           _c(
                             "td",
