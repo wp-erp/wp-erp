@@ -1,4 +1,4 @@
-<style type="text/css">
+<style type='text/css'>
     .wrap * {
         box-sizing: border-box;
     }
@@ -47,9 +47,11 @@
     .module_item.hrm .icon {
         background-image: linear-gradient(180deg, #C2E998 0%, #02CC87 100%);
     }
+
     .module_item.crm .icon {
         background-image: linear-gradient(180deg, #72D0FF 0%, #349EFA 100%);
     }
+
     .module_item.accounting .icon {
         background-image: linear-gradient(180deg, #FEDB4D 0%, #FFB84E 100%);
     }
@@ -133,6 +135,7 @@
         background: transparent;
         color: #000;
     }
+
     .nav_wrap .btn.active:after, .nav_wrap .btn:hover:after {
         height: 2px;
     }
@@ -173,6 +176,7 @@
         align-items: center;
         margin-right: 20px;
     }
+
     .search-box input {
         border: 0;
     }
@@ -199,7 +203,7 @@
     }
 
     @media (min-width: 1441px) {
-         .erp_addon_col {
+        .erp_addon_col {
             width: 25%;
             flex-basis: 25%;
             max-width: 25%;
@@ -304,7 +308,7 @@
 
     .slider:before {
         position: absolute;
-        content: "";
+        content: '';
         height: 18px;
         width: 18px;
         left: 3px;
@@ -477,6 +481,7 @@
             flex-basis: 100%;
             margin-bottom: 20px;
         }
+
         .erp_addon_col {
             width: 100%;
             flex-basis: 100%;
@@ -531,7 +536,7 @@
     }
 </style>
 
-<?php $is_pro_active  = function_exists( 'wp_erp_pro' ) ? true : false; ?>
+<?php $is_pro_active = function_exists( 'wp_erp_pro' ) ? true : false; ?>
 
 <div class="wrap">
     <div class="wrap_head">
@@ -546,11 +551,11 @@
                         <div class="icon">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/hrm.svg' ); ?>" alt="<?php echo esc_attr( 'HRM' ); ?>" />
                         </div>
-                        <h3 class="title"><?php esc_html_e( 'HR Management', 'erp' );?></h3>
+                        <h3 class="title"><?php esc_html_e( 'HR Management', 'erp' ); ?></h3>
                         <div class="subtitle">
                             <span><?php esc_html_e( 'Human Resource Management', 'erp' ); ?></span>
                             <label class="switch">
-                                <input class="module_action" type="checkbox" data-module-id="hrm" <?php echo wperp()->modules->is_module_active('hrm') ? 'checked="checked"' : ''; ?>>
+                                <input class="module_action" type="checkbox" data-module-id="hrm" <?php echo wperp()->modules->is_module_active( 'hrm' ) ? 'checked="checked"' : ''; ?>>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -562,11 +567,11 @@
                         <div class="icon">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/crm.svg' ); ?>" alt="<?php echo esc_attr( 'CRM' ); ?>" />
                         </div>
-                        <h3 class="title"><?php esc_html_e( 'CR Management', 'erp' );?></h3>
+                        <h3 class="title"><?php esc_html_e( 'CR Management', 'erp' ); ?></h3>
                         <div class="subtitle">
                             <span><?php esc_html_e( 'Customer Relationship Management', 'erp' ); ?></span>
                             <label class="switch">
-                                <input class="module_action" type="checkbox" data-module-id="crm" <?php echo wperp()->modules->is_module_active('crm') ? 'checked="checked"' : ''; ?>>
+                                <input class="module_action" type="checkbox" data-module-id="crm" <?php echo wperp()->modules->is_module_active( 'crm' ) ? 'checked="checked"' : ''; ?>>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -578,11 +583,11 @@
                         <div class="icon">
                             <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/accounting.svg' ); ?>" alt="<?php echo esc_attr( 'Accounting' ); ?>" />
                         </div>
-                        <h3 class="title"><?php esc_html_e( 'Accounting', 'erp' );?></h3>
+                        <h3 class="title"><?php esc_html_e( 'Accounting', 'erp' ); ?></h3>
                         <div class="subtitle">
                             <span><?php esc_html_e( 'Accounting Management', 'erp' ); ?></span>
                             <label class="switch">
-                                <input class="module_action" type="checkbox" data-module-id="accounting" <?php echo wperp()->modules->is_module_active('accounting') ? 'checked="checked"' : ''; ?>>
+                                <input class="module_action" type="checkbox" data-module-id="accounting" <?php echo wperp()->modules->is_module_active( 'accounting' ) ? 'checked="checked"' : ''; ?>>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -595,23 +600,23 @@
             <div class="nav_left">
                 <ul>
                     <?php if ( ! $is_pro_active ) : ?>
-                    <li>
-                        <button id="all" class="btn">
-                            <span><?php esc_html_e( 'All', 'erp' ); ?></span>
-                        </button>
-                    </li>
+                        <li>
+                            <button id="all" class="btn">
+                                <span><?php esc_html_e( 'All', 'erp' ); ?></span>
+                            </button>
+                        </li>
                     <?php else : ?>
-                    <li>
-                        <button id="all" class="btn">
-                            <span><?php esc_html_e( 'All', 'erp' ); ?></span>
-                        </button>
-                    </li>
-                    <li>
-                        <button id="purchased" class="btn">
-                            <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/purchaged.svg' ); ?>" alt="<?php echo esc_attr( 'Purchased' ); ?>" />
-                            <span><?php esc_html_e( 'Purchased', 'erp' ); ?></span>
-                        </button>
-                    </li>
+                        <li>
+                            <button id="all" class="btn">
+                                <span><?php esc_html_e( 'All', 'erp' ); ?></span>
+                            </button>
+                        </li>
+                        <li>
+                            <button id="purchased" class="btn">
+                                <img src="<?php echo esc_url( WPERP_ASSETS . '/images/icons/purchaged.svg' ); ?>" alt="<?php echo esc_attr( 'Purchased' ); ?>" />
+                                <span><?php esc_html_e( 'Purchased', 'erp' ); ?></span>
+                            </button>
+                        </li>
                     <?php endif; ?>
                     <li>
                         <button id="hrm" class="btn">
@@ -643,16 +648,16 @@
                         </button>
                     </li>
                     <?php if ( $is_pro_active ) : ?>
-                    <li>
-                        <button id="active" class="btn">
-                            <span><?php esc_html_e( 'Active', 'erp' ); ?></span>
-                        </button>
-                    </li>
-                    <li>
-                        <button id="inactive" class="btn">
-                            <span><?php esc_html_e( 'Inactive', 'erp' ); ?></span>
-                        </button>
-                    </li>
+                        <li>
+                            <button id="active" class="btn">
+                                <span><?php esc_html_e( 'Active', 'erp' ); ?></span>
+                            </button>
+                        </li>
+                        <li>
+                            <button id="inactive" class="btn">
+                                <span><?php esc_html_e( 'Inactive', 'erp' ); ?></span>
+                            </button>
+                        </li>
                     <?php endif; ?>
                 </ul>
                 <div class="search-box">
@@ -697,7 +702,7 @@
     </div>
 
     <div id="erp_addon_wrap" class="erp_addon_wrap">
-    <?php
+        <?php
         $all_modules  = wperp()->modules->get_modules_extensions();
         $purchase_url = 'https://utm.guru/udfBI'; // URL with UTM for tracking
 
@@ -710,144 +715,144 @@
             $existing_users = wp_erp_pro()->update->count_users();
 
             if ( ! empty( $license_id ) ) {
-                $purchase_url  .= "&license_id={$license_id}&action=upgrade";
+                $purchase_url .= "&license_id={$license_id}&action=upgrade";
             }
         }
 
         asort( $all_modules );
 
         if ( count( $all_modules ) > 0 ) :
-    ?>
-        <div class="erp_addon_row" id="view">
-            <?php
-            foreach ( $all_modules as $module_id => $module ) :
-                $module     = (object) $module;
-                $cat_str    = implode( ' ', $module->category );
-                $addon_url  = $module->module_link . '?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
-                $doc_url    = $module->doc_link . '?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
-
-                if (
-                    $is_pro_active &&
-                    in_array( $module->id, $active_modules ) &&
-                    file_exists( $module->module_file ) &&
-                    wp_erp_pro()->update->is_valid_license() &&
-                    $licensed_users >= $existing_users
-                ) {
-                    $checked = 'checked="checked"';
-                    $is_active = 'active';
-                } else {
-                    $checked = '';
-                    $is_active = 'inactive';
-                }
-
-                $purchased_module = '';
-
-                if ( $is_pro_active ) {
-                    if ( $module->is_pro || in_array( $module->path, $my_modules ) ) {
-                        $purchased_module = 'purchased';
-                    }
-                }
             ?>
-                <div class="erp_addon_col <?php echo esc_attr( "$cat_str $is_active $purchased_module" ); ?>">
-                    <div class="erp_addon">
+            <div class="erp_addon_row" id="view">
+                <?php
+                foreach ( $all_modules as $module_id => $module ) :
+                    $module = (object) $module;
+                    $cat_str = implode( ' ', $module->category );
+                    $addon_url = $module->module_link . '?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
+                    $doc_url = $module->doc_link . '?utm_source=wp-admin&utm_medium=link&utm_campaign=erp-pro-extension-page';
 
-                        <div class="erp_addon_item_row erp_addon_item_row_top">
-                            <div class="erp-addon-thumb">
-                                <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank">
-                                    <img src="<?php echo esc_url( $module->thumbnail ); ?>" alt="<?php echo esc_attr( $module->name ); ?>" />
-                                </a>
-                            </div>
-                             <div class="erp-detail">
-                                <h3 class="title">
-                                    <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank"><?php echo esc_html( $module->name ); ?></a>
-                                    <?php if ( $is_pro_active ) : ?>
-                                        <em class="module_version">v<?php echo ( $module->version ) ?></em>
-                                    <?php endif; ?>
-                                </h3>
+                    if (
+                        $is_pro_active
+                        && in_array( $module->id, $active_modules )
+                        && file_exists( $module->module_file )
+                        && wp_erp_pro()->update->is_valid_license()
+                        && $licensed_users >= $existing_users
+                    ) {
+                        $checked   = 'checked="checked"';
+                        $is_active = 'active';
+                    } else {
+                        $checked   = '';
+                        $is_active = 'inactive';
+                    }
 
-                                <div class="text"><?php echo wp_kses_post( $module->description ); ?></div>
-                            </div>
-                            <?php if ( $is_pro_active && ! empty( $purchased_module ) ) : ?>
-                                <div class="bulk_item">
-                                    <input class="item_check" type="checkbox" value="<?php echo esc_attr( $module->id ); ?>">
+                    $purchased_module = '';
+
+                    if ( $is_pro_active ) {
+                        if ( $module->is_pro || in_array( $module->path, $my_modules ) ) {
+                            $purchased_module = 'purchased';
+                        }
+                    }
+                    ?>
+                    <div class="erp_addon_col <?php echo esc_attr( "$cat_str $is_active $purchased_module" ); ?>">
+                        <div class="erp_addon">
+
+                            <div class="erp_addon_item_row erp_addon_item_row_top">
+                                <div class="erp-addon-thumb">
+                                    <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank">
+                                        <img src="<?php echo esc_url( $module->thumbnail ); ?>" alt="<?php echo esc_attr( $module->name ); ?>" />
+                                    </a>
                                 </div>
-                            <?php endif; ?>
-                        </div>
+                                <div class="erp-detail">
+                                    <h3 class="title">
+                                        <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank"><?php echo esc_html( $module->name ); ?></a>
+                                        <?php if ( $is_pro_active ) : ?>
+                                            <em class="module_version">v<?php echo( $module->version ) ?></em>
+                                        <?php endif; ?>
+                                    </h3>
 
-                        <div class="erp_addon_item_row erp_addon_item_row_bottom">
-                            <div class="ext_cat">
-                                <?php foreach( $module->category as $cat ) : ?>
-                                    <span class="<?php echo esc_attr( strtolower( $cat ) ); ?>"> <?php echo esc_html( strtoupper( $cat ) ); ?></span>
-                                <?php endforeach; ?>
-                                <a class="doc_link" href="<?php echo esc_url( $module->doc_link ); ?>" target="_blank"><?php esc_html_e( 'Docs', 'erp' ); ?></a>
-                            </div>
-                            <div class="erp-links">
-                                <?php if ( $is_pro_active &&  ( $module->is_pro || in_array( $module->path, $my_modules ) ) ) : ?>
-                                    <label class="switch">
-                                        <input class="extension_action" type="checkbox" <?php echo esc_attr( $checked ); ?>
-                                               data-module-id="<?php echo esc_attr( $module->id ); ?>">
-                                        <span class="slider round"></span>
-                                    </label>
-                                <?php else : ?>
-                                    <a href="<?php echo esc_url( $purchase_url ); ?>" class="button button-primary"  target="_blank" title="<?php esc_attr_e( 'Get It', 'erp' ); ?>" ><?php esc_html_e( 'Get It', 'erp' ); ?></a>
+                                    <div class="text"><?php echo wp_kses_post( $module->description ); ?></div>
+                                </div>
+                                <?php if ( $is_pro_active && ! empty( $purchased_module ) ) : ?>
+                                    <div class="bulk_item">
+                                        <input class="item_check" type="checkbox" value="<?php echo esc_attr( $module->id ); ?>">
+                                    </div>
                                 <?php endif; ?>
+                            </div>
+
+                            <div class="erp_addon_item_row erp_addon_item_row_bottom">
+                                <div class="ext_cat">
+                                    <?php foreach ( $module->category as $cat ) : ?>
+                                        <span class="<?php echo esc_attr( strtolower( $cat ) ); ?>"> <?php echo esc_html( strtoupper( $cat ) ); ?></span>
+                                    <?php endforeach; ?>
+                                    <a class="doc_link" href="<?php echo esc_url( $module->doc_link ); ?>" target="_blank"><?php esc_html_e( 'Docs', 'erp' ); ?></a>
+                                </div>
+                                <div class="erp-links">
+                                    <?php if ( $is_pro_active && ( $module->is_pro || in_array( $module->path, $my_modules ) ) ) : ?>
+                                        <label class="switch">
+                                            <input class="extension_action" type="checkbox" <?php echo esc_attr( $checked ); ?>
+                                                   data-module-id="<?php echo esc_attr( $module->id ); ?>">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    <?php else : ?>
+                                        <a href="<?php echo esc_url( $purchase_url ); ?>" class="button button-primary" target="_blank" title="<?php esc_attr_e( 'Get It', 'erp' ); ?>"><?php esc_html_e( 'Get It', 'erp' ); ?></a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+            </div>
         <?php endif; ?>
     </div>
 </div>
 
 <script type="text/javascript">
-    jQuery( function( $ ) {
+    jQuery(function ($) {
         $('#filter').hide();
         $('#erp_addon_wrap').hide();
-        $(window).on('load', function() {
+        $(window).on('load', function () {
             $('#erp_addon_wrap').fadeIn();
             $('#filter').fadeIn();
         });
 
 
         <?php if ( $is_pro_active ) : ?>
-        $( '.erp_addon_col' ).hide();
-        $( '.erp_addon_col.purchased' ).show();
+        $('.erp_addon_col').hide();
+        $('.erp_addon_col.purchased').show();
         <?php endif; ?>
 
-        function filterAddonsLeftTab(filterId, isActiveInactivePressed) {
-            if(null === isActiveInactivePressed){
+        function filterAddonsLeftTab (filterId, isActiveInactivePressed) {
+            if (null === isActiveInactivePressed) {
                 isActiveInactivePressed = 'right_all'
             }
-            $( '.nav_left button' ).removeClass( 'active' );
-            $( `#${filterId}` ).addClass( 'active' );
+            $('.nav_left button').removeClass('active');
+            $(`#${filterId}`).addClass('active');
 
-            $( '.nav_right button' ).removeClass( 'active' );
-            $( `#${isActiveInactivePressed}` ).addClass( 'active' );
+            $('.nav_right button').removeClass('active');
+            $(`#${isActiveInactivePressed}`).addClass('active');
 
-            $( '.erp_addon_wrap' ).animate({ opacity: 0.1 }, 'fast', function() {
-                $( '.erp_addon_col' ).hide();
+            $('.erp_addon_wrap').animate({ opacity: 0.1 }, 'fast', function () {
+                $('.erp_addon_col').hide();
 
                 if (filterId === 'all') {
                     if (isActiveInactivePressed === 'right_all') {
-                        $( '.erp_addon_col' ).show();
+                        $('.erp_addon_col').show();
                     } else {
-                        $( '.erp_addon_col.' + isActiveInactivePressed ).show();
+                        $('.erp_addon_col.' + isActiveInactivePressed).show();
                     }
                 } else {
                     if (isActiveInactivePressed === 'right_all') {
-                        $( '.erp_addon_col.' + filterId ).show();
+                        $('.erp_addon_col.' + filterId).show();
                     } else {
-                        $( '.erp_addon_col.' + filterId + '.' + isActiveInactivePressed ).show();
+                        $('.erp_addon_col.' + filterId + '.' + isActiveInactivePressed).show();
                     }
                 }
 
-                $( '.erp_addon_wrap' ).animate({ opacity: 1 }, 'fast' );
+                $('.erp_addon_wrap').animate({ opacity: 1 }, 'fast');
             });
         }
 
-        function updateUrlHash(filterId, tab) {
+        function updateUrlHash (filterId, tab) {
             var url = location.href.split('#')[0];
             var fragment = location.hash.substring(1); // Get the current fragment identifier without the '#'
 
@@ -861,12 +866,13 @@
 
             history.pushState(null, null, url + '#' + fragment);
         }
-        // by default uncheck all checkbox
-        $( '.item_check' ).prop( 'checked', false );
 
-        $( '.nav_left button' ).click(function() {
-            var filterId = $( this ).attr( 'id' );
-            var isActiveInactivePressed = $( '.nav_right button.active' ).attr( 'id' );
+        // by default uncheck all checkbox
+        $('.item_check').prop('checked', false);
+
+        $('.nav_left button').click(function () {
+            var filterId = $(this).attr('id');
+            var isActiveInactivePressed = $('.nav_right button.active').attr('id');
 
             updateUrlHash(filterId, 'left_tab');
             filterAddonsLeftTab(filterId, isActiveInactivePressed);
@@ -888,188 +894,185 @@
             }
 
             filterAddonsLeftTab(leftTabValue, rightTabValue);
-        }else{
-            $( '.nav_left button' ).removeClass( 'active' );
-            $( '#right_all button' ).removeClass( 'active' );
-            $( '#purchased' ).addClass( 'active' );
-            $( '#all' ).addClass( 'active' );
+        } else {
+            $('.nav_left button').removeClass('active');
+            $('#right_all button').removeClass('active');
+            $('#purchased').addClass('active');
+            $('#right_all').addClass('active');
         }
 
-        $( '.nav_right button' ).click( function() {
-            var filterId = $( this ).attr( 'id' );
+        $('.nav_right button').click(function () {
+            var filterId = $(this).attr('id');
             updateUrlHash(filterId, 'right_tab');
-            $( '.nav_right button' ).removeClass( 'active' );
-            $( this ).addClass( 'active' );
-            var filter_id = $( this ).attr( 'id' );
-            var isTabPressed = $( '.nav_left button.active' ).attr( 'id' );
+            $('.nav_right button').removeClass('active');
+            $(this).addClass('active');
+            var filter_id = $(this).attr('id');
+            var isTabPressed = $('.nav_left button.active').attr('id');
 
-            $( '.erp_addon_wrap' ).animate({opacity: 0.1}, 'fast' , function() {
-                if ( filter_id == 'all' ) {
-                    if ( isTabPressed == 'right_all' ) {
-                        $( '.erp_addon_col' ).show();
+            $('.erp_addon_wrap').animate({ opacity: 0.1 }, 'fast', function () {
+                if (filter_id == 'right_all') {
+                    if (isTabPressed == 'all') {
+                        $('.erp_addon_col').show();
                     } else {
-                        $( '.erp_addon_col' ).hide();
-                        $( '.erp_addon_col.' + isTabPressed ).show();
+                        $('.erp_addon_col').hide();
+                        $('.erp_addon_col.' + isTabPressed).show();
                     }
                 } else {
-                    $( '.erp_addon_col' ).hide();
-                    if ( isTabPressed == 'right_all' ) {
-                        $( '.erp_addon_col.' + filter_id ).show();
+                    $('.erp_addon_col').hide();
+                    if (isTabPressed == 'all') {
+                        $('.erp_addon_col.' + filter_id).show();
                     } else {
-                        $( '.erp_addon_col.' + filter_id + '.' + isTabPressed ).show();
+                        $('.erp_addon_col.' + filter_id + '.' + isTabPressed).show();
                     }
 
                 }
             });
 
-            $( '.erp_addon_wrap' ).animate({opacity: 1}, 'fast' );
+            $('.erp_addon_wrap').animate({ opacity: 1 }, 'fast');
         });
 
+        $('.module_action').click(function () {
+            var module_id = $(this).data('module-id');
+            var state = $(this).prop('checked');
+            var toggle = (state) ? 'activate' : 'deactivate';
 
-        $( '.module_action' ).click( function() {
-            var module_id  = $(this).data('module-id');
-            var state      = $(this).prop( 'checked' );
-            var toggle     = ( state ) ? 'activate' : 'deactivate';
+            toastr.success('<?php esc_html_e( 'Please wait!', 'erp' ); ?>', '', { timeOut: 1000 });
 
-            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
-
-            wp.ajax.send( 'erp-toggle-module', {
+            wp.ajax.send('erp-toggle-module', {
                 data: {
                     '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-toggle-module' )  ?>',
-                    module_id:  module_id,
-                    toggle:     toggle
+                    module_id: module_id,
+                    toggle: toggle
                 },
-                success: function( resp ) {
-                    toastr.success( resp );
-                    setTimeout( function() {
+                success: function (resp) {
+                    toastr.success(resp);
+                    setTimeout(function () {
                         location.reload();
-                    }, 1000 )
+                    }, 1000)
                 },
-                error: function( response ) {
-                    toastr.error( response );
+                error: function (response) {
+                    toastr.error(response);
                 }
             });
 
-        } );
+        });
 
-        $( '.extension_action' ).click( function() {
+        $('.extension_action').click(function () {
             var module_id = $(this).data('module-id');
-            var state     = $(this).prop( 'checked' );
-            var toggle    = ( state ) ? 'activate' : 'deactivate';
-            var th        = $(this);
+            var state = $(this).prop('checked');
+            var toggle = (state) ? 'activate' : 'deactivate';
+            var th = $(this);
 
-            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success('<?php esc_html_e( 'Please wait!', 'erp' ); ?>', '', { timeOut: 1000 });
 
-            wp.ajax.send( 'erp-pro-toggle-extension', {
+            wp.ajax.send('erp-pro-toggle-extension', {
                 data: {
                     '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' ); ?>',
-                    module_id:  module_id,
-                    toggle:     toggle
+                    module_id: module_id,
+                    toggle: toggle
                 },
-                success: function( resp ) {
-                    toastr.success( resp );
-                    setTimeout( function() {
+                success: function (resp) {
+                    toastr.success(resp);
+                    setTimeout(function () {
                         location.reload();
-                    }, 1000 )
+                    }, 1000)
                 },
-                error: function( response ) {
-                    toastr.error( response );
-                    if ( toggle === 'activate' ) {
-                        th.prop( 'checked', false );
-                    }
-                    else {
-                        th.prop( 'checked', true );
+                error: function (response) {
+                    toastr.error(response);
+                    if (toggle === 'activate') {
+                        th.prop('checked', false);
+                    } else {
+                        th.prop('checked', true);
                     }
                 }
             });
 
-        } );
+        });
 
-        $( '.bulkactions .enable, .bulkactions .disable' ).click( function() {
+        $('.bulkactions .enable, .bulkactions .disable').click(function () {
             var modules = [];
-            var toggle  = $( this ).data( 'action' );
+            var toggle = $(this).data('action');
 
-            $( '.item_check:checked' ).each( function() {
-                modules.push($( this ).val() );
-            } );
+            $('.item_check:checked').each(function () {
+                modules.push($(this).val());
+            });
 
-            toastr.success( '<?php esc_html_e( 'Please wait!', 'erp'); ?>', '', {timeOut: 1000} );
+            toastr.success('<?php esc_html_e( 'Please wait!', 'erp' ); ?>', '', { timeOut: 1000 });
 
-            wp.ajax.send( 'erp-pro-toggle-extension', {
+            wp.ajax.send('erp-pro-toggle-extension', {
                 data: {
                     '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' )  ?>',
-                    module_id:  modules,
-                    toggle:     toggle
+                    module_id: modules,
+                    toggle: toggle
                 },
-                success: function( resp ) {
-                    toastr.success( resp );
-                    setTimeout( function() {
+                success: function (resp) {
+                    toastr.success(resp);
+                    setTimeout(function () {
                         location.reload();
-                    }, 1000 )
+                    }, 1000)
                 },
-                error: function( response ) {
-                    toastr.error( response );
+                error: function (response) {
+                    toastr.error(response);
                 }
             });
 
-        } );
+        });
 
-        $( '#select_all' ).click( function() {
-            var state      = $(this).prop( 'checked' );
+        $('#select_all').click(function () {
+            var state = $(this).prop('checked');
 
             // by default uncheck all checkbox
-            $( '.item_check' ).prop( 'checked', false );
+            $('.item_check').prop('checked', false);
 
             // check checkbox based on selected menu
             var selected_tab = $('#filter button.active').first().attr('id');
 
-            if ( state && selected_tab === 'all' ) {
-                $( '.item_check' ).prop( 'checked', true );
-            }
-            else if ( state && selected_tab != 'all' ) {
-                $('div.' + selected_tab).find( '.item_check' ).prop( 'checked', true );
+            if (state && selected_tab === 'all') {
+                $('.item_check').prop('checked', true);
+            } else if (state && selected_tab != 'all') {
+                $('div.' + selected_tab).find('.item_check').prop('checked', true);
             }
         });
 
-        $( '.item_check' ).change( function() {
-            var ext_length = $( '.item_check' ).length;
-            var checked_length = $( '.item_check:checked' ).length;
+        $('.item_check').change(function () {
+            var ext_length = $('.item_check').length;
+            var checked_length = $('.item_check:checked').length;
 
-            if ( checked_length > 0 ) {
-                $( '.tablenav' ).removeClass( 'hide' );
+            if (checked_length > 0) {
+                $('.tablenav').removeClass('hide');
             } else {
-                $( '.tablenav' ).addClass( 'hide' );
+                $('.tablenav').addClass('hide');
             }
 
-            if ( checked_length == ext_length ) {
-                $( '#select_all' ).prop( 'checked', true );
+            if (checked_length == ext_length) {
+                $('#select_all').prop('checked', true);
             } else {
-                $( '#select_all' ).prop( 'checked', false );
+                $('#select_all').prop('checked', false);
             }
-        } );
+        });
 
-        $( '#close_table_nav_btn' ).click( function() {
-            $( '.tablenav' ).addClass( 'hide' );
-            $( '.item_check' ).prop( 'checked', false );
-        } );
+        $('#close_table_nav_btn').click(function () {
+            $('.tablenav').addClass('hide');
+            $('.item_check').prop('checked', false);
+        });
 
-        $( '#plugin-search-input' ).keyup( function() {
-            var query = $( this ).val().trim().toLowerCase();
+        $('#plugin-search-input').keyup(function () {
+            var query = $(this).val().trim().toLowerCase();
 
-            $( '.erp_addon' ).each( function() {
-                var title = $( this ).find( '.title a' ).text();
-                var desc = $( this ).find( '.text' ).text();
+            $('.erp_addon').each(function () {
+                var title = $(this).find('.title a').text();
+                var desc = $(this).find('.text').text();
                 var searchContext = title + ' ' + desc;
                 searchContext = searchContext.toLowerCase();
 
-                if ( searchContext.search( query ) === -1 ) {
-                    $( this ).parents( '.erp_addon_col' ).hide();
+                if (searchContext.search(query) === -1) {
+                    $(this).parents('.erp_addon_col').hide();
                 } else {
-                    $( this ).parents( '.erp_addon_col' ).show();
+                    $(this).parents('.erp_addon_col').show();
                 }
 
-            } );
+            });
 
-        } )
+        })
     });
 </script>
