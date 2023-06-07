@@ -319,6 +319,8 @@ return [
 	__( 'Discount percent', 'erp' ),
 	__( 'Discount value', 'erp' ),
 	__( 'Select sales tax', 'erp' ),
+	__( 'Additional Notes', 'erp' ),
+	__( 'Enter content', 'erp' ),
 	__( 'Estimate', 'erp' ),
 	__( 'Invoice', 'erp' ),
 	__( 'Invoice does not exists!', 'erp' ),

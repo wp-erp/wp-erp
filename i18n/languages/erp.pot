@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.12.4\n"
+"Project-Id-Version: WP ERP 1.12.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2023-05-26 05:11:47+00:00\n"
+"POT-Creation-Date: 2023-06-07 05:58:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,11 +58,11 @@ msgstr ""
 #: modules/accounting/assets/js/bootstrap.js:2737
 #: modules/accounting/assets/js/bootstrap.js:2915
 #: modules/accounting/assets/js/bootstrap.js:3218
-#: modules/accounting/assets/js/bootstrap.js:3355
-#: modules/accounting/assets/js/bootstrap.js:3829
-#: modules/accounting/assets/js/bootstrap.js:3903
-#: modules/accounting/assets/js/bootstrap.js:4178
-#: modules/accounting/assets/js/bootstrap.js:4267
+#: modules/accounting/assets/js/bootstrap.js:3419
+#: modules/accounting/assets/js/bootstrap.js:3843
+#: modules/accounting/assets/js/bootstrap.js:3917
+#: modules/accounting/assets/js/bootstrap.js:4192
+#: modules/accounting/assets/js/bootstrap.js:4281
 #: modules/accounting/assets/js/frontend.js:114
 msgid "div"
 msgstr ""
@@ -77,7 +77,7 @@ msgid "multiselect"
 msgstr ""
 
 #: assets/js/erp-settings-bootstrap.js:232
-#: modules/accounting/assets/js/bootstrap.js:3260
+#: modules/accounting/assets/js/bootstrap.js:3267
 msgid "button"
 msgstr ""
 
@@ -98,15 +98,15 @@ msgstr ""
 msgid "form"
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:2338 assets/js/erp-settings.js:606
+#: assets/js/erp-settings-bootstrap.js:2338 assets/js/erp-settings.js:607
 #: build/i18n/languages/erp.php:66
 #: includes/Settings/assets/src/components/select/MultiSelect.vue:70
-#: modules/accounting/assets/js/bootstrap.js:6311
+#: modules/accounting/assets/js/bootstrap.js:6325
 #: modules/accounting/assets/src/admin/components/select/MultiSelect.vue:57
 msgid "Please search"
 msgstr ""
 
-#: assets/js/erp-settings-bootstrap.js:2418 assets/js/erp-settings.js:685
+#: assets/js/erp-settings-bootstrap.js:2418 assets/js/erp-settings.js:686
 #: build/i18n/languages/erp.php:14
 #: includes/Settings/assets/src/components/base/SubmitButton.vue:14
 #: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
@@ -218,13 +218,13 @@ msgstr ""
 #: build/modules/hrm/HRM.php:238 build/modules/hrm/assets/js/requests.js:582
 #: build/modules/hrm/includes/AnnouncementListTable.php:259
 #: build/modules/hrm/includes/EmployeeListTable.php:93
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:634
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:645
 #: build/modules/hrm/views/requests.php:42
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:119
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:83
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:231
 #: includes/Settings/assets/src/components/integration/Integration.vue:99
-#: modules/accounting/assets/js/bootstrap.js:5797
+#: modules/accounting/assets/js/bootstrap.js:5811
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
 #: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
 #: modules/accounting/assets/src/admin/components/people/ImportModal.vue:61
@@ -1490,7 +1490,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:12
 #: build/includes/Framework/class-settings-page.php:473
 #: build/includes/Settings/Template.php:494
-#: includes/Framework/class-settings-page.php:473
+#: includes/Framework/ERP_Settings_Page.php:473
 #: includes/Settings/Template.php:494
 #: includes/Settings/assets/src/components/base/ImagePicker.vue:7
 #: includes/Settings/assets/src/components/base/ImagePicker.vue:16
@@ -1516,7 +1516,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:17 build/modules/crm/assets/js/vue-table.js:403
 #: build/modules/hrm/includes/AnnouncementListTable.php:260
 #: build/modules/hrm/includes/EmployeeListTable.php:94
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:635
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:646
 #: build/modules/hrm/views/requests.php:47
 #: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:90
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:69
@@ -1661,7 +1661,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:180
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:185
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:208
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:200
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:209
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:111
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:284
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:167
@@ -1689,7 +1689,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:45 build/includes/functions.php:2977
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:20
-#: includes/functions.php:2977
+#: includes/functions.php:2979
 msgid "Enable/Disable"
 msgstr ""
 
@@ -1799,7 +1799,7 @@ msgstr ""
 #: build/modules/accounting/includes/Classes/Admin.php:155 build/wp-erp.php:359
 #: includes/Admin/AddProMenu.php:187 includes/Admin/AddProMenu.php:280
 #: includes/Admin/AddProMenu.php:435 includes/Admin/AdminMenu.php:132
-#: includes/Admin/AdminMenu.php:134
+#: includes/Admin/AdminMenu.php:135
 #: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
 #: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:359
 msgid "Settings"
@@ -1911,14 +1911,14 @@ msgid "uploaded"
 msgstr ""
 
 #: build/i18n/languages/erp.php:81
-#: modules/accounting/assets/js/bootstrap.js:6097
+#: modules/accounting/assets/js/bootstrap.js:6111
 #: modules/accounting/assets/src/admin/components/base/Media.vue:76
 msgid "Select & Crop Image"
 msgstr ""
 
 #: build/i18n/languages/erp.php:82
-#: modules/accounting/assets/js/bootstrap.js:6154
-#: modules/accounting/assets/js/bootstrap.js:6156
+#: modules/accounting/assets/js/bootstrap.js:6168
+#: modules/accounting/assets/js/bootstrap.js:6170
 #: modules/accounting/assets/src/admin/components/base/Media.vue:138
 #: modules/accounting/assets/src/admin/components/base/Media.vue:140
 msgid "Select Image"
@@ -1966,8 +1966,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:96
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:44
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:93
-#: modules/accounting/includes/functions/transactions.php:941
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:50
+#: modules/accounting/includes/functions/transactions.php:940
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:91
 msgid "Due Date"
 msgstr ""
 
@@ -1982,7 +1982,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:65
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:39
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:64
-#: modules/accounting/includes/functions/transactions.php:931
+#: modules/accounting/includes/functions/transactions.php:930
 msgid "Reference No"
 msgstr ""
 
@@ -2075,7 +2075,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:62
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:73
 #: modules/accounting/assets/src/admin/components/transfers/Transfers.vue:56
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:84
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:125
 #: modules/hrm/assets/js/requests.js:117
 msgid "Amount"
 msgstr ""
@@ -2114,8 +2114,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:89
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:76
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:95
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:54
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:116
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:95
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:157
 #: modules/crm/views/reports/activity-report.php:57
 msgid "Total"
 msgstr ""
@@ -2150,6 +2150,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/TransParticulars.vue:3
 #: modules/accounting/assets/src/admin/components/transfers/NewTransfer.vue:42
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:88
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:178
 msgid "Particulars"
 msgstr ""
 
@@ -2224,7 +2225,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:182
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:187
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:210
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:202
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:211
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:168
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:184
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:202
@@ -2238,8 +2239,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:188
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:195
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:211
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:203
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:210
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:212
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:219
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:169
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:185
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:203
@@ -2259,7 +2260,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/chart-accounts/AddChartAccounts.vue:7
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:192
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:215
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:207
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:216
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:10
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:142
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:50
@@ -2280,7 +2281,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:189
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:194
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:217
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:209
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:218
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:208
 msgid "Update and New"
 msgstr ""
@@ -2316,7 +2317,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:458
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:461
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:593
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:637
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:649
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:237
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:400
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:442
@@ -2327,7 +2328,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:110
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:462
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:641
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:653
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:591
 msgid "Due Date is required."
 msgstr ""
@@ -2336,7 +2337,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:466
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:473
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:609
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:645
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:657
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:241
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:416
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:458
@@ -2461,7 +2462,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:40
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:36
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:59
-#: modules/accounting/includes/functions/transactions.php:937
+#: modules/accounting/includes/functions/transactions.php:936
 #: modules/hrm/assets/js/requests.js:121
 msgid "Transaction Date"
 msgstr ""
@@ -2525,7 +2526,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:123
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:102
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:89
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:126
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:167
 msgid "Attachments"
 msgstr ""
 
@@ -2946,7 +2947,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:12
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:25
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:24
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:71
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:112
 #: modules/crm/includes/functions-reporting.php:58
 #: modules/crm/includes/functions-reporting.php:102
 #: modules/crm/includes/functions-reporting.php:183
@@ -3050,7 +3051,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:190
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:421
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:528
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:539
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:514
 msgid "Conversion Successful!"
 msgstr ""
@@ -3231,7 +3232,7 @@ msgstr ""
 #: modules/accounting/includes/API/TaxAgenciesController.php:358
 #: modules/accounting/includes/API/TaxCatsController.php:326
 #: modules/accounting/includes/API/TaxRateNamesController.php:317
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:112
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:153
 msgid "Tax"
 msgstr ""
 
@@ -3300,7 +3301,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:80
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:91
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:67
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:83
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:124
 msgid "Unit Price"
 msgstr ""
 
@@ -3329,22 +3330,22 @@ msgstr ""
 #: build/i18n/languages/erp.php:235
 #: build/modules/accounting/includes/functions/common.php:458
 #: build/modules/accounting/includes/functions/transactions.php:915
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:266
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:372
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:169
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:276
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:383
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:173
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:54
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:354
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:137
 #: modules/accounting/includes/functions/common.php:458
-#: modules/accounting/includes/functions/transactions.php:915
+#: modules/accounting/includes/functions/transactions.php:914
 msgid "Estimate"
 msgstr ""
 
 #: build/i18n/languages/erp.php:236
 #: build/modules/accounting/includes/API/InvoicesController.php:488
 #: build/modules/accounting/includes/functions/common.php:453
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:269
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:173
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:279
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:177
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:51
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:357
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:139
@@ -3354,34 +3355,34 @@ msgid "Invoice"
 msgstr ""
 
 #: build/i18n/languages/erp.php:237
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:311
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:321
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:276
 msgid "Invoice does not exists!"
 msgstr ""
 
 #: build/i18n/languages/erp.php:238
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:525
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:536
 msgid "Invoice Updated!"
 msgstr ""
 
 #: build/i18n/languages/erp.php:239
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:549
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:560
 msgid "created successfully!"
 msgstr ""
 
 #: build/i18n/languages/erp.php:240
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:552
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:563
 msgid "Could not create"
 msgstr ""
 
 #: build/i18n/languages/erp.php:241
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:633
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:645
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:496
 msgid "Customer Name is required."
 msgstr ""
 
 #: build/i18n/languages/erp.php:242
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:649
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:661
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:597
 msgid "Please select a product."
 msgstr ""
@@ -3508,7 +3509,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:19
 #: modules/accounting/assets/src/admin/components/tax/TaxRecords.vue:66
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:18
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:46
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:87
 #: modules/hrm/includes/Announcement.php:370
 #: modules/hrm/includes/AnnouncementListTable.php:41
 #: modules/hrm/views/employee/tab-job.php:13
@@ -3575,7 +3576,7 @@ msgid "Show more details"
 msgstr ""
 
 #: build/i18n/languages/erp.php:263
-#: modules/accounting/assets/js/bootstrap.js:5142
+#: modules/accounting/assets/js/bootstrap.js:5156
 #: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
 msgid "No items found."
 msgstr ""
@@ -4412,7 +4413,7 @@ msgid "Show More"
 msgstr ""
 
 #: build/i18n/languages/erp.php:348
-#: modules/accounting/assets/js/bootstrap.js:5794
+#: modules/accounting/assets/js/bootstrap.js:5808
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:249
 msgid ""
 "This email already exists in CRM! Do you want to import and update the "
@@ -4420,43 +4421,43 @@ msgid ""
 msgstr ""
 
 #: build/i18n/languages/erp.php:349
-#: modules/accounting/assets/js/bootstrap.js:5799
+#: modules/accounting/assets/js/bootstrap.js:5813
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:254
 msgid "Import & Update"
 msgstr ""
 
 #: build/i18n/languages/erp.php:350
-#: modules/accounting/assets/js/bootstrap.js:5809
+#: modules/accounting/assets/js/bootstrap.js:5823
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:265
 msgid "Email already exists as customer/vendor"
 msgstr ""
 
 #: build/i18n/languages/erp.php:351
-#: modules/accounting/assets/js/bootstrap.js:5834
+#: modules/accounting/assets/js/bootstrap.js:5848
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
 msgid "Created Successfully"
 msgstr ""
 
 #: build/i18n/languages/erp.php:352
-#: modules/accounting/assets/js/bootstrap.js:5834
+#: modules/accounting/assets/js/bootstrap.js:5848
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
 msgid "Updated Successfully"
 msgstr ""
 
 #: build/i18n/languages/erp.php:353
-#: modules/accounting/assets/js/bootstrap.js:5857
+#: modules/accounting/assets/js/bootstrap.js:5871
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:313
 msgid "First name is required"
 msgstr ""
 
 #: build/i18n/languages/erp.php:354
-#: modules/accounting/assets/js/bootstrap.js:5861
+#: modules/accounting/assets/js/bootstrap.js:5875
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:317
 msgid "Last name is required"
 msgstr ""
 
 #: build/i18n/languages/erp.php:355
-#: modules/accounting/assets/js/bootstrap.js:5865
+#: modules/accounting/assets/js/bootstrap.js:5879
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:321
 msgid "Email is required"
 msgstr ""
@@ -4769,8 +4770,8 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1238
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:61
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:109
-#: modules/accounting/includes/functions/transactions.php:1096
-#: modules/accounting/includes/functions/transactions.php:1238
+#: modules/accounting/includes/functions/transactions.php:1095
+#: modules/accounting/includes/functions/transactions.php:1237
 msgid "VAT"
 msgstr ""
 
@@ -5842,14 +5843,14 @@ msgstr ""
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:81
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:65
 #: modules/accounting/includes/API/InventoryProductsController.php:391
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:81
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:122
 msgid "Product"
 msgstr ""
 
 #: build/i18n/languages/erp.php:564
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:108
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:85
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:108
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:149
 msgid "Discount"
 msgstr ""
 
@@ -5864,7 +5865,7 @@ msgid "Shipping Tax"
 msgstr ""
 
 #: build/i18n/languages/erp.php:567
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:171
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:175
 msgid "Sales Return Invoice"
 msgstr ""
 
@@ -5873,7 +5874,7 @@ msgstr ""
 msgid "Invoice ID"
 msgstr ""
 
-#: build/i18n/languages/erp.php:569
+#: build/i18n/languages/erp.php:569 includes/Admin/AdminMenu.php:133
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:45
 msgid "Create Invoice"
 msgstr ""
@@ -6318,7 +6319,7 @@ msgstr ""
 #: build/modules/crm/assets/js/vue-table.js:401
 #: build/modules/hrm/includes/AnnouncementListTable.php:261
 #: build/modules/hrm/includes/EmployeeListTable.php:95
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:636
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:647
 #: build/modules/hrm/views/requests.php:52
 #: build/modules/hrm/views/requests.php:179
 #: build/modules/hrm/views/requests.php:314
@@ -21848,9 +21849,9 @@ msgstr ""
 #: includes/API/AnnouncementsController.php:337
 #: modules/accounting/includes/API/BillsController.php:616
 #: modules/accounting/includes/API/ExpensesController.php:592
-#: modules/accounting/includes/API/InvoicesController.php:705
-#: modules/accounting/includes/API/InvoicesController.php:710
-#: modules/accounting/includes/API/InvoicesController.php:718
+#: modules/accounting/includes/API/InvoicesController.php:709
+#: modules/accounting/includes/API/InvoicesController.php:714
+#: modules/accounting/includes/API/InvoicesController.php:730
 #: modules/accounting/includes/API/PayBillsController.php:532
 #: modules/accounting/includes/API/PayPurchasesController.php:532
 #: modules/accounting/includes/API/PayPurchasesController.php:545
@@ -23792,8 +23793,8 @@ msgstr ""
 #: build/includes/Admin/views/modules.php:876
 #: build/includes/Admin/views/modules.php:903
 #: build/includes/Admin/views/modules.php:938
-#: includes/Admin/views/modules.php:876 includes/Admin/views/modules.php:903
-#: includes/Admin/views/modules.php:938
+#: includes/Admin/views/modules.php:934 includes/Admin/views/modules.php:961
+#: includes/Admin/views/modules.php:996
 msgid "Please wait!"
 msgstr ""
 
@@ -23921,7 +23922,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/holiday.php:33
 #: build/modules/hrm/views/leave/new-request.php:74
 #: includes/Admin/views/tools/misc.php:35
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:64
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:105
 #: modules/crm/includes/functions-reporting.php:171
 #: modules/crm/views/contact/feeds.php:46
 #: modules/crm/views/js-templates/customer-email-note.php:26
@@ -23953,9 +23954,9 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1236
 #: includes/Admin/views/tools.php:16 includes/Promotion.php:64
 #: includes/Promotion.php:67 includes/functions.php:885
-#: includes/functions.php:3777
-#: modules/accounting/includes/functions/transactions.php:987
-#: modules/accounting/includes/functions/transactions.php:1236
+#: includes/functions.php:3779
+#: modules/accounting/includes/functions/transactions.php:986
+#: modules/accounting/includes/functions/transactions.php:1235
 msgid "%s"
 msgstr ""
 
@@ -24403,21 +24404,21 @@ msgstr ""
 
 #: build/includes/Framework/class-settings-page.php:469
 #: build/includes/Settings/Template.php:490
-#: includes/Framework/class-settings-page.php:469
+#: includes/Framework/ERP_Settings_Page.php:469
 #: includes/Settings/Template.php:490
 msgid "Delete this image?"
 msgstr ""
 
 #: build/includes/Framework/class-settings-page.php:735
 #: build/includes/Settings/Template.php:756
-#: includes/Framework/class-settings-page.php:735
+#: includes/Framework/ERP_Settings_Page.php:735
 #: includes/Settings/Template.php:756
 msgid "Hard Crop?"
 msgstr ""
 
 #: build/includes/Framework/class-settings-page.php:762
 #: build/includes/Settings/Template.php:783
-#: includes/Framework/class-settings-page.php:762
+#: includes/Framework/ERP_Settings_Page.php:762
 #: includes/Settings/Template.php:783
 msgid "Select a page&hellip;"
 msgstr ""
@@ -25931,17 +25932,17 @@ msgstr ""
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: build/includes/Updates.php:131 includes/Updates.php:131
+#: build/includes/Updates.php:131 includes/Updates.php:132
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: build/includes/Updates.php:132 includes/Updates.php:132
+#: build/includes/Updates.php:132 includes/Updates.php:133
 msgid "Run the updater"
 msgstr ""
 
-#: build/includes/Updates.php:137 includes/Updates.php:137
+#: build/includes/Updates.php:137 includes/Updates.php:138
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -25972,119 +25973,119 @@ msgstr ""
 msgid " from your computer."
 msgstr ""
 
-#: build/includes/functions-people.php:217
-#: build/includes/functions-people.php:280 includes/functions-people.php:214
+#: build/includes/functions-people.php:214
+#: build/includes/functions-people.php:277 includes/functions-people.php:214
 #: includes/functions-people.php:277
 msgid "No data found"
 msgstr ""
 
-#: build/includes/functions-people.php:221
-#: build/includes/functions-people.php:284 includes/functions-people.php:218
+#: build/includes/functions-people.php:218
+#: build/includes/functions-people.php:281 includes/functions-people.php:218
 #: includes/functions-people.php:281
 msgid "No type found"
 msgstr ""
 
-#: build/includes/functions-people.php:383 includes/functions-people.php:380
+#: build/includes/functions-people.php:380 includes/functions-people.php:380
 msgid "No field provided"
 msgstr ""
 
-#: build/includes/functions-people.php:387 includes/functions-people.php:384
+#: build/includes/functions-people.php:384 includes/functions-people.php:384
 msgid "No value provided"
 msgstr ""
 
-#: build/includes/functions-people.php:507 includes/functions-people.php:504
+#: build/includes/functions-people.php:504 includes/functions-people.php:504
 msgid "No user type provided."
 msgstr ""
 
-#: build/includes/functions-people.php:512 includes/functions-people.php:509
+#: build/includes/functions-people.php:509 includes/functions-people.php:509
 msgid "The people type is invalid."
 msgstr ""
 
-#: build/includes/functions-people.php:520 includes/functions-people.php:517
+#: build/includes/functions-people.php:517 includes/functions-people.php:517
 msgid "You must need to fill up both first name and email fields"
 msgstr ""
 
-#: build/includes/functions-people.php:523
+#: build/includes/functions-people.php:520
 #: build/modules/hrm/includes/Employee.php:291
 #: includes/functions-people.php:520 modules/hrm/includes/Employee.php:291
 msgid "Please provide a valid first name"
 msgstr ""
 
-#: build/includes/functions-people.php:527
+#: build/includes/functions-people.php:524
 #: build/modules/hrm/includes/Employee.php:303
 #: includes/functions-people.php:524 modules/hrm/includes/Employee.php:303
 msgid "Please provide a valid last name"
 msgstr ""
 
-#: build/includes/functions-people.php:536 includes/functions-people.php:533
+#: build/includes/functions-people.php:533 includes/functions-people.php:533
 msgid "You must need to fill up both Company name and email fields"
 msgstr ""
 
-#: build/includes/functions-people.php:539 includes/functions-people.php:536
+#: build/includes/functions-people.php:536 includes/functions-people.php:536
 msgid "Please provide a valid company name"
 msgstr ""
 
-#: build/includes/functions-people.php:546
+#: build/includes/functions-people.php:543
 #: build/modules/crm/includes/Subscription.php:270
 #: includes/functions-people.php:543 modules/crm/includes/Subscription.php:270
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: build/includes/functions-people.php:550 includes/functions-people.php:547
+#: build/includes/functions-people.php:547 includes/functions-people.php:547
 msgid "Please select a valid life stage"
 msgstr ""
 
-#: build/includes/functions-people.php:554
+#: build/includes/functions-people.php:551
 #: build/modules/hrm/includes/Employee.php:380
 #: includes/functions-people.php:551 modules/hrm/includes/Employee.php:380
 msgid "Please provide a valid phone number"
 msgstr ""
 
-#: build/includes/functions-people.php:558
+#: build/includes/functions-people.php:555
 #: build/modules/hrm/includes/Employee.php:388
 #: includes/functions-people.php:555 modules/hrm/includes/Employee.php:388
 msgid "Please provide a valid date of birth"
 msgstr ""
 
-#: build/includes/functions-people.php:562 includes/functions-people.php:559
+#: build/includes/functions-people.php:559 includes/functions-people.php:559
 msgid "Please provide a valid age"
 msgstr ""
 
-#: build/includes/functions-people.php:566
+#: build/includes/functions-people.php:563
 #: build/modules/hrm/includes/Employee.php:376
 #: includes/functions-people.php:563 modules/hrm/includes/Employee.php:376
 msgid "Please provide a valid mobile number"
 msgstr ""
 
-#: build/includes/functions-people.php:570 includes/functions-people.php:567
+#: build/includes/functions-people.php:567 includes/functions-people.php:567
 msgid "Please provide a valid website"
 msgstr ""
 
-#: build/includes/functions-people.php:574 includes/functions-people.php:571
+#: build/includes/functions-people.php:571 includes/functions-people.php:571
 msgid "Please provide a valid fax number"
 msgstr ""
 
-#: build/includes/functions-people.php:578
+#: build/includes/functions-people.php:575
 #: build/modules/hrm/includes/Employee.php:411
 #: includes/functions-people.php:575 modules/hrm/includes/Employee.php:411
 msgid "Please provide a valid city name"
 msgstr ""
 
-#: build/includes/functions-people.php:582
+#: build/includes/functions-people.php:579
 #: build/modules/hrm/includes/Employee.php:415
 #: includes/functions-people.php:579 modules/hrm/includes/Employee.php:415
 msgid "Please provide a valid postal code"
 msgstr ""
 
-#: build/includes/functions-people.php:586 includes/functions-people.php:583
+#: build/includes/functions-people.php:583 includes/functions-people.php:583
 msgid "Please select a valid contact source"
 msgstr ""
 
-#: build/includes/functions-people.php:637 includes/functions-people.php:634
+#: build/includes/functions-people.php:634 includes/functions-people.php:634
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: build/includes/functions-people.php:930
+#: build/includes/functions-people.php:927
 #: build/modules/crm/includes/functions-customer.php:4031
 #: build/modules/crm/includes/functions-customer.php:4051
 #: build/modules/crm/includes/functions-customer.php:4070
@@ -26949,15 +26950,15 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: build/includes/functions.php:3482 includes/functions.php:3482
+#: build/includes/functions.php:3482 includes/functions.php:3484
 msgid "Sorry! You are not allowed to access this page."
 msgstr ""
 
-#: build/includes/functions.php:3634 includes/functions.php:3634
+#: build/includes/functions.php:3634 includes/functions.php:3636
 msgid "ERP data reset completed"
 msgstr ""
 
-#: build/includes/functions.php:3713 includes/functions.php:3713
+#: build/includes/functions.php:3713 includes/functions.php:3715
 msgid "Something went wrong when resetting. Please try again."
 msgstr ""
 
@@ -27011,7 +27012,7 @@ msgstr ""
 #: modules/accounting/includes/API/BankAccountsController.php:533
 #: modules/accounting/includes/API/BillsController.php:556
 #: modules/accounting/includes/API/ExpensesController.php:535
-#: modules/accounting/includes/API/InvoicesController.php:603
+#: modules/accounting/includes/API/InvoicesController.php:607
 #: modules/accounting/includes/API/PayPurchasesController.php:462
 #: modules/accounting/includes/API/PaymentsController.php:473
 #: modules/accounting/includes/API/PurchasesController.php:538
@@ -27089,7 +27090,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/PayBillsController.php:488
 #: build/modules/accounting/includes/API/PurchasesController.php:547
 #: modules/accounting/includes/API/BillsController.php:565
-#: modules/accounting/includes/API/InvoicesController.php:612
+#: modules/accounting/includes/API/InvoicesController.php:616
 #: modules/accounting/includes/API/PayBillsController.php:488
 #: modules/accounting/includes/API/PurchasesController.php:547
 msgid "Due date for the resource."
@@ -27117,7 +27118,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/PurchasesController.php:556
 #: modules/accounting/includes/API/BillsController.php:591
 #: modules/accounting/includes/API/ExpensesController.php:557
-#: modules/accounting/includes/API/InvoicesController.php:642
+#: modules/accounting/includes/API/InvoicesController.php:646
 #: modules/accounting/includes/API/JournalsController.php:353
 #: modules/accounting/includes/API/PayBillsController.php:473
 #: modules/accounting/includes/API/PayPurchasesController.php:471
@@ -27440,7 +27441,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/InvoicesController.php:597
 #: build/modules/accounting/includes/API/PurchasesController.php:521
 #: build/modules/accounting/includes/API/PurchasesController.php:530
-#: modules/accounting/includes/API/InvoicesController.php:597
+#: modules/accounting/includes/API/InvoicesController.php:601
 #: modules/accounting/includes/API/PurchasesController.php:521
 #: modules/accounting/includes/API/PurchasesController.php:530
 msgid "Customer id for the resource."
@@ -27449,26 +27450,26 @@ msgstr ""
 #: build/modules/accounting/includes/API/InvoicesController.php:621
 #: build/modules/accounting/includes/API/PaymentsController.php:482
 #: build/modules/accounting/includes/API/PeopleController.php:442
-#: modules/accounting/includes/API/InvoicesController.php:621
+#: modules/accounting/includes/API/InvoicesController.php:625
 #: modules/accounting/includes/API/PaymentsController.php:482
 #: modules/accounting/includes/API/PeopleController.php:442
 msgid "List of billing address data."
 msgstr ""
 
 #: build/modules/accounting/includes/API/InvoicesController.php:629
-#: modules/accounting/includes/API/InvoicesController.php:629
+#: modules/accounting/includes/API/InvoicesController.php:633
 msgid "Discount type data."
 msgstr ""
 
 #: build/modules/accounting/includes/API/InvoicesController.php:637
-#: modules/accounting/includes/API/InvoicesController.php:637
+#: modules/accounting/includes/API/InvoicesController.php:641
 msgid "Tax rate id."
 msgstr ""
 
 #: build/modules/accounting/includes/API/InvoicesController.php:647
 #: build/modules/accounting/includes/API/PayPurchasesController.php:476
 #: build/modules/accounting/includes/API/PurchasesController.php:561
-#: modules/accounting/includes/API/InvoicesController.php:647
+#: modules/accounting/includes/API/InvoicesController.php:651
 #: modules/accounting/includes/API/PayPurchasesController.php:476
 #: modules/accounting/includes/API/PurchasesController.php:561
 msgid "Product id."
@@ -27478,8 +27479,8 @@ msgstr ""
 #: build/modules/accounting/includes/API/InvoicesController.php:660
 #: build/modules/accounting/includes/API/PayPurchasesController.php:481
 #: build/modules/accounting/includes/API/PurchasesController.php:566
-#: modules/accounting/includes/API/InvoicesController.php:652
-#: modules/accounting/includes/API/InvoicesController.php:660
+#: modules/accounting/includes/API/InvoicesController.php:656
+#: modules/accounting/includes/API/InvoicesController.php:664
 #: modules/accounting/includes/API/PayPurchasesController.php:481
 #: modules/accounting/includes/API/PurchasesController.php:566
 msgid "Product type."
@@ -27487,7 +27488,7 @@ msgstr ""
 
 #: build/modules/accounting/includes/API/InvoicesController.php:665
 #: build/modules/accounting/includes/API/PurchasesController.php:571
-#: modules/accounting/includes/API/InvoicesController.php:665
+#: modules/accounting/includes/API/InvoicesController.php:669
 #: modules/accounting/includes/API/PurchasesController.php:571
 msgid "Product quantity."
 msgstr ""
@@ -27495,7 +27496,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/InvoicesController.php:670
 #: build/modules/accounting/includes/API/PayPurchasesController.php:486
 #: build/modules/accounting/includes/API/PurchasesController.php:576
-#: modules/accounting/includes/API/InvoicesController.php:670
+#: modules/accounting/includes/API/InvoicesController.php:674
 #: modules/accounting/includes/API/PayPurchasesController.php:486
 #: modules/accounting/includes/API/PurchasesController.php:576
 msgid "Unit price."
@@ -27505,7 +27506,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/PayPurchasesController.php:491
 #: build/modules/accounting/includes/API/PayPurchasesController.php:496
 #: build/modules/accounting/includes/API/PurchasesController.php:581
-#: modules/accounting/includes/API/InvoicesController.php:675
+#: modules/accounting/includes/API/InvoicesController.php:679
 #: modules/accounting/includes/API/PayPurchasesController.php:491
 #: modules/accounting/includes/API/PayPurchasesController.php:496
 #: modules/accounting/includes/API/PurchasesController.php:581
@@ -27514,14 +27515,14 @@ msgstr ""
 
 #: build/modules/accounting/includes/API/InvoicesController.php:680
 #: build/modules/accounting/includes/API/PurchasesController.php:586
-#: modules/accounting/includes/API/InvoicesController.php:680
+#: modules/accounting/includes/API/InvoicesController.php:684
 #: modules/accounting/includes/API/PurchasesController.php:586
 msgid "Tax."
 msgstr ""
 
 #: build/modules/accounting/includes/API/InvoicesController.php:685
 #: build/modules/accounting/includes/API/PurchasesController.php:591
-#: modules/accounting/includes/API/InvoicesController.php:685
+#: modules/accounting/includes/API/InvoicesController.php:689
 #: modules/accounting/includes/API/PurchasesController.php:591
 msgid "Tax percent."
 msgstr ""
@@ -27529,7 +27530,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/InvoicesController.php:690
 #: build/modules/accounting/includes/API/PayPurchasesController.php:501
 #: build/modules/accounting/includes/API/PurchasesController.php:596
-#: modules/accounting/includes/API/InvoicesController.php:690
+#: modules/accounting/includes/API/InvoicesController.php:694
 #: modules/accounting/includes/API/PayPurchasesController.php:501
 #: modules/accounting/includes/API/PurchasesController.php:596
 msgid "Item total."
@@ -27543,7 +27544,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/PayPurchasesController.php:524
 #: build/modules/accounting/includes/API/PaymentsController.php:557
 #: build/modules/accounting/includes/API/PurchasesController.php:603
-#: modules/accounting/includes/API/InvoicesController.php:697
+#: modules/accounting/includes/API/InvoicesController.php:701
 #: modules/accounting/includes/API/JournalsController.php:345
 #: modules/accounting/includes/API/LedgersAccountsController.php:669
 #: modules/accounting/includes/API/PayBillsController.php:524
@@ -28330,45 +28331,45 @@ msgid "Expense created with voucher no %s"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:213
-#: modules/accounting/includes/functions/invoices.php:213
+#: modules/accounting/includes/functions/invoices.php:214
 msgid "Failed to create voucher"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:246
-#: modules/accounting/includes/functions/invoices.php:246
+#: modules/accounting/includes/functions/invoices.php:248
 msgid "Failed to create invoice"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:276
-#: modules/accounting/includes/functions/invoices.php:276
+#: modules/accounting/includes/functions/invoices.php:278
 #. translators: error message
 msgid "Could not create invoice. Error: %s"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:335
-#: modules/accounting/includes/functions/invoices.php:335
+#: modules/accounting/includes/functions/invoices.php:337
 msgid "Failed to create invoice details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:376
-#: modules/accounting/includes/functions/invoices.php:376
+#: modules/accounting/includes/functions/invoices.php:378
 msgid "Failed to create tax data of invoice details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:408
-#: modules/accounting/includes/functions/invoices.php:408
+#: modules/accounting/includes/functions/invoices.php:410
 msgid "Failed to create tax agency details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:459
-#: modules/accounting/includes/functions/invoices.php:459
+#: modules/accounting/includes/functions/invoices.php:461
 msgid "Failed to create invoice account details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:739
 #: build/modules/accounting/includes/functions/taxes.php:481
 #: build/modules/accounting/includes/functions/taxes.php:510
-#: modules/accounting/includes/functions/invoices.php:739
+#: modules/accounting/includes/functions/invoices.php:741
 #: modules/accounting/includes/functions/taxes.php:481
 #: modules/accounting/includes/functions/taxes.php:510
 #. translators: %s: voucher_no
@@ -28376,22 +28377,22 @@ msgid "Invoice created with voucher no %s"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:866
-#: modules/accounting/includes/functions/invoices.php:866
+#: modules/accounting/includes/functions/invoices.php:869
 msgid "Failed to insert amount in ledger details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:888
-#: modules/accounting/includes/functions/invoices.php:888
+#: modules/accounting/includes/functions/invoices.php:891
 msgid "Failed to insert discount in ledger details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:911
-#: modules/accounting/includes/functions/invoices.php:911
+#: modules/accounting/includes/functions/invoices.php:914
 msgid "Failed to insert shipping in ledger details"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/invoices.php:934
-#: modules/accounting/includes/functions/invoices.php:934
+#: modules/accounting/includes/functions/invoices.php:937
 msgid "Failed to insert shipping tax in ledger details"
 msgstr ""
 
@@ -28467,24 +28468,24 @@ msgid "Inconsistent data provided"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:891
-#: modules/accounting/includes/functions/transactions.php:891
+#: modules/accounting/includes/functions/transactions.php:890
 msgid ""
 "ERP PDF extension is not installed. Please install the extension for PDF "
 "support"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:926
-#: modules/accounting/includes/functions/transactions.php:926
+#: modules/accounting/includes/functions/transactions.php:925
 msgid "Transaction Number"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:948
-#: modules/accounting/includes/functions/transactions.php:948
+#: modules/accounting/includes/functions/transactions.php:947
 msgid "FROM"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:959
-#: modules/accounting/includes/functions/transactions.php:959
+#: modules/accounting/includes/functions/transactions.php:958
 msgid "TO"
 msgstr ""
 
@@ -28492,10 +28493,10 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1069
 #: build/modules/accounting/includes/functions/transactions.php:1105
 #: build/modules/accounting/includes/functions/transactions.php:1209
-#: modules/accounting/includes/functions/transactions.php:968
-#: modules/accounting/includes/functions/transactions.php:1069
-#: modules/accounting/includes/functions/transactions.php:1105
-#: modules/accounting/includes/functions/transactions.php:1209
+#: modules/accounting/includes/functions/transactions.php:967
+#: modules/accounting/includes/functions/transactions.php:1068
+#: modules/accounting/includes/functions/transactions.php:1104
+#: modules/accounting/includes/functions/transactions.php:1208
 msgid "PRODUCT"
 msgstr ""
 
@@ -28503,19 +28504,19 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1070
 #: build/modules/accounting/includes/functions/transactions.php:1106
 #: build/modules/accounting/includes/functions/transactions.php:1210
-#: modules/accounting/includes/functions/transactions.php:969
-#: modules/accounting/includes/functions/transactions.php:1070
-#: modules/accounting/includes/functions/transactions.php:1106
-#: modules/accounting/includes/functions/transactions.php:1210
+#: modules/accounting/includes/functions/transactions.php:968
+#: modules/accounting/includes/functions/transactions.php:1069
+#: modules/accounting/includes/functions/transactions.php:1105
+#: modules/accounting/includes/functions/transactions.php:1209
 msgid "QUANTITY"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:970
 #: build/modules/accounting/includes/functions/transactions.php:1071
 #: build/modules/accounting/includes/functions/transactions.php:1107
-#: modules/accounting/includes/functions/transactions.php:970
-#: modules/accounting/includes/functions/transactions.php:1071
-#: modules/accounting/includes/functions/transactions.php:1107
+#: modules/accounting/includes/functions/transactions.php:969
+#: modules/accounting/includes/functions/transactions.php:1070
+#: modules/accounting/includes/functions/transactions.php:1106
 msgid "UNIT PRICE"
 msgstr ""
 
@@ -28533,20 +28534,20 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1348
 #: build/modules/accounting/includes/functions/transactions.php:1381
 #: build/modules/accounting/includes/functions/transactions.php:1411
-#: modules/accounting/includes/functions/transactions.php:971
-#: modules/accounting/includes/functions/transactions.php:1007
-#: modules/accounting/includes/functions/transactions.php:1039
-#: modules/accounting/includes/functions/transactions.php:1072
-#: modules/accounting/includes/functions/transactions.php:1108
-#: modules/accounting/includes/functions/transactions.php:1144
-#: modules/accounting/includes/functions/transactions.php:1178
-#: modules/accounting/includes/functions/transactions.php:1212
-#: modules/accounting/includes/functions/transactions.php:1249
-#: modules/accounting/includes/functions/transactions.php:1282
-#: modules/accounting/includes/functions/transactions.php:1315
-#: modules/accounting/includes/functions/transactions.php:1348
-#: modules/accounting/includes/functions/transactions.php:1381
-#: modules/accounting/includes/functions/transactions.php:1411
+#: modules/accounting/includes/functions/transactions.php:970
+#: modules/accounting/includes/functions/transactions.php:1006
+#: modules/accounting/includes/functions/transactions.php:1038
+#: modules/accounting/includes/functions/transactions.php:1071
+#: modules/accounting/includes/functions/transactions.php:1107
+#: modules/accounting/includes/functions/transactions.php:1143
+#: modules/accounting/includes/functions/transactions.php:1177
+#: modules/accounting/includes/functions/transactions.php:1211
+#: modules/accounting/includes/functions/transactions.php:1248
+#: modules/accounting/includes/functions/transactions.php:1281
+#: modules/accounting/includes/functions/transactions.php:1314
+#: modules/accounting/includes/functions/transactions.php:1347
+#: modules/accounting/includes/functions/transactions.php:1380
+#: modules/accounting/includes/functions/transactions.php:1410
 msgid "AMOUNT"
 msgstr ""
 
@@ -28564,36 +28565,36 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1371
 #: build/modules/accounting/includes/functions/transactions.php:1401
 #: build/modules/accounting/includes/functions/transactions.php:1423
-#: modules/accounting/includes/functions/transactions.php:988
-#: modules/accounting/includes/functions/transactions.php:1029
-#: modules/accounting/includes/functions/transactions.php:1061
-#: modules/accounting/includes/functions/transactions.php:1095
-#: modules/accounting/includes/functions/transactions.php:1131
-#: modules/accounting/includes/functions/transactions.php:1168
-#: modules/accounting/includes/functions/transactions.php:1200
-#: modules/accounting/includes/functions/transactions.php:1237
-#: modules/accounting/includes/functions/transactions.php:1272
-#: modules/accounting/includes/functions/transactions.php:1305
-#: modules/accounting/includes/functions/transactions.php:1337
-#: modules/accounting/includes/functions/transactions.php:1371
-#: modules/accounting/includes/functions/transactions.php:1401
-#: modules/accounting/includes/functions/transactions.php:1423
+#: modules/accounting/includes/functions/transactions.php:987
+#: modules/accounting/includes/functions/transactions.php:1028
+#: modules/accounting/includes/functions/transactions.php:1060
+#: modules/accounting/includes/functions/transactions.php:1094
+#: modules/accounting/includes/functions/transactions.php:1130
+#: modules/accounting/includes/functions/transactions.php:1167
+#: modules/accounting/includes/functions/transactions.php:1199
+#: modules/accounting/includes/functions/transactions.php:1236
+#: modules/accounting/includes/functions/transactions.php:1271
+#: modules/accounting/includes/functions/transactions.php:1304
+#: modules/accounting/includes/functions/transactions.php:1336
+#: modules/accounting/includes/functions/transactions.php:1370
+#: modules/accounting/includes/functions/transactions.php:1400
+#: modules/accounting/includes/functions/transactions.php:1422
 msgid "SUB TOTAL"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:989
 #: build/modules/accounting/includes/functions/transactions.php:1097
 #: build/modules/accounting/includes/functions/transactions.php:1133
-#: modules/accounting/includes/functions/transactions.php:989
-#: modules/accounting/includes/functions/transactions.php:1097
-#: modules/accounting/includes/functions/transactions.php:1133
+#: modules/accounting/includes/functions/transactions.php:988
+#: modules/accounting/includes/functions/transactions.php:1096
+#: modules/accounting/includes/functions/transactions.php:1132
 msgid "DISCOUNT"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:990
 #: build/modules/accounting/includes/functions/transactions.php:1132
-#: modules/accounting/includes/functions/transactions.php:990
-#: modules/accounting/includes/functions/transactions.php:1132
+#: modules/accounting/includes/functions/transactions.php:989
+#: modules/accounting/includes/functions/transactions.php:1131
 msgid "TAX"
 msgstr ""
 
@@ -28611,29 +28612,29 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1372
 #: build/modules/accounting/includes/functions/transactions.php:1402
 #: build/modules/accounting/includes/functions/transactions.php:1424
-#: modules/accounting/includes/functions/transactions.php:991
-#: modules/accounting/includes/functions/transactions.php:1030
-#: modules/accounting/includes/functions/transactions.php:1062
-#: modules/accounting/includes/functions/transactions.php:1098
-#: modules/accounting/includes/functions/transactions.php:1134
-#: modules/accounting/includes/functions/transactions.php:1169
-#: modules/accounting/includes/functions/transactions.php:1201
-#: modules/accounting/includes/functions/transactions.php:1239
-#: modules/accounting/includes/functions/transactions.php:1273
-#: modules/accounting/includes/functions/transactions.php:1306
-#: modules/accounting/includes/functions/transactions.php:1338
-#: modules/accounting/includes/functions/transactions.php:1372
-#: modules/accounting/includes/functions/transactions.php:1402
-#: modules/accounting/includes/functions/transactions.php:1424
+#: modules/accounting/includes/functions/transactions.php:990
+#: modules/accounting/includes/functions/transactions.php:1029
+#: modules/accounting/includes/functions/transactions.php:1061
+#: modules/accounting/includes/functions/transactions.php:1097
+#: modules/accounting/includes/functions/transactions.php:1133
+#: modules/accounting/includes/functions/transactions.php:1168
+#: modules/accounting/includes/functions/transactions.php:1200
+#: modules/accounting/includes/functions/transactions.php:1238
+#: modules/accounting/includes/functions/transactions.php:1272
+#: modules/accounting/includes/functions/transactions.php:1305
+#: modules/accounting/includes/functions/transactions.php:1337
+#: modules/accounting/includes/functions/transactions.php:1371
+#: modules/accounting/includes/functions/transactions.php:1401
+#: modules/accounting/includes/functions/transactions.php:1423
 msgid "TOTAL"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:992
 #: build/modules/accounting/includes/functions/transactions.php:1167
 #: build/modules/accounting/includes/functions/transactions.php:1240
-#: modules/accounting/includes/functions/transactions.php:992
-#: modules/accounting/includes/functions/transactions.php:1167
-#: modules/accounting/includes/functions/transactions.php:1240
+#: modules/accounting/includes/functions/transactions.php:991
+#: modules/accounting/includes/functions/transactions.php:1166
+#: modules/accounting/includes/functions/transactions.php:1239
 msgid "DUE"
 msgstr ""
 
@@ -28656,19 +28657,19 @@ msgstr ""
 #: build/modules/hrm/views/employee/single.php:123
 #: build/modules/hrm/views/employee/tab-notes.php:2
 #: build/modules/hrm/views/js-templates/education-form.php:95
-#: modules/accounting/includes/functions/transactions.php:996
-#: modules/accounting/includes/functions/transactions.php:1024
-#: modules/accounting/includes/functions/transactions.php:1056
-#: modules/accounting/includes/functions/transactions.php:1090
-#: modules/accounting/includes/functions/transactions.php:1126
-#: modules/accounting/includes/functions/transactions.php:1162
-#: modules/accounting/includes/functions/transactions.php:1195
-#: modules/accounting/includes/functions/transactions.php:1232
-#: modules/accounting/includes/functions/transactions.php:1266
-#: modules/accounting/includes/functions/transactions.php:1299
-#: modules/accounting/includes/functions/transactions.php:1332
-#: modules/accounting/includes/functions/transactions.php:1366
-#: modules/accounting/includes/functions/transactions.php:1397
+#: modules/accounting/includes/functions/transactions.php:995
+#: modules/accounting/includes/functions/transactions.php:1023
+#: modules/accounting/includes/functions/transactions.php:1055
+#: modules/accounting/includes/functions/transactions.php:1089
+#: modules/accounting/includes/functions/transactions.php:1125
+#: modules/accounting/includes/functions/transactions.php:1161
+#: modules/accounting/includes/functions/transactions.php:1194
+#: modules/accounting/includes/functions/transactions.php:1231
+#: modules/accounting/includes/functions/transactions.php:1265
+#: modules/accounting/includes/functions/transactions.php:1298
+#: modules/accounting/includes/functions/transactions.php:1331
+#: modules/accounting/includes/functions/transactions.php:1365
+#: modules/accounting/includes/functions/transactions.php:1396
 #: modules/crm/includes/functions-customer.php:1928
 #: modules/crm/views/js-templates/new-customer.php:317
 #: modules/hrm/views/employee/empty-employee.php:133
@@ -28680,15 +28681,15 @@ msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1005
 #: build/modules/accounting/includes/functions/transactions.php:1037
-#: modules/accounting/includes/functions/transactions.php:1005
-#: modules/accounting/includes/functions/transactions.php:1037
+#: modules/accounting/includes/functions/transactions.php:1004
+#: modules/accounting/includes/functions/transactions.php:1036
 msgid "INVOICE NO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1006
 #: build/modules/accounting/includes/functions/transactions.php:1038
-#: modules/accounting/includes/functions/transactions.php:1006
-#: modules/accounting/includes/functions/transactions.php:1038
+#: modules/accounting/includes/functions/transactions.php:1005
+#: modules/accounting/includes/functions/transactions.php:1037
 msgid "TRN DATE"
 msgstr ""
 
@@ -28699,32 +28700,32 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1303
 #: build/modules/accounting/includes/functions/transactions.php:1336
 #: build/modules/accounting/includes/functions/transactions.php:1370
-#: modules/accounting/includes/functions/transactions.php:1028
-#: modules/accounting/includes/functions/transactions.php:1060
-#: modules/accounting/includes/functions/transactions.php:1199
-#: modules/accounting/includes/functions/transactions.php:1270
-#: modules/accounting/includes/functions/transactions.php:1303
-#: modules/accounting/includes/functions/transactions.php:1336
-#: modules/accounting/includes/functions/transactions.php:1370
+#: modules/accounting/includes/functions/transactions.php:1027
+#: modules/accounting/includes/functions/transactions.php:1059
+#: modules/accounting/includes/functions/transactions.php:1198
+#: modules/accounting/includes/functions/transactions.php:1269
+#: modules/accounting/includes/functions/transactions.php:1302
+#: modules/accounting/includes/functions/transactions.php:1335
+#: modules/accounting/includes/functions/transactions.php:1369
 msgid "PAID"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1094
 #: build/modules/accounting/includes/functions/transactions.php:1130
-#: modules/accounting/includes/functions/transactions.php:1094
-#: modules/accounting/includes/functions/transactions.php:1130
+#: modules/accounting/includes/functions/transactions.php:1093
+#: modules/accounting/includes/functions/transactions.php:1129
 msgid "RETURNED"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1141
 #: build/modules/accounting/includes/functions/transactions.php:1176
-#: modules/accounting/includes/functions/transactions.php:1141
-#: modules/accounting/includes/functions/transactions.php:1176
+#: modules/accounting/includes/functions/transactions.php:1140
+#: modules/accounting/includes/functions/transactions.php:1175
 msgid "BILL NO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1142
-#: modules/accounting/includes/functions/transactions.php:1142
+#: modules/accounting/includes/functions/transactions.php:1141
 msgid "BILL DATE"
 msgstr ""
 
@@ -28732,98 +28733,98 @@ msgstr ""
 #: build/modules/accounting/includes/functions/transactions.php:1177
 #: build/modules/accounting/includes/functions/transactions.php:1248
 #: build/modules/accounting/includes/functions/transactions.php:1281
-#: modules/accounting/includes/functions/transactions.php:1143
-#: modules/accounting/includes/functions/transactions.php:1177
-#: modules/accounting/includes/functions/transactions.php:1248
-#: modules/accounting/includes/functions/transactions.php:1281
+#: modules/accounting/includes/functions/transactions.php:1142
+#: modules/accounting/includes/functions/transactions.php:1176
+#: modules/accounting/includes/functions/transactions.php:1247
+#: modules/accounting/includes/functions/transactions.php:1280
 msgid "DUE DATE"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1166
-#: modules/accounting/includes/functions/transactions.php:1166
+#: modules/accounting/includes/functions/transactions.php:1165
 msgid "PENDING"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1211
-#: modules/accounting/includes/functions/transactions.php:1211
+#: modules/accounting/includes/functions/transactions.php:1210
 msgid "COST PRICE"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1247
 #: build/modules/accounting/includes/functions/transactions.php:1280
-#: modules/accounting/includes/functions/transactions.php:1247
-#: modules/accounting/includes/functions/transactions.php:1280
+#: modules/accounting/includes/functions/transactions.php:1246
+#: modules/accounting/includes/functions/transactions.php:1279
 msgid "PURCHASE NO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1313
-#: modules/accounting/includes/functions/transactions.php:1313
+#: modules/accounting/includes/functions/transactions.php:1312
 msgid "EXPENSE NO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1314
-#: modules/accounting/includes/functions/transactions.php:1314
+#: modules/accounting/includes/functions/transactions.php:1313
 msgid "EXPENSE DATE"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1345
-#: modules/accounting/includes/functions/transactions.php:1345
+#: modules/accounting/includes/functions/transactions.php:1344
 msgid "CHECK NO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1346
-#: modules/accounting/includes/functions/transactions.php:1346
+#: modules/accounting/includes/functions/transactions.php:1345
 msgid "CHECK DATE"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1347
-#: modules/accounting/includes/functions/transactions.php:1347
+#: modules/accounting/includes/functions/transactions.php:1346
 msgid "PAY TO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1379
 #: build/modules/accounting/includes/functions/transactions.php:1409
-#: modules/accounting/includes/functions/transactions.php:1379
-#: modules/accounting/includes/functions/transactions.php:1409
+#: modules/accounting/includes/functions/transactions.php:1378
+#: modules/accounting/includes/functions/transactions.php:1408
 msgid "VOUCHER NO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1380
-#: modules/accounting/includes/functions/transactions.php:1380
+#: modules/accounting/includes/functions/transactions.php:1379
 msgid "ACCOUNT FROM"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1382
-#: modules/accounting/includes/functions/transactions.php:1382
+#: modules/accounting/includes/functions/transactions.php:1381
 msgid "ACCOUNT TO"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1410
-#: modules/accounting/includes/functions/transactions.php:1410
+#: modules/accounting/includes/functions/transactions.php:1409
 msgid "PARTICULARS"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1457
-#: modules/accounting/includes/functions/transactions.php:1457
+#: modules/accounting/includes/functions/transactions.php:1456
 #. translators: %s: type
 msgid "Transaction alert for %s"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1458
-#: modules/accounting/includes/functions/transactions.php:1458
+#: modules/accounting/includes/functions/transactions.php:1457
 msgid "Thank you for the transaction"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1466
 #: build/modules/accounting/includes/functions/transactions.php:1563
-#: modules/accounting/includes/functions/transactions.php:1466
-#: modules/accounting/includes/functions/transactions.php:1563
+#: modules/accounting/includes/functions/transactions.php:1465
+#: modules/accounting/includes/functions/transactions.php:1562
 #. translators: %s: type
 msgid "PDF not generated!"
 msgstr ""
 
 #: build/modules/accounting/includes/functions/transactions.php:1764
-#: modules/accounting/includes/functions/transactions.php:1764
+#: modules/accounting/includes/functions/transactions.php:1763
 msgid "Failed to create people transaction details"
 msgstr ""
 
@@ -28862,37 +28863,37 @@ msgid "from"
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:23
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:23
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:64
 msgid "Transaction Type: "
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:25
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:25
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:66
 msgid "Amount Due: "
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:27
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:27
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:68
 msgid "Date Due: "
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:32
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:32
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:73
 msgid "INVOICE"
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:42
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:42
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:83
 msgid "Voucher Number"
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:82
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:82
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:123
 msgid "Quantity"
 msgstr ""
 
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:140
-#: modules/accounting/includes/views/transactions/invoice-readonly.php:140
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:189
 msgid "Powered By "
 msgstr ""
 
@@ -34337,17 +34338,17 @@ msgstr ""
 msgid "Request Days"
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:487
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:486
 #: modules/hrm/includes/LeaveRequestsListTable.php:486
 msgid "Last week"
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:489
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:488
 #: modules/hrm/includes/LeaveRequestsListTable.php:488
 msgid "Last month"
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:491
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:490
 #: modules/hrm/includes/LeaveRequestsListTable.php:490
 msgid "Last 3 months"
 msgstr ""
@@ -34379,26 +34380,26 @@ msgstr ""
 msgid "Financial year"
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:577
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:575
 #: modules/hrm/includes/LeaveRequestsListTable.php:575
 msgid "Leave status"
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:579
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:577
 #: modules/hrm/includes/LeaveRequestsListTable.php:577
 msgid ""
 "Select the leave request states as per your preference. Selecting none "
 "would show all leave states including Approved, Pending and Rejected."
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:598
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:596
 #: build/modules/hrm/views/requests.php:35
 #: modules/hrm/includes/LeaveRequestsListTable.php:596
 #: modules/hrm/views/requests.php:35
 msgid "Date range"
 msgstr ""
 
-#: build/modules/hrm/includes/LeaveRequestsListTable.php:708
+#: build/modules/hrm/includes/LeaveRequestsListTable.php:721
 #: modules/hrm/includes/LeaveRequestsListTable.php:721
 msgid "Clear filter"
 msgstr ""
@@ -35556,6 +35557,8 @@ msgid "Year of Completion"
 msgstr ""
 
 #: build/modules/hrm/views/employee/tab-general.php:209
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:139
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:119
 #: modules/hrm/views/employee/tab-general.php:209
 msgid "Additional Notes"
 msgstr ""
@@ -36133,6 +36136,7 @@ msgid "Scale (Out of)"
 msgstr ""
 
 #: build/modules/hrm/views/js-templates/education-form.php:99
+#: modules/accounting/includes/views/transactions/invoice-readonly.php:182
 #: modules/hrm/views/js-templates/education-form.php:99
 msgid "Additional notes"
 msgstr ""
@@ -36789,6 +36793,14 @@ msgstr ""
 msgid "modal"
 msgstr ""
 
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:140
+msgid "Enter content"
+msgstr ""
+
+#: modules/accounting/includes/API/InvoicesController.php:722
+msgid "Custom text for invoice"
+msgstr ""
+
 #: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
 msgid "This is a dummy plugin"
 msgstr ""
@@ -37026,11 +37038,11 @@ msgid_plural "images"
 msgstr[0] ""
 msgstr[1] ""
 
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:230
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:238
 msgid "Inactive Widgets"
 msgstr ""
 
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:233
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:241
 msgid "Drag widgets here to remove them from the sidebar but keep their settings."
 msgstr ""
 
