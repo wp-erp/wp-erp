@@ -1654,6 +1654,8 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
             $mailgun->send_email( $data );
         }
+    } else {
+        $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
     }
 
     return $is_mail_sent;

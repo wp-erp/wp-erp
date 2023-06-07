@@ -869,7 +869,6 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
     if ( ! empty( $request ) ) {
         $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
-        $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
         $body       = isset( $request['message'] ) ? $request['message'] : ( ! empty( $request['body'] ) ? $request['body'] : '' );
         $attach_pdf = isset( $request['attachment'] ) && 'on' === $request['attachment'] ? true : false;
     }
@@ -927,7 +926,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     }
 
     // Set Reference No
-    if ( $transaction->ref ) {
+    if ( ! empty( $transaction->ref ) ) {
         $trn_pdf->set_reference( $transaction->ref , __( 'Reference No', 'erp' ) );
     }
 
