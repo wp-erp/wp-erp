@@ -14,11 +14,11 @@
 
         <form action="" method="post" @submit.prevent="submitInvoiceForm">
 
-        <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
+            <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
 
-            <show-errors :error_msgs="form_errors"></show-errors>
+                <show-errors :error_msgs="form_errors"></show-errors>
 
-            <div class="wperp-panel-body">
+                <div class="wperp-panel-body">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <select-customers v-model="basic_fields.customer"></select-customers>
@@ -40,122 +40,122 @@
                             <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                         </div>
                     </div>
-                <!-- </form> -->
+                    <!-- </form> -->
 
+                </div>
             </div>
-        </div>
 
             <div class="wperp-table-responsive">
                 <!-- Start Invoice Items Table -->
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
-                            <tr>
-                                <th scope="col" class="col--products">{{ __('Product/Service', 'erp') }}</th>
-                                <th scope="col" class="col--qty">{{ __('Qty', 'erp') }}</th>
-                                <th scope="col" class="col--unit-price">{{ __('Unit Price', 'erp') }}</th>
-                                <th scope="col" class="col--amount">{{ __('Amount', 'erp') }}</th>
-                                <th scope="col" class="col--tax">{{ __('Tax', 'erp') }} <span class="erp-help-tip .erp-tips" :title="__('Make sure you have created tax category, zone and rate. Also, make sure the tax category is added on the product.', 'erp')"></span></th>
-                                <th scope="col" class="col--actions"></th>
-                            </tr>
+                        <tr>
+                            <th scope="col" class="col--products">{{ __('Product/Service', 'erp') }}</th>
+                            <th scope="col" class="col--qty">{{ __('Qty', 'erp') }}</th>
+                            <th scope="col" class="col--unit-price">{{ __('Unit Price', 'erp') }}</th>
+                            <th scope="col" class="col--amount">{{ __('Amount', 'erp') }}</th>
+                            <th scope="col" class="col--tax">{{ __('Tax', 'erp') }} <span class="erp-help-tip .erp-tips" :title="__('Make sure you have created tax category, zone and rate. Also, make sure the tax category is added on the product.', 'erp')"></span></th>
+                            <th scope="col" class="col--actions"></th>
+                        </tr>
                         </thead>
                         <tbody v-if="null != taxSummary">
-                            <invoice-trn-row
-                                :line="line"
-                                :products="products"
-                                :taxSummary="taxSummary"
-                                :key="index"
-                                v-for="(line, index) in transactionLines"
-                            ></invoice-trn-row>
+                        <invoice-trn-row
+                            :line="line"
+                            :products="products"
+                            :taxSummary="taxSummary"
+                            :key="index"
+                            v-for="(line, index) in transactionLines"
+                        ></invoice-trn-row>
 
-                            <tr class="add-new-line">
-                                <td colspan="9" style="text-align: left;">
-                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
-                                </td>
-                            </tr>
+                        <tr class="add-new-line">
+                            <td colspan="9" style="text-align: left;">
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
+                            </td>
+                        </tr>
 
-                            <tr class="discount-rate-row inline-edit-row">
-                                <td colspan="4" class="text-right with-multiselect">
-                                    <select v-model="discountType">
-                                        <option value="discount-percent">{{ __('Discount percent', 'erp') }}</option>
-                                        <option value="discount-value">{{ __('Discount value', 'erp') }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="discountType-box">
-                                        <input type="text" class="wperp-form-field" v-model="discount" :placeholder="discountType">
-                                        <em v-show="'discount-percent' === discountType"> %</em>
+                        <tr class="discount-rate-row inline-edit-row">
+                            <td colspan="4" class="text-right with-multiselect">
+                                <select v-model="discountType">
+                                    <option value="discount-percent">{{ __('Discount percent', 'erp') }}</option>
+                                    <option value="discount-value">{{ __('Discount value', 'erp') }}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="discountType-box">
+                                    <input type="text" class="wperp-form-field" v-model="discount" :placeholder="discountType">
+                                    <em v-show="'discount-percent' === discountType"> %</em>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+
+                        <tr class="tax-rate-row inline-edit-row">
+                            <td colspan="4" class="text-right with-multiselect">
+                                <multi-select v-model="taxRate"
+                                              :options="taxRates"
+                                              class="tax-rates"
+                                              :placeholder="__('Select sales tax', 'erp')" />
+                            </td>
+                            <td><input type="text" class="wperp-form-field" :value="moneyFormat(taxTotalAmount)" readonly></td>
+                            <td></td>
+                        </tr>
+
+                        <tr class="total-amount-row inline-edit-row">
+                            <td colspan="4" class="text-right">
+                                <span>{{ __('Total Amount', 'erp') }} =</span>
+                            </td>
+                            <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
+                            <td></td>
+                        </tr>
+                        <tr class="wperp-form-group inline-edit-row">
+                            <td colspan="9" style="text-align: left;">
+                                <label>{{ __('Particulars', 'erp') }}</label>
+                                <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
+                            </td>
+                        </tr>
+                        <tr class="inline-edit-row">
+                            <td>
+                                <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
+                                    <img :src="erp_acct_assets + '/images/file-thumb.png'">
+                                    <span class="remove-file" @click="removeFile(index)">&#10007;</span>
+
+                                    <div class="attachment-meta">
+                                        <h3>{{ getFileName(file) }}</h3>
                                     </div>
-                                </td>
-                                <td></td>
-                            </tr>
-
-                            <tr class="tax-rate-row inline-edit-row">
-                                <td colspan="4" class="text-right with-multiselect">
-                                    <multi-select v-model="taxRate"
-                                        :options="taxRates"
-                                        class="tax-rates"
-                                        :placeholder="__('Select sales tax', 'erp')" />
-                                </td>
-                                <td><input type="text" class="wperp-form-field" :value="moneyFormat(taxTotalAmount)" readonly></td>
-                                <td></td>
-                            </tr>
-
-                            <tr class="total-amount-row inline-edit-row">
-                                <td colspan="4" class="text-right">
-                                    <span>{{ __('Total Amount', 'erp') }} =</span>
-                                </td>
-                                <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
-                                <td></td>
-                            </tr>
-                            <tr class="wperp-form-group inline-edit-row">
-                                <td colspan="9" style="text-align: left;">
-                                    <label>{{ __('Particulars', 'erp') }}</label>
-                                    <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
-                                </td>
-                            </tr>
-                            <tr class="inline-edit-row">
-                                <td>
-                                    <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
-                                        <img :src="erp_acct_assets + '/images/file-thumb.png'">
-                                        <span class="remove-file" @click="removeFile(index)">&#10007;</span>
-
-                                        <div class="attachment-meta">
-                                            <h3>{{ getFileName(file) }}</h3>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="add-attachment-row inline-edit-row">
-                                <td colspan="9" style="text-align: left;">
-                                    <div class="attachment-container">
-                                        <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
-                                        <file-upload v-model="attachments" url="/invoices/attachments"/>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="add-attachment-row inline-edit-row">
-                                <td colspan="9" style="text-align: left;">
-                                    <label>{{ __('Additional Notes', 'erp') }}</label>
-                                    <VueTrix v-model="additional_notes" :placeholder="__('Enter content', 'erp')"/>
-                                </td>
-                            </tr>
-                            <component
-                                v-for="(component, compKey) in extraFields"
-                                :key="'key-' + compKey"
-                                :is="component"
-                                :tran-type="inv_title" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="add-attachment-row inline-edit-row">
+                            <td colspan="9" style="text-align: left;">
+                                <div class="attachment-container">
+                                    <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
+                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="add-additional-note-row inline-edit-row">
+                            <td colspan="9" style="text-align: left;">
+                                <label>{{ __('Additional Notes', 'erp') }}</label>
+                                <VueTrix v-model="additional_notes" :placeholder="__('Enter content', 'erp')"/>
+                            </td>
+                        </tr>
+                        <component
+                            v-for="(component, compKey) in extraFields"
+                            :key="'key-' + compKey"
+                            :is="component"
+                            :tran-type="inv_title" />
                         </tbody>
                         <tfoot>
-                            <tr>
-                                <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
-                                    <combo-button :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
-                                </td>
-                                <td v-else colspan="9" style="text-align: right;">
-                                    <combo-button v-if="editMode" :options="updateButtons" />
-                                    <combo-button v-else :options="createButtons" />
-                                </td>
-                            </tr>
+                        <tr>
+                            <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
+                                <combo-button :options="[{ id: 'update', text: __('Save Conversion', 'erp') }]" />
+                            </td>
+                            <td v-else colspan="9" style="text-align: right;">
+                                <combo-button v-if="editMode" :options="updateButtons" />
+                                <combo-button v-else :options="createButtons" />
+                            </td>
+                        </tr>
                         </tfoot>
                     </table>
                 </div>
@@ -311,8 +311,8 @@ export default {
                  */
                 const [request1, request2] = await Promise.all([
                     HTTP.get('/products', { params: {
-                        number: -1
-                    } }),
+                            number: -1
+                        } }),
                     HTTP.get('/taxes/summary')
                 ]);
                 const request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
@@ -397,8 +397,8 @@ export default {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/products', { params: {
-                number: -1
-            } }).then(response => {
+                    number: -1
+                } }).then(response => {
                 this.products = response.data;
 
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -667,137 +667,142 @@ export default {
 </script>
 
 <style lang="less">
-    tr.padded {
-        height: 50px;
+tr.padded {
+    height: 50px;
+}
+
+.add-additional-note-row {
+    .trix-button--icon-code {
+        display: none;
+    }
+}
+.discount-rate-row {
+    select {
+        width: 235px;
+        height: 34px;
     }
 
-    .discount-rate-row {
-        select {
-            width: 235px;
-            height: 34px;
+    input {
+        width: 130px !important;
+    }
+
+    .discountType-box {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.tax-rate-row {
+    .tax-rates {
+        width: 235px;
+        float: right;
+    }
+}
+
+.attachment-item {
+    box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3);
+    padding: 3px;
+    position: relative;
+    height: 58px;
+    margin: 10px 0;
+
+    .remove-file {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: 13px;
+        color: #fff;
+        cursor: pointer;
+        background: #f44336;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+    }
+
+    img {
+        float: left;
+    }
+}
+
+.attachment-meta {
+    h3 {
+        margin-left: 50px;
+        text-align: left;
+        line-height: 2;
+    }
+}
+
+.invoice-create {
+    .dropdown {
+        width: 100%;
+    }
+
+    .col--products {
+        width: 400px;
+    }
+
+    .col--qty {
+        width: 80px;
+    }
+
+    .col--unit-price {
+        width: 120px;
+    }
+
+    .col--amount {
+        width: 200px;
+    }
+
+    .col--tax {
+        text-align: center;
+        width: 100px;
+    }
+
+    .product-select {
+        .with-multiselect .multiselect__select,
+        .with-multiselect .multiselect__tags {
+            min-height: 33px !important;
+            margin-top: 4px;
         }
 
-        input {
-            width: 130px !important;
-        }
-
-        .discountType-box {
-            display: flex;
-            align-items: center;
+        .with-multiselect .multiselect__placeholder {
+            margin-top: 3px;
         }
     }
 
-    .tax-rate-row {
-        .tax-rates {
-            width: 235px;
-            float: right;
-        }
+    .invoice-create .erp-help-tip {
+        color    : #2f4f4f;
+        font-size: 1.2em;
     }
 
-    .attachment-item {
-        box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3);
-        padding: 3px;
-        position: relative;
-        height: 58px;
-        margin: 10px 0;
-
-        .remove-file {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 13px;
-            color: #fff;
-            cursor: pointer;
-            background: #f44336;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            text-align: center;
-        }
-
-        img {
-            float: left;
-        }
-    }
-
-    .attachment-meta {
-        h3 {
-            margin-left: 50px;
-            text-align: left;
-            line-height: 2;
-        }
-    }
-
-    .invoice-create {
-        .dropdown {
-            width: 100%;
-        }
-
-        .col--products {
-            width: 400px;
-        }
-
+    @media (max-width: 782px) {
         .col--qty {
-            width: 80px;
-        }
-
-        .col--unit-price {
-            width: 120px;
-        }
-
-        .col--amount {
-            width: 200px;
-        }
-
-        .col--tax {
-            text-align: center;
-            width: 100px;
-        }
-
-        .product-select {
-            .with-multiselect .multiselect__select,
-            .with-multiselect .multiselect__tags {
-                min-height: 33px !important;
-                margin-top: 4px;
-            }
-
-            .with-multiselect .multiselect__placeholder {
-                margin-top: 3px;
+            input {
+                padding: 5px !important;
             }
         }
 
-        .invoice-create .erp-help-tip {
-            color    : #2f4f4f;
-            font-size: 1.2em;
+        .col--uni_price,
+        .col--amount,
+        .col--tax,
+        .col--actions {
+            display: table-cell !important;
+            width: 10%;
+
+            input {
+                padding: 5px !important;
+            }
         }
 
-        @media (max-width: 782px) {
-            .col--qty {
-                input {
-                    padding: 5px !important;
-                }
-            }
+        tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
+            display: none !important;
+        }
 
-            .col--uni_price,
-            .col--amount,
-            .col--tax,
-            .col--actions {
-                display: table-cell !important;
-                width: 10%;
-
-                input {
-                    padding: 5px !important;
-                }
-            }
-
-            tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary)::before {
-                display: none !important;
-            }
-
-            td {
-                padding-left: 5px !important;
-                padding-right: 5px !important;
-            }
+        td {
+            padding-left: 5px !important;
+            padding-right: 5px !important;
         }
     }
+}
 </style>
