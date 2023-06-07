@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 1.12.5
+Stable tag: 1.12.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -324,14 +324,17 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
-= v1.12.5 -> Jun 07, 2023 =
+= v1.12.6 -> Jun 07, 2023 =
 --------------------------
-* 🛠️ [FIX] If email setup in WP ERP is not done, then sent mail using default WP.
-* 🛠️ [FIX] Redirects on the purchased extensions while activating/deactivating on the module page.
 * 🔥 [NEW] Added create Invoice Button to WP ERP Sidebar Menu.
     * A new invoice button is added in the main admin sidebar.
 * 🔥 [NEW] Added additional Notes input to the invoice.
     * Now when a user creates a new invoice, they can add additional texts.
+
+= v1.12.5 -> Jun 07, 2023 =
+--------------------------
+* 🛠️ [FIX] If email setup in WP ERP is not done, then sent mail using default WP.
+* 🛠️ [FIX] Redirects on the purchased extensions while activating/deactivating on the module page.
 
 = v1.12.4 -> May 26, 2023 =
 --------------------------
