@@ -65,9 +65,9 @@ function erp_get_peoples( $args = [] ) {
         $trashed_sql = $trashed ? '`deleted_at` is not null' : '`deleted_at` is null';
 
         if ( is_array( $type ) ) {
-            $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
+            $type_sql = "and `name` IN ( '" . implode( "','", esc_sql( $type ) ) . "' )";
         } else {
-            $type_sql = ( $type !== 'all' ) ? "and `name` = '" . $type . "'" : '';
+            $type_sql = ( $type !== 'all' ) ? "and `name` = '" . esc_sql( $type ) . "'" : '';
         }
 
         $wrapper_select = 'SELECT people.*, ';
@@ -167,24 +167,21 @@ function erp_get_peoples( $args = [] ) {
         $post_where_queries = '';
 
         if ( ! empty( $sql['post_where_queries'] ) ) {
-            $post_where_queries = 'AND ( 1 = 1 '
-                                  . implode( ' ', $sql['post_where_queries'] )
-                                  . ' )';
+            $post_where_queries = 'AND ( 1 = 1 ' . implode( ' ', $sql['post_where_queries'] ) . ' )';
         }
 
         $final_query = $wrapper_select . ' '
-                       . implode( ' ', $sql['select'] ) . ' '
-                       . $sql_from_tb . ' '
-                       . implode( ' ', $sql['join'] ) . ' '
-                       . $sql_people_type . ' '
-                       . 'AND ( 1=1 '
-                       . implode( ' ', $sql['where'] ) . ' '
-                       . ' )'
-                       . $post_where_queries
-                       . $sql_group_by . ' '
-                       . $sql_order_by . ' '
-                       . $sql_limit;
-
+            . implode( ' ', $sql['select'] ) . ' '
+            . $sql_from_tb . ' '
+            . implode( ' ', $sql['join'] ) . ' '
+            . $sql_people_type . ' '
+            . 'AND ( 1=1 '
+            . implode( ' ', $sql['where'] ) . ' '
+            . ' )'
+            . $post_where_queries
+            . $sql_group_by . ' '
+            . $sql_order_by . ' '
+            . $sql_limit;
         if ( $count ) {
             // Only filtered total count of people
             $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
@@ -500,14 +497,12 @@ function erp_insert_people( $args = [], $return_object = false ) {
         $args['last_name']  = '(company)';
     }
 
+    $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
     if ( ! $existing_people->id ) {
         // if an empty type provided
         if ( '' === $people_type ) {
             return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
         }
-
-        // Some validation
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
 
         // check if a valid people type exists in the database
         if ( null === $type_obj ) {

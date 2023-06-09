@@ -14,7 +14,7 @@ use WeDevs\ERP\Updates\BP\ERPACCTBGProcessPeopleTrn_1_5_2;
  */
 
 // don't call the file directly
-if ( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
@@ -61,6 +61,7 @@ class Updates {
         '1.10.0'  => 'updates/update-1.10.0.php',
         '1.10.2'  => 'updates/update-1.10.2.php',
         '1.11.0'  => 'updates/update-1.11.0.php',
+        '1.12.6'  => 'updates/update-1.12.6.php',
     ];
 
     /**
@@ -199,7 +200,7 @@ class Updates {
 
         $this->enable_active_erp_modules();
 
-        $location = remove_query_arg( ['wperp_do_update'], isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+        $location = remove_query_arg( [ 'wperp_do_update' ], isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
         wp_redirect( $location );
         exit();
     }

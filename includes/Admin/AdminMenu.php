@@ -130,6 +130,9 @@ class AdminMenu {
         add_submenu_page( 'erp', __( 'Modules', 'erp' ), __( 'Modules', 'erp' ), 'manage_options', 'erp-modules', [ $this, 'module' ] );
         add_submenu_page( 'erp', __( 'WP ERP Pro', 'erp' ), __( 'WP ERP Pro', 'erp' ), 'manage_options', 'erp-addons', [ $this, 'addon_page' ] );
         add_submenu_page( 'erp', __( 'Settings', 'erp' ), __( 'Settings', 'erp' ), 'manage_options', 'erp-settings', [ $this, 'router' ] );
+        if( wperp()->modules->is_module_active('accounting') ) {
+            add_submenu_page( 'erp', __( 'Create Invoice', 'erp' ), __( 'Create Invoice', 'erp' ), 'manage_options', 'erp-accounting#/invoices/new', [ $this, 'router' ], 4 );
+        }
         erp_add_menu( 'settings', [
             'title'         => __( 'Settings', 'erp' ),
             'slug'          => 'settings',
