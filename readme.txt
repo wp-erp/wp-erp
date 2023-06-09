@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.1.1
+Tested up to: 6.2
 Requires PHP: 7.2
-Stable tag: 1.12.1
+Stable tag: 1.12.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,37 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.12.6 -> Jun 07, 2023 =
+--------------------------
+* 🔥 [NEW] Added create Invoice Button to WP ERP Sidebar Menu.
+    * A new invoice button is added in the main admin sidebar.
+* 🔥 [NEW] Added additional Notes input to the invoice.
+    * Now when a user creates a new invoice, they can add additional texts.
+
+= v1.12.5 -> Jun 07, 2023 =
+--------------------------
+* 🛠️ [FIX] If email setup in WP ERP is not done, then sent mail using default WP.
+* 🛠️ [FIX] Redirects on the purchased extensions while activating/deactivating on the module page.
+
+= v1.12.4 -> May 26, 2023 =
+--------------------------
+* 🐛 [FIX] SQL injection and HTML vulnerability.
+
+= v1.12.3 -> May 17, 2023 =
+--------------------------
+* [Enhancement] Added the year in the leave request list table.
+* [FIX] Fatal error on HR > Leave - Holidays.
+* [FIX] Leave date mismatch on the "Leave Request" page.
+* [FIX] Handled log error on CRM Contact and/or Company.
+* [FIX] Handled php notice in Mailchimp Configuration.
+* [FIX] Handle log error on accounting module’s vendor creation.
+
+= v1.12.2 -> May 05, 2023 =
+--------------------------
+* [FIX] - CRM contacts are not imported in accounting module.
+* [FIX] - Invoice format gets distorted.
+* [FIX] - ERP Help button displaying error.
 
 = v1.12.1 -> February 15, 2023 =
 --------------------------

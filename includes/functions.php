@@ -1654,6 +1654,8 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
             $mailgun->send_email( $data );
         }
+    } else {
+        $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
     }
 
     return $is_mail_sent;
@@ -3352,7 +3354,7 @@ function erp_is_valid_contact_no( $contact_no ) {
  * @return bool
  */
 function erp_is_valid_zip_code( $zip_code ) {
-    return preg_match( '/^[A-Z0-9][ \-A-Z0-9]{3,8}+$/', $zip_code );
+    return preg_match( '/^[A-Z0-9][ \-A-Z0-9]{3,12}+$/', $zip_code );
 }
 
 /**
@@ -3409,7 +3411,11 @@ function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
     $changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
 
     foreach ( $changes_key as $key => $change_field_key ) {
-        $old_value[ $change_field_key ] = $old_data[ $change_field_key ];
+        // To avoid the error when the key is not set in the old data, we need to check if the key is set or not.
+        if (isset($old_data[$change_field_key])) {
+            $old_value[$change_field_key] = $old_data[$change_field_key];
+        }
+
         $new_value[ $change_field_key ] = $new_data[ $change_field_key ];
     }
 

@@ -1138,6 +1138,7 @@ Account Manager
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
+                `additional_notes` TEXT NULL DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
