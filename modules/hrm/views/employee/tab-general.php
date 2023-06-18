@@ -11,7 +11,7 @@
             </button>
         </div>
     </div>
-    
+
     <div class="inside">
         <ul class="erp-list two-col separated">
             <li><?php erp_print_key_value( __( 'First Name', 'erp' ), $employee->first_name ); ?></li>
@@ -41,7 +41,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Department', 'erp' ), $employee->get_department( 'view' ) ); ?></li>
@@ -85,7 +85,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), $employee->get_bloog_group() ); ?></li>
@@ -126,7 +126,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="inside">
 
             <?php
