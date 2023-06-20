@@ -70,7 +70,7 @@ export default {
             // insert "more" button and duplicate the list
             primary.insertAdjacentHTML(
                 'beforeend',
-                '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">More <span class="dashicons dashicons-arrow-down-alt2"></span></button><ul class="-secondary">' +
+                '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">' + __('More', 'erp') + ' <span class="dashicons dashicons-arrow-down-alt2"></span></button><ul class="-secondary">' +
                     primary.innerHTML +
                     '</ul></li>'
             );
