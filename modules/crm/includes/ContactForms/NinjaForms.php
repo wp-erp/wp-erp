@@ -23,7 +23,7 @@ class NinjaForms {
     public function add_to_plugin_list( $plugins ) {
         $plugins['ninja_forms'] = [
             'title'     => 'Ninja Forms',
-            'is_active' => class_exists( 'NinjaForms' ),
+            'is_active' => class_exists( 'Ninja_Forms' ),
         ];
 
         return $plugins;
