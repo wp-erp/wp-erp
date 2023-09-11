@@ -29,7 +29,7 @@ $employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_uns
 
         <form method="get">
             <div class='wperp-filter-panel-body'>
-                <div class='input-component'>
+                <div class='input-component people_live_search'>
                     <input type="hidden" name="page" value="erp-hr">
                     <input type="hidden" name="section" value="people">
                     <input type="hidden" name="sub-section" value="employee">
