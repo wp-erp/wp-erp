@@ -129,6 +129,10 @@ final class Accounting {
      * @return void
      */
     public function dismiss_pdf_notice() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+            return;
+        }
+
         update_option( 'pdf-notice-dismissed', 'hide' );
     }
 
