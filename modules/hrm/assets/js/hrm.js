@@ -1734,10 +1734,15 @@
                     data: form.serializeObject(),
                     success: function() {
                         $.get( window.location.href, function( data ) {
-                            if( $('ul.notes-list li').length < 0 ) {
-                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
-                            }else {
-                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
+                            var notesList = $('ul.notes-list');
+                            notesList.empty(); // Remove all previous notes
+
+                            if ($(data).find('ul.notes-list li').length > 0) {
+                                console.log($(data).find('ul.notes-list').last(), 'last');
+                                notesList.append($(data).find('ul.notes-list').last());
+                            } else {
+                                console.log($(data).find('ul.notes-list li').first(), 'first');
+                                notesList.prepend($(data).find('ul.notes-list li').first());
                             }
 
                             if( $('ul.notes-list li').length > 10 ){
@@ -1770,6 +1775,7 @@
 
                 var self = $(this),
                     data = {
+                        _wpnonce: wpErpHr.nonce,
                         action : 'erp-load-more-notes',
                         user_id : self.data('user_id'),
                         total_no : self.data('total_no'),
