@@ -302,7 +302,7 @@
                                 <td><?php echo esc_html( $dependent->relation ); ?></td>
                                 <td>
                                     <?php
-                                    if ( '0000-00-00' === $dependent->dob ){
+                                    if ( '0000-00-00' === $dependent->dob || '' === $dependent->dob ){
                                         echo esc_html( '-' );
                                     }else{
                                         echo esc_html( erp_format_date( $dependent->dob ) );
