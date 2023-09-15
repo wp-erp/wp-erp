@@ -21,7 +21,7 @@ class TransactionalEmail extends Email {
 
         $this->find = [
             'customer_name' => '{customer_name}',
-            'invoide_ID'    => '{invoide_ID}',
+            'invoice_ID'    => '{invoice_ID}',
             'amount'        => '{amount}',
             'due_date'      => '{due_date}',
             'company_name'  => '{company_name}',
@@ -48,7 +48,7 @@ class TransactionalEmail extends Email {
 
         $this->replace = [
             'customer_name' => $voucher_details['customer_name'],
-            'invoide_ID'    => $voucher_no,
+            'invoice_ID'    => $voucher_no,
             'amount'        => $voucher_details['amount'],
             'due_date'      => $voucher_details['due_date'],
             'company_name'  => $company->name,
