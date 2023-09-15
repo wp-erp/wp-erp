@@ -20,7 +20,7 @@ body:
     attributes:
       label: Version
       description: What version of our software are you running?
-      placeholder: ex. 1.0.0
+      placeholder: ex. WP ERP-1.0.0 & WP ERP Pro-1.0.0
     validations:
       required: true
 
@@ -56,6 +56,13 @@ body:
       description: Please provide detailed steps for reproducing the issue.
       placeholder: ex. 1. Go to '...'
       value: "1. Go to '...'"
+    validations:
+      required: true
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System Info
+      description: Please provide system info. To get system info, go to WP ERP > Tools > Status > Click Get System Report and paste the report here.
     validations:
       required: true
 
