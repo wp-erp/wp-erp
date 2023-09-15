@@ -129,6 +129,14 @@ final class Accounting {
      * @return void
      */
     public function dismiss_pdf_notice() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+            wp_send_json_error( esc_html__( 'Invalid nonce', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
+        }
+
         update_option( 'pdf-notice-dismissed', 'hide' );
     }
 

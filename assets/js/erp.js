@@ -537,6 +537,7 @@ window.wperp = window.wperp || {};
                 $.ajax({
                     url: ajaxurl,
                     data: {
+                        _wpnonce: wpErp.nonce,
                         action: 'dismiss_pdf_notice'
                     }
                 });
