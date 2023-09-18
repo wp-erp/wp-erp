@@ -19,15 +19,22 @@
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', '.announcement-title a', this.dashboard.viewAnnouncementTitle );
 
-            // Employee live search
+            // Detect the clearing of a "search" HTML5 input element?
+            $( 'body' ).on( 'search', 'input#erp-employee-search-search-input', function (e) {
+                self.employee.searchEmployee( '' );
+                // Hide live-employee-search dropdown
+                $( '.erp-live-search-list' ).hide();
+            });
             $( 'body' ).on( 'keyup', 'input#erp-employee-search-search-input', function (e) {
                 if ( e.keyCode === 13 ) {
                     e.preventDefault();
                 }
-                if ( $(this).val().length > 2 ) {
+                if ( $(this).val().length >= 3 ) {
                     self.employee.searchEmployee( $(this).val() );
-                } else if ( $(this).val().length === 0 ) {
+                } else if ( $(this).val().length < 3 ) {
                     self.employee.searchEmployee( '' );
+                    // Hide live-employee-search dropdown
+                    $( '.erp-live-search-list' ).hide();
                 }
             });
 
