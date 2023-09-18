@@ -22,8 +22,7 @@
             // Detect the clearing of a "search" HTML5 input element?
             $( 'body' ).on( 'search', 'input#erp-employee-search-search-input', function (e) {
                 self.employee.searchEmployee( '' );
-                // Hide live-employee-search dropdown
-                $( '.erp-live-search-list' ).hide();
+                $('#live-search').remove();
             });
             $( 'body' ).on( 'keyup', 'input#erp-employee-search-search-input', function (e) {
                 if ( e.keyCode === 13 ) {
@@ -33,8 +32,7 @@
                     self.employee.searchEmployee( $(this).val() );
                 } else if ( $(this).val().length < 3 ) {
                     self.employee.searchEmployee( '' );
-                    // Hide live-employee-search dropdown
-                    $( '.erp-live-search-list' ).hide();
+                    $('#live-search').remove();
                 }
             });
 
