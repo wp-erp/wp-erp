@@ -300,11 +300,12 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $rel_tbl    = $wpdb->prefix . 'erp_people_type_relations';
         $type_tbl   = $wpdb->prefix . 'erp_people_types';
 
-        $sql        = 'select life_stage as status, count(*) as count'
-                    . " from {$people_tbl}"
-                    . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.people_id"
-                    . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
-                    . " WHERE {$type_tbl}.name = %s AND {$rel_tbl}.deleted_at IS NULL";
+        $sql = "SELECT life_stage AS status, COUNT(DISTINCT {$rel_tbl}.people_id) AS count
+        FROM {$people_tbl}
+        LEFT JOIN {$rel_tbl} ON {$people_tbl}.id = {$rel_tbl}.people_id
+        LEFT JOIN {$type_tbl} ON {$rel_tbl}.people_types_id = {$type_tbl}.id
+        WHERE {$type_tbl}.name = %s AND {$rel_tbl}.deleted_at IS NULL";
+
 
         if ( ! current_user_can( 'erp_crm_manager' ) && current_user_can( 'erp_crm_agent' ) ) {
             $current_user_id = get_current_user_id();
