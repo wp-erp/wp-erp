@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.2
+Tested up to: 6.3.1
 Requires PHP: 7.2
-Stable tag: 1.12.6
+Stable tag: 1.12.7
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,18 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.12.6 -> Sep 21, 2023 =
+--------------------------
+* 🪝 [ADD] Implement Live Search on People List Table.
+* 🛠️ [FIX] Dependents DOB empty - Showing random date.
+* 🛠️ [FIX] Employee Notes - Not adding the notes given properly.
+* 🛠️ [FIX] Menu items overlapping issue.
+* 🛠️ [FIX] Invoice ID is not showing for Sales Transaction.
+* 🛠️ [FIX] Redirecting to incorrect page instead of Profile.
+* 🛠️ [FIX] Ninja Forms integration error.
+* 🛠️ [FIX] security vulnerability on notices.
+* 🛠️ [FIX] Email not sent warning.
 
 = v1.12.6 -> Jun 07, 2023 =
 --------------------------

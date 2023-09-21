@@ -33624,7 +33624,7 @@ var render = function() {
                     attrs: {
                       to: {
                         name: "EmployeeDetails",
-                        params: { id: data.row.id }
+                        params: { id: data.row.people_id }
                       }
                     }
                   },
