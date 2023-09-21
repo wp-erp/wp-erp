@@ -879,7 +879,8 @@
         });
 
         if (location.hash) {
-            var hash = location.hash.substring(1); // Get the fragment identifier without the '#'
+            // Get the fragment identifier without the '#'
+            var hash = location.hash.substring(1);
             var params = hash.split('&');
             var leftTabValue = null;
             var rightTabValue = null;

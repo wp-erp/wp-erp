@@ -1231,3 +1231,13 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
 .wperp-filter-dropdown #search-main .filter-left .clear-filter a{
     color: #5C626A !important;
 }
+.people_live_search {
+    position: relative;
+}
+
+.people_live_search #live-employee-search {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    width: 345px;
+}

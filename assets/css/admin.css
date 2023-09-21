@@ -3544,7 +3544,7 @@ table.audit-log-table th.col-date {
   vertical-align: baseline;
 }
 #adminmenuwrap {
-  z-index: 99;
+  z-index: 9990;
 }
 .erp-modal-backdrop {
   position: fixed;

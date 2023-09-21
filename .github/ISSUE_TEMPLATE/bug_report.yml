@@ -1,0 +1,71 @@
+name: 🐞 Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: input
+    id: erp-version
+    attributes:
+      label: WP ERP Version
+      description: What version of WP ERP are you running?
+      placeholder: ex. 1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: erp-pro-version
+    attributes:
+      label: WP ERP Pro Version (if applicable)
+      description: What version of WP ERP Pro are you running?
+      placeholder: ex. 1.0.0
+    validations:
+      required: false
+
+  - type: input
+    id: wp-version
+    attributes:
+      label: What version of WordPress are you running?
+      placeholder: ex. 5.7.2
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: What version of PHP are you running?
+      placeholder: ex. 7.4
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen? If applicable, attach screenshots or videos to help us better understand the issue.
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please provide detailed steps for reproducing the issue.
+      placeholder: ex. 1. Go to '...'
+      value: "1. Go to '...'"
+    validations:
+      required: true
+
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System Info
+      description: Please provide system info. To get system info, go to WP ERP > Tools > Status > Click Get System Report and paste the report here.
+    validations:
+      required: true

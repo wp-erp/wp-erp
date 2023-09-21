@@ -21,7 +21,7 @@ class TransactionalEmailPurchaseOrder extends Email {
 
         $this->find = [
             'vendor_name'  => '{vendor_name}',
-            'invoide_ID'   => '{invoide_ID}',
+            'invoice_ID'   => '{invoice_ID}',
             'amount'       => '{amount}',
             'trn_date'     => '{trn_date}',
             'company_name' => '{company_name}',
@@ -48,7 +48,7 @@ class TransactionalEmailPurchaseOrder extends Email {
 
         $this->replace = [
             'vendor_name'  => $voucher_details['vendor_name'],
-            'invoide_ID'   => $voucher_no,
+            'invoice_ID'   => $voucher_no,
             'amount'       => $voucher_details['amount'],
             'trn_date'     => $voucher_details['trn_date'],
             'company_name' => $company->name,
