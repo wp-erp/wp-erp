@@ -19,6 +19,25 @@
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', '.announcement-title a', this.dashboard.viewAnnouncementTitle );
 
+            // Detect the clearing of a "search" HTML5 input element?
+            $( 'body' ).on( 'search', 'input#erp-employee-search-search-input', function (e) {
+                self.employee.searchEmployee( '' );
+                $('#live-search').remove();
+            });
+            $( 'body' ).on( 'keyup', 'input#erp-employee-search-search-input', function (e) {
+                if ( e.keyCode === 13 ) {
+                    e.preventDefault();
+                }
+                if ( $(this).val().length >= 3 ) {
+                    self.employee.searchEmployee( $(this).val() );
+                } else if ( $(this).val().length < 3 ) {
+                    self.employee.searchEmployee( '' );
+                    $('#live-search').remove();
+                }
+            });
+
+            $( '.input-component' ).on( 'click', '.list-employee-name', self, self.employee.setEmployee );
+
             // Birthday Wish
             $( 'ul.erp-list' ).on( 'click', '.send-wish', this.dashboard.sendBirthdayWish );
 
@@ -1734,10 +1753,15 @@
                     data: form.serializeObject(),
                     success: function() {
                         $.get( window.location.href, function( data ) {
-                            if( $('ul.notes-list li').length < 0 ) {
-                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
-                            }else {
-                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
+                            var notesList = $('ul.notes-list');
+                            notesList.empty(); // Remove all previous notes
+
+                            if ($(data).find('ul.notes-list li').length > 0) {
+                                console.log($(data).find('ul.notes-list').last(), 'last');
+                                notesList.append($(data).find('ul.notes-list').last());
+                            } else {
+                                console.log($(data).find('ul.notes-list li').first(), 'first');
+                                notesList.prepend($(data).find('ul.notes-list li').first());
                             }
 
                             if( $('ul.notes-list li').length > 10 ){
@@ -1770,6 +1794,7 @@
 
                 var self = $(this),
                     data = {
+                        _wpnonce: wpErpHr.nonce,
                         action : 'erp-load-more-notes',
                         user_id : self.data('user_id'),
                         total_no : self.data('total_no'),
@@ -2033,8 +2058,54 @@
                 } else {
                     form.submit();
                 }
-            }
-
+            },
+            setEmployee: function (e) {
+                e.preventDefault();
+                $("#erp-employee-search-search-input").val($(this).data('employee_full_name'));
+                $('#live-search').addClass('hidden');
+            },
+            searchEmployee: function (value){
+                var employee_name = value;
+                $('#live-search').remove();
+                if (employee_name.length < 3){
+                    return;
+                }
+                wp.ajax.send( 'search_live_employee', {
+                    data: {
+                        '_wpnonce': wpErpHr.nonce,
+                        employee_name: employee_name
+                    },
+                    success: function(response) {
+                        var element = '<ul id="live-search"> ';
+                        for (var i = 0; i < response.length; i++){
+                            var designation = response[i]['work']['designation'] ? response[i]['work']['designation']['title'] : '';
+                            element += '<li><span class="employee_name">' +
+                                '<div class="list-main">'+ response[i]['avatar']['image'] +
+                                '<div class="list-employee-name" data-employee_full_name="'+ response[i]['name']['full_name'] +'">'+ response[i]['name']['full_name']
+                                +'<div class="list-employee-designation">'+ designation +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</span></li> ';
+                        }
+                        element += '</ul> ';
+                        $('#live-employee-search').append( element );
+                    },
+                    error: function(error) {
+                        // alert( error.data );
+                        $('#live-search').remove();
+                        var element = '<ul id="live-search"> ';
+                        element += '<li><span class="employee_name">' +
+                            '<div class="list-main"><div class="list-employee-name">'+ error.data
+                            +'<div class="list-employee-designation"></div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</span></li> ';
+                        element += '</ul> ';
+                        $('#live-employee-search').append( element );
+                    }
+                });
+            },
         },
 
         announcement: {

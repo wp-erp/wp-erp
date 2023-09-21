@@ -11,7 +11,7 @@
             </button>
         </div>
     </div>
-    
+
     <div class="inside">
         <ul class="erp-list two-col separated">
             <li><?php erp_print_key_value( __( 'First Name', 'erp' ), $employee->first_name ); ?></li>
@@ -41,7 +41,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Department', 'erp' ), $employee->get_department( 'view' ) ); ?></li>
@@ -85,7 +85,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="inside">
             <ul class="erp-list two-col separated">
                 <li><?php erp_print_key_value( __( 'Blood Group', 'erp' ), $employee->get_bloog_group() ); ?></li>
@@ -126,7 +126,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="inside">
 
             <?php
@@ -300,7 +300,15 @@
                             <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
                                 <td><?php echo esc_html( $dependent->name ); ?></td>
                                 <td><?php echo esc_html( $dependent->relation ); ?></td>
-                                <td><?php echo esc_html( erp_format_date( $dependent->dob ) ); ?></td>
+                                <td>
+                                    <?php
+                                    if ( '0000-00-00' === $dependent->dob || '' === $dependent->dob ){
+                                        echo esc_html( '-' );
+                                    }else{
+                                        echo esc_html( erp_format_date( $dependent->dob ) );
+                                    }
+                                    ?>
+                                </td>
                                 <td width="10%">
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
                                         <div class="row-actions erp-hide-print">
