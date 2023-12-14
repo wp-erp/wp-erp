@@ -9,6 +9,7 @@ use WP_List_Table;
  */
 class ContactGroupListTable extends WP_List_Table {
     private $counts = [];
+    protected $page_status;
 
     public function __construct() {
         global $status, $page;
