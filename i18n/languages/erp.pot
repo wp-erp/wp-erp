@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.12.7\n"
+"Project-Id-Version: WP ERP 1.12.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2023-09-21 11:23:38+00:00\n"
+"POT-Creation-Date: 2023-12-14 12:20:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,6 +47,93 @@ msgstr ""
 #: assets/js/erp-settings.js:6540 assets/js/erp-settings.js:6774
 #: assets/js/erp-settings.js:8346 assets/js/erp-settings.js:8899
 #: assets/js/erp-settings.js:10715 assets/js/erp-settings.js:11060
+#: assets/js/vendor.js:13179 assets/js/vendor.js:18630
+#: assets/js/vendor.js:31194 modules/accounting/assets/js/admin.js:29554
+#: modules/accounting/assets/js/admin.js:29812
+#: modules/accounting/assets/js/admin.js:30768
+#: modules/accounting/assets/js/admin.js:30905
+#: modules/accounting/assets/js/admin.js:31203
+#: modules/accounting/assets/js/admin.js:31384
+#: modules/accounting/assets/js/admin.js:31709
+#: modules/accounting/assets/js/admin.js:32433
+#: modules/accounting/assets/js/admin.js:32570
+#: modules/accounting/assets/js/admin.js:32822
+#: modules/accounting/assets/js/admin.js:33382
+#: modules/accounting/assets/js/admin.js:33573
+#: modules/accounting/assets/js/admin.js:33721
+#: modules/accounting/assets/js/admin.js:33955
+#: modules/accounting/assets/js/admin.js:33990
+#: modules/accounting/assets/js/admin.js:34278
+#: modules/accounting/assets/js/admin.js:34446
+#: modules/accounting/assets/js/admin.js:34560
+#: modules/accounting/assets/js/admin.js:34840
+#: modules/accounting/assets/js/admin.js:35126
+#: modules/accounting/assets/js/admin.js:35520
+#: modules/accounting/assets/js/admin.js:35672
+#: modules/accounting/assets/js/admin.js:36123
+#: modules/accounting/assets/js/admin.js:36189
+#: modules/accounting/assets/js/admin.js:36942
+#: modules/accounting/assets/js/admin.js:37323
+#: modules/accounting/assets/js/admin.js:38076
+#: modules/accounting/assets/js/admin.js:38347
+#: modules/accounting/assets/js/admin.js:38456
+#: modules/accounting/assets/js/admin.js:39145
+#: modules/accounting/assets/js/admin.js:39843
+#: modules/accounting/assets/js/admin.js:40298
+#: modules/accounting/assets/js/admin.js:40878
+#: modules/accounting/assets/js/admin.js:41323
+#: modules/accounting/assets/js/admin.js:41389
+#: modules/accounting/assets/js/admin.js:42211
+#: modules/accounting/assets/js/admin.js:42685
+#: modules/accounting/assets/js/admin.js:43315
+#: modules/accounting/assets/js/admin.js:43807
+#: modules/accounting/assets/js/admin.js:43973
+#: modules/accounting/assets/js/admin.js:44569
+#: modules/accounting/assets/js/admin.js:44880
+#: modules/accounting/assets/js/admin.js:45036
+#: modules/accounting/assets/js/admin.js:45370
+#: modules/accounting/assets/js/admin.js:45687
+#: modules/accounting/assets/js/admin.js:46519
+#: modules/accounting/assets/js/admin.js:46767
+#: modules/accounting/assets/js/admin.js:47004
+#: modules/accounting/assets/js/admin.js:47176
+#: modules/accounting/assets/js/admin.js:47316
+#: modules/accounting/assets/js/admin.js:47580
+#: modules/accounting/assets/js/admin.js:47755
+#: modules/accounting/assets/js/admin.js:47896
+#: modules/accounting/assets/js/admin.js:48034
+#: modules/accounting/assets/js/admin.js:48157
+#: modules/accounting/assets/js/admin.js:48721
+#: modules/accounting/assets/js/admin.js:48864
+#: modules/accounting/assets/js/admin.js:49151
+#: modules/accounting/assets/js/admin.js:49218
+#: modules/accounting/assets/js/admin.js:49361
+#: modules/accounting/assets/js/admin.js:49592
+#: modules/accounting/assets/js/admin.js:49809
+#: modules/accounting/assets/js/admin.js:50427
+#: modules/accounting/assets/js/admin.js:50771
+#: modules/accounting/assets/js/admin.js:50842
+#: modules/accounting/assets/js/admin.js:50998
+#: modules/accounting/assets/js/admin.js:51154
+#: modules/accounting/assets/js/admin.js:51324
+#: modules/accounting/assets/js/admin.js:51527
+#: modules/accounting/assets/js/admin.js:51697
+#: modules/accounting/assets/js/admin.js:52051
+#: modules/accounting/assets/js/admin.js:52328
+#: modules/accounting/assets/js/admin.js:53008
+#: modules/accounting/assets/js/admin.js:53481
+#: modules/accounting/assets/js/admin.js:53781
+#: modules/accounting/assets/js/admin.js:53950
+#: modules/accounting/assets/js/admin.js:54019
+#: modules/accounting/assets/js/admin.js:54177
+#: modules/accounting/assets/js/admin.js:54479
+#: modules/accounting/assets/js/admin.js:55041
+#: modules/accounting/assets/js/admin.js:55996
+#: modules/accounting/assets/js/admin.js:56135
+#: modules/accounting/assets/js/admin.js:56376
+#: modules/accounting/assets/js/admin.js:56732
+#: modules/accounting/assets/js/admin.js:57043
+#: modules/accounting/assets/js/admin.js:57311
 #: modules/accounting/assets/js/bootstrap.js:241
 #: modules/accounting/assets/js/bootstrap.js:324
 #: modules/accounting/assets/js/bootstrap.js:1251
@@ -101,6 +188,7 @@ msgstr ""
 #: assets/js/erp-settings-bootstrap.js:2338 assets/js/erp-settings.js:607
 #: build/i18n/languages/erp.php:66
 #: includes/Settings/assets/src/components/select/MultiSelect.vue:70
+#: modules/accounting/assets/js/admin.js:2284
 #: modules/accounting/assets/js/bootstrap.js:6325
 #: modules/accounting/assets/src/admin/components/select/MultiSelect.vue:57
 msgid "Please search"
@@ -114,18 +202,20 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: assets/js/erp-settings.js:5047 build/i18n/languages/erp.php:25
+#: assets/js/erp-settings.js:5047 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:25
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:69
 msgid " Test Connection"
 msgstr ""
 
-#: assets/js/erp-settings.js:5052 build/i18n/languages/erp.php:26
+#: assets/js/erp-settings.js:5052 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:26
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:75
 msgid " OK"
 msgstr ""
 
 #: assets/js/erp-settings.js:5352 assets/js/erp-settings.js:5358
-#: build/i18n/languages/erp.php:49
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:49
 #: build/modules/crm/assets/js/crm-contacts.js:306
 #: build/modules/crm/assets/js/crm-contacts.js:1157
 #: build/modules/crm/includes/CampaignListTable.php:89
@@ -158,6 +248,14 @@ msgstr ""
 #: build/modules/hrm/views/leave/holiday.php:153
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:227
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:233
+#: modules/accounting/assets/js/admin.js:8644
+#: modules/accounting/assets/js/admin.js:10933
+#: modules/accounting/assets/js/admin.js:14261
+#: modules/accounting/assets/js/admin.js:24079
+#: modules/accounting/assets/js/admin.js:24330
+#: modules/accounting/assets/js/admin.js:24578
+#: modules/accounting/assets/js/admin.js:24822
+#: modules/accounting/assets/js/admin.js:26484
 #: modules/accounting/assets/src/admin/components/people/People.vue:97
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:109
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:94
@@ -170,23 +268,23 @@ msgstr ""
 #: modules/crm/assets/js/crm-contacts.js:1157
 #: modules/crm/includes/CampaignListTable.php:89
 #: modules/crm/includes/CampaignListTable.php:115
-#: modules/crm/includes/ContactGroupListTable.php:122
-#: modules/crm/includes/ContactGroupListTable.php:158
-#: modules/crm/includes/ContactSubscriberListTable.php:197
-#: modules/crm/includes/ContactSubscriberListTable.php:215
+#: modules/crm/includes/ContactGroupListTable.php:123
+#: modules/crm/includes/ContactGroupListTable.php:159
+#: modules/crm/includes/ContactSubscriberListTable.php:198
+#: modules/crm/includes/ContactSubscriberListTable.php:216
 #: modules/crm/includes/functions-localize.php:14
 #: modules/hrm/assets/js/requests.js:311
-#: modules/hrm/includes/DepartmentListTable.php:215
+#: modules/hrm/includes/DepartmentListTable.php:216
 #: modules/hrm/includes/DepartmentWalker.php:43
-#: modules/hrm/includes/DesignationListTable.php:83
-#: modules/hrm/includes/DesignationListTable.php:108
+#: modules/hrm/includes/DesignationListTable.php:85
+#: modules/hrm/includes/DesignationListTable.php:110
 #: modules/hrm/includes/EmployeeListTable.php:231
-#: modules/hrm/includes/EntitlementListTable.php:227
-#: modules/hrm/includes/EntitlementListTable.php:267
-#: modules/hrm/includes/LeavePoliciesListTable.php:212
-#: modules/hrm/includes/LeavePoliciesListTable.php:259
-#: modules/hrm/includes/LeavePolicyNameListTable.php:38
-#: modules/hrm/includes/LeavePolicyNameListTable.php:110
+#: modules/hrm/includes/EntitlementListTable.php:228
+#: modules/hrm/includes/EntitlementListTable.php:268
+#: modules/hrm/includes/LeavePoliciesListTable.php:214
+#: modules/hrm/includes/LeavePoliciesListTable.php:261
+#: modules/hrm/includes/LeavePolicyNameListTable.php:41
+#: modules/hrm/includes/LeavePolicyNameListTable.php:113
 #: modules/hrm/includes/LeaveRequestsListTable.php:265
 #: modules/hrm/includes/LeaveRequestsListTable.php:292
 #: modules/hrm/views/employee/tab-notes-row.php:19
@@ -194,17 +292,19 @@ msgstr ""
 #: modules/hrm/views/js-templates/row-dept.php:11
 #: modules/hrm/views/js-templates/row-desig.php:11
 #: modules/hrm/views/js-templates/row-employee.php:12
-#: modules/hrm/views/leave/holiday.php:112
-#: modules/hrm/views/leave/holiday.php:153
+#: modules/hrm/views/leave/holiday.php:114
+#: modules/hrm/views/leave/holiday.php:155
 msgid "Delete"
 msgstr ""
 
-#: assets/js/erp-settings.js:5353 build/i18n/languages/erp.php:50
+#: assets/js/erp-settings.js:5353 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:50
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:228
 msgid "Are you sure to delete this ?"
 msgstr ""
 
-#: assets/js/erp-settings.js:5356 build/i18n/languages/erp.php:40
+#: assets/js/erp-settings.js:5356 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:40
 #: build/modules/crm/assets/js/crm-contacts.js:742
 #: build/modules/crm/assets/js/vue-table.js:402
 #: build/modules/crm/views/company/single.php:154
@@ -223,6 +323,7 @@ msgstr ""
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:83
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:231
 #: includes/Settings/assets/src/components/integration/Integration.vue:99
+#: modules/accounting/assets/js/admin.js:1772
 #: modules/accounting/assets/js/bootstrap.js:5811
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
 #: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
@@ -250,14 +351,16 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: assets/js/erp-settings.js:5560 build/i18n/languages/erp.php:41
+#: assets/js/erp-settings.js:5560 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:41
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:160
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:18
 msgid "Template Name"
 msgstr ""
 
 #: assets/js/erp-settings.js:5563 assets/js/erp-settings.js:5861
-#: build/i18n/languages/erp.php:42 build/includes/Settings/Email.php:397
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:42
+#: build/includes/Settings/Email.php:397
 #: build/modules/crm/includes/SubscriptionWidget.php:71
 #: build/modules/crm/views/js-templates/new-contact-group.php:16
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:165
@@ -272,6 +375,7 @@ msgstr ""
 #: includes/Settings/Email.php:397
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:164
 #: includes/Settings/assets/src/components/integration/Integration.vue:148
+#: modules/accounting/assets/js/admin.js:24311
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:75
@@ -280,49 +384,53 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:62
 #: modules/crm/includes/SubscriptionWidget.php:71
 #: modules/crm/views/js-templates/new-contact-group.php:16
-#: modules/hrm/includes/LeavePoliciesListTable.php:165
-#: modules/hrm/includes/LeavePolicyNameListTable.php:77
+#: modules/hrm/includes/LeavePoliciesListTable.php:167
+#: modules/hrm/includes/LeavePolicyNameListTable.php:80
 #: modules/hrm/views/employee/tab-leave.php:134
 #: modules/hrm/views/js-templates/holiday.php:49
 #: modules/hrm/views/js-templates/new-dept.php:11
 #: modules/hrm/views/js-templates/new-designation.php:9
-#: modules/hrm/views/leave/holiday.php:95
+#: modules/hrm/views/leave/holiday.php:97
 #: modules/hrm/views/leave/new-policy.php:120
 #: modules/hrm/views/leave/policy-name.php:50
 msgid "Description"
 msgstr ""
 
-#: assets/js/erp-settings.js:5566 build/i18n/languages/erp.php:43
+#: assets/js/erp-settings.js:5566 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:43
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:168
 msgid "Disable / Enable"
 msgstr ""
 
-#: assets/js/erp-settings.js:5861 build/i18n/languages/erp.php:54
-#: build/includes/Settings/Integration.php:15
+#: assets/js/erp-settings.js:5861 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:54 build/includes/Settings/Integration.php:15
 #: includes/Settings/Integration.php:15
 #: includes/Settings/assets/src/components/integration/Integration.vue:147
 msgid "Integration"
 msgstr ""
 
-#: assets/js/erp-settings.js:6003 build/i18n/languages/erp.php:57
+#: assets/js/erp-settings.js:6003 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:57
 #: includes/Settings/assets/src/components/license/License.vue:59
 msgid "Extension"
 msgstr ""
 
-#: assets/js/erp-settings.js:6003 build/i18n/languages/erp.php:58
+#: assets/js/erp-settings.js:6003 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:58
 #: build/includes/Framework/views/status-report.php:642
 #: includes/Framework/views/status-report.php:642
 #: includes/Settings/assets/src/components/license/License.vue:60
 msgid "Version"
 msgstr ""
 
-#: assets/js/erp-settings.js:6003 build/i18n/languages/erp.php:59
+#: assets/js/erp-settings.js:6003 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:59
 #: includes/Settings/assets/src/components/license/License.vue:61
 msgid "License Key"
 msgstr ""
 
-#: assets/js/erp-settings.js:6003 build/i18n/languages/erp.php:60
-#: build/includes/Admin/views/tools.php:37
+#: assets/js/erp-settings.js:6003 build/assets/js/erp-settings.js:1
+#: build/i18n/languages/erp.php:60 build/includes/Admin/views/tools.php:37
 #: build/modules/crm/includes/ContactSubscriberListTable.php:173
 #: build/modules/hrm/assets/js/requests.js:135
 #: build/modules/hrm/assets/js/requests.js:172
@@ -334,6 +442,9 @@ msgstr ""
 #: build/modules/hrm/views/reporting/headcount.php:151
 #: includes/Admin/views/tools.php:37
 #: includes/Settings/assets/src/components/license/License.vue:62
+#: modules/accounting/assets/js/admin.js:20951
+#: modules/accounting/assets/js/admin.js:21660
+#: modules/accounting/assets/js/admin.js:22594
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:33
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:17
@@ -341,7 +452,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:17
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:96
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:17
-#: modules/crm/includes/ContactSubscriberListTable.php:173
+#: modules/crm/includes/ContactSubscriberListTable.php:174
 #: modules/hrm/assets/js/requests.js:135 modules/hrm/assets/js/requests.js:172
 #: modules/hrm/assets/js/requests.js:181 modules/hrm/assets/js/requests.js:190
 #: modules/hrm/includes/EmployeeListTable.php:214
@@ -366,6 +477,115 @@ msgstr ""
 
 #: assets/js/erp-settings.js:8712
 msgid "crm-contact-form-layout"
+msgstr ""
+
+#: assets/js/vendor.js:13215
+msgid " + (data ? ("
+msgstr ""
+
+#: assets/js/vendor.js:13638
+msgid " + (JSON.stringify(comment.text)) + "
+msgstr ""
+
+#: assets/js/vendor.js:13673
+msgid " + componentName + "
+msgstr ""
+
+#: assets/js/vendor.js:45143 assets/js/vendor.js:45323
+msgid "svg"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:11
+#: includes/Settings/assets/src/components/base/Dropdown.vue:8
+#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
+msgid "Dropdown"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:65
+#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
+msgid "Oops! No item found."
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:62
+#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
+msgid "More"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:12
+#: build/includes/Framework/ERP_Settings_Page.php:473
+#: build/includes/Settings/Template.php:494
+#: includes/Framework/ERP_Settings_Page.php:473
+#: includes/Settings/Template.php:494
+#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
+#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
+msgid "Upload Image"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:55
+#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
+msgid "Select date"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:10
+#: build/includes/Admin/views/tools/general.php:59
+#: includes/Admin/views/tools/general.php:59
+#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
+#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
+#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
+#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
+#: includes/Settings/assets/src/components/license/License.vue:34
+msgid "Save Changes"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:68
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
+msgid "Get WooCommerce Extension"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:69
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
+msgid "Activate WooCommerce"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:70
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
+msgid "Get WP ERP Pro"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:22
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
+msgid "Test Connection"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:24
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
+msgid "Testing Connection"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:61
+#: build/includes/Admin/AddProMenu.php:187
+#: build/includes/Admin/AddProMenu.php:280
+#: build/includes/Admin/AddProMenu.php:435
+#: build/includes/Admin/AdminMenu.php:132
+#: build/includes/Admin/AdminMenu.php:138
+#: build/modules/accounting/includes/Classes/Admin.php:155 build/wp-erp.php:359
+#: includes/Admin/AddProMenu.php:187 includes/Admin/AddProMenu.php:280
+#: includes/Admin/AddProMenu.php:435 includes/Admin/AdminMenu.php:132
+#: includes/Admin/AdminMenu.php:138
+#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
+#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:359
+msgid "Settings"
+msgstr ""
+
+#: build/assets/js/erp-settings.js:1 build/i18n/languages/erp.php:63
+#: build/modules/crm/views/contact-groups.php:20
+#: build/modules/hrm/views/employee.php:36
+#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
+#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
+#: modules/accounting/assets/src/admin/components/products/Search.vue:9
+#: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:36
+msgid "Search"
 msgstr ""
 
 #: build/i18n/countries.php:14 i18n/countries.php:14
@@ -1369,11 +1589,14 @@ msgstr ""
 #: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:8
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:46
 #: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:7
+#: modules/accounting/assets/js/admin.js:8615
+#: modules/accounting/assets/js/admin.js:10451
+#: modules/accounting/assets/js/admin.js:13532
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:105
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:52
 #: modules/accounting/assets/src/admin/components/people/People.vue:82
-#: modules/crm/includes/ContactGroupListTable.php:86
-#: modules/crm/includes/ContactSubscriberListTable.php:169
+#: modules/crm/includes/ContactGroupListTable.php:87
+#: modules/crm/includes/ContactSubscriberListTable.php:170
 #: modules/crm/views/company/single.php:89
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/hrm/includes/Employee.php:1436
@@ -1396,7 +1619,7 @@ msgstr ""
 #: modules/hrm/includes/AnnouncementListTable.php:247
 #: modules/hrm/views/js-templates/holiday-import.php:25
 #: modules/hrm/views/js-templates/holiday.php:15
-#: modules/hrm/views/leave/holiday.php:92
+#: modules/hrm/views/leave/holiday.php:94
 msgid "Start Date"
 msgstr ""
 
@@ -1412,7 +1635,7 @@ msgstr ""
 #: modules/hrm/includes/AnnouncementListTable.php:251
 #: modules/hrm/views/js-templates/holiday-import.php:26
 #: modules/hrm/views/js-templates/holiday.php:38
-#: modules/hrm/views/leave/holiday.php:93
+#: modules/hrm/views/leave/holiday.php:95
 msgid "End Date"
 msgstr ""
 
@@ -1451,6 +1674,7 @@ msgstr ""
 #: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:37
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:11
 #: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:36
+#: modules/accounting/assets/js/admin.js:13758
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:9
 #: modules/accounting/assets/src/admin/components/people/People.vue:6
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:141
@@ -1458,7 +1682,7 @@ msgstr ""
 #: modules/crm/CRM.php:231 modules/hrm/views/announcements.php:35
 #: modules/hrm/views/departments.php:5 modules/hrm/views/designation.php:4
 #: modules/hrm/views/employee/single.php:12 modules/hrm/views/employee.php:13
-#: modules/hrm/views/leave/holiday.php:252
+#: modules/hrm/views/leave/holiday.php:254
 #: modules/hrm/views/leave/leave-entitlements.php:16
 #: modules/hrm/views/leave/leave-entitlements.php:48
 #: modules/hrm/views/leave/leave-entitlements.php:49
@@ -1467,33 +1691,6 @@ msgstr ""
 #: modules/hrm/views/leave/new-policy.php:42
 #: modules/hrm/views/leave/new-request.php:29
 msgid "Add New"
-msgstr ""
-
-#: build/i18n/languages/erp.php:10
-#: build/includes/Admin/views/tools/general.php:59
-#: includes/Admin/views/tools/general.php:59
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
-#: includes/Settings/assets/src/components/license/License.vue:34
-msgid "Save Changes"
-msgstr ""
-
-#: build/i18n/languages/erp.php:11
-#: includes/Settings/assets/src/components/base/Dropdown.vue:8
-#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
-msgid "Dropdown"
-msgstr ""
-
-#: build/i18n/languages/erp.php:12
-#: build/includes/Framework/ERP_Settings_Page.php:473
-#: build/includes/Settings/Template.php:494
-#: includes/Framework/ERP_Settings_Page.php:473
-#: includes/Settings/Template.php:494
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
-msgid "Upload Image"
 msgstr ""
 
 #: build/i18n/languages/erp.php:13
@@ -1547,20 +1744,9 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
-#: build/i18n/languages/erp.php:22
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
-msgid "Test Connection"
-msgstr ""
-
 #: build/i18n/languages/erp.php:23
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:15
 msgid "Click on the Above Button Before Saving the Setting"
-msgstr ""
-
-#: build/i18n/languages/erp.php:24
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
-msgid "Testing Connection"
 msgstr ""
 
 #: build/i18n/languages/erp.php:27
@@ -1657,6 +1843,13 @@ msgstr ""
 #: build/modules/hrm/views/leave/policy-name.php:4
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:115
 #: includes/Settings/assets/src/components/integration/Integration.vue:93
+#: modules/accounting/assets/js/admin.js:14620
+#: modules/accounting/assets/js/admin.js:15246
+#: modules/accounting/assets/js/admin.js:16025
+#: modules/accounting/assets/js/admin.js:16777
+#: modules/accounting/assets/js/admin.js:17870
+#: modules/accounting/assets/js/admin.js:19740
+#: modules/accounting/assets/js/admin.js:25767
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:180
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:185
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:208
@@ -1718,6 +1911,21 @@ msgstr ""
 #: build/modules/hrm/views/leave/holiday.php:111
 #: includes/Admin/views/company.php:17
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:37
+#: modules/accounting/assets/js/admin.js:8640
+#: modules/accounting/assets/js/admin.js:10930
+#: modules/accounting/assets/js/admin.js:13546
+#: modules/accounting/assets/js/admin.js:14258
+#: modules/accounting/assets/js/admin.js:21033
+#: modules/accounting/assets/js/admin.js:21057
+#: modules/accounting/assets/js/admin.js:21923
+#: modules/accounting/assets/js/admin.js:21993
+#: modules/accounting/assets/js/admin.js:22679
+#: modules/accounting/assets/js/admin.js:22703
+#: modules/accounting/assets/js/admin.js:24075
+#: modules/accounting/assets/js/admin.js:24326
+#: modules/accounting/assets/js/admin.js:24574
+#: modules/accounting/assets/js/admin.js:24818
+#: modules/accounting/assets/js/admin.js:26480
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:111
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
@@ -1741,22 +1949,22 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:191
 #: modules/crm/assets/js/crm-contacts.js:1143
 #: modules/crm/includes/CampaignListTable.php:88
-#: modules/crm/includes/ContactGroupListTable.php:116
-#: modules/crm/includes/ContactSubscriberListTable.php:196
+#: modules/crm/includes/ContactGroupListTable.php:117
+#: modules/crm/includes/ContactSubscriberListTable.php:197
 #: modules/crm/includes/functions-localize.php:13
 #: modules/hrm/includes/Announcement.php:177
 #: modules/hrm/includes/AnnouncementListTable.php:131
-#: modules/hrm/includes/DepartmentListTable.php:214
+#: modules/hrm/includes/DepartmentListTable.php:215
 #: modules/hrm/includes/DepartmentWalker.php:42
-#: modules/hrm/includes/DesignationListTable.php:82
+#: modules/hrm/includes/DesignationListTable.php:84
 #: modules/hrm/includes/EmployeeListTable.php:235
-#: modules/hrm/includes/LeavePoliciesListTable.php:207
-#: modules/hrm/includes/LeavePolicyNameListTable.php:109
+#: modules/hrm/includes/LeavePoliciesListTable.php:209
+#: modules/hrm/includes/LeavePolicyNameListTable.php:112
 #: modules/hrm/views/employee/single.php:85
 #: modules/hrm/views/js-templates/row-dept.php:10
 #: modules/hrm/views/js-templates/row-desig.php:10
 #: modules/hrm/views/js-templates/row-employee.php:11
-#: modules/hrm/views/leave/holiday.php:111
+#: modules/hrm/views/leave/holiday.php:113
 msgid "Edit"
 msgstr ""
 
@@ -1780,43 +1988,9 @@ msgstr ""
 msgid "Test Dropbox Connection"
 msgstr ""
 
-#: build/i18n/languages/erp.php:55
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
-msgid "Select date"
-msgstr ""
-
 #: build/i18n/languages/erp.php:56
 #: includes/Settings/assets/src/components/license/License.vue:28
 msgid "No extensions found."
-msgstr ""
-
-#: build/i18n/languages/erp.php:61 build/includes/Admin/AddProMenu.php:187
-#: build/includes/Admin/AddProMenu.php:280
-#: build/includes/Admin/AddProMenu.php:435
-#: build/includes/Admin/AdminMenu.php:132
-#: build/includes/Admin/AdminMenu.php:138
-#: build/modules/accounting/includes/Classes/Admin.php:155 build/wp-erp.php:359
-#: includes/Admin/AddProMenu.php:187 includes/Admin/AddProMenu.php:280
-#: includes/Admin/AddProMenu.php:435 includes/Admin/AdminMenu.php:132
-#: includes/Admin/AdminMenu.php:138
-#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
-#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:359
-msgid "Settings"
-msgstr ""
-
-#: build/i18n/languages/erp.php:62
-#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
-msgid "More"
-msgstr ""
-
-#: build/i18n/languages/erp.php:63
-#: build/modules/crm/views/contact-groups.php:20
-#: build/modules/hrm/views/employee.php:36
-#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
-#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
-#: modules/accounting/assets/src/admin/components/products/Search.vue:9
-#: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:36
-msgid "Search"
 msgstr ""
 
 #: build/i18n/languages/erp.php:64
@@ -1824,29 +1998,9 @@ msgstr ""
 msgid "Sorry ! Nothings found for your query. Please try again !"
 msgstr ""
 
-#: build/i18n/languages/erp.php:65
-#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
-msgid "Oops! No item found."
-msgstr ""
-
 #: build/i18n/languages/erp.php:67
 #: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:12
 msgid "Connect with WooCommerce"
-msgstr ""
-
-#: build/i18n/languages/erp.php:68
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
-msgid "Get WooCommerce Extension"
-msgstr ""
-
-#: build/i18n/languages/erp.php:69
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
-msgid "Activate WooCommerce"
-msgstr ""
-
-#: build/i18n/languages/erp.php:70
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
-msgid "Get WP ERP Pro"
 msgstr ""
 
 #: build/i18n/languages/erp.php:71
@@ -1909,13 +2063,14 @@ msgstr ""
 msgid "uploaded"
 msgstr ""
 
-#: build/i18n/languages/erp.php:81
+#: build/i18n/languages/erp.php:81 modules/accounting/assets/js/admin.js:2071
 #: modules/accounting/assets/js/bootstrap.js:6111
 #: modules/accounting/assets/src/admin/components/base/Media.vue:76
 msgid "Select & Crop Image"
 msgstr ""
 
-#: build/i18n/languages/erp.php:82
+#: build/i18n/languages/erp.php:82 modules/accounting/assets/js/admin.js:2128
+#: modules/accounting/assets/js/admin.js:2130
 #: modules/accounting/assets/js/bootstrap.js:6168
 #: modules/accounting/assets/js/bootstrap.js:6170
 #: modules/accounting/assets/src/admin/components/base/Media.vue:138
@@ -1933,6 +2088,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:84
 #: build/modules/accounting/includes/API/BillsController.php:405
 #: build/modules/accounting/includes/functions/common.php:468
+#: modules/accounting/assets/js/admin.js:21348
+#: modules/accounting/assets/js/admin.js:21902
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:49
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:56
@@ -1950,6 +2107,9 @@ msgstr ""
 #: build/i18n/languages/erp.php:86
 #: build/modules/accounting/includes/functions/transactions.php:941
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:91
+#: modules/accounting/assets/js/admin.js:20942
+#: modules/accounting/assets/js/admin.js:21651
+#: modules/accounting/assets/js/admin.js:22585
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:35
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:72
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:34
@@ -2040,6 +2200,14 @@ msgstr ""
 #: build/i18n/languages/erp.php:92
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:125
 #: build/modules/hrm/assets/js/requests.js:117
+#: modules/accounting/assets/js/admin.js:18505
+#: modules/accounting/assets/js/admin.js:19142
+#: modules/accounting/assets/js/admin.js:25086
+#: modules/accounting/assets/js/admin.js:27037
+#: modules/accounting/assets/js/admin.js:27045
+#: modules/accounting/assets/js/admin.js:27317
+#: modules/accounting/assets/js/admin.js:27325
+#: modules/accounting/assets/js/admin.js:27333
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:62
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:72
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:95
@@ -2083,6 +2251,9 @@ msgstr ""
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:95
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:157
 #: build/modules/crm/views/reports/activity-report.php:57
+#: modules/accounting/assets/js/admin.js:20948
+#: modules/accounting/assets/js/admin.js:21657
+#: modules/accounting/assets/js/admin.js:22591
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:63
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:75
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:111
@@ -2121,6 +2292,10 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:94
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:178
+#: modules/accounting/assets/js/admin.js:10916
+#: modules/accounting/assets/js/admin.js:11821
+#: modules/accounting/assets/js/admin.js:18502
+#: modules/accounting/assets/js/admin.js:28541
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:71
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:96
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:94
@@ -2221,7 +2396,13 @@ msgstr ""
 msgid "Attachment"
 msgstr ""
 
-#: build/i18n/languages/erp.php:100
+#: build/i18n/languages/erp.php:100 modules/accounting/assets/js/admin.js:14623
+#: modules/accounting/assets/js/admin.js:15250
+#: modules/accounting/assets/js/admin.js:16028
+#: modules/accounting/assets/js/admin.js:16781
+#: modules/accounting/assets/js/admin.js:17873
+#: modules/accounting/assets/js/admin.js:19744
+#: modules/accounting/assets/js/admin.js:25771
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:182
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:187
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:210
@@ -2233,7 +2414,16 @@ msgstr ""
 msgid "Save and New"
 msgstr ""
 
-#: build/i18n/languages/erp.php:101
+#: build/i18n/languages/erp.php:101 modules/accounting/assets/js/admin.js:14626
+#: modules/accounting/assets/js/admin.js:15253
+#: modules/accounting/assets/js/admin.js:15264
+#: modules/accounting/assets/js/admin.js:16031
+#: modules/accounting/assets/js/admin.js:16784
+#: modules/accounting/assets/js/admin.js:16795
+#: modules/accounting/assets/js/admin.js:17876
+#: modules/accounting/assets/js/admin.js:19747
+#: modules/accounting/assets/js/admin.js:25774
+#: modules/accounting/assets/js/admin.js:25785
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:183
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:190
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:188
@@ -2256,6 +2446,10 @@ msgstr ""
 #: build/modules/hrm/HRM.php:188
 #: build/modules/hrm/views/leave/new-policy.php:23
 #: build/modules/hrm/views/leave/policy-name.php:8 includes/Scripts.php:185
+#: modules/accounting/assets/js/admin.js:15257
+#: modules/accounting/assets/js/admin.js:16788
+#: modules/accounting/assets/js/admin.js:19751
+#: modules/accounting/assets/js/admin.js:25778
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:187
 #: modules/accounting/assets/src/admin/components/chart-accounts/AddChartAccounts.vue:7
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:192
@@ -2277,7 +2471,10 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: build/i18n/languages/erp.php:103
+#: build/i18n/languages/erp.php:103 modules/accounting/assets/js/admin.js:15261
+#: modules/accounting/assets/js/admin.js:16792
+#: modules/accounting/assets/js/admin.js:19755
+#: modules/accounting/assets/js/admin.js:25782
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:189
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:194
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:217
@@ -2286,34 +2483,43 @@ msgstr ""
 msgid "Update and New"
 msgstr ""
 
-#: build/i18n/languages/erp.php:104
+#: build/i18n/languages/erp.php:104 modules/accounting/assets/js/admin.js:15333
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:241
 msgid "Bill does not exists!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:105
+#: build/i18n/languages/erp.php:105 modules/accounting/assets/js/admin.js:15345
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:248
 msgid "Can't edit"
 msgstr ""
 
-#: build/i18n/languages/erp.php:106
+#: build/i18n/languages/erp.php:106 modules/accounting/assets/js/admin.js:15471
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:355
 msgid "Bill Updated!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:107
+#: build/i18n/languages/erp.php:107 modules/accounting/assets/js/admin.js:15495
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:374
 msgid "Bill Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:108
+#: build/i18n/languages/erp.php:108 modules/accounting/assets/js/admin.js:15575
+#: modules/accounting/assets/js/admin.js:16266
+#: modules/accounting/assets/js/admin.js:20166
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:454
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:589
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:396
 msgid "People Name is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:109
+#: build/i18n/languages/erp.php:109 modules/accounting/assets/js/admin.js:14958
+#: modules/accounting/assets/js/admin.js:15579
+#: modules/accounting/assets/js/admin.js:16270
+#: modules/accounting/assets/js/admin.js:17270
+#: modules/accounting/assets/js/admin.js:18139
+#: modules/accounting/assets/js/admin.js:18816
+#: modules/accounting/assets/js/admin.js:20170
+#: modules/accounting/assets/js/admin.js:26101
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:458
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:461
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:593
@@ -2326,14 +2532,22 @@ msgstr ""
 msgid "Transaction Date is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:110
+#: build/i18n/languages/erp.php:110 modules/accounting/assets/js/admin.js:15583
+#: modules/accounting/assets/js/admin.js:17274
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:462
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:653
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:591
 msgid "Due Date is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:111
+#: build/i18n/languages/erp.php:111 modules/accounting/assets/js/admin.js:14970
+#: modules/accounting/assets/js/admin.js:15587
+#: modules/accounting/assets/js/admin.js:16286
+#: modules/accounting/assets/js/admin.js:17278
+#: modules/accounting/assets/js/admin.js:18155
+#: modules/accounting/assets/js/admin.js:18820
+#: modules/accounting/assets/js/admin.js:20186
+#: modules/accounting/assets/js/admin.js:26113
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:466
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:473
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:609
@@ -2346,7 +2560,9 @@ msgstr ""
 msgid "Total amount can't be zero."
 msgstr ""
 
-#: build/i18n/languages/erp.php:112
+#: build/i18n/languages/erp.php:112 modules/accounting/assets/js/admin.js:15591
+#: modules/accounting/assets/js/admin.js:20190
+#: modules/accounting/assets/js/admin.js:26117
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:470
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:477
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:613
@@ -2420,7 +2636,13 @@ msgstr ""
 msgid "Send Mail"
 msgstr ""
 
-#: build/i18n/languages/erp.php:117
+#: build/i18n/languages/erp.php:117 modules/accounting/assets/js/admin.js:10913
+#: modules/accounting/assets/js/admin.js:19135
+#: modules/accounting/assets/js/admin.js:25075
+#: modules/accounting/assets/js/admin.js:28534
+#: modules/accounting/assets/js/admin.js:28734
+#: modules/accounting/assets/js/admin.js:28910
+#: modules/accounting/assets/js/admin.js:29091
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:60
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:60
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:59
@@ -2446,6 +2668,10 @@ msgstr ""
 #: build/i18n/languages/erp.php:118
 #: build/modules/accounting/includes/functions/transactions.php:937
 #: build/modules/hrm/assets/js/requests.js:121
+#: modules/accounting/assets/js/admin.js:10906
+#: modules/accounting/assets/js/admin.js:28538
+#: modules/accounting/assets/js/admin.js:28737
+#: modules/accounting/assets/js/admin.js:29094
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:68
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:63
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:68
@@ -2473,7 +2699,9 @@ msgstr ""
 #: build/modules/crm/includes/CampaignListTable.php:71
 #: build/modules/crm/includes/ContactGroupListTable.php:90
 #: build/modules/hrm/includes/LeavePolicyNameListTable.php:78
-#: includes/Admin/AuditlogListTable.php:185
+#: includes/Admin/AuditlogListTable.php:187
+#: modules/accounting/assets/js/admin.js:10910
+#: modules/accounting/assets/js/admin.js:11815
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:76
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:67
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:72
@@ -2486,8 +2714,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:40
 #: modules/crm/assets/js/crm-contacts.js:298
 #: modules/crm/includes/CampaignListTable.php:71
-#: modules/crm/includes/ContactGroupListTable.php:90
-#: modules/hrm/includes/LeavePolicyNameListTable.php:78
+#: modules/crm/includes/ContactGroupListTable.php:91
+#: modules/hrm/includes/LeavePolicyNameListTable.php:81
 msgid "Created At"
 msgstr ""
 
@@ -2550,7 +2778,9 @@ msgstr ""
 msgid "Please select a category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:128
+#: build/i18n/languages/erp.php:128 modules/accounting/assets/js/admin.js:11595
+#: modules/accounting/assets/js/admin.js:27034
+#: modules/accounting/assets/js/admin.js:27042
 #: modules/accounting/assets/src/admin/components/chart-accounts/AddChartAccounts.vue:49
 #: modules/accounting/assets/src/admin/components/reports/IncomeStatement.vue:104
 #: modules/accounting/assets/src/admin/components/reports/IncomeStatement.vue:109
@@ -2585,12 +2815,17 @@ msgid ""
 "by the accounting terms."
 msgstr ""
 
-#: build/i18n/languages/erp.php:133
+#: build/i18n/languages/erp.php:133 modules/accounting/assets/js/admin.js:13528
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:104
 msgid "Code"
 msgstr ""
 
-#: build/i18n/languages/erp.php:134
+#: build/i18n/languages/erp.php:134 modules/accounting/assets/js/admin.js:10925
+#: modules/accounting/assets/js/admin.js:11830
+#: modules/accounting/assets/js/admin.js:13535
+#: modules/accounting/assets/js/admin.js:20945
+#: modules/accounting/assets/js/admin.js:22588
+#: modules/accounting/assets/js/admin.js:28550
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:106
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:74
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:73
@@ -2609,6 +2844,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:135
 #: build/modules/crm/views/reports/activity-report.php:40
 #: build/modules/hrm/views/reporting/gender-profile.php:50
+#: modules/accounting/assets/js/admin.js:13538
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:107
 #: modules/crm/views/reports/activity-report.php:40
 #: modules/hrm/views/reporting/gender-profile.php:50
@@ -2620,6 +2856,16 @@ msgstr ""
 #: build/modules/hrm/assets/js/requests.js:139
 #: build/modules/hrm/views/employee/single.php:80
 #: includes/Admin/views/company-editor.php:221
+#: modules/accounting/assets/js/admin.js:8628
+#: modules/accounting/assets/js/admin.js:9311
+#: modules/accounting/assets/js/admin.js:13541
+#: modules/accounting/assets/js/admin.js:14253
+#: modules/accounting/assets/js/admin.js:24063
+#: modules/accounting/assets/js/admin.js:24314
+#: modules/accounting/assets/js/admin.js:24562
+#: modules/accounting/assets/js/admin.js:24806
+#: modules/accounting/assets/js/admin.js:25089
+#: modules/accounting/assets/js/admin.js:26468
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:108
 #: modules/accounting/assets/src/admin/components/people/People.vue:86
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:89
@@ -2636,6 +2882,23 @@ msgid "Actions"
 msgstr ""
 
 #: build/i18n/languages/erp.php:137 build/modules/crm/CRM.php:237
+#: modules/accounting/assets/js/admin.js:8753
+#: modules/accounting/assets/js/admin.js:8794
+#: modules/accounting/assets/js/admin.js:10953
+#: modules/accounting/assets/js/admin.js:13626
+#: modules/accounting/assets/js/admin.js:21146
+#: modules/accounting/assets/js/admin.js:22793
+#: modules/accounting/assets/js/admin.js:24170
+#: modules/accounting/assets/js/admin.js:24198
+#: modules/accounting/assets/js/admin.js:24425
+#: modules/accounting/assets/js/admin.js:24457
+#: modules/accounting/assets/js/admin.js:24669
+#: modules/accounting/assets/js/admin.js:24697
+#: modules/accounting/assets/js/admin.js:24950
+#: modules/accounting/assets/js/admin.js:24984
+#: modules/accounting/assets/js/admin.js:25174
+#: modules/accounting/assets/js/admin.js:25204
+#: modules/accounting/assets/js/admin.js:26538
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:188
 #: modules/accounting/assets/src/admin/components/people/People.vue:205
 #: modules/accounting/assets/src/admin/components/people/People.vue:239
@@ -2692,32 +2955,35 @@ msgstr ""
 msgid "SL No."
 msgstr ""
 
-#: build/i18n/languages/erp.php:143
+#: build/i18n/languages/erp.php:143 modules/accounting/assets/js/admin.js:25860
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:249
 msgid "Check does not exists!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:144
+#: build/i18n/languages/erp.php:144 modules/accounting/assets/js/admin.js:26006
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:373
 msgid "Check Updated!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:145
+#: build/i18n/languages/erp.php:145 modules/accounting/assets/js/admin.js:26031
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:393
 msgid "Check Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:146
+#: build/i18n/languages/erp.php:146 modules/accounting/assets/js/admin.js:26093
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:453
 msgid "Pay to is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:147
+#: build/i18n/languages/erp.php:147 modules/accounting/assets/js/admin.js:26097
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:457
 msgid "Check No is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:148
+#: build/i18n/languages/erp.php:148 modules/accounting/assets/js/admin.js:16274
+#: modules/accounting/assets/js/admin.js:18143
+#: modules/accounting/assets/js/admin.js:20174
+#: modules/accounting/assets/js/admin.js:26105
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:465
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:597
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:404
@@ -2725,7 +2991,11 @@ msgstr ""
 msgid "Transaction Account is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:149
+#: build/i18n/languages/erp.php:149 modules/accounting/assets/js/admin.js:16282
+#: modules/accounting/assets/js/admin.js:18151
+#: modules/accounting/assets/js/admin.js:20182
+#: modules/accounting/assets/js/admin.js:23986
+#: modules/accounting/assets/js/admin.js:26109
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:469
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:605
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:412
@@ -2747,6 +3017,8 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:152
 #: build/modules/accounting/includes/functions/common.php:498
+#: modules/accounting/assets/js/admin.js:21354
+#: modules/accounting/assets/js/admin.js:21961
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:5
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:48
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:58
@@ -2770,7 +3042,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:155
 #: build/includes/Admin/AuditlogListTable.php:101
 #: build/modules/hrm/includes/functions-dashboard-widgets.php:253
-#: includes/Admin/AuditlogListTable.php:101
+#: includes/Admin/AuditlogListTable.php:103
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:8
 #: modules/hrm/includes/functions-dashboard-widgets.php:253
 msgid "This Month"
@@ -2778,21 +3050,21 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:156
 #: build/includes/Admin/AuditlogListTable.php:102
-#: includes/Admin/AuditlogListTable.php:102
+#: includes/Admin/AuditlogListTable.php:104
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:9
 msgid "Last Month"
 msgstr ""
 
 #: build/i18n/languages/erp.php:157
 #: build/includes/Admin/AuditlogListTable.php:103
-#: includes/Admin/AuditlogListTable.php:103
+#: includes/Admin/AuditlogListTable.php:105
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:10
 msgid "This Quarter"
 msgstr ""
 
 #: build/i18n/languages/erp.php:158
 #: build/includes/Admin/AuditlogListTable.php:104
-#: includes/Admin/AuditlogListTable.php:104
+#: includes/Admin/AuditlogListTable.php:106
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:11
 msgid "Last Quarter"
 msgstr ""
@@ -2800,7 +3072,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:159
 #: build/includes/Admin/AuditlogListTable.php:105
 #: build/modules/crm/includes/functions-reporting.php:158
-#: includes/Admin/AuditlogListTable.php:105
+#: includes/Admin/AuditlogListTable.php:107
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:12
 #: modules/crm/includes/functions-reporting.php:158
 msgid "This Year"
@@ -2808,12 +3080,17 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:160
 #: build/includes/Admin/AuditlogListTable.php:106
-#: includes/Admin/AuditlogListTable.php:106
+#: includes/Admin/AuditlogListTable.php:108
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:13
 msgid "Last Year"
 msgstr ""
 
-#: build/i18n/languages/erp.php:161
+#: build/i18n/languages/erp.php:161 modules/accounting/assets/js/admin.js:11283
+#: modules/accounting/assets/js/admin.js:11297
+#: modules/accounting/assets/js/admin.js:11311
+#: modules/accounting/assets/js/admin.js:11325
+#: modules/accounting/assets/js/admin.js:11343
+#: modules/accounting/assets/js/admin.js:11369
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:52
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:70
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:88
@@ -2826,6 +3103,14 @@ msgstr ""
 #: build/i18n/languages/erp.php:162
 #: build/modules/accounting/includes/API/ExpensesController.php:347
 #: build/modules/accounting/includes/functions/common.php:493
+#: modules/accounting/assets/js/admin.js:11287
+#: modules/accounting/assets/js/admin.js:11301
+#: modules/accounting/assets/js/admin.js:11315
+#: modules/accounting/assets/js/admin.js:11329
+#: modules/accounting/assets/js/admin.js:11347
+#: modules/accounting/assets/js/admin.js:11373
+#: modules/accounting/assets/js/admin.js:21345
+#: modules/accounting/assets/js/admin.js:21935
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:57
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:75
 #: modules/accounting/assets/src/admin/components/dashboard/Chart.vue:93
@@ -2885,25 +3170,27 @@ msgstr ""
 msgid "Bills you need to pay"
 msgstr ""
 
-#: build/i18n/languages/erp.php:170
+#: build/i18n/languages/erp.php:170 modules/accounting/assets/js/admin.js:11085
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:112
 msgid "Income & Expenses"
 msgstr ""
 
 #: build/i18n/languages/erp.php:171
 #: build/modules/accounting/includes/Classes/Admin.php:175
+#: modules/accounting/assets/js/admin.js:11086
+#: modules/accounting/assets/js/admin.js:28294
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:113
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:137
 #: modules/accounting/includes/Classes/Admin.php:175
 msgid "Bank Accounts"
 msgstr ""
 
-#: build/i18n/languages/erp.php:172
+#: build/i18n/languages/erp.php:172 modules/accounting/assets/js/admin.js:11087
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:114
 msgid "Invoices owed to you"
 msgstr ""
 
-#: build/i18n/languages/erp.php:173
+#: build/i18n/languages/erp.php:173 modules/accounting/assets/js/admin.js:11088
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:115
 msgid "Bills to pay"
 msgstr ""
@@ -2921,6 +3208,7 @@ msgstr ""
 #: includes/Admin/views/modules.php:636 includes/Framework/Modules.php:65
 #: includes/Framework/views/status-report.php:113
 #: includes/Settings/Email.php:102 includes/Settings/Email.php:228
+#: modules/accounting/assets/js/admin.js:11090
 #: modules/accounting/assets/src/admin/components/dashboard/DashBoard.vue:117
 #: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:48
 #: modules/accounting/includes/Classes/Admin.php:37
@@ -2957,7 +3245,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:143
 #: modules/hrm/views/js-templates/new-leave-request.php:63
 #: modules/hrm/views/js-templates/work-experience.php:36
-#: modules/hrm/views/leave/holiday.php:36
+#: modules/hrm/views/leave/holiday.php:38
 #: modules/hrm/views/leave/new-request.php:89
 msgid "To"
 msgstr ""
@@ -2975,7 +3263,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:178
 #: build/includes/Admin/AuditlogListTable.php:183
 #: build/includes/Admin/views/tools/misc.php:58
-#: includes/Admin/AuditlogListTable.php:183
+#: includes/Admin/AuditlogListTable.php:185
 #: includes/Admin/views/tools/misc.php:58
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:26
 msgid "Message"
@@ -3044,24 +3332,28 @@ msgstr ""
 msgid "Transaction Charge"
 msgstr ""
 
-#: build/i18n/languages/erp.php:189
+#: build/i18n/languages/erp.php:189 modules/accounting/assets/js/admin.js:19989
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:418
 msgid "Expense Updated!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:190
+#: build/i18n/languages/erp.php:190 modules/accounting/assets/js/admin.js:17178
+#: modules/accounting/assets/js/admin.js:19992
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:421
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:539
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:514
 msgid "Conversion Successful!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:191
+#: build/i18n/languages/erp.php:191 modules/accounting/assets/js/admin.js:20020
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:444
 msgid "Expense Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:192
+#: build/i18n/languages/erp.php:192 modules/accounting/assets/js/admin.js:14966
+#: modules/accounting/assets/js/admin.js:16278
+#: modules/accounting/assets/js/admin.js:18147
+#: modules/accounting/assets/js/admin.js:20178
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:601
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:408
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:450
@@ -3088,134 +3380,136 @@ msgstr ""
 #: build/includes/Settings/Email.php:32 build/includes/Settings/General.php:15
 #: build/modules/crm/views/help.php:10 build/modules/hrm/views/help.php:10
 #: includes/Admin/views/tools.php:33 includes/Settings/Email.php:32
-#: includes/Settings/General.php:15
+#: includes/Settings/General.php:15 modules/accounting/assets/js/admin.js:28231
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:43
 #: modules/crm/views/help.php:10 modules/hrm/views/help.php:10
 msgid "General"
 msgstr ""
 
-#: build/i18n/languages/erp.php:197
+#: build/i18n/languages/erp.php:197 modules/accounting/assets/js/admin.js:28233
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:46
 msgid "How to set Financial Years?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:198
+#: build/i18n/languages/erp.php:198 modules/accounting/assets/js/admin.js:28236
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:50
 msgid "What is Opening Balance?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:199
+#: build/i18n/languages/erp.php:199 modules/accounting/assets/js/admin.js:28239
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:54
 msgid "How to Set Currency?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:200
+#: build/i18n/languages/erp.php:200 modules/accounting/assets/js/admin.js:28242
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:58
 msgid "What are the basic transaction types?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:201
+#: build/i18n/languages/erp.php:201 modules/accounting/assets/js/admin.js:28245
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:62
 msgid "How to create a Journal Entry?"
 msgstr ""
 
 #: build/i18n/languages/erp.php:202
 #: build/modules/accounting/includes/Classes/Admin.php:53
+#: modules/accounting/assets/js/admin.js:28249
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:69
 #: modules/accounting/includes/Classes/Admin.php:53
 msgid "Users"
 msgstr ""
 
-#: build/i18n/languages/erp.php:203
+#: build/i18n/languages/erp.php:203 modules/accounting/assets/js/admin.js:28251
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:72
 msgid "How to create customer?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:204
+#: build/i18n/languages/erp.php:204 modules/accounting/assets/js/admin.js:28254
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:76
 msgid "How to create vendors?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:205
+#: build/i18n/languages/erp.php:205 modules/accounting/assets/js/admin.js:28258
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:83
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:8
 msgid "Sales Transactions"
 msgstr ""
 
-#: build/i18n/languages/erp.php:206
+#: build/i18n/languages/erp.php:206 modules/accounting/assets/js/admin.js:28260
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:86
 msgid "How to create an invoice?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:207
+#: build/i18n/languages/erp.php:207 modules/accounting/assets/js/admin.js:28263
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:90
 msgid "How to receive payment from invoices?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:208
+#: build/i18n/languages/erp.php:208 modules/accounting/assets/js/admin.js:28266
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:94
 msgid "How can I delete an invoice?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:209
+#: build/i18n/languages/erp.php:209 modules/accounting/assets/js/admin.js:28270
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:101
 msgid "Expense Transactions"
 msgstr ""
 
-#: build/i18n/languages/erp.php:210
+#: build/i18n/languages/erp.php:210 modules/accounting/assets/js/admin.js:28272
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:104
 msgid "How to create a bill?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:211
+#: build/i18n/languages/erp.php:211 modules/accounting/assets/js/admin.js:28275
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:108
 msgid "How to create payments for bills?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:212
+#: build/i18n/languages/erp.php:212 modules/accounting/assets/js/admin.js:28278
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:112
 msgid "How to create an expense?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:213
+#: build/i18n/languages/erp.php:213 modules/accounting/assets/js/admin.js:28281
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:116
 msgid "How to create a check payment?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:214
+#: build/i18n/languages/erp.php:214 modules/accounting/assets/js/admin.js:28285
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:123
 msgid "Purchase Transactions"
 msgstr ""
 
-#: build/i18n/languages/erp.php:215
+#: build/i18n/languages/erp.php:215 modules/accounting/assets/js/admin.js:28287
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:126
 msgid "How to create purchase quotation?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:216
+#: build/i18n/languages/erp.php:216 modules/accounting/assets/js/admin.js:28290
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:130
 msgid "How to create payments for purchase quotations?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:217
+#: build/i18n/languages/erp.php:217 modules/accounting/assets/js/admin.js:28296
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:140
 msgid "Can I create a bank account in Accounting?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:218
+#: build/i18n/languages/erp.php:218 modules/accounting/assets/js/admin.js:28299
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:144
 msgid "How can I receive, spend transfer between bank accounts?"
 msgstr ""
 
 #: build/i18n/languages/erp.php:219
 #: build/modules/accounting/includes/Classes/Admin.php:204
+#: modules/accounting/assets/js/admin.js:28303
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:151
 #: modules/accounting/assets/src/admin/components/products/Products.vue:5
 #: modules/accounting/includes/Classes/Admin.php:204
 msgid "Products"
 msgstr ""
 
-#: build/i18n/languages/erp.php:220
+#: build/i18n/languages/erp.php:220 modules/accounting/assets/js/admin.js:28305
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:154
 msgid "Can I create products / services / product categoty?"
 msgstr ""
@@ -3225,6 +3519,7 @@ msgstr ""
 #: build/modules/accounting/includes/API/TaxCatsController.php:326
 #: build/modules/accounting/includes/API/TaxRateNamesController.php:317
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:153
+#: modules/accounting/assets/js/admin.js:28309
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:161
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceTrnRow.vue:23
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:89
@@ -3236,17 +3531,17 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: build/i18n/languages/erp.php:222
+#: build/i18n/languages/erp.php:222 modules/accounting/assets/js/admin.js:28311
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:164
 msgid "What is Tax Zone?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:223
+#: build/i18n/languages/erp.php:223 modules/accounting/assets/js/admin.js:28314
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:168
 msgid "What is Tax Category?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:224
+#: build/i18n/languages/erp.php:224 modules/accounting/assets/js/admin.js:28317
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:172
 msgid "What is Tax Agency?"
 msgstr ""
@@ -3260,6 +3555,7 @@ msgstr ""
 #: build/modules/hrm/views/employee/empty-employee.php:169
 #: build/modules/hrm/views/reporting.php:2 includes/Admin/AddProMenu.php:270
 #: includes/Admin/AddProMenu.php:352
+#: modules/accounting/assets/js/admin.js:28321
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:179
 #: modules/accounting/includes/Classes/Admin.php:247
 #: modules/crm/includes/Admin/AdminMenu.php:63 modules/crm/views/reports.php:2
@@ -3269,7 +3565,7 @@ msgstr ""
 msgid "Reports"
 msgstr ""
 
-#: build/i18n/languages/erp.php:226
+#: build/i18n/languages/erp.php:226 modules/accounting/assets/js/admin.js:28323
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:182
 msgid "How to produce different types of reports in Accounting?"
 msgstr ""
@@ -3343,6 +3639,9 @@ msgstr ""
 #: build/i18n/languages/erp.php:237
 #: build/modules/accounting/includes/functions/common.php:458
 #: build/modules/accounting/includes/functions/transactions.php:915
+#: modules/accounting/assets/js/admin.js:20354
+#: modules/accounting/assets/js/admin.js:20613
+#: modules/accounting/assets/js/admin.js:21263
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:276
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:383
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:173
@@ -3357,6 +3656,9 @@ msgstr ""
 #: build/i18n/languages/erp.php:238
 #: build/modules/accounting/includes/API/InvoicesController.php:488
 #: build/modules/accounting/includes/functions/common.php:453
+#: modules/accounting/assets/js/admin.js:20356
+#: modules/accounting/assets/js/admin.js:20604
+#: modules/accounting/assets/js/admin.js:21266
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:279
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:177
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:51
@@ -3367,7 +3669,7 @@ msgstr ""
 msgid "Invoice"
 msgstr ""
 
-#: build/i18n/languages/erp.php:239
+#: build/i18n/languages/erp.php:239 modules/accounting/assets/js/admin.js:14716
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:321
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:276
 msgid "Invoice does not exists!"
@@ -3388,13 +3690,13 @@ msgstr ""
 msgid "Could not create"
 msgstr ""
 
-#: build/i18n/languages/erp.php:243
+#: build/i18n/languages/erp.php:243 modules/accounting/assets/js/admin.js:14954
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:645
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:496
 msgid "Customer Name is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:244
+#: build/i18n/languages/erp.php:244 modules/accounting/assets/js/admin.js:17282
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:661
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:597
 msgid "Please select a product."
@@ -3418,7 +3720,12 @@ msgstr ""
 msgid "Ref."
 msgstr ""
 
-#: build/i18n/languages/erp.php:248
+#: build/i18n/languages/erp.php:248 modules/accounting/assets/js/admin.js:10919
+#: modules/accounting/assets/js/admin.js:11824
+#: modules/accounting/assets/js/admin.js:23808
+#: modules/accounting/assets/js/admin.js:23812
+#: modules/accounting/assets/js/admin.js:23956
+#: modules/accounting/assets/js/admin.js:28544
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:52
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:70
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:89
@@ -3439,7 +3746,10 @@ msgstr ""
 msgid "Debit"
 msgstr ""
 
-#: build/i18n/languages/erp.php:249
+#: build/i18n/languages/erp.php:249 modules/accounting/assets/js/admin.js:10922
+#: modules/accounting/assets/js/admin.js:11827
+#: modules/accounting/assets/js/admin.js:23815
+#: modules/accounting/assets/js/admin.js:28547
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:53
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:73
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:93
@@ -3463,17 +3773,18 @@ msgstr ""
 msgid "Remove Selection"
 msgstr ""
 
-#: build/i18n/languages/erp.php:251
+#: build/i18n/languages/erp.php:251 modules/accounting/assets/js/admin.js:18794
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:217
 msgid "Journal Entry Added!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:252
+#: build/i18n/languages/erp.php:252 modules/accounting/assets/js/admin.js:18812
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:233
 msgid "Accounts are required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:253
+#: build/i18n/languages/erp.php:253 modules/accounting/assets/js/admin.js:18824
+#: modules/accounting/assets/js/admin.js:28044
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:245
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:539
 msgid "Debit and Credit must be Equal."
@@ -3491,7 +3802,10 @@ msgstr ""
 msgid "New Journal Entry"
 msgstr ""
 
-#: build/i18n/languages/erp.php:256
+#: build/i18n/languages/erp.php:256 modules/accounting/assets/js/admin.js:18496
+#: modules/accounting/assets/js/admin.js:20926
+#: modules/accounting/assets/js/admin.js:21635
+#: modules/accounting/assets/js/admin.js:22569
 #: modules/accounting/assets/src/admin/components/journal/JournalList.vue:50
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:62
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:91
@@ -3518,6 +3832,8 @@ msgstr ""
 #: build/modules/hrm/views/js-templates/job-info-history-edit.php:6
 #: build/modules/hrm/views/js-templates/job-info.php:6
 #: build/modules/hrm/views/reporting/salary-history.php:13
+#: modules/accounting/assets/js/admin.js:18499
+#: modules/accounting/assets/js/admin.js:25082
 #: modules/accounting/assets/src/admin/components/journal/JournalList.vue:51
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:19
 #: modules/accounting/assets/src/admin/components/tax/TaxRecords.vue:66
@@ -3588,7 +3904,7 @@ msgstr ""
 msgid "Show more details"
 msgstr ""
 
-#: build/i18n/languages/erp.php:265
+#: build/i18n/languages/erp.php:265 modules/accounting/assets/js/admin.js:1120
 #: modules/accounting/assets/js/bootstrap.js:5156
 #: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
 msgid "No items found."
@@ -3619,6 +3935,8 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:270
 #: build/modules/hrm/includes/Admin/AdminMenu.php:40
+#: modules/accounting/assets/js/admin.js:8701
+#: modules/accounting/assets/js/admin.js:21645
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:46
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:86
 #: modules/accounting/assets/src/admin/components/people/People.vue:153
@@ -3649,7 +3967,8 @@ msgstr ""
 msgid "Tax Payable"
 msgstr ""
 
-#: build/i18n/languages/erp.php:275
+#: build/i18n/languages/erp.php:275 modules/accounting/assets/js/admin.js:25079
+#: modules/accounting/assets/js/admin.js:26459
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:126
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:42
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:58
@@ -3691,27 +4010,27 @@ msgstr ""
 msgid "Total Credit"
 msgstr ""
 
-#: build/i18n/languages/erp.php:282
+#: build/i18n/languages/erp.php:282 modules/accounting/assets/js/admin.js:28025
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:518
 msgid "People is not selected in Accounts Receivable."
 msgstr ""
 
-#: build/i18n/languages/erp.php:283
+#: build/i18n/languages/erp.php:283 modules/accounting/assets/js/admin.js:28030
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:524
 msgid "People is not selected in Accounts Payable."
 msgstr ""
 
-#: build/i18n/languages/erp.php:284
+#: build/i18n/languages/erp.php:284 modules/accounting/assets/js/admin.js:28035
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:530
 msgid "Agency is not selected in Tax Payable."
 msgstr ""
 
-#: build/i18n/languages/erp.php:285
+#: build/i18n/languages/erp.php:285 modules/accounting/assets/js/admin.js:28040
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:535
 msgid "Financial year is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:286
+#: build/i18n/languages/erp.php:286 modules/accounting/assets/js/admin.js:28073
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:568
 msgid "Opening Balance Created!"
 msgstr ""
@@ -3732,7 +4051,7 @@ msgstr ""
 msgid "Bill No"
 msgstr ""
 
-#: build/i18n/languages/erp.php:290
+#: build/i18n/languages/erp.php:290 modules/accounting/assets/js/admin.js:21654
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:67
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:77
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:83
@@ -3741,7 +4060,7 @@ msgstr ""
 msgid "Due"
 msgstr ""
 
-#: build/i18n/languages/erp.php:291
+#: build/i18n/languages/erp.php:291 modules/accounting/assets/js/admin.js:16199
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:339
 msgid "Pay-Bill Created!"
 msgstr ""
@@ -3749,6 +4068,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:292
 #: build/modules/hrm/includes/FormHandler.php:702
 #: build/modules/hrm/includes/FormHandler.php:845
+#: modules/accounting/assets/js/admin.js:16211
+#: modules/accounting/assets/js/admin.js:18084
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:348
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:393
 #: modules/hrm/includes/FormHandler.php:702
@@ -3759,6 +4080,8 @@ msgstr ""
 #: build/i18n/languages/erp.php:293
 #: build/modules/accounting/includes/API/PayBillsController.php:300
 #: build/modules/accounting/includes/functions/common.php:473
+#: modules/accounting/assets/js/admin.js:21341
+#: modules/accounting/assets/js/admin.js:21876
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:5
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:49
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:51
@@ -3776,7 +4099,18 @@ msgstr ""
 msgid "Sl."
 msgstr ""
 
-#: build/i18n/languages/erp.php:295
+#: build/i18n/languages/erp.php:295 modules/accounting/assets/js/admin.js:18435
+#: modules/accounting/assets/js/admin.js:20390
+#: modules/accounting/assets/js/admin.js:20610
+#: modules/accounting/assets/js/admin.js:21054
+#: modules/accounting/assets/js/admin.js:21072
+#: modules/accounting/assets/js/admin.js:21085
+#: modules/accounting/assets/js/admin.js:21268
+#: modules/accounting/assets/js/admin.js:22322
+#: modules/accounting/assets/js/admin.js:22700
+#: modules/accounting/assets/js/admin.js:22718
+#: modules/accounting/assets/js/admin.js:22731
+#: modules/accounting/assets/js/admin.js:22900
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:8
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:212
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:8
@@ -3797,12 +4131,13 @@ msgstr ""
 msgid "Payment"
 msgstr ""
 
-#: build/i18n/languages/erp.php:296
+#: build/i18n/languages/erp.php:296 modules/accounting/assets/js/admin.js:18072
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:384
 msgid "Pay Purchase Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:297
+#: build/i18n/languages/erp.php:297 modules/accounting/assets/js/admin.js:17266
+#: modules/accounting/assets/js/admin.js:18135
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:438
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:585
 msgid "Vendor Name is required."
@@ -3835,6 +4170,8 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:302
 #: build/modules/accounting/includes/API/VendorsController.php:500
+#: modules/accounting/assets/js/admin.js:8693
+#: modules/accounting/assets/js/admin.js:9308
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:95
 #: modules/accounting/assets/src/admin/components/people/People.vue:145
 #: modules/accounting/assets/src/admin/components/people/SelectVendors.vue:4
@@ -3844,7 +4181,12 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: build/i18n/languages/erp.php:303
+#: build/i18n/languages/erp.php:303 modules/accounting/assets/js/admin.js:18432
+#: modules/accounting/assets/js/admin.js:20388
+#: modules/accounting/assets/js/admin.js:20607
+#: modules/accounting/assets/js/admin.js:21270
+#: modules/accounting/assets/js/admin.js:22325
+#: modules/accounting/assets/js/admin.js:22902
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:209
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:55
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:358
@@ -3863,6 +4205,8 @@ msgstr ""
 #: build/modules/crm/views/contact/single.php:93
 #: build/modules/hrm/views/js-templates/new-employee.php:359
 #: includes/Admin/views/company-editor.php:123
+#: modules/accounting/assets/js/admin.js:8625
+#: modules/accounting/assets/js/admin.js:10464
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:25
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:56
 #: modules/accounting/assets/src/admin/components/people/People.vue:85
@@ -3909,12 +4253,13 @@ msgstr ""
 #: build/modules/hrm/views/reporting/age-profile.php:52
 #: build/modules/hrm/views/reporting/gender-profile.php:84
 #: build/modules/hrm/views/reporting/headcount.php:149
+#: modules/accounting/assets/js/admin.js:10458
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:33
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:54
-#: modules/hrm/includes/DepartmentListTable.php:270
+#: modules/hrm/includes/DepartmentListTable.php:271
 #: modules/hrm/includes/EmployeeListTable.php:67
 #: modules/hrm/includes/EmployeeListTable.php:185
-#: modules/hrm/includes/LeavePoliciesListTable.php:169
+#: modules/hrm/includes/LeavePoliciesListTable.php:171
 #: modules/hrm/views/employee/tab-general.php:47
 #: modules/hrm/views/employee/tab-job.php:215
 #: modules/hrm/views/js-templates/job-info-history-edit.php:30
@@ -3935,11 +4280,12 @@ msgstr ""
 #: build/modules/hrm/views/dashboard.php:47
 #: build/modules/hrm/views/leave/leave-entitlements.php:101
 #: build/modules/hrm/views/leave/new-policy.php:210
+#: modules/accounting/assets/js/admin.js:10455
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:37
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:53
 #: modules/hrm/includes/EmployeeListTable.php:53
 #: modules/hrm/includes/EmployeeListTable.php:184
-#: modules/hrm/includes/LeavePoliciesListTable.php:170
+#: modules/hrm/includes/LeavePoliciesListTable.php:172
 #: modules/hrm/views/dashboard.php:47
 #: modules/hrm/views/leave/leave-entitlements.php:101
 #: modules/hrm/views/leave/new-policy.php:210
@@ -3952,7 +4298,7 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: build/i18n/languages/erp.php:309
+#: build/i18n/languages/erp.php:309 modules/accounting/assets/js/admin.js:20781
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:72
 #: modules/accounting/assets/src/admin/components/people/PeopleDetails.vue:28
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:25
@@ -3988,6 +4334,17 @@ msgstr ""
 #: build/i18n/languages/erp.php:312
 #: build/modules/hrm/includes/DepartmentListTable.php:285
 #: build/modules/hrm/includes/EmployeeListTable.php:269
+#: modules/accounting/assets/js/admin.js:8610
+#: modules/accounting/assets/js/admin.js:9316
+#: modules/accounting/assets/js/admin.js:10444
+#: modules/accounting/assets/js/admin.js:10899
+#: modules/accounting/assets/js/admin.js:11588
+#: modules/accounting/assets/js/admin.js:14265
+#: modules/accounting/assets/js/admin.js:24583
+#: modules/accounting/assets/js/admin.js:24827
+#: modules/accounting/assets/js/admin.js:25106
+#: modules/accounting/assets/js/admin.js:27027
+#: modules/accounting/assets/js/admin.js:27307
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:47
 #: modules/accounting/assets/src/admin/components/people/People.vue:77
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:94
@@ -3999,7 +4356,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:89
 #: modules/accounting/assets/src/admin/components/tax/TaxRecords.vue:85
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:83
-#: modules/hrm/includes/DepartmentListTable.php:285
+#: modules/hrm/includes/DepartmentListTable.php:286
 #: modules/hrm/includes/EmployeeListTable.php:269
 msgid "Move to Trash"
 msgstr ""
@@ -4016,11 +4373,12 @@ msgstr ""
 #: build/modules/crm/views/js-templates/new-customer.php:89
 #: build/modules/hrm/views/employee/tab-general.php:20
 #: build/modules/hrm/views/js-templates/new-employee.php:85
-#: includes/Settings/Email.php:396
+#: includes/Settings/Email.php:396 modules/accounting/assets/js/admin.js:8622
+#: modules/accounting/assets/js/admin.js:10461
 #: modules/accounting/assets/src/admin/components/people/Employees.vue:55
 #: modules/accounting/assets/src/admin/components/people/People.vue:84
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:43
-#: modules/crm/includes/ContactSubscriberListTable.php:170
+#: modules/crm/includes/ContactSubscriberListTable.php:171
 #: modules/crm/includes/Subscription.php:165
 #: modules/crm/includes/functions-customer.php:548
 #: modules/crm/includes/functions-customer.php:1808
@@ -4069,12 +4427,12 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: build/i18n/languages/erp.php:317
+#: build/i18n/languages/erp.php:317 modules/accounting/assets/js/admin.js:9195
 #: modules/accounting/assets/src/admin/components/people/ExportModal.vue:99
 msgid "Select customer fields to export"
 msgstr ""
 
-#: build/i18n/languages/erp.php:318
+#: build/i18n/languages/erp.php:318 modules/accounting/assets/js/admin.js:9195
 #: modules/accounting/assets/src/admin/components/people/ExportModal.vue:100
 msgid "Select vendor fields to export"
 msgstr ""
@@ -4145,10 +4503,11 @@ msgstr ""
 #: build/modules/crm/views/dashboard-badge.php:53
 #: build/modules/crm/views/dashboard.php:54 includes/Admin/AdminMenu.php:128
 #: includes/Admin/views/company-editor.php:2
+#: modules/accounting/assets/js/admin.js:8619
 #: modules/accounting/assets/src/admin/components/people/People.vue:83
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:51
 #: modules/accounting/includes/Classes/Settings.php:71
-#: modules/crm/includes/ContactSubscriberListTable.php:97
+#: modules/crm/includes/ContactSubscriberListTable.php:98
 #: modules/crm/includes/functions-customer.php:226
 #: modules/crm/views/dashboard-badge.php:53 modules/crm/views/dashboard.php:54
 msgid "Company"
@@ -4159,6 +4518,7 @@ msgstr ""
 #: build/modules/accounting/includes/Classes/Admin.php:63
 #: build/modules/accounting/includes/Classes/Settings.php:26
 #: includes/Framework/views/status-report.php:122
+#: modules/accounting/assets/js/admin.js:8684
 #: modules/accounting/assets/src/admin/components/people/People.vue:136
 #: modules/accounting/includes/Classes/Admin.php:63
 #: modules/accounting/includes/Classes/Settings.php:26
@@ -4169,6 +4529,9 @@ msgstr ""
 #: build/modules/accounting/includes/API/CustomersController.php:475
 #: build/modules/crm/includes/functions-customer.php:198
 #: build/modules/crm/includes/functions-customer.php:225
+#: modules/accounting/assets/js/admin.js:8685
+#: modules/accounting/assets/js/admin.js:20936
+#: modules/accounting/assets/js/admin.js:22579
 #: modules/accounting/assets/src/admin/components/people/People.vue:137
 #: modules/accounting/assets/src/admin/components/people/SelectCustomers.vue:4
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:94
@@ -4179,12 +4542,12 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: build/i18n/languages/erp.php:327
+#: build/i18n/languages/erp.php:327 modules/accounting/assets/js/admin.js:8686
 #: modules/accounting/assets/src/admin/components/people/People.vue:138
 msgid "Import Customers"
 msgstr ""
 
-#: build/i18n/languages/erp.php:328
+#: build/i18n/languages/erp.php:328 modules/accounting/assets/js/admin.js:8687
 #: modules/accounting/assets/src/admin/components/people/People.vue:139
 msgid "Export Customers"
 msgstr ""
@@ -4193,37 +4556,50 @@ msgstr ""
 #: build/includes/Framework/views/status-report.php:127
 #: build/modules/accounting/includes/Classes/Admin.php:73
 #: includes/Framework/views/status-report.php:127
+#: modules/accounting/assets/js/admin.js:8692
 #: modules/accounting/assets/src/admin/components/people/People.vue:144
 #: modules/accounting/includes/Classes/Admin.php:73
 msgid "Vendors"
 msgstr ""
 
-#: build/i18n/languages/erp.php:330
+#: build/i18n/languages/erp.php:330 modules/accounting/assets/js/admin.js:8694
 #: modules/accounting/assets/src/admin/components/people/People.vue:146
 msgid "Import Vendors"
 msgstr ""
 
-#: build/i18n/languages/erp.php:331
+#: build/i18n/languages/erp.php:331 modules/accounting/assets/js/admin.js:8695
 #: modules/accounting/assets/src/admin/components/people/People.vue:147
 msgid "Export Vendors"
 msgstr ""
 
-#: build/i18n/languages/erp.php:332
+#: build/i18n/languages/erp.php:332 modules/accounting/assets/js/admin.js:8700
 #: modules/accounting/assets/src/admin/components/people/People.vue:152
 msgid "Peoples"
 msgstr ""
 
-#: build/i18n/languages/erp.php:333
+#: build/i18n/languages/erp.php:333 modules/accounting/assets/js/admin.js:8702
 #: modules/accounting/assets/src/admin/components/people/People.vue:154
 msgid "Import People"
 msgstr ""
 
-#: build/i18n/languages/erp.php:334
+#: build/i18n/languages/erp.php:334 modules/accounting/assets/js/admin.js:8703
 #: modules/accounting/assets/src/admin/components/people/People.vue:155
 msgid "Export People"
 msgstr ""
 
-#: build/i18n/languages/erp.php:335
+#: build/i18n/languages/erp.php:335 modules/accounting/assets/js/admin.js:8816
+#: modules/accounting/assets/js/admin.js:14318
+#: modules/accounting/assets/js/admin.js:21153
+#: modules/accounting/assets/js/admin.js:24177
+#: modules/accounting/assets/js/admin.js:24212
+#: modules/accounting/assets/js/admin.js:24432
+#: modules/accounting/assets/js/admin.js:24471
+#: modules/accounting/assets/js/admin.js:24676
+#: modules/accounting/assets/js/admin.js:24711
+#: modules/accounting/assets/js/admin.js:24957
+#: modules/accounting/assets/js/admin.js:25181
+#: modules/accounting/assets/js/admin.js:25218
+#: modules/accounting/assets/js/admin.js:26545
 #: modules/accounting/assets/src/admin/components/people/People.vue:258
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:140
 #: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:147
@@ -4425,7 +4801,7 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: build/i18n/languages/erp.php:350
+#: build/i18n/languages/erp.php:350 modules/accounting/assets/js/admin.js:1769
 #: modules/accounting/assets/js/bootstrap.js:5808
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:249
 msgid ""
@@ -4433,43 +4809,43 @@ msgid ""
 "contact?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:351
+#: build/i18n/languages/erp.php:351 modules/accounting/assets/js/admin.js:1774
 #: modules/accounting/assets/js/bootstrap.js:5813
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:254
 msgid "Import & Update"
 msgstr ""
 
-#: build/i18n/languages/erp.php:352
+#: build/i18n/languages/erp.php:352 modules/accounting/assets/js/admin.js:1784
 #: modules/accounting/assets/js/bootstrap.js:5823
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:265
 msgid "Email already exists as customer/vendor"
 msgstr ""
 
-#: build/i18n/languages/erp.php:353
+#: build/i18n/languages/erp.php:353 modules/accounting/assets/js/admin.js:1809
 #: modules/accounting/assets/js/bootstrap.js:5848
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
 msgid "Created Successfully"
 msgstr ""
 
-#: build/i18n/languages/erp.php:354
+#: build/i18n/languages/erp.php:354 modules/accounting/assets/js/admin.js:1809
 #: modules/accounting/assets/js/bootstrap.js:5848
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
 msgid "Updated Successfully"
 msgstr ""
 
-#: build/i18n/languages/erp.php:355
+#: build/i18n/languages/erp.php:355 modules/accounting/assets/js/admin.js:1832
 #: modules/accounting/assets/js/bootstrap.js:5871
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:313
 msgid "First name is required"
 msgstr ""
 
-#: build/i18n/languages/erp.php:356
+#: build/i18n/languages/erp.php:356 modules/accounting/assets/js/admin.js:1836
 #: modules/accounting/assets/js/bootstrap.js:5875
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:317
 msgid "Last name is required"
 msgstr ""
 
-#: build/i18n/languages/erp.php:357
+#: build/i18n/languages/erp.php:357 modules/accounting/assets/js/admin.js:1840
 #: modules/accounting/assets/js/bootstrap.js:5879
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:321
 msgid "Email is required"
@@ -4520,7 +4896,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/holiday.php:39
 #: build/modules/hrm/views/reporting/headcount.php:73
 #: build/modules/hrm/views/requests.php:17
-#: includes/Admin/AuditlogListTable.php:86
+#: includes/Admin/AuditlogListTable.php:88
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:17
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:13
 #: modules/accounting/assets/src/admin/components/reports/IncomeStatement.vue:10
@@ -4531,19 +4907,19 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/TransactionBased.vue:20
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:16
 #: modules/crm/assets/js/vue-table.js:400
-#: modules/crm/includes/ContactSubscriberListTable.php:58
+#: modules/crm/includes/ContactSubscriberListTable.php:59
 #: modules/crm/includes/functions-reporting.php:65
 #: modules/crm/includes/functions-reporting.php:127
 #: modules/crm/includes/functions-reporting.php:191
 #: modules/crm/views/contact/feeds.php:48
 #: modules/hrm/includes/AnnouncementListTable.php:245
 #: modules/hrm/includes/EmployeeListTable.php:49
-#: modules/hrm/includes/EntitlementListTable.php:129
-#: modules/hrm/includes/LeavePoliciesListTable.php:106
+#: modules/hrm/includes/EntitlementListTable.php:130
+#: modules/hrm/includes/LeavePoliciesListTable.php:108
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:109
 #: modules/hrm/views/employee/tab-leave.php:126
 #: modules/hrm/views/leave/calendar.php:81
-#: modules/hrm/views/leave/holiday.php:39
+#: modules/hrm/views/leave/holiday.php:41
 #: modules/hrm/views/reporting/headcount.php:73
 #: modules/hrm/views/requests.php:17
 msgid "Filter"
@@ -4561,7 +4937,8 @@ msgstr ""
 msgid "Add new category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:364
+#: build/i18n/languages/erp.php:364 modules/accounting/assets/js/admin.js:14249
+#: modules/accounting/assets/js/admin.js:24307
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:10
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:85
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/CategoryBased.vue:36
@@ -4574,7 +4951,10 @@ msgstr ""
 msgid "Parent Category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:366
+#: build/i18n/languages/erp.php:366 modules/accounting/assets/js/admin.js:9384
+#: modules/accounting/assets/js/admin.js:9404
+#: modules/accounting/assets/js/admin.js:14311
+#: modules/accounting/assets/js/admin.js:14331
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:134
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:151
 #: modules/accounting/assets/src/admin/components/products/Products.vue:171
@@ -4582,12 +4962,12 @@ msgstr ""
 msgid "Are you sure want to delete?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:367
+#: build/i18n/languages/erp.php:367 modules/accounting/assets/js/admin.js:14374
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:189
 msgid "Product category added!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:368
+#: build/i18n/languages/erp.php:368 modules/accounting/assets/js/admin.js:14394
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:205
 msgid "Product category updated!"
 msgstr ""
@@ -4651,22 +5031,22 @@ msgstr ""
 msgid "Default Tax category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:380
+#: build/i18n/languages/erp.php:380 modules/accounting/assets/js/admin.js:10229
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:236
 msgid "Please select a default product category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:381
+#: build/i18n/languages/erp.php:381 modules/accounting/assets/js/admin.js:10233
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:240
 msgid "Please select a default product type"
 msgstr ""
 
-#: build/i18n/languages/erp.php:382
+#: build/i18n/languages/erp.php:382 modules/accounting/assets/js/admin.js:10236
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:243
 msgid "Validating data"
 msgstr ""
 
-#: build/i18n/languages/erp.php:383
+#: build/i18n/languages/erp.php:383 modules/accounting/assets/js/admin.js:10252
 #: modules/accounting/assets/src/admin/components/products/ImportModal.vue:266
 msgid "Importing data"
 msgstr ""
@@ -4683,7 +5063,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: build/i18n/languages/erp.php:385
+#: build/i18n/languages/erp.php:385 modules/accounting/assets/js/admin.js:9289
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:26
 #: modules/accounting/assets/src/admin/components/products/Products.vue:73
 msgid "Product Name"
@@ -4699,7 +5079,7 @@ msgstr ""
 msgid "Product/Service Details"
 msgstr ""
 
-#: build/i18n/languages/erp.php:388
+#: build/i18n/languages/erp.php:388 modules/accounting/assets/js/admin.js:9305
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:44
 #: modules/accounting/assets/src/admin/components/products/Products.vue:89
 msgid "Product Type"
@@ -4716,13 +5096,13 @@ msgstr ""
 msgid "Product Information"
 msgstr ""
 
-#: build/i18n/languages/erp.php:391
+#: build/i18n/languages/erp.php:391 modules/accounting/assets/js/admin.js:9296
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:83
 #: modules/accounting/assets/src/admin/components/products/Products.vue:80
 msgid "Cost Price"
 msgstr ""
 
-#: build/i18n/languages/erp.php:392
+#: build/i18n/languages/erp.php:392 modules/accounting/assets/js/admin.js:9293
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:92
 #: modules/accounting/assets/src/admin/components/products/Products.vue:77
 msgid "Sale Price"
@@ -4752,12 +5132,14 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:396
 #: build/modules/accounting/includes/API/InventoryProductCatsController.php:285
+#: modules/accounting/assets/js/admin.js:9299
 #: modules/accounting/assets/src/admin/components/products/Products.vue:83
 #: modules/accounting/includes/API/InventoryProductCatsController.php:285
 msgid "Product Category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:397
+#: build/i18n/languages/erp.php:397 modules/accounting/assets/js/admin.js:9302
+#: modules/accounting/assets/js/admin.js:26462
 #: modules/accounting/assets/src/admin/components/products/Products.vue:86
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:7
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:43
@@ -4795,6 +5177,8 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:402
 #: build/modules/accounting/includes/functions/common.php:478
+#: modules/accounting/assets/js/admin.js:16906
+#: modules/accounting/assets/js/admin.js:22895
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:307
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:351
 #: modules/accounting/includes/functions/common.php:478
@@ -4804,6 +5188,9 @@ msgstr ""
 #: build/i18n/languages/erp.php:403
 #: build/modules/accounting/includes/API/PurchasesController.php:370
 #: build/modules/accounting/includes/functions/common.php:483
+#: modules/accounting/assets/js/admin.js:16909
+#: modules/accounting/assets/js/admin.js:22319
+#: modules/accounting/assets/js/admin.js:22898
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:310
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:49
@@ -4814,7 +5201,7 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
-#: build/i18n/languages/erp.php:404
+#: build/i18n/languages/erp.php:404 modules/accounting/assets/js/admin.js:17175
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:512
 msgid "Purchase Updated!"
 msgstr ""
@@ -4834,12 +5221,12 @@ msgstr ""
 msgid "Deposit to"
 msgstr ""
 
-#: build/i18n/languages/erp.php:408
+#: build/i18n/languages/erp.php:408 modules/accounting/assets/js/admin.js:14891
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:442
 msgid "Payment Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:409
+#: build/i18n/languages/erp.php:409 modules/accounting/assets/js/admin.js:14962
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:504
 msgid "Deposit Account is required."
 msgstr ""
@@ -4886,34 +5273,35 @@ msgstr ""
 #: build/includes/Admin/AddProMenu.php:122 includes/Admin/AddProMenu.php:52
 #: includes/Admin/AddProMenu.php:83 includes/Admin/AddProMenu.php:93
 #: includes/Admin/AddProMenu.php:122
+#: modules/accounting/assets/js/admin.js:27314
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:130
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:178
 msgid "Assets"
 msgstr ""
 
-#: build/i18n/languages/erp.php:418
+#: build/i18n/languages/erp.php:418 modules/accounting/assets/js/admin.js:27322
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:136
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:182
 msgid "Liability"
 msgstr ""
 
-#: build/i18n/languages/erp.php:419
+#: build/i18n/languages/erp.php:419 modules/accounting/assets/js/admin.js:27330
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:136
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:186
 msgid "Equity"
 msgstr ""
 
-#: build/i18n/languages/erp.php:420
+#: build/i18n/languages/erp.php:420 modules/accounting/assets/js/admin.js:27446
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:304
 msgid "Please select financial year"
 msgstr ""
 
-#: build/i18n/languages/erp.php:421
+#: build/i18n/languages/erp.php:421 modules/accounting/assets/js/admin.js:27457
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:316
 msgid "Please create a financial year which start after "
 msgstr ""
 
-#: build/i18n/languages/erp.php:422
+#: build/i18n/languages/erp.php:422 modules/accounting/assets/js/admin.js:27477
 #: modules/accounting/assets/src/admin/components/reports/BalanceSheet.vue:335
 msgid "Balance Sheet Closed!"
 msgstr ""
@@ -4967,12 +5355,12 @@ msgstr ""
 msgid "Currency"
 msgstr ""
 
-#: build/i18n/languages/erp.php:431
+#: build/i18n/languages/erp.php:431 modules/accounting/assets/js/admin.js:11811
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:88
 msgid "Trns Date"
 msgstr ""
 
-#: build/i18n/languages/erp.php:432
+#: build/i18n/languages/erp.php:432 modules/accounting/assets/js/admin.js:11818
 #: modules/accounting/assets/src/admin/components/reports/LedgerReport.vue:90
 msgid "Trns No"
 msgstr ""
@@ -5061,7 +5449,7 @@ msgid ""
 "current financial cycle/year"
 msgstr ""
 
-#: build/i18n/languages/erp.php:443
+#: build/i18n/languages/erp.php:443 modules/accounting/assets/js/admin.js:22344
 #: modules/accounting/assets/src/admin/components/reports/ReportsOverview.vue:52
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:69
 msgid "Purchase Return"
@@ -5074,7 +5462,7 @@ msgid ""
 "current financial cycle/year"
 msgstr ""
 
-#: build/i18n/languages/erp.php:445
+#: build/i18n/languages/erp.php:445 modules/accounting/assets/js/admin.js:20627
 #: modules/accounting/assets/src/admin/components/reports/ReportsOverview.vue:65
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:65
 msgid "Sales Return"
@@ -5147,13 +5535,13 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: build/i18n/languages/erp.php:456
+#: build/i18n/languages/erp.php:456 modules/accounting/assets/js/admin.js:11598
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:31
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:91
 msgid "Debit Total"
 msgstr ""
 
-#: build/i18n/languages/erp.php:457
+#: build/i18n/languages/erp.php:457 modules/accounting/assets/js/admin.js:11601
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:32
 #: modules/accounting/assets/src/admin/components/reports/TrialBalance.vue:92
 msgid "Credit Total"
@@ -5168,13 +5556,15 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: build/i18n/languages/erp.php:459
+#: build/i18n/languages/erp.php:459 modules/accounting/assets/js/admin.js:24059
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/AgencyBased.vue:37
 #: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:62
 msgid "Agency Name"
 msgstr ""
 
-#: build/i18n/languages/erp.php:460
+#: build/i18n/languages/erp.php:460 modules/accounting/assets/js/admin.js:28740
+#: modules/accounting/assets/js/admin.js:28916
+#: modules/accounting/assets/js/admin.js:29097
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/CategoryBased.vue:105
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/CustomerBased.vue:117
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/TransactionBased.vue:94
@@ -5232,7 +5622,7 @@ msgstr ""
 msgid "It generates sales tax report based on categories"
 msgstr ""
 
-#: build/i18n/languages/erp.php:471
+#: build/i18n/languages/erp.php:471 modules/accounting/assets/js/admin.js:28913
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/TransactionBased.vue:91
 msgid "Trnasaction Date"
 msgstr ""
@@ -5240,6 +5630,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:472
 #: build/modules/crm/views/js-templates/customer-add-schedules.php:103
 #: build/modules/crm/views/js-templates/customer-schedule-note.php:98
+#: modules/accounting/assets/js/admin.js:20687
 #: modules/accounting/assets/src/admin/components/select/ComboBox.vue:34
 #: modules/crm/views/js-templates/customer-add-schedules.php:103
 #: modules/crm/views/js-templates/customer-schedule-note.php:98
@@ -5294,9 +5685,9 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:322
 #: modules/crm/views/activities.php:27
 #: modules/crm/views/reports/customer-report.php:34
-#: modules/hrm/includes/EntitlementListTable.php:96
+#: modules/hrm/includes/EntitlementListTable.php:97
 #: modules/hrm/includes/HrLog.php:773 modules/hrm/includes/HrLog.php:778
-#: modules/hrm/includes/LeavePoliciesListTable.php:85
+#: modules/hrm/includes/LeavePoliciesListTable.php:87
 #: modules/hrm/includes/functions-employee.php:231
 #: modules/hrm/includes/functions-leave.php:828
 #: modules/hrm/includes/functions-leave.php:829
@@ -5329,17 +5720,17 @@ msgstr ""
 msgid "Tax Agency Name"
 msgstr ""
 
-#: build/i18n/languages/erp.php:478
+#: build/i18n/languages/erp.php:478 modules/accounting/assets/js/admin.js:23013
 #: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:104
 msgid "Tax Agency Updated!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:479
+#: build/i18n/languages/erp.php:479 modules/accounting/assets/js/admin.js:23017
 #: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:108
 msgid "Tax Agency Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:480
+#: build/i18n/languages/erp.php:480 modules/accounting/assets/js/admin.js:23045
 #: modules/accounting/assets/src/admin/components/tax/NewTaxAgency.vue:133
 msgid "Agency Name is required."
 msgstr ""
@@ -5349,17 +5740,17 @@ msgstr ""
 msgid "Tax Category Name"
 msgstr ""
 
-#: build/i18n/languages/erp.php:482
+#: build/i18n/languages/erp.php:482 modules/accounting/assets/js/admin.js:23166
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:111
 msgid "Tax Category Updated!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:483
+#: build/i18n/languages/erp.php:483 modules/accounting/assets/js/admin.js:23170
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:115
 msgid "Tax Category Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:484
+#: build/i18n/languages/erp.php:484 modules/accounting/assets/js/admin.js:23199
 #: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:141
 msgid "Tax Category Name is required."
 msgstr ""
@@ -5369,7 +5760,8 @@ msgstr ""
 msgid "Add New Tax Rate"
 msgstr ""
 
-#: build/i18n/languages/erp.php:486
+#: build/i18n/languages/erp.php:486 modules/accounting/assets/js/admin.js:24552
+#: modules/accounting/assets/js/admin.js:24802
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:20
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:17
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:72
@@ -5389,6 +5781,7 @@ msgstr ""
 
 #: build/i18n/languages/erp.php:489
 #: build/modules/accounting/includes/API/TaxRatesController.php:704
+#: modules/accounting/assets/js/admin.js:26465
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:44
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:68
 #: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:77
@@ -5425,7 +5818,7 @@ msgstr ""
 msgid "Add Component"
 msgstr ""
 
-#: build/i18n/languages/erp.php:495
+#: build/i18n/languages/erp.php:495 modules/accounting/assets/js/admin.js:23425
 #: modules/accounting/assets/src/admin/components/tax/NewTaxRate.vue:210
 msgid "Tax Rate Created!"
 msgstr ""
@@ -5435,7 +5828,7 @@ msgstr ""
 msgid "Tax Zone"
 msgstr ""
 
-#: build/i18n/languages/erp.php:497
+#: build/i18n/languages/erp.php:497 modules/accounting/assets/js/admin.js:24556
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:22
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:65
 msgid "Tax Number"
@@ -5451,17 +5844,17 @@ msgstr ""
 msgid "Is this tax default"
 msgstr ""
 
-#: build/i18n/languages/erp.php:500
+#: build/i18n/languages/erp.php:500 modules/accounting/assets/js/admin.js:23634
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:120
 msgid "Tax Zone Updated!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:501
+#: build/i18n/languages/erp.php:501 modules/accounting/assets/js/admin.js:23638
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:124
 msgid "Tax Zone Created!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:502
+#: build/i18n/languages/erp.php:502 modules/accounting/assets/js/admin.js:23667
 #: modules/accounting/assets/src/admin/components/tax/NewTaxZone.vue:149
 msgid "Tax Zone Name is required."
 msgstr ""
@@ -5517,32 +5910,32 @@ msgstr ""
 msgid "Enter Particulars"
 msgstr ""
 
-#: build/i18n/languages/erp.php:512
+#: build/i18n/languages/erp.php:512 modules/accounting/assets/js/admin.js:23924
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:218
 msgid "Tax Paid!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:513
+#: build/i18n/languages/erp.php:513 modules/accounting/assets/js/admin.js:23963
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:243
 msgid "Payment method Name is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:514
+#: build/i18n/languages/erp.php:514 modules/accounting/assets/js/admin.js:23967
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:247
 msgid "Deposit to is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:515
+#: build/i18n/languages/erp.php:515 modules/accounting/assets/js/admin.js:23971
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:251
 msgid "Agency to is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:516
+#: build/i18n/languages/erp.php:516 modules/accounting/assets/js/admin.js:23975
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:255
 msgid "Date is required."
 msgstr ""
 
-#: build/i18n/languages/erp.php:517
+#: build/i18n/languages/erp.php:517 modules/accounting/assets/js/admin.js:23979
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:259
 msgid "Tax amount is required."
 msgstr ""
@@ -5553,7 +5946,7 @@ msgstr ""
 msgid "Add New Line"
 msgstr ""
 
-#: build/i18n/languages/erp.php:519
+#: build/i18n/languages/erp.php:519 modules/accounting/assets/js/admin.js:26455
 #: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:74
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:15
 #: modules/accounting/assets/src/admin/components/tax/TaxRateRow.vue:4
@@ -5570,6 +5963,8 @@ msgstr ""
 #: build/modules/hrm/includes/AnnouncementListTable.php:132
 #: build/modules/hrm/includes/AnnouncementListTable.php:330
 #: build/modules/hrm/includes/EmployeeListTable.php:372
+#: modules/accounting/assets/js/admin.js:24084
+#: modules/accounting/assets/js/admin.js:24335
 #: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:79
 #: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:79
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:8
@@ -5587,7 +5982,8 @@ msgstr ""
 msgid "Tax Categories"
 msgstr ""
 
-#: build/i18n/languages/erp.php:523
+#: build/i18n/languages/erp.php:523 modules/accounting/assets/js/admin.js:26657
+#: modules/accounting/assets/js/admin.js:26898
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:94
 #: modules/accounting/assets/src/admin/components/tax/TaxRateRow.vue:106
 msgid "Tax Rate Updated!"
@@ -5605,22 +6001,23 @@ msgstr ""
 msgid "Add Tax Rate"
 msgstr ""
 
-#: build/i18n/languages/erp.php:526
+#: build/i18n/languages/erp.php:526 modules/accounting/assets/js/admin.js:24832
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:94
 msgid "New Tax Zone"
 msgstr ""
 
-#: build/i18n/languages/erp.php:527
+#: build/i18n/languages/erp.php:527 modules/accounting/assets/js/admin.js:24835
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:95
 msgid "New Tax Category"
 msgstr ""
 
-#: build/i18n/languages/erp.php:528
+#: build/i18n/languages/erp.php:528 modules/accounting/assets/js/admin.js:24838
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:96
 msgid "New Tax Agency"
 msgstr ""
 
-#: build/i18n/languages/erp.php:529
+#: build/i18n/languages/erp.php:529 modules/accounting/assets/js/admin.js:24559
+#: modules/accounting/assets/js/admin.js:24888
 #: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:143
 #: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:66
 msgid "Default"
@@ -5638,7 +6035,7 @@ msgstr ""
 msgid "New Tax Payment"
 msgstr ""
 
-#: build/i18n/languages/erp.php:532
+#: build/i18n/languages/erp.php:532 modules/accounting/assets/js/admin.js:25102
 #: modules/accounting/assets/src/admin/components/tax/TaxRecords.vue:80
 msgid "No action found"
 msgstr ""
@@ -5687,13 +6084,16 @@ msgstr ""
 #: build/modules/hrm/includes/Announcement.php:369
 #: build/modules/hrm/includes/AnnouncementListTable.php:39
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:168
+#: modules/accounting/assets/js/admin.js:20930
+#: modules/accounting/assets/js/admin.js:21639
+#: modules/accounting/assets/js/admin.js:22573
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:43
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:63
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:92
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:89
 #: modules/hrm/includes/Announcement.php:369
 #: modules/hrm/includes/AnnouncementListTable.php:39
-#: modules/hrm/includes/LeavePoliciesListTable.php:168
+#: modules/hrm/includes/LeavePoliciesListTable.php:170
 msgid "Type"
 msgstr ""
 
@@ -5702,48 +6102,60 @@ msgstr ""
 msgid "Expenses Transactions"
 msgstr ""
 
-#: build/i18n/languages/erp.php:543
+#: build/i18n/languages/erp.php:543 modules/accounting/assets/js/admin.js:21332
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:48
 msgid "Create Expense"
 msgstr ""
 
-#: build/i18n/languages/erp.php:544
+#: build/i18n/languages/erp.php:544 modules/accounting/assets/js/admin.js:21335
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:49
 msgid "Create Check"
 msgstr ""
 
-#: build/i18n/languages/erp.php:545
+#: build/i18n/languages/erp.php:545 modules/accounting/assets/js/admin.js:21338
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:50
 msgid "Create Bill"
 msgstr ""
 
-#: build/i18n/languages/erp.php:546
+#: build/i18n/languages/erp.php:546 modules/accounting/assets/js/admin.js:21351
 #: modules/accounting/assets/src/admin/components/transactions/expenses/Expenses.vue:57
 msgid "Bill Payment"
 msgstr ""
 
-#: build/i18n/languages/erp.php:547
+#: build/i18n/languages/erp.php:547 modules/accounting/assets/js/admin.js:20933
+#: modules/accounting/assets/js/admin.js:21642
+#: modules/accounting/assets/js/admin.js:22576
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:64
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:93
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:90
 msgid "Ref"
 msgstr ""
 
-#: build/i18n/languages/erp.php:548
+#: build/i18n/languages/erp.php:548 modules/accounting/assets/js/admin.js:20939
+#: modules/accounting/assets/js/admin.js:21648
+#: modules/accounting/assets/js/admin.js:22582
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:66
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:95
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:92
 msgid "Trn Date"
 msgstr ""
 
-#: build/i18n/languages/erp.php:549
+#: build/i18n/languages/erp.php:549 modules/accounting/assets/js/admin.js:21201
+#: modules/accounting/assets/js/admin.js:21800
+#: modules/accounting/assets/js/admin.js:22836
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:188
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:302
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:301
 msgid "Are you sure to void the transaction?"
 msgstr ""
 
-#: build/i18n/languages/erp.php:550
+#: build/i18n/languages/erp.php:550 modules/accounting/assets/js/admin.js:21204
+#: modules/accounting/assets/js/admin.js:21212
+#: modules/accounting/assets/js/admin.js:21803
+#: modules/accounting/assets/js/admin.js:21811
+#: modules/accounting/assets/js/admin.js:21819
+#: modules/accounting/assets/js/admin.js:22839
+#: modules/accounting/assets/js/admin.js:22847
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:191
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:198
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:205
@@ -5754,7 +6166,14 @@ msgstr ""
 msgid "Transaction has been void!"
 msgstr ""
 
-#: build/i18n/languages/erp.php:551
+#: build/i18n/languages/erp.php:551 modules/accounting/assets/js/admin.js:21060
+#: modules/accounting/assets/js/admin.js:21893
+#: modules/accounting/assets/js/admin.js:21926
+#: modules/accounting/assets/js/admin.js:21952
+#: modules/accounting/assets/js/admin.js:21978
+#: modules/accounting/assets/js/admin.js:21996
+#: modules/accounting/assets/js/admin.js:22706
+#: modules/accounting/assets/js/admin.js:22742
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:260
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:283
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:303
@@ -5766,18 +6185,29 @@ msgstr ""
 msgid "Void"
 msgstr ""
 
-#: build/i18n/languages/erp.php:552
+#: build/i18n/languages/erp.php:552 modules/accounting/assets/js/admin.js:21920
+#: modules/accounting/assets/js/admin.js:21990
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:281
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:334
 msgid "Make Payment"
 msgstr ""
 
-#: build/i18n/languages/erp.php:553
+#: build/i18n/languages/erp.php:553 modules/accounting/assets/js/admin.js:22001
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:340
 msgid "Make Expense"
 msgstr ""
 
-#: build/i18n/languages/erp.php:554
+#: build/i18n/languages/erp.php:554 modules/accounting/assets/js/admin.js:21041
+#: modules/accounting/assets/js/admin.js:21049
+#: modules/accounting/assets/js/admin.js:21090
+#: modules/accounting/assets/js/admin.js:21115
+#: modules/accounting/assets/js/admin.js:21122
+#: modules/accounting/assets/js/admin.js:22006
+#: modules/accounting/assets/js/admin.js:22687
+#: modules/accounting/assets/js/admin.js:22695
+#: modules/accounting/assets/js/admin.js:22736
+#: modules/accounting/assets/js/admin.js:22761
+#: modules/accounting/assets/js/admin.js:22768
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:344
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:183
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:191
@@ -5792,13 +6222,15 @@ msgstr ""
 msgid "No actions found"
 msgstr ""
 
-#: build/i18n/languages/erp.php:555
+#: build/i18n/languages/erp.php:555 modules/accounting/assets/js/admin.js:21514
+#: modules/accounting/assets/js/admin.js:22421
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:55
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:55
 msgid "Paid"
 msgstr ""
 
-#: build/i18n/languages/erp.php:556
+#: build/i18n/languages/erp.php:556 modules/accounting/assets/js/admin.js:21514
+#: modules/accounting/assets/js/admin.js:22421
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:55
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:55
 msgid "Payable"
@@ -5809,7 +6241,7 @@ msgstr ""
 msgid "Purchases Transactions"
 msgstr ""
 
-#: build/i18n/languages/erp.php:558
+#: build/i18n/languages/erp.php:558 modules/accounting/assets/js/admin.js:22309
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:48
 msgid "Create Purchase"
 msgstr ""
@@ -5817,23 +6249,27 @@ msgstr ""
 #: build/i18n/languages/erp.php:559
 #: build/modules/accounting/includes/API/PayPurchasesController.php:292
 #: build/modules/accounting/includes/functions/common.php:488
+#: modules/accounting/assets/js/admin.js:22312
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:49
 #: modules/accounting/includes/API/PayPurchasesController.php:292
 #: modules/accounting/includes/functions/common.php:488
 msgid "Pay Purchase"
 msgstr ""
 
-#: build/i18n/languages/erp.php:560
+#: build/i18n/languages/erp.php:560 modules/accounting/assets/js/admin.js:22315
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:50
 msgid "Create Purchase Order"
 msgstr ""
 
-#: build/i18n/languages/erp.php:561
+#: build/i18n/languages/erp.php:561 modules/accounting/assets/js/admin.js:22682
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:179
 msgid "Make Purchase"
 msgstr ""
 
-#: build/i18n/languages/erp.php:562
+#: build/i18n/languages/erp.php:562 modules/accounting/assets/js/admin.js:22712
+#: modules/accounting/assets/js/admin.js:22724
+#: modules/accounting/assets/js/admin.js:22748
+#: modules/accounting/assets/js/admin.js:22756
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:202
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:210
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:228
@@ -5854,6 +6290,7 @@ msgstr ""
 #: build/i18n/languages/erp.php:565
 #: build/modules/accounting/includes/API/InventoryProductsController.php:391
 #: build/modules/accounting/includes/views/transactions/invoice-readonly.php:122
+#: modules/accounting/assets/js/admin.js:9644
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:65
 #: modules/accounting/includes/API/InventoryProductsController.php:391
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:122
@@ -5888,7 +6325,7 @@ msgid "Invoice ID"
 msgstr ""
 
 #: build/i18n/languages/erp.php:571 build/includes/Admin/AdminMenu.php:135
-#: includes/Admin/AdminMenu.php:135
+#: includes/Admin/AdminMenu.php:135 modules/accounting/assets/js/admin.js:20594
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:45
 msgid "Create Invoice"
 msgstr ""
@@ -5896,23 +6333,27 @@ msgstr ""
 #: build/i18n/languages/erp.php:572
 #: build/modules/accounting/includes/API/PaymentsController.php:294
 #: build/modules/accounting/includes/functions/common.php:463
+#: modules/accounting/assets/js/admin.js:20597
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:46
 #: modules/accounting/includes/API/PaymentsController.php:294
 #: modules/accounting/includes/functions/common.php:463
 msgid "Receive Payment"
 msgstr ""
 
-#: build/i18n/languages/erp.php:573
+#: build/i18n/languages/erp.php:573 modules/accounting/assets/js/admin.js:20600
 #: modules/accounting/assets/src/admin/components/transactions/sales/Sales.vue:47
 msgid "Create Estimate"
 msgstr ""
 
-#: build/i18n/languages/erp.php:574
+#: build/i18n/languages/erp.php:574 modules/accounting/assets/js/admin.js:21036
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:174
 msgid "Make Invoice"
 msgstr ""
 
-#: build/i18n/languages/erp.php:575
+#: build/i18n/languages/erp.php:575 modules/accounting/assets/js/admin.js:21066
+#: modules/accounting/assets/js/admin.js:21078
+#: modules/accounting/assets/js/admin.js:21102
+#: modules/accounting/assets/js/admin.js:21110
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:196
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:204
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:222
@@ -5925,7 +6366,7 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: build/i18n/languages/erp.php:577
+#: build/i18n/languages/erp.php:577 modules/accounting/assets/js/admin.js:20781
 #: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:54
 msgid "Received"
 msgstr ""
@@ -5964,25 +6405,25 @@ msgstr ""
 msgid "Type Here"
 msgstr ""
 
-#: build/i18n/languages/erp.php:584
+#: build/i18n/languages/erp.php:584 modules/accounting/assets/js/admin.js:19305
 #: modules/accounting/assets/src/admin/components/transfers/NewTransfer.vue:123
 msgid "Transfer Successful!"
 msgstr ""
 
 #: build/i18n/languages/erp.php:585
 #: build/includes/Admin/AuditlogListTable.php:184
-#: includes/Admin/AuditlogListTable.php:184
+#: includes/Admin/AuditlogListTable.php:186
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:50
 msgid "Created By"
 msgstr ""
 
-#: build/i18n/languages/erp.php:586
+#: build/i18n/languages/erp.php:586 modules/accounting/assets/js/admin.js:19139
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:72
 #: modules/accounting/assets/src/admin/components/transfers/Transfers.vue:55
 msgid "Account From"
 msgstr ""
 
-#: build/i18n/languages/erp.php:587
+#: build/i18n/languages/erp.php:587 modules/accounting/assets/js/admin.js:19145
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:74
 #: modules/accounting/assets/src/admin/components/transfers/Transfers.vue:57
 msgid "Account To"
@@ -6432,7 +6873,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/holiday.php:94
 #: modules/hrm/assets/js/requests.js:79 modules/hrm/assets/js/requests.js:97
 #: modules/hrm/views/js-templates/holiday-import.php:27
-#: modules/hrm/views/leave/holiday.php:94
+#: modules/hrm/views/leave/holiday.php:96
 msgid "Duration"
 msgstr ""
 
@@ -22419,7 +22860,7 @@ msgstr ""
 #: modules/hrm/includes/FormHandler.php:1003
 #: modules/hrm/includes/FormHandler.php:1041
 #: modules/hrm/includes/FormHandler.php:1116
-#: modules/hrm/includes/LeavePolicyNameListTable.php:148
+#: modules/hrm/includes/LeavePolicyNameListTable.php:151
 #: modules/hrm/includes/functions-leave.php:186
 #: modules/hrm/includes/functions-leave.php:1066
 #: modules/hrm/includes/functions-leave.php:1661
@@ -22555,79 +22996,79 @@ msgid ""
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:62
-#: includes/Admin/AuditlogListTable.php:62
+#: includes/Admin/AuditlogListTable.php:64
 msgid "Filter by Module"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:64
-#: includes/Admin/AuditlogListTable.php:64
+#: includes/Admin/AuditlogListTable.php:66
 msgid "&mdash; All Modules &mdash;"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:70
-#: includes/Admin/AuditlogListTable.php:70
+#: includes/Admin/AuditlogListTable.php:72
 msgid "Filter by Section"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:72
-#: includes/Admin/AuditlogListTable.php:72
+#: includes/Admin/AuditlogListTable.php:74
 msgid "&mdash; All Sections &mdash;"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:78
-#: includes/Admin/AuditlogListTable.php:78
+#: includes/Admin/AuditlogListTable.php:80
 msgid "Filter by Duration"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:80
-#: includes/Admin/AuditlogListTable.php:80
+#: includes/Admin/AuditlogListTable.php:82
 msgid "&mdash; All Times &mdash;"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:99
-#: includes/Admin/AuditlogListTable.php:99
+#: includes/Admin/AuditlogListTable.php:101
 msgid "Today"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:100
-#: includes/Admin/AuditlogListTable.php:100
+#: includes/Admin/AuditlogListTable.php:102
 msgid "Yesterday"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:107
 #: build/modules/crm/includes/functions-reporting.php:159
 #: build/modules/hrm/includes/LeaveReportEmployeeBased.php:74
-#: includes/Admin/AuditlogListTable.php:107
+#: includes/Admin/AuditlogListTable.php:109
 #: modules/crm/includes/functions-reporting.php:159
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:74
 msgid "Custom"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:132
-#: includes/Admin/AuditlogListTable.php:132
+#: includes/Admin/AuditlogListTable.php:134
 msgid "No logs found."
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:154
-#: includes/Admin/AuditlogListTable.php:154
+#: includes/Admin/AuditlogListTable.php:156
 msgid ""
 "%s. <a href=\"#\" class=\"erp-audit-log-view-changes erp-tips\" "
 "data-id=\"%d\" title=\"%s\"> (view changes)</a>"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:154
-#: includes/Admin/AuditlogListTable.php:154
+#: includes/Admin/AuditlogListTable.php:156
 msgid "View what elements are changes"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:181
 #: build/includes/Admin/SetupWizard.php:63
-#: includes/Admin/AuditlogListTable.php:181 includes/Admin/SetupWizard.php:63
+#: includes/Admin/AuditlogListTable.php:183 includes/Admin/SetupWizard.php:63
 msgid "Module"
 msgstr ""
 
 #: build/includes/Admin/AuditlogListTable.php:182
-#: includes/Admin/AuditlogListTable.php:182
+#: includes/Admin/AuditlogListTable.php:184
 msgid "Sections"
 msgstr ""
 
@@ -23947,7 +24388,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:142
 #: modules/hrm/views/js-templates/new-leave-request.php:49
 #: modules/hrm/views/js-templates/work-experience.php:25
-#: modules/hrm/views/leave/holiday.php:33
+#: modules/hrm/views/leave/holiday.php:35
 #: modules/hrm/views/leave/new-request.php:74
 msgid "From"
 msgstr ""
@@ -24435,8 +24876,8 @@ msgstr ""
 #: modules/crm/includes/Subscription.php:253
 #: modules/crm/includes/Subscription.php:784
 #: modules/hrm/includes/AjaxHandler.php:1234
-#: modules/hrm/includes/LeavePolicyNameListTable.php:136
-#: modules/hrm/includes/LeavePolicyNameListTable.php:143
+#: modules/hrm/includes/LeavePolicyNameListTable.php:139
+#: modules/hrm/includes/LeavePolicyNameListTable.php:146
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -28187,7 +28628,7 @@ msgstr ""
 #: build/modules/crm/views/dashboard-badge.php:17
 #: build/modules/crm/views/dashboard.php:18
 #: modules/accounting/includes/Classes/Settings.php:71
-#: modules/crm/includes/ContactSubscriberListTable.php:101
+#: modules/crm/includes/ContactSubscriberListTable.php:102
 #: modules/crm/views/dashboard-badge.php:17 modules/crm/views/dashboard.php:18
 msgid "Contact"
 msgstr ""
@@ -29218,10 +29659,10 @@ msgstr ""
 #: modules/crm/includes/CampaignListTable.php:69
 #: modules/crm/includes/SubscriptionWidget.php:64
 #: modules/hrm/includes/AnnouncementListTable.php:38
-#: modules/hrm/includes/DesignationListTable.php:64
+#: modules/hrm/includes/DesignationListTable.php:66
 #: modules/hrm/views/employee/tab-general.php:48
 #: modules/hrm/views/js-templates/holiday-import.php:24
-#: modules/hrm/views/leave/holiday.php:91
+#: modules/hrm/views/leave/holiday.php:93
 msgid "Title"
 msgstr ""
 
@@ -29686,14 +30127,14 @@ msgstr ""
 #: build/modules/crm/includes/CampaignListTable.php:88
 #: build/modules/crm/includes/ContactGroupListTable.php:116
 #: modules/crm/includes/CampaignListTable.php:88
-#: modules/crm/includes/ContactGroupListTable.php:116
+#: modules/crm/includes/ContactGroupListTable.php:117
 msgid "Edit this Contact Group"
 msgstr ""
 
 #: build/modules/crm/includes/CampaignListTable.php:89
 #: build/modules/crm/includes/ContactGroupListTable.php:122
 #: modules/crm/includes/CampaignListTable.php:89
-#: modules/crm/includes/ContactGroupListTable.php:122
+#: modules/crm/includes/ContactGroupListTable.php:123
 msgid "Delete this Contact Group"
 msgstr ""
 
@@ -29726,7 +30167,7 @@ msgstr ""
 #: build/modules/crm/views/js-templates/customer-import.php:106
 #: build/modules/crm/views/js-templates/new-customer.php:265
 #: modules/crm/includes/ContactForms/ERPSettingsContactForms.php:67
-#: modules/crm/includes/ContactGroupListTable.php:209
+#: modules/crm/includes/ContactGroupListTable.php:210
 #: modules/crm/includes/functions-customer.php:1953
 #: modules/crm/views/company/single.php:203
 #: modules/crm/views/contact/single.php:209
@@ -29817,71 +30258,71 @@ msgid "Nothing to reset"
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:33
-#: modules/crm/includes/ContactGroupListTable.php:33
+#: modules/crm/includes/ContactGroupListTable.php:34
 msgid "No contact group found."
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:87
 #: build/modules/crm/includes/functions-customer.php:1729
-#: modules/crm/includes/ContactGroupListTable.php:87
+#: modules/crm/includes/ContactGroupListTable.php:88
 #: modules/crm/includes/functions-customer.php:1729
 msgid "Subscribed"
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:88
 #: build/modules/crm/includes/functions-customer.php:1731
-#: modules/crm/includes/ContactGroupListTable.php:88
+#: modules/crm/includes/ContactGroupListTable.php:89
 #: modules/crm/includes/functions-customer.php:1731
 msgid "Unconfirmed"
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:89
-#: modules/crm/includes/ContactGroupListTable.php:89
+#: modules/crm/includes/ContactGroupListTable.php:90
 msgid "Unsubscribed"
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:119
-#: modules/crm/includes/ContactGroupListTable.php:119
+#: modules/crm/includes/ContactGroupListTable.php:120
 msgid "View Subscriber in this group"
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:119
-#: modules/crm/includes/ContactGroupListTable.php:119
+#: modules/crm/includes/ContactGroupListTable.php:120
 msgid "View Subscriber"
 msgstr ""
 
 #: build/modules/crm/includes/ContactGroupListTable.php:126
-#: modules/crm/includes/ContactGroupListTable.php:126
+#: modules/crm/includes/ContactGroupListTable.php:127
 msgid "This group is private"
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:52
-#: modules/crm/includes/ContactSubscriberListTable.php:52
+#: modules/crm/includes/ContactSubscriberListTable.php:53
 msgid "Filter by Group"
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:71
-#: modules/crm/includes/ContactSubscriberListTable.php:71
+#: modules/crm/includes/ContactSubscriberListTable.php:72
 msgid "No Subscriber contact found"
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:132
-#: modules/crm/includes/ContactSubscriberListTable.php:132
+#: modules/crm/includes/ContactSubscriberListTable.php:133
 msgid "Subscribed on "
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:133
-#: modules/crm/includes/ContactSubscriberListTable.php:133
+#: modules/crm/includes/ContactSubscriberListTable.php:134
 msgid "Unsubscribed on "
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:171
-#: modules/crm/includes/ContactSubscriberListTable.php:171
+#: modules/crm/includes/ContactSubscriberListTable.php:172
 msgid "Contact Type"
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:172
-#: modules/crm/includes/ContactSubscriberListTable.php:172
+#: modules/crm/includes/ContactSubscriberListTable.php:173
 msgid "Group"
 msgstr ""
 
@@ -29893,14 +30334,14 @@ msgstr ""
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:207
 #: build/modules/hrm/views/js-templates/row-employee.php:11
 #: build/modules/hrm/views/leave/holiday.php:111
-#: modules/crm/includes/ContactSubscriberListTable.php:196
-#: modules/hrm/includes/DepartmentListTable.php:214
+#: modules/crm/includes/ContactSubscriberListTable.php:197
+#: modules/hrm/includes/DepartmentListTable.php:215
 #: modules/hrm/includes/DepartmentWalker.php:42
-#: modules/hrm/includes/DesignationListTable.php:82
+#: modules/hrm/includes/DesignationListTable.php:84
 #: modules/hrm/includes/EmployeeListTable.php:235
-#: modules/hrm/includes/LeavePoliciesListTable.php:207
+#: modules/hrm/includes/LeavePoliciesListTable.php:209
 #: modules/hrm/views/js-templates/row-employee.php:11
-#: modules/hrm/views/leave/holiday.php:111
+#: modules/hrm/views/leave/holiday.php:113
 msgid "Edit this item"
 msgstr ""
 
@@ -29914,26 +30355,26 @@ msgstr ""
 #: build/modules/hrm/views/js-templates/row-desig.php:11
 #: build/modules/hrm/views/js-templates/row-employee.php:12
 #: build/modules/hrm/views/leave/holiday.php:112
-#: modules/crm/includes/ContactSubscriberListTable.php:197
-#: modules/hrm/includes/DepartmentListTable.php:215
-#: modules/hrm/includes/DesignationListTable.php:83
+#: modules/crm/includes/ContactSubscriberListTable.php:198
+#: modules/hrm/includes/DepartmentListTable.php:216
+#: modules/hrm/includes/DesignationListTable.php:85
 #: modules/hrm/includes/EmployeeListTable.php:239
-#: modules/hrm/includes/EntitlementListTable.php:227
-#: modules/hrm/includes/LeavePoliciesListTable.php:212
+#: modules/hrm/includes/EntitlementListTable.php:228
+#: modules/hrm/includes/LeavePoliciesListTable.php:214
 #: modules/hrm/views/js-templates/row-dept.php:11
 #: modules/hrm/views/js-templates/row-desig.php:11
 #: modules/hrm/views/js-templates/row-employee.php:12
-#: modules/hrm/views/leave/holiday.php:112
+#: modules/hrm/views/leave/holiday.php:114
 msgid "Delete this item"
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:201
-#: modules/crm/includes/ContactSubscriberListTable.php:201
+#: modules/crm/includes/ContactSubscriberListTable.php:202
 msgid "No name"
 msgstr ""
 
 #: build/modules/crm/includes/ContactSubscriberListTable.php:327
-#: modules/crm/includes/ContactSubscriberListTable.php:327
+#: modules/crm/includes/ContactSubscriberListTable.php:328
 msgid "Nonce verfication failed!"
 msgstr ""
 
@@ -30993,6 +31434,9 @@ msgid "an"
 msgstr ""
 
 #: build/modules/crm/includes/functions-localize.php:16
+#: modules/accounting/assets/js/admin.js:47554
+#: modules/accounting/assets/js/admin.js:48008
+#: modules/accounting/assets/js/admin.js:49125
 #: modules/crm/includes/functions-localize.php:16
 msgid "a"
 msgstr ""
@@ -31681,10 +32125,10 @@ msgstr ""
 #: modules/hrm/includes/AjaxHandler.php:355
 #: modules/hrm/includes/AjaxHandler.php:360
 #: modules/hrm/includes/AjaxHandler.php:1943
-#: modules/hrm/includes/EntitlementListTable.php:166
-#: modules/hrm/includes/EntitlementListTable.php:186
-#: modules/hrm/includes/EntitlementListTable.php:188
-#: modules/hrm/includes/EntitlementListTable.php:191
+#: modules/hrm/includes/EntitlementListTable.php:167
+#: modules/hrm/includes/EntitlementListTable.php:187
+#: modules/hrm/includes/EntitlementListTable.php:189
+#: modules/hrm/includes/EntitlementListTable.php:192
 #: modules/hrm/includes/LeaveRequestsListTable.php:140
 #: modules/hrm/includes/LeaveRequestsListTable.php:155
 #: modules/hrm/includes/LeaveRequestsListTable.php:158
@@ -32230,7 +32674,7 @@ msgstr ""
 #: build/modules/hrm/includes/EntitlementListTable.php:36
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:556
 #: build/modules/hrm/views/leave/leave-entitlements.php:154
-#: modules/hrm/HRM.php:189 modules/hrm/includes/EntitlementListTable.php:36
+#: modules/hrm/HRM.php:189 modules/hrm/includes/EntitlementListTable.php:37
 #: modules/hrm/includes/LeaveRequestsListTable.php:556
 #: modules/hrm/views/leave/leave-entitlements.php:154
 msgid "Leave Policy"
@@ -32241,7 +32685,7 @@ msgid "Create Policy"
 msgstr ""
 
 #: build/modules/hrm/HRM.php:191 build/modules/hrm/views/leave/holiday.php:250
-#: modules/hrm/HRM.php:191 modules/hrm/views/leave/holiday.php:250
+#: modules/hrm/HRM.php:191 modules/hrm/views/leave/holiday.php:252
 msgid "Holiday"
 msgstr ""
 
@@ -32918,7 +33362,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/new-policy.php:89
 #: build/modules/hrm/views/leave/policy-name.php:39
 #: modules/hrm/includes/AjaxHandler.php:1993
-#: modules/hrm/includes/LeavePolicyNameListTable.php:76
+#: modules/hrm/includes/LeavePolicyNameListTable.php:79
 #: modules/hrm/views/leave/new-policy.php:89
 #: modules/hrm/views/leave/policy-name.php:39
 msgid "Leave Type"
@@ -33261,29 +33705,29 @@ msgid "Draft"
 msgstr ""
 
 #: build/modules/hrm/includes/DepartmentListTable.php:27
-#: modules/hrm/includes/DepartmentListTable.php:27
+#: modules/hrm/includes/DepartmentListTable.php:28
 msgid "No department found."
 msgstr ""
 
 #: build/modules/hrm/includes/DepartmentListTable.php:200
-#: modules/hrm/includes/DepartmentListTable.php:200
+#: modules/hrm/includes/DepartmentListTable.php:201
 msgid "Select %s"
 msgstr ""
 
 #: build/modules/hrm/includes/DepartmentListTable.php:271
-#: modules/hrm/includes/DepartmentListTable.php:271
+#: modules/hrm/includes/DepartmentListTable.php:272
 msgid "Department Manager"
 msgstr ""
 
 #: build/modules/hrm/includes/DepartmentListTable.php:272
 #: build/modules/hrm/includes/DesignationListTable.php:65
-#: modules/hrm/includes/DepartmentListTable.php:272
-#: modules/hrm/includes/DesignationListTable.php:65
+#: modules/hrm/includes/DepartmentListTable.php:273
+#: modules/hrm/includes/DesignationListTable.php:67
 msgid "No. of Employees"
 msgstr ""
 
 #: build/modules/hrm/includes/DesignationListTable.php:31
-#: modules/hrm/includes/DesignationListTable.php:31
+#: modules/hrm/includes/DesignationListTable.php:33
 msgid "No designation found."
 msgstr ""
 
@@ -33822,7 +34266,7 @@ msgstr ""
 #: build/modules/hrm/includes/EntitlementListTable.php:35
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:72
 #: modules/hrm/includes/EmployeeListTable.php:183
-#: modules/hrm/includes/EntitlementListTable.php:35
+#: modules/hrm/includes/EntitlementListTable.php:36
 #: modules/hrm/includes/LeaveRequestsListTable.php:72
 msgid "Employee Name"
 msgstr ""
@@ -33875,14 +34319,14 @@ msgid "Search Employee"
 msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:37
-#: modules/hrm/includes/EntitlementListTable.php:37
+#: modules/hrm/includes/EntitlementListTable.php:38
 msgid "Validity"
 msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:38
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:75
 #: build/modules/hrm/views/employee/tab-leave.php:16
-#: modules/hrm/includes/EntitlementListTable.php:38
+#: modules/hrm/includes/EntitlementListTable.php:39
 #: modules/hrm/includes/LeaveRequestsListTable.php:75
 #: modules/hrm/views/employee/tab-leave.php:16
 msgid "Available"
@@ -33890,15 +34334,15 @@ msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:39
 #: build/modules/hrm/views/employee/tab-leave.php:15
-#: modules/hrm/includes/EntitlementListTable.php:39
+#: modules/hrm/includes/EntitlementListTable.php:40
 #: modules/hrm/views/employee/tab-leave.php:15
 msgid "Spent"
 msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:95
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:84
-#: modules/hrm/includes/EntitlementListTable.php:95
-#: modules/hrm/includes/LeavePoliciesListTable.php:84
+#: modules/hrm/includes/EntitlementListTable.php:96
+#: modules/hrm/includes/LeavePoliciesListTable.php:86
 msgid "Employee Types"
 msgstr ""
 
@@ -33907,7 +34351,7 @@ msgstr ""
 #: build/modules/hrm/views/employee/tab-leave.php:119
 #: build/modules/hrm/views/employee/tab-leave.php:147
 #: build/modules/hrm/views/leave/leave-entitlements.php:226
-#: modules/hrm/includes/EntitlementListTable.php:117
+#: modules/hrm/includes/EntitlementListTable.php:118
 #: modules/hrm/includes/LeaveRequestsListTable.php:558
 #: modules/hrm/views/employee/tab-leave.php:119
 #: modules/hrm/views/employee/tab-leave.php:147
@@ -33917,20 +34361,20 @@ msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:140
 #: build/modules/hrm/includes/functions-leave.php:2074
-#: modules/hrm/includes/EntitlementListTable.php:140
+#: modules/hrm/includes/EntitlementListTable.php:141
 #: modules/hrm/includes/functions-leave.php:2074
 msgid "No entitlement found."
 msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:167
-#: modules/hrm/includes/EntitlementListTable.php:167
+#: modules/hrm/includes/EntitlementListTable.php:168
 msgid "Entitled Days"
 msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:186
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:155
 #: build/modules/hrm/views/employee/tab-leave.php:42
-#: modules/hrm/includes/EntitlementListTable.php:186
+#: modules/hrm/includes/EntitlementListTable.php:187
 #: modules/hrm/includes/LeaveRequestsListTable.php:155
 #: modules/hrm/views/employee/tab-leave.php:42
 msgid "Available Leave"
@@ -33940,8 +34384,8 @@ msgstr ""
 #: build/modules/hrm/includes/EntitlementListTable.php:191
 #: build/modules/hrm/includes/LeaveRequestsListTable.php:158
 #: build/modules/hrm/views/employee/tab-leave.php:44
-#: modules/hrm/includes/EntitlementListTable.php:188
-#: modules/hrm/includes/EntitlementListTable.php:191
+#: modules/hrm/includes/EntitlementListTable.php:189
+#: modules/hrm/includes/EntitlementListTable.php:192
 #: modules/hrm/includes/LeaveRequestsListTable.php:158
 #: modules/hrm/views/employee/tab-leave.php:44
 msgid "Extra Leave"
@@ -33949,7 +34393,7 @@ msgstr ""
 
 #: build/modules/hrm/includes/EntitlementListTable.php:209
 #: build/modules/hrm/views/employee/tab-leave-history.php:22
-#: modules/hrm/includes/EntitlementListTable.php:209
+#: modules/hrm/includes/EntitlementListTable.php:210
 #: modules/hrm/views/employee/tab-leave-history.php:22
 msgid "days"
 msgstr ""
@@ -34205,17 +34649,17 @@ msgid "<strong>%s</strong> announcement has been deleted"
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:52
-#: modules/hrm/includes/LeavePoliciesListTable.php:52
+#: modules/hrm/includes/LeavePoliciesListTable.php:54
 msgid "No policies found."
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:91
-#: modules/hrm/includes/LeavePoliciesListTable.php:91
+#: modules/hrm/includes/LeavePoliciesListTable.php:93
 msgid "Filter by year"
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:163
-#: modules/hrm/includes/LeavePoliciesListTable.php:163
+#: modules/hrm/includes/LeavePoliciesListTable.php:165
 msgid "Policy Name"
 msgstr ""
 
@@ -34225,7 +34669,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/new-policy.php:73
 #: build/modules/hrm/views/leave/new-request.php:41
 #: build/modules/hrm/views/reporting/years-of-service.php:54
-#: modules/hrm/includes/LeavePoliciesListTable.php:164
+#: modules/hrm/includes/LeavePoliciesListTable.php:166
 #: modules/hrm/views/js-templates/new-leave-request.php:32
 #: modules/hrm/views/leave/leave-entitlements.php:59
 #: modules/hrm/views/leave/new-policy.php:73
@@ -34238,7 +34682,7 @@ msgstr ""
 #: build/modules/hrm/views/employee/tab-leave.php:14
 #: build/modules/hrm/views/leave/new-policy.php:134
 #: build/modules/hrm/views/leave/new-policy.php:153
-#: modules/hrm/includes/LeavePoliciesListTable.php:166
+#: modules/hrm/includes/LeavePoliciesListTable.php:168
 #: modules/hrm/views/employee/tab-leave.php:14
 #: modules/hrm/views/leave/new-policy.php:134
 #: modules/hrm/views/leave/new-policy.php:153
@@ -34247,7 +34691,7 @@ msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:167
 #: build/modules/hrm/views/leave/new-policy.php:159
-#: modules/hrm/includes/LeavePoliciesListTable.php:167
+#: modules/hrm/includes/LeavePoliciesListTable.php:169
 #: modules/hrm/views/leave/new-policy.php:159
 msgid "Calendar Color"
 msgstr ""
@@ -34260,7 +34704,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/leave-entitlements.php:115
 #: build/modules/hrm/views/leave/new-policy.php:223
 #: build/modules/hrm/views/reporting/headcount.php:150
-#: modules/hrm/includes/LeavePoliciesListTable.php:171
+#: modules/hrm/includes/LeavePoliciesListTable.php:173
 #: modules/hrm/views/employee/tab-job.php:214
 #: modules/hrm/views/js-templates/job-info-history-edit.php:19
 #: modules/hrm/views/js-templates/job-info.php:19
@@ -34277,7 +34721,7 @@ msgstr ""
 #: build/modules/hrm/views/leave/leave-entitlements.php:128
 #: build/modules/hrm/views/leave/new-policy.php:240
 #: build/modules/hrm/views/reporting/gender-profile.php:49
-#: modules/hrm/includes/LeavePoliciesListTable.php:172
+#: modules/hrm/includes/LeavePoliciesListTable.php:174
 #: modules/hrm/views/employee/tab-general.php:105
 #: modules/hrm/views/js-templates/new-employee.php:404
 #: modules/hrm/views/leave/leave-entitlements.php:128
@@ -34287,24 +34731,24 @@ msgid "Gender"
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:173
-#: modules/hrm/includes/LeavePoliciesListTable.php:173
+#: modules/hrm/includes/LeavePoliciesListTable.php:175
 msgid "Marital"
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:209
-#: modules/hrm/includes/LeavePoliciesListTable.php:209
+#: modules/hrm/includes/LeavePoliciesListTable.php:211
 msgid "Copy this item"
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePoliciesListTable.php:209
 #: build/modules/hrm/views/leave/new-policy.php:26
-#: modules/hrm/includes/LeavePoliciesListTable.php:209
+#: modules/hrm/includes/LeavePoliciesListTable.php:211
 #: modules/hrm/views/leave/new-policy.php:26
 msgid "Copy"
 msgstr ""
 
 #: build/modules/hrm/includes/LeavePolicyNameListTable.php:28
-#: modules/hrm/includes/LeavePolicyNameListTable.php:28
+#: modules/hrm/includes/LeavePolicyNameListTable.php:31
 msgid "No leave types found."
 msgstr ""
 
@@ -36365,32 +36809,32 @@ msgid "Details about the job"
 msgstr ""
 
 #: build/modules/hrm/views/leave/holiday.php:34
-#: modules/hrm/views/leave/holiday.php:34
+#: modules/hrm/views/leave/holiday.php:36
 msgid "From date"
 msgstr ""
 
 #: build/modules/hrm/views/leave/holiday.php:37
-#: modules/hrm/views/leave/holiday.php:37
+#: modules/hrm/views/leave/holiday.php:39
 msgid "To date"
 msgstr ""
 
 #: build/modules/hrm/views/leave/holiday.php:48
-#: modules/hrm/views/leave/holiday.php:48
+#: modules/hrm/views/leave/holiday.php:50
 msgid "No holiday record found!"
 msgstr ""
 
 #: build/modules/hrm/views/leave/holiday.php:251
-#: modules/hrm/views/leave/holiday.php:251
+#: modules/hrm/views/leave/holiday.php:253
 msgid "Add holidays for current year."
 msgstr ""
 
 #: build/modules/hrm/views/leave/holiday.php:253
-#: modules/hrm/views/leave/holiday.php:253
+#: modules/hrm/views/leave/holiday.php:255
 msgid "Import iCal / CSV"
 msgstr ""
 
 #: build/modules/hrm/views/leave/holiday.php:267
-#: modules/hrm/views/leave/holiday.php:267
+#: modules/hrm/views/leave/holiday.php:269
 msgid "Search Holiday"
 msgstr ""
 
@@ -36797,8 +37241,57 @@ msgid ""
 "of WPERP in advance!"
 msgstr ""
 
+#: modules/accounting/assets/js/admin.js:9750
+msgid "Product Updated!"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:9750
+msgid "Product Created!"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:9829
+msgid "Product name is required"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:9833
+msgid "Product type is required"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:9837
+msgid "Product sale price should be greater than 0"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:9841
+msgid "Vendor is required"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:13899
+msgid "Are you sure to remove this category?"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:13901
+msgid "Category Removed!"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:13914
+msgid "Created !"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:13932
+msgid "Updated !"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:13977
+msgid "Duplicate Account!"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:35893
 #: modules/accounting/assets/js/bootstrap.js:100
 msgid "tr"
+msgstr ""
+
+#: modules/accounting/assets/js/admin.js:37547
+msgid "ul"
 msgstr ""
 
 #: modules/accounting/assets/js/bootstrap.js:2309
@@ -36827,7 +37320,7 @@ msgstr ""
 msgid "https://wedevs.com"
 msgstr ""
 
-#: assets/js/i18n.js:695 build/assets/js/i18n.js:695
+#: assets/js/i18n.js:695 assets/js/vendor.js:23292 build/assets/js/i18n.js:695
 #: build/i18n/languages/erp.php:3
 msgctxt "text direction"
 msgid "ltr"
