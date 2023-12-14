@@ -8,6 +8,8 @@ use WP_List_Table;
  * List table class
  */
 class DesignationListTable extends WP_List_Table {
+
+    protected $page_status;
     public function __construct() {
         global $status, $page;
 

@@ -3,6 +3,8 @@
  * List table class
  */
 class Leave_Holiday_List_Table extends WP_List_Table {
+
+    protected $page_status;
     public function __construct() {
         global $status, $page;
 

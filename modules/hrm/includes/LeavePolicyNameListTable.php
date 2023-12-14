@@ -9,6 +9,9 @@ use WP_List_Table;
  * List table class
  */
 class LeavePolicyNameListTable extends WP_List_Table {
+
+    protected $counts;
+
     public function __construct() {
         parent::__construct( [
             'singular' => 'type',
