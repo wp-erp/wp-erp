@@ -6,6 +6,8 @@ namespace WeDevs\ERP\Admin;
  * List table class
  */
 class AuditlogListTable extends \WP_List_Table {
+
+    protected $page_status;
     public function __construct() {
         global $status, $page;
 

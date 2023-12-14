@@ -9,6 +9,7 @@ use WeDevs\ERP\HRM\Models\FinancialYear;
  */
 class EntitlementListTable extends \WP_List_Table {
     protected $entitlement_data = [];
+    protected $page_status;
 
     public function __construct() {
         global $status, $page;
