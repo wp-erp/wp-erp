@@ -8,6 +8,8 @@ use WeDevs\ERP\HRM\Models\FinancialYear;
  * List table class
  */
 class LeavePoliciesListTable extends \WP_List_Table {
+
+    protected $page_status;
     public function __construct() {
         global $status, $page;
 
