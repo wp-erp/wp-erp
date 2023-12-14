@@ -324,7 +324,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
-= v1.12.6 -> Sep 21, 2023 =
+= v1.12.7 -> Sep 21, 2023 =
 --------------------------
 * 🪝 [ADD] Implement Live Search on People List Table.
 * 🛠️ [FIX] Dependents DOB empty - Showing random date.
