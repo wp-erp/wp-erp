@@ -7,6 +7,7 @@ namespace WeDevs\ERP\CRM;
  */
 class ContactSubscriberListTable extends \WP_List_Table {
     private $counts = [];
+    private $page_status;
 
     private $subscription_statuses = [];
 
