@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 6.4.2
 Requires PHP: 7.2
-Stable tag: 1.12.8
+Stable tag: 1.12.9
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,10 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.12.9 -> Dec 28, 2023 =
+--------------------------
+* 🛠️ [FIX] SQL injection issue.
 
 = v1.12.8 -> Dec 14, 2023 =
 --------------------------
