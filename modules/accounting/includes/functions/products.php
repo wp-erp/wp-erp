@@ -64,7 +64,9 @@ function erp_acct_get_all_products( $args = [] ) {
             WHERE product.product_type_id<>3";
 
         if ( ! empty( $args['s'] ) ) {
-            $sql .= " AND product.name LIKE '%{$args['s']}%'";
+            $sql .= ' AND product.name LIKE %s';
+            $search_str = '%' . $wpdb->esc_like( $args['s'] ) . '%';
+            $sql = $wpdb->prepare( $sql, $search_str );
         }
 
         $sql .= " ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
