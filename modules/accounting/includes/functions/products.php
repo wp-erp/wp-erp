@@ -65,7 +65,7 @@ function erp_acct_get_all_products( $args = [] ) {
 
         if ( ! empty( $args['s'] ) ) {
             $sql .= " AND product.name LIKE %s";
-            $sql = $wpdb->prepare($sql, "%". $args['s'] ."%" );
+            $sql = $wpdb->prepare( $sql, '%' . $wpdb->esc_like( $args['s'] ) . '%' );
         }
 
         $sql .= " ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
