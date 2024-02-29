@@ -76,47 +76,48 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <tr :key="key" v-for="(item,key) in pay_purchases" class="inline-edit-row">
-                            <td scope="row" class="col--id">#{{item.voucher_no}}</td>
-                            <td class="col--due-date" :data-colname="__('Due Date', 'erp')">{{item.due_date}}</td>
-                            <td class="col--total" :data-colname="__('Total', 'erp')">{{moneyFormat(item.total)}}</td>
-                            <td class="col--due" :data-colname="__('Due', 'erp')">{{formatAmount(item.due, true)}}</td>
-                            <td class="col--amount" :data-colname="__('Amount', 'erp')">
-                                <input type="number" step="0.01" :max="Math.abs(item.due)" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
-                            </td>
-                            <td class="delete-row" :data-colname="__('Remove Above Selection', 'erp')">
-                                <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
-                            </td>
-                        </tr>
+                            <tr :key="key" v-for="(item,key) in pay_purchases" class="inline-edit-row">
+                                <td scope="row" class="col--id">#{{item.voucher_no}}</td>
+                                <td class="col--due-date" :data-colname="__('Due Date', 'erp')">{{item.due_date}}</td>
+                                <td class="col--total" :data-colname="__('Total', 'erp')">{{moneyFormat(item.total)}}</td>
+                                <td class="col--due" :data-colname="__('Due', 'erp')">{{formatAmount(item.due, true)}}</td>
+                                <td class="col--amount" :data-colname="__('Amount', 'erp')">
+                                    <input type="number" step="0.01" :max="Math.abs(item.due)" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
+                                </td>
+                                <td class="delete-row" :data-colname="__('Remove Above Selection', 'erp')">
+                                    <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
+                                </td>
+                            </tr>
 
-                        <tr class="total-amount-row inline-edit-row">
-                            <td class="text-right pr-0" colspan="4">{{ __('Total Amount', 'erp') }}</td>
-                            <td class="text-right" :data-colname="__('Total Amount', 'erp')">
-                                <input type="text" class="text-right wperp-form-field" name="finalamount"
-                                :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
-                            <td class="text-right"></td>
-                        </tr>
+                            <tr class="total-amount-row inline-edit-row">
+                                <td class="text-right pr-0" colspan="4">{{ __('Total Amount', 'erp') }}</td>
+                                <td class="text-right" :data-colname="__('Total Amount', 'erp')">
+                                    <input type="text" class="text-right wperp-form-field" name="finalamount"
+                                    :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr class="wperp-form-group inline-edit-row">
+                                <td colspan="9" style="text-align: left;">
+                                    <label>{{ __('Particulars', 'erp') }}</label>
+                                    <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
+                                </td>
+                            </tr>
+                            <tr class="add-attachment-row inline-edit-row">
+                                <td colspan="9" style="text-align: left;">
+                                    <div class="attachment-container">
+                                        <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
+                                        <file-upload v-model="attachments" url="/invoices/attachments"/>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
-                        <tr class="wperp-form-group inline-edit-row">
-                            <td colspan="9" style="text-align: left;">
-                                <label>{{ __('Particulars', 'erp') }}</label>
-                                <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
-                            </td>
-                        </tr>
-                        <tr class="add-attachment-row inline-edit-row">
-                            <td colspan="9" style="text-align: left;">
-                                <div class="attachment-container">
-                                    <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
-                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
-                                </div>
-                            </td>
-                        </tr>
+
                         <tfoot>
-                        <tr class="inline-edit-row">
-                            <td colspan="9" style="text-align: right;">
-                                <combo-button :options="createButtons" />
-                            </td>
-                        </tr>
+                            <tr class="inline-edit-row">
+                                <td colspan="9" style="text-align: right;">
+                                    <combo-button :options="createButtons" />
+                                </td>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>
