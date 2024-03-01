@@ -297,8 +297,16 @@ window.wperp = window.wperp || {};
             $( '.wrap.erp #message button.notice-dismiss' ).on( 'click', this.dismissNoticeMessage );
 
             this.initFields();
+            this.initToolTip();
         },
 
+        initToolTip: function() {
+            $( '.erp-tips' ).tipTip( {
+                defaultPosition: "top",
+                fadeIn: 100,
+                fadeOut: 100
+            } );
+        },
         proPopupTooltip: function (e){
             e.preventDefault();
             $('.pro-popup').mouseover(function (e) {
