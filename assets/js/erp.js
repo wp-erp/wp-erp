@@ -300,7 +300,7 @@ window.wperp = window.wperp || {};
             this.initToolTip();
         },
 
-        initToolTip: function() {
+        initTipTip: function() {
             $( '.erp-tips' ).tipTip( {
                 defaultPosition: "top",
                 fadeIn: 100,
