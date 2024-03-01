@@ -297,7 +297,7 @@ window.wperp = window.wperp || {};
             $( '.wrap.erp #message button.notice-dismiss' ).on( 'click', this.dismissNoticeMessage );
 
             this.initFields();
-            this.initToolTip();
+            this.initTipTip();
         },
 
         initTipTip: function() {
