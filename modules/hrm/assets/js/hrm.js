@@ -141,7 +141,6 @@
             $( '#erp-hr-employee-export-csv' ).on( 'click', this.employee.exportCsv );
 
             this.showRequestNotification();
-            this.initTipTip();
 
             // Announcements
             $( 'body' ).on( 'click', 'input[name="reset_announcement_filter"]', function( e ){
@@ -226,14 +225,6 @@
                         return false;
                     });
             });
-        },
-
-        initTipTip: function() {
-            $( '.erp-tips' ).tipTip( {
-                defaultPosition: "top",
-                fadeIn: 100,
-                fadeOut: 100
-            } );
         },
 
         requiredAlert: function( action ) {
