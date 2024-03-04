@@ -1310,13 +1310,17 @@
                 // document.getElementById( 'erp-leave-dropdown-content' ).classList.toggle( 'show' );
             },
 
-            resetLeaveFilterDropdown: function() {
+            resetLeaveFilterDropdown: function(e) {
                 $( '#employee_name' ).val('');
                 $( '#financial_year' ).val('');
                 $( '#leave_policy' ).val('');
                 $( '#filter_leave_year' ).val('');
                 $('#custom-input').remove();
                 $( '.filter_leave_status' ).removeAttr('checked');
+
+                var resetUlr = $(e.target).attr('data-url');
+
+                window.location = resetUlr;
             },
 
             general: {
