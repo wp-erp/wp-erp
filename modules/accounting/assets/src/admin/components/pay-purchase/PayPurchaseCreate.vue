@@ -102,6 +102,18 @@
                                     <textarea v-model="particulars" rows="4" maxlength="250" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                                 </td>
                             </tr>
+                            <tr class="inline-edit-row">
+                                <td>
+                                    <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
+                                        <img :src="acct_assets + '/images/file-thumb.png'">
+                                        <span class="remove-file" @click="removeFile(index)">&#10007;</span>
+
+                                        <div class="attachment-meta">
+                                            <h3>{{ getFileName(file) }}</h3>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                             <tr class="add-attachment-row inline-edit-row">
                                 <td colspan="9" style="text-align: left;">
                                     <div class="attachment-container">
@@ -502,7 +514,11 @@ export default {
             this.$delete(this.totalAmounts, index);
             this.$delete(this.negativeAmount, index);
             this.updateFinalAmount();
-        }
+        },
+
+        removeFile: function removeFile(index) {
+            this.$delete(this.attachments, index);
+        },
     },
 
     watch: {
