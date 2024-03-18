@@ -212,7 +212,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
     $financial_year = \WeDevs\ERP\Accounting\Classes\Common::closest_financial_year( $fy_start_date ) ;
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND people.people_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND people.people_id = %d ", $args['people_id'] );
     }
 
     if ( empty( $args['start_date'] ) ) {
@@ -225,11 +225,11 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND people.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
     }
 
     $sql = 'SELECT';
