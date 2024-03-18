@@ -380,8 +380,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
         if ( ! empty( $_GET['leave_policy'] ) ) {
             $args['policy_id'] = sanitize_text_field( wp_unslash( $_GET['leave_policy'] ) );
         }
+        
         if ( ! empty( $_GET['filter_leave_status'] ) ) {
-            $args['status'] = sanitize_text_field( wp_unslash( $_GET['filter_leave_status'] ) );
+            $args['status'] = map_deep( wp_unslash( $_GET['filter_leave_status'] ), 'sanitize_text_field' );
         }
 
         if ( ! empty( $_GET['filter_leave_year'] ) && 4 !== $_GET['filter_leave_year'] ) {
@@ -643,7 +644,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
                     <div class="wperp-filter-panel-footer">
                         <input type="button" class="wperp-btn btn--cancel btn--filter-apply" value="<?php esc_attr_e( 'Cancel', 'erp' ); ?>" name="hide_filter">
-                        <input type="button" class="wperp-btn btn--reset btn--filter-apply" value="<?php esc_attr_e( 'Reset', 'erp' ); ?>" name="leave_filter_reset">
+                        <input type="button" class="wperp-btn btn--reset btn--filter-apply" value="<?php esc_attr_e( 'Reset', 'erp' ); ?>" data-url="<?php echo esc_url($this->get_filter_reset_url()); ?>" name="leave_filter_reset">
                         <input type="submit" name="filter_employee_search" id="filter_employee_search" class="wperp-btn btn--filter-apply" value="<?php esc_attr_e( 'Apply', 'erp' ); ?>">
                     </div>
                 </div>
@@ -660,7 +661,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
         <div class='filter-left'>
             <?php
             // phpcs:disable
-            $clear_all_url = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
+            $clear_all_url = $this->get_filter_reset_url();
+
             foreach ( $filters as $key => $filter ) {
                 if( empty( $filter ) ){
                     continue;
@@ -725,4 +727,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
         <?php
     }
 
+    public function get_filter_reset_url() {
+        return admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-requests' );
+    }
 }
