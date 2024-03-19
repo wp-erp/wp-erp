@@ -741,7 +741,7 @@ class FormHandler {
         if ( $leave_policy == '' ) {
             $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Please select a leave policy.', 'erp' ) ) );
         } else {
-            $policy = LeavePolicy::with(['segregation', 'financial_year'])->find( $leave_policy );
+            $policy = LeavePolicy::find( $leave_policy );
 
             if ( ! $policy ) {
                 $errors->add( new WP_Error( 'leave_policy', esc_attr__( 'Error: Invalid policy selected. Please check your input.', 'erp' ) ) );
@@ -797,41 +797,6 @@ class FormHandler {
         $affected = 0;
 
         foreach ( $employees as $employee ) {
-            // Get employee from user id.
-            $employee = new Employee( $employee->user_id );
-            $hiring_date = $employee->get_hiring_date();
-            $hiring_year = date( 'Y', strtotime( $hiring_date ) );
-            $hiring_month = date( 'M', strtotime( $hiring_date ) );
-            $day_in = $policy->days;
-            $segregation_policy = $policy->segregation->toArray();
-            $found_starting_month = false;
-            $if_segregation_policy_is_empty = true;
-            // To get only month data
-            unset( $segregation_policy['id'], $segregation_policy['leave_policy_id'], $segregation_policy['created_at'], $segregation_policy['updated_at'] );
-            if ( $hiring_year == $policy->financial_year->fy_name ) {
-                // Those employees who are hired in the middle of the year, assume they've 0 day in
-                $day_in = 0;
-                foreach ( $segregation_policy as $key => $value ) {
-                    if ( $value == 0 ) {
-                        continue;
-                    }
-
-                    $if_segregation_policy_is_empty = false;
-                    if ( $key === strtolower($hiring_month) ) {
-                        $found_starting_month = true;
-                    }
-
-                    // Form hiring month to December
-                    if ( $found_starting_month ) {
-                        $day_in += $value;
-                    }
-                }
-            }
-
-            if ( $if_segregation_policy_is_empty ) {
-                $day_in = $policy->days;
-            }
-
             // get required data and send it to insert_entitlement function
             $data = [
                 'user_id'       => $employee->user_id,
@@ -839,7 +804,7 @@ class FormHandler {
                 'created_by'    => get_current_user_id(),
                 'trn_id'        => $policy->id,
                 'trn_type'      => 'leave_policies',
-                'day_in'        => $day_in,
+                'day_in'        => $policy->days,
                 'day_out'       => 0,
                 'description'   => $comment,
                 'f_year'        => $policy->f_year,
