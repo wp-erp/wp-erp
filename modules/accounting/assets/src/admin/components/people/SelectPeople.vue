@@ -36,7 +36,7 @@ export default {
 
         label: {
             type: String,
-            default: 'Pay to'
+            default: __('Pay To', 'erp')
         },
 
         isDisabled: {

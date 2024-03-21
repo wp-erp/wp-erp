@@ -349,7 +349,7 @@
                 placeholder: __('Filter by Segment', 'erp'),
                 default: {
                     id: '',
-                    text: '--Select save filter --'
+                    text: __('--Select save filter --', 'erp')
                 },
                 options: wpErpCrm.saveAdvanceSearch
             },
@@ -463,7 +463,7 @@
                     + '<div class="filter-content" v-if="field.editable">'
                         + '<div class="filter-left">'
                             + '<select id="filter-key" v-model="fieldObj.filterKey">'
-                                + '<option value="">--Select a field--</option>'
+                                + '<option value="">' + __('--Select a field--', 'erp') + '</option>'
                                 + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
                             + '</select>'
                             + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey" @change="setCondiationWiseValue( fieldObj.filterCondition )">'
@@ -483,12 +483,12 @@
                                 + '<template v-if="searchFields[fieldObj.filterKey].type == \'date_range\'">'
                                     + '<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeFrom">'
                                     + '<input type="text" v-else v-datepicker class="input-text" v-model="fieldObj.filterValue">'
-                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeTo">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">' + __('to', 'erp') + '</span>&nbsp;<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeTo">'
                                 + '</template>'
                                 + '<template v-if="searchFields[fieldObj.filterKey].type == \'number_range\'">'
                                     + '<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeFrom">'
                                     + '<input type="number" v-else class="input-text" step="any" v-model="fieldObj.filterValue">'
-                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeTo">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">' + __('to', 'erp') + '</span>&nbsp;<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeTo">'
                                 + '</template>'
                             + '</template>'
                         + '</div>'
@@ -1243,7 +1243,7 @@
                 },
 
                 contact_view_link: function( action, item ) {
-                    return '<span class="view"><a href="' + item.details_url + '" title="View this contact">'+
+                    return '<span class="view"><a href="' + item.details_url + '" title="' + __('View this contact', 'erp') +'">'+
                     __('View', 'erp') +'</a><span> | </span></span>';
                 },
 
@@ -2082,7 +2082,7 @@
                             columnNames     = columnNamesLine.split(','),
                             html            = '';
 
-                        html += '<option value="">&mdash; Select Field &mdash;</option>';
+                        html += '<option value="">' + __('&mdash; Select Field &mdash;', 'erp') + '</option>';
 
                         columnNames.forEach(function (item, index) {
                             item = item.replace(/"/g, "");

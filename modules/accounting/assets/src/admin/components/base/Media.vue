@@ -25,7 +25,7 @@ export default {
         },
         buttonLabel: {
             type: String,
-            default: 'Upload Image'
+            default: __('Upload Image', 'erp')
         },
         croppingWidth: {
             type: Number
