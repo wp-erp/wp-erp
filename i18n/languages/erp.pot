@@ -1,14 +1,14 @@
-# Copyright (C) 2023 weDevs
+# Copyright (C) 2024 weDevs
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.12.9\n"
+"Project-Id-Version: WP ERP 1.13.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2023-12-28 11:27:31+00:00\n"
+"POT-Creation-Date: 2024-03-27 07:56:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: wp-vue-i18n 1.1.4\n"
@@ -30,80 +30,92 @@ msgstr ""
 msgid "100"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/base/Dropdown.vue:8
-#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
-msgid "Dropdown"
+#: assets/js/erp-settings-bootstrap.js:11
+#: assets/js/erp-settings-bootstrap.js:311
+#: assets/js/erp-settings-bootstrap.js:482
+#: assets/js/erp-settings-bootstrap.js:702
+#: assets/js/erp-settings-bootstrap.js:1256
+#: assets/js/erp-settings-bootstrap.js:1355 assets/js/erp-settings.js:6426
+#: assets/js/erp-settings.js:6540 assets/js/erp-settings.js:6774
+#: assets/js/erp-settings.js:8346 assets/js/erp-settings.js:8899
+#: assets/js/erp-settings.js:10715 assets/js/erp-settings.js:11060
+#: modules/accounting/assets/js/bootstrap.js:241
+#: modules/accounting/assets/js/bootstrap.js:324
+#: modules/accounting/assets/js/bootstrap.js:1251
+#: modules/accounting/assets/js/bootstrap.js:1370
+#: modules/accounting/assets/js/bootstrap.js:2266
+#: modules/accounting/assets/js/bootstrap.js:2527
+#: modules/accounting/assets/js/bootstrap.js:2635
+#: modules/accounting/assets/js/bootstrap.js:2680
+#: modules/accounting/assets/js/bootstrap.js:2737
+#: modules/accounting/assets/js/bootstrap.js:2915
+#: modules/accounting/assets/js/bootstrap.js:3218
+#: modules/accounting/assets/js/bootstrap.js:3419
+#: modules/accounting/assets/js/bootstrap.js:3843
+#: modules/accounting/assets/js/bootstrap.js:3917
+#: modules/accounting/assets/js/bootstrap.js:4192
+#: modules/accounting/assets/js/bootstrap.js:4281
+#: modules/accounting/assets/js/frontend.js:114
+msgid "div"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
-msgid "Oops! No item found."
+#: assets/js/erp-settings-bootstrap.js:94
+msgid "input"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
-msgid "More"
+#: assets/js/erp-settings-bootstrap.js:146
+#: modules/accounting/assets/js/bootstrap.js:1321
+msgid "multiselect"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Framework/ERP_Settings_Page.php:473
-#: includes/Settings/Template.php:494
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
-msgid "Upload Image"
+#: assets/js/erp-settings-bootstrap.js:232
+#: modules/accounting/assets/js/bootstrap.js:3267
+msgid "button"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
-msgid "Select date"
+#: assets/js/erp-settings-bootstrap.js:543
+#: assets/js/erp-settings-bootstrap.js:1223
+#: assets/js/erp-settings-bootstrap.js:1231
+#: modules/accounting/assets/js/bootstrap.js:209
+#: modules/accounting/assets/js/bootstrap.js:1155
+msgid "span"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Admin/views/tools/general.php:59
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
-#: includes/Settings/assets/src/components/license/License.vue:34
-msgid "Save Changes"
+#: assets/js/erp-settings-bootstrap.js:675
+msgid "p"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
-msgid "Get WooCommerce Extension"
+#: assets/js/erp-settings-bootstrap.js:737
+#: modules/accounting/assets/js/bootstrap.js:2439
+msgid "form"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
-msgid "Activate WooCommerce"
+#: assets/js/erp-settings-bootstrap.js:2338 assets/js/erp-settings.js:607
+#: includes/Settings/assets/src/components/select/MultiSelect.vue:70
+#: modules/accounting/assets/js/bootstrap.js:6325
+#: modules/accounting/assets/src/admin/components/select/MultiSelect.vue:57
+msgid "Please search"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
-msgid "Get WP ERP Pro"
+#: assets/js/erp-settings-bootstrap.js:2418 assets/js/erp-settings.js:686
+#: includes/Settings/assets/src/components/base/SubmitButton.vue:14
+#: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:71
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
+msgid "Submit"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
-msgid "Test Connection"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
-msgid "Testing Connection"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5047
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:69
 msgid " Test Connection"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5052
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:75
 msgid " OK"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5352 assets/js/erp-settings.js:5358
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:227
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:233
 #: modules/accounting/assets/src/admin/components/people/People.vue:97
@@ -147,16 +159,17 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5353
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:228
 msgid "Are you sure to delete this ?"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5356
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:119
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:83
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:231
 #: includes/Settings/assets/src/components/integration/Integration.vue:99
+#: modules/accounting/assets/js/bootstrap.js:5811
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
 #: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
 #: modules/accounting/assets/src/admin/components/people/ImportModal.vue:61
@@ -178,18 +191,19 @@ msgstr ""
 #: modules/hrm/HRM.php:238 modules/hrm/assets/js/requests.js:582
 #: modules/hrm/includes/AnnouncementListTable.php:259
 #: modules/hrm/includes/EmployeeListTable.php:93
-#: modules/hrm/includes/LeaveRequestsListTable.php:645
+#: modules/hrm/includes/LeaveRequestsListTable.php:646
 #: modules/hrm/views/requests.php:42
 msgid "Cancel"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5560
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:160
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:18
 msgid "Template Name"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Settings/Email.php:397
+#: assets/js/erp-settings.js:5563 assets/js/erp-settings.js:5861
+#: includes/Settings/Email.php:397
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:164
 #: includes/Settings/assets/src/components/integration/Integration.vue:148
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
@@ -212,32 +226,33 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:5566
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:168
 msgid "Disable / Enable"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Settings/Integration.php:15
+#: assets/js/erp-settings.js:5861 includes/Settings/Integration.php:15
 #: includes/Settings/assets/src/components/integration/Integration.vue:147
 msgid "Integration"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:6003
 #: includes/Settings/assets/src/components/license/License.vue:59
 msgid "Extension"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Framework/views/status-report.php:642
+#: assets/js/erp-settings.js:6003
+#: includes/Framework/views/status-report.php:642
 #: includes/Settings/assets/src/components/license/License.vue:60
 msgid "Version"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
+#: assets/js/erp-settings.js:6003
 #: includes/Settings/assets/src/components/license/License.vue:61
 msgid "License Key"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Admin/views/tools.php:37
+#: assets/js/erp-settings.js:6003 includes/Admin/views/tools.php:37
 #: includes/Settings/assets/src/components/license/License.vue:62
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:33
 #: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
@@ -256,20 +271,21 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: assets/js/erp-settings.js:1 includes/Admin/AddProMenu.php:187
-#: includes/Admin/AddProMenu.php:280 includes/Admin/AddProMenu.php:435
-#: includes/Admin/AdminMenu.php:132 includes/Admin/AdminMenu.php:138
-#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
-#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:359
-msgid "Settings"
+#: assets/js/erp-settings.js:7090 assets/js/erp-settings.js:7170
+#: assets/js/erp-settings.js:7250 assets/js/erp-settings.js:7330
+#: assets/js/erp-settings.js:7577 assets/js/erp-settings.js:7657
+#: assets/js/erp-settings.js:7737 assets/js/erp-settings.js:7817
+#: assets/js/erp-settings.js:8064 assets/js/erp-settings.js:8197
+#: assets/js/erp-settings.js:8818 assets/js/erp-settings.js:9028
+#: assets/js/erp-settings.js:9108 assets/js/erp-settings.js:9259
+#: assets/js/erp-settings.js:9391 assets/js/erp-settings.js:9505
+#: assets/js/erp-settings.js:9605 assets/js/erp-settings.js:9816
+#: assets/js/erp-settings.js:10239
+msgid "base-layout"
 msgstr ""
 
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
-#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
-#: modules/accounting/assets/src/admin/components/products/Search.vue:9
-#: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:36
-msgid "Search"
+#: assets/js/erp-settings.js:8712
+msgid "crm-contact-form-layout"
 msgstr ""
 
 #: i18n/countries.php:14
@@ -16508,6 +16524,14 @@ msgstr ""
 msgid "Assign Bulk Shift"
 msgstr ""
 
+#: includes/Admin/AddProMenu.php:187 includes/Admin/AddProMenu.php:280
+#: includes/Admin/AddProMenu.php:435 includes/Admin/AdminMenu.php:132
+#: includes/Admin/AdminMenu.php:138
+#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
+#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:359
+msgid "Settings"
+msgstr ""
+
 #: includes/Admin/AddProMenu.php:220 includes/Framework/Modules.php:443
 msgid "Payroll"
 msgstr ""
@@ -16779,19 +16803,19 @@ msgid "Log changes"
 msgstr ""
 
 #: includes/Admin/Ajax.php:475 includes/Admin/Ajax.php:522
-#: includes/Settings/Ajax.php:337 modules/hrm/includes/AjaxHandler.php:1354
+#: includes/Settings/Ajax.php:336 modules/hrm/includes/AjaxHandler.php:1354
 msgid "No email address provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:518 includes/Settings/Ajax.php:326
+#: includes/Admin/Ajax.php:518 includes/Settings/Ajax.php:325
 msgid "No host address provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:526 includes/Settings/Ajax.php:341
+#: includes/Admin/Ajax.php:526 includes/Settings/Ajax.php:340
 msgid "No email password provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:530 includes/Settings/Ajax.php:330
+#: includes/Admin/Ajax.php:530 includes/Settings/Ajax.php:329
 msgid "No port address provided"
 msgstr ""
 
@@ -17767,6 +17791,7 @@ msgstr ""
 #: modules/hrm/views/leave/leave-entitlements.php:147
 #: modules/hrm/views/leave/leave-entitlements.php:159
 #: modules/hrm/views/leave/leave-entitlements.php:181
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
 msgid "- Select -"
 msgstr ""
 
@@ -18224,6 +18249,15 @@ msgstr ""
 msgid "New Transaction"
 msgstr ""
 
+#: includes/Admin/views/tools/general.php:59
+#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
+#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
+#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
+#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
+#: includes/Settings/assets/src/components/license/License.vue:34
+msgid "Save Changes"
+msgstr ""
+
 #: includes/Admin/views/tools/misc.php:3
 #: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:23
 #: includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue:22
@@ -18462,6 +18496,13 @@ msgstr ""
 #: includes/Framework/ERP_Settings_Page.php:469
 #: includes/Settings/Template.php:490
 msgid "Delete this image?"
+msgstr ""
+
+#: includes/Framework/ERP_Settings_Page.php:473
+#: includes/Settings/Template.php:494
+#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
+#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
+msgid "Upload Image"
 msgstr ""
 
 #: includes/Framework/ERP_Settings_Page.php:735
@@ -19525,53 +19566,53 @@ msgstr ""
 msgid "Allowed Files"
 msgstr ""
 
-#: includes/Settings/Ajax.php:150 includes/Settings/Ajax.php:213
-#: includes/Settings/Ajax.php:254 includes/Settings/Ajax.php:290
+#: includes/Settings/Ajax.php:149 includes/Settings/Ajax.php:212
+#: includes/Settings/Ajax.php:253 includes/Settings/Ajax.php:289
 #: modules/hrm/includes/AjaxHandler.php:1066
 msgid "You do not have sufficient permission to do this action"
 msgstr ""
 
-#: includes/Settings/Ajax.php:261
+#: includes/Settings/Ajax.php:260
 msgid "Invalid email template ID"
 msgstr ""
 
-#: includes/Settings/Ajax.php:276
+#: includes/Settings/Ajax.php:275
 msgid "Template updated successfully"
 msgstr ""
 
-#: includes/Settings/Ajax.php:371
+#: includes/Settings/Ajax.php:370
 msgid "ERP SMTP Test Mail"
 msgstr ""
 
-#: includes/Settings/Ajax.php:372 includes/Settings/Ajax.php:466
+#: includes/Settings/Ajax.php:371 includes/Settings/Ajax.php:465
 msgid "This is a test email by WP ERP."
 msgstr ""
 
-#: includes/Settings/Ajax.php:417
+#: includes/Settings/Ajax.php:416
 msgid "Test email has been sent successfully to %s"
 msgstr ""
 
-#: includes/Settings/Ajax.php:442
+#: includes/Settings/Ajax.php:441
 msgid "No private API key provided"
 msgstr ""
 
-#: includes/Settings/Ajax.php:448
+#: includes/Settings/Ajax.php:447
 msgid "No domain address provided"
 msgstr ""
 
-#: includes/Settings/Ajax.php:454
+#: includes/Settings/Ajax.php:453
 msgid "No region selected"
 msgstr ""
 
-#: includes/Settings/Ajax.php:465
+#: includes/Settings/Ajax.php:464
 msgid "ERP Mailgun Test Mail"
 msgstr ""
 
-#: includes/Settings/Ajax.php:496
+#: includes/Settings/Ajax.php:495
 msgid "Test email has been sent successfully to "
 msgstr ""
 
-#: includes/Settings/Ajax.php:581
+#: includes/Settings/Ajax.php:580
 msgid "Licenses saved succesfully"
 msgstr ""
 
@@ -20012,15 +20053,14 @@ msgstr ""
 msgid "End date"
 msgstr ""
 
+#: includes/Settings/assets/src/components/base/Dropdown.vue:8
+#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
+msgid "Dropdown"
+msgstr ""
+
 #: includes/Settings/assets/src/components/base/ShowErrors.vue:4
 #: modules/accounting/assets/src/admin/components/base/ShowErrors.vue:4
 msgid "Please complete these fields"
-msgstr ""
-
-#: includes/Settings/assets/src/components/base/SubmitButton.vue:14
-#: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:71
-msgid "Submit"
 msgstr ""
 
 #: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:9
@@ -20036,7 +20076,7 @@ msgstr ""
 #: modules/crm/assets/js/vue-table.js:403
 #: modules/hrm/includes/AnnouncementListTable.php:260
 #: modules/hrm/includes/EmployeeListTable.php:94
-#: modules/hrm/includes/LeaveRequestsListTable.php:646
+#: modules/hrm/includes/LeaveRequestsListTable.php:647
 #: modules/hrm/views/requests.php:47
 msgid "Reset"
 msgstr ""
@@ -20057,8 +20097,17 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
+msgid "Test Connection"
+msgstr ""
+
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:15
 msgid "Click on the Above Button Before Saving the Setting"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
+msgid "Testing Connection"
 msgstr ""
 
 #: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:14
@@ -20107,7 +20156,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:111
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:284
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:167
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:183
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:196
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:24
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:200
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:196
@@ -20148,21 +20197,47 @@ msgstr ""
 msgid "Test Dropbox Connection"
 msgstr ""
 
+#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
+msgid "Select date"
+msgstr ""
+
 #: includes/Settings/assets/src/components/license/License.vue:28
 msgid "No extensions found."
+msgstr ""
+
+#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
+msgid "More"
+msgstr ""
+
+#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
+#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
+#: modules/accounting/assets/src/admin/components/products/Search.vue:9
+#: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:36
+msgid "Search"
 msgstr ""
 
 #: includes/Settings/assets/src/components/searchbar/SearchBar.vue:30
 msgid "Sorry ! Nothings found for your query. Please try again !"
 msgstr ""
 
-#: includes/Settings/assets/src/components/select/MultiSelect.vue:70
-#: modules/accounting/assets/src/admin/components/select/MultiSelect.vue:57
-msgid "Please search"
+#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
+msgid "Oops! No item found."
 msgstr ""
 
 #: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:12
 msgid "Connect with WooCommerce"
+msgstr ""
+
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
+msgid "Get WooCommerce Extension"
+msgstr ""
+
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
+msgid "Activate WooCommerce"
+msgstr ""
+
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
+msgid "Get WP ERP Pro"
 msgstr ""
 
 #: includes/Updates/BP/ERPACCTBGProcess1_5_0.php:253
@@ -21248,6 +21323,77 @@ msgid ""
 "PDF export feature."
 msgstr ""
 
+#: modules/accounting/assets/js/bootstrap.js:100
+msgid "tr"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:2309
+msgid "dropdown"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:2989
+msgid "modal"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5156
+#: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
+msgid "No items found."
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5808
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:249
+msgid ""
+"This email already exists in CRM! Do you want to import and update the "
+"contact?"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5813
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:254
+msgid "Import & Update"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5823
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:265
+msgid "Email already exists as customer/vendor"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5848
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
+msgid "Created Successfully"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5848
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
+msgid "Updated Successfully"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5871
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:313
+msgid "First name is required"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5875
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:317
+msgid "Last name is required"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:5879
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:321
+msgid "Email is required"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:6111
+#: modules/accounting/assets/src/admin/components/base/Media.vue:76
+msgid "Select & Crop Image"
+msgstr ""
+
+#: modules/accounting/assets/js/bootstrap.js:6168
+#: modules/accounting/assets/js/bootstrap.js:6170
+#: modules/accounting/assets/src/admin/components/base/Media.vue:138
+#: modules/accounting/assets/src/admin/components/base/Media.vue:140
+msgid "Select Image"
+msgstr ""
+
 #: modules/accounting/assets/src/admin/components/bank-accounts/BankAccounts.vue:6
 #: modules/accounting/assets/src/admin/components/dashboard/Accounts.vue:4
 msgid "Accounts"
@@ -21284,15 +21430,6 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/base/FileUpload.vue:10
 msgid "uploaded"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/base/Media.vue:76
-msgid "Select & Crop Image"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/base/Media.vue:138
-#: modules/accounting/assets/src/admin/components/base/Media.vue:140
-msgid "Select Image"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
@@ -21472,7 +21609,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/journal/JournalList.vue:52
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:57
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:95
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:102
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:101
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:102
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:126
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:127
@@ -21532,7 +21669,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:36
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:279
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:96
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:103
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:102
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:108
 msgid "Internal Information"
 msgstr ""
@@ -21544,7 +21681,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:132
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:103
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:102
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:109
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:120
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:145
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:126
 msgid "Attachment"
@@ -21555,7 +21692,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:210
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:211
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:168
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:184
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:197
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:202
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:197
 msgid "Save and New"
@@ -21569,7 +21706,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:212
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:219
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:169
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:185
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:198
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:203
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:209
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:198
@@ -21612,7 +21749,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:649
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:237
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:400
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:442
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:455
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:588
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:500
 msgid "Transaction Date is required."
@@ -21630,7 +21767,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:657
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:241
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:416
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:458
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:471
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:594
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:512
 msgid "Total amount can't be zero."
@@ -21922,14 +22059,14 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:465
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:597
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:404
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:446
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:459
 msgid "Transaction Account is required."
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:469
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:605
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:412
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:454
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:467
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:267
 msgid "Not enough balance in selected account."
 msgstr ""
@@ -22107,7 +22244,7 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:601
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:408
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:450
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:463
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:508
 msgid "Payment Method is required."
 msgstr ""
@@ -22492,10 +22629,6 @@ msgstr ""
 msgid "Show more details"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/list-table/ListTable.vue:268
-msgid "No items found."
-msgstr ""
-
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:8
 msgid "Opening Balances"
 msgstr ""
@@ -22622,7 +22755,7 @@ msgid "Pay-Bill Created!"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:348
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:393
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:406
 #: modules/hrm/includes/FormHandler.php:702
 #: modules/hrm/includes/FormHandler.php:845
 msgid "Something went wrong!"
@@ -22664,11 +22797,11 @@ msgstr ""
 msgid "Payment"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:384
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:397
 msgid "Pay Purchase Created!"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:438
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:451
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:585
 msgid "Vendor Name is required."
 msgstr ""
@@ -22974,40 +23107,6 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:131
 #: modules/hrm/includes/AnnouncementListTable.php:197
 msgid "Show More"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:249
-msgid ""
-"This email already exists in CRM! Do you want to import and update the "
-"contact?"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:254
-msgid "Import & Update"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:265
-msgid "Email already exists as customer/vendor"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
-msgid "Created Successfully"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:291
-msgid "Updated Successfully"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:313
-msgid "First name is required"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:317
-msgid "Last name is required"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:321
-msgid "Email is required"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:5
@@ -25843,7 +25942,7 @@ msgstr ""
 #: modules/crm/assets/js/vue-table.js:401
 #: modules/hrm/includes/AnnouncementListTable.php:261
 #: modules/hrm/includes/EmployeeListTable.php:95
-#: modules/hrm/includes/LeaveRequestsListTable.php:647
+#: modules/hrm/includes/LeaveRequestsListTable.php:648
 #: modules/hrm/views/requests.php:52 modules/hrm/views/requests.php:179
 #: modules/hrm/views/requests.php:314
 msgid "Apply"
@@ -28252,7 +28351,7 @@ msgid "Employment Type"
 msgstr ""
 
 #: modules/hrm/HRM.php:189 modules/hrm/includes/EntitlementListTable.php:37
-#: modules/hrm/includes/LeaveRequestsListTable.php:556
+#: modules/hrm/includes/LeaveRequestsListTable.php:557
 #: modules/hrm/views/leave/leave-entitlements.php:154
 msgid "Leave Policy"
 msgstr ""
@@ -29674,7 +29773,7 @@ msgid "Employee Types"
 msgstr ""
 
 #: modules/hrm/includes/EntitlementListTable.php:118
-#: modules/hrm/includes/LeaveRequestsListTable.php:558
+#: modules/hrm/includes/LeaveRequestsListTable.php:559
 #: modules/hrm/views/employee/tab-leave.php:119
 #: modules/hrm/views/employee/tab-leave.php:147
 #: modules/hrm/views/leave/leave-entitlements.php:226
@@ -30008,7 +30107,7 @@ msgid "No leave types found."
 msgstr ""
 
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:62
-#: modules/hrm/includes/LeaveRequestsListTable.php:543
+#: modules/hrm/includes/LeaveRequestsListTable.php:544
 #: modules/hrm/views/employee/tab-leave.php:94
 #: modules/hrm/views/leave/new-policy.php:81
 msgid "Select year"
@@ -30050,55 +30149,55 @@ msgstr ""
 msgid "Request Days"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:486
+#: modules/hrm/includes/LeaveRequestsListTable.php:487
 msgid "Last week"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:488
+#: modules/hrm/includes/LeaveRequestsListTable.php:489
 msgid "Last month"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:490
+#: modules/hrm/includes/LeaveRequestsListTable.php:491
 msgid "Last 3 months"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:524
+#: modules/hrm/includes/LeaveRequestsListTable.php:525
 #: modules/hrm/views/leave/zero_request.php:12
 msgid "Filter Leave Requests"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:531
+#: modules/hrm/includes/LeaveRequestsListTable.php:532
 msgid "Filter Leave Request"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:534
+#: modules/hrm/includes/LeaveRequestsListTable.php:535
 msgid "Employee name"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:535
+#: modules/hrm/includes/LeaveRequestsListTable.php:536
 msgid "Search by employee name"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:541
+#: modules/hrm/includes/LeaveRequestsListTable.php:542
 msgid "Financial year"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:575
+#: modules/hrm/includes/LeaveRequestsListTable.php:576
 msgid "Leave status"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:577
+#: modules/hrm/includes/LeaveRequestsListTable.php:578
 msgid ""
 "Select the leave request states as per your preference. Selecting none "
 "would show all leave states including Approved, Pending and Rejected."
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:596
+#: modules/hrm/includes/LeaveRequestsListTable.php:597
 #: modules/hrm/views/requests.php:35
 msgid "Date range"
 msgstr ""
 
-#: modules/hrm/includes/LeaveRequestsListTable.php:721
+#: modules/hrm/includes/LeaveRequestsListTable.php:723
 msgid "Clear filter"
 msgstr ""
 
@@ -31921,6 +32020,251 @@ msgstr ""
 msgid "Select bulk action"
 msgstr ""
 
+#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
+msgid "This is a dummy plugin"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "All done."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "Have fun!"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
+msgid "Assign Authors"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of "
+"this site. For example, you may want to import all the entries as "
+"<code>admin</code>s entries."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually "
+"changing the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
+msgid "Import Attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
+msgid "Download and import file attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
+msgid "Import author:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
+msgid "or create new user with login name:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
+msgid "as a new user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
+msgid "Failed to import category %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
+msgid "Invalid file type"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
+msgid "Remote server did not respond"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
+msgid "Import WordPress"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
+msgid ""
+"Import <strong>posts, pages, comments, custom fields, categories, and "
+"tags</strong> from a WordPress export file."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
+msgid "This is a dummy theme"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:746
+msgid "Wildcard DNS may not be configured correctly."
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:157
+msgid "Uncategorized"
+msgstr ""
+
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
+msgid "Export Error"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:729
+msgid " Try again"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:735
+msgid "API error. Try Again."
+msgstr ""
+
+#: vendor/wp-cli/media-command/src/Media_Command.php:145
+msgid "image"
+msgid_plural "images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:247
+msgid "Inactive Widgets"
+msgstr ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:250
+msgid "Drag widgets here to remove them from the sidebar but keep their settings."
+msgstr ""
+
 #: wp-erp.php:222
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
@@ -31989,4 +32333,18 @@ msgstr ""
 #: i18n/states/US.php:20
 msgctxt "US state of Georgia"
 msgid "Georgia"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:488
+#: vendor/wp-cli/core-command/src/Core_Command.php:562
+#. translators: placeholder is blog name
+#. translators: placeholder is user supplied title
+msgctxt "Default network name"
+msgid "%s Sites"
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:160
+#. translators: Default category slug
+msgctxt "Default category slug"
+msgid "Uncategorized"
 msgstr ""

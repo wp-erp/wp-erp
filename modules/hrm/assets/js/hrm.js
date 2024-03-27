@@ -141,7 +141,6 @@
             $( '#erp-hr-employee-export-csv' ).on( 'click', this.employee.exportCsv );
 
             this.showRequestNotification();
-            this.initTipTip();
 
             // Announcements
             $( 'body' ).on( 'click', 'input[name="reset_announcement_filter"]', function( e ){
@@ -226,14 +225,6 @@
                         return false;
                     });
             });
-        },
-
-        initTipTip: function() {
-            $( '.erp-tips' ).tipTip( {
-                defaultPosition: "top",
-                fadeIn: 100,
-                fadeOut: 100
-            } );
         },
 
         requiredAlert: function( action ) {
@@ -1310,13 +1301,17 @@
                 // document.getElementById( 'erp-leave-dropdown-content' ).classList.toggle( 'show' );
             },
 
-            resetLeaveFilterDropdown: function() {
+            resetLeaveFilterDropdown: function(e) {
                 $( '#employee_name' ).val('');
                 $( '#financial_year' ).val('');
                 $( '#leave_policy' ).val('');
                 $( '#filter_leave_year' ).val('');
                 $('#custom-input').remove();
                 $( '.filter_leave_status' ).removeAttr('checked');
+
+                var resetUlr = $(e.target).attr('data-url');
+
+                window.location = resetUlr;
             },
 
             general: {
