@@ -10303,12 +10303,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "8b1a52e046668b7dcea1c3c663c5521b4b1c2a9a"
+                "reference": "9333efcbff231f10dfd9c56bb7b65818b4733ca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/8b1a52e046668b7dcea1c3c663c5521b4b1c2a9a",
-                "reference": "8b1a52e046668b7dcea1c3c663c5521b4b1c2a9a",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/9333efcbff231f10dfd9c56bb7b65818b4733ca7",
+                "reference": "9333efcbff231f10dfd9c56bb7b65818b4733ca7",
                 "shasum": ""
             },
             "require": {
@@ -10318,7 +10318,7 @@
                 "ext-xmlreader": "*",
                 "php": ">=5.4",
                 "phpcsstandards/phpcsextra": "^1.2.1",
-                "phpcsstandards/phpcsutils": "^1.0.9",
+                "phpcsstandards/phpcsutils": "^1.0.10",
                 "squizlabs/php_codesniffer": "^3.9.0"
             },
             "require-dev": {
@@ -10362,7 +10362,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-03-05T10:47:01+00:00"
+            "time": "2024-03-25T16:39:00+00:00"
         },
         {
             "name": "zordius/lightncandy",

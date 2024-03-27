@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.12.9
+ * Version: 1.13.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -71,7 +71,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.12.9';
+    public $version = '1.13.0';
 
     /**
      * Minimum PHP version required
