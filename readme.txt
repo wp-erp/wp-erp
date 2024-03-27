@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 6.4.2
 Requires PHP: 7.2
-Stable tag: 1.12.9
+Stable tag: 1.13.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,15 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+
+= v1.13.0 -> Mar 27, 2024 =
+--------------------------
+* 🛠️ [FIX] The setting fields helper text support HTML.
+* 🛠️ [FIX] Use prepare method for data binging to avoid SQL injection.
+* 🛠️ [FIX] Attachment remove from create purchase.
+* 🛠️ [FIX] Enable reset option for leave filter.
+* 🛠️ [FIX] Resolve illuminate/database package conflict with the WP Project Manager.
 
 = v1.12.9 -> Dec 28, 2023 =
 --------------------------
