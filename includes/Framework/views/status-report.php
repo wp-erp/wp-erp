@@ -575,7 +575,12 @@ $security         = $system_status->get_security_info();
 				<?php if ( $security['secure_connection'] ) { ?>
 					<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>
 				<?php } else { ?>
-					<mark class="error"><span class="dashicons dashicons-warning"></span><?php wp_kses_post( printf( __( 'Your website is not using HTTPS. <a href="%s" target="_blank">Learn more about HTTPS and SSL Certificates</a>.', 'erp' ), 'https://docs.erp.com/document/ssl-and-https/' ) ); ?></mark>
+					<mark class="error"><span class="dashicons dashicons-warning"></span>
+                        <?php
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            wp_kses_post( printf( esc_html__( 'Your website is not using HTTPS. <a href="%s" target="_blank">Learn more about HTTPS and SSL Certificates</a>.', 'erp' ), 'https://docs.erp.com/document/ssl-and-https/' ) );
+                        ?>
+                    </mark>
 				<?php } ?>
 			</td>
 		</tr>
