@@ -1092,14 +1092,21 @@ class parseCSV {
      * @return Data from file, or false on failure
      */
     protected function _rfile( $file = null ) {
+        global $wp_filesystem;
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
         if ( is_readable( $file ) ) {
-            if ( !( $fh = fopen( $file, 'r' ) ) ) {
+
+            if( ! $wp_filesystem->is_readable( $file ) ){
                 return false;
             }
 
-            $data = fread( $fh, filesize( $file ) );
-            fclose( $fh );
+            if ( ! $wp_filesystem->exists( $file ) ) {
+                return false;
+            }
 
+            $data = $wp_filesystem->get_contents( $file );
             return $data;
         }
 
@@ -1117,16 +1124,15 @@ class parseCSV {
      * @return true or false
      */
     protected function _wfile( $file, $string = '', $mode = 'wb', $lock = 2 ) {
-        if ( $fp = fopen( $file, $mode ) ) {
-            flock( $fp, $lock );
-            $re  = fwrite( $fp, $string );
-            $re2 = fclose( $fp );
+        global $wp_filesystem;
+        include_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
 
-            if ( $re != false && $re2 != false ) {
-                return true;
-            }
+        $is_written = $wp_filesystem->put_contents( $file, $string );
+
+        if( $is_written ){
+            return true;
         }
-
         return false;
     }
 }

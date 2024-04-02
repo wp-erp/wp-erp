@@ -2921,15 +2921,18 @@ function erp_crm_track_email_opened() {
     header( 'Pragma: no-cache' );
     header( 'Content-type: image/png' );
 
-    $image  = WPERP_PATH . '/assets/images/one-by-one-pixel.png';
-    $handle = fopen( $image, 'r' );
+    // Using WP_Filesystem to read the image file
+    global $wp_filesystem;
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    WP_Filesystem();
 
-    if ( ! $handle ) {
+    $image = WPERP_PATH . '/assets/images/one-by-one-pixel.png';
+    $contents = $wp_filesystem->get_contents( $image );
+
+    if ( false === $contents ) {
         exit;
     }
 
-    $contents = fread( $handle, filesize( $image ) );
-    fclose( $handle );
     echo wp_kses_post( $contents );
 
     exit;
