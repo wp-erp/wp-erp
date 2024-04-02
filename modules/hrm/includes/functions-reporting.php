@@ -118,7 +118,13 @@ function erp_hr_get_gender_count( $department = null ) {
     if ( null == $department ) {
         $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
     } else {
-        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE department = $department AND status = 'active'" );
+        $all_user_id = $wpdb->get_col( 
+            $wpdb->prepare(
+                "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE department = %d AND status = %s",
+                $department,
+                'active'
+            )
+        );
     }
 
     if ( $all_user_id ) {
