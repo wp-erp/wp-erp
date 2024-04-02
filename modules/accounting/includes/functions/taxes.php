@@ -118,7 +118,7 @@ function erp_acct_insert_tax_rate( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -163,7 +163,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -221,7 +221,7 @@ function erp_acct_quick_edit_tax_rate( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -259,7 +259,7 @@ function erp_acct_add_tax_rate_line( $data ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_line_data( $data );
@@ -295,7 +295,7 @@ function erp_acct_edit_tax_rate_line( $data ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_line_data( $data );
@@ -452,7 +452,7 @@ function erp_acct_pay_tax( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $currency           = erp_get_currency( true );
 
@@ -608,14 +608,14 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['agency_name']     = isset( $data['agency_name'] ) ? $data['agency_name'] : '';
     $tax_data['tax_cat_name']    = isset( $data['tax_cat_name'] ) ? $data['tax_cat_name'] : '';
     $tax_data['tax_components']  = isset( $data['tax_components'] ) ? $data['tax_components'] : [];
-    $tax_data['created_at']      = date( 'Y-m-d' );
+    $tax_data['created_at']      = gmdate( 'Y-m-d' );
     $tax_data['created_by']      = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $tax_data['updated_at']      = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $tax_data['updated_by']      = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
     $tax_data['name']            = isset( $data['name'] ) ? $data['name'] : '';
     $tax_data['description']     = isset( $data['description'] ) ? $data['description'] : '';
     $tax_data['voucher_no']      = isset( $data['voucher_no'] ) ? $data['voucher_no'] : '';
-    $tax_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $tax_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $tax_data['tax_period']      = isset( $data['tax_period'] ) ? $data['tax_period'] : '';
     $tax_data['particulars']     = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $tax_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : '';

@@ -277,7 +277,7 @@ function erp_acct_ledger_opening_balance_by_fn_year_id( $id ) {
 function erp_acct_get_ledgers_with_balances() {
     global $wpdb;
 
-    $today = date( 'Y-m-d' );
+    $today = gmdate( 'Y-m-d' );
 
     $ledgers = $wpdb->get_results(
         "SELECT ledger.id, ledger.chart_id, ledger.category_id, ledger.name, ledger.slug, ledger.code, ledger.system, chart_of_account.name as account_name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger

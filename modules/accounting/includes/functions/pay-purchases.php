@@ -117,9 +117,9 @@ function erp_acct_insert_pay_purchase( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $created_by;
     $voucher_no         = null;
     $currency           = erp_get_currency( true );
@@ -141,7 +141,7 @@ function erp_acct_insert_pay_purchase( $data ) {
                 'currency'   => $currency,
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
-                'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : date( 'Y-m-d' ),
+                'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : gmdate( 'Y-m-d' ),
                 'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : get_current_user_id(),
             ]
         );
@@ -432,7 +432,7 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['vendor_id']        = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $pay_purchase_data['vendor_name']      = $user_data->first_name . ' ' . $user_data->last_name;
     $pay_purchase_data['purchase_details'] = isset( $data['purchase_details'] ) ? $data['purchase_details'] : '';
-    $pay_purchase_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $pay_purchase_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $pay_purchase_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $pay_purchase_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $pay_purchase_data['bank_trn_charge']  = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : '';
@@ -446,9 +446,9 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['name']             = isset( $data['name'] ) ? $data['name'] : $company->name;
     $pay_purchase_data['bank']             = isset( $data['bank'] ) ? $data['bank'] : '';
     $pay_purchase_data['voucher_type']     = isset( $data['voucher_type'] ) ? $data['voucher_type'] : '';
-    $pay_purchase_data['created_at']       = date( 'Y-m-d' );
+    $pay_purchase_data['created_at']       = gmdate( 'Y-m-d' );
     $pay_purchase_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : get_current_user_id();
-    $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : date( 'Y-m-d' );
+    $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : gmdate( 'Y-m-d' );
     $pay_purchase_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : get_current_user_id();
 
     return $pay_purchase_data;

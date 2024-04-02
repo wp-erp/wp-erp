@@ -3,7 +3,7 @@
     $tab              = ! empty( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'own';
     $selected_user_id = ( $tab === 'own' ) ? get_current_user_id() : '';
 ?>
-    <# if( new Date( data.current_date ) >= new Date() ) { #>
+    <# if( new gmdate( data.current_date ) >= new Date() ) { #>
         <div class="feed-schedule-wrapper">
 
             <div class="schedule-title-assign-user">

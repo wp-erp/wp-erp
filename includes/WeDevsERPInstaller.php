@@ -1713,7 +1713,7 @@ Account Manager
      */
     public function populate_data() {
         global $wpdb;
-        $current_date = date( 'Y-m-d' );
+        $current_date = gmdate( 'Y-m-d' );
 
         // Subscription pages
         $subscription_settings = get_option( 'erp_settings_erp-crm_subscription', [] );
@@ -2102,21 +2102,21 @@ Account Manager
             $general         = get_option( 'erp_settings_general', [] );
             $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
 
-            $start_date = new DateTime( date( 'Y-' . $financial_month . '-1' ) );
+            $start_date = new DateTime( gmdate( 'Y-' . $financial_month . '-1' ) );
 
             $start_date = $start_date->format( 'Y-m-d' );
 
-            $end_date = date( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
+            $end_date = gmdate( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
             $end_date = new DateTime( $end_date );
             $end_date->modify( '-1 day' );
 
             $end_date = $end_date->format( 'Y-m-d' );
 
             $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', [
-                'name'       => date( 'Y' ),
+                'name'       => gmdate( 'Y' ),
                 'start_date' => $start_date,
                 'end_date'   => $end_date,
-                'created_at' => date( 'Y-m-d' ),
+                'created_at' => gmdate( 'Y-m-d' ),
                 'created_by' => get_current_user_id(),
             ] );
         }

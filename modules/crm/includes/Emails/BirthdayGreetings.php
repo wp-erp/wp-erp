@@ -40,7 +40,7 @@ class BirthdayGreetings extends Email {
 
         foreach ( $contacts as $contact ) {
             $birthday     = erp_people_get_meta( $contact->id, 'date_of_birth', true );
-            $current_date = date( 'Y-m-d' );
+            $current_date = gmdate( 'Y-m-d' );
 
             if ( $birthday != $current_date ) {
                 continue;

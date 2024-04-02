@@ -441,7 +441,7 @@ class parseCSV {
             header( 'Cache-Control: no-cache, must-revalidate' );
             header( 'Pragma: no-cache' );
             header( 'Expires: 0' );
-            header( 'Content-Disposition: attachment; filename="' . $filename . '"; modification-date="' . date( 'r' ) . '";' );
+            header( 'Content-Disposition: attachment; filename="' . $filename . '"; modification-date="' . gmdate( 'r' ) . '";' );
 
             echo wp_kses_post( $data );
         }

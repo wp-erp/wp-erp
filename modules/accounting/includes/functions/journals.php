@@ -122,7 +122,7 @@ function erp_acct_insert_journal( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     $voucher_no = null;
@@ -221,7 +221,7 @@ function erp_acct_update_journal( $data, $journal_no ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -310,7 +310,7 @@ function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
     $journal_data = [];
 
     $journal_data['voucher_no']     = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $journal_data['trn_date']       = isset( $data['date'] ) ? $data['date'] : date( 'Y-m-d' );
+    $journal_data['trn_date']       = isset( $data['date'] ) ? $data['date'] : gmdate( 'Y-m-d' );
     $journal_data['voucher_amount'] = isset( $data['voucher_amount'] ) ? $data['voucher_amount'] : 0;
     $journal_data['line_items']     = isset( $data['line_items'] ) ? $data['line_items'] : [];
     // translators: %s: voucher_no

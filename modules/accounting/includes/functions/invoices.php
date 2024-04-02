@@ -185,9 +185,9 @@ function erp_acct_insert_invoice( $data ) {
 
     $user_id = get_current_user_id();
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
     $voucher_no    = null;
@@ -426,9 +426,9 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
 
     $user_id = get_current_user_id();
 
-    $invoice_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $invoice_data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $invoice_data['created_by'] = $user_id;
-    $invoice_data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $invoice_data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $invoice_data['updated_by'] = $user_id;
 
     if ( $contra ) {
@@ -484,9 +484,9 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     $user_id    = get_current_user_id();
     $voucher_no = null;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
     $estimate_type = 1;
@@ -589,9 +589,9 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
 
     $user_id  = get_current_user_id();
 
-    $data['created_at'] = date( 'Y-m-d' );
+    $data['created_at'] = gmdate( 'Y-m-d' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d' );
+    $data['updated_at'] = gmdate( 'Y-m-d' );
     $data['updated_by'] = $user_id;
     $data['estimate']   = 0;
 
@@ -724,8 +724,8 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
     $invoice_data['customer_id']     = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $invoice_data['customer_name']   = $customer_name;
-    $invoice_data['trn_date']        = isset( $data['date'] ) ? $data['date'] : date( 'Y-m-d' );
-    $invoice_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
+    $invoice_data['trn_date']        = isset( $data['date'] ) ? $data['date'] : gmdate( 'Y-m-d' );
+    $invoice_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : gmdate( 'Y-m-d' );
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
     $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
@@ -815,7 +815,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     global $wpdb;
 
     $user_id = get_current_user_id();
-    $date    = date( 'Y-m-d H:i:s' );
+    $date    = gmdate( 'Y-m-d H:i:s' );
 
     $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
 
@@ -1073,8 +1073,8 @@ function erp_acct_get_due_payment( $invoice_no ) {
 function erp_acct_get_recievables( $from, $to ) {
     global $wpdb;
 
-    $from_date = date( 'Y-m-d', strtotime( $from ) );
-    $to_date   = date( 'Y-m-d', strtotime( $to ) );
+    $from_date = gmdate( 'Y-m-d', strtotime( $from ) );
+    $to_date   = gmdate( 'Y-m-d', strtotime( $to ) );
 
     $invoices              = $wpdb->prefix . 'erp_acct_invoices';
     $invoices_acct_details = $wpdb->prefix . 'erp_acct_invoice_account_details';
@@ -1098,8 +1098,8 @@ function erp_acct_get_recievables( $from, $to ) {
  */
 function erp_acct_get_recievables_overview() {
     // get dates till coming 90 days
-    $from_date = date( 'Y-m-d' );
-    $to_date   = date( 'Y-m-d', strtotime( '+90 day', strtotime( $from_date ) ) );
+    $from_date = gmdate( 'Y-m-d' );
+    $to_date   = gmdate( 'Y-m-d', strtotime( '+90 day', strtotime( $from_date ) ) );
 
     $data   = [];
     $amount = [
