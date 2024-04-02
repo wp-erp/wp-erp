@@ -309,7 +309,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
 
         if ( ! current_user_can( 'erp_crm_manager' ) && current_user_can( 'erp_crm_agent' ) ) {
             $current_user_id = get_current_user_id();
-            $sql .= " AND {$people_tbl}.contact_owner = {$current_user_id}";
+            $sql .= $wpdb->prepare( " AND {$people_tbl}.contact_owner = %d", $current_user_id);
         }
         $sql .= ' group by life_stage';
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $type ) );
@@ -579,7 +579,7 @@ function erp_crm_get_customer_feeds_nav() {
 function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
     global $wpdb;
 
-    $sql = "SELECT `id` FROM {$wpdb->prefix}erp_crm_customer_companies WHERE `customer_id` = '$customer_id' AND `company_id` = '$company_id'";
+    $sql = $wpdb->prepare( "SELECT `id` FROM {$wpdb->prefix}erp_crm_customer_companies WHERE `customer_id` =  %d AND `company_id` = %d", $customer_id, $company_id ) ;
 
     return $wpdb->get_row( $sql, ARRAY_A );
 }
@@ -714,7 +714,8 @@ function erp_crm_get_feed_activity( $args = [] ) {
 
         if ( erp_crm_is_current_user_crm_agent() ) {
             $contact_owner = get_current_user_id();
-            $people_ids    = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
+            $people_sql =  $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = %d", $contact_owner );
+            $people_ids    = array_keys( $wpdb->get_results( $people_sql, OBJECT_K ) );
 
             $results = $results->whereIn( 'user_id', $people_ids );
         }
@@ -2458,12 +2459,12 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             switch ( $condition ) {
                                 case 'NOT LIKE':
                                     $search       = str_replace( '!~', '', $search );
-                                    $and_clause[] = "term.term_id != {$search}";
+                                    $and_clause[] = $wpdb->prepare( "term.term_id != %d", $search );
                                     break;
 
                                 default:
                                     $search       = str_replace( '~', '', $search );
-                                    $and_clause[] = "term.term_id = {$search}";
+                                    $and_clause[] = $wpdb->prepare( "term.term_id = %d", $search );
                                     break;
                             }
                         }
@@ -2491,14 +2492,14 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                 $add_or = ( $j === count( $val ) - 1 ) ? '' : ' OR ';
 
                                 if ( 'has_not' === $search_val ) {
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $add_or";
+                                    $custom_sql['where'][] = $wpdb->prepare( "( $name.meta_key=%s AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $add_or", $field );
                                 } elseif ( 'if_has' === $search_val ) {
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $add_or";
+                                    $custom_sql['where'][] = $wpdb->prepare( "( $name.meta_key=%s AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $add_or", $field );
                                 } elseif ( 'BETWEEN' === $search_condition ) {
                                     $formatted_val         = explode( ',', $search_val );
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value >= '$formatted_val[0]' AND $name.meta_value <= '$formatted_val[1]' ) ) $add_or";
+                                    $custom_sql['where'][] = $wpdb->prepare( "( $name.meta_key=%s AND ( $name.meta_value >= %s AND $name.meta_value <= %s ) ) $add_or", $field, $formatted_val[0], $formatted_val[1] );
                                 } else {
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND $name.meta_value $search_condition '$search_val' ) $add_or";
+                                    $custom_sql['where'][] =  $wpdb->prepare( "( $name.meta_key=%s AND $name.meta_value $search_condition %s ) $add_or", $field, $search_val );
                                 }
 
                                 $j ++;
@@ -2517,13 +2518,13 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             if ( count( $key_value ) > 1 ) {
                                 $start_date      = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
                                 $end_date        = gmdate( 'Y-m-d 23:59:59', strtotime( $key_value[1] ) );
-                                $where_condition = " created_at BETWEEN '{$start_date}' AND '{$end_date}'";
+                                $where_condition = $wpdb->prepare( " created_at BETWEEN %s AND %s",  $start_date, $end_date );
                             } elseif ( '>' === $condition ) {
                                 $start_date      = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
-                                $where_condition = " created_at > '{$start_date}'";
+                                $where_condition = $wpdb->prepare( " created_at > %s", $start_date );
                             } elseif ( '<' === $condition ) {
                                 $end_date        = gmdate( 'Y-m-d 00:00:00', strtotime( $key_value[0] ) );
-                                $where_condition = " created_at < '{$end_date}'";
+                                $where_condition = $wpdb->prepare( " created_at < %s", $end_date );
                             }
 
                             $custom_sql['where'][] = "people.id NOT IN ( SELECT user_id FROM {$wpdb->prefix}erp_crm_customer_activities WHERE " . $where_condition . " ) $add_or";
