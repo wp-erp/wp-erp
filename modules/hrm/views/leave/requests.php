@@ -2,7 +2,9 @@
     <h2>
     <?php esc_html_e( 'Leave Requests', 'erp' ); ?>
     <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
-        <?php echo erp_help_tip( esc_html__( 'To submit a new leave request you have to first create leave policy and leave entitlement for your employee.', 'erp' ) ); ?>
+        <?php
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo erp_help_tip( esc_html__( 'To submit a new leave request you have to first create leave policy and leave entitlement for your employee.', 'erp' ) ); ?>
         <a href="<?php echo esc_url( add_query_arg( [ 'view' => 'new' ] ) ); ?>" class="add-new-h2"><?php esc_html_e( 'New Request', 'erp' ); ?></a>
     <?php } ?>
     </h2>
