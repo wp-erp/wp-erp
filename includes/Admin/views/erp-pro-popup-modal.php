@@ -3,7 +3,7 @@
         <div class="pro-popup-left-content">
             <div class='pro-popup-top'>
                 <div class='pro-popup-image'>
-                    <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/pro-diamond.svg'; ?>">
+                    <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/pro-popup/pro-diamond.svg' ); ?>">
                 </div>
                 <div class='pro-popup-title'>
                     <span class='text-orange'>Upgrade to</span> WP ERP <b>Pro</b>
@@ -15,19 +15,19 @@
             <ul>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . __( '<b>Unlock 12+ premium HR extensions</b> and manage<br /> your employee’s <b>recruitment, payroll, attendance,</b><br /> and more', 'erp' ) . '</div>'; ?>
+                    <?php echo '<div>' . wp_kses_post( __( '<b>Unlock 12+ premium HR extensions</b> and manage<br /> your employee’s <b>recruitment, payroll, attendance,</b><br /> and more', 'erp' ) ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . __( 'Nurture B2B & regular clients with <b>8+ CRM<br /> Integrations</b> like - <b>HubSpot, Mailchimp,<br /> Salesforce, Help Scout,</b> etc.', 'erp' ) . '</div>'; ?>
+                    <?php echo '<div>' . wp_kses_post (__( 'Nurture B2B & regular clients with <b>8+ CRM<br /> Integrations</b> like - <b>HubSpot, Mailchimp,<br /> Salesforce, Help Scout,</b> etc.', 'erp' ) ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . __( 'From <b>creating invoice to calculating taxes</b>; take<br /> full control of your company’s finances with the<br /> <b>Accounting module</b>', 'erp' ) . '</div>'; ?>
+                    <?php echo '<div>' . wp_kses_post( __( 'From <b>creating invoice to calculating taxes</b>; take<br /> full control of your company’s finances with the<br /> <b>Accounting module</b>', 'erp' ) ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . __( '<b>Boost your WooCommerce store</b> with powerful<br /> <b>CRM and Accounting</b> premium integrations ', 'erp' ) . '</div>'; ?>
+                    <?php echo '<div>' . wp_kses_post( __( '<b>Boost your WooCommerce store</b> with powerful<br /> <b>CRM and Accounting</b> premium integrations ', 'erp' ) ) . '</div>'; ?>
                 </li>
             </ul>
         </div>
@@ -36,28 +36,28 @@
                 <input type='radio' name='radio-btn' id='img-1' checked />
                 <li class='slide-container'>
                     <div class='slide'>
-                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/erp-pro.svg'; ?>" id='slide-1' />
+                        <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/pro-popup/erp-pro.svg' ); ?>" id='slide-1' />
                     </div>
                 </li>
 
                 <input type='radio' name='radio-btn' id='img-2' />
                 <li class='slide-container'>
                     <div class='slide'>
-                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/crm.svg'; ?>" id='slide-2' />
+                        <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/pro-popup/crm.svg' ); ?>" id='slide-2' />
                     </div>
                 </li>
 
                 <input type='radio' name='radio-btn' id='img-3' />
                 <li class='slide-container'>
                     <div class='slide'>
-                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/accounting.svg'; ?>" id='slide-3' />
+                        <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/pro-popup/accounting.svg' ); ?>" id='slide-3' />
                     </div>
                 </li>
 
                 <input type='radio' name='radio-btn' id='img-4' />
                 <li class='slide-container'>
                     <div class='slide'>
-                        <img src="<?php echo WPERP_ASSETS . '/images/pro-popup/woo.svg'; ?>" id='slide-4' />
+                        <img src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/pro-popup/woo.svg' ); ?>" id='slide-4' />
                     </div>
                 </li>
 

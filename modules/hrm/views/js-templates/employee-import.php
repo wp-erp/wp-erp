@@ -17,10 +17,11 @@ $csv_sample_url = wp_nonce_url( $page, $nonce );
                 <p class="description">
                     <?php
                     esc_html_e( 'Upload a csv file.', 'erp' );
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     echo erp_help_tip( esc_html__( 'Make sure CSV meets the sample CSV format exactly.', 'erp' ) );
                     ?>
                 </p>
-                <p id="download_sample_wrap">                    
+                <p id="download_sample_wrap">
                     <button class="button button-primary"
                         id="erp-employee-sample-csv"
                         data-url="<?php echo esc_url( $csv_sample_url ); ?>">
