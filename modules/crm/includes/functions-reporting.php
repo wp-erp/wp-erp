@@ -380,7 +380,7 @@ function erp_crm_growth_reporting_query( $start_date, $end_date, $type ) {
     if ( 'this_year' == $type ) {
         $pattern = 'F';
 
-        $results = $peoples->whereRaw( 'year(`created`) = ?', [ date( 'Y' ) ] )
+        $results = $peoples->whereRaw( 'year(`created`) = ?', [ gmdate( 'Y' ) ] )
             ->whereNotNull( 'life_stage' )->orderBy( 'created', 'ASC' )->get();
     } elseif ( 'custom' == $type ) {
         $pattern = 'd-M-Y';

@@ -59,7 +59,7 @@
                     <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . erp_format_date( $employee->get_hiring_date() ) . '</span>' ); ?>
                     <?php
                         $emp_hdate = new DateTime( $employee->get_hiring_date() );
-                        $cur_date  = new DateTime( date( 'd-m-Y' ) );
+                        $cur_date  = new DateTime( gmdate( 'd-m-Y' ) );
                         $interval  = $cur_date->diff( $emp_hdate );
                         echo '( ' . $interval->y . ' years, ' . $interval->m . ' months, ' . $interval->d . ' days )';
                     ?>

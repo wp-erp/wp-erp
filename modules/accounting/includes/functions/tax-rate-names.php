@@ -85,7 +85,7 @@ function erp_acct_insert_tax_rate_name( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     if ( ! empty( $data['default'] ) ) {
@@ -123,7 +123,7 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_rate_name_data( $data );
@@ -181,7 +181,7 @@ function erp_acct_get_formatted_tax_rate_name_data( $data ) {
     $tax_data['tax_rate_name'] = isset( $data['tax_rate_name'] ) ? $data['tax_rate_name'] : '';
     $tax_data['tax_number']    = isset( $data['tax_number'] ) ? $data['tax_number'] : '';
     $tax_data['default']       = isset( $data['default'] ) ? $data['default'] : '';
-    $tax_data['created_at']    = date( 'Y-m-d' );
+    $tax_data['created_at']    = gmdate( 'Y-m-d' );
     $tax_data['created_by']    = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $tax_data['updated_at']    = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $tax_data['updated_by']    = isset( $data['updated_by'] ) ? $data['updated_by'] : '';

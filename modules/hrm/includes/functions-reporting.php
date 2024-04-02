@@ -275,7 +275,7 @@ function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
 
     if ( 'month' == $query_type ) {
         foreach ( $all_user_data as $user_data ) {
-            if ( isset( $user_data['status'] ) && 'terminated' == $user_data['status'] && date( 'Y-m', strtotime( $user_data['termination_date'] ) ) > $date ) {
+            if ( isset( $user_data['status'] ) && 'terminated' == $user_data['status'] && gmdate( 'Y-m', strtotime( $user_data['termination_date'] ) ) > $date ) {
                 $count++;
                 continue;
             }

@@ -220,7 +220,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
     }
 
     if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $args['end_date'] = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
 
@@ -263,7 +263,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
     $previous_balance_data  = [
         'start_date'        => $financial_year['start_date'],
-        'end_date'          =>  date('Y-m-d', strtotime('-1 day', strtotime( $args['start_date'] ) ) ),
+        'end_date'          =>  gmdate('Y-m-d', strtotime('-1 day', strtotime( $args['start_date'] ) ) ),
         'people_id'         => $args['people_id'],
         'financial_year_id' => $financial_year['id']
     ];

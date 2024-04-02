@@ -389,7 +389,7 @@ function erp_acct_get_income_expense_chart_data() {
         'expense' => array_values( $expenses_monthly ),
     ];
 
-    $current_year = date( 'Y' );
+    $current_year = gmdate( 'Y' );
     $start_date   = $current_year . '-01-01';
     $end_date     = $current_year . '-12-31';
 
@@ -483,7 +483,7 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
 
     $result = array_map(
         function ( $item ) {
-            $item['month']   = date( 'M', mktime( 0, 0, 0, $item['month'] ) );
+            $item['month']   = gmdate( 'M', mktime( 0, 0, 0, $item['month'] ) );
             $item['balance'] = abs( $item['balance'] );
 
             return $item;
@@ -516,13 +516,13 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
 
     switch ( $month ) {
         case 'current':
-            $start_date = date( 'Y-m-d', strtotime( 'first day of this month' ) );
-            $end_date   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+            $start_date = gmdate( 'Y-m-d', strtotime( 'first day of this month' ) );
+            $end_date   = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
             break;
 
         case 'last':
-            $start_date = date( 'Y-m-d', strtotime( 'first day of previous month' ) );
-            $end_date   = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
+            $start_date = gmdate( 'Y-m-d', strtotime( 'first day of previous month' ) );
+            $end_date   = gmdate( 'Y-m-d', strtotime( 'last day of previous month' ) );
             break;
         default:
             break;
@@ -555,7 +555,7 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
 function erp_acct_format_daily_data_to_yearly_data( $result ) {
     $result = array_map(
         function ( $item ) {
-            $item['day']     = date( 'd-m', strtotime( $item['day'] ) );
+            $item['day']     = gmdate( 'd-m', strtotime( $item['day'] ) );
             $item['balance'] = abs( $item['balance'] );
 
             return $item;

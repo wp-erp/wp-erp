@@ -67,7 +67,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id 
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
 
     foreach ( $between_dates as $date ) {
-        $key       = strtolower( date( 'D', strtotime( $date ) ) );
+        $key       = strtolower( gmdate( 'D', strtotime( $date ) ) );
         $is_holidy = ( $work_days[ $key ] == 0 ) ? true : false;
 
         if ( ! $is_holidy ) {
@@ -137,7 +137,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
     }
 
     foreach ( $between_dates as $date ) {
-        $key       = strtolower( date( 'D', strtotime( $date ) ) );
+        $key       = strtolower( gmdate( 'D', strtotime( $date ) ) );
         $is_holidy = ( $work_days[ $key ] == '0' ) ? true : false;
 
         if ( ! $is_holidy ) {
@@ -210,7 +210,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
                 $previous_holiday_exist = erp_hr_leave_get_holiday_between_date_range( $last_req_end_date, $start_day_previous );
 
                 foreach ( $previous_between_dates as $date ) {
-                    $key       = strtolower( date( 'D', strtotime( $date ) ) );
+                    $key       = strtolower( gmdate( 'D', strtotime( $date ) ) );
                     $is_holidy = ( $work_days[ $key ] == '0' ) ? true : false;
 
                     if ( ! $is_holidy ) {
@@ -250,7 +250,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
                 $previous_holiday_exist = erp_hr_leave_get_holiday_between_date_range( $end_date_next_day, $last_req_start_date );
 
                 foreach ( $previous_between_dates as $date ) {
-                    $key       = strtolower( date( 'D', strtotime( $date ) ) );
+                    $key       = strtolower( gmdate( 'D', strtotime( $date ) ) );
                     $is_holidy = ( $work_days[ $key ] == '0' ) ? true : false;
 
                     if ( ! $is_holidy ) {
@@ -729,7 +729,7 @@ function erp_settings_save_leave_years( $post_data = [] ) {
         $data['end_date']    = strtotime( sanitize_text_field( wp_unslash( $data['end_date'] ) ) );
         $data['description'] = sanitize_text_field( wp_unslash( $data['description'] ) );
         $data['created_by']  = get_current_user_id();
-        $data['created_at']  = date( 'Y-m-d' );
+        $data['created_at']  = gmdate( 'Y-m-d' );
 
         $wpdb->insert(
             $wpdb->prefix . 'erp_hr_financial_years',

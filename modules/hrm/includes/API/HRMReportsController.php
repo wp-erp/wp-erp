@@ -185,7 +185,7 @@ class HRMReportsController extends REST_Controller {
             $chart_data = [];
 
             for ( $i = 0; $i <= 11; $i ++ ) {
-                $month    = date( 'Y-m', strtotime( $this_month . " -$i months" ) );
+                $month    = gmdate( 'Y-m', strtotime( $this_month . " -$i months" ) );
                 $js_month = strtotime( $month . '-01' ) * 1000;
                 $count    = erp_hr_get_headcount( $month, '', 'month' );
 
@@ -257,7 +257,7 @@ class HRMReportsController extends REST_Controller {
                         'employee_id'   => (int) esc_attr( $employee->id ),
                         'employee_name' => $employee->display_name,
                         'avatar_url'    => $employee->get_avatar_url( 80 ),
-                        'date'          => date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ),
+                        'date'          => gmdate( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ),
                         'pay_rate'      => (int) esc_attr( $compensation['pay_rate'] ),
                         'pay_type'      => esc_attr( $compensation['pay_type'] ),
                     ];
@@ -306,7 +306,7 @@ class HRMReportsController extends REST_Controller {
                     'employee_id'   => (int) $employee->id,
                     'employee_name' => $employee->display_name,
                     'hiring_date'   => $employee->hiring_date,
-                    'job_age'       => date( 'Y', time() ) - date( 'Y', strtotime( $employee->hiring_date ) ),
+                    'job_age'       => gmdate( 'Y', time() ) - gmdate( 'Y', strtotime( $employee->hiring_date ) ),
                 ];
             }
         }

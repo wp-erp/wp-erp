@@ -103,7 +103,7 @@ function erp_acct_insert_payment( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $voucher_no         = null;
     $currency           = erp_get_currency( true );
@@ -233,7 +233,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
 
     $payment_data               = erp_acct_get_formatted_payment_data( $data, $voucher_no, $item['invoice_no'] );
     $created_by                 = get_current_user_id();
-    $payment_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $payment_data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $payment_data['created_by'] = $created_by;
 
     $wpdb->insert(
@@ -295,7 +295,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -438,9 +438,9 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['invoice_no']       = ! empty( $invoice_no ) ? $invoice_no : 0;
     $payment_data['customer_id']      = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $payment_data['customer_name']    = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $payment_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $payment_data['line_items']       = isset( $data['line_items'] ) ? $data['line_items'] : [];
-    $payment_data['created_at']       = date( 'Y-m-d' );
+    $payment_data['created_at']       = gmdate( 'Y-m-d' );
     $payment_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $payment_data['bank_trn_charge']  = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : 0;
     $payment_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : null;

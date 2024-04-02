@@ -46,8 +46,8 @@ function erp_acct_upload_attachments( $files ) {
 function erp_acct_get_payables( $from, $to ) {
     global $wpdb;
 
-    $from_date = date( 'Y-m-d', strtotime( $from ) );
-    $to_date   = date( 'Y-m-d', strtotime( $to ) );
+    $from_date = gmdate( 'Y-m-d', strtotime( $from ) );
+    $to_date   = gmdate( 'Y-m-d', strtotime( $to ) );
 
     $purchases             = $wpdb->prefix . 'erp_acct_purchase';
     $purchase_acct_details = $wpdb->prefix . 'erp_acct_purchase_account_details';

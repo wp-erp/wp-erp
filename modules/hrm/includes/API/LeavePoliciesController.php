@@ -265,7 +265,7 @@ class LeavePoliciesController extends REST_Controller {
         }
 
         if ( isset( $request['effective_date'] ) ) {
-            $prepared_item['effective_date'] = date( 'Y-m-d', strtotime( $request['effective_date'] ) );
+            $prepared_item['effective_date'] = gmdate( 'Y-m-d', strtotime( $request['effective_date'] ) );
         }
 
         if ( isset( $request['location'] ) ) {
@@ -298,7 +298,7 @@ class LeavePoliciesController extends REST_Controller {
             'marital'        => ( $item->marital != -1 ) ? $item->marital : null,
             'activate'       => $this->activate_types[ $item->activate ],
             'execute_day'    => (int) $item->execute_day,
-            'effective_date' => date( 'Y-m-d', strtotime( $item->effective_date ) ),
+            'effective_date' => gmdate( 'Y-m-d', strtotime( $item->effective_date ) ),
             'location'       => ( $item->location != -1 ) ? $item->location : null,
             'description'    => $item->description,
         ];

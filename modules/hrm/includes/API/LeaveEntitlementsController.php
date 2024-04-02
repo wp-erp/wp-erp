@@ -184,11 +184,11 @@ class LeaveEntitlementsController extends REST_Controller {
         }
 
         if ( isset( $request['start_date'] ) ) {
-            $prepared_item['from_date'] = date( 'Y-m-d', strtotime( $request['start_date'] ) );
+            $prepared_item['from_date'] = gmdate( 'Y-m-d', strtotime( $request['start_date'] ) );
         }
 
         if ( isset( $request['end_date'] ) ) {
-            $prepared_item['to_date'] = date( 'Y-m-d', strtotime( $request['end_date'] ) );
+            $prepared_item['to_date'] = gmdate( 'Y-m-d', strtotime( $request['end_date'] ) );
         }
 
         return $prepared_item;
@@ -209,8 +209,8 @@ class LeaveEntitlementsController extends REST_Controller {
             'employee_id'    => (int) $item->user_id,
             'employee_name'  => $item->employee_name,
             'days'           => (int) $item->days,
-            'start_date'     => date( 'Y-m-d', strtotime( $item->from_date ) ),
-            'end_date'       => date( 'Y-m-d', strtotime( $item->to_date ) ),
+            'start_date'     => gmdate( 'Y-m-d', strtotime( $item->from_date ) ),
+            'end_date'       => gmdate( 'Y-m-d', strtotime( $item->to_date ) ),
         ];
 
         if ( isset( $request['include'] ) ) {

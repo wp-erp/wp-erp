@@ -171,11 +171,11 @@ class LeaveRequestsController extends REST_Controller {
         }
 
         if ( isset( $request['start_date'] ) ) {
-            $prepared_item['start_date'] = date( 'Y-m-d', strtotime( $request['start_date'] ) );
+            $prepared_item['start_date'] = gmdate( 'Y-m-d', strtotime( $request['start_date'] ) );
         }
 
         if ( isset( $request['end_date'] ) ) {
-            $prepared_item['end_date'] = date( 'Y-m-d', strtotime( $request['end_date'] ) );
+            $prepared_item['end_date'] = gmdate( 'Y-m-d', strtotime( $request['end_date'] ) );
         }
 
         if ( isset( $request['policy'] ) ) {
