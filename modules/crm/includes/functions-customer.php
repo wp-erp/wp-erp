@@ -2655,7 +2655,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
-        'extra'         => base64_encode( json_encode( $extra_data ) ),
+        'extra'         => base64_encode( wp_json_encode( $extra_data ) ),
     ];
 
     $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );

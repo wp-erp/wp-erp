@@ -1675,7 +1675,7 @@ class AjaxHandler {
             'school'          => $school,
             'degree'          => $degree,
             'field'           => $field,
-            'result'          => json_encode( $result ),
+            'result'          => wp_json_encode( $result ),
             'result_type'     => $result_type,
             'finished'        => $finished,
             'notes'           => $notes,

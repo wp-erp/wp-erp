@@ -57,7 +57,7 @@
                             </div><!-- .inside -->
 
                             <div class="actions">
-                                <a href="#" class="edit-location" data-data='<?php echo esc_attr( json_encode( $location ) ); ?>'><span class="dashicons dashicons-edit"></span></a>
+                                <a href="#" class="edit-location" data-data='<?php echo esc_attr( wp_json_encode( $location ) ); ?>'><span class="dashicons dashicons-edit"></span></a>
                                 <a href="#" class="remove-location" data-id="<?php echo esc_attr( $location['id'] ); ?>"><span class="dashicons dashicons-trash"></span></a>
                             </div>
                         </div>
