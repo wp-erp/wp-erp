@@ -28,7 +28,7 @@ function erp_acct_get_bills( $args = [] ) {
     $limit = '';
 
     if ( $args['number'] != '-1' ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql  = 'SELECT';
@@ -611,7 +611,7 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     $limit = '';
 
     if ( $args['number'] != '-1' ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $bills            = "{$wpdb->prefix}erp_acct_bills";
