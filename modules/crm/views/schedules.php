@@ -54,7 +54,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             },
             editable: false,
             eventLimit: true,
-            events: <?php echo json_encode( $schedules_data ); ?>,
+            events: <?php echo wp_json_encode( $schedules_data ); ?>,
             eventClick: function(calEvent, jsEvent, view) {
                 var scheduleId = calEvent.schedule.id;
                 var title      = ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php esc_attr_e( 'Log Details', 'erp' ); ?>';
