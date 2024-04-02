@@ -72,7 +72,7 @@ class AddonTask {
 
     public function erp_hr_leave_request_pending_hook_callback( $id, $request ) {
         $results = $this->make_query( 'select', '', [ 'sql' => function ( $wpdb ) use ( $id, $request ) {
-            return "SELECT * FROM {$wpdb->prefix}erp_user_leaves WHERE user_id = {$request->user_id} AND request_id = {$id}";
+            return $wpdb->prepare("SELECT * FROM {$wpdb->prefix}erp_user_leaves WHERE user_id = %d AND request_id = %d", $request->user_id, $id);
         } ] );
 
         $this->make_query( 'delete', 'erp_user_leaves', [ 'where' => [ 'user_id' => $request->user_id, 'request_id' => $id ] ] );
