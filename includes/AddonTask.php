@@ -116,7 +116,6 @@ class AddonTask {
         if ( ! empty( $id ) && ! empty( $args ) ) {
             $results_prev = $this->make_query( 'select', '', [ 'sql' => function ( $wpdb ) use ( $id ) {
                 return $wpdb->prepare("SELECT * FROM {$wpdb->prefix}erp_holidays_indv WHERE holiday_id = %d", $id);
-
             } ] );
 
             $this->make_query( 'delete', 'erp_holidays_indv', [ 'where' => [ 'holiday_id' => $id ] ] );
