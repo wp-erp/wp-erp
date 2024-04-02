@@ -1714,10 +1714,14 @@ function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $al
  * @return string
  */
 function erp_acct_get_pdf_filename( $voucher_no ) {
+    global $wp_filesystem;
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    WP_Filesystem();
+
     $inv_dir = WP_CONTENT_DIR . '/uploads/erp-pdfs/';
 
     if ( ! file_exists( $inv_dir ) ) {
-        mkdir( $inv_dir, 0777, true );
+        $wp_filesystem->mkdir( $inv_dir, 0777, true );
     }
 
     $pdf_file = $inv_dir . "voucher_{$voucher_no}.pdf";
