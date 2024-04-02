@@ -38,7 +38,7 @@ class AddonTask {
 
     public function erp_hr_leave_holiday_delete_hook_callback( $id ) {
         $result = $this->make_query( 'select', '', [ 'sql' => function ( $wpdb ) use ( $id ) {
-            return "SELECT * FROM {$wpdb->prefix}erp_holidays_indv WHERE holiday_id = {$id}";
+            return $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_holidays_indv WHERE holiday_id = %d", $id );
         } ] );
 
         $this->make_query( 'delete', 'erp_holidays_indv', [ 'where' => [ 'holiday_id' => $id ] ] );
