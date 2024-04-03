@@ -36,11 +36,11 @@ function erp_acct_get_all_journals( $args = [] ) {
         $limit = '';
 
         if ( ! empty( $args['start_date'] ) ) {
-            $where .= "WHERE journal.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+            $where .= $wpdb->prepare( "WHERE journal.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date']);
         }
 
         if ( '-1' === $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
         }
 
         $sql = 'SELECT';
@@ -52,7 +52,7 @@ function erp_acct_get_all_journals( $args = [] ) {
         }
 
         $sql .= " FROM {$wpdb->prefix}erp_acct_journals AS journal LEFT JOIN {$wpdb->prefix}erp_acct_journal_details AS journal_detail";
-        $sql .= " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.{$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.%i {$args['order']} {$limit}", $args['orderby']);
 
         if ( $args['count'] ) {
             $wpdb->get_results( $sql );
@@ -84,7 +84,7 @@ function erp_acct_get_all_journals( $args = [] ) {
 function erp_acct_get_journal( $journal_no ) {
     global $wpdb;
 
-    $sql = "SELECT
+    $sql = $wpdb->prepare( "SELECT
 
                 journal.id,
                 journal.voucher_no,
@@ -100,7 +100,7 @@ function erp_acct_get_journal( $journal_no ) {
 
             FROM {$wpdb->prefix}erp_acct_journals as journal
             LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
-            WHERE journal.voucher_no = {$journal_no} LIMIT 1";
+            WHERE journal.voucher_no = %d LIMIT 1", $journal_no );
 
     erp_disable_mysql_strict_mode();
 
@@ -336,17 +336,20 @@ function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
 function erp_acct_format_journal_data( $item, $journal_no ) {
     global $wpdb;
 
-    $sql = "SELECT
-                journal.id,
-                journal_detail.trn_no,
-                journal_detail.ledger_id,
-                journal_detail.particulars,
-                journal_detail.debit,
-                journal_detail.credit
+    $sql = $wpdb->prepare(
+        "SELECT
+            journal.id,
+            journal_detail.trn_no,
+            journal_detail.ledger_id,
+            journal_detail.particulars,
+            journal_detail.debit,
+            journal_detail.credit
 
-            FROM {$wpdb->prefix}erp_acct_journals as journal
-            LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
-            WHERE journal.voucher_no = {$journal_no}";
+        FROM {$wpdb->prefix}erp_acct_journals as journal
+        LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
+        WHERE journal.voucher_no = %d",
+        $journal_no
+    );
 
     erp_disable_mysql_strict_mode();
 
