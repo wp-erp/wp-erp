@@ -402,7 +402,7 @@ class Employee {
             }
 
             // Extract only the Protocol+domain from the URL as per WordPress recommendation.
-            $parsed_url = parse_url( $data['personal']['user_url'] );
+            $parsed_url = wp_parse_url( $data['personal']['user_url'] );
             $data['personal']['user_url'] = $parsed_url['scheme'] . '://' . $parsed_url['host'];
         }
 

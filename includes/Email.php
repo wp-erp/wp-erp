@@ -304,7 +304,7 @@ class Email extends Settings_Page {
         $this->sending = true;
 
         if ( $this->get_email_type() == 'plain' ) {
-            $email_content = preg_replace( $this->plain_search, $this->plain_replace, strip_tags( $this->get_content_plain() ) );
+            $email_content = preg_replace( $this->plain_search, $this->plain_replace, wp_strip_all_tags( $this->get_content_plain() ) );
         } else {
             $email_content = $this->get_content_html();
         }

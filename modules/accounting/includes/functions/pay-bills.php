@@ -114,9 +114,9 @@ function erp_acct_insert_pay_bill( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $created_by;
 
     $voucher_no = null;
@@ -250,7 +250,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -378,7 +378,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data['trn_no']           = ! empty( $voucher_no ) ? $voucher_no : 0;
     $pay_bill_data['vendor_id']        = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
     $pay_bill_data['people_name']      = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $pay_bill_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $pay_bill_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $pay_bill_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $pay_bill_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $pay_bill_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
@@ -392,7 +392,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data['name']             = isset( $data['name'] ) ? $data['name'] : $company->name;
     $pay_bill_data['bank']             = isset( $data['bank'] ) ? $data['bank'] : '';
     $pay_bill_data['voucher_type']     = isset( $data['voucher_type'] ) ? $data['voucher_type'] : '';
-    $pay_bill_data['created_at']       = date( 'Y-m-d' );
+    $pay_bill_data['created_at']       = gmdate( 'Y-m-d' );
     $pay_bill_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $pay_bill_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $pay_bill_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';

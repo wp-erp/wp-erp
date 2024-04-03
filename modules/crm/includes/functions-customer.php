@@ -812,8 +812,8 @@ function erp_crm_get_feed_activity( $args = [] ) {
             unset( $value['extra']['invite_contact'] );
             $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
             $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
-            $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
-            $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
+            $value['created_date']          = gmdate( 'Y-m-d', strtotime( $value['created_at'] ) );
+            $value['created_timeline_date'] = gmdate( 'Y-m-01', strtotime( $value['created_at'] ) );
             // $value['component'] = 'timeline-item';
             $feeds[] = $value;
         }
@@ -877,8 +877,8 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['contact']['types']      = wp_list_pluck( $activity['contact']['types'], 'name' );
     $activity['message']               = erp_crm_format_activity_feed_message( $activity['message'], $activity );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
-    $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
-    $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
+    $activity['created_date']          = gmdate( 'Y-m-d', strtotime( $activity['created_at'] ) );
+    $activity['created_timeline_date'] = gmdate( 'Y-m-01', strtotime( $activity['created_at'] ) );
 
     if ( isset( $activity['extra']['attachments'] ) ) {
         $activity['extra']['attachments'] = erp_crm_process_attachment_data( $activity['extra']['attachments'] );
@@ -2656,7 +2656,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
-        'extra'         => base64_encode( json_encode( $extra_data ) ),
+        'extra'         => base64_encode( wp_json_encode( $extra_data ) ),
     ];
 
     $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
@@ -2792,16 +2792,16 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
 
     if ( $schedules ) {
         foreach ( $schedules as $key => $schedule ) {
-            $start_date = date( 'Y-m-d', strtotime( $schedule['start_date'] ) );
+            $start_date = gmdate( 'Y-m-d', strtotime( $schedule['start_date'] ) );
             $end_date   = ( $schedule['end_date'] ) ? gmdate( 'Y-m-d', strtotime( $schedule['end_date'] . '+1 day' ) ) : gmdate( 'Y-m-d', strtotime( $schedule['start_date'] . '+1 day' ) );        // $end_date = $schedule['end_date'];
 
             if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
-                $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
+                $time = gmdate( 'g:i a', strtotime( $schedule['start_date'] ) );
             } else {
-                if ( date( 'g:i a', strtotime( $schedule['start_date'] ) ) == date( 'g:i a', strtotime( $schedule['end_date'] ) ) || ! $schedule['end_date'] ) {
-                    $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
+                if ( gmdate( 'g:i a', strtotime( $schedule['start_date'] ) ) == gmdate( 'g:i a', strtotime( $schedule['end_date'] ) ) || ! $schedule['end_date'] ) {
+                    $time = gmdate( 'g:i a', strtotime( $schedule['start_date'] ) );
                 } else {
-                    $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
+                    $time = gmdate( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . gmdate( 'g:i a', strtotime( $schedule['end_date'] ) );
                 }
             }
 
@@ -2922,15 +2922,18 @@ function erp_crm_track_email_opened() {
     header( 'Pragma: no-cache' );
     header( 'Content-type: image/png' );
 
-    $image  = WPERP_PATH . '/assets/images/one-by-one-pixel.png';
-    $handle = fopen( $image, 'r' );
+    // Using WP_Filesystem to read the image file
+    global $wp_filesystem;
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    WP_Filesystem();
 
-    if ( ! $handle ) {
+    $image = WPERP_PATH . '/assets/images/one-by-one-pixel.png';
+    $contents = $wp_filesystem->get_contents( $image );
+
+    if ( false === $contents ) {
         exit;
     }
 
-    $contents = fread( $handle, filesize( $image ) );
-    fclose( $handle );
     echo wp_kses_post( $contents );
 
     exit;

@@ -205,7 +205,7 @@ class FormHandler {
             $body    = isset( $_POST['body'] ) ? sanitize_text_field( wp_unslash( $_POST['body'] ) ) : '';
 
             if ( empty( $body ) ) {
-                $body = sprintf( __( 'This test email proves that your WordPress installation at %1$s can send emails.\n\nSent: %2$s', 'erp' ), get_bloginfo( 'url' ), date( 'r' ) );
+                $body = sprintf( __( 'This test email proves that your WordPress installation at %1$s can send emails.\n\nSent: %2$s', 'erp' ), get_bloginfo( 'url' ), gmdate( 'r' ) );
             }
 
             erp_mail( $to, $subject, $body );
