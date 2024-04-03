@@ -33,7 +33,7 @@ function erp_acct_get_purchases( $args = [] ) {
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_purchase Where %d=%d ORDER BY {$args['orderby']} {$args['order']} {$limit}", 1, 1);
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -367,7 +367,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
             $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
 
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}erp_acct_purchase_details_tax WHERE invoice_details_id IN($prev_detail_ids)" ); // delete previous tax data
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_acct_purchase_details_tax WHERE invoice_details_id IN(%s)", $prev_detail_ids ) ); // delete previous tax data
 
             $items = $purchase_data['purchase_details'];
 
