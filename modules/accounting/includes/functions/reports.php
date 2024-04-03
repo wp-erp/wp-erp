@@ -37,7 +37,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         $sql1 = $wpdb->prepare(
             "SELECT SUM(debit - credit) AS balance
             FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s' ORDER BY trn_date ASC",
+            WHERE ledger_id = %d AND trn_date BETWEEN %s AND %s ORDER BY trn_date ASC",
             $ledger_id,
             $closest_fy_date['start_date'],
             $prev_date_of_start
@@ -54,7 +54,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         "SELECT
         trn_no, particulars, debit, credit, trn_date, created_at
         FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s' ORDER BY trn_date ASC",
+        WHERE ledger_id = %d AND trn_date BETWEEN %s AND %s ORDER BY trn_date ASC",
         $ledger_id,
         $start_date,
         $end_date
@@ -170,7 +170,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     $sql1 = $wpdb->prepare(
         "SELECT SUM(debit - credit) AS opening_balance
         FROM {$wpdb->prefix}erp_acct_tax_agency_details
-        WHERE agency_id = %d AND trn_date < '%s'",
+        WHERE agency_id = %d AND trn_date < %s",
         $agency_id,
         $start_date
     );
@@ -179,7 +179,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     $opening_balance    = (float) $db_opening_balance;
 
     // agency details
-    $details = $wpdb->get_results( $wpdb->prepare( "SELECT trn_no, particulars, debit, credit, trn_date, created_at FROM {$wpdb->prefix}erp_acct_tax_agency_details WHERE agency_id = %d AND trn_date BETWEEN '%s' AND '%s'", $agency_id, $start_date, $end_date ), ARRAY_A );
+    $details = $wpdb->get_results( $wpdb->prepare( "SELECT trn_no, particulars, debit, credit, trn_date, created_at FROM {$wpdb->prefix}erp_acct_tax_agency_details WHERE agency_id = %d AND trn_date BETWEEN %s AND %s", $agency_id, $start_date, $end_date ), ARRAY_A );
 
     $total_debit  = 0;
     $total_credit = 0;
