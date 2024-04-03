@@ -39,16 +39,16 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment' OR voucher.type = 'return_payment')";
 
         if ( ! empty( $args['customer_id'] ) ) {
-            $where .= " AND (invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']}) ";
+            $where .= $wpdb->prepare( " AND (invoice.customer_id = %d OR invoice_receipt.customer_id = %d) ", $args['customer_id'], $args['customer_id'] );
         }
+
 
         if ( ! empty( $args['start_date'] ) ) {
-            $where .= " AND ( (invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+            $where .= $wpdb->prepare( " AND ( (invoice.trn_date BETWEEN %s AND %s) OR (invoice_receipt.trn_date BETWEEN %s AND %s) )", $args['start_date'], $args['end_date'], $args['start_date'], $args['end_date'] );
         }
 
-
         if ( ! empty( $args['status'] ) ) {
-            $where .= " AND (invoice.status={$args['status']} OR invoice_receipt.status={$args['status']}) ";
+            $where .= $wpdb->prepare( " AND (invoice.status = %d OR invoice_receipt.status = %d) ", $args['status'], $args['status'] );
         }
 
         if ( ! empty( $args['type'] ) ) {
@@ -56,15 +56,15 @@ function erp_acct_get_sales_transactions( $args = [] ) {
                 $where .= ' AND invoice.estimate = 1 ';
             }
             if ( $args['type'] === 'payment' ) {
-                $where .= " AND voucher.type = '{$args['type']}' ";
+                $where .= $wpdb->prepare( " AND voucher.type = %s ", $args['type'] );
             }
             if ( $args['type'] === 'invoice' ) {
-                $where .= " AND voucher.type = '{$args['type']}' AND invoice.estimate = 0 ";
+                $where .= $wpdb->prepare( " AND voucher.type = %s AND invoice.estimate = 0 ", $args['type'] );
             }
         }
 
-        if ( - 1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        if ( -1 !== $args['number'] ) {
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql = 'SELECT';
@@ -90,11 +90,13 @@ function erp_acct_get_sales_transactions( $args = [] ) {
                     invoice_receipt.status as pay_status';
         }
 
+        $orderby = ( 'ASC' === sanitize_text_field($args['order']) ) ? 'voucher.id ASC' : 'voucher.id DESC';
+
         $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
             LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
-            {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
+            {$where} GROUP BY voucher.id ORDER BY {$orderby} {$limit}";
 
         erp_disable_mysql_strict_mode();
 
@@ -130,11 +132,11 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
     $where = 'WHERE invoice.estimate<>1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND invoice.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND invoice.customer_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND invoice.customer_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.type_name
@@ -158,11 +160,11 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
     $where = ' WHERE invoice.estimate<>1 AND invoice.status<>1 AND invoice.status<>7 AND invoice.status<>8';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND invoice.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND invoice.customer_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND invoice.customer_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT SUM(credit) as received, SUM(balance) AS outstanding
@@ -187,11 +189,11 @@ function erp_acct_get_bill_chart_data( $args = [] ) {
     $where = ' WHERE bill.status != 1  AND bill.status!=7 AND bill.status!=8';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND bill.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND bill.vendor_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
@@ -216,11 +218,11 @@ function erp_acct_get_bill_chart_status( $args = [] ) {
     $where = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE bill.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND bill.vendor_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
@@ -246,11 +248,11 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
     $where = ' WHERE purchase.purchase_order<>1 AND purchase.status<>1 AND purchase.status<>7 AND purchase.status<>8';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND purchase.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND purchase.vendor_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND purchase.vendor_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
@@ -277,11 +279,11 @@ function erp_acct_get_purchase_chart_status( $args = [] ) {
     $where = 'WHERE purchase.purchase_order<>1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND purchase.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND purchase.vendor_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND purchase.vendor_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT status_type.type_name, COUNT(purchase.status) AS sub_total
@@ -309,11 +311,11 @@ function erp_acct_get_expense_chart_data( $args = [] ) {
     $where = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE bill.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND bill.people_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND bill.people_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT SUM(balance) as paid, 0 AS payable
@@ -337,11 +339,11 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
     $where = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE bill.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND bill.people_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND bill.people_id = %d ", $args['people_id'] );
     }
 
     $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
@@ -441,19 +443,7 @@ function erp_acct_get_income_expense_chart_data() {
 function erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $chart_id ) {
     global $wpdb;
 
-    $ledger_details = $wpdb->prefix . 'erp_acct_ledger_details';
-    $ledgers        = $wpdb->prefix . 'erp_acct_ledgers';
-    $chart_of_accs  = $wpdb->prefix . 'erp_acct_chart_of_accounts';
-
-    $query = "Select Month(ld.trn_date) as month, SUM( ld.debit-ld.credit ) as balance
-              From $ledger_details as ld
-              Inner Join $ledgers as al on al.id = ld.ledger_id
-              Inner Join $chart_of_accs as ca on ca.id = al.chart_id
-              Where ca.id = %d
-              AND ld.trn_date BETWEEN %s AND %s
-              Group By Month(ld.trn_date)";
-
-    $results = $wpdb->get_results( $wpdb->prepare( $query, $chart_id, $start_date, $end_date ), ARRAY_A );
+    $results = $wpdb->get_results( $wpdb->prepare( "Select Month(ld.trn_date) as month, SUM( ld.debit-ld.credit ) as balance From {$wpdb->prefix}erp_acct_ledger_details as ld Inner Join {$wpdb->prefix}erp_acct_ledgers as al on al.id = ld.ledger_id Inner Join {$wpdb->prefix}erp_acct_chart_of_accounts as ca on ca.id = al.chart_id Where ca.id = %d AND ld.trn_date BETWEEN %s AND %s Group By Month(ld.trn_date)", $chart_id, $start_date, $end_date ), ARRAY_A );
 
     return $results;
 }
@@ -528,19 +518,7 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
             break;
     }
 
-    $ledger_details = $wpdb->prefix . 'erp_acct_ledger_details';
-    $ledgers        = $wpdb->prefix . 'erp_acct_ledgers';
-    $chart_of_accs  = $wpdb->prefix . 'erp_acct_chart_of_accounts';
-
-    $query = "Select ld.trn_date as day, SUM( ld.debit-ld.credit ) as balance
-              From $ledger_details as ld
-              Inner Join $ledgers as al on al.id = ld.ledger_id
-              Inner Join $chart_of_accs as ca on ca.id = al.chart_id
-              Where ca.id = %d
-              AND ld.trn_date BETWEEN %s AND %s
-              Group By ld.trn_date";
-
-    $results = $wpdb->get_results( $wpdb->prepare( $query, $chart_id, $start_date, $end_date ), ARRAY_A );
+    $results = $wpdb->get_results( $wpdb->prepare( "Select ld.trn_date as day, SUM( ld.debit-ld.credit ) as balance From {$wpdb->prefix}erp_acct_ledger_details as ld Inner Join {$wpdb->prefix}erp_acct_ledgers as al on al.id = ld.ledger_id Inner Join {$wpdb->prefix}erp_acct_chart_of_accounts as ca on ca.id = al.chart_id Where ca.id = %d AND ld.trn_date BETWEEN %s AND %s Group By ld.trn_date", $chart_id, $start_date, $end_date ), ARRAY_A );
 
     return $results;
 }
@@ -606,31 +584,31 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense' OR voucher.type = 'check' ) ";
 
         if ( ! empty( $args['start_date'] ) ) {
-            $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (expense.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+            $where .= $wpdb->prepare( " AND ( (bill.trn_date BETWEEN %s AND %s) OR (pay_bill.trn_date BETWEEN %s AND %s) OR (expense.trn_date BETWEEN %s AND %s) )", $args['start_date'], $args['end_date'], $args['start_date'], $args['end_date'], $args['start_date'], $args['end_date'] );
         }
 
         if ( ! empty( $args['vendor_id'] ) ) {
-            $where .= " AND (bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']}) ";
+            $where .= $wpdb->prepare( " AND (bill.vendor_id = %d OR pay_bill.vendor_id = %d) ", $args['vendor_id'], $args['vendor_id'] );
         }
 
         if ( ! empty( $args['start_date'] ) ) {
-            $where .= " AND ( (bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+            $where .= $wpdb->prepare( " AND ( (bill.trn_date BETWEEN %s AND %s) OR (pay_bill.trn_date BETWEEN %s AND %s) )", $args['start_date'], $args['end_date'], $args['start_date'], $args['end_date'] );
         }
 
         if ( 0 === $args['status'] ) {
             $where .= '';
         } else {
             if ( ! empty( $args['status'] ) ) {
-                $where .= " AND (bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} )";
+                $where .= $wpdb->prepare( " AND (bill.status=%d OR pay_bill.status=%d OR expense.status=%d )", $args['status'], $args['status'], $args['status']);
             }
         }
 
         if ( ! empty( $args['type'] ) ) {
-            $where .= " AND voucher.type = '{$args['type']}' ";
+            $where .= $wpdb->prepare( " AND voucher.type = %s ", $args['type'] );
         }
 
         if ( - 1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql = 'SELECT';
@@ -662,6 +640,8 @@ function erp_acct_get_expense_transactions( $args = [] ) {
                 expense.status as expense_status';
         }
 
+        $orderby = ( 'ASC' === sanitize_text_field($args['order']) ) ? 'voucher.id ASC' : 'voucher.id DESC';
+
         $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
             LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill AS pay_bill ON pay_bill.voucher_no = voucher.id
@@ -670,7 +650,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON cheque.trn_no = voucher.id
             {$where}
             GROUP BY voucher.id
-            ORDER BY voucher.id {$args['order']} {$limit}";
+            ORDER BY {$orderby} {$limit}";
 
         erp_disable_mysql_strict_mode();
 
@@ -730,31 +710,31 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'receive_pay_purchase' OR voucher.type = 'purchase')";
 
         if ( ! empty( $args['vendor_id'] ) ) {
-            $where .= " AND (purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']}) ";
+            $where .= $wpdb->prepare( " AND (purchase.vendor_id = %d OR pay_purchase.vendor_id = %d) ", $args['vendor_id'], $args['vendor_id']);
         }
 
         if ( ! empty( $args['start_date'] ) ) {
-            $where .= " AND ( (purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') OR (pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}') )";
+            $where .= $wpdb->prepare( " AND ( (purchase.trn_date BETWEEN %s AND %s) OR (pay_purchase.trn_date BETWEEN %s AND %s) )", $args['start_date'], $args['end_date'], $args['start_date'], $args['end_date'] );
         }
 
         if ( ! empty( $args['type'] ) ) {
-            $where .= " AND voucher.type = '{$args['type']}'";
+            $where .= $wpdb->prepare( " AND voucher.type = %s ", $args['type'] );
         }
 
         if ( empty( $args['status'] ) ) {
             $where .= '';
         } else {
             if ( ! empty( $args['status'] ) ) {
-                $where .= " AND (purchase.status={$args['status']} OR pay_purchase.status={$args['status']}) ";
+                $where .= $wpdb->prepare( " AND (purchase.status=%d OR pay_purchase.status=%d) ", $args['status'], $args['status'] );
             }
         }
 
         if ( ! empty( $args['type'] ) ) {
-            $where .= " AND voucher.type = '{$args['start_date']}'";
+            $where .= $wpdb->prepare( " AND voucher.type = %s", $args['start_date'] );
         }
 
         if ( - 1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
         }
 
         $sql = 'SELECT';
@@ -780,11 +760,14 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
                 pay_purchase.status AS pay_purchase_status';
         }
 
+        
+        $orderby = ( 'ASC' === sanitize_text_field($args['order']) ) ? 'voucher.id ASC' : 'voucher.id DESC';
+        
         $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
             LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase ON pay_purchase.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acct_details ON purchase_acct_details.purchase_no = purchase.voucher_no
-            {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
+            {$where} GROUP BY voucher.id ORDER BY {$orderby} {$limit}";
 
         erp_disable_mysql_strict_mode();
 
