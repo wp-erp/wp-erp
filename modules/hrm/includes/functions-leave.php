@@ -1449,7 +1449,8 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
     // filter by name
     if ( ! empty( $args['s'] ) ) {
-        $where .= $wpdb->prepare( " AND u.display_name like '%%%s%%' ", $args['s'] );
+        $like_s = '%' . $wpdb->esc_like( $args['s'] ) . '%';
+        $where .= $wpdb->prepare( " AND u.display_name like %s ", $like_s );
     }
 
     if ( is_array( $args['status'] ) ) {
@@ -2041,9 +2042,7 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
     $from_date = $year . '-01-01';
     $to_date   = $year . '-12-31';
 
-    $query  = "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements
-        WHERE user_id = %d AND policy_id = %d AND from_date = %s AND to_date = %s";
-    $result = $wpdb->get_var( $wpdb->prepare( $query, $employee_id, $policy_id, $from_date, $to_date ) );
+    $result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND policy_id = %d AND from_date = %s AND to_date = %s", $employee_id, $policy_id, $from_date, $to_date ) );
 
     return $result;
 }
@@ -2130,7 +2129,8 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
         }
 
         if ( ! empty( $args['search'] ) ) {
-            $where .= $wpdb->prepare( " AND u.display_name LIKE '%%%s%%' ", $args['search'] );
+            $like_search = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+            $where .= $wpdb->prepare( " AND u.display_name LIKE %s ", $like_search );
         }
 
         if ( $args['leave_id'] ) {
@@ -2353,7 +2353,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     global $wpdb;
 
-    $query = "
+    $result = $wpdb->get_row( $wpdb->prepare( "
     SELECT en.id, en.leave_id, en.user_id, en.f_year, fy.start_date, fy.end_date, l.name AS policy_name,
     IFNULL( sum(en.day_in), 0 ) AS policy_day_in,
     IFNULL( ( SELECT sum(en2.day_in) AS total_day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_in,
@@ -2364,9 +2364,7 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
     LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
     WHERE en.id = %d
-    ";
-
-    $result = $wpdb->get_row( $wpdb->prepare( $query, $entitlement_id ) );
+    ", $entitlement_id ) );
 
     $balance = [];
 
