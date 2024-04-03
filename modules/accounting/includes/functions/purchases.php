@@ -438,7 +438,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             $wpdb->query( $wpdb->prepare( "CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_purchase WHERE voucher_no = %d", $purchase_id ) );
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = %s",
                     0,
                     $voucher_no,
                     $purchase_id,
@@ -452,7 +452,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             $status_closed = 7;
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                    "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = %d, updated_at =%s, updated_by = %d WHERE voucher_no IN (%d, %d)",
                     $status_closed,
                     $data['updated_at'],
                     $user_id,
