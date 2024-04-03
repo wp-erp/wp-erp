@@ -199,7 +199,7 @@ class HRMReportsController extends REST_Controller {
         } else {
             global $wpdb;
 
-            $user_ids = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
+            $user_ids = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT %d OFFSET %d", $args['number'], $args['offset'] ) );
             $total    = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
 
             foreach ( $user_ids as $user_id ) {
@@ -238,7 +238,7 @@ class HRMReportsController extends REST_Controller {
 
         global $wpdb;
 
-        $user_ids    = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
+        $user_ids    = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT %d OFFSET %d", $args['number'], $args['offset'] ) );
         $total_items = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
 
         $date_format = get_option( 'date_format' );
@@ -289,7 +289,7 @@ class HRMReportsController extends REST_Controller {
 
         global $wpdb;
 
-        $user_ids = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' LIMIT {$args['number']} OFFSET {$args['offset']}" );
+        $user_ids = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = %s LIMIT %d OFFSET %d", 'active', $args['number'], $args['offset'] ) );
 
         $total_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
 

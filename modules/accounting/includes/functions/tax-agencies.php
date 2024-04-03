@@ -35,12 +35,12 @@ function erp_acct_get_all_tax_agencies( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
             $tax_agencies_count = $wpdb->get_var( $sql );
