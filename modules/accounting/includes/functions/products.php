@@ -36,7 +36,7 @@ function erp_acct_get_all_products( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql = 'SELECT';
@@ -359,7 +359,7 @@ function erp_acct_get_vendor_products( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql = 'SELECT';
