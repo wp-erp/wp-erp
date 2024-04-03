@@ -28,7 +28,7 @@ function erp_acct_get_pay_purchases( $args = [] ) {
     $limit = '';
 
     if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
     }
 
     $sql  = 'SELECT';
