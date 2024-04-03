@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_clsbl_get_closest_next_fn_year( $date ) {
     global $wpdb;
 
-    return $wpdb->get_row( $wpdb->prepare( "SELECT id, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date > '%s' ORDER BY start_date ASC LIMIT 1", $date ) );
+    return $wpdb->get_row( $wpdb->prepare( "SELECT id, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date > %s ORDER BY start_date ASC LIMIT 1", $date ) );
 }
 
 /**

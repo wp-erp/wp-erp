@@ -336,7 +336,7 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
         ledger.id, ledger.name, SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN %s AND %s GROUP BY ledger_detail.ledger_id",
         $closest_fy_date['start_date'],
         $prev_date_of_tb_start
     );
