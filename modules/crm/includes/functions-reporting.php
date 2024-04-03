@@ -300,7 +300,7 @@ function erp_crm_customer_reporting_query( $start_date, $end_date, $filter_type 
             $where = '';
 
             if ( $start_date ) {
-                $where = " WHERE p.created between '{$start_date}' and '{$end_date}'";
+                $where =  $wpdb->prepare( " WHERE p.created between '%s' and '%s'", $start_date, $end_date );
             }
 
             $results = $wpdb->get_results( "SELECT cg.name, p.life_stage FROM `{$wpdb->prefix}erp_crm_contact_subscriber` cs LEFT JOIN `{$wpdb->prefix}erp_peoples` p ON cs.user_id = p.id LEFT JOIN `{$wpdb->prefix}erp_crm_contact_group` cg ON cs.group_id = cg.id {$where}", OBJECT );
