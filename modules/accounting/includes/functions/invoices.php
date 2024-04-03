@@ -27,11 +27,11 @@ function erp_acct_get_all_invoices( $args = [] ) {
     $limit = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE invoice.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date']);
     }
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql = 'SELECT';
@@ -43,7 +43,7 @@ function erp_acct_get_all_invoices( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
-    $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.%i {$args['order']} {$limit}", $args['orderby']);
 
     erp_disable_mysql_strict_mode();
 
@@ -531,8 +531,8 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
                     $data['created_at']
                 )
             );
-            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" );
-            $wpdb->query( 'DROP TABLE acct_tmptable' );
+            $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" ) );
+            $wpdb->query( $wpdb->prepare( 'DROP TABLE acct_tmptable' ) );
 
             // change invoice status and other things
             $status_closed = 7;
@@ -992,7 +992,7 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
 function erp_acct_get_invoice_count() {
     global $wpdb;
 
-    $row = $wpdb->get_row( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_invoices' );
+    $row = $wpdb->get_row( $wpdb->prepare( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_invoices' ) );
 
     return $row->count;
 }
@@ -1019,7 +1019,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
     $limit = '';
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $invoices            = "{$wpdb->prefix}erp_acct_invoices";
