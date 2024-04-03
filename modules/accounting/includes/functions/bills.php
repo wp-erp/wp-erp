@@ -28,12 +28,12 @@ function erp_acct_get_bills( $args = [] ) {
     $limit = '';
 
     if ( $args['number'] != '-1' ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_bills WHERE `trn_by_ledger_id` IS NULL ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare("FROM {$wpdb->prefix}erp_acct_bills WHERE `trn_by_ledger_id` IS NULL ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -301,8 +301,8 @@ function erp_acct_update_bill( $data, $bill_id ) {
                     $data['created_at']
                 )
             );
-            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_bills SELECT * FROM acct_tmptable" );
-            $wpdb->query( 'DROP TABLE acct_tmptable' );
+            $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}erp_acct_bills SELECT * FROM acct_tmptable" ) );
+            $wpdb->query( $wpdb->prepare('DROP TABLE acct_tmptable' ) );
 
             // change bill status and other things
             $status_closed = 7;
@@ -582,7 +582,7 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
 function erp_acct_get_bill_count() {
     global $wpdb;
 
-    $row = $wpdb->get_row( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_bills' );
+    $row = $wpdb->get_row( $wpdb->prepare( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_bills') );
 
     return $row->count;
 }
@@ -611,7 +611,7 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     $limit = '';
 
     if ( $args['number'] != '-1' ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $bills            = "{$wpdb->prefix}erp_acct_bills";

@@ -27,11 +27,11 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
     $limit = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE opening_balance.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE opening_balance.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date']);
     }
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql = 'SELECT';
@@ -43,7 +43,7 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_opening_balances AS opening_balance LEFT JOIN {$wpdb->prefix}erp_acct_financial_years AS financial_year";
-    $sql .= " ON opening_balance.financial_year_id = financial_year.id {$where} GROUP BY financial_year.name ORDER BY financial_year.{$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( " ON opening_balance.financial_year_id = financial_year.id {$where} GROUP BY financial_year.name ORDER BY financial_year.%i {$args['order']} {$limit}", $args['orderby']);
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
@@ -263,7 +263,7 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
 function erp_acct_get_opening_balance_names() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
+    $rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years"), ARRAY_A  );
 
     return $rows;
 }
@@ -455,7 +455,7 @@ function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
 function erp_acct_get_date_boundary() {
     global $wpdb;
 
-    $result = $wpdb->get_row( "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
+    $result = $wpdb->get_row( $wpdb->prepare( "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years" ), ARRAY_A );
 
     return $result;
 }
