@@ -2159,8 +2159,8 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
             LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
             LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
             LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON en.trn_id = policy.id
-            %s
-            ORDER BY %s %s %s", $where, $args['orderby'], $args['order'], $limit);
+            {$where}
+            ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
         $leave_entitlements = $wpdb->get_results( $query );
         wp_cache_set( $cache_key, $leave_entitlements, 'erp' );
