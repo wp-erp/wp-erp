@@ -336,7 +336,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
             'number'     => empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
             'type'       => empty( $request['type'] ) ? '' : $request['type'],
             'customer_id'=> empty( $request['customer_id'] ) ? '' : $request['customer_id'],
@@ -382,7 +382,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_status = erp_acct_get_sales_chart_status( $args );
@@ -400,7 +400,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_payment = erp_acct_get_sales_chart_payment( $args );
@@ -439,7 +439,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_expense_chart_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $bill_payment    = erp_acct_get_bill_chart_data( $args );
@@ -466,7 +466,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_expense_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_statuses = erp_acct_get_bill_chart_status( $args );
@@ -504,7 +504,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
             'number'     => empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
             'type'       => empty( $request['type'] ) ? '' : $request['type'],
             'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
@@ -552,7 +552,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchase_chart_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_payment = erp_acct_get_purchase_chart_data( $args );
@@ -574,7 +574,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchase_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_status = erp_acct_get_purchase_chart_status( $args );
@@ -598,7 +598,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
             'number'     => (int) empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
             'status'     => empty( $request['status'] ) ? '' : $request['status'],
             'type'       => empty( $request['type'] ) ? '' : $request['type'],
             'vendor_id'  => empty( $request['vendor_id'] ) ? '' : $request['vendor_id'],
@@ -760,7 +760,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_people_trn_amount_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $args['people_id'] = $request['id'];
@@ -786,7 +786,7 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_people_trn_status_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $args['people_id'] = $request['id'];

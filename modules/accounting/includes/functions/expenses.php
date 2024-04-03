@@ -208,9 +208,9 @@ function erp_acct_insert_expense( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $created_by;
 
     $voucher_no = null;
@@ -379,7 +379,7 @@ function erp_acct_update_expense( $data, $expense_id ) {
     }
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -462,7 +462,7 @@ function erp_acct_convert_draft_to_expense( $data, $expense_id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -628,7 +628,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['people_id']        = isset( $data['people_id'] ) ? $data['people_id'] : get_current_user_id();
     $expense_data['people_name']      = isset( $people ) ? $people->first_name . ' ' . $people->last_name : '';
     $expense_data['billing_address']  = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $expense_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $expense_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $expense_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $expense_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $expense_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
@@ -639,7 +639,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;
     $expense_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
     $expense_data['bank_trn_charge']  = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : null;
-    $expense_data['created_at']       = date( 'Y-m-d' );
+    $expense_data['created_at']       = gmdate( 'Y-m-d' );
     $expense_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $expense_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $expense_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';

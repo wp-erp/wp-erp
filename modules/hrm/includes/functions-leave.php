@@ -2473,8 +2473,8 @@ function erp_hr_get_next_month_leave_list() {
  * @return void
  */
 function erp_hr_leave_period() {
-    $next_sart_date = date( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
-    $next_end_date  = date( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
+    $next_sart_date = gmdate( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
+    $next_end_date  = gmdate( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
 
     $date = [
         erp_financial_start_date() => erp_format_date( erp_financial_start_date() ) . ' - ' . erp_format_date( erp_financial_end_date() ),
@@ -2591,7 +2591,7 @@ function get_entitlement_financial_years() {
         $min_date_fy_year = get_financial_year_from_date( $min_max_dates->min );
 
         $start_year = $min_date_fy_year['start'];
-        $end_year   = date( 'Y', strtotime( $min_max_dates->max ) );
+        $end_year   = gmdate( 'Y', strtotime( $min_max_dates->max ) );
     } else {
         return [];
     }

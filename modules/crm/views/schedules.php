@@ -54,7 +54,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             },
             editable: false,
             eventLimit: true,
-            events: <?php echo json_encode( $schedules_data ); ?>,
+            events: <?php echo wp_json_encode( $schedules_data ); ?>,
             eventClick: function(calEvent, jsEvent, view) {
                 var scheduleId = calEvent.schedule.id;
                 var title      = ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php esc_attr_e( 'Log Details', 'erp' ); ?>';
@@ -126,8 +126,8 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             dayClick: function(date, jsEvent, view) {
 
                 $.erpPopup({
-                    title: ( new Date( date) < new Date() ) ? '<?php esc_attr_e( 'Add new Log', 'erp' ); ?>' : '<?php esc_attr_e( 'Add new Schedule', 'erp' ); ?>',
-                    button: ( new Date( date) < new Date() ) ? '<?php esc_attr_e( 'Create Log', 'erp' ); ?>' : '<?php esc_attr_e( 'Create Schedule', 'erp' ); ?>',
+                    title: ( new gmdate( date) < new Date() ) ? '<?php esc_attr_e( 'Add new Log', 'erp' ); ?>' : '<?php esc_attr_e( 'Add new Schedule', 'erp' ); ?>',
+                    button: ( new gmdate( date) < new Date() ) ? '<?php esc_attr_e( 'Create Log', 'erp' ); ?>' : '<?php esc_attr_e( 'Create Schedule', 'erp' ); ?>',
                     id: 'erp-crm-customer-schedules',
                     content: wperp.template('erp-crm-customer-schedules')( { current_date: date.format() } ).trim(),
                     extraClass: 'larger',
@@ -205,14 +205,14 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                     return letter.toUpperCase();
                                 });
 
-                                var end_time = new Date( res.end_date ),
-                                    start_time = new Date( res.start_date ),
+                                var end_time = new gmdate( res.end_date ),
+                                    start_time = new gmdate( res.start_date ),
                                     addOneMin = 60*1000,
                                     start_date = wperp.dateFormat( res.start_date, 'Y-m-d' );
 
                                 if ( res.end_date ) {
-                                    if ( new Date( res.start_date ) < new Date() ) {
-                                       var time = date( 'g:ia', strtotime( $schedule['start_date'] ) );
+                                    if ( new gmdate( res.start_date ) < new Date() ) {
+                                       var time = gmdate( 'g:ia', strtotime( $schedule['start_date'] ) );
                                     } else {
                                         if ( wperp.timeFormat( res.start_date ) == wperp.timeFormat( res.end_date ) ) {
                                             var time = wperp.timeFormat( res.start_date );
@@ -221,15 +221,15 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                         }
                                     }
 
-                                    var end_date = new Date( end_time.setTime( end_time.getTime() + addOneMin ) );
+                                    var end_date = new gmdate( end_time.setTime( end_time.getTime() + addOneMin ) );
 
                                 } else {
                                     var time     = wperp.timeFormat( res.start_date );
-                                    var end_date = new Date( start_time.setTime( start_time.getTime() + addOneMin ) );
+                                    var end_date = new gmdate( start_time.setTime( start_time.getTime() + addOneMin ) );
                                 }
 
                                 var title = time + ' ' + log_title;
-                                var color = new Date( res.start_date ) < new Date() ? '#f05050' : '#03c756';
+                                var color = new gmdate( res.start_date ) < new Date() ? '#f05050' : '#03c756';
 
                                 // Add in current calendar only if current user id in invited_user array or not in own tab
                                 const currentUserId = <?php echo get_current_user_id() ?>;

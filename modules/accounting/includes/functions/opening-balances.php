@@ -110,7 +110,7 @@ function erp_acct_insert_opening_balance( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     try {
@@ -348,7 +348,7 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
 
     // should we go further calculation, check the diff
     if ( erp_acct_has_date_diff( $start_date, $closest_fy_date['start_date'] ) ) {
-        $prev_date_of_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
+        $prev_date_of_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
 
         $sql1 = $wpdb->prepare(
             "SELECT SUM(debit - credit) AS balance
@@ -467,7 +467,7 @@ function erp_acct_get_current_financial_year( $date = '' ) {
     global $wpdb;
 
     if ( empty( $date ) ) {
-        $date = date( 'Y-m-d' );
+        $date = gmdate( 'Y-m-d' );
     }
 
     $result = $wpdb->get_row( $wpdb->prepare( "SELECT id,name,start_date,end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE '%s' between start_date AND end_date", $date ) );

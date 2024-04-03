@@ -50,7 +50,7 @@ function erp_acct_insert_product_cat( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     try {
@@ -94,7 +94,7 @@ function erp_acct_update_product_cat( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {

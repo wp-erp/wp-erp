@@ -134,9 +134,9 @@ function erp_acct_insert_bill( $data ) {
     $voucher_no = null;
     $draft      = 1;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $created_by;
     $currency           = erp_get_currency( true );
 
@@ -257,9 +257,9 @@ function erp_acct_update_bill( $data, $bill_id ) {
     $draft      = 1;
     $voucher_no = null;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
     $currency           = erp_get_currency( true );
 
@@ -483,9 +483,9 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['vendor_id']       = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $bill_data['vendor_name']     = isset( $vendor ) ? $vendor->first_name . ' ' . $vendor->last_name : '';
     $bill_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $bill_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $bill_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
-    $bill_data['created_at']      = date( 'Y-m-d' );
+    $bill_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
+    $bill_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : gmdate( 'Y-m-d' );
+    $bill_data['created_at']      = gmdate( 'Y-m-d' );
     $bill_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $bill_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['due']             = isset( $data['due'] ) ? $data['due'] : 0;
@@ -495,7 +495,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $bill_data['trn_by_ledger_id'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
-    $bill_data['created_at']       = date( 'Y-m-d' );
+    $bill_data['created_at']       = gmdate( 'Y-m-d' );
     $bill_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $bill_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $bill_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
@@ -552,9 +552,9 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
 
     $user_id = get_current_user_id();
 
-    $bill_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $bill_data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $bill_data['created_by'] = $user_id;
-    $bill_data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $bill_data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $bill_data['updated_by'] = $user_id;
 
     $wpdb->insert(

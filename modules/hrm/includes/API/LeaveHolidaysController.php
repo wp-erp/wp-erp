@@ -210,7 +210,7 @@ class LeaveHolidaysController extends REST_Controller {
         }
 
         if ( isset( $request['start_date'] ) ) {
-            $prepared_item['start'] = date( 'Y-m-d', strtotime( $request['start_date'] ) );
+            $prepared_item['start'] = gmdate( 'Y-m-d', strtotime( $request['start_date'] ) );
         }
 
         // optional arguments.
@@ -218,7 +218,7 @@ class LeaveHolidaysController extends REST_Controller {
             $prepared_item['id'] = absint( $request['id'] );
         }
 
-        $prepared_item['end'] = isset( $request['end_date'] ) ? date( 'Y-m-d', strtotime( $request['end_date'] ) ) : date( 'Y-m-d', strtotime( $request['start_date'] . '+1 days' ) );
+        $prepared_item['end'] = isset( $request['end_date'] ) ? gmdate( 'Y-m-d', strtotime( $request['end_date'] ) ) : gmdate( 'Y-m-d', strtotime( $request['start_date'] . '+1 days' ) );
 
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
@@ -240,8 +240,8 @@ class LeaveHolidaysController extends REST_Controller {
         $data = [
             'id'          => (int) $item->id,
             'name'        => $item->title,
-            'start_date'  => date( 'Y-m-d', strtotime( $item->start ) ),
-            'end_date'    => date( 'Y-m-d', strtotime( $item->end ) ),
+            'start_date'  => gmdate( 'Y-m-d', strtotime( $item->start ) ),
+            'end_date'    => gmdate( 'Y-m-d', strtotime( $item->end ) ),
             'description' => $item->description,
         ];
 
