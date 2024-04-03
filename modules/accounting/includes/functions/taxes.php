@@ -34,12 +34,12 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( DISTINCT tax.id ) as total_number ' : ' DISTINCT tax.id, tax.tax_rate_name, tax.tax_number, tax.default ';
-        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
             $tax_rates_count = $wpdb->get_var( $sql );
@@ -69,7 +69,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
 function erp_acct_get_tax_rate( $tax_no ) {
     global $wpdb;
 
-    $sql = "SELECT
+    $sql = $wpdb->prepare( "SELECT
 
                 tax.id,
                 tax.tax_rate_name,
@@ -85,10 +85,10 @@ function erp_acct_get_tax_rate( $tax_no ) {
                 tax_item.agency_id,
                 tax_item.tax_cat_id
 
-            FROM {$wpdb->prefix}erp_acct_taxes AS tax
-            LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
+        FROM {$wpdb->prefix}erp_acct_taxes AS tax
+        LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
 
-            WHERE tax.id = {$tax_no} LIMIT 1";
+        WHERE tax.id = %d LIMIT 1", $tax_no );
 
     erp_disable_mysql_strict_mode();
 
@@ -385,12 +385,12 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
             $tax_pay_count = $wpdb->get_var( $sql );
@@ -579,7 +579,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
     if ( 'all' === $tax ) {
         $tax_sql = '';
     } else {
-        $tax_sql = 'WHERE tax_id = ' . $tax;
+        $tax_sql = $wpdb->prepare( 'WHERE tax_id = %d', $tax );
     }
     $sql .= " FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
 
