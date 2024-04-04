@@ -3444,7 +3444,7 @@ function erp_user_bulk_actions() {
 function erp_handle_user_bulk_actions() {
     // Check permission
     if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
-        wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
     }
 
     $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
@@ -4293,6 +4293,7 @@ function erp_crm_get_contacts_menu_html( $selected = 'contacts' ) {
     </div>
 
     <?php
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     echo ob_get_clean();
 }
 
@@ -4326,6 +4327,7 @@ function erp_crm_get_tasks_menu_html( $selected = '' ) {
     </div>
 
     <?php
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     echo ob_get_clean();
 }
 
@@ -4358,7 +4360,7 @@ function erp_crm_get_attachment_dir() {
  */
 function erp_crm_schedule_inbound_email_cron( $value ) {
     if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-settings-nonce' ) ) {
-        wp_die( __( 'Unauthorized attempt!', 'erp' ), 403 );
+        wp_die( esc_html__( 'Unauthorized attempt!', 'erp' ), 403 );
     }
 
     if ( ! isset( $_POST['module'] ) || 'erp-email' !== sanitize_text_field( wp_unslash( $_POST['module'] ) ) ) {

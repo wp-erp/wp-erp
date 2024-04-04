@@ -334,6 +334,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new Exception( __( 'Failed to create invoice details', 'erp' ) );
         }
 
@@ -375,6 +376,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 );
 
                 if ( ! $inserted ) {
+                    // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                     throw new Exception( __( 'Failed to create tax data of invoice details', 'erp' ) );
                 }
             }
@@ -407,6 +409,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             );
 
             if ( ! $inserted ) {
+                // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                 throw new \Exception( __( 'Failed to create tax agency details', 'erp' ) );
             }
         }
@@ -458,6 +461,7 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
     );
 
     if ( ! $inserted ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         throw new \Exception( __( 'Failed to create invoice account details', 'erp' ) );
     }
 
@@ -866,6 +870,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     );
 
     if ( ! $inserted ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         throw new \Exception( __( 'Failed to insert amount in ledger details', 'erp' ) );
     }
 
@@ -888,6 +893,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception( __( 'Failed to insert discount in ledger details', 'erp' ) );
         }
     }
@@ -911,6 +917,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception( __( 'Failed to insert shipping in ledger details', 'erp' ) );
         }
     }
@@ -934,6 +941,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception( __( 'Failed to insert shipping tax in ledger details', 'erp' ) );
         }
     }

@@ -380,7 +380,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
         if ( ! empty( $_GET['leave_policy'] ) ) {
             $args['policy_id'] = sanitize_text_field( wp_unslash( $_GET['leave_policy'] ) );
         }
-        
+
         if ( ! empty( $_GET['filter_leave_status'] ) ) {
             $args['status'] = map_deep( wp_unslash( $_GET['filter_leave_status'] ), 'sanitize_text_field' );
         }
@@ -564,7 +564,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                             if ( ! empty( $filters['leave_policy'] ) && (int) $_GET['leave_policy'] === (int) esc_attr( $policy['policy_id'] ) ) {
                                                 $selected = 'selected=selected';
                                             }
-                                            echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $policy['policy_id'] ), esc_html( $policy['name'] ) );
+                                            echo sprintf( "<option %s value='%s'>%s</option>\n", esc_attr($selected), esc_attr( $policy['policy_id'] ), esc_html( $policy['name'] ) );
                                         }
                                     }
                                     ?>
@@ -575,7 +575,9 @@ class LeaveRequestsListTable extends \WP_List_Table {
                             <label for="filter_leave_status">
                                 <?php esc_html_e( 'Leave status', 'erp' ); ?>
                                 <span class="leave-tool-tip">
-                                    <?php echo erp_help_tip( esc_html__( 'Select the leave request states as per your preference. Selecting none would show all leave states including Approved, Pending and Rejected.', 'erp' ) ); ?>
+                                    <?php
+                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                    echo erp_help_tip( esc_html__( 'Select the leave request states as per your preference. Selecting none would show all leave states including Approved, Pending and Rejected.', 'erp' ) ); ?>
                                 </span>
                             </label>
                             <div style="margin: 15px 0 25px 0">
@@ -588,7 +590,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     if ( ! empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
                                         $checked = 'checked';
                                     }
-                                    echo sprintf( "<input name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", $checked, esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
+                                    echo sprintf( "<input name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_attr($checked), esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
                             </div>
@@ -615,7 +617,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                         if ( ! empty( $_GET['filter_leave_year'] ) && $key == $_GET['filter_leave_year'] ) {
                                             $selected = 'selected';
                                         }
-                                        echo sprintf( "<option %s value='%s'>%s</option>\n", $selected, esc_attr( $key ), esc_html( $title ) );
+                                        echo sprintf( "<option %s value='%s'>%s</option>\n", esc_attr($selected), esc_attr( $key ), esc_html( $title ) );
                                     }
                                     ?>
                                 </select>
@@ -720,7 +722,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             ?>
             <div class="clear-filter">
                 <a href="<?php echo esc_url( $clear_all_url ); ?>">
-                    <?php echo __( 'Clear filter', 'erp' ); ?>
+                    <?php echo esc_html__( 'Clear filter', 'erp' ); ?>
                 </a>
             </div>
         </div>
