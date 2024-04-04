@@ -5,7 +5,7 @@
         <?php erp_html_form_input( [
             'label'    => __( 'Set Date', 'erp' ),
             'name'     => 'performance_date',
-            'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
+            'value'    => gmdate( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
             'class'    => 'erp-date-field',
         ] ); ?>
@@ -15,7 +15,7 @@
         <?php erp_html_form_input( [
             'label'    => __( 'Completion Date', 'erp' ),
             'name'     => 'completion_date',
-            'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
+            'value'    => gmdate( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
             'class'    => 'erp-date-field',
             'id'       => 'performance_completion_date',

@@ -223,7 +223,7 @@ class BankAccountsController extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_transfer_invalid_accounts', __( 'Both accounts should be present.', 'erp' ), [ 'status' => 400 ] );
         }
         $args               = [];
-        $args['start_date'] = date( 'Y-m-d' );
+        $args['start_date'] = gmdate( 'Y-m-d' );
 
         $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
         $args['start_date'] = $closest_fy_date['start_date'];
@@ -388,7 +388,7 @@ class BankAccountsController extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        $prepared_item['date']            = date( 'Y-m-d', strtotime( $request['date'] ) );
+        $prepared_item['date']            = gmdate( 'Y-m-d', strtotime( $request['date'] ) );
         $prepared_item['from_account_id'] = isset( $request['from_account_id'] ) ? intval( $request['from_account_id'] ) : 0;
         $prepared_item['to_account_id']   = isset( $request['to_account_id'] ) ? intval( $request['to_account_id'] ) : 0;
         $prepared_item['amount']          = isset( $request['amount'] ) ? floatval( $request['amount'] ) : 0;

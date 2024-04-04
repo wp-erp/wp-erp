@@ -5,7 +5,7 @@
         <?php erp_html_form_input( [
             'label'    => __( 'Date', 'erp' ),
             'name'     => 'date',
-            'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
+            'value'    => gmdate( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
             'class'    => 'erp-date-field',
             'custom_attr' => [

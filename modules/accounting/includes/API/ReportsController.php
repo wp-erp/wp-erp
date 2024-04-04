@@ -149,7 +149,7 @@ class ReportsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_status = erp_acct_get_sales_chart_status( $args );
@@ -167,7 +167,7 @@ class ReportsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_payment = erp_acct_get_sales_chart_payment( $args );
@@ -188,8 +188,8 @@ class ReportsController extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_ledger_report( $request ) {
         $ledger_id  = (int) $request['ledger_id'];
-        $start_date = empty( $request['start_date'] ) ? date( 'Y-m-d' ) : $request['start_date'];
-        $end_date   = empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'];
+        $start_date = empty( $request['start_date'] ) ? gmdate( 'Y-m-d' ) : $request['start_date'];
+        $end_date   = empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'];
 
         $data = erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date );
 
@@ -287,7 +287,7 @@ class ReportsController extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response response data
      */
     public function get_closest_fn_year( $request ) {
-        $data = erp_acct_get_closest_fn_year_date( date( 'Y-m-d' ) );
+        $data = erp_acct_get_closest_fn_year_date( gmdate( 'Y-m-d' ) );
 
         $response = rest_ensure_response( $data );
 

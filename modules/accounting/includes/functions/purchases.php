@@ -33,7 +33,7 @@ function erp_acct_get_purchases( $args = [] ) {
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_purchase Where %d=%d ORDER BY {$args['orderby']} {$args['order']} %s", 1, 1, $limit);
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -149,9 +149,9 @@ function erp_acct_insert_purchase( $data ) {
 
     $created_by         = get_current_user_id();
     $voucher_no         = null;
-    $data['created_at'] = date( 'Y-m-d' );
+    $data['created_at'] = gmdate( 'Y-m-d' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( 'Y-m-d' );
+    $data['updated_at'] = gmdate( 'Y-m-d' );
     $data['updated_by'] = $created_by;
 
     $purchase_type_order = 1;
@@ -317,9 +317,9 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     $draft               = 1;
     $voucher_no          = null;
 
-    $data['created_at'] = date( 'Y-m-d' );
+    $data['created_at'] = gmdate( 'Y-m-d' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d' );
+    $data['updated_at'] = gmdate( 'Y-m-d' );
     $data['updated_by'] = $user_id;
     $currency           = erp_get_currency( true );
 
@@ -367,7 +367,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
             $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
 
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}erp_acct_purchase_details_tax WHERE invoice_details_id IN($prev_detail_ids)" ); // delete previous tax data
+            $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_acct_purchase_details_tax WHERE invoice_details_id IN(%s)", $prev_detail_ids ) ); // delete previous tax data
 
             $items = $purchase_data['purchase_details'];
 
@@ -438,7 +438,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             $wpdb->query( $wpdb->prepare( "CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_purchase WHERE voucher_no = %d", $purchase_id ) );
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = %s",
                     0,
                     $voucher_no,
                     $purchase_id,
@@ -452,7 +452,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             $status_closed = 7;
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                    "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = %d, updated_at =%s, updated_by = %d WHERE voucher_no IN (%d, %d)",
                     $status_closed,
                     $data['updated_at'],
                     $user_id,
@@ -472,7 +472,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                         'qty'        => $item['qty'],
                         'price'      => $item['unit_price'],
                         'amount'     => (float) $item['qty'] * (float) $item['unit_price'],
-                        'updated_at' => date( 'Y-m-d H:i:s' ),
+                        'updated_at' => gmdate( 'Y-m-d H:i:s' ),
                         'updated_by' => $user_id,
                     ]
                 );
@@ -486,7 +486,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'trn_date'    => $purchase_data['trn_date'],
                     'particulars' => $purchase_data['particulars'],
                     'debit'       => $old_purchase['amount'],
-                    'updated_at'  => date( 'Y-m-d H:i:s' ),
+                    'updated_at'  => gmdate( 'Y-m-d H:i:s' ),
                     'updated_by'  => $user_id,
                 ]
             );
@@ -565,7 +565,7 @@ function erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id ) {
                 'qty'        => $item['qty'],
                 'price'      => $item['unit_price'],
                 'amount'     => (float) $item['qty'] * (float) $item['unit_price'],
-                'updated_at' => date( 'Y-m-d' ),
+                'updated_at' => gmdate( 'Y-m-d' ),
                 'updated_by' => $user_id,
             ] );
         }
@@ -576,7 +576,7 @@ function erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id ) {
             'trn_date'    => $purchase_data['trn_date'],
             'particulars' => $purchase_data['particulars'],
             'credit'      => $purchase_data['amount'],
-            'updated_at'  => date( 'Y-m-d' ),
+            'updated_at'  => gmdate( 'Y-m-d' ),
             'updated_by'  => $user_id,
         ] );
 
@@ -648,8 +648,8 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['vendor_id']       = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
     $purchase_data['vendor_name']     = $user_info->first_name . ' ' . $user_info->last_name;
     $purchase_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $purchase_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $purchase_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
+    $purchase_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
+    $purchase_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : gmdate( 'Y-m-d' );
     $purchase_data['amount']          = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
     $purchase_data['tax']             = isset( $data['tax'] ) ? floatval( $data['tax'] ) : 0;
     $purchase_data['tax_rate']        = isset( $data['tax_rate'] ) ?   $data['tax_rate']  : [];
@@ -660,7 +660,7 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : '';
     // translators: %s: voucher_no
     $purchase_data['particulars'] = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase created with voucher no %s', 'erp' ), $voucher_no );
-    $purchase_data['created_at']  = date( 'Y-m-d' );
+    $purchase_data['created_at']  = gmdate( 'Y-m-d' );
     $purchase_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $purchase_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $purchase_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : '';

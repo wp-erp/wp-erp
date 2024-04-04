@@ -16,7 +16,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 4, 'Sales Return Discount', 'sales_return_discount', '1406', 1, date( 'Y-m-d' ) ]
+                [ 4, 'Sales Return Discount', 'sales_return_discount', '1406', 1, gmdate( 'Y-m-d' ) ]
             )
         );
     }
@@ -31,7 +31,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 4, 'Sales Return Tax', 'sales_return_tax', '1407', 1, date( 'Y-m-d' ) ]
+                [ 4, 'Sales Return Tax', 'sales_return_tax', '1407', 1, gmdate( 'Y-m-d' ) ]
             )
         );
     }
@@ -46,7 +46,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 4, 'Purchase Return', 'purchase_return', '1408', 1, date( 'Y-m-d' ) ]
+                [ 4, 'Purchase Return', 'purchase_return', '1408', 1, gmdate( 'Y-m-d' ) ]
             )
         );
     }
@@ -61,7 +61,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 4, 'Purchase Return VAT', 'purchase_return_vat', '1409', 1, date( 'Y-m-d' ) ]
+                [ 4, 'Purchase Return VAT', 'purchase_return_vat', '1409', 1, gmdate( 'Y-m-d' ) ]
             )
         );
     }
@@ -76,7 +76,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 5, 'Purchase Return Discount', 'purchase_return_discount', '1410', 1, date( 'Y-m-d' ) ]
+                [ 5, 'Purchase Return Discount', 'purchase_return_discount', '1410', 1, gmdate( 'Y-m-d' ) ]
             )
         );
     }
@@ -91,7 +91,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_8_0() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                [ 5, 'Purchase VAT', 'purchase_vat', '1509', 1, date( 'Y-m-d' ) ]
+                [ 5, 'Purchase VAT', 'purchase_vat', '1509', 1, gmdate( 'Y-m-d' ) ]
             )
         );
     }
@@ -174,7 +174,7 @@ function erp_acct_update_table_erp_acct_ledgers_1_8_0() {
 
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_ledgers',
-        [ 'code' => '1507', 'updated_at' => date( 'Y-m-d' ) ],
+        [ 'code' => '1507', 'updated_at' => gmdate( 'Y-m-d' ) ],
         [ 'slug' => 'asset_purchase' ],
         [ '%s', '%s' ],
         [ '%s' ]

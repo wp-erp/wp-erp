@@ -1,7 +1,10 @@
 <div class="postbox">
     <h3>
         <?php esc_html_e( 'Admin Menu', 'erp' ); ?>
-        <?php echo erp_help_tip( esc_html__( 'If you select any, the menu will be hidden for all users.', 'erp' ) ); ?>
+        <?php
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo erp_help_tip( esc_html__( 'If you select any, the menu will be hidden for all users.', 'erp' ) );
+        ?>
     </h3>
 
     <div class="inside">
@@ -37,7 +40,9 @@
                 <?php foreach ( $menus as $menu_item ): ?>
                     <li>
                         <label>
-                            <input type="checkbox" name="menu[]" value="<?php echo htmlspecialchars( serialize( $menu_item ) ); ?>" <?php checked( in_array( $menu_item, $inactive_menus ), true ); ?>>
+                            <input type="checkbox" name="menu[]" value="<?php
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            echo htmlspecialchars( serialize( $menu_item ) ); ?>" <?php checked( in_array( $menu_item, $inactive_menus ), true ); ?>>
                             <?php echo esc_html( $menu_item[0] ); ?>
                         </label>
                     </li>

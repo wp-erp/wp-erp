@@ -28,12 +28,12 @@ function erp_acct_get_bills( $args = [] ) {
     $limit = '';
 
     if ( $args['number'] != '-1' ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_bills WHERE `trn_by_ledger_id` IS NULL ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare("FROM {$wpdb->prefix}erp_acct_bills WHERE `trn_by_ledger_id` IS NULL ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -134,9 +134,9 @@ function erp_acct_insert_bill( $data ) {
     $voucher_no = null;
     $draft      = 1;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $created_by;
     $currency           = erp_get_currency( true );
 
@@ -257,9 +257,9 @@ function erp_acct_update_bill( $data, $bill_id ) {
     $draft      = 1;
     $voucher_no = null;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
     $currency           = erp_get_currency( true );
 
@@ -294,21 +294,21 @@ function erp_acct_update_bill( $data, $bill_id ) {
             $wpdb->query( $wpdb->prepare( "CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_bills WHERE voucher_no = %d", $bill_id ) );
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = %s",
                     0,
                     $voucher_no,
                     $bill_id,
                     $data['created_at']
                 )
             );
-            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_bills SELECT * FROM acct_tmptable" );
-            $wpdb->query( 'DROP TABLE acct_tmptable' );
+            $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}erp_acct_bills SELECT * FROM acct_tmptable" ) );
+            $wpdb->query( $wpdb->prepare('DROP TABLE acct_tmptable' ) );
 
             // change bill status and other things
             $status_closed = 7;
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}erp_acct_bills SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                    "UPDATE {$wpdb->prefix}erp_acct_bills SET status = %d, updated_at = %s, updated_by = %d WHERE voucher_no IN (%d, %d)",
                     $status_closed,
                     $data['updated_at'],
                     $user_id,
@@ -483,9 +483,9 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['vendor_id']       = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $bill_data['vendor_name']     = isset( $vendor ) ? $vendor->first_name . ' ' . $vendor->last_name : '';
     $bill_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $bill_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
-    $bill_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
-    $bill_data['created_at']      = date( 'Y-m-d' );
+    $bill_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
+    $bill_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : gmdate( 'Y-m-d' );
+    $bill_data['created_at']      = gmdate( 'Y-m-d' );
     $bill_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $bill_data['ref']             = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['due']             = isset( $data['due'] ) ? $data['due'] : 0;
@@ -495,7 +495,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $bill_data['trn_by_ledger_id'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
-    $bill_data['created_at']       = date( 'Y-m-d' );
+    $bill_data['created_at']       = gmdate( 'Y-m-d' );
     $bill_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $bill_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $bill_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
@@ -552,9 +552,9 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
 
     $user_id = get_current_user_id();
 
-    $bill_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $bill_data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $bill_data['created_by'] = $user_id;
-    $bill_data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $bill_data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $bill_data['updated_by'] = $user_id;
 
     $wpdb->insert(
@@ -582,7 +582,7 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
 function erp_acct_get_bill_count() {
     global $wpdb;
 
-    $row = $wpdb->get_row( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_bills' );
+    $row = $wpdb->get_row( $wpdb->prepare( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_bills') );
 
     return $row->count;
 }
@@ -611,7 +611,7 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     $limit = '';
 
     if ( $args['number'] != '-1' ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $bills            = "{$wpdb->prefix}erp_acct_bills";

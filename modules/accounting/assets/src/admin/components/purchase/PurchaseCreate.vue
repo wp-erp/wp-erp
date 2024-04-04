@@ -596,7 +596,10 @@
                 if (this.noFulfillLines(this.transactionLines, 'product')) {
                     this.form_errors.push(__('Please select a product.', 'erp'));
                 }
-            }
+            },
+            removeFile(index) {
+                this.$delete(this.attachments, index);
+            },
         }
     };
 </script>

@@ -36,7 +36,7 @@ function erp_acct_get_all_products( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql = 'SELECT';
@@ -69,7 +69,8 @@ function erp_acct_get_all_products( $args = [] ) {
             $sql = $wpdb->prepare( $sql, $search_str );
         }
 
-        $sql .= " ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+        // To use wpdb prepare, we need to add and %d=%d to achieve where 1=1
+        $sql .= $wpdb->prepare( " AND %d=%d ORDER BY product.{$args['orderby']} {$args['order']} {$limit}", 1, 1 );
 
         erp_disable_mysql_strict_mode();
 
@@ -104,7 +105,8 @@ function erp_acct_get_product( $product_id ) {
     erp_disable_mysql_strict_mode();
 
     $row = $wpdb->get_row(
-        "SELECT
+        $wpdb->prepare(
+            "SELECT
             product.id,
             product.name,
             product.product_type_id,
@@ -120,7 +122,9 @@ function erp_acct_get_product( $product_id ) {
 		FROM {$wpdb->prefix}erp_acct_products AS product
 		LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
 		LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id WHERE product.id = {$product_id} LIMIT 1",
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id WHERE product.id = %d LIMIT %d",
+            $product_id, 1
+        ),
         ARRAY_A
     );
 
@@ -137,7 +141,7 @@ function erp_acct_insert_product( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $product_id         = null;
 
@@ -200,7 +204,7 @@ function erp_acct_update_product( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -359,7 +363,7 @@ function erp_acct_get_vendor_products( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql = 'SELECT';
@@ -380,11 +384,11 @@ function erp_acct_get_vendor_products( $args = [] ) {
                 product_type.name AS product_type_name";
         }
 
-        $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
+        $sql .= $wpdb->prepare( " FROM {$wpdb->prefix}erp_acct_products AS product
             LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-            WHERE people.id={$args['vendor']} AND product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+            WHERE people.id=%d AND product.product_type_id<>%d ORDER BY product.{$args['orderby']} {$args['order']} %s", $args['vendor'], 3, $limit );
 
         if ( $args['count'] ) {
             $products_vendor_count = $wpdb->get_var( $sql );
@@ -406,11 +410,11 @@ function erp_acct_get_vendor_products( $args = [] ) {
 
 /**
  * Validates csv data for importing
- * 
+ *
  * @since 1.9.0
  *
  * @param array $data
- * 
+ *
  * @return array|WP_Error
  */
 function erp_acct_validate_csv_data( $data ) {
@@ -476,9 +480,9 @@ function erp_acct_validate_csv_data( $data ) {
             foreach ( $data['fields'] as $key => $value ) {
 
                 switch ( $key ) {
-                    
+
                     case 'category_id':
-                        
+
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
                                 "SELECT id
@@ -488,7 +492,7 @@ function erp_acct_validate_csv_data( $data ) {
                         }
 
                         break;
-                    
+
                     case 'product_type_id':
 
                         if ( ! empty( $line[ $value ] ) ) {
@@ -547,8 +551,8 @@ function erp_acct_validate_csv_data( $data ) {
                             "SELECT id FROM {$wpdb->prefix}erp_acct_products where name = %s",
                             $value
                         )
-                    ); 
-                    
+                    );
+
                     $product_checked = true;
                 }
 
@@ -569,7 +573,7 @@ function erp_acct_validate_csv_data( $data ) {
         }
     }
 
-    if ( ! empty( $product_data ) ) {        
+    if ( ! empty( $product_data ) ) {
         $processed_data = '(' . implode( '),(', $product_data ) . ')';
     }
 
@@ -582,11 +586,11 @@ function erp_acct_validate_csv_data( $data ) {
 
 /**
  * Imports products from csv
- * 
+ *
  * @since 1.9.0
  *
  * @param array $data
- * 
+ *
  * @return int|WP_Error
  */
 function erp_acct_import_products( $data ) {
@@ -594,9 +598,12 @@ function erp_acct_import_products( $data ) {
 
     if ( ! empty( $data['items'] ) ) {
         $inserted = $wpdb->query(
-            "INSERT INTO {$wpdb->prefix}erp_acct_products
-            (name, product_type_id, category_id, cost_price, sale_price, vendor, tax_cat_id, created_by, created_at)
-            VALUES {$data['items']}"
+            $wpdb->prepare(
+                "INSERT INTO {$wpdb->prefix}erp_acct_products
+                 (name, product_type_id, category_id, cost_price, sale_price, vendor, tax_cat_id, created_by, created_at)
+                VALUES %s",
+                $data['items']
+            )
         );
 
         if ( is_wp_error( $inserted ) ) {

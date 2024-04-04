@@ -1,4 +1,4 @@
-<?php
+x<?php
 
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $submit_button = esc_attr__( 'Save', 'erp' );
@@ -28,7 +28,7 @@ if ( $id ) {
                         echo '<ul>';
 
                         foreach ( $policy_name_create_error->get_error_messages() as $error ) {
-                            echo '<li style="color: #ef5350">* ' . $error . '</li>';
+                            echo '<li style="color: #ef5350">* ' . wp_kses_post( $error ) . '</li>';
                         }
                         echo '</ul>';
                     }

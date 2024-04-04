@@ -32,12 +32,12 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
 
     // should we go further calculation, check the diff
     if ( erp_acct_has_date_diff( $start_date, $closest_fy_date['start_date'] ) ) {
-        $prev_date_of_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
+        $prev_date_of_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
 
         $sql1 = $wpdb->prepare(
             "SELECT SUM(debit - credit) AS balance
             FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s' ORDER BY trn_date ASC",
+            WHERE ledger_id = %d AND trn_date BETWEEN %s AND %s ORDER BY trn_date ASC",
             $ledger_id,
             $closest_fy_date['start_date'],
             $prev_date_of_start
@@ -54,7 +54,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         "SELECT
         trn_no, particulars, debit, credit, trn_date, created_at
         FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s' ORDER BY trn_date ASC",
+        WHERE ledger_id = %d AND trn_date BETWEEN %s AND %s ORDER BY trn_date ASC",
         $ledger_id,
         $start_date,
         $end_date
@@ -170,7 +170,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     $sql1 = $wpdb->prepare(
         "SELECT SUM(debit - credit) AS opening_balance
         FROM {$wpdb->prefix}erp_acct_tax_agency_details
-        WHERE agency_id = %d AND trn_date < '%s'",
+        WHERE agency_id = %d AND trn_date < %s",
         $agency_id,
         $start_date
     );
@@ -179,7 +179,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     $opening_balance    = (float) $db_opening_balance;
 
     // agency details
-    $details = $wpdb->get_results( $wpdb->prepare( "SELECT trn_no, particulars, debit, credit, trn_date, created_at FROM {$wpdb->prefix}erp_acct_tax_agency_details WHERE agency_id = %d AND trn_date BETWEEN '%s' AND '%s'", $agency_id, $start_date, $end_date ), ARRAY_A );
+    $details = $wpdb->get_results( $wpdb->prepare( "SELECT trn_no, particulars, debit, credit, trn_date, created_at FROM {$wpdb->prefix}erp_acct_tax_agency_details WHERE agency_id = %d AND trn_date BETWEEN %s AND %s", $agency_id, $start_date, $end_date ), ARRAY_A );
 
     $total_debit  = 0;
     $total_credit = 0;
@@ -370,7 +370,7 @@ function erp_acct_income_statement_calculate_with_opening_balance( $is_start_dat
     if ( ! erp_acct_has_date_diff( $is_start_date, $closest_fy_date['start_date'] ) ) {
         return $temp_data;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $is_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $is_start_date ) ) );
     }
 
     // should we go further calculation, check the diff
@@ -383,7 +383,7 @@ function erp_acct_income_statement_calculate_with_opening_balance( $is_start_dat
         return $temp_data;
     } else {
         // get previous date from balance sheet start date
-        $date_before_balance_sheet_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $is_start_date ) ) );
+        $date_before_balance_sheet_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $is_start_date ) ) );
         $is_date                         = $date_before_balance_sheet_start;
     }
 
@@ -494,16 +494,16 @@ function erp_acct_get_balance_sheet( $args ) {
     global $wpdb;
 
     if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
+        $args['start_date'] = gmdate( 'Y-m-d', strtotime( 'first day of this month' ) );
     }
 
     if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $args['end_date'] = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
     if ( empty( $args['start_date'] ) && empty( $args['end_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
-        $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $args['start_date'] = gmdate( 'Y-m-d', strtotime( 'first day of this month' ) );
+        $args['end_date']   = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
     $sql1 = "SELECT
@@ -582,7 +582,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $new_capital = $capital + $drawings;
 
     $closest_fy_date       = erp_acct_get_closest_fn_year_date( $args['start_date'] );
-    $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $args['start_date'] ) ) );
+    $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $args['start_date'] ) ) );
 
     // Owner's Equity calculation with income statement profit/loss
     $inc_statmnt_range = [
@@ -708,7 +708,7 @@ function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, 
     if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
         return $temp_data;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
     }
 
     // should we go further calculation, check the diff
@@ -721,7 +721,7 @@ function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, 
         return $temp_data;
     } else {
         // get previous date from balance sheet start date
-        $date_before_balance_sheet_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
+        $date_before_balance_sheet_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
         $bs_date                         = $date_before_balance_sheet_start;
     }
 
@@ -826,19 +826,19 @@ function erp_acct_get_profit_loss( $args ) {
     global $wpdb;
 
     if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january' ) );
+        $args['start_date'] = gmdate( 'Y-m-d', strtotime( 'first day of january' ) );
     } else {
         $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
         $args['start_date'] = $closest_fy_date['start_date'];
     }
 
     if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $args['end_date'] = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
     if ( empty( $args['start_date'] ) && empty( $args['end_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january' ) );
-        $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $args['start_date'] = gmdate( 'Y-m-d', strtotime( 'first day of january' ) );
+        $args['end_date']   = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
     $sql1 = "SELECT

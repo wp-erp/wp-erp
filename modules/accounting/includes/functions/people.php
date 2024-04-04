@@ -144,8 +144,14 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     global $wpdb;
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date   = isset( $args['end_date'] ) ? $args['start_date'] : '';
+    $sql = $wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= %s AND trn_date <= %s AND people_id = %d",
+        $start_date,
+        $end_date,
+        $people_id
+    );
 
-    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
+    $rows = $wpdb->get_results( $sql, ARRAY_A );
 
     return $rows;
 }
@@ -212,7 +218,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
     $financial_year = \WeDevs\ERP\Accounting\Classes\Common::closest_financial_year( $fy_start_date ) ;
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND people.people_id = {$args['people_id']} ";
+        $where .= $wpdb->prepare( " AND people.people_id = %d ", $args['people_id'] );
     }
 
     if ( empty( $args['start_date'] ) ) {
@@ -220,16 +226,16 @@ function erp_acct_get_people_transactions( $args = [] ) {
     }
 
     if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $args['end_date'] = gmdate( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( " AND people.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date'] );
     }
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
     }
 
     $sql = 'SELECT';
@@ -248,9 +254,9 @@ function erp_acct_get_people_transactions( $args = [] ) {
             people.created_at';
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
+    $sql .= $wpdb->prepare( " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         INNER JOIN {$wpdb->prefix}erp_acct_people_trn_details AS people ON voucher.id = people.voucher_no
-        {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
+        {$where} AND %d=%d ORDER BY people.trn_date {$args['order']} {$limit}", 1, 1 );
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
@@ -263,7 +269,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
     $previous_balance_data  = [
         'start_date'        => $financial_year['start_date'],
-        'end_date'          =>  date('Y-m-d', strtotime('-1 day', strtotime( $args['start_date'] ) ) ),
+        'end_date'          =>  gmdate('Y-m-d', strtotime('-1 day', strtotime( $args['start_date'] ) ) ),
         'people_id'         => $args['people_id'],
         'financial_year_id' => $financial_year['id']
     ];

@@ -14,6 +14,10 @@ class SystemStatus {
     public function get_environment_info() {
         global $wpdb;
 
+        global $wp_filesystem;
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
         // Figure out cURL version, if installed.
         $curl_version = '';
 
@@ -63,7 +67,7 @@ class SystemStatus {
             'site_url'                  => get_option( 'siteurl' ),
             'version'                	  => wperp()->version,
             'log_directory'             => $log_directory,
-            'log_directory_writable'    => ( @fopen( $log_directory . 'test-log.log', 'a' ) ? true : false ),
+            'log_directory_writable'    => $wp_filesystem->is_writable( $log_directory . 'test-log.log' ),
             'wp_version'                => get_bloginfo( 'version' ),
             'wp_multisite'              => is_multisite(),
             'wp_memory_limit'           => $wp_memory_limit,

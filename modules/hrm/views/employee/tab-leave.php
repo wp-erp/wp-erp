@@ -39,9 +39,9 @@ $balance = $employee->get_leave_summary();
                     <td>
                         <?php
                         if ( floatval( $entitlement->available ) >= 0 && intval( $entitlement->extra_leave ) === 0 ) {
-                            printf( '<span class="green tooltip" title="%s"> %s %s</span>', __( 'Available Leave', 'erp' ), erp_number_format_i18n( $entitlement->available ), _n( 'day', 'days', $entitlement->available + 1, 'erp' ) );
+                            printf( '<span class="green tooltip" title="%s"> %s %s</span>', esc_attr__( 'Available Leave', 'erp' ), esc_html( erp_number_format_i18n( $entitlement->available ) ), esc_html( _n( 'day', 'days', $entitlement->available + 1, 'erp' ) ) );
                         } elseif ( floatval( $entitlement->extra_leave ) > 0 ) {
-                            printf( '<span class="red tooltip" title="%s"> -%s %s</span>', __( 'Extra Leave', 'erp' ), erp_number_format_i18n( $entitlement->extra_leave ), _n( 'day', 'days', $entitlement->extra_leave, 'erp' ) );
+                            printf( '<span class="red tooltip" title="%s"> -%s %s</span>', esc_attr__( 'Extra Leave', 'erp' ), esc_html( erp_number_format_i18n( $entitlement->extra_leave ) ), esc_html( _n( 'day', 'days', $entitlement->extra_leave, 'erp' ) ) );
                         }
                         ?>
                     </td>
