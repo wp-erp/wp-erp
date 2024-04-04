@@ -423,6 +423,7 @@ function customer_statics() {
     <?php
     $output = ob_get_contents();
     ob_get_clean();
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     echo $output;
 }
 

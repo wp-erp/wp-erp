@@ -104,7 +104,7 @@ class Promotion {
                 wp.ajax.post('erp-dismiss-promotional-offer-notice-temp', {
                     dismissed   : true,
                     option_name : '<?php echo esc_attr( $offer->key ); ?>',
-                    _wpnonce    : '<?php echo wp_create_nonce( 'erp_admin' ); ?>',
+                    _wpnonce    : '<?php echo esc_attr( wp_create_nonce( 'erp_admin' ) ); ?>'
                 } );
             });
         </script>

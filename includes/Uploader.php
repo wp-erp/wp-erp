@@ -14,7 +14,7 @@ class Uploader {
      */
     public function upload_file() {
         if ( ! current_user_can( 'upload_files' ) ) {
-            wp_die( __( 'Sorry, you are not allowed to upload files.', 'erp' ) );
+            wp_die( esc_html__( 'Sorry, you are not allowed to upload files.', 'erp' ) );
         }
 
         $upload = [

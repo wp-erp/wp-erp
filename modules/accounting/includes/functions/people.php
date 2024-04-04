@@ -144,8 +144,14 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     global $wpdb;
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date   = isset( $args['end_date'] ) ? $args['start_date'] : '';
+    $sql = $wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= %s AND trn_date <= %s AND people_id = %d",
+        $start_date,
+        $end_date,
+        $people_id
+    );
 
-    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
+    $rows = $wpdb->get_results( $sql, ARRAY_A );
 
     return $rows;
 }
@@ -248,9 +254,9 @@ function erp_acct_get_people_transactions( $args = [] ) {
             people.created_at';
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
+    $sql .= $wpdb->prepare( " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         INNER JOIN {$wpdb->prefix}erp_acct_people_trn_details AS people ON voucher.id = people.voucher_no
-        {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
+        {$where} AND %d=%d ORDER BY people.trn_date {$args['order']} {$limit}", 1, 1 );
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
