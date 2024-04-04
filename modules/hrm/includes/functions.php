@@ -619,7 +619,7 @@ function erp_hr_get_people_menu_html( $selected = '' ) {
 
                 if ( current_user_can( $value['cap'] ) ) :
 					?>
-                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo ! empty( $value['pro_popup'] ) ? '#' : esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?> <?php echo wp_kses_post( $pro_popup ); ?></a> <?php echo wp_kses_post( $pro_popup ); ?></li>
+                    <li class="<?php echo esc_attr( $key === $selected ? $key . ' active' : $key ); ?>"><a href="<?php echo ! empty( $value['pro_popup'] ) ? '#' : esc_url_raw( add_query_arg( array( 'sub-section' => $key ), admin_url( 'admin.php?page=erp-hr&section=people' ) ) ); ?>" class="" data-key="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value['title'] ); ?> <?php echo wp_kses_post( $pro_popup ); ?></a> </li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
