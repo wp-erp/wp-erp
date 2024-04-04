@@ -12,7 +12,7 @@ function wperp_update_1_3_3_update_holidays_table() {
 
     foreach ( $holidays as $holiday ) {
         $end           = $holiday->end;
-        $corrected_end = date( 'Y-m-d 23:59:59', strtotime( '-1 day', strtotime( $end ) ) );
+        $corrected_end = gmdate( 'Y-m-d 23:59:59', strtotime( '-1 day', strtotime( $end ) ) );
         $holiday->end  = $corrected_end;
         $holiday->save();
     }

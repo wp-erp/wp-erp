@@ -41,7 +41,7 @@ function erp_html_form_error( $value = '' ) {
 function erp_html_form_label( $label, $field_id = '', $required = false, $tooltip = '' ) {
     $req = $required ? ' <span class="required">*</span>' : '';
     $tip = ! empty( $tooltip ) ? ' ' . erp_help_tip( $tooltip, true ) : '';
-    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . $tip . '</label>';
+    echo '<label for="' . esc_attr( $field_id ) . '">' . wp_kses_post( $label ) . wp_kses_post( $req ) . wp_kses_post( $tip ) . '</label>';
 }
 
 /**
@@ -235,7 +235,7 @@ function erp_html_form_input( $args = [] ) {
             $pick_files = $id . '-upload-pickfiles';
             $drop       = $id . '-drop-files';
             $action     = isset( $field['action'] ) ? $field['action'] : 'erp_file_upload';
-            $call_back  = isset( $field['callback'] ) ? json_encode( $field['callback'] ) : json_encode( [] );
+            $call_back  = isset( $field['callback'] ) ? wp_json_encode( $field['callback'] ) : wp_json_encode( [] );
             $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
 

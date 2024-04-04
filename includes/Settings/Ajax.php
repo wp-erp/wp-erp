@@ -125,8 +125,7 @@ class Ajax {
             $this->send_error( erp_get_message( [ 'type' => 'error_permission' ] ) );
         }
 
-        $postdata = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
-        $data     = Helpers::process_settings_data( $postdata );
+        $data     = Helpers::process_settings_data( $_POST );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_process'] ) );

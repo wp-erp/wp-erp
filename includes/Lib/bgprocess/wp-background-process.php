@@ -138,7 +138,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
          * @return string
          */
         protected function generate_key( $length = 64 ) {
-            $unique  = md5( microtime() . rand() );
+            $unique  = md5( microtime() . wp_rand() );
             $prepend = $this->identifier . '_batch_';
 
             return substr( $prepend . $unique, 0, $length );

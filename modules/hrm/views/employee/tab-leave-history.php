@@ -9,7 +9,7 @@ if ( ! empty( $requests ) ) {
                 $request_days = $request->start_date === $request->end_date
                     ? erp_format_date( $request->start_date, 'M d' )
                     : erp_format_date( $request->start_date, 'M d' ) . ' &mdash; ' . erp_format_date( $request->end_date, 'M d' );
-                printf( '%s', $request_days );
+                printf( '%s', esc_html( $request_days ) );
                 ?>
             </td>
             <td><?php echo esc_html( $request->policy_name ); ?></td>
@@ -22,10 +22,10 @@ if ( ! empty( $requests ) ) {
                     $days = erp_number_format_i18n( $request->days ) . ' ' . esc_attr__( 'days', 'erp' );
                 }
 
-                printf( '<span>%s</span>', $days );
+                printf( '<span>%s</span>', esc_html( $days ) );
                 ?>
             </td>
-            <td><?php echo '<span class="status-' . $request->status . '">' . erp_hr_leave_request_get_statuses( $request->status ) . '</span>'; ?></td>
+            <td><?php echo '<span class="status-' . esc_attr($request->status) . '">' . wp_kses_post( erp_hr_leave_request_get_statuses( $request->status ) ) . '</span>'; ?></td>
         </tr>
 
     <?php

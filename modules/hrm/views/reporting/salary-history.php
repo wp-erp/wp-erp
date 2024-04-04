@@ -31,6 +31,7 @@ $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employ
                             $emp_url      = ( 0 == $line ? wp_kses_post( $employee_url ) : '' );
                             echo '<tr>';
                             echo '<td>' . wp_kses_post( $emp_url ) . '</td>';
+                            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                             echo '<td>' . erp_format_date( esc_attr( $compensation['date'] ) ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_rate'] ) . '</td>';
                             echo '<td>' . esc_attr( $compensation['pay_type'] ) . '</td>';

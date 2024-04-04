@@ -29,8 +29,8 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             return;
         }
 
-        $from         = isset( $_GET['from'] ) ? sanitize_text_field( wp_unslash( $_GET['from'] ) ) : date( 'Y-01-01' );
-        $to           = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : date( 'Y-12-31' ); ?>
+        $from         = isset( $_GET['from'] ) ? sanitize_text_field( wp_unslash( $_GET['from'] ) ) : gmdate( 'Y-01-01' );
+        $to           = isset( $_GET['to'] ) ? sanitize_text_field( wp_unslash( $_GET['to'] ) ) : gmdate( 'Y-12-31' ); ?>
 
         <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'From', 'erp' ); ?></label>
         <input type="text" placeholder="<?php esc_attr_e( 'From date', 'erp' ); ?>" name="from" value="<?php echo esc_attr( $from ); ?>" class="erp-leave-date-picker-from">
@@ -67,7 +67,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
                 return erp_format_date( $holiday->start );
 
             case 'end':
-                return erp_format_date( date( 'Y-m-d', strtotime( $holiday->end ) ) );
+                return erp_format_date( gmdate( 'Y-m-d', strtotime( $holiday->end ) ) );
 
             case 'duration':
 
@@ -217,15 +217,15 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         }
 
         if ( isset( $_GET['from'] ) && $_GET['from'] != '' ) {
-            $args['from'] = date( 'Y-m-d', strtotime( sanitize_text_field( wp_unslash( $_GET['from'] ) ) ) );
+            $args['from'] = gmdate( 'Y-m-d', strtotime( sanitize_text_field( wp_unslash( $_GET['from'] ) ) ) );
         } else {
-            $args['from'] = date( 'Y-01-01' );
+            $args['from'] = gmdate( 'Y-01-01' );
         }
 
         if ( isset( $_GET['to'] ) && $_GET['to'] != '' ) {
-            $args['to'] = date( 'Y-m-d', strtotime( sanitize_text_field( wp_unslash( $_GET['to'] ) ) . '+1day' ) );
+            $args['to'] = gmdate( 'Y-m-d', strtotime( sanitize_text_field( wp_unslash( $_GET['to'] ) ) . '+1day' ) );
         } else {
-            $args['to'] = date( 'Y-12-31' );
+            $args['to'] = gmdate( 'Y-12-31' );
         }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
@@ -250,7 +250,9 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <h2>
         <?php esc_html_e( 'Holiday', 'erp' ); ?>
-        <?php echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
+        <?php
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
         <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
         <a href="#" id="erp-hr-import-holiday" class="add-new-h2"><?php esc_html_e( 'Import iCal / CSV', 'erp' ); ?></a>
     </h2>

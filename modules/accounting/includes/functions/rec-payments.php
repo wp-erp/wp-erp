@@ -26,12 +26,12 @@ function erp_acct_get_payments( $args = [] ) {
     $limit = '';
 
     if ( '-1' !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_invoice_receipts ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
@@ -52,35 +52,38 @@ function erp_acct_get_payments( $args = [] ) {
 function erp_acct_get_payment( $invoice_no ) {
     global $wpdb;
 
-    $sql = "SELECT
-                pay_inv.id,
-                pay_inv.voucher_no,
-                pay_inv.customer_id,
-                pay_inv.customer_name,
-                pay_inv.trn_date,
-                pay_inv.amount,
-                pay_inv.trn_by,
-                pay_inv.ref,
-                pay_inv.trn_by_ledger_id,
-                pay_inv.particulars,
-                pay_inv.attachments,
-                pay_inv.status,
-                pay_inv.created_at,
-                pay_inv.transaction_charge,
+    $sql = $wpdb->prepare(
+        "SELECT
+            pay_inv.id,
+            pay_inv.voucher_no,
+            pay_inv.customer_id,
+            pay_inv.customer_name,
+            pay_inv.trn_date,
+            pay_inv.amount,
+            pay_inv.trn_by,
+            pay_inv.ref,
+            pay_inv.trn_by_ledger_id,
+            pay_inv.particulars,
+            pay_inv.attachments,
+            pay_inv.status,
+            pay_inv.created_at,
+            pay_inv.transaction_charge,
 
-                pay_inv_detail.invoice_no,
-                pay_inv_detail.amount as pay_inv_detail_amount,
+            pay_inv_detail.invoice_no,
+            pay_inv_detail.amount as pay_inv_detail_amount,
 
-                ledger_detail.particulars,
-                ledger_detail.debit,
-                ledger_detail.credit
+            ledger_detail.particulars,
+            ledger_detail.debit,
+            ledger_detail.credit
 
-            from {$wpdb->prefix}erp_acct_invoice_receipts as pay_inv
+        from {$wpdb->prefix}erp_acct_invoice_receipts as pay_inv
 
-            LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts_details as pay_inv_detail ON pay_inv.voucher_no = pay_inv_detail.voucher_no
-            LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ledger_detail ON pay_inv.voucher_no = ledger_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts_details as pay_inv_detail ON pay_inv.voucher_no = pay_inv_detail.voucher_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ledger_detail ON pay_inv.voucher_no = ledger_detail.trn_no
 
-            WHERE pay_inv.voucher_no = {$invoice_no}";
+        WHERE pay_inv.voucher_no = %d",
+        $invoice_no
+    );
 
     erp_disable_mysql_strict_mode();
 
@@ -103,7 +106,7 @@ function erp_acct_insert_payment( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $voucher_no         = null;
     $currency           = erp_get_currency( true );
@@ -233,7 +236,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
 
     $payment_data               = erp_acct_get_formatted_payment_data( $data, $voucher_no, $item['invoice_no'] );
     $created_by                 = get_current_user_id();
-    $payment_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $payment_data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $payment_data['created_by'] = $created_by;
 
     $wpdb->insert(
@@ -295,7 +298,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -438,9 +441,9 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['invoice_no']       = ! empty( $invoice_no ) ? $invoice_no : 0;
     $payment_data['customer_id']      = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $payment_data['customer_name']    = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $payment_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $payment_data['line_items']       = isset( $data['line_items'] ) ? $data['line_items'] : [];
-    $payment_data['created_at']       = date( 'Y-m-d' );
+    $payment_data['created_at']       = gmdate( 'Y-m-d' );
     $payment_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $payment_data['bank_trn_charge']  = isset( $data['bank_trn_charge'] ) ? $data['bank_trn_charge'] : 0;
     $payment_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : null;
@@ -629,7 +632,7 @@ function erp_acct_update_payment_data_in_ledger( $payment_data, $invoice_no ) {
 function erp_acct_get_payment_count() {
     global $wpdb;
 
-    $row = $wpdb->get_row( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_invoice_receipts' );
+    $row = $wpdb->get_row( $wpdb->prepare( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_invoice_receipts' ) );
 
     return $row->count;
 }
@@ -649,12 +652,12 @@ function erp_acct_format_payment_line_items( $invoice = 'all' ) {
     if ( 'all' === $invoice ) {
         $invoice_sql = '';
     } else {
-        $invoice_sql = 'WHERE voucher_no = ' . $invoice;
+        $invoice_sql = $wpdb->prepare( "WHERE voucher_no = %d", $invoice );
     }
-    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details AS inv_rec_detail
+    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details AS inv_rec_detail
             LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no AS voucher
             ON inv_rec_detail.voucher_no = voucher.id
-            {$invoice_sql}";
+            {$invoice_sql}", $invoice_sql );
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }

@@ -91,19 +91,19 @@ class CRM {
      * @return void
      */
     private function create_files() {
+        global $wp_filesystem;
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
         $file_path     = erp_crm_get_attachment_dir();
         $htaccess_file = trailingslashit( $file_path ) . '.htaccess';
 
-        if ( file_exists( $htaccess_file ) ) {
+        if ( $wp_filesystem->exists( $htaccess_file ) ) {
             return;
         }
 
         $content = 'deny from all';
-        $file    = @fopen( $htaccess_file, 'w' );
-        if ( $file ) {
-            fwrite( $file, $content );
-            fclose( $file );
-        }
+        $wp_filesystem->put_contents( $htaccess_file, $content );
     }
 
     /**

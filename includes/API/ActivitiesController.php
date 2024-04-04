@@ -159,8 +159,8 @@ class ActivitiesController extends REST_Controller {
                 $extra_data = [
                     'invite_contact' => $item['invited_user'],
                 ];
-                $item['start_date'] = date( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) );
-                $item['extra']      = base64_encode( json_encode( $extra_data ) );
+                $item['start_date'] = gmdate( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) );
+                $item['extra']      = base64_encode( wp_json_encode( $extra_data ) );
 
                 $item['type'] = $this->activity_types[ $item['type'] ];
                 $saved_data   = erp_crm_save_customer_feed_data( $item );
@@ -188,11 +188,11 @@ class ActivitiesController extends REST_Controller {
                     'type'       => 'log_activity',
                     'log_type'   => $item['schedule_type'],
                     'message'    => $item['message'],
-                    'start_date' => date( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) ),
-                    'end_date'   => date( 'Y-m-d H:i:s', strtotime( $item['end_date'] ) ),
+                    'start_date' => gmdate( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) ),
+                    'end_date'   => gmdate( 'Y-m-d H:i:s', strtotime( $item['end_date'] ) ),
                     'user_id'    => $item['user_id'],
                     'created_by' => $item['created_by'],
-                    'extra'      => base64_encode( json_encode( $extra_data ) ),
+                    'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
                 $saved_data = erp_crm_save_customer_feed_data( $post_data );
@@ -208,10 +208,10 @@ class ActivitiesController extends REST_Controller {
                 $post_data = [
                     'type'       => 'tasks',
                     'message'    => $item['message'],
-                    'start_date' => date( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) ),
+                    'start_date' => gmdate( 'Y-m-d H:i:s', strtotime( $item['start_date'] ) ),
                     'user_id'    => $item['user_id'],
                     'created_by' => $item['created_by'],
-                    'extra'      => base64_encode( json_encode( $extra_data ) ),
+                    'extra'      => base64_encode( wp_json_encode( $extra_data ) ),
                 ];
 
                 $saved_data = erp_crm_save_customer_feed_data( $post_data );

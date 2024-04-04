@@ -325,7 +325,7 @@ class ContactSubscriberListTable extends \WP_List_Table {
             $action = 'bulk-' . $this->_args['plural'];
 
             if ( ! wp_verify_nonce( $nonce, $action ) ) {
-                wp_die( __( 'Nonce verfication failed!', 'erp' ) );
+                wp_die( esc_html__(  'Nonce verification failed!', 'erp' ) );
             }
         }
 

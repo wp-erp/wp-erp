@@ -415,7 +415,7 @@ class LedgersAccountsController extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_cash_accounts( $request ) {
         $args               = [];
-        $args['start_date'] = date( 'Y-m-d' );
+        $args['start_date'] = gmdate( 'Y-m-d' );
 
         $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
         $args['start_date'] = $closest_fy_date['start_date'];

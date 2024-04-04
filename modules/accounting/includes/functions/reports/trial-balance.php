@@ -328,7 +328,7 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
     if ( ! erp_acct_has_date_diff( $tb_start_date, $closest_fy_date['start_date'] ) ) {
         return $temp_data;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
     $sql = $wpdb->prepare(
@@ -336,7 +336,7 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
         ledger.id, ledger.name, SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN %s AND %s GROUP BY ledger_detail.ledger_id",
         $closest_fy_date['start_date'],
         $prev_date_of_tb_start
     );
@@ -375,7 +375,7 @@ function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $s
     if ( ! erp_acct_has_date_diff( $tb_start_date, $closest_fy_date['start_date'] ) ) {
         return $balance;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
     // get ledger details data between
@@ -420,7 +420,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
     if ( ! erp_acct_has_date_diff( $tb_start_date, $closest_fy_date['start_date'] ) ) {
         return $temp_data;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
     $sql = $wpdb->prepare( $sql, $chart_bank, $closest_fy_date['start_date'], $prev_date_of_tb_start );
@@ -459,7 +459,7 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
     if ( ! erp_acct_has_date_diff( $tb_start_date, $closest_fy_date['start_date'] ) ) {
         return $balance;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
     // get agency details data between
@@ -569,7 +569,7 @@ function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data
     if ( ! erp_acct_has_date_diff( $tb_start_date, $closest_fy_date['start_date'] ) ) {
         return $balance;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
     // get ledger details data between
@@ -795,7 +795,7 @@ function erp_acct_get_trial_balance( $args ) {
     $new_capital = $capital + $drawings;
 
     $closest_fy_date       = erp_acct_get_closest_fn_year_date( $args['start_date'] );
-    $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $args['start_date'] ) ) );
+    $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $args['start_date'] ) ) );
 
     // Owner's Equity calculation with income statement profit/loss
     $inc_statmnt_range = [

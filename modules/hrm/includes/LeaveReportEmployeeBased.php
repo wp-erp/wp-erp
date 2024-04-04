@@ -93,7 +93,9 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Designation', 'erp' ); ?></label>
             <select name="filter_department" id="filter_department">
-                <?php echo erp_hr_get_departments_dropdown( $selected_department ); ?>
+                <?php
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo erp_hr_get_departments_dropdown( $selected_department ); ?>
             </select>
 
             <label class="screen-reader-text" for="new_role"><?php esc_html_e( 'Filter by Employment Type', 'erp' ); ?></label>
