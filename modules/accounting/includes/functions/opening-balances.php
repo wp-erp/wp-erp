@@ -27,11 +27,11 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
     $limit = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE opening_balance.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE opening_balance.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date']);
     }
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql = 'SELECT';
@@ -43,7 +43,7 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_opening_balances AS opening_balance LEFT JOIN {$wpdb->prefix}erp_acct_financial_years AS financial_year";
-    $sql .= " ON opening_balance.financial_year_id = financial_year.id {$where} GROUP BY financial_year.name ORDER BY financial_year.{$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( " ON opening_balance.financial_year_id = financial_year.id {$where} GROUP BY financial_year.name ORDER BY financial_year.%i {$args['order']} {$limit}", $args['orderby']);
 
     if ( $args['count'] ) {
         $wpdb->get_results( $sql );
@@ -110,7 +110,7 @@ function erp_acct_insert_opening_balance( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     try {
@@ -263,7 +263,7 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
 function erp_acct_get_opening_balance_names() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
+    $rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years"), ARRAY_A  );
 
     return $rows;
 }
@@ -348,12 +348,12 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
 
     // should we go further calculation, check the diff
     if ( erp_acct_has_date_diff( $start_date, $closest_fy_date['start_date'] ) ) {
-        $prev_date_of_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
+        $prev_date_of_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
 
         $sql1 = $wpdb->prepare(
             "SELECT SUM(debit - credit) AS balance
             FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+            WHERE ledger_id = %d AND trn_date BETWEEN %s AND %s",
             $ledger_id,
             $closest_fy_date['start_date'],
             $prev_date_of_start
@@ -368,7 +368,7 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
         "SELECT
         SUM(debit-credit) as balance
         FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+        WHERE ledger_id = %d AND trn_date BETWEEN %s AND %s",
         $ledger_id,
         $start_date,
         $end_date
@@ -412,7 +412,7 @@ function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
     // mainly ( debit - credit )
     $sql = "SELECT SUM(balance) AS amount
         FROM ( SELECT SUM( debit - credit ) AS balance
-            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date < '%s'
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date < %s
             GROUP BY invoice_no HAVING balance > 0 )
         AS get_amount";
 
@@ -434,12 +434,12 @@ function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
      *? Expense is `direct expense`, and we don't include direct expense here
      */
     $bill_sql = "SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_bill_account_details WHERE trn_date < '%s'
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_bill_account_details WHERE trn_date < %s
         GROUP BY bill_no HAVING balance < 0 )
         AS get_amount";
 
     $purchase_sql = "SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date < '%s'
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date < %s
         GROUP BY purchase_no HAVING balance < 0 )
         AS get_amount";
 
@@ -455,7 +455,7 @@ function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
 function erp_acct_get_date_boundary() {
     global $wpdb;
 
-    $result = $wpdb->get_row( "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
+    $result = $wpdb->get_row( $wpdb->prepare( "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years" ), ARRAY_A );
 
     return $result;
 }
@@ -467,10 +467,10 @@ function erp_acct_get_current_financial_year( $date = '' ) {
     global $wpdb;
 
     if ( empty( $date ) ) {
-        $date = date( 'Y-m-d' );
+        $date = gmdate( 'Y-m-d' );
     }
 
-    $result = $wpdb->get_row( $wpdb->prepare( "SELECT id,name,start_date,end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE '%s' between start_date AND end_date", $date ) );
+    $result = $wpdb->get_row( $wpdb->prepare( "SELECT id,name,start_date,end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE %s between start_date AND end_date", $date ) );
 
     return $result;
 }

@@ -118,7 +118,13 @@ function erp_hr_get_gender_count( $department = null ) {
     if ( null == $department ) {
         $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
     } else {
-        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE department = $department AND status = 'active'" );
+        $all_user_id = $wpdb->get_col( 
+            $wpdb->prepare(
+                "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE department = %d AND status = %s",
+                $department,
+                'active'
+            )
+        );
     }
 
     if ( $all_user_id ) {
@@ -275,7 +281,7 @@ function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
 
     if ( 'month' == $query_type ) {
         foreach ( $all_user_data as $user_data ) {
-            if ( isset( $user_data['status'] ) && 'terminated' == $user_data['status'] && date( 'Y-m', strtotime( $user_data['termination_date'] ) ) > $date ) {
+            if ( isset( $user_data['status'] ) && 'terminated' == $user_data['status'] && gmdate( 'Y-m', strtotime( $user_data['termination_date'] ) ) > $date ) {
                 $count++;
                 continue;
             }

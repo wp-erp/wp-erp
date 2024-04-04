@@ -34,12 +34,12 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( DISTINCT tax.id ) as total_number ' : ' DISTINCT tax.id, tax.tax_rate_name, tax.tax_number, tax.default ';
-        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
             $tax_rates_count = $wpdb->get_var( $sql );
@@ -69,7 +69,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
 function erp_acct_get_tax_rate( $tax_no ) {
     global $wpdb;
 
-    $sql = "SELECT
+    $sql = $wpdb->prepare( "SELECT
 
                 tax.id,
                 tax.tax_rate_name,
@@ -85,10 +85,10 @@ function erp_acct_get_tax_rate( $tax_no ) {
                 tax_item.agency_id,
                 tax_item.tax_cat_id
 
-            FROM {$wpdb->prefix}erp_acct_taxes AS tax
-            LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
+        FROM {$wpdb->prefix}erp_acct_taxes AS tax
+        LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
 
-            WHERE tax.id = {$tax_no} LIMIT 1";
+        WHERE tax.id = %d LIMIT 1", $tax_no );
 
     erp_disable_mysql_strict_mode();
 
@@ -118,7 +118,7 @@ function erp_acct_insert_tax_rate( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -163,7 +163,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -221,7 +221,7 @@ function erp_acct_quick_edit_tax_rate( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -259,7 +259,7 @@ function erp_acct_add_tax_rate_line( $data ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_line_data( $data );
@@ -295,7 +295,7 @@ function erp_acct_edit_tax_rate_line( $data ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_line_data( $data );
@@ -385,12 +385,12 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
             $tax_pay_count = $wpdb->get_var( $sql );
@@ -452,7 +452,7 @@ function erp_acct_pay_tax( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $currency           = erp_get_currency( true );
 
@@ -579,7 +579,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
     if ( 'all' === $tax ) {
         $tax_sql = '';
     } else {
-        $tax_sql = 'WHERE tax_id = ' . $tax;
+        $tax_sql = $wpdb->prepare( 'WHERE tax_id = %d', $tax );
     }
     $sql .= " FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
 
@@ -608,14 +608,14 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['agency_name']     = isset( $data['agency_name'] ) ? $data['agency_name'] : '';
     $tax_data['tax_cat_name']    = isset( $data['tax_cat_name'] ) ? $data['tax_cat_name'] : '';
     $tax_data['tax_components']  = isset( $data['tax_components'] ) ? $data['tax_components'] : [];
-    $tax_data['created_at']      = date( 'Y-m-d' );
+    $tax_data['created_at']      = gmdate( 'Y-m-d' );
     $tax_data['created_by']      = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $tax_data['updated_at']      = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $tax_data['updated_by']      = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
     $tax_data['name']            = isset( $data['name'] ) ? $data['name'] : '';
     $tax_data['description']     = isset( $data['description'] ) ? $data['description'] : '';
     $tax_data['voucher_no']      = isset( $data['voucher_no'] ) ? $data['voucher_no'] : '';
-    $tax_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $tax_data['trn_date']        = isset( $data['trn_date'] ) ? $data['trn_date'] : gmdate( 'Y-m-d' );
     $tax_data['tax_period']      = isset( $data['tax_period'] ) ? $data['tax_period'] : '';
     $tax_data['particulars']     = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $tax_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : '';

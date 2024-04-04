@@ -387,15 +387,15 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
         if ( ! empty( $_GET['filter_leave_year'] ) && 4 !== $_GET['filter_leave_year'] ) {
             if ( 1 === absint($_GET['filter_leave_year'] ) ) {
-                $args['start_date'] = date( 'Y-m-d', strtotime( '-7 days' ) );
-                $args['end_date']   = date( 'Y-m-d' );
+                $args['start_date'] = gmdate( 'Y-m-d', strtotime( '-7 days' ) );
+                $args['end_date']   = gmdate( 'Y-m-d' );
             } elseif ( 2 === absint( $_GET['filter_leave_year'] ) ) {
-                $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of previous month' ) );
-                $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of previous month' ) );
+                $args['start_date'] = gmdate( 'Y-m-d', strtotime( 'first day of previous month' ) );
+                $args['end_date']   = gmdate( 'Y-m-d', strtotime( 'last day of previous month' ) );
             } elseif ( 3 === absint( $_GET['filter_leave_year'] ) ) {
                 $today = date('d');
-                $args['start_date'] = date( 'Y-m-' . $today, strtotime( '-3 month' ) );
-                $args['end_date']   = date( 'Y-m-'. $today );
+                $args['start_date'] = gmdate( 'Y-m-' . $today, strtotime( '-3 month' ) );
+                $args['end_date']   = gmdate( 'Y-m-'. $today );
             }
         }
 
@@ -492,7 +492,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             } elseif ( 'custom' === $_GET['filter_leave_year'] ) {
                 $start_date = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
                 $end_date = isset( $_GET['end_date'] ) ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
-                $filters['filter_leave_year'] = date( 'M d, Y', strtotime( $start_date ) ) . ' - ' . date( 'M d, Y', strtotime( $end_date ) );
+                $filters['filter_leave_year'] = gmdate( 'M d, Y', strtotime( $start_date ) ) . ' - ' . gmdate( 'M d, Y', strtotime( $end_date ) );
                 $custom_date_html = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">
                                      <div style="display: flex">
                                      <label for="start_date">From

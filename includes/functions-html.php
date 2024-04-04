@@ -235,7 +235,7 @@ function erp_html_form_input( $args = [] ) {
             $pick_files = $id . '-upload-pickfiles';
             $drop       = $id . '-drop-files';
             $action     = isset( $field['action'] ) ? $field['action'] : 'erp_file_upload';
-            $call_back  = isset( $field['callback'] ) ? json_encode( $field['callback'] ) : json_encode( [] );
+            $call_back  = isset( $field['callback'] ) ? wp_json_encode( $field['callback'] ) : wp_json_encode( [] );
             $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
 

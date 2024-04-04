@@ -882,7 +882,7 @@ function erp_months_dropdown( $title = false ) {
     }
 
     for ( $m = 1; $m <= 12; $m ++ ) {
-        $months[ $m ] = sprintf( __( '%s', 'erp' ), date( 'F', mktime( 0, 0, 0, $m, 1 ) ) );
+        $months[ $m ] = sprintf( __( '%s', 'erp' ), gmdate( 'F', mktime( 0, 0, 0, $m, 1 ) ) );
     }
 
     return $months;
@@ -961,9 +961,9 @@ function erp_log() {
  */
 function erp_file_log( $message, $type = '' ) {
     if ( ! empty( $type ) ) {
-        $message = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $message );
+        $message = sprintf( "[%s][%s] %s\n", gmdate( 'd.m.Y h:i:s' ), $type, $message );
     } else {
-        $message = sprintf( "[%s] %s\n", date( 'd.m.Y h:i:s' ), $message );
+        $message = sprintf( "[%s] %s\n", gmdate( 'd.m.Y h:i:s' ), $message );
     }
 }
 
@@ -2276,8 +2276,8 @@ function erp_get_financial_year_dates( $date = null ) {
     }
 
     $months = erp_months_dropdown();
-    $start  = date( 'Y-m-d 00:00:00', strtotime( "first day of $months[$start_month] $year" ) );
-    $end    = date( 'Y-m-d 23:59:59', strtotime( "$start + 12 months - 1 day" ) );
+    $start  = gmdate( 'Y-m-d 00:00:00', strtotime( "first day of $months[$start_month] $year" ) );
+    $end    = gmdate( 'Y-m-d 23:59:59', strtotime( "$start + 12 months - 1 day" ) );
 
     return [
         'start' => $start,
@@ -2300,8 +2300,8 @@ function get_financial_year_from_date( $date ) {
     $fy_start_month = absint( $fy_start_month );
 
     $date_timestamp = ! is_numeric( $date ) ? erp_current_datetime()->modify( $date )->getTimestamp() : $date;
-    $date_year      = absint( date( 'Y', $date_timestamp ) );
-    $date_month     = absint( date( 'n', $date_timestamp ) );
+    $date_year      = absint( gmdate( 'Y', $date_timestamp ) );
+    $date_month     = absint( gmdate( 'n', $date_timestamp ) );
 
     if ( 1 === $fy_start_month ) {
         return [
@@ -2410,7 +2410,7 @@ function erp_get_dates_in_range( $first, $last, $step = '+1 day', $output_format
     $last    = strtotime( $last );
 
     while ( $current <= $last ) {
-        $dates[] = date( $output_format, $current );
+        $dates[] = gmdate( $output_format, $current );
         $current = strtotime( $step, $current );
     }
 
