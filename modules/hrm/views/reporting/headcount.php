@@ -158,7 +158,9 @@
             ?>
                 <tr>
                     <td><?php echo wp_kses_post( $employee_url ); ?></td>
-                    <td><?php echo erp_format_date( esc_attr( $employee->hiring_date ) ); ?></td>
+                    <td><?php
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        echo erp_format_date( esc_attr( $employee->hiring_date ) ); ?></td>
                     <td><?php echo esc_attr( $employee->designation_title ); ?></td>
                     <td><?php echo esc_attr( $employee->department_title ); ?></td>
                     <td><?php echo esc_attr( $employee->location_name ); ?></td>

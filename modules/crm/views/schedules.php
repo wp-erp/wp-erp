@@ -8,6 +8,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
         <?php esc_html_e( 'Tasks', 'erp' ); ?>
         <?php
         if ( $sub_section !== 'tasks' ) :
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo erp_help_tip( esc_html__( 'Click on the date to create a schedule.', 'erp' ) );
         endif;
         ?>
@@ -231,7 +232,9 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                 var color = new Date( res.start_date ) < new Date() ? '#f05050' : '#03c756';
 
                                 // Add in current calendar only if current user id in invited_user array or not in own tab
-                                const currentUserId = <?php echo get_current_user_id() ?>;
+                                const currentUserId = <?php
+                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                    echo get_current_user_id()?>;
                                 const currentTab    = "<?php echo esc_attr( $tab ); ?>";
                                 const existsArray   = res.extra.invited_user.filter(x => parseInt(x.id) === currentUserId);
 

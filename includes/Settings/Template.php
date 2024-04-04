@@ -407,6 +407,7 @@ class Template {
                     }
 
                     if ( ! empty( $value['desc'] ) ) {
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
                     }
                     echo '<table class="form-table">' . "\n\n";

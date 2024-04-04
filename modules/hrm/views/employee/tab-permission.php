@@ -1,7 +1,9 @@
 <div class="permission-tab-wrap">
     <h3>
         <?php esc_html_e( 'Permission Management', 'erp' ); ?>
-        <?php echo erp_help_tip( esc_html__( 'This is the additional permission for that user if you want to give him/her extra access', 'erp' ) ); ?>
+        <?php
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo erp_help_tip( esc_html__( 'This is the additional permission for that user if you want to give him/her extra access', 'erp' ) ); ?>
     </h3>
 
     <form action="" class="permission-form erp-form" method="post">

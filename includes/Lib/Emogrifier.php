@@ -179,6 +179,7 @@ class Emogrifier {
         $allowedCacheKeys = [self::CACHE_KEY_CSS, self::CACHE_KEY_SELECTOR, self::CACHE_KEY_XPATH, self::CACHE_KEY_CSS_DECLARATION_BLOCK];
 
         if ( !in_array( $key, $allowedCacheKeys, true ) ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new InvalidArgumentException( 'Invalid cache key: ' . $key, 1391822035 );
         }
 
