@@ -455,7 +455,7 @@ function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
 function erp_acct_get_date_boundary() {
     global $wpdb;
 
-    $result = $wpdb->get_row( $wpdb->prepare( "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years" ), ARRAY_A );
+    $result = $wpdb->get_row( $wpdb->prepare( "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years Where %d=%d", 1, 1 ), ARRAY_A );
 
     return $result;
 }

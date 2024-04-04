@@ -15,19 +15,27 @@
             <ul>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . wp_kses_post( __( '<b>Unlock 12+ premium HR extensions</b> and manage<br /> your employee’s <b>recruitment, payroll, attendance,</b><br /> and more', 'erp' ) ) . '</div>'; ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo '<div>' . __( '<b>Unlock 12+ premium HR extensions</b> and manage<br /> your employee’s <b>recruitment, payroll, attendance,</b><br /> and more', 'erp' ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . wp_kses_post (__( 'Nurture B2B & regular clients with <b>8+ CRM<br /> Integrations</b> like - <b>HubSpot, Mailchimp,<br /> Salesforce, Help Scout,</b> etc.', 'erp' ) ) . '</div>'; ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo '<div>' . __( 'Nurture B2B & regular clients with <b>8+ CRM<br /> Integrations</b> like - <b>HubSpot, Mailchimp,<br /> Salesforce, Help Scout,</b> etc.', 'erp' ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . wp_kses_post( __( 'From <b>creating invoice to calculating taxes</b>; take<br /> full control of your company’s finances with the<br /> <b>Accounting module</b>', 'erp' ) ) . '</div>'; ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo '<div>' . __( 'From <b>creating invoice to calculating taxes</b>; take<br /> full control of your company’s finances with the<br /> <b>Accounting module</b>', 'erp' ) . '</div>'; ?>
                 </li>
                 <li class="pro-popup-list">
                     <span class='dashicons dashicons-yes'></span>
-                    <?php echo '<div>' . wp_kses_post( __( '<b>Boost your WooCommerce store</b> with powerful<br /> <b>CRM and Accounting</b> premium integrations ', 'erp' ) ) . '</div>'; ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo '<div>' . __( '<b>Boost your WooCommerce store</b> with powerful<br /> <b>CRM and Accounting</b> premium integrations ', 'erp' ) . '</div>'; ?>
                 </li>
             </ul>
         </div>
