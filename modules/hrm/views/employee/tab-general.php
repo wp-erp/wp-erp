@@ -30,7 +30,9 @@
             <div class="">
                 <h3 class="hndle">
                     <span><?php esc_html_e( 'Work', 'erp' ); ?></span>
-                    <?php echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?>
                 </h3>
             </div>
 
@@ -61,7 +63,7 @@
                         $emp_hdate = new DateTime( $employee->get_hiring_date() );
                         $cur_date  = new DateTime( date( 'd-m-Y' ) );
                         $interval  = $cur_date->diff( $emp_hdate );
-                        echo '( ' . $interval->y . ' years, ' . $interval->m . ' months, ' . $interval->d . ' days )';
+                        echo esc_html( '( ' . $interval->y . ' years, ' . $interval->m . ' months, ' . $interval->d . ' days )' );
                     ?>
                 </li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>

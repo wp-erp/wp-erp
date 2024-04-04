@@ -250,7 +250,9 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <h2>
         <?php esc_html_e( 'Holiday', 'erp' ); ?>
-        <?php echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
+        <?php
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo erp_help_tip( esc_html__( 'Add holidays for current year.', 'erp' ) ); ?>
         <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php esc_html_e( 'Add New', 'erp' ); ?></a>
         <a href="#" id="erp-hr-import-holiday" class="add-new-h2"><?php esc_html_e( 'Import iCal / CSV', 'erp' ); ?></a>
     </h2>

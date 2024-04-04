@@ -766,7 +766,7 @@
                                     <h3 class="title">
                                         <a href="<?php echo esc_url( $addon_url ); ?>" target="_blank"><?php echo esc_html( $module->name ); ?></a>
                                         <?php if ( $is_pro_active ) : ?>
-                                            <em class="module_version">v<?php echo( $module->version ) ?></em>
+                                            <em class="module_version">v<?php echo esc_html( $module->version ) ?></em>
                                         <?php endif; ?>
                                     </h3>
 
@@ -941,7 +941,7 @@
 
             wp.ajax.send('erp-toggle-module', {
                 data: {
-                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-toggle-module' )  ?>',
+                    '_wpnonce': '<?php echo esc_attr(wp_create_nonce( 'wp-erp-toggle-module' ) ); ?>',
                     module_id: module_id,
                     toggle: toggle
                 },
@@ -968,7 +968,7 @@
 
             wp.ajax.send('erp-pro-toggle-extension', {
                 data: {
-                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' ); ?>',
+                    '_wpnonce': '<?php echo esc_attr(wp_create_nonce( 'wp-erp-pro-toggle-extension' ) ); ?>',
                     module_id: module_id,
                     toggle: toggle
                 },
@@ -1002,7 +1002,7 @@
 
             wp.ajax.send('erp-pro-toggle-extension', {
                 data: {
-                    '_wpnonce': '<?php echo wp_create_nonce( 'wp-erp-pro-toggle-extension' )  ?>',
+                    '_wpnonce': '<?php echo esc_attr(wp_create_nonce( 'wp-erp-pro-toggle-extension' ) ); ?>',
                     module_id: modules,
                     toggle: toggle
                 },

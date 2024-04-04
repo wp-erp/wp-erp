@@ -1709,7 +1709,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
                     continue;
                 }
                 // Explode them out
-                list( $name, $content ) = explode( ':', trim( $header ), 2 );
+                [ $name, $content ] = explode( ':', trim( $header ), 2 );
 
                 // Cleanup crew
                 $name    = trim( $name );
@@ -1740,7 +1740,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
 
                     case 'content-type':
                         if ( strpos( $content, ';' ) !== false ) {
-                            list( $type, $charset_content ) = explode( ';', $content );
+                            [ $type, $charset_content ] = explode( ';', $content );
                             $content_type                   = trim( $type );
 
                             if ( false !== stripos( $charset_content, 'charset=' ) ) {
@@ -2569,6 +2569,7 @@ function erp_render_menu( $component ) {
     ?>
     <div class='erp-nav-container erp-hide-print'>
         <?php
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo erp_render_menu_header( $component );
         echo wp_kses_post( erp_build_menu( $menu[ $component ], $tab, $component ) );
         ?>
@@ -3545,7 +3546,7 @@ function erp_print_js() {
 		 *
 		 * @param string $js JavaScript code.
 		 */
-		echo apply_filters( 'erp_queued_js', $js );
+        echo esc_html( apply_filters( 'erp_queued_js', $js ) );
 
 		unset( $erp_queued_js );
 	}

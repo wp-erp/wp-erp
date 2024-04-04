@@ -77,6 +77,7 @@ class Imap {
         $this->connection = imap_open( $this->mailbox, $username, $password );
 
         if ( ! $this->connection ) {
+            // phpcs:ignore 	WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new Exception( 'Cannot connect to Email: ' . imap_last_error() );
         }
     }

@@ -72,6 +72,7 @@ $employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_uns
         include WPERP_HRM_VIEWS . '/employee/empty-employee.php';
         $output = ob_get_contents();
         ob_get_clean();
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $output;
 
         return;

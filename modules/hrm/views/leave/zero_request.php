@@ -22,15 +22,15 @@ if ( ! empty( $get['financial_year'] ) || ! empty( $get['employee_name'] ) || ! 
 }
 ?>
 <div class="zero-request">
-    <img class="main-image" src="<?php echo $img; ?>" alt=''>
+    <img class="main-image" src="<?php echo esc_url($img); ?>" alt=''>
     <div class="title">
         <p>
-            <?php echo $title_text; ?>
+            <?php echo esc_html( $title_text ); ?>
         </p>
     </div>
     <div class="description">
         <p>
-            <?php echo $desc; ?>
+            <?php echo esc_html( $desc ); ?>
         </p>
     </div>
     <div class="filter-button">

@@ -1761,6 +1761,7 @@ function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no
     );
 
     if ( ! $inserted ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         throw new \Exception( __( 'Failed to create people transaction details', 'erp' ) );
     }
 
