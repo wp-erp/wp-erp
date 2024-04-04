@@ -388,7 +388,7 @@ function erp_acct_get_vendor_products( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-            WHERE people.id=%d AND product.product_type_id<>%d ORDER BY product.{$args['orderby']} {$args['order']} {$limit}", $args['vendor'], 3 );
+            WHERE people.id=%d AND product.product_type_id<>%d ORDER BY product.{$args['orderby']} {$args['order']} %s", $args['vendor'], 3, $limit );
 
         if ( $args['count'] ) {
             $products_vendor_count = $wpdb->get_var( $sql );
