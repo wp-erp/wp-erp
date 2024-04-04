@@ -308,6 +308,9 @@ if ( ! class_exists( 'WeFormsUpsell' ) ) {
          * @return void
          */
         public function dismiss_notice() {
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
+            }
             update_option( 'weforms_upsell_dismiss', 'yes' );
         }
 
@@ -407,6 +410,9 @@ if ( ! class_exists( 'WeFormsUpsell' ) ) {
          * @return void
          */
         public function dismiss_weforms_notice() {
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
+            }
             $this->dismiss_notice();
 
             wp_send_json_success();

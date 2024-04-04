@@ -129,6 +129,14 @@ final class Accounting {
      * @return void
      */
     public function dismiss_pdf_notice() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-nonce' ) ) {
+            wp_send_json_error( esc_html__( 'Invalid nonce', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( esc_html__( 'You have no permission to do that', 'erp' ) );
+        }
+
         update_option( 'pdf-notice-dismissed', 'hide' );
     }
 
@@ -378,7 +386,7 @@ final class Accounting {
      */
     public function invoice_frontend_style() {
         ?>
-        <link rel='stylesheet' href="<?php echo WPERP_ASSETS . '/css/invoice-front.css'; ?>">
+        <link rel='stylesheet' href="<?php echo esc_url_raw( WPERP_ASSETS . '/css/invoice-front.css' ); ?>">
         <?php
     }
 } // ERP_Accounting

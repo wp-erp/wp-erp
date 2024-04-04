@@ -84,7 +84,7 @@ class Birthdays_Controller extends REST_Controller {
             $item['user_id']       = $employee->user_id;
             $item['employee_id']   = $employee->employee_id;
             $item['date_of_birth'] = $employee->date_of_birth;
-            $item['birthday']      = date( 'dS, M', strtotime( $employee->date_of_birth ) );
+            $item['birthday']      = gmdate( 'dS, M', strtotime( $employee->date_of_birth ) );
             $item['designation']   = $employee->designation;
             $item['department']    = $employee->department;
 

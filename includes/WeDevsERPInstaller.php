@@ -243,7 +243,7 @@ XYZ Limited',
             'heading' => 'New transaction invoice',
             'body'    => 'Dear {customer_name},
 
-We are contacting you in regard to a new invoice #{invoide_ID} that has been created on your account. You may find the invoice attached. Please pay the balance of {amount} by {due_date}.
+We are contacting you in regard to a new invoice #{invoice_ID} that has been created on your account. You may find the invoice attached. Please pay the balance of {amount} by {due_date}.
 
 
 Kind Regards,
@@ -259,7 +259,7 @@ Account Manager
             'heading' => 'New transaction payment',
             'body'    => 'Dear {customer_name},
 
-I just wanted to drop you a quick note to let you know that we have received your recent payment in respect of invoice {invoice_id}. Thank you very much. We really appreciate it.
+I just wanted to drop you a quick note to let you know that we have received your recent payment in respect of invoice {invoice_ID}. Thank you very much. We really appreciate it.
 
 Kind Regards,
 Account Manager
@@ -274,7 +274,7 @@ Account Manager
             'heading' => 'New transaction purchase',
             'body'    => 'Dear {vendor_name},
 
-I just wanted to drop you a quick note to let you know that we have created a purchase invoice to pay you in respect of invoice {invoide_ID}. Thank you very much. We really appreciate it.
+I just wanted to drop you a quick note to let you know that we have created a purchase invoice to pay you in respect of invoice {invoice_ID}. Thank you very much. We really appreciate it.
 
 Kind Regards,
 Account Manager
@@ -305,7 +305,7 @@ Project Manager
             'heading' => 'New transaction purchase order',
             'body'    => 'Dear (vendor_name)
 
-With reference to our discussion, we would like to inform you that the order of {invoide_ID} has been approved. Please proceed the delivery of the product further.
+With reference to our discussion, we would like to inform you that the order of {invoice_ID} has been approved. Please proceed the delivery of the product further.
 
 Please feel free to contact me if you need any sort of clarification. Please dispatch the goods latest by the promised time.
 
@@ -325,7 +325,7 @@ Account Manager
             'heading' => 'New transaction pay purchase',
             'body'    => 'Dear {vendor_name},
 
-We are contacting you in regard to a new invoice #{invoide_ID} that has been created on your account. You may find the invoice attached.
+We are contacting you in regard to a new invoice #{invoice_ID} that has been created on your account. You may find the invoice attached.
 
 
 Kind Regards,
@@ -1713,7 +1713,7 @@ Account Manager
      */
     public function populate_data() {
         global $wpdb;
-        $current_date = date( 'Y-m-d' );
+        $current_date = gmdate( 'Y-m-d' );
 
         // Subscription pages
         $subscription_settings = get_option( 'erp_settings_erp-crm_subscription', [] );
@@ -2102,21 +2102,21 @@ Account Manager
             $general         = get_option( 'erp_settings_general', [] );
             $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
 
-            $start_date = new DateTime( date( 'Y-' . $financial_month . '-1' ) );
+            $start_date = new DateTime( gmdate( 'Y-' . $financial_month . '-1' ) );
 
             $start_date = $start_date->format( 'Y-m-d' );
 
-            $end_date = date( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
+            $end_date = gmdate( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
             $end_date = new DateTime( $end_date );
             $end_date->modify( '-1 day' );
 
             $end_date = $end_date->format( 'Y-m-d' );
 
             $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', [
-                'name'       => date( 'Y' ),
+                'name'       => gmdate( 'Y' ),
                 'start_date' => $start_date,
                 'end_date'   => $end_date,
-                'created_at' => date( 'Y-m-d' ),
+                'created_at' => gmdate( 'Y-m-d' ),
                 'created_by' => get_current_user_id(),
             ] );
         }

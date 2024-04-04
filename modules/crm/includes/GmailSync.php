@@ -198,6 +198,10 @@ class GmailSync {
     }
 
     public function save_attachments( $attachments ) {
+        global $wp_filesystem;
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        WP_Filesystem();
+
         if ( empty( $attachments ) ) {
             return $attachments;
         }
@@ -219,7 +223,7 @@ class GmailSync {
                 $name = uniqid() . '.' . $file['ext'];
             }
 
-            $saved = file_put_contents( $dir . $name, $item['data'] );
+            $saved = $wp_filesystem->put_contents( $dir . $name, $item['data'] );
 
             if ( $saved ) {
                 $attachments[$key]['slug'] = $name;

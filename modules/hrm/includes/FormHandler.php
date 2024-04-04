@@ -867,7 +867,7 @@ class FormHandler {
         $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_from'] . ' 00:00:00' ) ) : date_i18n( 'Y-m-d 00:00:00' );
         $end_date   = isset( $_POST['leave_to'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_to'] . ' 23:59:59' ) ) : date_i18n( 'Y-m-d 23:59:59' );
 
-        $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) : '';
+        $leave_reason = isset( $_POST['leave_reason'] ) ? wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['leave_reason'] ) ) ) : '';
 
         $insert = erp_hr_leave_insert_request( [
             'user_id'      => $employee_id,

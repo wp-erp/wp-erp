@@ -30,7 +30,7 @@
                         }
                         ?>
                         <div class="postbox">
-                            <h2 class='hndle'><span class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $report['title'] ) . $pro_popup; ?></span></h2>
+                            <h2 class='hndle'><span class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $report['title'] ) . wp_kses_post( $pro_popup ); ?></span></h2>
                             <div class="inside">
                                 <p><?php echo esc_html( $report['description'] ); ?></p>
                                 <p><a class='button button-primary' href="<?php echo esc_attr( $href ); ?>"><?php esc_html_e( 'View Report', 'erp' ); ?></a></p>
@@ -58,7 +58,7 @@
                         }
                         ?>
                         <div class="postbox">
-                            <h2 class="hndle"><span class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $report['title'] ) . $pro_popup; ?></span></h2>
+                            <h2 class="hndle"><span class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $report['title'] ) . wp_kses_post( $pro_popup); ?></span></h2>
                             <div class="inside">
                                 <p><?php echo esc_html( $report['description'] ); ?></p>
                                 <p><a class="button button-primary" href="<?php echo esc_attr( $href ); ?>"><?php esc_html_e( 'View Report', 'erp' ); ?></a></p>

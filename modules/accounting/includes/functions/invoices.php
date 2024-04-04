@@ -27,11 +27,11 @@ function erp_acct_get_all_invoices( $args = [] ) {
     $limit = '';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= $wpdb->prepare( "WHERE invoice.trn_date BETWEEN %s AND %s", $args['start_date'], $args['end_date']);
     }
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $sql = 'SELECT';
@@ -43,7 +43,7 @@ function erp_acct_get_all_invoices( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
-    $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $wpdb->prepare( " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.%i {$args['order']} {$limit}", $args['orderby']);
 
     erp_disable_mysql_strict_mode();
 
@@ -185,9 +185,9 @@ function erp_acct_insert_invoice( $data ) {
 
     $user_id = get_current_user_id();
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
     $voucher_no    = null;
@@ -334,6 +334,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new Exception( __( 'Failed to create invoice details', 'erp' ) );
         }
 
@@ -375,6 +376,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
                 );
 
                 if ( ! $inserted ) {
+                    // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                     throw new Exception( __( 'Failed to create tax data of invoice details', 'erp' ) );
                 }
             }
@@ -407,6 +409,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             );
 
             if ( ! $inserted ) {
+                // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                 throw new \Exception( __( 'Failed to create tax agency details', 'erp' ) );
             }
         }
@@ -426,9 +429,9 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
 
     $user_id = get_current_user_id();
 
-    $invoice_data['created_at'] = date( 'Y-m-d H:i:s' );
+    $invoice_data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $invoice_data['created_by'] = $user_id;
-    $invoice_data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $invoice_data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $invoice_data['updated_by'] = $user_id;
 
     if ( $contra ) {
@@ -458,6 +461,7 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
     );
 
     if ( ! $inserted ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         throw new \Exception( __( 'Failed to create invoice account details', 'erp' ) );
     }
 
@@ -484,9 +488,9 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     $user_id    = get_current_user_id();
     $voucher_no = null;
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
     $estimate_type = 1;
@@ -524,21 +528,21 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             $wpdb->query( $wpdb->prepare( "CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d", $invoice_no ) );
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                    "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = %s",
                     0,
                     $voucher_no,
                     $invoice_no,
                     $data['created_at']
                 )
             );
-            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" );
-            $wpdb->query( 'DROP TABLE acct_tmptable' );
+            $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" ) );
+            $wpdb->query( $wpdb->prepare( 'DROP TABLE acct_tmptable' ) );
 
             // change invoice status and other things
             $status_closed = 7;
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE {$wpdb->prefix}erp_acct_invoices SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                    "UPDATE {$wpdb->prefix}erp_acct_invoices SET status = %d, updated_at =%s, updated_by = %d WHERE voucher_no IN (%d, %d)",
                     $status_closed,
                     $data['updated_at'],
                     $user_id,
@@ -589,9 +593,9 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
 
     $user_id  = get_current_user_id();
 
-    $data['created_at'] = date( 'Y-m-d' );
+    $data['created_at'] = gmdate( 'Y-m-d' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d' );
+    $data['updated_at'] = gmdate( 'Y-m-d' );
     $data['updated_by'] = $user_id;
     $data['estimate']   = 0;
 
@@ -724,8 +728,8 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
     $invoice_data['customer_id']     = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $invoice_data['customer_name']   = $customer_name;
-    $invoice_data['trn_date']        = isset( $data['date'] ) ? $data['date'] : date( 'Y-m-d' );
-    $invoice_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
+    $invoice_data['trn_date']        = isset( $data['date'] ) ? $data['date'] : gmdate( 'Y-m-d' );
+    $invoice_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : gmdate( 'Y-m-d' );
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
     $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
@@ -815,7 +819,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     global $wpdb;
 
     $user_id = get_current_user_id();
-    $date    = date( 'Y-m-d H:i:s' );
+    $date    = gmdate( 'Y-m-d H:i:s' );
 
     $ledger_map = \WeDevs\ERP\Accounting\Classes\LedgerMap::get_instance();
 
@@ -866,6 +870,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     );
 
     if ( ! $inserted ) {
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         throw new \Exception( __( 'Failed to insert amount in ledger details', 'erp' ) );
     }
 
@@ -888,6 +893,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception( __( 'Failed to insert discount in ledger details', 'erp' ) );
         }
     }
@@ -911,6 +917,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception( __( 'Failed to insert shipping in ledger details', 'erp' ) );
         }
     }
@@ -934,6 +941,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
         );
 
         if ( ! $inserted ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             throw new \Exception( __( 'Failed to insert shipping tax in ledger details', 'erp' ) );
         }
     }
@@ -992,7 +1000,7 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
 function erp_acct_get_invoice_count() {
     global $wpdb;
 
-    $row = $wpdb->get_row( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_invoices' );
+    $row = $wpdb->get_row( $wpdb->prepare( 'SELECT COUNT(*) as count FROM ' . $wpdb->prefix . 'erp_acct_invoices' ) );
 
     return $row->count;
 }
@@ -1019,7 +1027,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
     $limit = '';
 
     if ( '-1' === $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset']);
     }
 
     $invoices            = "{$wpdb->prefix}erp_acct_invoices";
@@ -1073,8 +1081,8 @@ function erp_acct_get_due_payment( $invoice_no ) {
 function erp_acct_get_recievables( $from, $to ) {
     global $wpdb;
 
-    $from_date = date( 'Y-m-d', strtotime( $from ) );
-    $to_date   = date( 'Y-m-d', strtotime( $to ) );
+    $from_date = gmdate( 'Y-m-d', strtotime( $from ) );
+    $to_date   = gmdate( 'Y-m-d', strtotime( $to ) );
 
     $invoices              = $wpdb->prefix . 'erp_acct_invoices';
     $invoices_acct_details = $wpdb->prefix . 'erp_acct_invoice_account_details';
@@ -1098,8 +1106,8 @@ function erp_acct_get_recievables( $from, $to ) {
  */
 function erp_acct_get_recievables_overview() {
     // get dates till coming 90 days
-    $from_date = date( 'Y-m-d' );
-    $to_date   = date( 'Y-m-d', strtotime( '+90 day', strtotime( $from_date ) ) );
+    $from_date = gmdate( 'Y-m-d' );
+    $to_date   = gmdate( 'Y-m-d', strtotime( '+90 day', strtotime( $from_date ) ) );
 
     $data   = [];
     $amount = [

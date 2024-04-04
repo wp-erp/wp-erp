@@ -30,7 +30,9 @@
             <div class="">
                 <h3 class="hndle">
                     <span><?php esc_html_e( 'Work', 'erp' ); ?></span>
-                    <?php echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo erp_help_tip( esc_html__( 'To update work information of this employee, go to Job > Job Information > Update Job Information.', 'erp' ) ); ?>
                 </h3>
             </div>
 
@@ -59,9 +61,9 @@
                     <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . erp_format_date( $employee->get_hiring_date() ) . '</span>' ); ?>
                     <?php
                         $emp_hdate = new DateTime( $employee->get_hiring_date() );
-                        $cur_date  = new DateTime( date( 'd-m-Y' ) );
+                        $cur_date  = new DateTime( gmdate( 'd-m-Y' ) );
                         $interval  = $cur_date->diff( $emp_hdate );
-                        echo '( ' . $interval->y . esc_html__( ' years, ', 'erp' ) . $interval->m . esc_html__( ' months, ', 'erp' ) . $interval->d . esc_html__( ' days )', 'erp' );
+                        echo esc_html( '( ' . $interval->y . esc_html__( ' years, ', 'erp' ) . $interval->m . esc_html__( ' months, ', 'erp' ) . $interval->d . esc_html__( ' days )', 'erp' ) );
                     ?>
                 </li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>
@@ -300,7 +302,15 @@
                             <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
                                 <td><?php echo esc_html( $dependent->name ); ?></td>
                                 <td><?php echo esc_html( $dependent->relation ); ?></td>
-                                <td><?php echo esc_html( erp_format_date( $dependent->dob ) ); ?></td>
+                                <td>
+                                    <?php
+                                    if ( '0000-00-00' === $dependent->dob || '' === $dependent->dob ){
+                                        echo esc_html( '-' );
+                                    }else{
+                                        echo esc_html( erp_format_date( $dependent->dob ) );
+                                    }
+                                    ?>
+                                </td>
                                 <td width="10%">
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
                                         <div class="row-actions erp-hide-print">
