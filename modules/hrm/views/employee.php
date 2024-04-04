@@ -1,6 +1,7 @@
 <?php
 $employee_table = new \WeDevs\ERP\HRM\EmployeeListTable();
 $employee_table->prepare_items();
+$employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_unslash( $_GET['employee_name'] ) ) : '';
 ?>
 
 <div class="wrap erp-hr-employees" id="wp-erp">
@@ -27,10 +28,15 @@ $employee_table->prepare_items();
         <?php endif; ?>
 
         <form method="get">
-            <input type="hidden" name="page" value="erp-hr">
-            <input type="hidden" name="section" value="people">
-            <input type="hidden" name="sub-section" value="employee">
-            <?php $employee_table->search_box( __( 'Search', 'erp' ), 'erp-employee-search' ); ?>
+            <div class='wperp-filter-panel-body'>
+                <div class='input-component people_live_search'>
+                    <input type="hidden" name="page" value="erp-hr">
+                    <input type="hidden" name="section" value="people">
+                    <input type="hidden" name="sub-section" value="employee">
+                    <?php $employee_table->search_box( __( 'Search', 'erp' ), 'erp-employee-search' ); ?>
+                    <span id='live-employee-search'></span>
+                </div>
+            </div>
         </form>
     </h2>
 
@@ -66,6 +72,7 @@ $employee_table->prepare_items();
         include WPERP_HRM_VIEWS . '/employee/empty-employee.php';
         $output = ob_get_contents();
         ob_get_clean();
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $output;
 
         return;

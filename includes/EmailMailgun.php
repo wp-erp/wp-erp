@@ -413,7 +413,7 @@ class EmailMailgun {
                 $this->builder->getMessage()
             );
         } catch ( Exception $e ) {
-            throw new Exception( $e->getMessage() );
+            throw new Exception( esc_html( $e->getMessage() ) );
         }
     }
 }

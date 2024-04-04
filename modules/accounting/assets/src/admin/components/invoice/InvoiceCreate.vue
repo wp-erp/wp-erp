@@ -671,11 +671,13 @@ tr.padded {
     height: 50px;
 }
 
+// Display none code block for trix editor.
 .add-additional-note-row {
     .trix-button--icon-code {
         display: none;
     }
 }
+
 .discount-rate-row {
     select {
         width: 235px;

@@ -17281,6 +17281,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       if (this.noFulfillLines(this.transactionLines, 'product')) {
         this.form_errors.push(__('Please select a product.', 'erp'));
       }
+    },
+    removeFile: function removeFile(index) {
+      this.$delete(this.attachments, index);
     }
   }
 });
@@ -17815,6 +17818,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -18197,6 +18213,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.$delete(this.totalAmounts, index);
       this.$delete(this.negativeAmount, index);
       this.updateFinalAmount();
+    },
+    removeFile: function removeFile(index) {
+      this.$delete(this.attachments, index);
     }
   },
   watch: {
@@ -33624,7 +33643,7 @@ var render = function() {
                     attrs: {
                       to: {
                         name: "EmployeeDetails",
-                        params: { id: data.row.id }
+                        params: { id: data.row.people_id }
                       }
                     }
                   },
@@ -43129,82 +43148,129 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", { staticClass: "text-right" })
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "tr",
+                    { staticClass: "wperp-form-group inline-edit-row" },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticStyle: { "text-align": "left" },
+                          attrs: { colspan: "9" }
+                        },
+                        [
+                          _c("label", [
+                            _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.particulars,
+                                expression: "particulars"
+                              }
+                            ],
+                            staticClass: "wperp-form-field display-flex",
+                            attrs: {
+                              rows: "4",
+                              maxlength: "250",
+                              placeholder: _vm.__("Internal Information", "erp")
+                            },
+                            domProps: { value: _vm.particulars },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.particulars = $event.target.value
+                              }
+                            }
+                          })
+                        ]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("tr", { staticClass: "inline-edit-row" }, [
+                    _c(
+                      "td",
+                      _vm._l(_vm.attachments, function(file, index) {
+                        return _c(
+                          "div",
+                          { key: index, staticClass: "attachment-item" },
+                          [
+                            _c("img", {
+                              attrs: {
+                                src: _vm.acct_assets + "/images/file-thumb.png"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "remove-file",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.removeFile(index)
+                                  }
+                                }
+                              },
+                              [_vm._v("✗")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "attachment-meta" }, [
+                              _c("h3", [_vm._v(_vm._s(_vm.getFileName(file)))])
+                            ])
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tr",
+                    { staticClass: "add-attachment-row inline-edit-row" },
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticStyle: { "text-align": "left" },
+                          attrs: { colspan: "9" }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "attachment-container" },
+                            [
+                              _c("label", { staticClass: "col--attachement" }, [
+                                _vm._v(_vm._s(_vm.__("Attachment", "erp")))
+                              ]),
+                              _vm._v(" "),
+                              _c("file-upload", {
+                                attrs: { url: "/invoices/attachments" },
+                                model: {
+                                  value: _vm.attachments,
+                                  callback: function($$v) {
+                                    _vm.attachments = $$v
+                                  },
+                                  expression: "attachments"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    ]
                   )
                 ],
                 2
               ),
-              _vm._v(" "),
-              _c("tr", { staticClass: "wperp-form-group inline-edit-row" }, [
-                _c(
-                  "td",
-                  {
-                    staticStyle: { "text-align": "left" },
-                    attrs: { colspan: "9" }
-                  },
-                  [
-                    _c("label", [_vm._v(_vm._s(_vm.__("Particulars", "erp")))]),
-                    _vm._v(" "),
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.particulars,
-                          expression: "particulars"
-                        }
-                      ],
-                      staticClass: "wperp-form-field display-flex",
-                      attrs: {
-                        rows: "4",
-                        maxlength: "250",
-                        placeholder: _vm.__("Internal Information", "erp")
-                      },
-                      domProps: { value: _vm.particulars },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.particulars = $event.target.value
-                        }
-                      }
-                    })
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("tr", { staticClass: "add-attachment-row inline-edit-row" }, [
-                _c(
-                  "td",
-                  {
-                    staticStyle: { "text-align": "left" },
-                    attrs: { colspan: "9" }
-                  },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "attachment-container" },
-                      [
-                        _c("label", { staticClass: "col--attachement" }, [
-                          _vm._v(_vm._s(_vm.__("Attachment", "erp")))
-                        ]),
-                        _vm._v(" "),
-                        _c("file-upload", {
-                          attrs: { url: "/invoices/attachments" },
-                          model: {
-                            value: _vm.attachments,
-                            callback: function($$v) {
-                              _vm.attachments = $$v
-                            },
-                            expression: "attachments"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ]
-                )
-              ]),
               _vm._v(" "),
               _c("tfoot", [
                 _c("tr", { staticClass: "inline-edit-row" }, [

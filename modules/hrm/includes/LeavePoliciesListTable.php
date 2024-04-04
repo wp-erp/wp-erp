@@ -8,6 +8,8 @@ use WeDevs\ERP\HRM\Models\FinancialYear;
  * List table class
  */
 class LeavePoliciesListTable extends \WP_List_Table {
+
+    protected $page_status;
     public function __construct() {
         global $status, $page;
 
@@ -227,7 +229,7 @@ class LeavePoliciesListTable extends \WP_List_Table {
      */
     public function single_row( $item ) {
         // $item->effective_date = preg_replace( '/\s.+$/', '', $item->effective_date ); ?>
-            <tr data-json='<?php echo json_encode( $item ); ?>'>
+            <tr data-json='<?php echo wp_json_encode( $item ); ?>'>
                 <?php $this->single_row_columns( $item ); ?>
             </tr>
         <?php

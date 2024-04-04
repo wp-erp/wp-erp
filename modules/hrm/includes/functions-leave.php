@@ -1396,11 +1396,11 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     $where .= " AND entl.trn_type = 'leave_policies'";
 
     $groupby = '';
-    $orderby = " ORDER BY {$args['orderby']} {$args['order']}";
+    $orderby = $wpdb->prepare( " ORDER BY %s %s", $args['orderby'], $args['order'] );
 
     $offset = absint( $args['offset'] );
     $number = absint( $args['number'] );
-    $limit  = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
+    $limit  = $args['number'] == '-1' ? '' : $wpdb->prepare(" LIMIT %d, %d", $offset, $number);
 
     // filter by request_id
     if ( $args['lead'] ) {
@@ -1409,7 +1409,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         // get all user ids for this lead
         $args['users'] = erp_hr_get_dept_lead_subordinate_employees( $args['lead'] );
 
-        $where .= ' AND request.user_id in (' . implode( ', ', $args['users'] ) . ')';
+        $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $args['users'] ) );
     }
 
     if ( $args['department_id'] && $args['designation_id'] ) {
@@ -1420,7 +1420,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
         if ( $users->count() ) {
             $user_ids = $users->pluck( 'user_id' )->toArray();
-            $where .= ' AND request.user_id in (' . implode( ', ', $user_ids ) . ')';
+            $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
         }
     } elseif ( $args['department_id'] ) {
         $args['user'] = 0;
@@ -1429,7 +1429,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
         if ( $users->count() ) {
             $user_ids = $users->pluck( 'user_id' )->toArray();
-            $where .= ' AND request.user_id in (' . implode( ', ', $user_ids ) . ')';
+            $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
         }
     } elseif ( $args['designation_id'] ) {
         $args['user'] = 0;
@@ -1438,38 +1438,41 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
         if ( $users->count() ) {
             $user_ids = $users->pluck( 'user_id' )->toArray();
-            $where .= ' AND request.user_id in (' . implode( ', ', $user_ids ) . ')';
+            $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
+
         }
     }
 
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
-        $where .= ' AND request.id = ' . $args['request_id'];
+        $where .= $wpdb->prepare( " AND request.id = %d", $args['request_id'] );
     }
 
     // filter by name
     if ( ! empty( $args['s'] ) ) {
-        $where .= " AND u.display_name like '%" . esc_sql( $args['s'] ) . "%'";
+        $like_s = '%' . $wpdb->esc_like( $args['s'] ) . '%';
+        $where .= $wpdb->prepare( " AND u.display_name like %s ", $like_s );
     }
 
     if ( is_array( $args['status'] ) ) {
         $wh = [];
         foreach ( $args['status'] as $status ) {
-            $wh[] = 'request.last_status = ' . $status;
+            $wh[] = $wpdb->prepare( "request.last_status = %s", $status );
+
         }
 
-        $where .= ' AND (' . implode( ' OR ', $wh ) . ')';
+        $where .= $wpdb->prepare( " AND (%s)", implode( ' OR ', $wh ) );
     } else {
         if ( ! empty( $args['status'] ) && $args['status'] !== 'all' ) {
-            $where .= ' AND request.last_status = ' . absint( $args['status'] );
+            $where .= $wpdb->prepare( " AND request.last_status = %d", absint( $args['status'] ) );
         }
     }
 
     if ( $args['user_id'] ) {
-        $where .= ' AND request.user_id = ' . $args['user_id'];
+        $where .= $wpdb->prepare( " AND request.user_id = %d", $args['user_id'] );
     }
 
     if ( $args['policy_id'] ) { // @since 1.6.0 policy_id is equal to leave_id
-        $where .= ' AND request.leave_id = ' . $args['policy_id'];
+        $where .= $wpdb->prepare( " AND request.leave_id = %d", $args['policy_id'] );
     }
 
     if ( $args['year'] ) {
@@ -1481,11 +1484,11 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $to_date        = erp_current_datetime();
         $to_date        = $to_date->modify( $to_date_string );
 
-        $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.end_date <= {$to_date->getTimestamp()}";
+        $where .= $wpdb->prepare( " AND request.start_date >= %d AND request.end_date <= %d", $from_date->getTimestamp(), $to_date->getTimestamp() );
     }
 
     if ( $args['f_year'] ) {
-        $where .= ' AND entl.f_year = ' . $args['f_year'];
+        $where .= $wpdb->prepare( " AND entl.f_year = %d", $args['f_year'] );
     }
 
     if ( $args['start_date'] && $args['end_date'] ) {
@@ -1507,7 +1510,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $to_date = $to_date->modify( $args['end_date'] )->setTime( 23, 59, 59 );
         }
 
-        $where .= " AND request.start_date >= {$from_date->getTimestamp()} AND request.start_date <= {$to_date->getTimestamp()}";
+        $where .= $wpdb->prepare( " AND request.start_date >= %d AND request.start_date <= %d", $from_date->getTimestamp(), $to_date->getTimestamp() );
     }
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
@@ -2039,9 +2042,7 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
     $from_date = $year . '-01-01';
     $to_date   = $year . '-12-31';
 
-    $query  = "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements
-        WHERE user_id = %d AND policy_id = %d AND from_date = %s AND to_date = %s";
-    $result = $wpdb->get_var( $wpdb->prepare( $query, $employee_id, $policy_id, $from_date, $to_date ) );
+    $result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND policy_id = %d AND from_date = %s AND to_date = %s", $employee_id, $policy_id, $from_date, $to_date ) );
 
     return $result;
 }
@@ -2120,23 +2121,24 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
         $where = "WHERE 1 = 1 AND en.trn_type = 'leave_policies'";
 
         if ( absint( $args['year'] ) ) {
-            $where .= ' AND en.f_year = ' . absint( $args['year'] );
+            $where .= $wpdb->prepare( " AND en.f_year = %d", absint( $args['year'] ) );
         }
 
         if ( absint( $args['user_id'] ) ) {
-            $where .= ' AND en.user_id = ' . absint( $args['user_id'] );
+            $where .= $wpdb->prepare( " AND en.user_id = %d", absint( $args['user_id'] ) );
         }
 
         if ( ! empty( $args['search'] ) ) {
-            $where .= $wpdb->prepare( " AND u.display_name LIKE '%%%s%%' ", $args['search'] );
+            $like_search = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+            $where .= $wpdb->prepare( " AND u.display_name LIKE %s ", $like_search );
         }
 
         if ( $args['leave_id'] ) {
-            $where .= ' AND en.leave_id = ' . absint( $args['leave_id'] );
+            $where .= $wpdb->prepare( " AND en.leave_id = %d", absint( $args['leave_id'] ) );
         }
 
         if ( $args['policy_id'] ) {
-            $where .= ' AND en.trn_id = ' . absint( $args['policy_id'] );
+            $where .= $wpdb->prepare( " AND en.trn_id = %d", absint( $args['policy_id'] ) );
         }
 
         if ( $args['emp_status'] == 'active' ) {
@@ -2144,22 +2146,21 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
         }
 
         if ( $args['employee_type'] ) {
-            $where .= " AND policy.employee_type = '" . esc_sql( $args['employee_type'] ) . "'";
+            $where .= $wpdb->prepare( " AND policy.employee_type = %s",  $args['employee_type'] );
         }
 
         $offset = absint( $args['offset'] );
         $number = absint( $args['number'] );
-        $limit  = $args['number'] == '-1' ? '' : " LIMIT {$offset}, {$number}";
+        $limit  = $args['number'] == '-1' ? '' : $wpdb->prepare(" LIMIT %d, %d", $offset, $number);
 
-        $query = "SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
+        $query = $wpdb->prepare("SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
             FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
             LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
             LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
             LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
             LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON en.trn_id = policy.id
-            $where
-            ORDER BY {$args['orderby']} {$args['order']}
-            {$limit};";
+            {$where}
+            ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
         $leave_entitlements = $wpdb->get_results( $query );
         wp_cache_set( $cache_key, $leave_entitlements, 'erp' );
@@ -2306,7 +2307,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
     }
 
     if ( $date !== null ) {
-        $query .= ' AND fy.id = ' . absint( $date );
+        $query .= $wpdb->prepare( " AND fy.id = %d", absint( $date ) );
     }
 
     $query .= ' GROUP BY en.leave_id, en.f_year';
@@ -2352,7 +2353,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     global $wpdb;
 
-    $query = "
+    $result = $wpdb->get_row( $wpdb->prepare( "
     SELECT en.id, en.leave_id, en.user_id, en.f_year, fy.start_date, fy.end_date, l.name AS policy_name,
     IFNULL( sum(en.day_in), 0 ) AS policy_day_in,
     IFNULL( ( SELECT sum(en2.day_in) AS total_day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_in,
@@ -2363,9 +2364,7 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
     LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
     WHERE en.id = %d
-    ";
-
-    $result = $wpdb->get_row( $wpdb->prepare( $query, $entitlement_id ) );
+    ", $entitlement_id ) );
 
     $balance = [];
 
@@ -2473,8 +2472,8 @@ function erp_hr_get_next_month_leave_list() {
  * @return void
  */
 function erp_hr_leave_period() {
-    $next_sart_date = date( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
-    $next_end_date  = date( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
+    $next_sart_date = gmdate( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
+    $next_end_date  = gmdate( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
 
     $date = [
         erp_financial_start_date() => erp_format_date( erp_financial_start_date() ) . ' - ' . erp_format_date( erp_financial_end_date() ),
@@ -2591,7 +2590,7 @@ function get_entitlement_financial_years() {
         $min_date_fy_year = get_financial_year_from_date( $min_max_dates->min );
 
         $start_year = $min_date_fy_year['start'];
-        $end_year   = date( 'Y', strtotime( $min_max_dates->max ) );
+        $end_year   = gmdate( 'Y', strtotime( $min_max_dates->max ) );
     } else {
         return [];
     }
@@ -2653,7 +2652,7 @@ function erp_hr_get_custom_leave_report( $user_id, $f_year = null, $start_date =
         return [];
     }
 
-    $query .= ' and fy.id = ' . absint( $financial_year->id );
+    $query .= $wpdb->prepare( " and fy.id = %d", absint( $financial_year->id ) );
 
     $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
 

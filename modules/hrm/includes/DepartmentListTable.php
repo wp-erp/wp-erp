@@ -7,6 +7,7 @@ namespace WeDevs\ERP\HRM;
  */
 class DepartmentListTable extends \WP_List_Table {
     protected $per_page;
+    protected $page_status;
 
     public function __construct() {
         global $status, $page;

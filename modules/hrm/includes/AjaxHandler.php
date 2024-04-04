@@ -343,8 +343,8 @@ class AjaxHandler {
 
             if ( ( $start >= $first_day_of_year ) && ( $end <= $last_day_of_year ) ) {
                 $title       = sanitize_text_field( wp_unslash( $event['SUMMARY'] ) );
-                $start       = date( 'Y-m-d 00:00:00', $start );
-                $end         = date( 'Y-m-d 23:59:59', $end );
+                $start       = gmdate( 'Y-m-d 00:00:00', $start );
+                $end         = gmdate( 'Y-m-d 23:59:59', $end );
                 $description = ( ! empty( $event['DESCRIPTION'] ) ) ? sanitize_text_field( wp_unslash( $event['DESCRIPTION'] ) ) : $title;
 
                 // check for duplicate entries
@@ -1675,7 +1675,7 @@ class AjaxHandler {
             'school'          => $school,
             'degree'          => $degree,
             'field'           => $field,
-            'result'          => json_encode( $result ),
+            'result'          => wp_json_encode( $result ),
             'result_type'     => $result_type,
             'finished'        => $finished,
             'notes'           => $notes,

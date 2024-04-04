@@ -86,7 +86,7 @@ function erp_get_peoples( $args = [] ) {
         $sql_order_by = "ORDER BY $orderby $order";
 
         // Check if want all data without any pagination
-        $sql_limit = ( $number != '-1' && ! $count ) ? "LIMIT $number OFFSET $offset" : '';
+        $sql_limit = ( $number != '-1' && ! $count ) ? $wpdb->prepare( "LIMIT %d OFFSET %d", $number, $offset ) : '';
 
         if ( $meta_query ) {
             $sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
@@ -99,17 +99,17 @@ function erp_get_peoples( $args = [] ) {
         }
 
         if ( ! empty( $life_stage ) ) {
-            $sql['where'][] = "AND people.life_stage='$life_stage'";
+            $sql['where'][] = $wpdb->prepare( "AND people.life_stage = %s", $life_stage );
         }
 
         if ( ! empty( $contact_owner ) ) {
-            $sql['where'][] = "AND people.contact_owner='$contact_owner'";
+            $sql['where'][] = $wpdb->prepare( "AND people.contact_owner = %d", $contact_owner );
         }
 
         if ( erp_is_module_active( 'CRM' ) ) {
             if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
                 $current_user_id = get_current_user_id();
-                $sql['where'][]  = "AND people.contact_owner='$current_user_id'";
+                $sql['where'][]  = $wpdb->prepare( "AND people.contact_owner = %d", $current_user_id );
             }
         }
 
@@ -396,7 +396,7 @@ function erp_get_people_by( $field, $value ) {
         ";
 
         if ( is_array( $value ) ) {
-            $separeted_values = "'" . implode( "','", $value ) . "'";
+            $separeted_values = "'" . implode( "','", esc_sql( $value ) ) . "'";
             $sql .= " WHERE `people`.$field IN ( $separeted_values )";
         } else {
             $sql .= " WHERE `people`.$field = '$value'";
