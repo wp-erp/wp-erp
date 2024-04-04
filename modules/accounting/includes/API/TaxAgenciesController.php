@@ -131,7 +131,7 @@ class TaxAgenciesController extends \WeDevs\ERP\API\REST_Controller {
             'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'end_date'   => empty( $request['end_date'] ) ? gmdate( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $formatted_items   = [];

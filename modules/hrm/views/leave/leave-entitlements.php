@@ -3,7 +3,7 @@
 use WeDevs\ERP\ErpErrors;
 use WeDevs\ERP\HRM\Models\FinancialYear;
 
-$cur_year   = date( 'Y' );
+$cur_year   = gmdate( 'Y' );
 $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 ?>
 <div class="wrap" id="wp-erp">

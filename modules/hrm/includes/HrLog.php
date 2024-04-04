@@ -362,9 +362,10 @@ class HrLog {
         }
 
         global $wpdb;
-        $query = "SELECT user_id
+        $query = $wpdb->prepare( "SELECT user_id
                     FROM {$wpdb->prefix}erp_hr_employee_history
-                    WHERE id=" . $history_id;
+                    WHERE id = %d", $history_id );
+
         $user_id = $wpdb->get_var( $query );
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
@@ -411,9 +412,10 @@ class HrLog {
         }
 
         global $wpdb;
-        $query = "SELECT user_id
+        $query = $wpdb->prepare( "SELECT user_id
                     FROM {$wpdb->prefix}erp_hr_employee_history
-                    WHERE id=" . $history_id;
+                    WHERE id = %d", $history_id );
+
         $user_id = $wpdb->get_var( $query );
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
@@ -460,9 +462,10 @@ class HrLog {
         }
 
         global $wpdb;
-        $query = "SELECT user_id
-                    FROM {$wpdb->prefix}erp_hr_employee_history
-                    WHERE id=" . $history_id;
+        $query = $wpdb->prepare( "SELECT user_id
+                FROM {$wpdb->prefix}erp_hr_employee_history
+                WHERE id = %d", $history_id );
+
         $user_id = $wpdb->get_var( $query );
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );

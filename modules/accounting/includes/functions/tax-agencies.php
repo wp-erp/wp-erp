@@ -35,12 +35,12 @@ function erp_acct_get_all_tax_agencies( $args = [] ) {
         $limit = '';
 
         if ( -1 !== $args['number'] ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
             $tax_agencies_count = $wpdb->get_var( $sql );
@@ -86,7 +86,7 @@ function erp_acct_insert_tax_agency( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
@@ -120,7 +120,7 @@ function erp_acct_update_tax_agency( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = gmdate( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );

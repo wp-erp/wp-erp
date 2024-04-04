@@ -195,7 +195,7 @@ class Scripts {
             ],
         ] );
 
-        wp_enqueue_script( 'erp-menu', WPERP_ASSETS . '/js/erp-menu.js', [], date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-menu', WPERP_ASSETS . '/js/erp-menu.js', [], gmdate( 'Ymd' ), true );
 
         // load country/state JSON on new company page
         if ( erp_is_contacts_page() ) {

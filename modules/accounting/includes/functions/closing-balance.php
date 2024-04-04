@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_clsbl_get_closest_next_fn_year( $date ) {
     global $wpdb;
 
-    return $wpdb->get_row( $wpdb->prepare( "SELECT id, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date > '%s' ORDER BY start_date ASC LIMIT 1", $date ) );
+    return $wpdb->get_row( $wpdb->prepare( "SELECT id, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date > %s ORDER BY start_date ASC LIMIT 1", $date ) );
 }
 
 /**
@@ -257,7 +257,7 @@ function erp_acct_clsbl_insert_into_opening_balance( $f_year_id, $chart_id, $led
             'type'              => $type,
             'debit'             => $debit,
             'credit'            => $credit,
-            'created_at'        => date( 'Y-m-d H:i:s' ),
+            'created_at'        => gmdate( 'Y-m-d H:i:s' ),
             'created_by'        => get_current_user_id(),
         ]
     );
@@ -342,7 +342,7 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date ) {
     // if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
     //     return $result;
     // } else {
-    //     $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
+    //     $prev_date_of_bs_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
     // }
 
     // $query  = $wpdb->get_results( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_bs_start ), ARRAY_A );
@@ -488,7 +488,7 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
         return $result;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
+        $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
     }
 
     // get agency details data between

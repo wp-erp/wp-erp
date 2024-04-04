@@ -46,15 +46,12 @@ function erp_acct_upload_attachments( $files ) {
 function erp_acct_get_payables( $from, $to ) {
     global $wpdb;
 
-    $from_date = date( 'Y-m-d', strtotime( $from ) );
-    $to_date   = date( 'Y-m-d', strtotime( $to ) );
-
-    $purchases             = $wpdb->prefix . 'erp_acct_purchase';
-    $purchase_acct_details = $wpdb->prefix . 'erp_acct_purchase_account_details';
+    $from_date = gmdate( 'Y-m-d', strtotime( $from ) );
+    $to_date   = gmdate( 'Y-m-d', strtotime( $to ) );
 
     $purchase_query = $wpdb->prepare(
         "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
-        FROM $purchases LEFT JOIN $purchase_acct_details as ad
+        FROM {$wpdb->prefix}erp_acct_purchase LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details as ad
         ON ad.purchase_no = voucher_no  where due_date
         BETWEEN %s and %s Group BY voucher_no Having due < 0 ",
         $from_date,
@@ -63,11 +60,9 @@ function erp_acct_get_payables( $from, $to ) {
 
     $purchase_results = $wpdb->get_results( $purchase_query, ARRAY_A );
 
-    $bills             = $wpdb->prefix . 'erp_acct_bills';
-    $bill_acct_details = $wpdb->prefix . 'erp_acct_bill_account_details';
     $bills_query       = $wpdb->prepare(
         "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
-        FROM $bills LEFT JOIN $bill_acct_details as ad
+        FROM {$wpdb->prefix}erp_acct_bills LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details as ad
         ON ad.bill_no = voucher_no  where due_date
         BETWEEN %s and %s Group BY voucher_no Having due < 0",
         $from_date,

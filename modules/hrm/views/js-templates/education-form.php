@@ -37,7 +37,7 @@
             'type'        => 'number',
             'value'       => '{{ data.finished }}',
             'required'    => true,
-            'placeholder' => date( 'Y' ),
+            'placeholder' => gmdate( 'Y' ),
             'custom_attr' => [
                 'min'  => 1970,
                 'max'  => 2099,

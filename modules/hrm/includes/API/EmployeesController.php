@@ -1116,8 +1116,8 @@ class EmployeesController extends REST_Controller {
      */
     public function get_events( $request ) {
         $user_id  = (int) $request['user_id'];
-        $start    = ! empty( $request['start'] ) ? $request['start'] : date( 'Y-01-01' );
-        $end      = ! empty( $request['end'] ) ? $request['end'] : date( 'Y-12-31' );
+        $start    = ! empty( $request['start'] ) ? $request['start'] : gmdate( 'Y-01-01' );
+        $end      = ! empty( $request['end'] ) ? $request['end'] : gmdate( 'Y-12-31' );
 
         $employee = new Employee( $user_id );
 

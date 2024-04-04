@@ -28,7 +28,7 @@ function erp_acct_insert_to_erp_acct_ledgers_1_6_3() {
         $wpdb->query(
             $wpdb->prepare(
                 "INSERT INTO {$wpdb->prefix}erp_acct_ledgers ( `chart_id`, `name`, `slug`, `code`, `system`, `created_at` ) VALUES ( %d, %s, %s, %s, %d, %s )",
-                  [ 5, 'Bank Transaction Charge', 'bank_transaction_charge', '606', 0, date( 'Y-m-d' ) ]
+                  [ 5, 'Bank Transaction Charge', 'bank_transaction_charge', '606', 0, gmdate( 'Y-m-d' ) ]
             )
         );
     }
