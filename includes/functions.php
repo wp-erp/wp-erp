@@ -3618,7 +3618,7 @@ function erp_reset_data() {
         foreach ( $tables as $table ) {
             $table_name    = $table->TABLE_NAME;
             $table_names[] = $table_name;
-            $wpdb->query( 'TRUNCATE TABLE ' . $table_name );
+            $wpdb->query( 'TRUNCATE TABLE ' . $table_name );  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         }
 
         // Delete all posts data related to WP ERP

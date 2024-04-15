@@ -10,3 +10,4 @@ plugin-deploy.sh
 .github
 package-lock.json
 .svnignore
+core-file-reference.txt
