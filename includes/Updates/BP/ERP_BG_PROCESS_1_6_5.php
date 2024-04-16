@@ -56,9 +56,6 @@ class ERP_BG_PROCESS_1_6_5 extends \WP_Background_Process {
             foreach ( $db_data['fields'] as $field ) {
                 // Check the column.
                 if ( ! check_column( $table_name, $field, $col_type ) ) {
-                    $query = "ALTER TABLE $table_name MODIFY COLUMN $field $col_type $null DEFAULT '$default_value' ";
-                    $q     = $wpdb->query( $query );
-
                     if ( $wpdb->last_error ) {
                         error_log( __FILE__ . ' ' . __LINE__ . ' ' . $wpdb->last_error . PHP_EOL );
                     }

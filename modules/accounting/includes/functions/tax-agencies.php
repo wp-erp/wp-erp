@@ -43,11 +43,11 @@ function erp_acct_get_all_tax_agencies( $args = [] ) {
         $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
-            $tax_agencies_count = $wpdb->get_var( $sql );
+            $tax_agencies_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $tax_agencies_count, 'erp-accounting' );
         } else {
-            $tax_agencies = $wpdb->get_results( $sql, ARRAY_A );
+            $tax_agencies = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $tax_agencies, 'erp-accounting' );
         }

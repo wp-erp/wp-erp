@@ -256,12 +256,10 @@ function erp_acct_update_ledger( $item, $id ) {
 function erp_acct_ledger_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
-    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d AND opb.type = 'ledger' GROUP BY opb.ledger_id";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
+    FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+    LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
+    WHERE opb.financial_year_id = %d AND opb.type = 'ledger' GROUP BY opb.ledger_id", $id ), ARRAY_A );
 }
 
 /**
@@ -291,12 +289,10 @@ function erp_acct_get_ledgers_with_balances() {
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_ledger_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
-    $sql2 = "SELECT ledger.id, ledger.name, SUM(ld.debit - ld.credit) as balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id
-        AND ld.trn_date BETWEEN '%s' AND '%s' GROUP BY ld.ledger_id";
-
-    $data = $wpdb->get_results( $wpdb->prepare( $sql2, $closest_fy_date['start_date'], $today ), ARRAY_A );
+    $data = $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name, SUM(ld.debit - ld.credit) as balance
+    FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id
+    AND ld.trn_date BETWEEN %s AND %s GROUP BY ld.ledger_id", $closest_fy_date['start_date'], $today ), ARRAY_A );
 
     return erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening_balance );
 }

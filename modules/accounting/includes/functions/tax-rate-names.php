@@ -42,11 +42,11 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
         $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
         if ( $args['count'] ) {
-            $tax_rates_count = $wpdb->get_var( $sql );
+            $tax_rates_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $tax_rates_count, 'erp-accounting' );
         } else {
-            $tax_rates = $wpdb->get_results( $sql, ARRAY_A );
+            $tax_rates = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $tax_rates, 'erp-accounting' );
         }

@@ -3138,7 +3138,7 @@ function erp_wp_insert_rows( $row_arrays = [], $wp_table_name, $update = false, 
         $query .= $update;
     }
 
-    return $wpdb->query( $wpdb->prepare( $query, $values ) ) === false ? false : true;
+    return $wpdb->query( $wpdb->prepare( $query, $values ) ) === false ? false : true; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**

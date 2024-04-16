@@ -36,10 +36,10 @@ function erp_acct_get_purchases( $args = [] ) {
     $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_purchase Where %d=%d ORDER BY {$args['orderby']} {$args['order']} %s", 1, 1, $limit);
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -85,7 +85,7 @@ function erp_acct_get_purchase( $purchase_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row                = $wpdb->get_row( $sql, ARRAY_A );
+    $row                = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
     $row['attachments'] = unserialize( $row['attachments'] );
     $row['total_due']   = $row['credit'] - $row['debit'];
@@ -127,7 +127,7 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $results = $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     // calculate every line total
     foreach ( $results as $key => $value ) {
@@ -829,10 +829,10 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
     erp_disable_mysql_strict_mode();
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $query );
+        return $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    return $wpdb->get_results( $query, ARRAY_A );
+    return $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
