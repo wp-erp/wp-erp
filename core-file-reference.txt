@@ -1,1 +1,0 @@
-1. No need to prepare to the sql of drop table. Reference of DROP Table on core file wp-includes/ms-site.php#839
