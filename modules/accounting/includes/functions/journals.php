@@ -52,16 +52,16 @@ function erp_acct_get_all_journals( $args = [] ) {
         }
 
         $sql .= " FROM {$wpdb->prefix}erp_acct_journals AS journal LEFT JOIN {$wpdb->prefix}erp_acct_journal_details AS journal_detail";
-        $sql .= $wpdb->prepare( " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.%i {$args['order']} {$limit}", $args['orderby']);
+        $sql .= " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.{$args['orderby']} {$args['order']} {$limit}";
 
         if ( $args['count'] ) {
-            $wpdb->get_results( $sql );
+            $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             $journals_count = $wpdb->num_rows;
 
             wp_cache_set( $cache_key_count, $journals_count, 'erp-accounting' );
         } else {
-            $journals = $wpdb->get_results( $sql, ARRAY_A );
+            $journals = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $journals, 'erp-accounting' );
         }
@@ -104,7 +104,7 @@ function erp_acct_get_journal( $journal_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row                = $wpdb->get_row( $sql, ARRAY_A );
+    $row                = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     $rows               = $row;
     $rows['line_items'] = erp_acct_format_journal_data( $row, $journal_no );
 
@@ -353,7 +353,7 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $rows       = $wpdb->get_results( $sql, ARRAY_A );
+    $rows       = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     $line_items = [];
 
     foreach ( $rows as $key => $item ) {

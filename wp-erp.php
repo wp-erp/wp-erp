@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.13.1
+ * Version: 1.13.2
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -71,7 +71,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.13.1';
+    public $version = '1.13.2';
 
     /**
      * Minimum PHP version required
@@ -316,8 +316,8 @@ final class WeDevs_ERP {
 
         $this->container['emailer']     = Emailer::init();
         $this->container['integration'] = Integration::init();
-        $this->container['google_auth'] = GoogleAuth::init();
-        $this->container['google_sync'] = GmailSync::init();
+        $this->container['google_auth'] = new stdClass();
+        $this->container['google_sync'] = new stdClass();
     }
 
     /**

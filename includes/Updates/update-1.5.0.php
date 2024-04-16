@@ -708,9 +708,8 @@ function erp_acct_populate_data() {
     do_action( 'erp_acct_before_new_acct_populate_data' );
 
     // check if people_types exists
-    $sql = "INSERT IGNORE INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`) VALUES (5, 'employee')";
 
-    $wpdb->query( $sql );
+    $wpdb->query( "INSERT IGNORE INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`) VALUES (5, 'employee')" );
 
     /* ===========
      * Accounitng
@@ -786,10 +785,8 @@ function erp_acct_populate_data() {
 
     // insert product types
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_product_types` LIMIT 0, 1" ) ) {
-        $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`, `slug`)
-                    VALUES (1, 'Inventory', 'inventory'), (2, 'Service', 'service')";
-
-        $wpdb->query( $sql );
+        $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`, `slug`)
+        VALUES (1, 'Inventory', 'inventory'), (2, 'Service', 'service')" );
     }
 
     // insert currency info
@@ -960,10 +957,8 @@ function erp_acct_populate_data() {
         ];
 
         foreach ( $currency_symbols as $key => $val ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`name`, `sign`)
-                VALUES ( '{$key}', '{$val}' )";
-
-            $wpdb->query( $sql );
+            $wpdb->query( $wpdb->prepare( "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`name`, `sign`)
+            VALUES ( %s, %s )", $key, $val ) );
         }
     }
 

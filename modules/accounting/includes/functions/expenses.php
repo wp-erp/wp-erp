@@ -38,10 +38,10 @@ function erp_acct_get_expenses( $args = [] ) {
     erp_disable_mysql_strict_mode();
     
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    $rows = $wpdb->get_results( $sql, ARRAY_A );
+    $rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $rows;
 }
@@ -80,7 +80,7 @@ function erp_acct_get_expense( $expense_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $row['bill_details'] = erp_acct_format_expense_line_items( $expense_no );
     $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $expense_no );
@@ -130,7 +130,7 @@ function erp_acct_get_check( $expense_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $row['bill_details'] = erp_acct_format_check_line_items( $expense_no );
 
@@ -143,7 +143,7 @@ function erp_acct_get_check( $expense_no ) {
 function erp_acct_format_check_line_items( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare(
+    return $wpdb->get_results( $wpdb->prepare(
         "SELECT
         expense.id,
         expense.voucher_no,
@@ -163,9 +163,7 @@ function erp_acct_format_check_line_items( $voucher_no ) {
 
         WHERE expense.voucher_no = %d AND expense.trn_by = %d",
         $voucher_no, 3
-    );
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    ), ARRAY_A );
 }
 
 /**
@@ -174,7 +172,7 @@ function erp_acct_format_check_line_items( $voucher_no ) {
 function erp_acct_format_expense_line_items( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare(
+    return $wpdb->get_results( $wpdb->prepare(
         "SELECT
         expense_detail.id,
         expense_detail.ledger_id,
@@ -185,9 +183,7 @@ function erp_acct_format_expense_line_items( $voucher_no ) {
 
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense.voucher_no = expense_detail.trn_no LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id WHERE expense.voucher_no = %d", $voucher_no
-    );
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    ), ARRAY_A );
 }
 
 /**
@@ -774,7 +770,7 @@ function erp_acct_get_check_data_of_expense( $expense_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $row;
 }

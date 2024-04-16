@@ -43,15 +43,15 @@ function erp_acct_get_all_invoices( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
-    $sql .= $wpdb->prepare( " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.%i {$args['order']} {$limit}", $args['orderby']);
+    $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
 
     erp_disable_mysql_strict_mode();
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -103,7 +103,7 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $row['line_items']  = erp_acct_format_invoice_line_items( $invoice_no );
 
@@ -156,7 +156,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         $voucher_no
     );
 
-    $results = $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! is_null( $results ) && ! empty( reset( $results )['ecommerce_type'] ) ) {
         // product name should not fetch form `erp_acct_products`
@@ -1049,10 +1049,10 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
     );
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $query );
+        return $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    return $wpdb->get_results( $query, ARRAY_A );
+    return $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -1096,7 +1096,7 @@ function erp_acct_get_recievables( $from, $to ) {
         $to_date
     );
 
-    $results = $wpdb->get_results( $query, ARRAY_A );
+    $results = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $results;
 }

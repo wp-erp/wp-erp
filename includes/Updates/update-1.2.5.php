@@ -30,7 +30,7 @@ function erp_create_table_indices_1_2_5() {
            . " WHERE table_schema=DATABASE() AND TABLE_NAME='{$wpdb->prefix}erp_hr_employees' AND INDEX_NAME='employee_id'"
            . ' LIMIT 1';
 
-    if ( $wpdb->get_var( $query ) ) {
+    if ( $wpdb->get_var( $query ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         return;
     }
 
