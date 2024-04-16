@@ -25,6 +25,7 @@
         "modules/accounting/assets/src",
         "modules/crm/assets/less",
         "node_modules",
-        "tests"
+        "tests",
+        "vendor/google/apiclient/examples"
     ]
 }
