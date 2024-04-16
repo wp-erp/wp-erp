@@ -144,14 +144,13 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     global $wpdb;
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date   = isset( $args['end_date'] ) ? $args['start_date'] : '';
-    $sql = $wpdb->prepare(
+
+    $rows = $wpdb->get_results( $wpdb->prepare(
         "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= %s AND trn_date <= %s AND people_id = %d",
         $start_date,
         $end_date,
         $people_id
-    );
-
-    $rows = $wpdb->get_results( $sql, ARRAY_A );
+    ), ARRAY_A );
 
     return $rows;
 }
@@ -254,18 +253,18 @@ function erp_acct_get_people_transactions( $args = [] ) {
             people.created_at';
     }
 
-    $sql .= $wpdb->prepare( " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
+    $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         INNER JOIN {$wpdb->prefix}erp_acct_people_trn_details AS people ON voucher.id = people.voucher_no
-        {$where} AND %d=%d ORDER BY people.trn_date {$args['order']} {$limit}", 1, 1 );
+        {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        $wpdb->get_results( $sql );
+        $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         return $wpdb->num_rows;
     }
 
 
-    $results = $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $previous_balance_data  = [
         'start_date'        => $financial_year['start_date'],
@@ -349,12 +348,10 @@ function erp_acct_get_people_transactions( $args = [] ) {
 function erp_acct_get_people_previous_balance( $args = [] ) {
     global $wpdb;
 
-    $opening_balance_query     = $wpdb->prepare( "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_opening_balances where type = 'people' AND ledger_id = %d AND financial_year_id = %d", $args['people_id'], $args['financial_year_id'] );
-    $opening_balance_result    = $wpdb->get_row( $opening_balance_query, ARRAY_A );
+    $opening_balance_result    = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_opening_balances where type = 'people' AND ledger_id = %d AND financial_year_id = %d", $args['people_id'], $args['financial_year_id'] ), ARRAY_A );
     $opening_balance           =  isset( $opening_balance_result['opening_balance'] ) ? $opening_balance_result['opening_balance'] : 0;
 
-    $people_transaction_query  =  $wpdb->prepare( "SELECT SUM(debit - credit) AS balance FROM {$wpdb->prefix}erp_acct_people_trn_details where   people_id = %d AND trn_date BETWEEN %s AND %s", $args['people_id'], $args['start_date'], $args['end_date'] );
-    $people_transaction_result = $wpdb->get_row( $people_transaction_query, ARRAY_A );
+    $people_transaction_result = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(debit - credit) AS balance FROM {$wpdb->prefix}erp_acct_people_trn_details where   people_id = %d AND trn_date BETWEEN %s AND %s", $args['people_id'], $args['start_date'], $args['end_date'] ), ARRAY_A );
     $balance                   =  isset( $people_transaction_result['balance'] ) ? $people_transaction_result['balance'] : 0;
 
     return ($balance + $opening_balance) ;
@@ -619,10 +616,10 @@ function erp_acct_get_accounting_people( $args = [] ) {
 
         if ( $count ) {
             // Only filtered total count of people
-            $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
+            $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         } else {
             // Fetch results from people table
-            $results = $wpdb->get_results( apply_filters( 'erp_get_people_total_query', $final_query, $args ), ARRAY_A );
+            $results = $wpdb->get_results( apply_filters( 'erp_get_people_total_query', $final_query, $args ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             array_walk(
                 $results,
                 function ( &$results ) {

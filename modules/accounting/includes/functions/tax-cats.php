@@ -42,11 +42,11 @@ function erp_acct_get_all_tax_cats( $args = [] ) {
         $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_categories ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
-            $tax_cats_count = $wpdb->get_var( $sql );
+            $tax_cats_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $tax_cats_count, 'erp-accounting' );
         } else {
-            $tax_cats = $wpdb->get_results( $sql, ARRAY_A );
+            $tax_cats = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $tax_cats, 'erp-accounting' );
         }

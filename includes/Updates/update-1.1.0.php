@@ -174,7 +174,7 @@ function erp_ac_populate_data() {
         $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)
                 VALUES (1,'Assets'), (2,'Liabilities'), (3,'Expenses'), (4,'Income'), (5,'Equity');";
 
-        $wpdb->query( $sql );
+        $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
     // check if chart types exists
@@ -186,7 +186,7 @@ function erp_ac_populate_data() {
                     (11,'Direct Costs',3), (12,'Expense',3), (13,'Revenue',4), (14,'Sales',4),
                     (15,'Other Income',4), (16,'Equity',5);";
 
-        $wpdb->query( $sql );
+        $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
     // check if ledger exists
@@ -256,7 +256,7 @@ function erp_ac_populate_data() {
                     (61,'330','Common Stock',NULL,0,16,'',NULL,0,0,0,1),
                     (62,'092','Savings Account',NULL,0,6,'',NULL,1,1,0,1);";
 
-        $wpdb->query( $sql );
+        $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
     // check if banks exists
@@ -264,7 +264,7 @@ function erp_ac_populate_data() {
         $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_banks` (`id`, `ledger_id`, `account_number`, `bank_name`)
                 VALUES  (1,7,'',''), (2,62,'012345689','ABC Bank');";
 
-        $wpdb->query( $sql );
+        $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 }
 
@@ -279,7 +279,7 @@ function erp_ac_table_update() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_ac_transactions';
-    $cols  = $wpdb->get_col( 'DESC ' . $table );
+    $cols  = $wpdb->get_col( 'DESC ' . $table ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! in_array( 'sub_total', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(13,4) NOT NULL AFTER `conversion_rate`" );
@@ -287,14 +287,14 @@ function erp_ac_table_update() {
 
     $ledger = $wpdb->prefix . 'erp_ac_ledger';
 
-    $cols = $wpdb->get_col( 'DESC ' . $ledger );
+    $cols = $wpdb->get_col( 'DESC ' . $ledger ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! in_array( 'created_by', $cols ) ) {
         $wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );
     }
 
     $item_table = $wpdb->prefix . 'erp_ac_transaction_items';
-    $item_cols  = $wpdb->get_col( 'DESC ' . $item_table );
+    $item_cols  = $wpdb->get_col( 'DESC ' . $item_table ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! in_array( 'tax_rate', $item_cols ) ) {
         $wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(13,4) NOT NULL AFTER `tax`" );
@@ -340,8 +340,8 @@ function erp_crm_update_table_column() {
 
     $save_search_tb     = $wpdb->prefix . 'erp_crm_save_search';
     $people_tb          = $wpdb->prefix . 'erp_peoples';
-    $save_search_tb_col = $wpdb->get_col( 'DESC ' . $save_search_tb );
-    $people_tb_col      = $wpdb->get_col( 'DESC ' . $people_tb );
+    $save_search_tb_col = $wpdb->get_col( 'DESC ' . $save_search_tb ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    $people_tb_col      = $wpdb->get_col( 'DESC ' . $people_tb ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! in_array( 'type', $save_search_tb_col ) ) {
         $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );

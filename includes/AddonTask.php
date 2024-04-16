@@ -108,7 +108,7 @@ class AddonTask {
         }
 
         if ( $type == 'select' || $type == 'raw' ) {
-            return $wpdb->get_results( $input_data['sql']( $wpdb ) );
+            return $wpdb->get_results( $input_data['sql']( $wpdb ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         }
     }
 

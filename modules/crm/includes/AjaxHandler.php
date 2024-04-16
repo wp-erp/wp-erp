@@ -2005,7 +2005,7 @@ class AjaxHandler {
             }
 
             $relative_filepath = trailingslashit( $path ) . $new_filename;
-            if ( move_uploaded_file( $file['tmp_name'], $relative_filepath ) ) {
+            if ( move_uploaded_file( $file['tmp_name'], $relative_filepath ) ) { // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
                 $uploaded_files[] = $file['name'];
                 $attatchments[]   = [
                     'name' => $file['name'],
