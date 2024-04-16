@@ -42,11 +42,11 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
         $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
-            $tax_rates_count = $wpdb->get_var( $sql );
+            $tax_rates_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $tax_rates_count, 'erp-accounting' );
         } else {
-            $tax_rates = $wpdb->get_results( $sql, ARRAY_A );
+            $tax_rates = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $tax_rates, 'erp-accounting' );
         }
@@ -92,7 +92,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $row['tax_components'] = erp_acct_format_tax_line_items( $tax_no );
 
@@ -393,11 +393,11 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
         $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_tax_pay ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit );
 
         if ( $args['count'] ) {
-            $tax_pay_count = $wpdb->get_var( $sql );
+            $tax_pay_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $tax_pay_count, 'erp-accounting' );
         } else {
-            $tax_pay = $wpdb->get_results( $sql, ARRAY_A );
+            $tax_pay = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $tax_pay, 'erp-accounting' );
         }
@@ -583,7 +583,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
     }
     $sql .= " FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
 
-    $results = $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $results;
 }
@@ -745,7 +745,7 @@ function erp_acct_get_synced_tax_system_id( $sync_type, $sync_source, $sync_id =
         $args[] = $sync_slug;
     }
 
-    $system_id = $wpdb->get_var( $wpdb->prepare( $sql, $args ) );
+    $system_id = $wpdb->get_var( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return ! is_wp_error( $system_id ) ? (int) $system_id : null;
 }

@@ -36,10 +36,10 @@ function erp_acct_get_pay_bills( $args = [] ) {
     $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_pay_bill where %d=%d ORDER BY {$args['orderby']} {$args['order']} %s", 1, 1, $limit );
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**

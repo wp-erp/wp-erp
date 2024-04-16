@@ -299,9 +299,7 @@ class ContactTaxonomy {
 
         // Get taxonomy & terms
         $tax   = get_taxonomy( $this->taxonomy );
-        $terms = get_terms( $this->taxonomy, [
-            'hide_empty' => false,
-        ] );
+        $terms = get_terms( $this->taxonomy );
 
         // Add to bulk actions array
         if ( ! empty( $terms ) ) {
