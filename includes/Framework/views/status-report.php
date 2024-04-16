@@ -356,22 +356,18 @@ $security         = $system_status->get_security_info();
 			</tr>
 		<?php }
 
-        if ( $wpdb->use_mysqli ) {
-            $ver = mysqli_get_server_info( $wpdb->dbh );
-        } else {
-            $ver = mysql_get_server_info();
-        }
+		$mysql_version = $wpdb->db_version();
 
-        if ( ! empty( $wpdb->is_mysql ) && ! stristr( $ver, 'MariaDB' ) ) { ?>
+        if ( ! empty( $wpdb->is_mysql ) && !empty($mysql_version) ) { ?>
 			<tr>
 				<td data-export-label="MySQL Version"><?php esc_html_e( 'MySQL version', 'erp' ); ?>:</td>
 				<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'The version of MySQL installed on your hosting server.', 'erp' ) ) ); ?></td>
 				<td>
 					<?php
-                    if ( version_compare( $environment['mysql_version'], '5.6', '<' ) ) {
-                        echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'erp' ), esc_html( $environment['mysql_version'] ), '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'erp' ) . '</a>' ) . '</mark>';
+                    if ( version_compare( $mysql_version, '5.6', '<' ) ) {
+                        echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'erp' ), esc_html( $mysql_version ), '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'erp' ) . '</a>' ) . '</mark>';
                     } else {
-                        echo '<mark class="yes">' . esc_html( $environment['mysql_version'] ) . '</mark>';
+                        echo '<mark class="yes">' . esc_html( $mysql_version ) . '</mark>';
                     }
                     ?>
 				</td>

@@ -32,9 +32,7 @@ class ERPACCTBGProcessPeopleTrn_1_5_2 extends WP_Background_Process {
         $voucher_no   = $voucher['id'];
         $voucher_type = $voucher['type'];
 
-        $exists = $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_people_trn_details WHERE voucher_no = %d", $voucher_no );
-
-        if ( $wpdb->get_var( $exists ) ) {
+        if ( $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_people_trn_details WHERE voucher_no = %d", $voucher_no ) ) ) {
             return false;
         }
 

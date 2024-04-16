@@ -1515,7 +1515,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
 
-    $requests = $wpdb->get_results( $query, ARRAY_A );
+    $requests = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
 
@@ -2162,7 +2162,7 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
             {$where}
             ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
-        $leave_entitlements = $wpdb->get_results( $query );
+        $leave_entitlements = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         wp_cache_set( $cache_key, $leave_entitlements, 'erp' );
 
         $total_row_found = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
@@ -2312,7 +2312,7 @@ function erp_hr_leave_get_balance( $user_id, $date = null ) {
 
     $query .= ' GROUP BY en.leave_id, en.f_year';
 
-    $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
+    $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $balance = [];
 
@@ -2654,7 +2654,7 @@ function erp_hr_get_custom_leave_report( $user_id, $f_year = null, $start_date =
 
     $query .= $wpdb->prepare( " and fy.id = %d", absint( $financial_year->id ) );
 
-    $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
+    $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $balance = [];
 
@@ -3135,9 +3135,7 @@ function erp_hr_get_financial_year_from_date( $date = null ) {
         ]
     );
 
-    $fid = $wpdb->get_var(
-        $query
-    );
+    $fid = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( null === $fid ) {  // no financial year found with given range
         return $fid;

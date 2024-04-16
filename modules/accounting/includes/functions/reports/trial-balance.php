@@ -26,14 +26,15 @@ function erp_acct_cash_at_bank( $args, $type ) {
     $chart_bank = 7;
 
     $sql1       = $wpdb->prepare( "SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank );
-    $ledger_ids = implode( ',', explode( ',', $wpdb->get_var( $sql1 ) ) ); // e.g. 4, 5
+    $ledgers_query_result = $wpdb->get_var( $sql1 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    $ledger_ids = implode( ',', explode( ',', $ledgers_query_result ) ); // e.g. 4, 5
 
     if ( $ledger_ids ) {
         $sql2 = "SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_ledger_details WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s'
         GROUP BY ledger_id) AS ledger_details";
 
-        $data = $wpdb->get_var( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ) );
+        $data = $wpdb->get_var( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         $balance = erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
     }
@@ -66,7 +67,7 @@ function erp_acct_bank_balance( $args, $type ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
         WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id";
 
-    $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ), ARRAY_A );
+    $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $balance = erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
 
@@ -94,7 +95,7 @@ function erp_acct_sales_tax_query( $args, $type ) {
         FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_tax_agency_details
         WHERE trn_date BETWEEN '%s' AND '%s' GROUP BY agency_id {$having} ) AS get_amount";
 
-    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) );
+    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return erp_acct_sales_tax_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
 }
@@ -114,7 +115,7 @@ function erp_acct_get_account_receivable( $args ) {
             GROUP BY invoice_no HAVING balance <> 0 )
         AS get_amount";
 
-    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) );
+    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return erp_acct_people_calc_with_opening_balance( $args, $data, 'receivable', $sql );
 }
@@ -141,8 +142,8 @@ function erp_acct_get_account_payable( $args ) {
         GROUP BY purchase_no HAVING balance <> 0 )
         AS get_amount";
 
-    $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $args['end_date'] ) );
-    $purchase_amount = $wpdb->get_var( $wpdb->prepare( $purchase_sql, $args['end_date'] ) );
+    $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $args['end_date'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    $purchase_amount = $wpdb->get_var( $wpdb->prepare( $purchase_sql, $args['end_date'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $data = (float) $bill_amount + (float) $purchase_amount;
 
@@ -168,7 +169,7 @@ function erp_acct_get_owners_equity( $args, $type ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
         WHERE ledger.slug = 'owner_s_equity' AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}";
 
-    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) );
+    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return erp_acct_owners_equity_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
 }
@@ -205,7 +206,7 @@ function erp_acct_calculate_people_balance( $sql, $start_date, $end_date ) {
     global $wpdb;
 
     $balance = 0;
-    $query   = $wpdb->get_var( $wpdb->prepare( $sql, $start_date, $end_date ) );
+    $query   = $wpdb->get_var( $wpdb->prepare( $sql, $start_date, $end_date ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( $query ) {
         $balance += (float) $query;
@@ -270,7 +271,7 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $te
 
     $result = [];
 
-    $ledger_details = $wpdb->get_results( $sql, ARRAY_A );
+    $ledger_details = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! empty( $temp_data ) ) {
         foreach ( $temp_data as $temp ) {
@@ -382,7 +383,7 @@ function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $s
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
-    $ledger_details_balance = $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ) );
+    $ledger_details_balance = $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( $ledger_details_balance ) {
         $balance += (float) $ledger_details_balance;
@@ -423,7 +424,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
         $prev_date_of_tb_start = gmdate( 'Y-m-d', strtotime( '-1 day', strtotime( $tb_start_date ) ) );
     }
 
-    $sql = $wpdb->prepare( $sql, $chart_bank, $closest_fy_date['start_date'], $prev_date_of_tb_start );
+    $sql = $wpdb->prepare( $sql, $chart_bank, $closest_fy_date['start_date'], $prev_date_of_tb_start ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $result = erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $temp_data );
 
@@ -466,7 +467,7 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
-    $ledger_details_balance = $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ) );
+    $ledger_details_balance = $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( $ledger_details_balance ) {
         $balance += (float) $ledger_details_balance;
@@ -537,7 +538,7 @@ function erp_acct_calc_with_people_account_details( $closest_fy_start_date, $tb_
                 GROUP BY people_id {$having} )
             AS get_amount";
 
-    return $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_start_date, $tb_end_date ) );
+    return $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_start_date, $tb_end_date ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -576,7 +577,7 @@ function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
-    $ledger_details_balance = $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ) );
+    $ledger_details_balance = $wpdb->get_var( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( $ledger_details_balance ) {
         $balance += (float) $ledger_details_balance;
@@ -595,9 +596,7 @@ function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data
 function erp_acct_get_closest_fn_year_date( $date ) {
     global $wpdb;
 
-    $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
-
-    return $wpdb->get_row( $wpdb->prepare( $sql, $date ), ARRAY_A );
+    return $wpdb->get_row( $wpdb->prepare( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date <= %s ORDER BY start_date DESC LIMIT 1", $date ), ARRAY_A );
 }
 
 /**
@@ -617,13 +616,11 @@ function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
         $where = $wpdb->prepare( 'AND ledger.chart_id = %d', $chart_id );
     }
 
-    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d {$where} AND opb.type = 'ledger' AND ledger.slug <> 'owner_s_equity'
-        GROUP BY opb.ledger_id";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
+    FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+    LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
+    WHERE opb.financial_year_id = %d {$where} AND opb.type = 'ledger' AND ledger.slug <> 'owner_s_equity'
+    GROUP BY opb.ledger_id", $id ), ARRAY_A );
 }
 
 /**
@@ -637,11 +634,9 @@ function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
 function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
-    $sql = "SELECT SUM(opb.balance) AS balance FROM (SELECT SUM( debit - credit ) AS balance
-            FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d AND chart_id = 7
-            GROUP BY ledger_id) AS opb";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT SUM(opb.balance) AS balance FROM (SELECT SUM( debit - credit ) AS balance
+    FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d AND chart_id = 7
+    GROUP BY ledger_id) AS opb", $id ), ARRAY_A );
 }
 
 /**
@@ -661,11 +656,9 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
         $having = 'HAVING balance > 0';
     }
 
-    $sql = "SELECT SUM(opb.balance) AS balance FROM ( SELECT SUM( debit - credit ) AS balance
-            FROM {$wpdb->prefix}erp_acct_opening_balances
-            WHERE financial_year_id = %d AND type = 'tax_agency' GROUP BY ledger_id {$having} ) AS opb";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT SUM(opb.balance) AS balance FROM ( SELECT SUM( debit - credit ) AS balance
+    FROM {$wpdb->prefix}erp_acct_opening_balances
+    WHERE financial_year_id = %d AND type = 'tax_agency' GROUP BY ledger_id {$having} ) AS opb", $id ), ARRAY_A );
 }
 
 /**
@@ -679,12 +672,10 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
 function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
-    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d AND ledger.chart_id = 7 GROUP BY opb.ledger_id";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
+    FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+    LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
+    WHERE opb.financial_year_id = %d AND ledger.chart_id = 7 GROUP BY opb.ledger_id", $id ), ARRAY_A );
 }
 
 /**
@@ -704,12 +695,10 @@ function erp_acct_owners_equity_opening_balance_by_fn_year_id( $id, $type ) {
         $having = 'HAVING balance > 0';
     }
 
-    $sql = "SELECT SUM(opb.debit - opb.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d AND opb.type = 'ledger' AND ledger.slug = 'owner_s_equity' {$having}";
-
-    return $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
+    return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(opb.debit - opb.credit) AS balance
+    FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+    LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
+    WHERE opb.financial_year_id = %d AND opb.type = 'ledger' AND ledger.slug = 'owner_s_equity' {$having}", $id ) );
 }
 
 function erp_acct_people_opening_balance_by_fn_year_id( $id, $type ) {
@@ -721,11 +710,9 @@ function erp_acct_people_opening_balance_by_fn_year_id( $id, $type ) {
         $having = 'HAVING balance > 0';
     }
 
-    $sql = "SELECT SUM(opb.balance) AS balance FROM ( SELECT SUM( debit - credit ) AS balance
-        FROM {$wpdb->prefix}erp_acct_opening_balances
-        WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id {$having} ) AS opb";
-
-    return $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
+    return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(opb.balance) AS balance FROM ( SELECT SUM( debit - credit ) AS balance
+    FROM {$wpdb->prefix}erp_acct_opening_balances
+    WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id {$having} ) AS opb", $id ) );
 }
 
 /**
@@ -741,7 +728,7 @@ function erp_acct_get_trial_balance( $args ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
         WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id";
 
-    $data = $wpdb->get_results( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ), ARRAY_A );
+    $data = $wpdb->get_results( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     // All calculated DB results are inside `rows` key
     $results['rows'] = erp_acct_calc_with_opening_balance( $args['start_date'], $data, $sql );

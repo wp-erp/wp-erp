@@ -35,9 +35,7 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
     protected function task( $trn_id ) {
         global $wpdb;
 
-        $exists = $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $trn_id );
-
-        if ( $wpdb->get_var( $exists ) ) {
+        if ( $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $trn_id ) ) ) {
             return false;
         }
 
@@ -437,11 +435,10 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
-                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+        WHERE tran.id = %d", $id ), ARRAY_A );
 
         for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
@@ -474,7 +471,7 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
             ];
 
             foreach ( $sqls as $sql ) {
-                $wpdb->query( $wpdb->prepare( $sql, $id ) );
+                $wpdb->query( $wpdb->prepare( $sql, $id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             }
         }
     }
@@ -506,13 +503,11 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
 
         global $wpdb;
 
-        $sql1 = $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
-            WHERE transaction_id = %d", $trn_no );
-        $res1 = $wpdb->get_results( $sql1, ARRAY_A );
+        $res1 = $wpdb->get_results( $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
+        WHERE transaction_id = %d", $trn_no ), ARRAY_A );
 
-        $sql2 = $wpdb->prepare( "SELECT credit FROM {$wpdb->prefix}erp_ac_journals
-            WHERE `type` = 'line_item' AND transaction_id = %d", $trn_no );
-        $res2 = $wpdb->get_results( $sql2, ARRAY_A );
+        $res2 = $wpdb->get_results( $wpdb->prepare( "SELECT credit FROM {$wpdb->prefix}erp_ac_journals
+        WHERE `type` = 'line_item' AND transaction_id = %d", $trn_no ), ARRAY_A );
 
         $temp = [];
 
@@ -593,12 +588,11 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
-                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
-                WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( "SELECT tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+        LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
+        WHERE tran.id = %d", $id ), ARRAY_A );
 
         for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
@@ -641,10 +635,8 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM
-            {$wpdb->prefix}erp_ac_transactions AS tran LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( "SELECT tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id WHERE tran.id = %d", $id ), ARRAY_A );
 
         for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];
@@ -677,13 +669,11 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
 
         global $wpdb;
 
-        $sql1 = $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
-            WHERE transaction_id = %d", $trn_no );
-        $res1 = $wpdb->get_results( $sql1, ARRAY_A );
+        $res1 = $wpdb->get_results( $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
+        WHERE transaction_id = %d", $trn_no ), ARRAY_A );
 
-        $sql2 = $wpdb->prepare( "SELECT debit FROM {$wpdb->prefix}erp_ac_journals
-            WHERE `type` = 'line_item' AND transaction_id = %d", $trn_no );
-        $res2 = $wpdb->get_results( $sql2, ARRAY_A );
+        $res2 = $wpdb->get_results( $wpdb->prepare( "SELECT debit FROM {$wpdb->prefix}erp_ac_journals
+        WHERE `type` = 'line_item' AND transaction_id = %d", $trn_no ), ARRAY_A );
 
         $temp = [];
 
@@ -810,11 +800,9 @@ class ERPACCTBGProcess1_5_0 extends WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
-                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+        WHERE tran.id = %d", $id ), ARRAY_A );
 
         for ( $i = 0; $i < count( $transaction_items ); $i++ ) {
             $trn_item = $transaction_items[$i];

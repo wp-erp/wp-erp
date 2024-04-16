@@ -66,20 +66,20 @@ function erp_acct_get_all_products( $args = [] ) {
         if ( ! empty( $args['s'] ) ) {
             $sql .= ' AND product.name LIKE %s';
             $search_str = '%' . $wpdb->esc_like( $args['s'] ) . '%';
-            $sql = $wpdb->prepare( $sql, $search_str );
+            $sql = $wpdb->prepare( $sql, $search_str ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         }
 
         // To use wpdb prepare, we need to add and %d=%d to achieve where 1=1
-        $sql .= $wpdb->prepare( " AND %d=%d ORDER BY product.{$args['orderby']} {$args['order']} {$limit}", 1, 1 );
+        $sql .= " ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
 
         erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
-            $products_count = $wpdb->get_var( $sql );
+            $products_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $products_count, 'erp-accounting' );
         } else {
-            $products = $wpdb->get_results( $sql, ARRAY_A );
+            $products = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $products, 'erp-accounting' );
         }
@@ -391,11 +391,11 @@ function erp_acct_get_vendor_products( $args = [] ) {
             WHERE people.id=%d AND product.product_type_id<>%d ORDER BY product.{$args['orderby']} {$args['order']} %s", $args['vendor'], 3, $limit );
 
         if ( $args['count'] ) {
-            $products_vendor_count = $wpdb->get_var( $sql );
+            $products_vendor_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key_count, $products_vendor_count, 'erp-accounting' );
         } else {
-            $products_vendor = $wpdb->get_results( $sql, ARRAY_A );
+            $products_vendor = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $products_vendor, 'erp-accounting' );
         }

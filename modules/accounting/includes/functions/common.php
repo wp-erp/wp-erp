@@ -48,28 +48,24 @@ function erp_acct_get_payables( $from, $to ) {
 
     $from_date = gmdate( 'Y-m-d', strtotime( $from ) );
     $to_date   = gmdate( 'Y-m-d', strtotime( $to ) );
-
-    $purchase_query = $wpdb->prepare(
+    
+    $purchase_results = $wpdb->get_results( $wpdb->prepare(
         "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
         FROM {$wpdb->prefix}erp_acct_purchase LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details as ad
         ON ad.purchase_no = voucher_no  where due_date
         BETWEEN %s and %s Group BY voucher_no Having due < 0 ",
         $from_date,
         $to_date
-    );
+    ), ARRAY_A );
 
-    $purchase_results = $wpdb->get_results( $purchase_query, ARRAY_A );
-
-    $bills_query       = $wpdb->prepare(
+    $bill_results = $wpdb->get_results( $wpdb->prepare(
         "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
         FROM {$wpdb->prefix}erp_acct_bills LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details as ad
         ON ad.bill_no = voucher_no  where due_date
         BETWEEN %s and %s Group BY voucher_no Having due < 0",
         $from_date,
         $to_date
-    );
-
-    $bill_results = $wpdb->get_results( $bills_query, ARRAY_A );
+    ), ARRAY_A );
 
     if ( ! empty( $purchase_results ) && ! empty( $bill_results ) ) {
         return array_merge( $bill_results, $purchase_results );

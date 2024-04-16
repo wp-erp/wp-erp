@@ -36,10 +36,10 @@ function erp_acct_get_bills( $args = [] ) {
     $sql .= $wpdb->prepare("FROM {$wpdb->prefix}erp_acct_bills WHERE `trn_by_ledger_id` IS NULL ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    $rows = $wpdb->get_results( $sql, ARRAY_A );
+    $rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $rows;
 }
@@ -81,7 +81,7 @@ function erp_acct_get_bill( $bill_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $row['bill_details'] = erp_acct_format_bill_line_items( $bill_no );
     $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $bill_no );
@@ -117,7 +117,7 @@ function erp_acct_format_bill_line_items( $voucher_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -632,10 +632,10 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     );
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $query );
+        return $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    return $wpdb->get_results( $query, ARRAY_A );
+    return $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**

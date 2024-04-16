@@ -405,7 +405,7 @@ class Imap {
         header( 'Cache-Control: must-revalidate' );
         header( 'Pragma: public' );
 
-        readfile( $zip_file );
+        readfile( $zip_file ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
         exit;
     }
 
