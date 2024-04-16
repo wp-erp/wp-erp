@@ -469,7 +469,7 @@ class Ajax {
      * @return void
      */
     public function check_people() {
-        $email = isset( $_REQUEST['email'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['email'] ) ) : false;
+        $email = isset( $_REQUEST['email'] ) ? sanitize_email( wp_unslash( $_REQUEST['email'] ) ) : false;
 
         if ( ! $email ) {
             $this->send_error( esc_html__( 'No email address provided', 'erp' ) );

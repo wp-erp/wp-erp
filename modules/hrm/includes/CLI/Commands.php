@@ -39,7 +39,7 @@ class Commands extends WP_CLI_Command {
         ];
 
         foreach ( $tables as $table ) {
-            $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table );
+            $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         }
 
         WP_CLI::success( 'Table deleted successfully!' );

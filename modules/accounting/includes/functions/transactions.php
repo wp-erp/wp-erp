@@ -101,12 +101,12 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
-            $wpdb->get_results( $sql );
+            $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $sales_transaction_count = $wpdb->num_rows;
 
             wp_cache_set( $cache_key_count, $sales_transaction_count, 'erp-accounting' );
         } else {
-            $sales_transaction = $wpdb->get_results( $sql, ARRAY_A );
+            $sales_transaction = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $sales_transaction, 'erp-accounting' );
         }
@@ -144,7 +144,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.id {$where}
             GROUP BY status_type.id HAVING COUNT(invoice.status) > 0 ORDER BY status_type.type_name ASC";
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -173,7 +173,7 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_acc_detail ON invoice.voucher_no = invoice_acc_detail.invoice_no {$where}
         GROUP BY invoice.voucher_no) AS get_amount";
 
-    return $wpdb->get_row( $sql, ARRAY_A );
+    return $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -202,7 +202,7 @@ function erp_acct_get_bill_chart_data( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.bill_no {$where}
         GROUP BY bill.voucher_no) AS get_amount";
 
-    return $wpdb->get_row( $sql, ARRAY_A );
+    return $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -232,7 +232,7 @@ function erp_acct_get_bill_chart_status( $args = [] ) {
             HAVING sub_total > 0
             ORDER BY status_type.type_name ASC";
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -261,7 +261,7 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.purchase_no {$where}
         GROUP BY purchase.voucher_no) AS get_amount";
 
-    $result = $wpdb->get_row( $sql, ARRAY_A );
+    $result = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $result;
 }
@@ -293,7 +293,7 @@ function erp_acct_get_purchase_chart_status( $args = [] ) {
             HAVING sub_total > 0
             ORDER BY status_type.type_name ASC";
 
-    $result = $wpdb->get_results( $sql, ARRAY_A );
+    $result = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $result;
 }
@@ -323,7 +323,7 @@ function erp_acct_get_expense_chart_data( $args = [] ) {
         FROM {$wpdb->prefix}erp_acct_expenses AS bill
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.trn_no {$where} HAVING balance > 0 ) AS get_amount";
 
-    return $wpdb->get_row( $sql, ARRAY_A );
+    return $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -353,7 +353,7 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
             HAVING sub_total > 0
             ORDER BY status_type.type_name ASC";
 
-    return $wpdb->get_row( $sql, ARRAY_A );
+    return $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -655,13 +655,13 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
-            $wpdb->get_results( $sql );
+            $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             $expense_transaction_count = $wpdb->num_rows;
 
             wp_cache_set( $cache_key_count, $expense_transaction_count, 'erp-accounting' );
         } else {
-            $expense_transaction = $wpdb->get_results( $sql, ARRAY_A );
+            $expense_transaction = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             wp_cache_set( $cache_key, $expense_transaction, 'erp-accounting' );
         }
@@ -772,14 +772,14 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         erp_disable_mysql_strict_mode();
 
         if ( $args['count'] ) {
-            $wpdb->get_results( $sql );
+            $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             $purchase_transaction_count = $wpdb->num_rows;
 
             wp_cache_set( $cache_key_count, $purchase_transaction_count, 'erp-accounting' );
         }
 
-        $purchase_transaction = $wpdb->get_results( $sql, ARRAY_A );
+        $purchase_transaction = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         wp_cache_set( $cache_key, $purchase_transaction, 'erp-accounting' );
     }

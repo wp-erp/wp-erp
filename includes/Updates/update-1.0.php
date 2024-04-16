@@ -96,7 +96,7 @@ function wperp_update_1_0_create_people_types_table() {
 
     // seed the types table
     $seed_types = 'INSERT INTO ' . $wpdb->prefix . "erp_people_types (name) VALUES ('contact'), ('company'), ('customer'), ('vendor');";
-    $wpdb->query( $seed_types );
+    $wpdb->query( $seed_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -126,7 +126,7 @@ function wperp_update_1_0_populate_types_table() {
     global $wpdb;
 
     $query   = "SELECT * FROM {$wpdb->prefix}erp_peoples";
-    $peoples = $wpdb->get_results( $query );
+    $peoples = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! $peoples ) {
         return;
@@ -144,12 +144,17 @@ function wperp_update_1_0_populate_types_table() {
     $insert_queries = [];
 
     foreach ( $peoples as $people ) {
-        $insert_queries[] = sprintf( "(%d, '%s', '%s')", $people->id, $type_id_mapping[ $people->type ], $people->deleted_at );
+        $insert_queries[] = $wpdb->prepare(
+            "(%d, %d, %s)",
+            $people->id,
+            $type_id_mapping[ $people->type ],
+            $people->deleted_at
+        );
     }
 
     $insert_query = $table_name . ' ' . implode( ', ', $insert_queries );
 
-    $wpdb->query( $insert_query );
+    $wpdb->query( $insert_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**

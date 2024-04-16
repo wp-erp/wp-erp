@@ -34,10 +34,10 @@ function erp_acct_get_payments( $args = [] ) {
     $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_invoice_receipts ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
     if ( $args['count'] ) {
-        return $wpdb->get_var( $sql );
+        return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
 
-    $payment_data = $wpdb->get_results( $sql, ARRAY_A );
+    $payment_data = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     return $payment_data;
 }
@@ -87,7 +87,7 @@ function erp_acct_get_payment( $invoice_no ) {
 
     erp_disable_mysql_strict_mode();
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     $row['line_items'] = erp_acct_format_payment_line_items( $invoice_no );
     $row['pdf_link']   = erp_acct_pdf_abs_path_to_url( $invoice_no );
@@ -654,10 +654,10 @@ function erp_acct_format_payment_line_items( $invoice = 'all' ) {
     } else {
         $invoice_sql = $wpdb->prepare( "WHERE voucher_no = %d", $invoice );
     }
-    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details AS inv_rec_detail
+    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details AS inv_rec_detail
             LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no AS voucher
             ON inv_rec_detail.voucher_no = voucher.id
-            {$invoice_sql}", $invoice_sql );
+            {$invoice_sql}";
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }

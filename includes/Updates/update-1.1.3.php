@@ -7,13 +7,13 @@
 function erp_ac_update_1_1_3_table() {
     global $wpdb;
     $table = $wpdb->prefix . 'erp_ac_transactions';
-    $cols  = $wpdb->get_col( 'DESC ' . $table );
+    $cols  = $wpdb->get_col( 'DESC ' . $table ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( in_array( 'invoice_number', $cols ) && ! in_array( 'invoice_format', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table CHANGE `invoice_number` `invoice_format` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;" );
     }
 
-    $cols = $wpdb->get_col( 'DESC ' . $table );
+    $cols = $wpdb->get_col( 'DESC ' . $table ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
     if ( ! in_array( 'invoice_number', $cols ) ) {
         $wpdb->query( "ALTER TABLE $table ADD `invoice_number` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `invoice_format`;" );

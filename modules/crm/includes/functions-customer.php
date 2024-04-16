@@ -312,7 +312,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
             $sql .= $wpdb->prepare( " AND {$people_tbl}.contact_owner = %d", $current_user_id);
         }
         $sql .= ' group by life_stage';
-        $results = $wpdb->get_results( $wpdb->prepare( $sql, $type ) );
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, $type ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         wp_cache_set( $cache_key, $results, 'erp' );
     }
@@ -581,7 +581,7 @@ function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
 
     $sql = $wpdb->prepare( "SELECT `id` FROM {$wpdb->prefix}erp_crm_customer_companies WHERE `customer_id` =  %d AND `company_id` = %d", $customer_id, $company_id ) ;
 
-    return $wpdb->get_row( $sql, ARRAY_A );
+    return $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 }
 
 /**
@@ -715,7 +715,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
         if ( erp_crm_is_current_user_crm_agent() ) {
             $contact_owner = get_current_user_id();
             $people_sql =  $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = %d", $contact_owner );
-            $people_ids    = array_keys( $wpdb->get_results( $people_sql, OBJECT_K ) );
+            $people_ids    = array_keys( $wpdb->get_results( $people_sql, OBJECT_K ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
             $results = $results->whereIn( 'user_id', $people_ids );
         }

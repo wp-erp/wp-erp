@@ -2,7 +2,6 @@
 
 namespace WeDevs\ERP;
 
-use EDD_SL_Plugin_Updater;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -35,19 +34,7 @@ class License {
         $this->short_name = preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 
         // include and hooks
-        $this->includes();
         $this->init_hooks();
-    }
-
-    /**
-     * Include the EDD updater class
-     *
-     * @return void
-     */
-    private function includes() {
-        if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
-            require_once __DIR__ . '/Lib/EDD_SL_Plugin_Updater.php';
-        }
     }
 
     /**
@@ -70,7 +57,6 @@ class License {
      * @return void
      */
     private function init_hooks() {
-        $this->action( 'admin_init', 'init_updater' );
         $this->action( 'admin_notices', 'license_nag' );
 
         // scheduled events and checking
@@ -137,28 +123,6 @@ class License {
         ];
 
         return $settings;
-    }
-
-    /**
-     * Initialize the plugin updater
-     *
-     * @return void
-     */
-    public function init_updater() {
-        $args = [
-            'version'   => $this->version,
-            'license'   => $this->get_license_key(),
-            'author'    => $this->author,
-            'item_name' => $this->item_name,
-            'url'       => home_url(),
-        ];
-
-        // Setup the updater
-        $edd_updater = new EDD_SL_Plugin_Updater(
-            $this->api_url,
-            $this->file,
-            $args
-        );
     }
 
     public function api_request( $action = 'check_license' ) {

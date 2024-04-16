@@ -354,7 +354,7 @@ class ERP_1_6_0 {
             }
         }
 
-        if ( $wpdb->query( $queries ) === false ) {
+        if ( $wpdb->query( $queries ) === false ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             // query error, log this to db
             error_log(
                 print_r(
@@ -388,7 +388,7 @@ class ERP_1_6_0 {
             }
         }
 
-        if ( $wpdb->query( $queries ) === false ) {
+        if ( $wpdb->query( $queries ) === false ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             // query error, log this to db
             error_log(
                 print_r(
