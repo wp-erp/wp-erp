@@ -12,3 +12,4 @@ debug.log
 plugin-deploy.sh
 .env
 phpcs-report.txt
+.nvmrc
