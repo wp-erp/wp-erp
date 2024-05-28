@@ -11172,7 +11172,7 @@ if (false) {(function () {
   },
   data: function data() {
     return {
-      erp_mailgun_test_email: '',
+      erp_wpmail_test_email: '',
       options: {
         action: '',
         recurrent: false,
@@ -11182,10 +11182,10 @@ if (false) {(function () {
   },
   methods: {
     testConnection: function testConnection() {
-      this.options.action = 'erp_mailgun_test_connection';
+      this.options.action = 'erp_wpmail_test_connection';
       this.options.fields.push({
-        'key': 'erp_mailgun_test_email',
-        'value': this.erp_mailgun_test_email
+        'key': 'erp_wpmail_test_email',
+        'value': this.erp_wpmail_test_email
       });
     }
   }
@@ -11254,17 +11254,85 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-email",
-      sub_section_id: "wpmail",
-      enable_content: true,
-      enableSubSectionTitle: false,
-      disableMenu: true,
-      disableSectionTitle: true,
-      options: _vm.options
-    }
-  })
+  return _c(
+    "base-layout",
+    {
+      attrs: {
+        section_id: "erp-email",
+        sub_section_id: "wpmail",
+        enable_content: true,
+        enableSubSectionTitle: false,
+        disableMenu: true,
+        disableSectionTitle: true,
+        options: _vm.options
+      }
+    },
+    [
+      _c(
+        "div",
+        { attrs: { slot: "extended-data" }, slot: "extended-data" },
+        [
+          _vm._t("extended-data", function() {
+            return [
+              _c("div", { staticClass: "wperp-form-group test-connection" }, [
+                _c("div", { staticClass: "connection-outgoing" }, [
+                  _c("label", { attrs: { for: "erp_wpmail_test_email" } }, [
+                    _vm._v(_vm._s(_vm.__("Test Mail", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      _vm._s(
+                        _vm.__("An Email Address to Test the Connection", "erp")
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.erp_wpmail_test_email,
+                        expression: "erp_wpmail_test_email"
+                      }
+                    ],
+                    staticClass: "wperp-form-field",
+                    attrs: {
+                      placeholder: _vm.__("Email here", "erp"),
+                      id: "erp_wpmail_test_email",
+                      type: "email"
+                    },
+                    domProps: { value: _vm.erp_wpmail_test_email },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.erp_wpmail_test_email = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "wperp-btn btn--secondary btn-test-connection",
+                      attrs: { id: "wpmail-test-connection" },
+                      on: { click: _vm.testConnection }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Send Test Email", "erp")))]
+                  )
+                ])
+              ])
+            ]
+          })
+        ],
+        2
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

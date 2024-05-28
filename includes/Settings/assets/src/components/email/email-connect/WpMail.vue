@@ -7,24 +7,24 @@
         :disableMenu="true"
         :disableSectionTitle="true"
         :options="options">
-        <!-- <div slot="extended-data">
+        <div slot="extended-data">
             <slot name="extended-data">
                 <div class="wperp-form-group test-connection">
                     <div class="connection-outgoing">
-                        <label for="erp_mailgun_test_email">{{ __( 'Test Mail', 'erp' ) }}</label>
+                        <label for="erp_wpmail_test_email">{{ __( 'Test Mail', 'erp' ) }}</label>
                         <p>{{ __( 'An Email Address to Test the Connection', 'erp' ) }}</p>
                         <input
                             class="wperp-form-field"
                             :placeholder="__( 'Email here', 'erp' )"
-                            id="erp_mailgun_test_email"
+                            id="erp_wpmail_test_email"
                             type="email"
-                            v-model="erp_mailgun_test_email"
+                            v-model="erp_wpmail_test_email"
                         />
-                        <button id="mailgun-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
+                        <button id="wpmail-test-connection" class="wperp-btn btn--secondary btn-test-connection" @click="testConnection">{{ __('Send Test Email', 'erp') }}</button>
                     </div>
                 </div>
             </slot>
-        </div> -->
+        </div>
     </base-layout>
 </template>
 
@@ -40,7 +40,7 @@ export default {
 
     data() {
         return {
-            erp_mailgun_test_email: '',
+            erp_wpmail_test_email: '',
             options               : {
                 action   : '',
                 recurrent: false,
@@ -51,12 +51,12 @@ export default {
 
     methods: {
         testConnection() {
-            this.options.action = 'erp_mailgun_test_connection';
+            this.options.action = 'erp_wpmail_test_connection';
             
             this.options.fields.push(
                 {
-                    'key'   : 'erp_mailgun_test_email',
-                    'value' : this.erp_mailgun_test_email
+                    'key'   : 'erp_wpmail_test_email',
+                    'value' : this.erp_wpmail_test_email
                 }
             );
         }

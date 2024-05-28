@@ -36,6 +36,7 @@ class Ajax {
 		$this->action( 'wp_ajax_erp_update_email_template', 'update_email_template' );
 		$this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
 		$this->action( 'wp_ajax_erp_mailgun_test_connection', 'mailgun_test_connection' );
+		$this->action( 'wp_ajax_erp_wpmail_test_connection', 'wpmail_test_connection' );
 		$this->action( 'wp_ajax_erp_settings_get_email_providers', 'get_email_providers' );
 
 		// License settings
@@ -497,6 +498,59 @@ class Ajax {
 			$mailgun->send_email( $data );
 
 			$this->send_success( array( 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to_email ) );
+		} catch ( \Exception $e ) {
+			$this->send_error( $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Test connection using wpmail() credentials
+	 *
+	 * @return mixed
+	 */
+	public function wpmail_test_connection() {
+		$this->verify_nonce( 'erp-settings-nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->send_error( erp_get_message( array( 'type' => 'error_permission' ) ) );
+		}
+
+		if ( empty( $_REQUEST['erp_wpmail_test_email'] ) ) {
+			$to_email = get_option( 'admin_email' );
+		} else {
+			$to_email = sanitize_text_field( wp_unslash( $_REQUEST['erp_wpmail_test_email'] ) );
+		}
+
+		$subject = esc_html__( 'ERP wp_mail() Test Mail', 'erp' );
+		$message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
+
+		$erp_email_settings = get_option( 'erp_settings_erp-email_general', array() );
+
+		
+		if ( ! isset( $erp_email_settings['from_email'] ) ) {
+			$from_email = get_option( 'admin_email' );
+		} else {
+			$from_email = $erp_email_settings['from_email'];
+		}
+
+		if ( ! isset( $erp_email_settings['from_name'] ) ) {
+			global $current_user;
+			$from_name = $current_user->display_name;
+		} else {
+			$from_name = $erp_email_settings['from_name'];
+		}
+		
+		$headers[] = 'From: ' . $from_name . ' <'.$from_email.'>';
+
+		try {
+			$is_mail_sent = wp_mail( $to_email, $subject, $message, $headers );
+
+			if( $is_mail_sent ) {
+				$this->send_success( array( 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to_email ) );
+			} else {
+				$this->send_error( array( 'message' => esc_html__( 'Failed to send test message ', 'erp' ) . $to_email ) );
+			}
+
 		} catch ( \Exception $e ) {
 			$this->send_error( $e->getMessage() );
 		}
