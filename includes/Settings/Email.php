@@ -277,7 +277,7 @@ class Email extends Template {
         $erp_is_enable_smtp    = erp_is_smtp_enabled();
         $erp_is_enable_mailgun = erp_is_mailgun_enabled();
         $erp_is_enable_imap    = erp_is_imap_active();
-//        $erp_is_enable_gmail   = wperp()->google_auth->is_active();
+        $erp_is_enable_gmail   = wperp()->google_auth->is_active();
 
         $providers['smtp'] = [
             'type'         => 'outgoing',
@@ -312,16 +312,16 @@ class Email extends Template {
             'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-imap-disable.png',
         ];
 
-//        $providers['gmail'] = [
-//            'type'         => 'incoming',
-//            'name'         => __( 'Google Connect', 'erp' ),
-//            'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
-//            'enabled'      => $erp_is_enable_gmail,
-//            'is_active'    => $erp_is_enable_gmail,
-//            'actions'      => '',
-//            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
-//            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
-//        ];
+        $providers['gmail'] = [
+            'type'         => 'incoming',
+            'name'         => __( 'Google Connect', 'erp' ),
+            'description'  => __( 'Connect your Gmail or Gsuite account', 'erp' ),
+            'enabled'      => $erp_is_enable_gmail,
+            'is_active'    => $erp_is_enable_gmail,
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-google-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-google-disable.png',
+        ];
 
         return $providers;
     }
@@ -629,18 +629,18 @@ class Email extends Template {
             'desc'  => '',
         ];
 
-//        if ( wperp()->google_auth->is_connected() ) {
-//            $fields[] = [
-//                'type' => 'gmail_api_connected',
-//            ];
-//
-//            $fields[] = [
-//                'type' => 'sectionend',
-//                'id'   => 'script_styling_options',
-//            ];
-//
-//            return $fields;
-//        }
+        if ( wperp()->google_auth->is_connected() ) {
+            $fields[] = [
+                'type' => 'gmail_api_connected',
+            ];
+
+            $fields[] = [
+                'type' => 'sectionend',
+                'id'   => 'script_styling_options',
+            ];
+
+            return $fields;
+        }
 
         $fields[] = [
             'title' => '',
@@ -670,14 +670,14 @@ class Email extends Template {
             'desc'  => __( 'Your APP Client Secret', 'erp' ),
         ];
 
-//        $fields[] = [
-//            'title'    => __( 'Redirect URL to use', 'erp' ),
-//            'id'       => 'redirect_url',
-//            'type'     => 'text',
-//            'desc'     => __( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ),
-//            'default'  => esc_url_raw( wperp()->google_auth->get_redirect_url() ),
-//            'disabled' => true
-//        ];
+        $fields[] = [
+            'title'    => __( 'Redirect URL to use', 'erp' ),
+            'id'       => 'redirect_url',
+            'type'     => 'text',
+            'desc'     => __( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ),
+            'default'  => esc_url_raw( wperp()->google_auth->get_redirect_url() ),
+            'disabled' => true
+        ];
 
         $fields[] = [
             'type' => 'sectionend',
