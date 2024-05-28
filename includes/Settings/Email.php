@@ -200,6 +200,9 @@ class Email extends Template {
         // Mailgun Email Settings Options
         $fields['mailgun']  = $this->get_mailgun_settings_fields();
 
+        // WP Mail Email Settings Options
+        $fields['wpmail']  = $this->get_wpmail_settings_fields();
+
         // IMAP Email Settings Options
         $fields['imap']  = $this->get_imap_settings_fields();
 
@@ -274,11 +277,22 @@ class Email extends Template {
     public function get_email_prodivers() {
         $providers = [];
 
+        $erp_is_wp_mail_enabled    = erp_is_wp_mail_enabled();
         $erp_is_enable_smtp    = erp_is_smtp_enabled();
         $erp_is_enable_mailgun = erp_is_mailgun_enabled();
         $erp_is_enable_imap    = erp_is_imap_active();
 //        $erp_is_enable_gmail   = wperp()->google_auth->is_active();
 
+        $providers['wpmail'] = [
+            'type'         => 'outgoing',
+            'name'         => __( 'Use wp_mail() (default)', 'erp' ),
+            'description'  => __( 'Email outgoing settings for ERP.', 'erp' ),
+            'enabled'      => $erp_is_wp_mail_enabled,
+            'is_active'    => $erp_is_wp_mail_enabled,
+            'actions'      => '',
+            'icon_enable'  => WPERP_ASSETS . '/images/wperp-settings/email-wpmail-enable.png',
+            'icon_disable' => WPERP_ASSETS . '/images/wperp-settings/email-wpmail-disable.png',
+        ];
         $providers['smtp'] = [
             'type'         => 'outgoing',
             'name'         => __( 'SMTP', 'erp' ),
@@ -353,6 +367,10 @@ class Email extends Template {
                     $option                   = get_option( 'erp_settings_erp-email_mailgun', [] );
                     $option['enable_mailgun'] = 'no';
                     update_option( 'erp_settings_erp-email_mailgun', $option );
+
+                    $wpmail_option                = get_option( 'erp_settings_erp-email_wpmail', [] );
+                    $wpmail_option['enable_wpmail'] = 'no';
+                    update_option( 'erp_settings_erp-email_wpmail', $wpmail_option );
                 }
                 break;
 
@@ -361,6 +379,22 @@ class Email extends Template {
                     $option                = get_option( 'erp_settings_erp-email_smtp', [] );
                     $option['enable_smtp'] = 'no';
                     update_option( 'erp_settings_erp-email_smtp', $option );
+
+                    $wpmail_option                = get_option( 'erp_settings_erp-email_wpmail', [] );
+                    $wpmail_option['enable_wpmail'] = 'no';
+                    update_option( 'erp_settings_erp-email_wpmail', $wpmail_option );
+                }
+                break;
+
+            case 'wpmail':
+                if ( isset( $options['enable_wpmail'] ) && $options['enable_wpmail'] == 'yes' ) {
+                    $mailgun_option                   = get_option( 'erp_settings_erp-email_mailgun', [] );
+                    $mailgun_option['enable_mailgun'] = 'no';
+                    update_option( 'erp_settings_erp-email_mailgun', $mailgun_option );
+
+                    $smtp_option                   = get_option( 'erp_settings_erp-email_smtp', [] );
+                    $smtp_option['enable_smtp'] = 'no';
+                    update_option( 'erp_settings_erp-email_smtp', $smtp_option );
                 }
                 break;
 
@@ -746,6 +780,29 @@ class Email extends Template {
         $fields[] = [
             'type' => 'sectionend',
             'id'   => 'script_styling_options',
+        ];
+
+        return $fields;
+    }
+
+    /**
+     * Get all fields for WP Mail API sub section
+     *
+     * @return array
+     */
+    public function get_wpmail_settings_fields() {
+        $fields[] = [
+            'title' => __( 'WP Mail', 'erp' ),
+            'type'  => 'title',
+            'desc'  => ''
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Enable WP Mail', 'erp' ),
+            'id'      => 'enable_wpmail',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
         ];
 
         return $fields;
