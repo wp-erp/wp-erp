@@ -316,8 +316,8 @@ final class WeDevs_ERP {
 
         $this->container['emailer']     = Emailer::init();
         $this->container['integration'] = Integration::init();
-        $this->container['google_auth'] = new stdClass();
-        $this->container['google_sync'] = new stdClass();
+        $this->container['google_auth'] = GoogleAuth::init();
+        $this->container['google_sync'] = GmailSync::init();
     }
 
     /**
