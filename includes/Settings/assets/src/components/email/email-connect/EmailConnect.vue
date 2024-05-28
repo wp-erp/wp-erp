@@ -17,7 +17,8 @@
                     </div>
                 </div>
                 <div v-if="activeOutgoingEmail === 'smtp'"><smtp-email /></div>
-                <div v-else><mailgun-email /></div>
+                <div v-else-if="activeOutgoingEmail === 'mailgun'"><mailgun-email /></div>
+                <div v-else><wp-mail /></div>
             </div>
             <div class="email-card email-connect-incoming">
                 <h4>{{ __( 'Incoming Email Setting', 'erp' ) }}</h4>
@@ -45,6 +46,7 @@ import SmtpEmail from "./SmtpEmail.vue";
 import GoogleEmail from "./GoogleEmail.vue";
 import ImapEmail from "./ImapEmail.vue";
 import MailgunEmail from "./MailgunEmail.vue";
+import WpMail from "./WpMail.vue";
 import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
 
 import { mapState } from 'vuex';
@@ -59,7 +61,8 @@ export default {
         SmtpEmail,
         ImapEmail,
         GoogleEmail,
-        MailgunEmail
+        MailgunEmail,
+        WpMail
     },
 
     data() {

@@ -1966,6 +1966,21 @@ function erp_is_imap_active() {
 }
 
 /**
+ * Check if the WP Email settings is enabled or not
+ *
+ * @return bool
+ */
+function erp_is_wp_mail_enabled() {
+    $erp_email_wpmail_settings = get_option( 'erp_settings_erp-email_wpmail', [] );
+
+    if ( isset( $erp_email_wpmail_settings['enable_wpmail'] ) && filter_var( $erp_email_wpmail_settings['enable_wpmail'], FILTER_VALIDATE_BOOLEAN ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Check if the ERP Email SMTP settings is enabled or not
  *
  * @since 1.1.6
@@ -3673,6 +3688,7 @@ function erp_reset_data() {
             'erp_settings_erp-hr_workdays',
             'erp_settings_erp-crm_subscription',
             'erp_settings_erp-email_general',
+            'erp_settings_erp-wp_mail',
             'erp_settings_erp-email_smtp',
             'erp_settings_erp-email_mailgun',
             'erp_settings_erp-email_gmail',
