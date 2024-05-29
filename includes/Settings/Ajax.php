@@ -521,7 +521,7 @@ class Ajax {
 			$to_email = sanitize_text_field( wp_unslash( $_REQUEST['erp_wpmail_test_email'] ) );
 		}
 
-		$subject = esc_html__( 'ERP wp_mail() Test Mail', 'erp' );
+		$subject = esc_html__( 'ERP WP Default Test Mail', 'erp' );
 		$message = esc_html__( 'This is a test email by WP ERP.', 'erp' );
 
 		$erp_email_settings = get_option( 'erp_settings_erp-email_general', array() );
@@ -548,7 +548,7 @@ class Ajax {
 			if( $is_mail_sent ) {
 				$this->send_success( array( 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to_email ) );
 			} else {
-				$this->send_error( array( 'message' => esc_html__( 'Failed to send test message ', 'erp' ) . $to_email ) );
+				$this->send_error( __( 'Failed to send test message to ', 'erp' ) );
 			}
 
 		} catch ( \Exception $e ) {
