@@ -8,8 +8,8 @@
         <div class="email-connect-area">
             <div class="email-card email-connect-outgoing">
                 <h4>{{ __( 'Outgoing Email Setting', 'erp' ) }}</h4>
-                <div class="email-icons">
-                    <div v-for="connection in outgoingConnections" :class="`email-icon pointer ${connection.slug === activeOutgoingEmail ? 'active-email-icon' : ''}`" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
+                <div class="email-icons outgoing-email-icons">
+                    <div v-for="connection in outgoingConnections" :class="`email-icon pointer ${connection.slug} ${connection.slug === activeOutgoingEmail ? 'active-email-icon' : ''}`" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
                         <img :src="connection.isEnabled ? connection.enableIcon : connection.disableIcon" alt="" />
                         <span class="checkbox-icon checkbox-active" v-if="connection.isEnabled"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'outgoing')"></span>

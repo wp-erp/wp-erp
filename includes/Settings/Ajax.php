@@ -25,11 +25,11 @@ class Ajax {
 	 * @return void
 	 */
 	public function __construct() {
-		// Common settings
+		// Common settings.
 		$this->action( 'wp_ajax_erp-settings-save', 'erp_settings_save' );
 		$this->action( 'wp_ajax_erp-settings-get-data', 'erp_settings_get_data' );
 
-		// Email templates settings
+		// Email templates settings.
 		$this->action( 'wp_ajax_erp_get_email_templates', 'get_email_templates' );
 		$this->action( 'wp_ajax_erp_get_single_email_template', 'get_single_email_template' );
 		$this->action( 'wp_ajax_erp_update_email_status', 'update_email_status' );
@@ -39,7 +39,7 @@ class Ajax {
 		$this->action( 'wp_ajax_erp_wpmail_test_connection', 'wpmail_test_connection' );
 		$this->action( 'wp_ajax_erp_settings_get_email_providers', 'get_email_providers' );
 
-		// License settings
+		// License settings.
 		$this->action( 'wp_ajax_erp_settings_save_licenses', 'save_licenses' );
 	}
 
@@ -526,7 +526,6 @@ class Ajax {
 
 		$erp_email_settings = get_option( 'erp_settings_erp-email_general', array() );
 
-		
 		if ( ! isset( $erp_email_settings['from_email'] ) ) {
 			$from_email = get_option( 'admin_email' );
 		} else {
@@ -539,18 +538,17 @@ class Ajax {
 		} else {
 			$from_name = $erp_email_settings['from_name'];
 		}
-		
-		$headers[] = 'From: ' . $from_name . ' <'.$from_email.'>';
+
+		$headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
 
 		try {
 			$is_mail_sent = wp_mail( $to_email, $subject, $message, $headers );
 
-			if( $is_mail_sent ) {
+			if ( $is_mail_sent ) {
 				$this->send_success( array( 'message' => esc_html__( 'Test email has been sent successfully to ', 'erp' ) . $to_email ) );
 			} else {
 				$this->send_error( __( 'Failed to send test message to ', 'erp' ) );
 			}
-
 		} catch ( \Exception $e ) {
 			$this->send_error( $e->getMessage() );
 		}
