@@ -417,6 +417,31 @@ class EmailMailgun {
 	}
 
 	/**
+	 * Extracts the main message from Mailgun error response.
+	 *
+	 * @param \Exception $e
+	 * @return string
+	 */
+	private function extract_mailgun_error_message($e) {
+		$message = $e->getMessage();
+		
+		// Decode the JSON message if it is in JSON format
+		$decoded_message = json_decode($message, true);
+		
+		if (json_last_error() === JSON_ERROR_NONE && isset($decoded_message['message'])) {
+			return $decoded_message['message'];
+		}
+
+		// If it's not JSON, look for the pattern "Forbidden! {"message":"..."}"
+		if (preg_match('/Forbidden!\s*{\s*"message"\s*:\s*"([^"]+)"\s*}/', $message, $matches)) {
+			return $matches[1];
+		}
+		
+		// Return the original message if it's not in JSON format
+		return $message;
+	}
+
+	/**
 	 * Send a Mailgun Message
 	 *
 	 * @since 1.10.0
@@ -434,7 +459,7 @@ class EmailMailgun {
 				$this->builder->getMessage()
 			);
 		} catch ( Exception $e ) {
-			throw new Exception( esc_html( $e->getMessage() ) );
+			throw new Exception( esc_html( $this->extract_mailgun_error_message($e) ) );
 		}
 	}
 }

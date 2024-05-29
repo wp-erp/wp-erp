@@ -747,14 +747,14 @@ class Email extends Template {
             'title' => __( 'Private API Key', 'erp' ),
             'id'    => 'private_api_key',
             'type'  => 'password',
-            'desc'  => __( 'Get private API key from your Mailgun account <a href="https://app.mailgun.com/app/account/security/api_keys" target="_blank">Mailgun account</a>', 'erp' ),
+            'desc'  => __( 'Get private API key from your Mailgun account <a href="https://app.mailgun.com/settings/api_security" target="_blank">Mailgun account</a>', 'erp' ),
         ];
 
         $fields[] = [
             'title' => __( 'Domain', 'erp' ),
             'id'    => 'domain',
             'type'  => 'text',
-            'desc'  => __( 'Get sending domain from your Mailgun account <a href="https://app.mailgun.com/app/sending/domains" target="_blank">Mailgun account</a><br /><mark>Notice:</mark> In Sandbox domain with Free plan, only 5 Authorized Recipients are allowed. <a href="https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-Recipients" target="_blank">Learn More</a>', 'erp' ),
+            'desc'  => __( 'Get sending domain from your Mailgun account <a href="https://app.mailgun.com/mg/sending/domains" target="_blank">Mailgun account</a><br /><mark>Notice:</mark> In Sandbox domain with Free plan, only 5 Authorized Recipients are allowed. <a href="https://help.mailgun.com/hc/en-us/articles/217531258-Authorized-Recipients" target="_blank">Learn More</a>', 'erp' ),
         ];
 
         $fields[] = [
