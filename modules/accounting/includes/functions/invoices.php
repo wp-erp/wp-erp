@@ -262,17 +262,6 @@ function erp_acct_insert_invoice( $data ) {
 		erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
 		erp_acct_insert_invoice_data_into_ledger( $invoice_data );
 
-		if ( ! is_wp_error( $voucher_no ) ) {
-
-			// notification email.
-			$emailer = wperp()->emailer->get_email( 'Transactional_Email' );
-
-			if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
-				$company = new \WeDevs\ERP\Company();
-				$emailer->trigger( $email, erp_acct_pdf_abs_path_to_url( $voucher_no ), $voucher_no, $company );
-			}
-		}
-
 		do_action( 'erp_acct_after_sales_create', $data, $voucher_no );
 
 		$data['dr'] = $invoice_data['amount'];
