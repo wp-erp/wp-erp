@@ -78,7 +78,7 @@
 
                     <div class="tablenav-pages" :class="paginationClass">
                         <span v-if="items" class="displaying-num">
-                            {{ items }} {{ items > 1 ? ' items' : ' item' }}
+                            {{ items }} {{ items > 1 ? __(' items', 'erp') : __(' item', 'erp') }}
                         </span>
 
                         <span class="pagination-links">

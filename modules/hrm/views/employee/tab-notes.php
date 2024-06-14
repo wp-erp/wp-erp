@@ -59,7 +59,7 @@
     <?php $display_class = ( $total_notes > $no_of_notes ) ? 'show' : 'hide'; ?>
     <div class="wperp-load-more-btn <?php echo esc_attr( $display_class ); ?>">
             <?php submit_button(
-                'Load More',
+                __( 'Load More', 'erp' ),
                 false,
                 'erp-load-notes',
                 true,
