@@ -287,7 +287,8 @@
         border: 2px solid #eff2f7;
     }
 
-    .multiselect__input, .multiselect__single {
+    .multiselect__input,
+    .multiselect__single {
         font-size: 14px !important;
     }
 
@@ -304,7 +305,7 @@
 
     .wperp-btn-cancel {
         background: #d7d7d7;
-        color: #333!important;
+        color: #333 !important;
 
         &:hover {
             background: #e7e7e7;
@@ -340,7 +341,7 @@
 
     .wperp-btn-danger {
         background: #d63638;
-        color: #fff!important;
+        color: #fff !important;
     }
 
     .margin-bottom-10 {
@@ -539,7 +540,10 @@
 
     .wperp-modal-header {
         border-bottom: 1px solid #e9e9f7 !important;
-        h4, h5, h3 {
+
+        h4,
+        h5,
+        h3 {
             font-weight: 500 !important;
             font-size: 16px !important;
         }
@@ -551,7 +555,7 @@
 
     .wperp-modal-footer {
         border-top: 1px solid #e9e9f7 !important;
-        padding: 0px 20px!important;
+        padding: 0px 20px !important;
     }
 
     .modal-backdrop {
@@ -687,24 +691,31 @@
         border: 1px solid #eff2f7 !important;
 
         thead {
-            th, td {
+
+            th,
+            td {
                 border-bottom: 1px solid #eff2f7 !important;
             }
         }
 
-        tbody, tfoot {
-            th, td {
+        tbody,
+        tfoot {
+
+            th,
+            td {
                 word-break: break-word !important;
                 word-wrap: break-word !important;
             }
         }
     }
+
     /** Table End **/
 
     /** Trix Editor **/
     .trix-content * {
         color: #16191c;
     }
+
     /** Trix Editor **/
 
     /** WooCommerce seetings **/
@@ -754,18 +765,20 @@
 
         #progress-bar {
             background-color: #EEE;
-            border-radius: 13px; /* (height of inner div) / 2 + padding */
+            border-radius: 13px;
+            /* (height of inner div) / 2 + padding */
             padding: 3px;
-            margin-bottom : 20px;
+            margin-bottom: 20px;
         }
 
         #sync-progress {
             background-color: #00A0D2;
-            width: 0%; /* Adjust with JavaScript */
+            width: 0%;
+            /* Adjust with JavaScript */
             height: 20px;
             border-radius: 10px;
             text-align: center;
-            color:#FFF;
+            color: #FFF;
         }
 
         .regen-sync-table {
@@ -786,7 +799,9 @@
         }
 
         .wc-sync-notice {
-            h4, p {
+
+            h4,
+            p {
                 text-align: center;
             }
         }
@@ -799,6 +814,7 @@
             min-height: 520px !important;
         }
     }
+
     /** WooCommerce seetings ends **/
 
     .email-template-tags {
@@ -838,6 +854,7 @@
             }
         }
     }
+
     /** Integration settings ends **/
 
     /** Search Bar Global CSS **/
@@ -850,7 +867,7 @@
         max-height: 200px;
         height: auto;
         min-height: 67px;
-        box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow)!important;
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent), var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow) !important;
         z-index: 20000;
 
         .single-suggestion-item {
@@ -877,7 +894,7 @@
             .text-danger {
                 padding: 18px;
                 color: #d63638;
-                font-size: 11px!important;
+                font-size: 11px !important;
             }
         }
     }
@@ -887,28 +904,28 @@
         background: transparent;
         margin: 30px 0 0;
         padding: 0px;
-        border: none!important;
+        border: none !important;
 
-        .email-connect-area{
+        .email-connect-area {
             display: flex;
             flex-direction: row;
 
-            .settings-box{
+            .settings-box {
                 background: transparent;
-                margin: 30px 18px 0px 0px;
+                margin: 30px 0px 0px 0px;
                 padding: 0px;
-                border: none!important;
+                border: none !important;
             }
 
             .email-card {
                 background: #fff;
                 flex-basis: 49%;
                 margin-right: 30px;
-                padding: 25px 8px 10px 28px;
+                padding: 25px 28px 25px 28px;
                 border: 1px solid #dfe2e7;
                 border-radius: 2px;
 
-                h4{
+                h4 {
                     color: #27313A;
                     font-size: 16px;
                     font-weight: bold
@@ -917,12 +934,12 @@
                 .email-icons {
                     margin-top: 30px;
                     display: flex;
+                    gap: 20px;
 
                     .email-icon {
                         padding: 25px 0px 20px 0px;
                         border: 1px solid #dfe2e7;
                         flex-basis: 48%;
-                        margin-right: 20px;
                         text-align: center;
                         border-radius: 3px;
 
@@ -937,7 +954,7 @@
                             margin-top: 8px;
                         }
 
-                        .checkbox-icon{
+                        .checkbox-icon {
                             position: absolute;
                             margin-left: 22px;
                             margin-top: -14px;
@@ -966,6 +983,30 @@
                     }
                 }
 
+                .email-icons.outgoing-email-icons {
+                    display: block;
+                    overflow: hidden;
+
+                    .email-icon {
+                        width: 48%;
+                        margin-right: 0;
+                        margin-bottom: 20px;
+                    }
+
+                    .email-icon:nth-child(2),
+                    .email-icon:nth-child(3) {
+                        float: left;
+                    }
+
+                    .email-icon:nth-child(2) {
+                        margin-right: 2%;
+                    }
+
+                    .email-icon:nth-child(3) {
+                        margin-left: 2%;
+                    }
+                }
+
                 .test-connection {
                     text-align: center;
                     margin-top: 50px;
@@ -975,13 +1016,13 @@
                     .connection-outgoing {
                         padding: 20px;
                         background: #ab82ff;
-                        background: linear-gradient(175deg,#ab82ff,#d3c1ff);
+                        background: linear-gradient(175deg, #ab82ff, #d3c1ff);
                     }
 
                     .connection-incoming {
                         padding: 20px;
                         background: #6F88FC;
-                        background: linear-gradient(600deg,#6f88fc,#6f88fc,#c1e3ff);
+                        background: linear-gradient(600deg, #6f88fc, #6f88fc, #c1e3ff);
                     }
 
                     label {
