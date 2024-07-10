@@ -8,7 +8,7 @@ export default {
                 type: type,
                 title: message,
                 showConfirmButton: false,
-                timer: 1500
+                timer: 2000
             });
         },
 
