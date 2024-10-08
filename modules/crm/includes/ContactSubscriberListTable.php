@@ -191,7 +191,7 @@ class ContactSubscriberListTable extends \WP_List_Table {
         $actions    = [];
         $edit_url   = '';
         $group_id   = isset( $_GET['filter_contact_group'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_contact_group'] ) ) : 0;
-        $delete_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact-groups', 'action' => 'delete', 'group_id' => $group_id, 'id' => $subscriber_contact->user_id ], admin_url( 'admin.php' ) );
+        $delete_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact-groups', 'action' => 'delete', 'group_id' => intval( $group_id ), 'id' => $subscriber_contact->user_id ], admin_url( 'admin.php' ) );
 
         if ( current_user_can( 'erp_crm_delete_contact', $contact->id ) ) {
             $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
