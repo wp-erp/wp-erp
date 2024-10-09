@@ -8,8 +8,8 @@
         <div class="email-connect-area">
             <div class="email-card email-connect-outgoing">
                 <h4>{{ __( 'Outgoing Email Setting', 'erp' ) }}</h4>
-                <div class="email-icons">
-                    <div v-for="connection in outgoingConnections" :class="`email-icon pointer ${connection.slug === activeOutgoingEmail ? 'active-email-icon' : ''}`" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
+                <div class="email-icons outgoing-email-icons">
+                    <div v-for="connection in outgoingConnections" :class="`email-icon pointer ${connection.slug} ${connection.slug === activeOutgoingEmail ? 'active-email-icon' : ''}`" :key="connection.slug" @click="toggleActiveConnection(connection, 'outgoing')">
                         <img :src="connection.isEnabled ? connection.enableIcon : connection.disableIcon" alt="" />
                         <span class="checkbox-icon checkbox-active" v-if="connection.isEnabled"><i class="fa fa-check-circle"></i></span>
                         <span class="checkbox-icon checkbox-inactive" v-else @click="toggleActiveConnection(connection, 'outgoing')"></span>
@@ -17,7 +17,8 @@
                     </div>
                 </div>
                 <div v-if="activeOutgoingEmail === 'smtp'"><smtp-email /></div>
-                <div v-else><mailgun-email /></div>
+                <div v-else-if="activeOutgoingEmail === 'mailgun'"><mailgun-email /></div>
+                <div v-else><wp-mail /></div>
             </div>
             <div class="email-card email-connect-incoming">
                 <h4>{{ __( 'Incoming Email Setting', 'erp' ) }}</h4>
@@ -45,6 +46,7 @@ import SmtpEmail from "./SmtpEmail.vue";
 import GoogleEmail from "./GoogleEmail.vue";
 import ImapEmail from "./ImapEmail.vue";
 import MailgunEmail from "./MailgunEmail.vue";
+import WpMail from "./WpMail.vue";
 import { generateFormDataFromObject } from "../../../utils/FormDataHandler";
 
 import { mapState } from 'vuex';
@@ -59,7 +61,8 @@ export default {
         SmtpEmail,
         ImapEmail,
         GoogleEmail,
-        MailgunEmail
+        MailgunEmail,
+        WpMail
     },
 
     data() {

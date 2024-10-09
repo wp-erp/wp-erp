@@ -384,11 +384,20 @@ function erp_acct_get_vendor_products( $args = [] ) {
                 product_type.name AS product_type_name";
         }
 
+        // Build the FROM and JOIN parts of the query separately
         $sql .= $wpdb->prepare( " FROM {$wpdb->prefix}erp_acct_products AS product
             LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
             LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-            WHERE people.id=%d AND product.product_type_id<>%d ORDER BY product.{$args['orderby']} {$args['order']} %s", $args['vendor'], 3, $limit );
+            WHERE people.id = %d AND product.product_type_id <> %d", $args['vendor'], 3 );
+
+        // Append the ORDER BY clause
+        $sql .= " ORDER BY product.{$args['orderby']} {$args['order']}";
+
+        // Append the LIMIT clause if needed
+        if ( ! empty( $limit ) ) {
+            $sql .= " $limit";
+        }
 
         if ( $args['count'] ) {
             $products_vendor_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
