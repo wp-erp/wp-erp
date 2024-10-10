@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.5.2
+Tested up to: 6.6.2
 Requires PHP: 7.2
-Stable tag: 1.13.2
+Stable tag: 1.13.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -324,6 +324,18 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
+= v1.13.3 -> October 10, 2024 =
+--------------------------
+* 🛠️ [FIX] Cross Site Scripting (XSS) Vulnerability.
+* 🛠️ [FIX] SQL syntax issue where vendor own products were not showing.
+* 🛠️ [FIX] Account - New invoice create email not sent.
+* 🛠️ [Fix] CRM - New contact assgined email not sent.
+* 🛠️ [Fix] New leave request email not sent.
+* 🛠️ [Fix] Alert message UI broken issue.
+* 🛠️ [Fix] WP default email settings error handle.
+* 🛠️ [Fix] Mailgun email connect & settings issue.
+* 🛠️ [Feat] Added WordPress default email to the email settings panel.
+* 🛠️ [Feat] Added test mail form for wp_mail() settings.
 
 = v1.13.2 -> April 16, 2024 =
 --------------------------
