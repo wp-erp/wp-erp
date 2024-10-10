@@ -1543,12 +1543,12 @@ var getBase64StringFromFile = function getBase64StringFromFile(file) {
 
 /***/ }),
 
-/***/ 346:
+/***/ 347:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(347);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(348);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuelidate__ = __webpack_require__(182);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuelidate__);
@@ -1558,11 +1558,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_loading_overlay__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_loading_overlay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue_loading_overlay__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wordpress_hooks__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(379);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(380);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__directive_directives__ = __webpack_require__(381);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(380);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(381);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__directive_directives__ = __webpack_require__(382);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__utils_FormDataHandler__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__http__ = __webpack_require__(382);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__http__ = __webpack_require__(383);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_base_Dropdown_vue__ = __webpack_require__(87);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_base_DatePicker_vue__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_select_MultiSelect_vue__ = __webpack_require__(48);
@@ -1574,7 +1574,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_layouts_BaseContentLayout_vue__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_vue_dropify__ = __webpack_require__(121);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_vue_dropify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_21_vue_dropify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vuedraggable__ = __webpack_require__(423);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vuedraggable__ = __webpack_require__(424);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_vuedraggable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_22_vuedraggable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_vue_trix__ = __webpack_require__(92);
 
@@ -1648,7 +1648,7 @@ settings.addFilter = function (hookName, namespace, component) {
 
 /***/ }),
 
-/***/ 347:
+/***/ 348:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1773,7 +1773,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 379:
+/***/ 380:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1789,7 +1789,7 @@ var dateFormat = erp_settings_var.date_format;
         type: type,
         title: message,
         showConfirmButton: false,
-        timer: 1500
+        timer: 2000
       });
     },
     getFileName: function getFileName(path) {
@@ -1908,7 +1908,7 @@ var dateFormat = erp_settings_var.date_format;
 
 /***/ }),
 
-/***/ 380:
+/***/ 381:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1950,7 +1950,7 @@ var dateFormat = erp_settings_var.date_format;
 
 /***/ }),
 
-/***/ 381:
+/***/ 382:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1976,7 +1976,7 @@ var clickOutside = {
 
 /***/ }),
 
-/***/ 382:
+/***/ 383:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3537,4 +3537,4 @@ if (false) {(function () {
 
 /***/ })
 
-},[346]);
+},[347]);
