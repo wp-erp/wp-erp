@@ -794,7 +794,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
                 ];
             }
 
-            if ( !empty( $value['contact']['user_id'] ) ) {
+            if ( $value['contact']['user_id'] ) {
                 $value['contact']['first_name'] = get_user_meta( $value['contact']['user_id'], 'first_name', true );
                 $value['contact']['last_name']  = get_user_meta( $value['contact']['user_id'], 'last_name', true );
             }
@@ -4213,9 +4213,9 @@ function erp_crm_add_tag_taxonomy() {
  * @return bool
  */
 function erp_crm_sync_is_active() {
-//    if ( wperp()->google_auth->is_active() ) {
-//        return true;
-//    }
+    if ( wperp()->google_auth->is_active() ) {
+        return true;
+    }
 
     if ( erp_is_imap_active() ) {
         return true;
