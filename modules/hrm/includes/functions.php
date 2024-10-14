@@ -699,20 +699,20 @@ function erp_settings_save_leave_years( $post_data = [] ) {
     // Error handles
     foreach ( $post_data as $key => $data ) {
         if ( empty( $data['fy_name'] ) ) {
-            return new WP_Error( 'errors', __( 'Please give a financial year name on row #' . ( $key + 1 ), 'erp' ) );
+            return new WP_Error( 'errors', __( 'Please give a financial year name on row #', 'erp' ) . ( $key + 1 ) );
         }
         if ( empty( $data['start_date'] ) ) {
-            return new WP_Error( 'errors', __( 'Please give a financial year start date on row #' . ( $key + 1 ), 'erp' ) );
+            return new WP_Error( 'errors', __( 'Please give a financial year start date on row #', 'erp' ) . ( $key + 1 ) );
         }
         if ( empty( $data['end_date'] ) ) {
-            return new WP_Error( 'errors', __( 'Please give a financial year end date on row #' . ( $key + 1 ), 'erp' ) );
+            return new WP_Error( 'errors', __( 'Please give a financial year end date on row #', 'erp' ) . ( $key + 1 ) );
         }
         if ( ( strtotime( $data['end_date'] ) < strtotime( $data['start_date'] ) ) || strtotime( $data['end_date'] ) === strtotime( $data['start_date'] ) ) {
-            return new WP_Error( 'errors', __( 'End date must be greater than the start date on row #' . ( $key + 1 ), 'erp' ) );
+            return new WP_Error( 'errors', __( 'End date must be greater than the start date on row #', 'erp' ) . ( $key + 1 ) );
         }
 
         if ( in_array( $data['fy_name'], $year_names ) ) {
-            return new WP_Error( 'errors', __( 'Duplicate financial year name ' . $data['fy_name'] . ' on row #' . ( $key + 1 ), 'erp' ) );
+            return new WP_Error( 'errors', __( 'Duplicate financial year name ', 'erp' ) . $data['fy_name'] . __( ' on row #', 'erp' ) . ( $key + 1 ) );
         } else {
             array_push( $year_names, $data['fy_name'] );
         }
