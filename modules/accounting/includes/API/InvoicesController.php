@@ -518,7 +518,7 @@ class InvoicesController extends REST_Controller {
         }
 
         if ( isset( $request['billing_address'] ) ) {
-            $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
+            $prepared_item['billing_address'] = sanitize_textarea_field( $request['billing_address'] );
         }
 
         if ( isset( $request['line_items'] ) ) {
@@ -546,11 +546,11 @@ class InvoicesController extends REST_Controller {
         }
 
         if ( isset( $request['particulars'] ) ) {
-            $prepared_item['particulars'] = $request['particulars'];
+            $prepared_item['particulars'] =  sanitize_textarea_field( $request['particulars'] );
         }
 
         if ( isset( $request['additional_notes'] ) ) {
-            $prepared_item['additional_notes'] = $request['additional_notes'];
+            $prepared_item['additional_notes'] = sanitize_textarea_field( $request['additional_notes'] );
         }
 
         if ( isset( $request['transaction_by'] ) ) {
