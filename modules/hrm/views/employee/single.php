@@ -3,7 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-if ( !is_admin() || !current_user_can( 'erp_hr_manager' ) ||  ( $employee->get_status() == 'terminated' &&  absint( $employee->get_user_id() ) === get_current_user_id()) ) {
+
+if ( $employee->get_status() == 'terminated' && ! current_user_can( 'erp_hr_manager' ) || ! is_admin() ) {
     wp_die( __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
 }
 
