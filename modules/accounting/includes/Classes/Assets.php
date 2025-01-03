@@ -94,7 +94,7 @@ class Assets {
                 $menus,
                 function ( $a, $b ) {
 
-                    return $a['position'] - $b['position'];
+                    return $a['position'] <=> $b['position'];
                 }
             );
         }
