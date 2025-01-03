@@ -17,7 +17,7 @@
         "johngrogg/ics-parser": "~1.0",
         "google/apiclient": "^2.0",
         "google/apiclient-services": "dev-develop",
-        "appsero/client": "^1.2",
+        "appsero/client": "2.0.4",
         "parsecsv/php-parsecsv": "^1.2",
         "mailgun/mailgun-php": "^3.2",
         "php-http/zend-adapter": "^0.1.0",
