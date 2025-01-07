@@ -1397,7 +1397,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
     $groupby = '';
     $orderby = $wpdb->prepare( " ORDER BY %s %s", $args['orderby'], $args['order'] );
-
+    $orderby = esc_sql( str_replace( '\'', '', $orderby ) );
     $offset = absint( $args['offset'] );
     $number = absint( $args['number'] );
     $limit  = $args['number'] == '-1' ? '' : $wpdb->prepare(" LIMIT %d, %d", $offset, $number);
