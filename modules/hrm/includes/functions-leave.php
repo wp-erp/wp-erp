@@ -1370,6 +1370,12 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $args['orderby'] = 'request.' . $args['orderby'];
     } elseif ( $args['orderby'] == 'name' ) {
         $args['orderby'] = 'u.' . $args['orderby'];
+    }elseif ( $args['orderby'] == 'days' ) {
+        $args['orderby'] = 'request.days';
+    }elseif ( $args['orderby'] == 'policy' ) {
+        $args['orderby'] = 'policy.id';
+    }elseif ( $args['orderby'] == 'last_status' ) {
+        $args['orderby'] = 'request.last_status';
     }
 
     $last_changed = erp_cache_get_last_changed( 'hrm', 'leave_request' );
@@ -1578,6 +1584,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 		'sql' => $query,
 	];
     wp_cache_set( $cache_key, $requests_data, 'erp', HOUR_IN_SECONDS );
+error_log(print_r( $requests_data['sql'], true ));
 
     return $requests_data;
 }
