@@ -1584,8 +1584,6 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 		'sql' => $query,
 	];
     wp_cache_set( $cache_key, $requests_data, 'erp', HOUR_IN_SECONDS );
-error_log(print_r( $requests_data['sql'], true ));
-
     return $requests_data;
 }
 
