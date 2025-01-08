@@ -1462,18 +1462,12 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $where .= $wpdb->prepare( " AND u.display_name like %s ", $like_s );
     }
 
-    if ( is_array( $args['status'] ) ) {
-        $wh = [];
-        foreach ( $args['status'] as $status ) {
-            $wh[] = $wpdb->prepare( "request.last_status = %s", $status );
-
-        }
-
-        $where .= $wpdb->prepare( " AND (%s)", implode( ' OR ', $wh ) );
-    } else {
-        if ( ! empty( $args['status'] ) && $args['status'] !== 'all' ) {
-            $where .= $wpdb->prepare( " AND request.last_status = %d", absint( $args['status'] ) );
-        }
+    // filter by leave status (approved, pending, rejected)
+    if ( is_array( $args['status'] ) && ! empty( $args['status'] ) ) {
+        $placeholders = implode( ', ', array_fill( 0, count( $args['status'] ), '%s' ) );
+        $where .= $wpdb->prepare( " AND request.last_status IN ($placeholders)", $args['status'] );
+    } elseif ( ! empty( $args['status'] ) && $args['status'] !== 'all' ) {
+        $where .= $wpdb->prepare( " AND request.last_status = %d", absint( $args['status'] ) );
     }
 
     if ( $args['user_id'] ) {
