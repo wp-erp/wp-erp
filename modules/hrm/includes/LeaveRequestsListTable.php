@@ -608,7 +608,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                     if ( ! empty( $_GET['filter_leave_status'] ) && is_array( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
                                         $checked = 'checked';
                                     }
-                                    echo sprintf( "<input name='filter_leave_status' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_attr($checked), esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
+                                    echo sprintf( "<input  name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_attr($checked), esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
                             </div>
