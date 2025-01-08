@@ -1333,6 +1333,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         'designation_id' => 0,
         'lead'           => 0,
         's'              => '',
+        'created_at'     => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -1376,6 +1377,8 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $args['orderby'] = 'policy.id';
     }elseif ( $args['orderby'] == 'last_status' ) {
         $args['orderby'] = 'request.last_status';
+    }elseif ( $args['orderby'] == 'available' ) {
+        $args['orderby'] = 'request.leave_entitlement_id';
     }
 
     $last_changed = erp_cache_get_last_changed( 'hrm', 'leave_request' );
@@ -1391,7 +1394,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     $leave_requests_table = $wpdb->prefix . 'erp_hr_leave_requests';
     $tables               = " FROM $leave_requests_table as request";
 
-    $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, u.display_name';
+    $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, u.display_name, request.created_at as created_at';
     $fields .= ', policy.color';
 
     $join = " LEFT JOIN {$wpdb->users} AS u ON u.ID = request.user_id";
@@ -1573,6 +1576,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $temp_data['color']          = isset( $single_request['color'] ) ? $single_request['color'] : '';
             $temp_data['day_status_id']  = $request->day_status_id;
             $temp_data['f_year']         = $request->entitlement->f_year;
+            $temp_data['created_at']     = $single_request['created_at'];
 
             $formatted_data[] = $temp_data;
         }
