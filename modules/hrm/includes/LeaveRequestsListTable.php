@@ -71,7 +71,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
             'cb'          => '<input type="checkbox" />',
             'name'        => __( 'Employee Name', 'erp' ),
             'policy'      => __( 'Policy', 'erp' ),
-            'request'     => __( 'Request', 'erp' ),
+            'request'     => __( 'Request for', 'erp' ),
+            'created_at'  => __( 'Requested On', 'erp' ),
             'available'   => __( 'Available', 'erp' ),
             'status'      => __( 'Status', 'erp' ),
             'reason'      => __( 'Reason', 'erp' ),
@@ -97,6 +98,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
         global $wpdb;
 
         switch ( $column_name ) {
+
+            case 'created_at':
+                return erp_format_date( $item->created_at );
+
             case 'policy':
                 return esc_html( $item->policy_name );
 
@@ -236,12 +241,13 @@ class LeaveRequestsListTable extends \WP_List_Table {
      */
     public function get_sortable_columns() {
         $sortable_columns = [
-            'from_date' => [ 'start_date', false ],
+            'request' => [ 'start_date', false ],
             'to_date'   => [ 'end_date', false ],
             'name'      => [ 'display_name', false ],
             'status'    => [ 'last_status', true ],
-            'request'   => [ 'id', true ],
+            'created_at'   => [ 'id', true ],
             'policy'    => [ 'policy', true ],
+            'available'    => [ 'available', true ],
         ];
 
         return $sortable_columns;
@@ -513,7 +519,16 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
         $employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_unslash( $_GET['employee_name'] ) ) : '';
         ?>
+        <style>
+         table.leaves th#available {
+             width: inherit;
+         }
+         table.leaves th#request {
+            /* width: 150px; */
+            width: inherit;
 
+        }
+        </style>
         <div id="wperp-filter-dropdown" class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <div id="search-main">
                 <?php
