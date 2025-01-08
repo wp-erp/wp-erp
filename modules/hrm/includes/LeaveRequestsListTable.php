@@ -71,7 +71,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             'cb'          => '<input type="checkbox" />',
             'name'        => __( 'Employee Name', 'erp' ),
             'policy'      => __( 'Policy', 'erp' ),
-            'request'     => __( 'Request for', 'erp' ),
+            'request'     => __( 'Request For', 'erp' ),
             'created_at'  => __( 'Requested On', 'erp' ),
             'available'   => __( 'Available', 'erp' ),
             'status'      => __( 'Status', 'erp' ),
