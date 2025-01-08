@@ -240,7 +240,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
             'to_date'   => [ 'end_date', false ],
             'name'      => [ 'display_name', false ],
             'status'    => [ 'last_status', true ],
-            'request'   => [ 'days', true ],
+            'request'   => [ 'id', true ],
             'policy'    => [ 'policy', true ],
         ];
 
