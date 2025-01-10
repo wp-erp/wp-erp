@@ -7,6 +7,8 @@ namespace WeDevs\ERP\Settings;
  */
 class Email extends Template {
 
+    public $sections;
+
 	/**
 	 * Class constructor
 	 */

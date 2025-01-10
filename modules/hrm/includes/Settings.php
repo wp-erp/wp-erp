@@ -9,6 +9,8 @@ use WeDevs\ERP\Settings\Template;
  */
 class Settings extends Template {
 
+    public $sections;
+
     /**
      * [__construct description]
      */

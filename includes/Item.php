@@ -9,6 +9,13 @@ namespace WeDevs\ERP;
  */
 abstract class Item {
 
+    public $id;
+
+    public $name;
+
+    public $data;
+
+    
     /**
      * Initialize a item
      *

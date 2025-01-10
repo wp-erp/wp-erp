@@ -9,6 +9,13 @@ use WP_Error;
  */
 class People extends Item {
 
+
+    public $id;
+
+    public $data;
+
+    public $user_id;
+
     /**
      * Generate people data
      *

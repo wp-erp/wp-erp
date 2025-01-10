@@ -44,7 +44,10 @@ class ContactTaxonomy {
      * @var array
      */
     public $labels = [];
-
+    public $tax_singular;
+    public $tax_plural;
+    public $tax_singular_low;
+    public $tax_plural_low;
     /**
      * Main constructor
      *

@@ -19,6 +19,9 @@ class Contact extends \WeDevs\ERP\People {
      *
      * @param int|object $contact
      */
+
+     public $types = [];
+
     public function __construct( $contact = null, $type = null ) {
         if ( ! is_object( $contact ) ) {
             $contact = absint( $contact );
