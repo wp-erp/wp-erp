@@ -2658,7 +2658,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] - $b['position'];
 		}
 	);
 
@@ -2877,7 +2877,7 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] - $b['position'];
 		}
 	);
 
@@ -3171,7 +3171,7 @@ function filter_enabled_email( $email ) {
  * @author  Ugur Mirza ZEYREK
  * @contributor Travis Grenell
  */
-function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+function erp_wp_insert_rows( $row_arrays, $wp_table_name, $update = false, $primary_key = null ) {
 	global $wpdb;
 	$wp_table_name = esc_sql( $wp_table_name );
 	// Setup arrays for Actual Values, and Placeholders.
@@ -3505,7 +3505,8 @@ function erp_is_valid_currency_amount( $amount ) {
  */
 function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
 	$old_value   = $new_value   = array();
-	$changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
+	$old_data = (array) $old_data;
+	$changes_key = is_array($new_data) && is_array($old_data) ? array_keys(array_diff_assoc($new_data, $old_data)) : [];
 
 	foreach ( $changes_key as $key => $change_field_key ) {
 		// To avoid the error when the key is not set in the old data, we need to check if the key is set or not.

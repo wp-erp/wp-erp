@@ -8,6 +8,10 @@ use WeDevs\ERP\Settings\Template;
  * General class
  */
 class Settings extends Template {
+
+    // sections
+    public $sections;
+
     public function __construct() {
         $this->id            = 'erp-ac';
         $this->label         = __( 'Accounting', 'erp' );

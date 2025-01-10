@@ -17,6 +17,12 @@ class Countries {
     /** @var array Array of address formats for locales */
     public $address_formats;
 
+    /** @var array Array of countries */
+    public $countries;
+
+    /** @var array Array of states */
+    public $states;
+
     /**
      * Initializes the Countries() class
      *
