@@ -325,7 +325,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 == Changelog ==
 
 = v1.13.4 -> January 08, 2025 =
-* 🪝 [Added] New Column "Reqested On" Leave Request Table.
+* 🪝 [Added] New Column "Requested On" Leave Request Table.
 * 🪝 [Added] Sorting for Leave Request Table Columns Employee Name, Leave Policy, Requested for, Requested On, Leave Available & Status.
 * 🛠️ [Fixed] Compatibility with WordPress 6.7 by adjusting translation loading.
 * 🛠️ [Fixed] Unauthorized Access to Terminated Employee Information.
