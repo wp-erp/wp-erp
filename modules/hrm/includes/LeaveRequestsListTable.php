@@ -504,11 +504,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $filters['filter_leave_year'] = gmdate( 'M d, Y', strtotime( $start_date ) ) . ' - ' . gmdate( 'M d, Y', strtotime( $end_date ) );
                 $custom_date_html = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">
                                      <div style="display: flex">
-                                     <label for="start_date">From
+                                     <label for="start_date">' . esc_html__( 'From', 'erp' ) . '
                                      <input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required value='. esc_attr( $start_date ) .'>&nbsp;
                                      </div>
                                      <div>
-                                     <label for="end_date">To
+                                     <label for="end_date">' . esc_html__( 'To', 'erp' ) . '
                                      <input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required value='. esc_attr( $end_date ) .'>
                                      </div>
                                      </div>';
@@ -618,11 +618,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                             <div>
                                 <?php
                                 $filter_leave_years = [
-                                    ''       => 'Filter by date',
-                                    '1'      => 'Last week',
-                                    '2'      => 'Last month',
-                                    '3'      => 'Last 3 months',
-                                    'custom' => 'Custom',
+                                    ''       => __( 'Filter by date', 'erp' ),
+                                    '1'      => __( 'Last week', 'erp' ),
+                                    '2'      => __( 'Last month', 'erp' ),
+                                    '3'      => __( 'Last 3 months', 'erp' ),
+                                    'custom' => __( 'Custom', 'erp' ),
                                 ];
                                 ?>
                                 <select name='filter_leave_year' id='filter_leave_year'>
