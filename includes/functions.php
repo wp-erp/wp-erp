@@ -1275,6 +1275,7 @@ function erp_get_import_export_fields() {
 				'user_email',
 			),
 			'fields'          => array(
+                'employee_id',
 				'first_name',
 				'middle_name',
 				'last_name',
@@ -1604,7 +1605,7 @@ function erp_hr_get_reporting_to( $id, $field, $value ) {
     $user = get_user_by( 'id', $value );
 
     if ( $user ) {
-        return $user->display_name;
+        return $user->user_email;
     }
 
     return '';
@@ -2217,7 +2218,7 @@ function erp_is_module_active( $module_key ) {
  * @param bool   $field_data (optional)
  * @param string $file_name
  */
-function erp_make_csv_file( $items, $file_name, $field_data = true ) {
+function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' ) {
 	$file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . gmdate( 'd_m_Y' ) . '.csv';
 
 	if ( empty( $items ) ) {
@@ -2247,7 +2248,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
 			$csv_row = array_map(
 				function ( $item_val ) {
 					if ( is_array( $item_val ) ) {
-							return implode( ', ', $item_val );
+						return implode( ', ', $item_val );
 					}
 
 					return $item_val;
@@ -2259,9 +2260,64 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
 		}
 	}
 
+    if ( 'employee' === $type ) {
+
+        $sample_data = get_sample_employee_data($items[0]);
+        foreach ( $sample_data as $item ) {
+            fputcsv( $output, $item );
+        }
+    }
 	exit();
 }
 
+
+/**
+ * Get sample employee data
+ *
+ * @return array
+ */
+function get_sample_employee_data($columns) {
+
+    $sample_data = array(
+        array(
+            'employee_id' => '12345',
+            'first_name' => 'John',
+            'middle_name' => 'Karim',
+            'last_name' => 'Desuza',
+            'email' => 'john.doe@example.com',
+            'designation' => 'Software Engineer',
+            'department' => 'IT',
+            'location' => 'Dhaka',
+            'hiring_source' => 'Direct',
+            'hire_date' => '2020-01-01',
+            'date_of_birth' => '1999-01-01',
+            'reporting_to' => 'Yusuf Sarkar',
+            'pay_rate' => '50000.00',
+            'type' => 'Full Time',
+            'pay_type' => 'Monthly',
+            'status' => 'Active',
+            'other_email' => 'other_email@something.com',
+            'phone' => '123-456-7890',
+            'work_phone' => '123-456-7890',
+            'mobile' => '123-456-7891',
+            'address' => '123 Main Street, Anytown, CA 12345',
+            'gender' => 'Male',
+            'marital_status' => 'Single',
+            'nationality' => 'Bangladeshi',
+            'driving_license' => 'DRV-12345',
+            'hobbies' => 'Reading, Traveling',
+            'user_url' => 'https://example.com',
+            'description' => 'Sample employee data',
+            'street_1' => '123 Main Street',
+            'street_2' => 'Apt 123',
+            'city' => 'Anytown',
+            'country' => 'US',
+            'state' => 'CA',
+            'postal_code' => '12345',
+        ),
+    );
+    return $sample_data;
+}
 /**
  * Import/Export sample CSV download action hook
  *
@@ -2280,15 +2336,15 @@ function erp_import_export_download_sample() {
 		return;
 	}
 
-	$type   = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) );
+	$sample_type   = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) );
 	$fields = erp_get_import_export_fields();
 
-	if ( isset( $fields[ $type ] ) ) {
-		$keys      = $fields[ $type ]['fields'];
+	if ( isset( $fields[ $sample_type ] ) ) {
+		$keys      = $fields[ $sample_type ]['fields'];
 		$keys      = array_flip( $keys );
-		$file_name = "sample_csv_{$type}.csv";
+		$file_name = "sample_csv_{$sample_type}.csv";
 
-		erp_make_csv_file( array( $keys ), $file_name, false );
+		erp_make_csv_file( array( $keys ), $file_name, false, $sample_type );
 	}
 
 	return;
