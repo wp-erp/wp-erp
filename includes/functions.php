@@ -1287,8 +1287,8 @@ function erp_get_import_export_fields() {
 				'date_of_birth',
 				'reporting_to',
 				'pay_rate',
-				'pay_type',
 				'type',
+				'pay_type',
 				'status',
 				'other_email',
 				'phone',
@@ -1489,7 +1489,8 @@ function erp_process_csv_export() {
 						if ( in_array( $field, $custom_fields, true ) ) {
 							$csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
 						} else {
-							$csv_items[ $index ][ $field ] = $item->{$field};
+
+							$csv_items[ $index ][ $field ] = erp_hr_get_human_readable_name($item->id, $field, $item->{$field}, $item); // $item->{$field};
 						}
 					} elseif ( $is_people ) {
 						if ( in_array( $field, $custom_fields, true ) ) {
@@ -1508,6 +1509,171 @@ function erp_process_csv_export() {
 			erp_make_csv_file( $csv_items, $file_name );
 		}
 	}
+}
+
+
+function erp_hr_get_human_readable_name( $id, $field, $value, $item ) {
+
+    if ( ! $id ) {
+        return '';
+    }
+
+    switch ( $field ) {
+        case 'department':
+            return erp_hr_get_department_name( $id, $field, $value );
+            break;
+        case 'designation':
+            return erp_hr_get_designation_name( $id, $field, $value );
+            break;
+        case 'type':
+            return erp_hr_get_employee_type( $id, $field, $value );
+        case 'reporting_to':
+            return erp_hr_get_reporting_to( $id, $field, $value );
+            break;
+        case 'pay_type':
+            return erp_hr_get_pay_type_name( $id, $field, $value );
+            break;
+        case 'status':
+            return erp_hr_get_status_name( $id, $field, $value );
+            break;
+        case 'gender':
+            return erp_hr_get_gender_name( $id, $field, $value );
+            break;
+        case 'marital_status':
+            return erp_hr_get_marital_status_name( $id, $field, $value );
+            break;
+        case 'hiring_source':
+            return erp_hr_get_hiring_source_name( $id, $field, $value );
+            break;
+        case 'country':
+            return erp_get_country_name( $value );
+            break;
+        case 'state':
+            return erp_get_state_name(  $item->country, $value );
+            break;
+        case 'location':
+            return erp_get_location_name( $value );
+            break;
+        case 'nationality':
+            return erp_get_country_name(  $value );
+            break;
+
+        // case 'blood_group':
+        //     return erp_hr_get_blood_group( $id, $field, $value );
+        //     break;
+
+
+        default:
+            return $value;
+            break;
+    }
+}
+
+function erp_hr_get_department_name( $id, $field, $value ) {
+    $department = new \WeDevs\ERP\HRM\Models\Department();
+    $department = $department->find( $value );
+
+    if ( $department ) {
+        return $department->title;
+    }
+
+    return '';
+}
+
+function erp_hr_get_designation_name( $id, $field, $value ) {
+    $designation = new \WeDevs\ERP\HRM\Models\Designation();
+    $designation = $designation->find( $value );
+    if ( $designation ) {
+        return $designation->title;
+    }
+
+    return '';
+}
+
+function erp_hr_get_employee_type( $id, $field, $value ) {
+    $types = erp_hr_get_employee_types();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+function erp_hr_get_reporting_to( $id, $field, $value ) {
+    $user = get_user_by( 'id', $value );
+
+    if ( $user ) {
+        return $user->display_name;
+    }
+
+    return '';
+}
+
+function erp_hr_get_pay_type_name( $id, $field, $value ) {
+    $types = erp_hr_get_pay_type();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// gender
+function erp_hr_get_gender_name( $id, $field, $value ) {
+    $types = erp_hr_get_genders();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// employee status
+function erp_hr_get_status_name( $id, $field, $value ) {
+    $types = erp_hr_get_employee_statuses();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// marital status
+function erp_hr_get_marital_status_name( $id, $field, $value ) {
+    $types = erp_hr_get_marital_statuses();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// hiring source
+function erp_hr_get_hiring_source_name( $id, $field, $value ) {
+    $types = erp_hr_get_employee_sources();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+
+function erp_get_location_name( $location_id ) {
+    $location = new WeDevs\ERP\Admin\Models\CompanyLocations();
+    $location = $location->find( $location_id  );
+
+    if ( $location ) {
+        return $location->name;
+    }
+
+    return '';
 }
 
 /**
