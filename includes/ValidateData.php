@@ -39,7 +39,7 @@ class ValidateData {
             foreach ( $processed_data as $pdata_key => $pdata_val ) {
                 $pdata_key_arr = explode( '_', $pdata_key );
 
-                $errors[] = '<strong>' . __( sprintf( "Error at #ROW %d", $pdata_key_arr[1] + 1 ), 'erp' ) . '</strong>';
+                $errors[] = '<strong>' . sprintf( __( "Error at #ROW %d", 'erp' ), $pdata_key_arr[1] + 1 ) . '</strong>';
 
                 foreach ( $pdata_val as $pdval ) {
                     foreach ( $pdval['errors'] as $err ) {
@@ -81,7 +81,7 @@ class ValidateData {
     }
 
     /**
-     * Process collected csv data for validatiob
+     * Process collected csv data for validation
      *
      * @since 1.6.5
      *
