@@ -212,7 +212,7 @@ class ValidateData {
                 return $this->validate_field( 'Pay type', $dt_value, $type, 'max:20|' );
 
             case 'status':
-                return $this->validate_field( 'Statue', $dt_value, $type, 'max:10|' );
+                return $this->validate_field( 'Status', $dt_value, $type, 'max:10|' );
 
             case 'other_email':
                 return $this->validate_field( 'Other email', $dt_value, $type, 'max:60|email:true' );
