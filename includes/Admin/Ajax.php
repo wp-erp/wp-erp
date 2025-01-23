@@ -184,8 +184,54 @@ class Ajax {
      * @return int
      */
     public function process_csv_data( $csv_data, $fields, $type, $count ) {
+        unset( $csv_data[0] ); // remove the column head row
+       $designations =  erp_hr_get_designations_fresh();
+       $departments =  erp_hr_get_departments_fresh();
+       $employee_fields = [
+            'work'     => [
+                'designation',
+                'department',
+                'location',
+                'hiring_source',
+                'hiring_date',
+                'date_of_birth',
+                'reporting_to',
+                'pay_rate',
+                'pay_type',
+                'type',
+                'status',
+                'location',
+            ],
+            'personal' => [
+                'employee_id',
+                'photo_id',
+                'user_id',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'other_email',
+                'phone',
+                'work_phone',
+                'mobile',
+                'address',
+                'gender',
+                'marital_status',
+                'nationality',
+                'driving_license',
+                'hobbies',
+                'user_url',
+                'description',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ],
+        ];
 
         foreach ( $csv_data as $line ) {
+
             if ( empty( $line ) ) {
                 continue;
             }
@@ -194,62 +240,70 @@ class Ajax {
 
             if ( is_array( $fields ) && ! empty( $fields ) ) {
                 foreach ( $fields as $key => $value ) {
-                    if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
-                        if ( $type === 'employee' ) {
-                            $employee_fields = [
-                                'work'     => [
-                                    'designation',
-                                    'department',
-                                    'location',
-                                    'hiring_source',
-                                    'hiring_date',
-                                    'date_of_birth',
-                                    'reporting_to',
-                                    'pay_rate',
-                                    'pay_type',
-                                    'type',
-                                    'status',
-                                ],
-                                'personal' => [
-                                    'photo_id',
-                                    'user_id',
-                                    'first_name',
-                                    'middle_name',
-                                    'last_name',
-                                    'other_email',
-                                    'phone',
-                                    'work_phone',
-                                    'mobile',
-                                    'address',
-                                    'gender',
-                                    'marital_status',
-                                    'nationality',
-                                    'driving_license',
-                                    'hobbies',
-                                    'user_url',
-                                    'description',
-                                    'street_1',
-                                    'street_2',
-                                    'city',
-                                    'country',
-                                    'state',
-                                    'postal_code',
-                                ],
-                            ];
 
-                            $departments  = erp_hr_get_departments_dropdown_raw();
-                            $designations = erp_hr_get_designation_dropdown_raw();
+                    if ( ! empty( $line[ $value ] ) ) {
+                        if ( $type === 'employee' ) {
+
 
                             if ( in_array( $key, $employee_fields['work'], true ) ) {
-                                if ( $key === 'designation' ) {
-                                    $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
-                                } elseif ( $key === 'department' ) {
-                                    $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
+                                if ( $key === 'designation' && ! empty( $line[ $value ] ) ) {
+                                   if( ! array_search( $line[ $value ], $designations, true ) ){
+
+                                        $result = erp_hr_create_designation(['title' => $line[ $value ]]);
+
+                                        if ( is_wp_error( $result ) ) {
+                                            error_log( $result->get_error_message() );
+                                        } else {
+                                            $line_data['work'][ $key ] = $result;
+                                            $designations[ $result ] = $line[ $value ]; // add the new item to existing designations list
+                                        }
+
+                                   }else{
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
+                                   }
+                                } elseif ( $key === 'department' && ! empty( $line[ $value ] ) ) {
+
+                                    if( ! array_search( $line[ $value ], $departments, true ) ){
+
+                                        $result = erp_hr_create_department(['title' => $line[ $value ]]);
+
+                                        if ( is_wp_error( $result ) ) {
+                                            error_log( $result->get_error_message() );
+                                        } else {
+                                            $line_data['work'][ $key ] = $result;
+                                            $departments[ $result ] = $line[ $value ]; // add the new item to existing departments list
+                                        }
+                                    }else{
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
+                                    }
+
+                                }elseif ( $key === 'type' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_employee_types(), true );
+                                }elseif ( $key === 'pay_type' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_pay_type(), true );
+                                }elseif ( $key === 'hiring_source' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_employee_sources(), true );
+                                }elseif ( $key === 'status' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_employee_statuses(), true );
+                                }elseif ( $key === 'location' ) {
+                                    $locations = erp_company_get_location_dropdown_raw();
+
+                                    if ( ! array_search( $line[ $value ], $locations ) ) {
+                                        $line_data['work'][ $key ] = '-1'; // default location
+                                    } else {
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $locations, true );
+                                    }
                                 } else {
                                     $line_data['work'][ $key ] = $line[ $value ];
                                 }
                             } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
-                                $line_data['personal'][ $key ] = $line[ $value ];
+                                if ( $key === 'gender' ) {
+                                    $line_data['personal'][ $key ] = array_search( $line[ $value ], erp_hr_get_genders(), true );
+                                }elseif ( $key === 'marital_status' ) {
+                                    $line_data['personal'][ $key ] = array_search( $line[ $value ], erp_hr_get_marital_statuses(), true );
+                                }else {
+                                    $line_data['personal'][ $key ] = $line[ $value ];
+                                }
                             } else {
                                 $line_data[ $key ] = $line[ $value ];
                             }
