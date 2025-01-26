@@ -472,7 +472,7 @@ class SetupWizard {
                 <br>
                 <span class="plugin-install-info-list">
                     <span class="plugin-install-info-list-item">
-                        <a href="https://wordpress.org/plugins/wedevs-project-manager/" target="_blank"><?php esc_html( 'WP Project Manager' ); ?></a>
+                        <a href="https://wordpress.org/plugins/wedevs-project-manager/" target="_blank"><?php echo esc_html( 'WP Project Manager' ); ?></a>
                     </span>
                 </span>
             </span>
@@ -605,7 +605,7 @@ class SetupWizard {
                 <br>
                 <span class="plugin-install-info-list">
                     <span class="plugin-install-info-list-item">
-                        <a href="https://wordpress.org/plugins/wemail/" target="_blank"><?php esc_html( 'weMail' ); ?></a>
+                        <a href="https://wordpress.org/plugins/wemail/" target="_blank"><?php echo esc_html( 'weMail' ); ?></a>
                     </span>
                 </span>
             </span>
