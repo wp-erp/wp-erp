@@ -292,3 +292,15 @@ function erp_hr_match_user_dept_lead_with_current_user( $user_id ) {
 
     return false;
 }
+
+
+/**
+ * Get all departments with title and id
+ * example output: [1 => 'Department 1', 2 => 'Department 2']
+ * @return array
+ */
+function erp_hr_get_departments_fresh() {
+    $departments = \WeDevs\ERP\HRM\Models\Department::all(['id', 'title']);
+    return array_column( $departments->toArray(), 'title', 'id');
+
+}
