@@ -2492,18 +2492,18 @@ class AjaxHandler {
 		}
 
 		if ( 0 === count( $result ) && 'deleted' !== $action ) {
-			$this->send_error( __( sprintf( 'No pending item found. Selected item(s) are already approved/rejected.' ), 'erp' ) );
+			$this->send_error( __( 'No pending item found. Selected item(s) are already approved/rejected.', 'erp' ) );
 		}
 
 		$item_status = 'deleted' !== $action ? 'pending ' : '';
 
 		if ( 1 === count( $result ) ) {
-			$this->send_success( sprintf( __( '1 %1$sitem has been %2$s successfully', 'erp' ), $item_status, $action ) );
+			$this->send_success( sprintf( __( '1 %1$s item has been %2$s successfully', 'erp' ), $item_status, $action ) );
 		}
 
 		$this->send_success(
 			// translators: 1) no of items, 2) item status, 3) action
-			sprintf( __( '%1$d %2$sitems have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action )
+			sprintf( __( '%1$d %2$s items have been %3$s successfully', 'erp' ), count( $result ), $item_status, $action )
 		);
 	}
 
