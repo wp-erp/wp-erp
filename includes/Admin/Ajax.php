@@ -476,6 +476,12 @@ class Ajax {
      * @return void
      */
     public function location_remove() {
+
+        // check permission for deleting location
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
             return;
         }
