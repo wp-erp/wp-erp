@@ -477,6 +477,7 @@ class Ajax {
      */
     public function location_remove() {
 
+        // check permission for deleting location
         if ( ! current_user_can( 'manage_options' ) ) {
             $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
         }
