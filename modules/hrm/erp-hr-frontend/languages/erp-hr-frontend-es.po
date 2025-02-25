@@ -1,0 +1,1901 @@
+# Copyright (C) 2020 WP ERP
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP ERP - HR Frontend 2.1.2\n"
+"Report-Msgid-Bugs-To: https://example.com\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:331
+msgid "12332"
+msgstr "12332"
+
+# automatic translation
+#: includes/class-settings.php:25 includes/class-settings.php:41
+msgid "HR Frontend"
+msgstr "interfaz de recursos humanos"
+
+# automatic translation
+#: includes/class-settings.php:46
+msgid "HR Dashbord Slug"
+msgstr "Slug del panel de recursos humanos"
+
+# automatic translation
+#: includes/class-settings.php:49
+msgid "Your custom slug"
+msgstr "Tu babosa personalizada"
+
+# automatic translation
+#: includes/class-settings.php:53
+msgid "HR Dashbord Title"
+msgstr "Título del tablero de recursos humanos"
+
+# automatic translation
+#: includes/class-settings.php:56
+msgid "Your custom title"
+msgstr "Tu título personalizado"
+
+# automatic translation
+#. Author of the plugin/theme
+msgid "WP ERP"
+msgstr "WP ERP"
+
+# automatic translation
+#: includes/class-settings.php:60
+msgid "HR Dashbord Logo"
+msgstr "Logotipo del panel de recursos humanos"
+
+# automatic translation
+#: includes/class-settings.php:63
+msgid "Your dashbord custom logo"
+msgstr "Su logotipo personalizado dashbord"
+
+# automatic translation
+#: includes/class-settings.php:66
+msgid "Redirect to frontend"
+msgstr "Redirigir a la interfaz"
+
+# automatic translation
+#: includes/class-settings.php:69
+msgid "Check if you want to redirect to frontend"
+msgstr "Compruebe si desea redirigir a la interfaz"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:4
+msgid "Could not find the account"
+msgstr "No se pudo encontrar la cuenta"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:5
+msgid "Something went wrong. Please try again."
+msgstr "Algo salió mal. Inténtalo de nuevo."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:6
+msgid "HR Management"
+msgstr "Gestión de recursos humanos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:7
+msgid "Employees"
+msgstr "Empleados"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:8
+msgid "Departments"
+msgstr "Departamentos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:9
+msgid "Designations"
+msgstr "Designaciones"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:10
+msgid "You have %1$d available leaves under %2$s policy."
+msgstr "Tiene %1$d licencias disponibles según la política de %2$s."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:11
+msgid "Leave request sent!"
+msgstr "Solicitud de permiso enviada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:12
+msgid "Today"
+msgstr "Este Dia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:13
+msgid "Yesterday"
+msgstr "El dia de ayer"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:14
+msgid "This Month"
+msgstr "Este mes"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:15
+msgid "Last Month"
+msgstr "El mes pasado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:16
+msgid "Last Quarter"
+msgstr "Último cuarto"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:17
+msgid "Last Year"
+msgstr "El año pasado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:18
+msgid "In-time"
+msgstr "A tiempo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:19
+msgid "Late"
+msgstr "Tarde"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:20
+msgid "Absents"
+msgstr "Ausente"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:21
+msgid " You checkin Successfully!"
+msgstr " ¡Te registraste con éxito!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:22
+msgid " You checkout Successfully!"
+msgstr " ¡Pagaste con éxito!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:23
+msgid "You do not have permission to delete user"
+msgstr "No tienes permiso para eliminar usuario"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:24
+msgid "Active"
+msgstr "Activo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:25
+msgid "Terminated"
+msgstr "Terminado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:26
+msgid "Deceased"
+msgstr "Fallecido"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:27
+msgid "Resigned"
+msgstr "Renunciar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:28
+msgid "Trash"
+msgstr "Basura"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:29
+msgid "All"
+msgstr "Todos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:30
+msgid "Full Time"
+msgstr "Tiempo completo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:31
+msgid "Part Time"
+msgstr "Tiempo parcial"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:32
+msgid "On Contract"
+msgstr "En contrato"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:33
+msgid "Temporary"
+msgstr "Temporario"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:34
+msgid "Trainee"
+msgstr "Aprendiz"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:35
+msgid "Attendance"
+msgstr "Asistencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:36
+msgid "Better Employment Conditions"
+msgstr "Mejores Condiciones de Empleo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:37
+msgid "Career Prospect"
+msgstr "Prospecto de carrera"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:38
+msgid "Death"
+msgstr "Muerte"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:39
+msgid "Desertion"
+msgstr "Deserción"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:40
+msgid "Dismissed"
+msgstr "Despedido"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:41
+msgid "Dissatisfaction with the job"
+msgstr "Insatisfacción con el trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:42
+msgid "Higher Pay"
+msgstr "Pago más alto"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:43
+msgid "Other Employment"
+msgstr "Otro Empleo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:44
+msgid "Personality Conflicts"
+msgstr "Conflictos de personalidad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:45
+msgid "Relocation"
+msgstr "Reubicación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:46
+msgid "Retirement"
+msgstr "Jubilación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:47
+msgid "Yes"
+msgstr "Sí"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:48
+msgid "No"
+msgstr "No"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:49
+msgid "Upon Review"
+msgstr "Despues de la revision"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:50
+msgid "Employee Terminated!"
+msgstr "¡Empleado despedido!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:51
+msgid "Do you really want to remove this experience?"
+msgstr "¿Realmente quieres eliminar esta experiencia?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:52
+msgid "Experience Removed!"
+msgstr "¡Experiencia eliminada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:53
+msgid "Experience added!"
+msgstr "¡Experiencia añadida!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:54
+msgid "Education Updated!"
+msgstr "¡Educación actualizada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:55
+msgid "Do you really want to remove this education?"
+msgstr "¿De verdad quieres eliminar esta educación?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:56
+msgid "Education Removed!"
+msgstr "¡Educación eliminada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:57
+msgid "Education added!"
+msgstr "¡Educación añadida!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:58
+msgid "Dependent updated!"
+msgstr "Dependiente actualizado!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:59
+msgid "Do you really want to remove this dependent?"
+msgstr "¿Realmente desea eliminar este dependiente?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:60
+msgid "Dependent Removed!"
+msgstr "¡Se eliminó el dependiente!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:61
+msgid "Dependent added!"
+msgstr "Dependiente agregado!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:62
+msgid "Do you really want to remove this employment?"
+msgstr "¿Realmente desea eliminar este empleo?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:63
+msgid "Status Removed Successfully!"
+msgstr "¡Estado eliminado con éxito!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:64
+msgid "Status added Successfully!"
+msgstr "¡Estado agregado con éxito!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:65
+msgid "Do you really want to remove this compensation?"
+msgstr "¿Realmente desea eliminar esta compensación?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:66
+msgid "Compensation Removed!"
+msgstr "¡Compensación eliminada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:67
+msgid "Compensation added!"
+msgstr "¡Compensación añadida!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:68
+msgid "Do you really want to remove this information?"
+msgstr "¿Realmente desea eliminar esta información?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:69
+msgid "Information removed!"
+msgstr "¡Información eliminada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:70
+msgid "Information added!"
+msgstr "Información añadida!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:71
+msgid "Very Bad"
+msgstr "Muy mal"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:72
+msgid "Poor"
+msgstr "Pobre"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:73
+msgid "Average"
+msgstr "Promedio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:74
+msgid "Good"
+msgstr "Bueno"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:75
+msgid "Excellent"
+msgstr "Excelente"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:76
+msgid "Do you really want to remove this goals?"
+msgstr "¿Realmente desea eliminar estos objetivos?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:77
+msgid "Employee created!"
+msgstr "¡Empleado creado!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:78
+msgid "New Department"
+msgstr "Departamento nuevo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:79
+msgid "Create Department"
+msgstr "Crear Departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:80
+msgid "Edit Department"
+msgstr "Editar departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:81
+msgid "Update Department"
+msgstr "Departamento de actualización"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:82
+msgid "Do you really want to remove this department?"
+msgstr "¿Realmente desea eliminar este departamento?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:83
+msgid "Do you really want to remove selected departments?"
+msgstr "¿Realmente desea eliminar los departamentos seleccionados?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:84
+msgid "Department updated!"
+msgstr "Departamento actualizado!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:85
+msgid "Department added!"
+msgstr "Departamento agregado!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:86
+msgid "New Designation"
+msgstr "Nueva Designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:87
+msgid "Create Designation"
+msgstr "Crear Designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:88
+msgid "Edit Designation"
+msgstr "Editar Designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:89
+msgid "Update Designation"
+msgstr "Actualizar designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:90
+msgid "Do you really want to remove this designation?"
+msgstr "¿Realmente desea eliminar esta designación?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:91
+msgid "Designation updated!"
+msgstr "Designación actualizada!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:92
+msgid "Designation added!"
+msgstr "Designación añadida!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:93
+msgid "Do you really want to remove selected announcements?"
+msgstr "¿Realmente desea eliminar los anuncios seleccionados?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:94
+msgid "Do you really want to remove this announcement?"
+msgstr "¿Realmente desea eliminar este anuncio?"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:95
+msgid "Under 18 year"
+msgstr "menores de 18 años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:96
+msgid "18 to 25 year"
+msgstr "18 a 25 años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:97
+msgid "26 to 35 year"
+msgstr "26 a 35 años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:98
+msgid "36 to 45 year"
+msgstr "36 a 45 años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:99
+msgid "46 to 55 year"
+msgstr "46 a 55 años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:100
+msgid "56 to 65 year"
+msgstr "56 a 65 años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:101
+msgid "65+ year"
+msgstr "65+ año"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:102
+msgid "Overall Age Breakdown"
+msgstr "Desglose general de edad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:103
+msgid "Head Count By Month"
+msgstr "Recuento de personas por mes"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:104
+msgid "Age Profile"
+msgstr "Perfil de edad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:105
+msgid "Head Count"
+msgstr "Recuento de personas"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:106
+msgid "Gender Profile"
+msgstr "Perfil de género"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:107
+msgid "Year Of Service"
+msgstr "año de servicio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:108
+msgid "Salary History"
+msgstr "Historial de salarios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:109
+msgid "Employee Gender Ratio By Department"
+msgstr "Relación de género de empleados por departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:110
+msgid "Male"
+msgstr "Masculino"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:111
+msgid "Female"
+msgstr "Femenino"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:112
+msgid "Others"
+msgstr "Otros"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:113
+msgid "Add New Announcement"
+msgstr "Agregar nuevo anuncio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:114
+msgid "Enter Title Here"
+msgstr "Introduzca el título aquí"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:115
+msgid "Announcement Settings"
+msgstr "Configuración de anuncios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:116
+msgid "Send Announcement to"
+msgstr "Enviar anuncio a"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:117
+msgid "All Employees"
+msgstr "Todos los empleados"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:118
+msgid "Notify All Employees"
+msgstr "Notificar a todos los empleados"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:119
+msgid "Publish"
+msgstr "Publicar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:120
+msgid "Cancel"
+msgstr "Cancelar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:121
+msgid "Remove Announcements"
+msgstr "Eliminar anuncios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:122
+msgid "Edit Announcement"
+msgstr "Editar anuncio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:123
+msgid "Update"
+msgstr "Actualizar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:124
+msgid "Title"
+msgstr "Título"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:125
+msgid "Description"
+msgstr "Descripción"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:126
+msgid "No announcement founds"
+msgstr "No se encuentran anuncios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:127
+msgid "Employee Name"
+msgstr "Nombre de empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:128
+msgid "Designation"
+msgstr "Designacion"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:129
+msgid "Department"
+msgstr "Departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:130
+msgid "Employment Type"
+msgstr "Tipo de empleo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:131
+msgid "Joined"
+msgstr "Unido"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:132
+msgid "Status"
+msgstr "Estado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:133
+msgid "No employee founds"
+msgstr "Ningún empleado funda"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:134
+msgid "Move to Trash"
+msgstr "Mover a la papelera"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:135
+msgid "Choose Employee Type"
+msgstr "Elija el tipo de empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:136
+msgid "Select Designation"
+msgstr "Seleccionar designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:137
+msgid "Select Department"
+msgstr "Seleccionar Departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:138
+msgid "Select Location"
+msgstr "Seleccionar ubicación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:139
+msgid "Nothing found."
+msgstr "Nada Encontrado."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:140
+msgid "Attendance Service"
+msgstr "Servicio de Asistencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:141
+msgid "Out-time"
+msgstr "Fuera de tiempo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:142
+msgid "Total time"
+msgstr "Tiempo Total"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:143
+msgid "Hours"
+msgstr "Horas"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:144
+msgid "Checkin"
+msgstr "Registrarse"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:145
+msgid "Checkout"
+msgstr "Verificar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:146
+msgid "Attendance Status"
+msgstr "Estado de asistencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:147
+msgid "Filter by"
+msgstr "Filtrado por"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:148
+msgid "Birthday Buddies"
+msgstr "Amigos de cumpleaños"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:149
+msgid "Upcoming Birthdays"
+msgstr "Cumpleaños próximos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:150
+msgid "No one has birthdays this week!"
+msgstr "¡Nadie cumple años esta semana!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:151
+msgid "Load"
+msgstr "Carga"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:152
+msgid "Few"
+msgstr "Pocos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:153
+msgid "My Leave Calendar"
+msgstr "Mi calendario de vacaciones"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:154
+msgid "Take a Leave"
+msgstr "Pedir un permiso"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:155
+msgid "Leave Request"
+msgstr "Dejar petición"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:156
+msgid "From"
+msgstr "De"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:157
+msgid "Select date"
+msgstr "Seleccione fecha"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:158
+msgid "Reason"
+msgstr "Razón"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:159
+msgid "Type here"
+msgstr "Escriba aquí"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:160
+msgid "Document"
+msgstr "Documento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:161
+msgid "Send Leave Request"
+msgstr "Enviar solicitud de licencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:162
+msgid "View"
+msgstr "Vista"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:163
+msgid "Reports"
+msgstr "Informes"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:164
+msgid "Age"
+msgstr "Años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:165
+msgid "Profile"
+msgstr "Perfil"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:166
+msgid "Head"
+msgstr "Cabeza"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:167
+msgid "Count"
+msgstr "Contar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:168
+msgid "Gender"
+msgstr "Género"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:169
+msgid "Salary"
+msgstr "Salario"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:170
+msgid "History"
+msgstr "Historia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:171
+msgid "Years"
+msgstr "Años"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:172
+msgid "Of Service"
+msgstr "De servicio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:173
+msgid "Who is Out"
+msgstr "quien esta fuera"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:174
+msgid "Who Is Out"
+msgstr "quien esta fuera"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:175
+msgid "No one is on vacation!"
+msgstr "¡Nadie está de vacaciones!"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:176
+msgid "Previous Page"
+msgstr "Pagina anterior"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:177
+msgid "Next Page"
+msgstr "Siguiente página"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:178
+msgid "Total Employees:"
+msgstr "Empleados Totales:"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:179
+msgid "HRM"
+msgstr "gestión de recursos humanos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:180
+msgid "Overview"
+msgstr "Visión general"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:181
+msgid "Announcements"
+msgstr "Anuncios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:182
+msgid "Reporting"
+msgstr "Informes"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:183
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:184
+msgid "Basic Info"
+msgstr "Información básica"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:185
+msgid "First Name"
+msgstr "Primer nombre"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:186
+msgid "Last Name"
+msgstr "Apellido"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:187
+msgid "Employee ID"
+msgstr "ID de empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:188
+msgid "Email"
+msgstr "Correo electrónico"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:189
+msgid "Dependents"
+msgstr "dependientes"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:190
+msgid "Name"
+msgstr "Nombre"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:191
+msgid "Relationship"
+msgstr "Relación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:192
+msgid "Date of Birth"
+msgstr "Fecha de nacimiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:193
+msgid "Actions"
+msgstr "Comportamiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:194
+msgid "Add Dependent"
+msgstr "Agregar dependiente"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:195
+msgid "Education"
+msgstr "Educación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:196
+msgid "School Name"
+msgstr "Nombre de la escuela"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:197
+msgid "Degree"
+msgstr "La licenciatura"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:198
+msgid "Field(s) of Study"
+msgstr "Campos de estudio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:199
+msgid "Year of Completion"
+msgstr "Año de finalización"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:200
+msgid "Additional Notes"
+msgstr "Notas adicionales"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:201
+msgid "Interests"
+msgstr "Intereses"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:202
+msgid "Add Education"
+msgstr "Agregar Educación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:203
+msgid "Save Education"
+msgstr "Salvar la educación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:204
+msgid "ABC School"
+msgstr "Escuela ABC"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:205
+msgid "Bachelor in Science"
+msgstr "Licenciatura en Ciencias"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:206
+msgid "Field of Study"
+msgstr "Campo de estudio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:207
+msgid "Physics"
+msgstr "Física"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:208
+msgid "Notes"
+msgstr "notas"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:209
+msgid "Additional notes"
+msgstr "Notas adicionales"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:210
+msgid "Personal Details"
+msgstr "Detalles personales"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:211
+msgid "Street 1"
+msgstr "Calle 1"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:212
+msgid "Street 2"
+msgstr "Calle # 2"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:213
+msgid "Address"
+msgstr "Dirección"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:214
+msgid "City"
+msgstr "Ciudad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:215
+msgid "Country"
+msgstr "País"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:216
+msgid "State"
+msgstr "Estado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:217
+msgid "Postal Code"
+msgstr "Código postal"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:218
+msgid "Mobile"
+msgstr "Móvil"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:219
+msgid "Phone"
+msgstr "Teléfono"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:220
+msgid "Other Email"
+msgstr "Otro correo electrónico"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:221
+msgid "Nationality"
+msgstr "Nacionalidad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:222
+msgid "Marital Status"
+msgstr "Estado civil"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:223
+msgid "Driving License"
+msgstr "Licencia de conducir"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:224
+msgid "Hobbies"
+msgstr "Aficiones"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:225
+msgid "Select"
+msgstr "Seleccione"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:226
+msgid "Other"
+msgstr "Otro"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:227
+msgid "Single"
+msgstr "Único"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:228
+msgid "Married"
+msgstr "Casado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:229
+msgid "Widowed"
+msgstr "Viudo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:230
+msgid "Driving license"
+msgstr "Licencia de conducir"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:231
+msgid "Work"
+msgstr "Trabajar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:232
+msgid "Reporting To"
+msgstr "Informar a"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:233
+msgid "Date of Hire"
+msgstr "Fecha de contratación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:234
+msgid "Source of Hire"
+msgstr "Fuente de contratación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:235
+msgid "Employee Status"
+msgstr "Estado del Empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:236
+msgid "Work Phone"
+msgstr "Teléfono del trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:237
+msgid "Employee Type"
+msgstr "Tipo de empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:238
+msgid "Save"
+msgstr "Ahorrar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:239
+msgid "Work Experience"
+msgstr "Experiencia laboral"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:240
+msgid "Company"
+msgstr "Compañía"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:241
+msgid "Job Title"
+msgstr "Título profesional"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:242
+msgid "To"
+msgstr "A"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:243
+msgid "Job Description"
+msgstr "Descripción del trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:244
+msgid "Add Experience"
+msgstr "Añadir experiencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:245
+msgid "Save Experience"
+msgstr "Guardar experiencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:246
+msgid "ABC Corporation"
+msgstr "Corporación ABC"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:247
+msgid "Project Manager"
+msgstr "Gerente de proyecto"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:248
+msgid "Details about the job"
+msgstr "Detalles sobre el trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:249
+msgid "Compensation"
+msgstr "Compensación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:250
+msgid "Date"
+msgstr "Fecha"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:251
+msgid "Pay Rate"
+msgstr "Tarifa de pago"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:252
+msgid "Pay Type"
+msgstr "Tipo de pago"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:253
+msgid "Change Reason"
+msgstr "Motivo de cambio"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:254
+msgid "Comment"
+msgstr "Comentario"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:255
+msgid "Add Compensation"
+msgstr "Agregar Compensación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:256
+msgid "Save Compensation"
+msgstr "Guardar Compensación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:257
+msgid "No compensations found"
+msgstr "No se encontraron compensaciones"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:258
+msgid "Employment Status"
+msgstr "Estado de Empleo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:259
+msgid "Add Employment Status"
+msgstr "Agregar estado de empleo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:260
+msgid "Save Status"
+msgstr "Guardar estado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:261
+msgid "No employments found"
+msgstr "No se encontraron empleos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:262
+msgid "Job Information"
+msgstr "Informacion del trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:263
+msgid "Location"
+msgstr "Ubicación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:264
+msgid "Reports To"
+msgstr "Informes a"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:265
+msgid "Add Information"
+msgstr "Añadir información"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:266
+msgid "-- select --"
+msgstr "-- seleccionar --"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:267
+msgid "Balances"
+msgstr "Saldos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:268
+msgid "Leave"
+msgstr "Abandonar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:269
+msgid "Days"
+msgstr "Días"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:270
+msgid "Spent"
+msgstr "Gastó"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:271
+msgid "Scheduled"
+msgstr "Programado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:272
+msgid "Available"
+msgstr "Disponible"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:273
+msgid "Period"
+msgstr "Período"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:274
+msgid "Policy"
+msgstr "Política"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:275
+msgid "Nothing Found"
+msgstr "Nada Encontrado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:276
+msgid "Delete"
+msgstr "Borrar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:277
+msgid "No content found"
+msgstr "No se encontró contenido"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:278
+msgid "Performance Comments"
+msgstr "Comentarios de rendimiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:279
+msgid "Reviewer"
+msgstr "Crítico"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:280
+msgid "Comments"
+msgstr "Comentarios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:281
+msgid "Action"
+msgstr "Acción"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:282
+msgid "Add Performance Comments"
+msgstr "Añadir comentarios de rendimiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:283
+msgid "Reference Date"
+msgstr "Fecha de referencia"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:284
+msgid "No reviews found"
+msgstr "No se encontraron reseñas"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:285
+msgid "Performance Goals"
+msgstr "Metas de desempeño"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:286
+msgid "Set Date"
+msgstr "Define la fecha"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:287
+msgid "Completion Date"
+msgstr "Fecha de Terminación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:288
+msgid "Goal Description"
+msgstr "Descripción del objetivo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:289
+msgid "Employee Assessment"
+msgstr "Evaluación de empleados"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:290
+msgid "Supervisor"
+msgstr "Supervisor"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:291
+msgid "Supervisor Assessment"
+msgstr "Evaluación del supervisor"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:292
+msgid "Add Performance Goals"
+msgstr "Añadir objetivos de rendimiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:293
+msgid "Performance Reviews"
+msgstr "Revisiones de rendimiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:294
+msgid "Job Knowledge"
+msgstr "Conocimiento del trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:295
+msgid "Work Quality"
+msgstr "Calidad de trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:296
+msgid "Attendance / Punctuality"
+msgstr "Asistencia y puntualidad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:297
+msgid "Communication / Listening"
+msgstr "Comunicación / Escuchar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:298
+msgid "Dependability"
+msgstr "Confianza"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:299
+msgid "Add Performance Reviews"
+msgstr "Añadir revisiones de rendimiento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:300
+msgid "Review Date"
+msgstr "Fecha de revisión"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:301
+msgid "Attendance/Punctuality"
+msgstr "Asistencia y puntualidad"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:302
+msgid "Communication/Listening"
+msgstr "Comunicación/Escuchar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:303
+msgid "Permission Management"
+msgstr "Gestión de permisos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:304
+msgid "Latest Announcements"
+msgstr "Últimos anuncios"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:305
+msgid "My Profile"
+msgstr "Mi perfil"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:306
+msgid "Oops! No elements found."
+msgstr "¡Ups! No se encontraron elementos."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:307
+msgid "Type to search"
+msgstr "Escribe para buscar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:308
+msgid "Add New Department"
+msgstr "Agregar nuevo departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:309
+msgid "Remove Departments"
+msgstr "Eliminar departamentos"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:310
+msgid "Department Title"
+msgstr "Título del departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:311
+msgid "optional"
+msgstr "opcional"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:312
+msgid "Department Head"
+msgstr "Jefe de departamento"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:313
+msgid "Parent Department"
+msgstr "Departamento de Padres"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:314
+msgid "No. of Employees"
+msgstr "Cantidad de Empleados"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:315 languages/erp-hr-frontend.php:323
+msgid "A"
+msgstr "A"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:316 languages/erp-hr-frontend.php:324
+msgid "N"
+msgstr "norte"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:317 languages/erp-hr-frontend.php:325
+msgid "S"
+msgstr "S"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:318 languages/erp-hr-frontend.php:326
+msgid "M"
+msgstr "METRO"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:319
+msgid "No department founds"
+msgstr "Ningún departamento funda"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:320
+msgid "Add New Designation"
+msgstr "Agregar nueva designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:321
+msgid "Remove Designations"
+msgstr "Eliminar designaciones"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:322
+msgid "Designation Title"
+msgstr "Título de la designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:327
+msgid "No designation founds"
+msgstr "No se funda la designación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:328
+msgid "Basic info"
+msgstr "Información básica"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:329
+msgid "first name"
+msgstr "primer nombre"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:330
+msgid "last name"
+msgstr "apellido"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:332
+msgid "Personal details"
+msgstr "Detalles personales"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:333
+msgid "Type Here"
+msgstr "Escriba aquí"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:334
+msgid "Website"
+msgstr "Sitio web"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:335
+msgid "Address 1"
+msgstr "Dirección 1"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:336
+msgid "Address 2"
+msgstr "Dirección 2"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:337
+msgid "Province/State"
+msgstr "Provincia/Estado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:338
+msgid "Post/Zip Code"
+msgstr "Código postal/postal"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:339
+msgid "Biography"
+msgstr "Biografía"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:340
+msgid "Send the employee an welcome email."
+msgstr "Envía al empleado un correo electrónico de bienvenida."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:341
+msgid "Send the login details as well. If login_info present."
+msgstr "Envíe los datos de inicio de sesión también. Si login_info está presente."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:342
+msgid "Next"
+msgstr "próximo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:343
+msgid "Create Employee"
+msgstr "Crear empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:344
+msgid "Add New Employee"
+msgstr "Agregar nuevo empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:345
+msgid "No report found"
+msgstr "No se encontró ningún informe"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:346
+msgid "Percentage"
+msgstr "Porcentaje"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:347
+msgid "Unspecified"
+msgstr "sin especificar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:348
+msgid "Hire Date"
+msgstr "Fecha de contratación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:349
+msgid "Main Location"
+msgstr "Ubicación principal"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:350
+msgid "Employee"
+msgstr "Empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:351
+msgid "21+"
+msgstr "21+"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:352
+msgid "Shows age breakdown data in your company in different departments."
+msgstr ""
+"Muestra datos desglosados por edad en su empresa en diferentes "
+"departamentos."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:353
+msgid "View Report"
+msgstr "Vista del informe"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:354
+msgid ""
+"Displays actual number of individuals in your company in different "
+"departments."
+msgstr ""
+"Muestra el número real de personas en su empresa en diferentes "
+"departamentos."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:355
+msgid "Shows differentiation data by age in your company."
+msgstr "Muestra datos de diferenciación por antigüedad en tu empresa."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:356
+msgid "Shows longevity and experience report of the employees of your company."
+msgstr ""
+"Muestra el informe de antigüedad y experiencia de los empleados de su "
+"empresa."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:357
+msgid "Shows Salary History of the employees of your company."
+msgstr "Muestra el historial de salarios de los empleados de su empresa."
+
+# automatic translation
+#: languages/erp-hr-frontend.php:358 languages/erp-hr-frontend.php:360
+msgid "Terminate"
+msgstr "Terminar"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:359
+msgid "Terminate Employee"
+msgstr "rescindir empleado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:361
+msgid "Termination Date"
+msgstr "Fecha de conclusión"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:362
+msgid "Termination Type"
+msgstr "Tipo de terminación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:363
+msgid "-- Select --"
+msgstr "-- Seleccionar --"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:364
+msgid "Voluntary"
+msgstr "Voluntario"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:365
+msgid "Involuntary"
+msgstr "Involuntario"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:366
+msgid "Termination Reason"
+msgstr "Motivo de terminación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:367
+msgid "Eligible for Rehire"
+msgstr "Elegible para ser re-contratado"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:368
+msgid "General Info"
+msgstr "Información general"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:369
+msgid "Job"
+msgstr "Trabajo"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:370
+msgid "Performance"
+msgstr "Actuación"
+
+# automatic translation
+#: languages/erp-hr-frontend.php:371
+msgid "Permissions"
+msgstr "permisos"
+
+# automatic translation
+#. Plugin Name of the plugin/theme
+msgid "WP ERP - HR Frontend"
+msgstr "WP ERP - interfaz de recursos humanos"
+
+# automatic translation
+#. Author URI of the plugin/theme
+msgid "https://wperp.com/"
+msgstr "https://wperp.com/"
+
+# automatic translation
+#. Description of the plugin/theme
+msgid "Provides a brand new dashboard experience for WordPress ERP"
+msgstr "Proporciona una nueva experiencia de tablero para WordPress ERP"
