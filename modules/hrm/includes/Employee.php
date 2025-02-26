@@ -533,11 +533,10 @@ class Employee {
                 'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
             ] );
 
+            // // This job history id will be used for update reporting to employee in while importing employee csv
             if ( ! empty( $GLOBALS['job_info'] ) ) {
                 $GLOBALS['job_info'][$user_id]['id'] = $job_history['id'];
             }
-            // // This job history id will be used for update reporting to employee in while importing employee csv
-            // $GLOBALS['job_info'][$user_id]['id'] = $job_history['id'];
         }
 
         $data['personal']['user_email'] = $user_email;
