@@ -295,7 +295,7 @@ class Ajax {
                                     } else {
                                         $line_data['work'][ $key ] = array_search( $line[ $value ], $locations, true );
                                     }
-                                }elseif($key === 'reporting_to' && $line[ $value ] !== '') {
+                                }elseif( $key === 'reporting_to' && $line[ $value ] !== '' ) {
                                     $line_data['work'][ $key ] = $line[ $value ];
                                 } else {
                                     $line_data['work'][ $key ] = $line[ $value ];
@@ -397,8 +397,8 @@ class Ajax {
 
             ++ $count;
         }
-        $this->map_reporting_to_employee($reporting_to);
-        $this->update_reporting_history($GLOBALS['job_info']);
+        $this->map_reporting_to_employee( $reporting_to );
+        $this->update_reporting_history( $GLOBALS['job_info'] );
         return $count;
     }
 
@@ -409,12 +409,12 @@ class Ajax {
      *
      * @return void
      */
-    function map_reporting_to_employee($reporting_to) {
+    function map_reporting_to_employee( $reporting_to ) {
         global $wpdb;
     
         foreach ( $reporting_to as $value ) {
             if ( ! empty( $value['reporting_to'] ) && ! empty( $value['user_id'] ) ) {
-                $reporting_employee = get_user_by('email', $value['reporting_to']);
+                $reporting_employee = get_user_by( 'email', $value['reporting_to'] );
 
                 if ( $reporting_employee ) {
                     $reporting_employee_id = $reporting_employee->ID;
