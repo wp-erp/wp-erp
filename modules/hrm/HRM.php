@@ -90,7 +90,7 @@ class HRM {
 //        require_once WPERP_HRM_PATH . '/includes/class-leave-entitlement-bg-process.php';
         new LeaveEntitlementBGProcess();
         // cli command
-        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+        if ( defined( 'WP_CLI' ) && WP_CLI && file_exists( WPERP_HRM_PATH . '/includes/cli/commands.php' ) ) {
             include WPERP_HRM_PATH . '/includes/cli/commands.php';
         }
     }

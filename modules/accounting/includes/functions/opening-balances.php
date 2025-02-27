@@ -263,8 +263,7 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
 function erp_acct_get_opening_balance_names() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years"), ARRAY_A  );
-
+    $rows = $wpdb->get_results( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A  );
     return $rows;
 }
 

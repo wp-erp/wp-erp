@@ -121,7 +121,7 @@ class CRM {
 		//        require_once WPERP_CRM_PATH . '/includes/ContactForms/class-contact-forms-integration.php';
         new ContactFormsIntegration();
         // cli command
-        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+        if ( defined( 'WP_CLI' ) && WP_CLI && file_exists( WPERP_CRM_PATH . '/includes/cli/commands.php' ) ) {
             include WPERP_CRM_PATH . '/includes/cli/commands.php';
         }
     }

@@ -284,29 +284,35 @@ class Ajax {
 	 * @return mixed
 	 */
 	public function update_email_status() {
-		$this->verify_nonce( 'erp-settings-nonce' );
+        $this->verify_nonce( 'erp-settings-nonce' );
 
-		if ( ! current_user_can( 'manage_options' ) ) {
-			$this->send_error( esc_html__( 'You do not have sufficient permission to do this action', 'erp' ) );
-		}
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( esc_html__( 'You do not have sufficient permission to do this action', 'erp' ) );
+        }
 
-		$option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_id'] ) ) : '';
-		$option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_value'] ) ) : '';
+        $option_id    = ! empty( $_REQUEST['option_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_id'] ) ) : '';
+        $option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_value'] ) ) : '';
 
-		if ( ! empty( $option_id ) ) {
-			$email_option = get_option( $option_id );
+        if ( ! empty( $option_id ) ) {
+            $email_option = get_option( $option_id );
 
-			if ( 'yes' === $option_value ) {
-				$email_option['is_enable'] = 'yes';
-			} else {
-				unset( $email_option['is_enable'] );
-			}
+            // Ensure $email_option is an array
+            if ( ! is_array( $email_option ) ) {
+                $email_option = [];
+            }
 
-			update_option( $option_id, $email_option );
-		}
+            if ( 'yes' === $option_value ) {
+                $email_option['is_enable'] = 'yes';
+            } else {
+                unset( $email_option['is_enable'] );
+            }
 
-		$this->send_success();
-	}
+            update_option( $option_id, $email_option );
+        }
+
+        $this->send_success();
+    }
+
 
 	/**
 	 * Test connection using SMTP credentials
