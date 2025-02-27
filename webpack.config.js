@@ -182,4 +182,37 @@ var i18nJSConfig = {
     }
 };
 
+var setupWizardConfig = {
+    ...mainConfig,
+    entry: {
+        'setup-wizard': './includes/Admin/react-setup-wizard/src/index.js'
+    },
+    output: {
+        path: path.resolve(__dirname, './assets/js'),
+        filename: '[name].js',
+        chunkFilename: 'chunks/[chunkhash].js',
+        jsonpFunction: 'pluginWebpack'
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react']
+                    }
+                }
+            }
+        ]
+    },
+    externals: {
+        '@wordpress/element': 'wp.element',
+        '@wordpress/i18n': 'wp.i18n',
+        'react': 'React',
+        'react-dom': 'ReactDOM'
+    }
+};
+
 module.exports = [mainConfig, i18nJSConfig];

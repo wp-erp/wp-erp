@@ -9,8 +9,7 @@ pluginWebpack([1],[
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BaseLayout_vue__ = __webpack_require__(51);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16af2479_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseLayout_vue__ = __webpack_require__(128);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_123de940_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseLayout_vue__ = __webpack_require__(128);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -27,29 +26,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BaseLayout_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16af2479_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseLayout_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_123de940_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseLayout_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/layouts/BaseLayout.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-16af2479", Component.options)
-  } else {
-    hotAPI.reload("data-v-16af2479", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -78,10 +60,8 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SubmitButton_vue__ = __webpack_require__(50);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_52bbe600_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SubmitButton_vue__ = __webpack_require__(117);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1575b965_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SubmitButton_vue__ = __webpack_require__(117);
 function injectStyle (ssrContext) {
-  if (disposed) return
   __webpack_require__(116)
 }
 var normalizeComponent = __webpack_require__(0)
@@ -100,29 +80,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SubmitButton_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_52bbe600_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SubmitButton_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1575b965_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SubmitButton_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/base/SubmitButton.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-52bbe600", Component.options)
-  } else {
-    hotAPI.reload("data-v-52bbe600", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -213,8 +176,7 @@ var getBase64StringFromFile = function getBase64StringFromFile(file) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatePicker_vue__ = __webpack_require__(47);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_49b6181c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatePicker_vue__ = __webpack_require__(112);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b8cce36_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatePicker_vue__ = __webpack_require__(112);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -231,29 +193,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatePicker_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_49b6181c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatePicker_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b8cce36_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatePicker_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/base/DatePicker.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-49b6181c", Component.options)
-  } else {
-    hotAPI.reload("data-v-49b6181c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -265,8 +210,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BaseContentLayout_vue__ = __webpack_require__(53);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_796c2e84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseContentLayout_vue__ = __webpack_require__(127);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0a99982e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseContentLayout_vue__ = __webpack_require__(127);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -283,29 +227,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BaseContentLayout_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_796c2e84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseContentLayout_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0a99982e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BaseContentLayout_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/layouts/BaseContentLayout.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-796c2e84", Component.options)
-  } else {
-    hotAPI.reload("data-v-796c2e84", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -482,10 +409,8 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_MultiSelect_vue__ = __webpack_require__(49);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1894e21a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MultiSelect_vue__ = __webpack_require__(115);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_201a30c5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MultiSelect_vue__ = __webpack_require__(115);
 function injectStyle (ssrContext) {
-  if (disposed) return
   __webpack_require__(113)
 }
 var normalizeComponent = __webpack_require__(0)
@@ -504,29 +429,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_MultiSelect_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1894e21a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MultiSelect_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_201a30c5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MultiSelect_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/select/MultiSelect.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1894e21a", Component.options)
-  } else {
-    hotAPI.reload("data-v-1894e21a", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -1405,8 +1313,7 @@ var $ = jQuery;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Tooltip_vue__ = __webpack_require__(56);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6774445d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Tooltip_vue__ = __webpack_require__(123);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3b48bb4a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Tooltip_vue__ = __webpack_require__(123);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -1423,29 +1330,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Tooltip_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6774445d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Tooltip_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3b48bb4a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Tooltip_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/base/Tooltip.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6774445d", Component.options)
-  } else {
-    hotAPI.reload("data-v-6774445d", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -1533,8 +1423,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switch_vue__ = __webpack_require__(59);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bca00e3a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switch_vue__ = __webpack_require__(126);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_805a78ce_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switch_vue__ = __webpack_require__(126);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -1551,29 +1440,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switch_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bca00e3a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switch_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_805a78ce_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switch_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/layouts/partials/Switch.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-bca00e3a", Component.options)
-  } else {
-    hotAPI.reload("data-v-bca00e3a", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -1632,8 +1504,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__ = __webpack_require__(61);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_30c61af2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(129);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_269ccbda_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__ = __webpack_require__(129);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -1650,29 +1521,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Modal_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_30c61af2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_269ccbda_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Modal_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/base/Modal.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-30c61af2", Component.options)
-  } else {
-    hotAPI.reload("data-v-30c61af2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -1771,8 +1625,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dropdown_vue__ = __webpack_require__(42);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b3919b2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dropdown_vue__ = __webpack_require__(111);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4d69fe52_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dropdown_vue__ = __webpack_require__(111);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -1789,29 +1642,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dropdown_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b3919b2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dropdown_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4d69fe52_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dropdown_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/base/Dropdown.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2b3919b2", Component.options)
-  } else {
-    hotAPI.reload("data-v-2b3919b2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -1844,108 +1680,20 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "dropdown wperp-has-dropdown",
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.toggleDropdown.apply(null, arguments)
-        }
-      }
-    },
-    [
-      _vm._t("button", function() {
-        return [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-secondary dropdown-toggle",
-              attrs: {
-                type: "button",
-                "data-toggle": "dropdown",
-                "aria-haspopup": "true",
-                "aria-expanded": "false"
-              }
-            },
-            [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.__("Dropdown", "erp")) +
-                  "\n        "
-              )
-            ]
-          )
-        ]
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          ref: "menu",
-          class: [
-            "dropdown-popper dropdown-menu",
-            _vm.dropdownClasses,
-            { show: _vm.visible }
-          ],
-          on: {
-            click: function($event) {
-              $event.stopPropagation()
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "popper__arrow", attrs: { "x-arrow": "" } }),
-          _vm._v(" "),
-          _vm._t("dropdown")
-        ],
-        2
-      )
-    ],
-    2
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"dropdown wperp-has-dropdown",on:{"click":function($event){$event.preventDefault();return _vm.toggleDropdown.apply(null, arguments)}}},[_vm._t("button",function(){return [_c('button',{staticClass:"btn btn-secondary dropdown-toggle",attrs:{"type":"button","data-toggle":"dropdown","aria-haspopup":"true","aria-expanded":"false"}},[_vm._v("\n            "+_vm._s(_vm.__('Dropdown', 'erp'))+"\n        ")])]}),_vm._v(" "),_c('div',{ref:"menu",class:['dropdown-popper dropdown-menu', _vm.dropdownClasses, {'show': _vm.visible}],on:{"click":function($event){$event.stopPropagation();}}},[_c('div',{staticClass:"popper__arrow",attrs:{"x-arrow":""}}),_vm._v(" "),_vm._t("dropdown")],2)],2)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2b3919b2", esExports)
-  }
-}
 
 /***/ }),
 /* 112 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("input", {
-    attrs: { type: "text", autocomplete: "off" },
-    domProps: { value: _vm.value },
-    on: { input: _vm.changeDateInput }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('input',{attrs:{"type":"text","autocomplete":"off"},domProps:{"value":_vm.value},on:{"input":_vm.changeDateInput}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-49b6181c", esExports)
-  }
-}
 
 /***/ }),
 /* 113 */
@@ -1975,78 +1723,14 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "multiselect",
-    {
-      attrs: {
-        value: _vm.value,
-        options: _vm.getOptions(_vm.options),
-        multiple: _vm.multiple,
-        "close-on-select": !_vm.multiple,
-        loading: _vm.isLoading,
-        placeholder: _vm.placeholder,
-        disabled: _vm.disabled,
-        label: "name",
-        "track-by": _vm.id
-      },
-      on: {
-        open: _vm.onDropdownOpen,
-        remove: _vm.onRemove,
-        select: _vm.onSelect,
-        "search-change": _vm.asyncFind
-      },
-      scopedSlots: _vm._u([
-        {
-          key: "singleLabel",
-          fn: function(ref) {
-            var option = ref.option
-            return [
-              _c("span", { domProps: { innerHTML: _vm._s(option.name) } })
-            ]
-          }
-        },
-        {
-          key: "option",
-          fn: function(ref) {
-            var option = ref.option
-            return [
-              _c("span", { domProps: { innerHTML: _vm._s(option.name) } })
-            ]
-          }
-        }
-      ])
-    },
-    [
-      _c("span", { attrs: { slot: "noResult" }, slot: "noResult" }, [
-        _vm._v(_vm._s(_vm.__("Oops! No item found.", "erp")))
-      ]),
-      _vm._v(" "),
-      _c(
-        "span",
-        {
-          staticClass: "multiselect-custom-arrow",
-          attrs: { slot: "caret" },
-          slot: "caret"
-        },
-        [_c("img", { attrs: { src: _vm.icon, alt: "" } })]
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('multiselect',{attrs:{"value":_vm.value,"options":_vm.getOptions(_vm.options),"multiple":_vm.multiple,"close-on-select":!_vm.multiple,"loading":_vm.isLoading,"placeholder":_vm.placeholder,"disabled":_vm.disabled,"label":"name","track-by":_vm.id},on:{"open":_vm.onDropdownOpen,"remove":_vm.onRemove,"select":_vm.onSelect,"search-change":_vm.asyncFind},scopedSlots:_vm._u([{key:"singleLabel",fn:function(ref){
+var option = ref.option;
+return [_c('span',{domProps:{"innerHTML":_vm._s(option.name)}})]}},{key:"option",fn:function(ref){
+var option = ref.option;
+return [_c('span',{domProps:{"innerHTML":_vm._s(option.name)}})]}}])},[_c('span',{attrs:{"slot":"noResult"},slot:"noResult"},[_vm._v(_vm._s(_vm.__('Oops! No item found.', 'erp')))]),_vm._v(" "),_c('span',{staticClass:"multiselect-custom-arrow",attrs:{"slot":"caret"},slot:"caret"},[_c('img',{attrs:{"src":_vm.icon,"alt":""}})])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1894e21a", esExports)
-  }
-}
 
 /***/ }),
 /* 116 */
@@ -2059,24 +1743,10 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("button", { class: _vm.fullClass, attrs: { type: "submit" } }, [
-    _vm._v("\n    " + _vm._s(_vm.text) + "\n")
-  ])
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{class:_vm.fullClass,attrs:{"type":"submit"}},[_vm._v("\n    "+_vm._s(_vm.text)+"\n")])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-52bbe600", esExports)
-  }
-}
 
 /***/ }),
 /* 118 */
@@ -2085,8 +1755,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsSubMenu_vue__ = __webpack_require__(52);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0d023f84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsSubMenu_vue__ = __webpack_require__(119);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_8ae4abec_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsSubMenu_vue__ = __webpack_require__(119);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -2103,29 +1772,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsSubMenu_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0d023f84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsSubMenu_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_8ae4abec_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsSubMenu_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/menu/SettingsSubMenu.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0d023f84", Component.options)
-  } else {
-    hotAPI.reload("data-v-0d023f84", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -2135,118 +1787,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return Object.keys(_vm.menus).length > 0
-    ? _c("div", { staticClass: "settings-submenu-navbar" }, [
-        _c(
-          "ul",
-          { staticClass: "settings-sub-menu" },
-          [
-            _vm._l(_vm.menus, function(menu, key, index) {
-              return [
-                index < _vm.dropdownMenuStartPos
-                  ? _c(
-                      "li",
-                      { key: key },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            class: _vm.activeRouteClass(index),
-                            attrs: {
-                              tag: "li",
-                              to: "/" + _vm.parent_id + "/" + key
-                            }
-                          },
-                          [
-                            _c("a", { attrs: { href: "#" } }, [
-                              _c("span", { staticClass: "menu-name" }, [
-                                _vm._v(_vm._s(menu))
-                              ])
-                            ])
-                          ]
-                        )
-                      ],
-                      1
-                    )
-                  : _vm._e()
-              ]
-            }),
-            _vm._v(" "),
-            _vm.dropdownMenuStartPos > 0 && Object.keys(_vm.menus).length > 5
-              ? _c(
-                  "dropdown",
-                  [
-                    _c("template", { slot: "button" }, [
-                      _c("a", { attrs: { href: "#" } }, [
-                        _vm._v(" " + _vm._s(_vm.__("More", "erp")) + "   "),
-                        _c("i", { staticClass: "fa fa-chevron-down" })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("template", { slot: "dropdown" }, [
-                      _c(
-                        "ul",
-                        { attrs: { role: "menu" } },
-                        [
-                          _vm._l(_vm.menus, function(menu, key, index) {
-                            return [
-                              index >= _vm.dropdownMenuStartPos
-                                ? _c(
-                                    "li",
-                                    {
-                                      key: index,
-                                      staticClass: "dropdown-list-item"
-                                    },
-                                    [
-                                      _c(
-                                        "router-link",
-                                        {
-                                          attrs: {
-                                            to: "/" + _vm.parent_id + "/" + key
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "span",
-                                            { staticClass: "menu-name" },
-                                            [_vm._v(_vm._s(menu))]
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                : _vm._e()
-                            ]
-                          })
-                        ],
-                        2
-                      )
-                    ])
-                  ],
-                  2
-                )
-              : _vm._e()
-          ],
-          2
-        )
-      ])
-    : _vm._e()
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (Object.keys(_vm.menus).length > 0)?_c('div',{staticClass:"settings-submenu-navbar"},[_c('ul',{staticClass:"settings-sub-menu"},[_vm._l((_vm.menus),function(menu,key,index){return [(index < _vm.dropdownMenuStartPos)?_c('li',{key:key},[_c('router-link',{class:_vm.activeRouteClass(index),attrs:{"tag":"li","to":("/" + _vm.parent_id + "/" + key)}},[_c('a',{attrs:{"href":"#"}},[_c('span',{staticClass:"menu-name"},[_vm._v(_vm._s(menu))])])])],1):_vm._e()]}),_vm._v(" "),(_vm.dropdownMenuStartPos > 0 && Object.keys(_vm.menus).length > 5)?_c('dropdown',[_c('template',{slot:"button"},[_c('a',{attrs:{"href":"#"}},[_vm._v(" "+_vm._s(_vm.__("More", "erp"))+"   "),_c('i',{staticClass:"fa fa-chevron-down"})])]),_vm._v(" "),_c('template',{slot:"dropdown"},[_c('ul',{attrs:{"role":"menu"}},[_vm._l((_vm.menus),function(menu,key,index){return [(index >= _vm.dropdownMenuStartPos)?_c('li',{key:index,staticClass:"dropdown-list-item"},[_c('router-link',{attrs:{"to":("/" + _vm.parent_id + "/" + key)}},[_c('span',{staticClass:"menu-name"},[_vm._v(_vm._s(menu))])])],1):_vm._e()]})],2)])],2):_vm._e()],2)]):_vm._e()}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0d023f84", esExports)
-  }
-}
 
 /***/ }),
 /* 120 */
@@ -2255,8 +1799,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ImagePicker_vue__ = __webpack_require__(54);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0464c3ba_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImagePicker_vue__ = __webpack_require__(122);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4f6a7683_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImagePicker_vue__ = __webpack_require__(122);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -2273,29 +1816,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ImagePicker_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0464c3ba_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImagePicker_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4f6a7683_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImagePicker_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/base/ImagePicker.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0464c3ba", Component.options)
-  } else {
-    hotAPI.reload("data-v-0464c3ba", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -2306,137 +1832,20 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      typeof this.imageValue === "string" && this.imageValue.length > 0
-        ? _c("vue-dropify", {
-            attrs: {
-              accept: "image/*",
-              uploadIcon: "fa fa-cloud-upload",
-              message: _vm.__("Upload Image", "erp"),
-              src: typeof this.imageValue === "string" ? this.imageValue : ""
-            },
-            on: { change: _vm.changeImage },
-            model: {
-              value: _vm.imageValue,
-              callback: function($$v) {
-                _vm.imageValue = $$v
-              },
-              expression: "imageValue"
-            }
-          })
-        : _c("vue-dropify", {
-            attrs: {
-              accept: "image/*",
-              uploadIcon: "fa fa-cloud-upload",
-              message: _vm.__("Upload Image", "erp")
-            },
-            on: { change: _vm.changeImage },
-            model: {
-              value: _vm.imageValue,
-              callback: function($$v) {
-                _vm.imageValue = $$v
-              },
-              expression: "imageValue"
-            }
-          })
-    ],
-    1
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[((typeof this.imageValue === 'string' && this.imageValue.length > 0))?_c('vue-dropify',{attrs:{"accept":"image/*","uploadIcon":"fa fa-cloud-upload","message":_vm.__('Upload Image', 'erp'),"src":typeof this.imageValue === 'string' ? this.imageValue : ''},on:{"change":_vm.changeImage},model:{value:(_vm.imageValue),callback:function ($$v) {_vm.imageValue=$$v},expression:"imageValue"}}):_c('vue-dropify',{attrs:{"accept":"image/*","uploadIcon":"fa fa-cloud-upload","message":_vm.__('Upload Image', 'erp')},on:{"change":_vm.changeImage},model:{value:(_vm.imageValue),callback:function ($$v) {_vm.imageValue=$$v},expression:"imageValue"}})],1)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0464c3ba", esExports)
-  }
-}
 
 /***/ }),
 /* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm.input.tooltip
-    ? _c("span", { staticClass: "erp-settings-tooltip" }, [
-        _c(
-          "svg",
-          {
-            attrs: {
-              width: "13px",
-              height: "13px",
-              viewBox: "0 0 13 13",
-              version: "1.1",
-              xmlns: "http://www.w3.org/2000/svg",
-              "xmlns:xlink": "http://www.w3.org/1999/xlink"
-            }
-          },
-          [
-            _c(
-              "g",
-              {
-                attrs: {
-                  id: "Tooltip",
-                  stroke: "none",
-                  "stroke-width": "1",
-                  fill: "none",
-                  "fill-rule": "evenodd"
-                }
-              },
-              [
-                _c(
-                  "g",
-                  {
-                    attrs: {
-                      transform: "translate(-639.000000, -350.000000)",
-                      fill: "#CECFD3",
-                      "fill-rule": "nonzero"
-                    }
-                  },
-                  [
-                    _c("path", {
-                      attrs: {
-                        d:
-                          "M645.499725,350 C641.910349,350 639,352.910349 639,356.499725 C639,360.089101 641.910349,363 645.499725,363 C649.089101,363 652,360.089101 652,356.499725 C652,352.910349 649.089101,350 645.499725,350 Z M646.852825,360.073693 C646.518265,360.205757 646.251937,360.305905 646.05219,360.375238 C645.852995,360.444571 645.621333,360.479238 645.357757,360.479238 C644.952762,360.479238 644.63746,360.38019 644.412952,360.182646 C644.188444,359.985101 644.076741,359.73473 644.076741,359.430434 C644.076741,359.312127 644.084995,359.191069 644.101503,359.06781 C644.118561,358.94455 644.145524,358.805884 644.182392,358.650159 L644.601143,357.171048 C644.638011,357.029079 644.669926,356.894265 644.695238,356.768804 C644.72055,356.642243 644.732656,356.526138 644.732656,356.420487 C644.732656,356.232296 644.693587,356.100233 644.616,356.025947 C644.537312,355.951661 644.389291,355.915344 644.168635,355.915344 C644.060783,355.915344 643.94963,355.931302 643.835725,355.964868 C643.722921,355.999534 643.624974,356.030899 643.544635,356.061714 L643.655238,355.606095 C643.92927,355.494392 644.191746,355.398646 644.442116,355.319407 C644.692487,355.239069 644.929101,355.19945 645.151958,355.19945 C645.554201,355.19945 645.86455,355.297397 646.083005,355.49109 C646.30036,355.685333 646.409862,355.937905 646.409862,356.248254 C646.409862,356.312635 646.402159,356.425989 646.387302,356.587767 C646.372444,356.750095 646.344381,356.898116 646.303661,357.034032 L645.887111,358.508741 C645.852995,358.627048 645.82273,358.762413 645.795217,358.913735 C645.768254,359.065058 645.755048,359.180614 645.755048,359.258201 C645.755048,359.454095 645.798519,359.58781 645.886561,359.658794 C645.973503,359.729778 646.125926,359.765545 646.34163,359.765545 C646.443429,359.765545 646.557333,359.747386 646.686095,359.712169 C646.813757,359.676952 646.906201,359.645587 646.964529,359.618624 L646.852825,360.073693 Z M646.77909,354.087915 C646.584847,354.268402 646.350984,354.358646 646.077503,354.358646 C645.804571,354.358646 645.569058,354.268402 645.373164,354.087915 C645.17837,353.907429 645.079873,353.687873 645.079873,353.43145 C645.079873,353.175577 645.178921,352.955471 645.373164,352.773333 C645.569058,352.590646 645.804571,352.499852 646.077503,352.499852 C646.350984,352.499852 646.585397,352.590646 646.77909,352.773333 C646.973333,352.955471 647.07073,353.175577 647.07073,353.43145 C647.07073,353.688423 646.973333,353.907429 646.77909,354.087915 Z",
-                        id: "Shape"
-                      }
-                    })
-                  ]
-                )
-              ]
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", {
-          staticClass: "tooltiptext",
-          domProps: { innerHTML: _vm._s(_vm.getTooltipText()) }
-        })
-      ])
-    : _vm._e()
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.input.tooltip)?_c('span',{staticClass:"erp-settings-tooltip"},[_c('svg',{attrs:{"width":"13px","height":"13px","viewBox":"0 0 13 13","version":"1.1","xmlns":"http://www.w3.org/2000/svg","xmlns:xlink":"http://www.w3.org/1999/xlink"}},[_c('g',{attrs:{"id":"Tooltip","stroke":"none","stroke-width":"1","fill":"none","fill-rule":"evenodd"}},[_c('g',{attrs:{"transform":"translate(-639.000000, -350.000000)","fill":"#CECFD3","fill-rule":"nonzero"}},[_c('path',{attrs:{"d":"M645.499725,350 C641.910349,350 639,352.910349 639,356.499725 C639,360.089101 641.910349,363 645.499725,363 C649.089101,363 652,360.089101 652,356.499725 C652,352.910349 649.089101,350 645.499725,350 Z M646.852825,360.073693 C646.518265,360.205757 646.251937,360.305905 646.05219,360.375238 C645.852995,360.444571 645.621333,360.479238 645.357757,360.479238 C644.952762,360.479238 644.63746,360.38019 644.412952,360.182646 C644.188444,359.985101 644.076741,359.73473 644.076741,359.430434 C644.076741,359.312127 644.084995,359.191069 644.101503,359.06781 C644.118561,358.94455 644.145524,358.805884 644.182392,358.650159 L644.601143,357.171048 C644.638011,357.029079 644.669926,356.894265 644.695238,356.768804 C644.72055,356.642243 644.732656,356.526138 644.732656,356.420487 C644.732656,356.232296 644.693587,356.100233 644.616,356.025947 C644.537312,355.951661 644.389291,355.915344 644.168635,355.915344 C644.060783,355.915344 643.94963,355.931302 643.835725,355.964868 C643.722921,355.999534 643.624974,356.030899 643.544635,356.061714 L643.655238,355.606095 C643.92927,355.494392 644.191746,355.398646 644.442116,355.319407 C644.692487,355.239069 644.929101,355.19945 645.151958,355.19945 C645.554201,355.19945 645.86455,355.297397 646.083005,355.49109 C646.30036,355.685333 646.409862,355.937905 646.409862,356.248254 C646.409862,356.312635 646.402159,356.425989 646.387302,356.587767 C646.372444,356.750095 646.344381,356.898116 646.303661,357.034032 L645.887111,358.508741 C645.852995,358.627048 645.82273,358.762413 645.795217,358.913735 C645.768254,359.065058 645.755048,359.180614 645.755048,359.258201 C645.755048,359.454095 645.798519,359.58781 645.886561,359.658794 C645.973503,359.729778 646.125926,359.765545 646.34163,359.765545 C646.443429,359.765545 646.557333,359.747386 646.686095,359.712169 C646.813757,359.676952 646.906201,359.645587 646.964529,359.618624 L646.852825,360.073693 Z M646.77909,354.087915 C646.584847,354.268402 646.350984,354.358646 646.077503,354.358646 C645.804571,354.358646 645.569058,354.268402 645.373164,354.087915 C645.17837,353.907429 645.079873,353.687873 645.079873,353.43145 C645.079873,353.175577 645.178921,352.955471 645.373164,352.773333 C645.569058,352.590646 645.804571,352.499852 646.077503,352.499852 C646.350984,352.499852 646.585397,352.590646 646.77909,352.773333 C646.973333,352.955471 647.07073,353.175577 647.07073,353.43145 C647.07073,353.688423 646.973333,353.907429 646.77909,354.087915 Z","id":"Shape"}})])])]),_vm._v(" "),_c('span',{staticClass:"tooltiptext",domProps:{"innerHTML":_vm._s(_vm.getTooltipText())}})]):_vm._e()}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6774445d", esExports)
-  }
-}
 
 /***/ }),
 /* 124 */
@@ -2445,8 +1854,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InputDesc_vue__ = __webpack_require__(57);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7d3443c8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InputDesc_vue__ = __webpack_require__(125);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_272e29c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InputDesc_vue__ = __webpack_require__(125);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -2463,29 +1871,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InputDesc_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7d3443c8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InputDesc_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_272e29c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InputDesc_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/layouts/partials/InputDesc.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7d3443c8", Component.options)
-  } else {
-    hotAPI.reload("data-v-7d3443c8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -2495,750 +1886,50 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm.isEnableDescription(_vm.input)
-    ? _c("p", {
-        staticClass: "erp-form-input-hint",
-        domProps: { innerHTML: _vm._s(_vm.desc) }
-      })
-    : _vm._e()
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.isEnableDescription(_vm.input))?_c('p',{staticClass:"erp-form-input-hint",domProps:{"innerHTML":_vm._s(_vm.desc)}}):_vm._e()}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7d3443c8", esExports)
-  }
-}
 
 /***/ }),
 /* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "field" }, [
-    _c("input", {
-      class: _vm.switchType,
-      attrs: { type: "checkbox", name: "switchRounded" },
-      domProps: { checked: _vm.checked }
-    }),
-    _vm._v(" "),
-    _c(
-      "label",
-      { attrs: { for: "switchRounded" }, on: { click: _vm.toggle } },
-      [_vm._v(_vm._s(_vm.label))]
-    )
-  ])
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"field"},[_c('input',{class:_vm.switchType,attrs:{"type":"checkbox","name":"switchRounded"},domProps:{"checked":_vm.checked}}),_vm._v(" "),_c('label',{attrs:{"for":"switchRounded"},on:{"click":_vm.toggle}},[_vm._v(_vm._s(_vm.label))])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-bca00e3a", esExports)
-  }
-}
 
 /***/ }),
 /* 127 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    {
-      staticClass: "wperp-form",
-      attrs: { action: "", method: "post", enctype: "multipart/form-data" },
-      on: {
-        submit: function($event) {
-          $event.preventDefault()
-          return _vm.onFormSubmit.apply(null, arguments)
-        }
-      }
-    },
-    [
-      typeof _vm.sub_sub_section_title !== "undefined" &&
-      _vm.sub_sub_section_title.length > 0
-        ? _c("h3", {
-            staticClass: "sub-sub-title",
-            domProps: { innerHTML: _vm._s(_vm.sub_sub_section_title) }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm._t("extended-data-before"),
-      _vm._v(" "),
-      _vm._l(_vm.fields, function(input, index) {
-        return _c("div", { key: index }, [
-          _c(
-            "div",
-            { staticClass: "wperp-form-group" },
-            [
-              _c(
-                "label",
-                { attrs: { for: "erp-" + _vm.fields[index]["id"] } },
-                [
-                  _c("span", { domProps: { innerHTML: _vm._s(input.title) } }),
-                  _vm._v(" "),
-                  input ? _c("tooltip", { attrs: { input: input } }) : _vm._e()
-                ],
-                1
-              ),
-              _vm._v(" "),
-              input.type === "select"
-                ? [
-                    _c("multi-select", {
-                      attrs: {
-                        options: input.options,
-                        id: "erp-" + _vm.fields[index]["id"],
-                        placeholder:
-                          "Please select " + _vm.fields[index]["title"]
-                      },
-                      model: {
-                        value: _vm.fields[index]["value"],
-                        callback: function($$v) {
-                          _vm.$set(_vm.fields[index], "value", $$v)
-                        },
-                        expression: "fields[index]['value']"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("input-desc", { attrs: { input: input } })
-                  ]
-                : input.type === "label"
-                ? [
-                    _c("div", {
-                      attrs: { id: "erp-" + _vm.fields[index]["id"] },
-                      domProps: { innerHTML: _vm._s(input.value) }
-                    }),
-                    _vm._v(" "),
-                    _c("input-desc", { attrs: { input: input } })
-                  ]
-                : input.type === "hidden"
-                ? [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        id: "erp-" + _vm.fields[index]["id"]
-                      },
-                      domProps: { value: _vm.fields[index]["value"] }
-                    })
-                  ]
-                : input.type === "hidden-fixed"
-                ? [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        id: "erp-" + _vm.fields[index]["id"]
-                      },
-                      domProps: { value: _vm.fields[index]["value"] }
-                    })
-                  ]
-                : input.type === "checkbox"
-                ? _c(
-                    "div",
-                    { staticClass: "form-check" },
-                    [
-                      _c("label", { staticClass: "form-check-label" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fields[index]["value"],
-                              expression: "fields[index]['value']"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: {
-                            type: "checkbox",
-                            id: "erp-" + _vm.fields[index]["id"]
-                          },
-                          domProps: {
-                            checked: Array.isArray(_vm.fields[index]["value"])
-                              ? _vm._i(_vm.fields[index]["value"], null) > -1
-                              : _vm.fields[index]["value"]
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.fields[index]["value"],
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.fields[index],
-                                      "value",
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.fields[index],
-                                      "value",
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(_vm.fields[index], "value", $$c)
-                              }
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _vm._m(0, true),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "form-check-label-light",
-                          domProps: { innerHTML: _vm._s(input.desc) }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("input-desc", { attrs: { input: input } })
-                    ],
-                    1
-                  )
-                : input.type === "radio"
-                ? _c(
-                    "div",
-                    [
-                      _c("radio-switch", {
-                        attrs: {
-                          value: _vm.fields[index]["value"],
-                          id: "erp-" + _vm.fields[index]["id"]
-                        },
-                        on: {
-                          toggle: function($event) {
-                            return _vm.toggleSwitch(index)
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("input-desc", { attrs: { input: input } })
-                    ],
-                    1
-                  )
-                : input.type === "multicheck"
-                ? _c(
-                    "div",
-                    { staticClass: "form-check" },
-                    [
-                      _vm._l(input.options, function(
-                        checkOption,
-                        checkKey,
-                        index2
-                      ) {
-                        return _c(
-                          "label",
-                          { key: index2, staticClass: "form-check-label" },
-                          [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.fields[index]["value"][checkKey],
-                                  expression: "fields[index]['value'][checkKey]"
-                                }
-                              ],
-                              staticClass: "form-check-input",
-                              attrs: {
-                                type: "checkbox",
-                                id: "erp-" + _vm.fields[index]["id"][checkKey]
-                              },
-                              domProps: {
-                                checked: Array.isArray(
-                                  _vm.fields[index]["value"][checkKey]
-                                )
-                                  ? _vm._i(
-                                      _vm.fields[index]["value"][checkKey],
-                                      null
-                                    ) > -1
-                                  : _vm.fields[index]["value"][checkKey]
-                              },
-                              on: {
-                                change: function($event) {
-                                  var $$a =
-                                      _vm.fields[index]["value"][checkKey],
-                                    $$el = $event.target,
-                                    $$c = $$el.checked ? true : false
-                                  if (Array.isArray($$a)) {
-                                    var $$v = null,
-                                      $$i = _vm._i($$a, $$v)
-                                    if ($$el.checked) {
-                                      $$i < 0 &&
-                                        _vm.$set(
-                                          _vm.fields[index]["value"],
-                                          checkKey,
-                                          $$a.concat([$$v])
-                                        )
-                                    } else {
-                                      $$i > -1 &&
-                                        _vm.$set(
-                                          _vm.fields[index]["value"],
-                                          checkKey,
-                                          $$a
-                                            .slice(0, $$i)
-                                            .concat($$a.slice($$i + 1))
-                                        )
-                                    }
-                                  } else {
-                                    _vm.$set(
-                                      _vm.fields[index]["value"],
-                                      checkKey,
-                                      $$c
-                                    )
-                                  }
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _vm._m(1, true),
-                            _vm._v(" "),
-                            _c("span", {
-                              staticClass: "form-check-label-light",
-                              domProps: { innerHTML: _vm._s(checkOption) }
-                            })
-                          ]
-                        )
-                      }),
-                      _vm._v(" "),
-                      _c("input-desc", { attrs: { input: input } })
-                    ],
-                    2
-                  )
-                : input.type === "text" ||
-                  input.type === "textarea" ||
-                  input.type === "password" ||
-                  input.type === "email"
-                ? _c(
-                    "div",
-                    [
-                      input.type === "text" && input.class !== "erp-date-field"
-                        ? _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fields[index]["value"],
-                                expression: "fields[index]['value']"
-                              }
-                            ],
-                            staticClass: "wperp-form-field",
-                            attrs: {
-                              placeholder: _vm.fields[index]["placeholder"]
-                                ? _vm.fields[index]["placeholder"]
-                                : "",
-                              id: "erp-" + _vm.fields[index]["id"],
-                              disabled: _vm.fields[index]["disabled"]
-                                ? true
-                                : false
-                            },
-                            domProps: { value: _vm.fields[index]["value"] },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.fields[index],
-                                  "value",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        : input.type === "text" &&
-                          input.class === "erp-date-field"
-                        ? _c("date-picker", {
-                            staticClass: "wperp-form-field",
-                            attrs: {
-                              placeholder: _vm.__("Select date", "erp"),
-                              id: "erp-" + _vm.fields[index]["id"]
-                            },
-                            model: {
-                              value: _vm.fields[index]["value"],
-                              callback: function($$v) {
-                                _vm.$set(_vm.fields[index], "value", $$v)
-                              },
-                              expression: "fields[index]['value']"
-                            }
-                          })
-                        : input.type === "textarea"
-                        ? _c("textarea", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fields[index]["value"],
-                                expression: "fields[index]['value']"
-                              }
-                            ],
-                            staticClass: "wperp-form-field",
-                            attrs: {
-                              cols: "45",
-                              rows: "4",
-                              id: "erp-" + _vm.fields[index]["id"],
-                              disabled: _vm.fields[index]["disabled"]
-                                ? true
-                                : false
-                            },
-                            domProps: { value: _vm.fields[index]["value"] },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.fields[index],
-                                  "value",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        : input.type === "password"
-                        ? _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fields[index]["value"],
-                                expression: "fields[index]['value']"
-                              }
-                            ],
-                            staticClass: "wperp-form-field",
-                            attrs: {
-                              type: "password",
-                              id: "erp-" + _vm.fields[index]["id"],
-                              disabled: _vm.fields[index]["disabled"]
-                                ? true
-                                : false
-                            },
-                            domProps: { value: _vm.fields[index]["value"] },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.fields[index],
-                                  "value",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        : input.type === "email"
-                        ? _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fields[index]["value"],
-                                expression: "fields[index]['value']"
-                              }
-                            ],
-                            staticClass: "wperp-form-field",
-                            attrs: {
-                              type: "email",
-                              id: "erp-" + _vm.fields[index]["id"],
-                              disabled: _vm.fields[index]["disabled"]
-                                ? true
-                                : false
-                            },
-                            domProps: { value: _vm.fields[index]["value"] },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.fields[index],
-                                  "value",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("input-desc", { attrs: { input: input } })
-                    ],
-                    1
-                  )
-                : input.type === "image"
-                ? _c(
-                    "div",
-                    [
-                      _c("image-picker", {
-                        attrs: {
-                          value: _vm.fields[index]["value"],
-                          id: "erp-" + _vm.fields[index]["id"]
-                        },
-                        on: {
-                          changeImage: function(value) {
-                            return _vm.changeImage(value, index)
-                          }
-                        },
-                        model: {
-                          value: _vm.fields[index]["value"],
-                          callback: function($$v) {
-                            _vm.$set(_vm.fields[index], "value", $$v)
-                          },
-                          expression: "fields[index]['value']"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                : input.type === "html"
-                ? _c("div", { domProps: { innerHTML: _vm._s(input.value) } })
-                : _vm._e()
-            ],
-            2
-          )
-        ])
-      }),
-      _vm._v(" "),
-      _vm._t("extended-data"),
-      _vm._v(" "),
-      !_vm.hide_submit
-        ? _c(
-            "div",
-            { staticClass: "wperp-form-group" },
-            [
-              _c("submit-button", {
-                attrs: { text: _vm.__("Save Changes", "erp") }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "clearfix" })
-            ],
-            1
-          )
-        : _vm._e()
-    ],
-    2
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "form-check-sign" }, [
-      _c("span", { staticClass: "check" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "form-check-sign" }, [
-      _c("span", { staticClass: "check" })
-    ])
-  }
-]
-render._withStripped = true
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post","enctype":"multipart/form-data"},on:{"submit":function($event){$event.preventDefault();return _vm.onFormSubmit.apply(null, arguments)}}},[(typeof _vm.sub_sub_section_title !== 'undefined' && _vm.sub_sub_section_title.length > 0)?_c('h3',{staticClass:"sub-sub-title",domProps:{"innerHTML":_vm._s(_vm.sub_sub_section_title)}}):_vm._e(),_vm._v(" "),_vm._t("extended-data-before"),_vm._v(" "),_vm._l((_vm.fields),function(input,index){return _c('div',{key:index},[_c('div',{staticClass:"wperp-form-group"},[_c('label',{attrs:{"for":'erp-'+_vm.fields[index]['id']}},[_c('span',{domProps:{"innerHTML":_vm._s(input.title)}}),_vm._v(" "),(input)?_c('tooltip',{attrs:{"input":input}}):_vm._e()],1),_vm._v(" "),(input.type === 'select')?[_c('multi-select',{attrs:{"options":input.options,"id":'erp-'+_vm.fields[index]['id'],"placeholder":'Please select ' + _vm.fields[index]['title']},model:{value:(_vm.fields[index]['value']),callback:function ($$v) {_vm.$set(_vm.fields[index], 'value', $$v)},expression:"fields[index]['value']"}}),_vm._v(" "),_c('input-desc',{attrs:{"input":input}})]:(input.type === 'label')?[_c('div',{attrs:{"id":'erp-'+_vm.fields[index]['id']},domProps:{"innerHTML":_vm._s(input.value)}}),_vm._v(" "),_c('input-desc',{attrs:{"input":input}})]:(input.type === 'hidden')?[_c('input',{attrs:{"type":"hidden","id":'erp-'+_vm.fields[index]['id']},domProps:{"value":_vm.fields[index]['value']}})]:(input.type === 'hidden-fixed')?[_c('input',{attrs:{"type":"hidden","id":'erp-'+_vm.fields[index]['id']},domProps:{"value":_vm.fields[index]['value']}})]:(input.type === 'checkbox')?_c('div',{staticClass:"form-check"},[_c('label',{staticClass:"form-check-label"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fields[index]['value']),expression:"fields[index]['value']"}],staticClass:"form-check-input",attrs:{"type":"checkbox","id":'erp-'+_vm.fields[index]['id']},domProps:{"checked":Array.isArray(_vm.fields[index]['value'])?_vm._i(_vm.fields[index]['value'],null)>-1:(_vm.fields[index]['value'])},on:{"change":function($event){var $$a=_vm.fields[index]['value'],$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.$set(_vm.fields[index], 'value', $$a.concat([$$v])))}else{$$i>-1&&(_vm.$set(_vm.fields[index], 'value', $$a.slice(0,$$i).concat($$a.slice($$i+1))))}}else{_vm.$set(_vm.fields[index], 'value', $$c)}}}}),_vm._v(" "),_vm._m(0,true),_vm._v(" "),_c('span',{staticClass:"form-check-label-light",domProps:{"innerHTML":_vm._s(input.desc)}})]),_vm._v(" "),_c('input-desc',{attrs:{"input":input}})],1):(input.type === 'radio')?_c('div',[_c('radio-switch',{attrs:{"value":_vm.fields[index]['value'],"id":'erp-'+_vm.fields[index]['id']},on:{"toggle":function($event){return _vm.toggleSwitch(index)}}}),_vm._v(" "),_c('input-desc',{attrs:{"input":input}})],1):(input.type === 'multicheck')?_c('div',{staticClass:"form-check"},[_vm._l((input.options),function(checkOption,checkKey,index2){return _c('label',{key:index2,staticClass:"form-check-label"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fields[index]['value'][checkKey]),expression:"fields[index]['value'][checkKey]"}],staticClass:"form-check-input",attrs:{"type":"checkbox","id":'erp-'+_vm.fields[index]['id'][checkKey]},domProps:{"checked":Array.isArray(_vm.fields[index]['value'][checkKey])?_vm._i(_vm.fields[index]['value'][checkKey],null)>-1:(_vm.fields[index]['value'][checkKey])},on:{"change":function($event){var $$a=_vm.fields[index]['value'][checkKey],$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.$set(_vm.fields[index]['value'], checkKey, $$a.concat([$$v])))}else{$$i>-1&&(_vm.$set(_vm.fields[index]['value'], checkKey, $$a.slice(0,$$i).concat($$a.slice($$i+1))))}}else{_vm.$set(_vm.fields[index]['value'], checkKey, $$c)}}}}),_vm._v(" "),_vm._m(1,true),_vm._v(" "),_c('span',{staticClass:"form-check-label-light",domProps:{"innerHTML":_vm._s(checkOption)}})])}),_vm._v(" "),_c('input-desc',{attrs:{"input":input}})],2):(input.type === 'text' || input.type === 'textarea' || input.type === 'password' || input.type === 'email')?_c('div',[(input.type === 'text' && input.class !== 'erp-date-field')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fields[index]['value']),expression:"fields[index]['value']"}],staticClass:"wperp-form-field",attrs:{"placeholder":_vm.fields[index]['placeholder'] ? _vm.fields[index]['placeholder'] : '',"id":'erp-'+_vm.fields[index]['id'],"disabled":_vm.fields[index]['disabled'] ? true : false},domProps:{"value":(_vm.fields[index]['value'])},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.fields[index], 'value', $event.target.value)}}}):(input.type === 'text' && input.class === 'erp-date-field')?_c('date-picker',{staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__( 'Select date', 'erp' ),"id":'erp-'+_vm.fields[index]['id']},model:{value:(_vm.fields[index]['value']),callback:function ($$v) {_vm.$set(_vm.fields[index], 'value', $$v)},expression:"fields[index]['value']"}}):(input.type === 'textarea')?_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.fields[index]['value']),expression:"fields[index]['value']"}],staticClass:"wperp-form-field",attrs:{"cols":"45","rows":"4","id":'erp-'+_vm.fields[index]['id'],"disabled":_vm.fields[index]['disabled'] ? true : false},domProps:{"value":(_vm.fields[index]['value'])},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.fields[index], 'value', $event.target.value)}}}):(input.type === 'password')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fields[index]['value']),expression:"fields[index]['value']"}],staticClass:"wperp-form-field",attrs:{"type":"password","id":'erp-'+_vm.fields[index]['id'],"disabled":_vm.fields[index]['disabled'] ? true : false},domProps:{"value":(_vm.fields[index]['value'])},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.fields[index], 'value', $event.target.value)}}}):(input.type === 'email')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fields[index]['value']),expression:"fields[index]['value']"}],staticClass:"wperp-form-field",attrs:{"type":"email","id":'erp-'+_vm.fields[index]['id'],"disabled":_vm.fields[index]['disabled'] ? true : false},domProps:{"value":(_vm.fields[index]['value'])},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.fields[index], 'value', $event.target.value)}}}):_vm._e(),_vm._v(" "),_c('input-desc',{attrs:{"input":input}})],1):(input.type === 'image')?_c('div',[_c('image-picker',{attrs:{"value":_vm.fields[index]['value'],"id":'erp-'+_vm.fields[index]['id']},on:{"changeImage":function (value) { return _vm.changeImage(value, index); }},model:{value:(_vm.fields[index]['value']),callback:function ($$v) {_vm.$set(_vm.fields[index], 'value', $$v)},expression:"fields[index]['value']"}})],1):(input.type === 'html')?_c('div',{domProps:{"innerHTML":_vm._s(input.value)}}):_vm._e()],2)])}),_vm._v(" "),_vm._t("extended-data"),_vm._v(" "),(! _vm.hide_submit)?_c('div',{staticClass:"wperp-form-group"},[_c('submit-button',{attrs:{"text":_vm.__('Save Changes', 'erp')}}),_vm._v(" "),_c('div',{staticClass:"clearfix"})],1):_vm._e()],2)}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"form-check-sign"},[_c('span',{staticClass:"check"})])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"form-check-sign"},[_c('span',{staticClass:"check"})])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-796c2e84", esExports)
-  }
-}
 
 /***/ }),
 /* 128 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      !_vm.disableSectionTitle
-        ? _c("h2", { staticClass: "section-title" }, [
-            _vm._v(_vm._s(_vm.sectionTitle))
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      Object.keys(_vm.subMenus).length > 0 && !_vm.disableMenu
-        ? [
-            _c("settings-sub-menu", {
-              attrs: { menus: _vm.subMenus, parent_id: _vm.section_id }
-            })
-          ]
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "settings-box",
-          attrs: {
-            id: "erp-settings-box-" + _vm.section_id + "-" + _vm.sub_section_id
-          }
-        },
-        [
-          _vm.subSectionTitle && _vm.enableSubSectionTitle
-            ? _c(
-                "h3",
-                { staticClass: "sub-section-title" },
-                [
-                  _vm._t("subSectionTitle", function() {
-                    return [_vm._v(_vm._s(_vm.subSectionTitle))]
-                  })
-                ],
-                2
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.subSectionDescription && _vm.enableSubSectionTitle
-            ? _c("p", {
-                staticClass: "sub-section-description",
-                domProps: { innerHTML: _vm._s(_vm.subSectionDescription) }
-              })
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.enable_content ? _vm._t("default") : _vm._e(),
-          _vm._v(" "),
-          _vm.enable_content
-            ? _c(
-                "base-content-layout",
-                {
-                  attrs: {
-                    section_id: _vm.section_id,
-                    sub_section_id: _vm.sub_section_id,
-                    sub_sub_section_id: _vm.sub_sub_section_id,
-                    inputs: _vm.inputFields,
-                    single_option: _vm.single_option,
-                    options: _vm.options
-                  }
-                },
-                [
-                  _c(
-                    "div",
-                    { attrs: { slot: "extended-data" }, slot: "extended-data" },
-                    [_vm._t("extended-data")],
-                    2
-                  )
-                ]
-              )
-            : _vm._e()
-        ],
-        2
-      )
-    ],
-    2
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(!_vm.disableSectionTitle)?_c('h2',{staticClass:"section-title"},[_vm._v(_vm._s(_vm.sectionTitle))]):_vm._e(),_vm._v(" "),(Object.keys(_vm.subMenus).length > 0 && !_vm.disableMenu)?[_c('settings-sub-menu',{attrs:{"menus":_vm.subMenus,"parent_id":_vm.section_id}})]:_vm._e(),_vm._v(" "),_c('div',{staticClass:"settings-box",attrs:{"id":("erp-settings-box-" + _vm.section_id + "-" + _vm.sub_section_id)}},[(_vm.subSectionTitle && _vm.enableSubSectionTitle)?_c('h3',{staticClass:"sub-section-title"},[_vm._t("subSectionTitle",function(){return [_vm._v(_vm._s(_vm.subSectionTitle))]})],2):_vm._e(),_vm._v(" "),(_vm.subSectionDescription && _vm.enableSubSectionTitle)?_c('p',{staticClass:"sub-section-description",domProps:{"innerHTML":_vm._s(_vm.subSectionDescription)}}):_vm._e(),_vm._v(" "),(!_vm.enable_content)?_vm._t("default"):_vm._e(),_vm._v(" "),(_vm.enable_content)?_c('base-content-layout',{attrs:{"section_id":_vm.section_id,"sub_section_id":_vm.sub_section_id,"sub_sub_section_id":_vm.sub_sub_section_id,"inputs":_vm.inputFields,"single_option":_vm.single_option,"options":_vm.options}},[_c('div',{attrs:{"slot":"extended-data"},slot:"extended-data"},[_vm._t("extended-data")],2)]):_vm._e()],2)],2)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-16af2479", esExports)
-  }
-}
 
 /***/ }),
 /* 129 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      class: [
-        "wperp-modal",
-        "wperp-modal-open",
-        _vm.hasForm ? "wperp-has-form" : ""
-      ]
-    },
-    [
-      _c("div", { class: _vm.modalContentClass }, [
-        _c("div", { staticClass: "wperp-modal-content" }, [
-          _c(
-            "div",
-            { staticClass: "wperp-modal-header" },
-            [
-              _vm.header
-                ? _vm._t("header", function() {
-                    return [_c("h3", [_vm._v(_vm._s(_vm.title))])]
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c(
-                "span",
-                {
-                  staticClass: "modal-close",
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit("close")
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "flaticon-close" })]
-              )
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-modal-body" }, [_vm._t("body")], 2),
-          _vm._v(" "),
-          _vm.footer
-            ? _c(
-                "div",
-                { staticClass: "wperp-modal-footer" },
-                [_vm._t("footer")],
-                2
-              )
-            : _vm._e()
-        ])
-      ])
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['wperp-modal', 'wperp-modal-open', _vm.hasForm ? 'wperp-has-form' : '']},[_c('div',{class:_vm.modalContentClass},[_c('div',{staticClass:"wperp-modal-content"},[_c('div',{staticClass:"wperp-modal-header"},[(_vm.header)?_vm._t("header",function(){return [_c('h3',[_vm._v(_vm._s(_vm.title))])]}):_vm._e(),_vm._v(" "),_c('span',{staticClass:"modal-close",on:{"click":function($event){return _vm.$emit('close')}}},[_c('i',{staticClass:"flaticon-close"})])],2),_vm._v(" "),_c('div',{staticClass:"wperp-modal-body"},[_vm._t("body")],2),_vm._v(" "),(_vm.footer)?_c('div',{staticClass:"wperp-modal-footer"},[_vm._t("footer")],2):_vm._e()])])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-30c61af2", esExports)
-  }
-}
 
 /***/ }),
 /* 130 */,
@@ -4799,8 +3490,7 @@ var $ = jQuery;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SmtpEmail_vue__ = __webpack_require__(232);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_248d80f5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SmtpEmail_vue__ = __webpack_require__(474);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2952760a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SmtpEmail_vue__ = __webpack_require__(474);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -4817,29 +3507,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SmtpEmail_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_248d80f5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SmtpEmail_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2952760a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SmtpEmail_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-248d80f5", Component.options)
-  } else {
-    hotAPI.reload("data-v-248d80f5", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -6384,8 +5057,7 @@ if (settingsContainer !== null) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(208);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bbad6d40_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(441);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5f75e136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(441);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -6402,29 +5074,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bbad6d40_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5f75e136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/App.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-bbad6d40", Component.options)
-  } else {
-    hotAPI.reload("data-v-bbad6d40", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -6436,8 +5091,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsMenu_vue__ = __webpack_require__(209);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6ed0aa2c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsMenu_vue__ = __webpack_require__(433);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3b2e2326_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsMenu_vue__ = __webpack_require__(433);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -6454,29 +5108,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsMenu_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6ed0aa2c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsMenu_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3b2e2326_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsMenu_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/menu/SettingsMenu.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6ed0aa2c", Component.options)
-  } else {
-    hotAPI.reload("data-v-6ed0aa2c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -6486,62 +5123,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "settings-navbar" }, [
-    _c("h2", [_vm._v(_vm._s(_vm.__("Settings", "erp")))]),
-    _vm._v(" "),
-    _c(
-      "ul",
-      { staticClass: "settings-menu" },
-      _vm._l(_vm.menus, function(menu, index) {
-        return _c(
-          "li",
-          { key: index },
-          [
-            _c(
-              "router-link",
-              {
-                class:
-                  _vm.$route.name === "GeneralSettings" && index === 0
-                    ? "router-link-active"
-                    : "",
-                attrs: { tag: "li", to: menu.slug }
-              },
-              [
-                _c("a", { attrs: { href: "#" } }, [
-                  _c("img", { attrs: { src: menu.icon, alt: "" } }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "menu-name" }, [
-                    _vm._v(_vm._s(menu.label))
-                  ]),
-                  _vm._v(" "),
-                  menu.extra.pro_label !== undefined && menu.extra.pro_label
-                    ? _c("span", { staticClass: "pro-label" }, [_vm._v("PRO")])
-                    : _vm._e()
-                ])
-              ]
-            )
-          ],
-          1
-        )
-      }),
-      0
-    )
-  ])
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"settings-navbar"},[_c('h2',[_vm._v(_vm._s(_vm.__("Settings", "erp")))]),_vm._v(" "),_c('ul',{staticClass:"settings-menu"},_vm._l((_vm.menus),function(menu,index){return _c('li',{key:index},[_c('router-link',{class:(_vm.$route.name === 'GeneralSettings' && index === 0) ? 'router-link-active' : '',attrs:{"tag":"li","to":menu.slug}},[_c('a',{attrs:{"href":"#"}},[_c('img',{attrs:{"src":menu.icon,"alt":""}}),_vm._v(" "),_c('span',{staticClass:"menu-name"},[_vm._v(_vm._s(menu.label))]),_vm._v(" "),(menu.extra.pro_label !== undefined && menu.extra.pro_label)?_c('span',{staticClass:"pro-label"},[_vm._v("PRO")]):_vm._e()])])],1)}),0)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6ed0aa2c", esExports)
-  }
-}
 
 /***/ }),
 /* 434 */
@@ -6550,8 +5135,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SearchBar_vue__ = __webpack_require__(210);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e20e2202_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SearchBar_vue__ = __webpack_require__(435);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7d309bf5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SearchBar_vue__ = __webpack_require__(435);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -6568,29 +5152,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SearchBar_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e20e2202_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SearchBar_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7d309bf5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SearchBar_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/searchbar/SearchBar.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e20e2202", Component.options)
-  } else {
-    hotAPI.reload("data-v-e20e2202", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -6600,156 +5167,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "search-area" }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.searchText,
-            expression: "searchText"
-          }
-        ],
-        staticClass: "input-searchbar",
-        attrs: { type: "search", placeholder: _vm.__("Search", "erp") },
-        domProps: { value: _vm.searchText },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.searchText = $event.target.value
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "svg",
-        {
-          attrs: {
-            width: "12px",
-            height: "12px",
-            viewBox: "0 0 12 12",
-            version: "1.1",
-            xmlns: "http://www.w3.org/2000/svg",
-            "xmlns:xlink": "http://www.w3.org/1999/xlink"
-          }
-        },
-        [
-          _c(
-            "g",
-            {
-              attrs: {
-                id: "Page-1",
-                stroke: "none",
-                "stroke-width": "1",
-                fill: "none",
-                "fill-rule": "evenodd"
-              }
-            },
-            [
-              _c(
-                "g",
-                {
-                  attrs: {
-                    id: "search",
-                    transform: "translate(-1163.000000, -73.000000)",
-                    fill: "#CBCBCB",
-                    "fill-rule": "nonzero"
-                  }
-                },
-                [
-                  _c(
-                    "g",
-                    {
-                      attrs: {
-                        id: "search-inner",
-                        transform: "translate(1012.000000, 64.000000)"
-                      }
-                    },
-                    [
-                      _c("path", {
-                        attrs: {
-                          d:
-                            "M162.674231,19.2599522 L160.074438,16.6602072 C160.060622,16.6463904 160.044414,16.6367331 160.029976,16.6238725 C160.54153,15.8478884 160.840096,14.919012 160.840096,13.9200956 C160.840096,11.2027888 158.637307,9 155.920048,9 C153.202789,9 151,11.2027888 151,13.9200478 C151,16.637259 153.202741,18.8400956 155.92,18.8400956 C156.918964,18.8400956 157.847793,18.5415299 158.623777,18.0299761 C158.636637,18.0443665 158.646247,18.0605737 158.660064,18.0743904 L161.259904,20.6742311 C161.650454,21.0647331 162.283633,21.0647331 162.674231,20.6742311 C163.064733,20.2836813 163.064733,19.650502 162.674231,19.2599522 Z M155.920048,17.1344701 C154.144717,17.1344701 152.705578,15.6953307 152.705578,13.9200478 C152.705578,12.1447171 154.144765,10.7055777 155.920048,10.7055777 C157.695283,10.7055777 159.13447,12.1447649 159.13447,13.9200478 C159.13447,15.6953307 157.695283,17.1344701 155.920048,17.1344701 Z",
-                          id: "Shape"
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
-            ]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _vm.searchText.length && _vm.searchedItems.length
-        ? _c(
-            "div",
-            { staticClass: "search-suggestion-area" },
-            _vm._l(_vm.searchedItems, function(item, index) {
-              return _c(
-                "div",
-                { key: index, staticClass: "single-suggestion-item" },
-                [
-                  _c("router-link", { attrs: { to: item.url } }, [
-                    _c("h4", {
-                      domProps: { innerHTML: _vm._s(item.parentLabel) }
-                    }),
-                    _vm._v(" "),
-                    _c("h6", {
-                      domProps: { innerHTML: _vm._s("# " + item.label) }
-                    }),
-                    _vm._v(" "),
-                    item.desc
-                      ? _c("p", { domProps: { innerHTML: _vm._s(item.desc) } })
-                      : _vm._e()
-                  ])
-                ],
-                1
-              )
-            }),
-            0
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.searchText.length && !_vm.searchedItems.length
-        ? _c("div", { staticClass: "search-suggestion-area" }, [
-            _c("div", { staticClass: "single-suggestion-item" }, [
-              _c("p", { staticClass: "text-danger" }, [
-                _vm._v(
-                  "\n                        " +
-                    _vm._s(
-                      _vm.__(
-                        "Sorry ! Nothings found for your query. Please try again !",
-                        "erp"
-                      )
-                    ) +
-                    "\n                    "
-                )
-              ])
-            ])
-          ])
-        : _vm._e()
-    ])
-  ])
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"search-area"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.searchText),expression:"searchText"}],staticClass:"input-searchbar",attrs:{"type":"search","placeholder":_vm.__('Search', 'erp')},domProps:{"value":(_vm.searchText)},on:{"input":function($event){if($event.target.composing){ return; }_vm.searchText=$event.target.value}}}),_vm._v(" "),_c('svg',{attrs:{"width":"12px","height":"12px","viewBox":"0 0 12 12","version":"1.1","xmlns":"http://www.w3.org/2000/svg","xmlns:xlink":"http://www.w3.org/1999/xlink"}},[_c('g',{attrs:{"id":"Page-1","stroke":"none","stroke-width":"1","fill":"none","fill-rule":"evenodd"}},[_c('g',{attrs:{"id":"search","transform":"translate(-1163.000000, -73.000000)","fill":"#CBCBCB","fill-rule":"nonzero"}},[_c('g',{attrs:{"id":"search-inner","transform":"translate(1012.000000, 64.000000)"}},[_c('path',{attrs:{"d":"M162.674231,19.2599522 L160.074438,16.6602072 C160.060622,16.6463904 160.044414,16.6367331 160.029976,16.6238725 C160.54153,15.8478884 160.840096,14.919012 160.840096,13.9200956 C160.840096,11.2027888 158.637307,9 155.920048,9 C153.202789,9 151,11.2027888 151,13.9200478 C151,16.637259 153.202741,18.8400956 155.92,18.8400956 C156.918964,18.8400956 157.847793,18.5415299 158.623777,18.0299761 C158.636637,18.0443665 158.646247,18.0605737 158.660064,18.0743904 L161.259904,20.6742311 C161.650454,21.0647331 162.283633,21.0647331 162.674231,20.6742311 C163.064733,20.2836813 163.064733,19.650502 162.674231,19.2599522 Z M155.920048,17.1344701 C154.144717,17.1344701 152.705578,15.6953307 152.705578,13.9200478 C152.705578,12.1447171 154.144765,10.7055777 155.920048,10.7055777 C157.695283,10.7055777 159.13447,12.1447649 159.13447,13.9200478 C159.13447,15.6953307 157.695283,17.1344701 155.920048,17.1344701 Z","id":"Shape"}})])])])]),_vm._v(" "),(_vm.searchText.length && _vm.searchedItems.length)?_c('div',{staticClass:"search-suggestion-area"},_vm._l((_vm.searchedItems),function(item,index){return _c('div',{key:index,staticClass:"single-suggestion-item"},[_c('router-link',{attrs:{"to":item.url}},[_c('h4',{domProps:{"innerHTML":_vm._s(item.parentLabel)}}),_vm._v(" "),_c('h6',{domProps:{"innerHTML":_vm._s(("# " + (item.label)))}}),_vm._v(" "),(item.desc)?_c('p',{domProps:{"innerHTML":_vm._s(item.desc)}}):_vm._e()])],1)}),0):_vm._e(),_vm._v(" "),(_vm.searchText.length && ! _vm.searchedItems.length)?_c('div',{staticClass:"search-suggestion-area"},[_c('div',{staticClass:"single-suggestion-item"},[_c('p',{staticClass:"text-danger"},[_vm._v("\n                        "+_vm._s(_vm.__('Sorry ! Nothings found for your query. Please try again !', 'erp'))+"\n                    ")])])]):_vm._e()])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-e20e2202", esExports)
-  }
-}
 
 /***/ }),
 /* 436 */,
@@ -6834,61 +5255,10 @@ module.exports = "data:application/x-font-ttf;base64,AAEAAAANAIAAAwBQRkZUTXzyIqA
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "erp-settings" } }, [
-    _c("div", { staticClass: "settings-area" }, [
-      _c("div", { staticClass: "settings-sidebar" }, [_c("settings-menu")], 1),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "settings-content" },
-        [
-          _c("h2", {
-            attrs: {
-              role: "erp-wp-notice",
-              "data-text":
-                "Don't remove me, I am super important for admin notice"
-            }
-          }),
-          _vm._v(" "),
-          _c("search-bar"),
-          _vm._v(" "),
-          _c("router-view"),
-          _vm._v(" "),
-          _c("loading", {
-            attrs: {
-              active: _vm.loader,
-              loader: "spinner",
-              color: "#1a9ed4",
-              opacity: 0.8,
-              isFullPage: false,
-              width: 45
-            },
-            on: {
-              "update:active": function($event) {
-                _vm.loader = $event
-              }
-            }
-          })
-        ],
-        1
-      )
-    ])
-  ])
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"erp-settings"}},[_c('div',{staticClass:"settings-area"},[_c('div',{staticClass:"settings-sidebar"},[_c('settings-menu')],1),_vm._v(" "),_c('div',{staticClass:"settings-content"},[_c('h2',{attrs:{"role":"erp-wp-notice","data-text":"Don't remove me, I am super important for admin notice"}}),_vm._v(" "),_c('search-bar'),_vm._v(" "),_c('router-view'),_vm._v(" "),_c('loading',{attrs:{"active":_vm.loader,"loader":"spinner","color":"#1a9ed4","opacity":0.8,"isFullPage":false,"width":45},on:{"update:active":function($event){_vm.loader=$event}}})],1)])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-bbad6d40", esExports)
-  }
-}
 
 /***/ }),
 /* 442 */
@@ -7100,8 +5470,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GeneralSettings_vue__ = __webpack_require__(215);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c22bae48_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralSettings_vue__ = __webpack_require__(444);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c6361476_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralSettings_vue__ = __webpack_require__(444);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7118,29 +5487,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GeneralSettings_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c22bae48_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralSettings_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c6361476_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralSettings_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/general/GeneralSettings.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-c22bae48", Component.options)
-  } else {
-    hotAPI.reload("data-v-c22bae48", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7150,28 +5502,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "general",
-      sub_section_id: "general",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"general","sub_section_id":"general","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-c22bae48", esExports)
-  }
-}
 
 /***/ }),
 /* 445 */
@@ -7180,8 +5514,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRWorkDays_vue__ = __webpack_require__(216);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_33318d28_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRWorkDays_vue__ = __webpack_require__(446);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_452d1000_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRWorkDays_vue__ = __webpack_require__(446);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7198,29 +5531,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRWorkDays_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_33318d28_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRWorkDays_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_452d1000_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRWorkDays_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/hr/workdays/HRWorkDays.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-33318d28", Component.options)
-  } else {
-    hotAPI.reload("data-v-33318d28", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7230,28 +5546,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-hr",
-      sub_section_id: "workdays",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-hr","sub_section_id":"workdays","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-33318d28", esExports)
-  }
-}
 
 /***/ }),
 /* 447 */
@@ -7260,8 +5558,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRLeave_vue__ = __webpack_require__(217);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_291a3468_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeave_vue__ = __webpack_require__(448);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d27e27c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeave_vue__ = __webpack_require__(448);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7278,29 +5575,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRLeave_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_291a3468_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeave_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d27e27c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeave_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/hr/leave/HRLeave.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-291a3468", Component.options)
-  } else {
-    hotAPI.reload("data-v-291a3468", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7310,28 +5590,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-hr",
-      sub_section_id: "leave",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-hr","sub_section_id":"leave","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-291a3468", esExports)
-  }
-}
 
 /***/ }),
 /* 449 */
@@ -7340,8 +5602,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRLeaveYears_vue__ = __webpack_require__(218);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d3895756_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeaveYears_vue__ = __webpack_require__(450);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2d68b26c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeaveYears_vue__ = __webpack_require__(450);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7358,29 +5619,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRLeaveYears_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d3895756_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeaveYears_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2d68b26c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRLeaveYears_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d3895756", Component.options)
-  } else {
-    hotAPI.reload("data-v-d3895756", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7390,195 +5634,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    { attrs: { section_id: "erp-hr", sub_section_id: "financial" } },
-    [
-      _c(
-        "form",
-        {
-          staticClass: "wperp-form",
-          attrs: { action: "", method: "post" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.submitHRLeaveYearsForm.apply(null, arguments)
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "wperp-row" }, [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-              },
-              [_c("label", [_vm._v(" " + _vm._s(_vm.__("Name", "erp")))])]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-              },
-              [_c("label", [_vm._v(" " + _vm._s(_vm.__("Start Date", "erp")))])]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-              },
-              [_c("label", [_vm._v(" " + _vm._s(_vm.__("End Date", "erp")))])]
-            )
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.years_data, function(year, index) {
-            return _c("div", { key: index, staticClass: "wperp-row" }, [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    " wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: year.fy_name,
-                        expression: "year.fy_name"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    domProps: { value: year.fy_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(year, "fy_name", $event.target.value)
-                      }
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-                },
-                [
-                  _c("date-picker", {
-                    staticClass: "wperp-form-field",
-                    attrs: { placeholder: _vm.__("Start date", "erp") },
-                    model: {
-                      value: year.start_date,
-                      callback: function($$v) {
-                        _vm.$set(year, "start_date", $$v)
-                      },
-                      expression: "year.start_date"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-                },
-                [
-                  _c("date-picker", {
-                    staticClass: "wperp-form-field",
-                    attrs: { placeholder: _vm.__("End date", "erp") },
-                    model: {
-                      value: year.end_date,
-                      callback: function($$v) {
-                        _vm.$set(year, "end_date", $$v)
-                      },
-                      expression: "year.end_date"
-                    }
-                  }),
-                  _vm._v(" "),
-                  index > 0
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "settings-btn-cancel",
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteYear(index)
-                            }
-                          }
-                        },
-                        [_vm._v("x")]
-                      )
-                    : _vm._e()
-                ],
-                1
-              )
-            ])
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-form-group" }, [
-            _c(
-              "button",
-              {
-                staticClass: "wperp-btn wperp-btn-default",
-                attrs: { type: "button" },
-                on: { click: _vm.addNewYear }
-              },
-              [
-                _vm._v(
-                  "\n                + " +
-                    _vm._s(_vm.__("Add New", "erp")) +
-                    "\n            "
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "wperp-form-group" },
-            [
-              _c("submit-button", {
-                attrs: { text: _vm.__("Save Changes", "erp") }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "clearfix" })
-            ],
-            1
-          )
-        ],
-        2
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-hr","sub_section_id":"financial"}},[_c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitHRLeaveYearsForm.apply(null, arguments)}}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('label',[_vm._v(" "+_vm._s(_vm.__("Name", "erp")))])]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('label',[_vm._v(" "+_vm._s(_vm.__("Start Date", "erp")))])]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('label',[_vm._v(" "+_vm._s(_vm.__("End Date", "erp")))])])]),_vm._v(" "),_vm._l((_vm.years_data),function(year,index){return _c('div',{key:index,staticClass:"wperp-row"},[_c('div',{staticClass:" wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(year.fy_name),expression:"year.fy_name"}],staticClass:"wperp-form-field",domProps:{"value":(year.fy_name)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(year, "fy_name", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('date-picker',{staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__('Start date', 'erp')},model:{value:(year.start_date),callback:function ($$v) {_vm.$set(year, "start_date", $$v)},expression:"year.start_date"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('date-picker',{staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__('End date', 'erp')},model:{value:(year.end_date),callback:function ($$v) {_vm.$set(year, "end_date", $$v)},expression:"year.end_date"}}),_vm._v(" "),(index > 0)?_c('span',{staticClass:"settings-btn-cancel",on:{"click":function($event){return _vm.deleteYear(index)}}},[_vm._v("x")]):_vm._e()],1)])}),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('button',{staticClass:"wperp-btn wperp-btn-default",attrs:{"type":"button"},on:{"click":_vm.addNewYear}},[_vm._v("\n                + "+_vm._s(_vm.__('Add New', 'erp'))+"\n            ")])]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('submit-button',{attrs:{"text":_vm.__('Save Changes', 'erp')}}),_vm._v(" "),_c('div',{staticClass:"clearfix"})],1)],2)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-d3895756", esExports)
-  }
-}
 
 /***/ }),
 /* 451 */
@@ -7587,8 +5646,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRMiscellaneous_vue__ = __webpack_require__(219);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3fa9f5d6_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRMiscellaneous_vue__ = __webpack_require__(452);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_899870a4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRMiscellaneous_vue__ = __webpack_require__(452);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7605,29 +5663,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HRMiscellaneous_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3fa9f5d6_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRMiscellaneous_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_899870a4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HRMiscellaneous_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/hr/miscellaneous/HRMiscellaneous.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3fa9f5d6", Component.options)
-  } else {
-    hotAPI.reload("data-v-3fa9f5d6", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7637,28 +5678,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-hr",
-      sub_section_id: "miscellaneous",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-hr","sub_section_id":"miscellaneous","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3fa9f5d6", esExports)
-  }
-}
 
 /***/ }),
 /* 453 */
@@ -7667,8 +5690,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AcCustomer_vue__ = __webpack_require__(220);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_05b841e8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCustomer_vue__ = __webpack_require__(454);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76ad4b66_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCustomer_vue__ = __webpack_require__(454);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7685,29 +5707,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AcCustomer_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_05b841e8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCustomer_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76ad4b66_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCustomer_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/act/customer/AcCustomer.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-05b841e8", Component.options)
-  } else {
-    hotAPI.reload("data-v-05b841e8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7717,28 +5722,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-ac",
-      sub_section_id: "customers",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-ac","sub_section_id":"customers","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-05b841e8", esExports)
-  }
-}
 
 /***/ }),
 /* 455 */
@@ -7747,8 +5734,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AcCurrency_vue__ = __webpack_require__(221);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6d1bc12c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCurrency_vue__ = __webpack_require__(456);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_596daa2e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCurrency_vue__ = __webpack_require__(456);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7765,29 +5751,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AcCurrency_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6d1bc12c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCurrency_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_596daa2e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcCurrency_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/act/currency/AcCurrency.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6d1bc12c", Component.options)
-  } else {
-    hotAPI.reload("data-v-6d1bc12c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7797,28 +5766,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-ac",
-      sub_section_id: "currency_option",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-ac","sub_section_id":"currency_option","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6d1bc12c", esExports)
-  }
-}
 
 /***/ }),
 /* 457 */
@@ -7827,8 +5778,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AcFinancialYears_vue__ = __webpack_require__(222);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_50cf8a78_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcFinancialYears_vue__ = __webpack_require__(458);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76935254_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcFinancialYears_vue__ = __webpack_require__(458);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -7845,29 +5795,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AcFinancialYears_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_50cf8a78_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcFinancialYears_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76935254_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AcFinancialYears_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-50cf8a78", Component.options)
-  } else {
-    hotAPI.reload("data-v-50cf8a78", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -7877,195 +5810,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    { attrs: { section_id: "erp-ac", sub_section_id: "opening_balance" } },
-    [
-      _c(
-        "form",
-        {
-          staticClass: "wperp-form",
-          attrs: { action: "", method: "post" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.submitAcFinancialYearsForm.apply(null, arguments)
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "wperp-row" }, [
-            _c(
-              "div",
-              {
-                staticClass:
-                  " wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-              },
-              [_c("label", [_vm._v(" " + _vm._s(_vm.__("Name", "erp")))])]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  " wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-              },
-              [_c("label", [_vm._v(" " + _vm._s(_vm.__("Start Date", "erp")))])]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  " wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-              },
-              [_c("label", [_vm._v(" " + _vm._s(_vm.__("End Date", "erp")))])]
-            )
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.years_data, function(year, index) {
-            return _c("div", { key: index, staticClass: "wperp-row" }, [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: year.name,
-                        expression: "year.name"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    domProps: { value: year.name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(year, "name", $event.target.value)
-                      }
-                    }
-                  })
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-                },
-                [
-                  _c("date-picker", {
-                    staticClass: "wperp-form-field",
-                    attrs: { placeholder: _vm.__("Start date", "erp") },
-                    model: {
-                      value: year.start_date,
-                      callback: function($$v) {
-                        _vm.$set(year, "start_date", $$v)
-                      },
-                      expression: "year.start_date"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"
-                },
-                [
-                  _c("date-picker", {
-                    staticClass: "wperp-form-field",
-                    attrs: { placeholder: _vm.__("End date", "erp") },
-                    model: {
-                      value: year.end_date,
-                      callback: function($$v) {
-                        _vm.$set(year, "end_date", $$v)
-                      },
-                      expression: "year.end_date"
-                    }
-                  }),
-                  _vm._v(" "),
-                  index > 0
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "settings-btn-cancel",
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteYear(index)
-                            }
-                          }
-                        },
-                        [_vm._v("x")]
-                      )
-                    : _vm._e()
-                ],
-                1
-              )
-            ])
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-form-group" }, [
-            _c(
-              "button",
-              {
-                staticClass: "wperp-btn wperp-btn-default",
-                attrs: { type: "button" },
-                on: { click: _vm.addNewYear }
-              },
-              [
-                _vm._v(
-                  "\n                + " +
-                    _vm._s(_vm.__("Add New", "erp")) +
-                    "\n            "
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "wperp-form-group" },
-            [
-              _c("submit-button", {
-                attrs: { text: _vm.__("Save Changes", "erp") }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "clearfix" })
-            ],
-            1
-          )
-        ],
-        2
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-ac","sub_section_id":"opening_balance"}},[_c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitAcFinancialYearsForm.apply(null, arguments)}}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:" wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('label',[_vm._v(" "+_vm._s(_vm.__("Name", "erp")))])]),_vm._v(" "),_c('div',{staticClass:" wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('label',[_vm._v(" "+_vm._s(_vm.__("Start Date", "erp")))])]),_vm._v(" "),_c('div',{staticClass:" wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('label',[_vm._v(" "+_vm._s(_vm.__("End Date", "erp")))])])]),_vm._v(" "),_vm._l((_vm.years_data),function(year,index){return _c('div',{key:index,staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(year.name),expression:"year.name"}],staticClass:"wperp-form-field",domProps:{"value":(year.name)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(year, "name", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('date-picker',{staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__('Start date', 'erp')},model:{value:(year.start_date),callback:function ($$v) {_vm.$set(year, "start_date", $$v)},expression:"year.start_date"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-form-group wperp-col-sm-4 wperp-col-xs-12 margin-bottom-10"},[_c('date-picker',{staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__('End date', 'erp')},model:{value:(year.end_date),callback:function ($$v) {_vm.$set(year, "end_date", $$v)},expression:"year.end_date"}}),_vm._v(" "),(index > 0)?_c('span',{staticClass:"settings-btn-cancel",on:{"click":function($event){return _vm.deleteYear(index)}}},[_vm._v("x")]):_vm._e()],1)])}),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('button',{staticClass:"wperp-btn wperp-btn-default",attrs:{"type":"button"},on:{"click":_vm.addNewYear}},[_vm._v("\n                + "+_vm._s(_vm.__('Add New', 'erp'))+"\n            ")])]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('submit-button',{attrs:{"text":_vm.__('Save Changes', 'erp')}}),_vm._v(" "),_c('div',{staticClass:"clearfix"})],1)],2)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-50cf8a78", esExports)
-  }
-}
 
 /***/ }),
 /* 459 */
@@ -8074,8 +5822,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContacts_vue__ = __webpack_require__(223);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7a01fd84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContacts_vue__ = __webpack_require__(460);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e681cba8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContacts_vue__ = __webpack_require__(460);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8092,29 +5839,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContacts_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7a01fd84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContacts_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e681cba8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContacts_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/crm/contacts/CrmContacts.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7a01fd84", Component.options)
-  } else {
-    hotAPI.reload("data-v-7a01fd84", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -8124,29 +5854,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-crm",
-      sub_section_id: "contacts",
-      enable_content: true,
-      single_option: false
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-crm","sub_section_id":"contacts","enable_content":true,"single_option":false}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7a01fd84", esExports)
-  }
-}
 
 /***/ }),
 /* 461 */
@@ -8155,8 +5866,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContactForm_vue__ = __webpack_require__(224);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6ac6329c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactForm_vue__ = __webpack_require__(466);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7528437a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactForm_vue__ = __webpack_require__(466);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8173,29 +5883,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContactForm_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6ac6329c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactForm_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7528437a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactForm_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/crm/contact-forms/CrmContactForm.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6ac6329c", Component.options)
-  } else {
-    hotAPI.reload("data-v-6ac6329c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -8207,8 +5900,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContactFormLayout_vue__ = __webpack_require__(225);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_30735c34_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormLayout_vue__ = __webpack_require__(463);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b96fa6b2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormLayout_vue__ = __webpack_require__(463);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8225,29 +5917,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContactFormLayout_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_30735c34_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormLayout_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b96fa6b2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormLayout_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormLayout.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-30735c34", Component.options)
-  } else {
-    hotAPI.reload("data-v-30735c34", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -8257,97 +5932,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: _vm.section_id,
-        sub_section_id: _vm.sub_section_id,
-        enable_content: false,
-        enableSubSectionTitle: false
-      }
-    },
-    [
-      typeof _vm.options.sub_sections === "undefined" && _vm.options.length > 0
-        ? _c("div", [
-            _c("h3", { staticClass: "sub-section-title" }, [
-              _vm._v(
-                "\n            " + _vm._s(_vm.options[0].title) + "\n        "
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { domProps: { innerHTML: _vm._s(_vm.options[0].desc) } })
-          ])
-        : _c("div", [
-            _vm.subSectionTitle
-              ? _c("h3", { staticClass: "sub-section-title" }, [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(_vm.subSectionTitle) +
-                      "\n        "
-                  )
-                ])
-              : _vm._e()
-          ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c(
-            "ul",
-            { staticClass: "sub-sub-menu" },
-            _vm._l(_vm.options.sub_sections, function(menu, key) {
-              return _c(
-                "li",
-                { key: key },
-                [
-                  _c(
-                    "router-link",
-                    {
-                      attrs: {
-                        to:
-                          "/" +
-                          _vm.section_id +
-                          "/" +
-                          _vm.sub_section_id +
-                          "/" +
-                          key
-                      }
-                    },
-                    [
-                      _c("span", { staticClass: "menu-name" }, [
-                        _vm._v(_vm._s(menu))
-                      ])
-                    ]
-                  )
-                ],
-                1
-              )
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _vm._t("default")
-        ],
-        2
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":_vm.section_id,"sub_section_id":_vm.sub_section_id,"enable_content":false,"enableSubSectionTitle":false}},[(typeof _vm.options.sub_sections === 'undefined' && _vm.options.length > 0)?_c('div',[_c('h3',{staticClass:"sub-section-title"},[_vm._v("\n            "+_vm._s(_vm.options[0].title)+"\n        ")]),_vm._v(" "),_c('div',{domProps:{"innerHTML":_vm._s(_vm.options[0].desc)}})]):_c('div',[(_vm.subSectionTitle)?_c('h3',{staticClass:"sub-section-title"},[_vm._v("\n            "+_vm._s(_vm.subSectionTitle)+"\n        ")]):_vm._e()]),_vm._v(" "),_c('div',[_c('ul',{staticClass:"sub-sub-menu"},_vm._l((_vm.options.sub_sections),function(menu,key){return _c('li',{key:key},[_c('router-link',{attrs:{"to":'/' + _vm.section_id + '/' + _vm.sub_section_id + '/' + key}},[_c('span',{staticClass:"menu-name"},[_vm._v(_vm._s(menu))])])],1)}),0),_vm._v(" "),_vm._t("default")],2)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-30735c34", esExports)
-  }
-}
 
 /***/ }),
 /* 464 */
@@ -8356,8 +5944,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContactFormSingle_vue__ = __webpack_require__(226);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_09de1c04_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormSingle_vue__ = __webpack_require__(465);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c8811e00_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormSingle_vue__ = __webpack_require__(465);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8374,29 +5961,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmContactFormSingle_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_09de1c04_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormSingle_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c8811e00_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmContactFormSingle_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-09de1c04", Component.options)
-  } else {
-    hotAPI.reload("data-v-09de1c04", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -8406,420 +5976,20 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h3", { staticClass: "sub-section-title mb-20" }, [
-      _vm._v(" " + _vm._s(_vm.formData.title) + " ")
-    ]),
-    _vm._v(" "),
-    _c("form", { staticClass: "wperp-form", attrs: { method: "post" } }, [
-      _c(
-        "table",
-        {
-          staticClass: "erp-settings-table widefat",
-          staticStyle: { "max-width": "600px" }
-        },
-        [
-          _c("thead", [
-            _c("tr", [
-              _c("th", [_vm._v(_vm._s(_vm.__("Form Field", "erp")))]),
-              _vm._v(" "),
-              _c("th", [_vm._v(_vm._s(_vm.__("CRM Contact Option	", "erp")))]),
-              _vm._v(" "),
-              _c("th")
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._l(Object.keys(_vm.formData.fields), function(fieldKey) {
-            return _c("tbody", { key: fieldKey }, [
-              _c("tr", { attrs: { valign: "top" } }, [
-                _c("td", [_vm._v(_vm._s(_vm.formData.fields[fieldKey]))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.getCRMOptionTitle(fieldKey)))]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "button button-default",
-                      attrs: {
-                        type: "button",
-                        disabled: _vm.isMapped(fieldKey)
-                      },
-                      on: {
-                        click: function($event) {
-                          return _vm.resetMapping(fieldKey)
-                        }
-                      }
-                    },
-                    [_c("i", { staticClass: "dashicons dashicons-no-alt" })]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "button button-default",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          return _vm.setActiveDropDown(fieldKey)
-                        }
-                      }
-                    },
-                    [
-                      _c("i", {
-                        staticClass: "dashicons dashicons-screenoptions"
-                      })
-                    ]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "tr",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: fieldKey === _vm.activeDropDown,
-                      expression: "fieldKey === activeDropDown"
-                    }
-                  ],
-                  staticClass: "cfi-option-row"
-                },
-                [
-                  _c(
-                    "td",
-                    {
-                      staticClass: "cfi-contact-options",
-                      attrs: { colspan: "3" }
-                    },
-                    [
-                      _vm._l(_vm.data.crmOptions, function(
-                        optionTitle,
-                        option,
-                        index
-                      ) {
-                        return _c("span", { key: index }, [
-                          !_vm.optionIsAnObject(option)
-                            ? _c(
-                                "button",
-                                {
-                                  class: [
-                                    "button",
-                                    _vm.isOptionMapped(fieldKey, option)
-                                      ? "button-primary active"
-                                      : ""
-                                  ],
-                                  staticStyle: { margin: "3px" },
-                                  attrs: { type: "button" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.mapOption(fieldKey, option)
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                            " +
-                                      _vm._s(optionTitle) +
-                                      "\n                            "
-                                  )
-                                ]
-                              )
-                            : _vm._e()
-                        ])
-                      }),
-                      _vm._v(" "),
-                      _vm._l(_vm.data.crmOptions, function(
-                        option,
-                        options,
-                        index2
-                      ) {
-                        return _c(
-                          "span",
-                          { key: "parent-" + index2 },
-                          _vm._l(options.options, function(
-                            childOptionTitle,
-                            childOption,
-                            index3
-                          ) {
-                            return _c("span", { key: "child-" + index3 }, [
-                              _vm.optionIsAnObject(option)
-                                ? _c(
-                                    "button",
-                                    {
-                                      class: [
-                                        "button",
-                                        _vm.isChildOptionMapped(
-                                          _vm.field,
-                                          option,
-                                          childOption
-                                        )
-                                          ? "button-primary active"
-                                          : ""
-                                      ],
-                                      staticStyle: { margin: "3px" },
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.mapChildOption(
-                                            _vm.field,
-                                            option,
-                                            childOption
-                                          )
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                    " +
-                                          _vm._s(
-                                            options.title +
-                                              " - " +
-                                              childOptionTitle
-                                          ) +
-                                          "\n                                "
-                                      )
-                                    ]
-                                  )
-                                : _vm._e()
-                            ])
-                          }),
-                          0
-                        )
-                      })
-                    ],
-                    2
-                  )
-                ]
-              )
-            ])
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "wperp-form-group mt-10" }, [
-        _c("label", [_vm._v(_vm._s(_vm.i18n.labelContactGroups))]),
-        _vm._v(" "),
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.formData.contactGroup,
-                expression: "formData.contactGroup"
-              }
-            ],
-            on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.$set(
-                  _vm.formData,
-                  "contactGroup",
-                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                )
-              }
-            }
-          },
-          [
-            _c("option", { attrs: { value: "0" } }, [
-              _vm._v(_vm._s(_vm.i18n.labelSelectGroup))
-            ]),
-            _vm._v(" "),
-            _vm._l(_vm.data.contactGroups, function(groupTitle, groupId) {
-              return _c(
-                "option",
-                { key: groupId, domProps: { value: groupId } },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(groupTitle) +
-                      "\n                "
-                  )
-                ]
-              )
-            })
-          ],
-          2
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "wperp-form-group mt-10" }, [
-        _c("label", [
-          _vm._v(_vm._s(_vm.i18n.labelContactOwner) + " "),
-          _c("span", { staticClass: "required" }, [_vm._v("*")])
-        ]),
-        _vm._v(" "),
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.formData.contactOwner,
-                expression: "formData.contactOwner"
-              }
-            ],
-            on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.$set(
-                  _vm.formData,
-                  "contactOwner",
-                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                )
-              }
-            }
-          },
-          [
-            _c("option", { attrs: { value: "0" } }, [
-              _vm._v(_vm._s(_vm.i18n.labelSelectGroup))
-            ]),
-            _vm._v(" "),
-            _vm._l(_vm.data.contactOwners, function(userName, userId) {
-              return _c(
-                "option",
-                { key: userId, domProps: { value: userId } },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(userName) +
-                      "\n                "
-                  )
-                ]
-              )
-            })
-          ],
-          2
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "wperp-form-group mt-10" }, [
-        _c(
-          "button",
-          {
-            staticClass:
-              "wperp-btn btn--default settings-button-reset pull-left",
-            attrs: { type: "button" },
-            on: { click: _vm.reset_mapping }
-          },
-          [
-            _vm._v(
-              "\n                " +
-                _vm._s(_vm.__("Reset", "erp")) +
-                "\n            "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "wperp-btn btn--primary settings-button ml-10 mt-0",
-            attrs: { type: "button" },
-            on: { click: _vm.save_mapping }
-          },
-          [
-            _vm._v(
-              "\n                " +
-                _vm._s(_vm.__("Save Changes", "erp")) +
-                "\n            "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "clearfix" })
-      ])
-    ])
-  ])
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('h3',{staticClass:"sub-section-title mb-20"},[_vm._v(" "+_vm._s(_vm.formData.title)+" ")]),_vm._v(" "),_c('form',{staticClass:"wperp-form",attrs:{"method":"post"}},[_c('table',{staticClass:"erp-settings-table widefat",staticStyle:{"max-width":"600px"}},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Form Field', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('CRM Contact Option	', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_vm._l((Object.keys(_vm.formData.fields)),function(fieldKey){return _c('tbody',{key:fieldKey},[_c('tr',{attrs:{"valign":"top"}},[_c('td',[_vm._v(_vm._s(_vm.formData.fields[fieldKey]))]),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.getCRMOptionTitle(fieldKey)))]),_vm._v(" "),_c('td',[_c('button',{staticClass:"button button-default",attrs:{"type":"button","disabled":_vm.isMapped(fieldKey)},on:{"click":function($event){return _vm.resetMapping(fieldKey)}}},[_c('i',{staticClass:"dashicons dashicons-no-alt"})]),_vm._v(" "),_c('button',{staticClass:"button button-default",attrs:{"type":"button"},on:{"click":function($event){return _vm.setActiveDropDown(fieldKey)}}},[_c('i',{staticClass:"dashicons dashicons-screenoptions"})])])]),_vm._v(" "),_c('tr',{directives:[{name:"show",rawName:"v-show",value:(fieldKey === _vm.activeDropDown),expression:"fieldKey === activeDropDown"}],staticClass:"cfi-option-row"},[_c('td',{staticClass:"cfi-contact-options",attrs:{"colspan":"3"}},[_vm._l((_vm.data.crmOptions),function(optionTitle,option,index){return _c('span',{key:index},[(! _vm.optionIsAnObject(option))?_c('button',{class:['button', _vm.isOptionMapped(fieldKey, option) ? 'button-primary active' : ''],staticStyle:{"margin":"3px"},attrs:{"type":"button"},on:{"click":function($event){return _vm.mapOption(fieldKey, option)}}},[_vm._v("\n                            "+_vm._s(optionTitle)+"\n                            ")]):_vm._e()])}),_vm._v(" "),_vm._l((_vm.data.crmOptions),function(option,options,index2){return _c('span',{key:("parent-" + index2)},_vm._l((options.options),function(childOptionTitle,childOption,index3){return _c('span',{key:("child-" + index3)},[(_vm.optionIsAnObject(option))?_c('button',{class:['button', _vm.isChildOptionMapped(_vm.field, option, childOption) ? 'button-primary active' : ''],staticStyle:{"margin":"3px"},attrs:{"type":"button"},on:{"click":function($event){return _vm.mapChildOption(_vm.field, option, childOption)}}},[_vm._v("\n                                    "+_vm._s(options.title + ' - ' + childOptionTitle)+"\n                                ")]):_vm._e()])}),0)})],2)])])})],2),_vm._v(" "),_c('div',{staticClass:"wperp-form-group mt-10"},[_c('label',[_vm._v(_vm._s(_vm.i18n.labelContactGroups))]),_vm._v(" "),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.formData.contactGroup),expression:"formData.contactGroup"}],on:{"change":function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.$set(_vm.formData, "contactGroup", $event.target.multiple ? $$selectedVal : $$selectedVal[0])}}},[_c('option',{attrs:{"value":"0"}},[_vm._v(_vm._s(_vm.i18n.labelSelectGroup))]),_vm._v(" "),_vm._l((_vm.data.contactGroups),function(groupTitle,groupId){return _c('option',{key:groupId,domProps:{"value":groupId}},[_vm._v("\n                    "+_vm._s(groupTitle)+"\n                ")])})],2)]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group mt-10"},[_c('label',[_vm._v(_vm._s(_vm.i18n.labelContactOwner)+" "),_c('span',{staticClass:"required"},[_vm._v("*")])]),_vm._v(" "),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.formData.contactOwner),expression:"formData.contactOwner"}],on:{"change":function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.$set(_vm.formData, "contactOwner", $event.target.multiple ? $$selectedVal : $$selectedVal[0])}}},[_c('option',{attrs:{"value":"0"}},[_vm._v(_vm._s(_vm.i18n.labelSelectGroup))]),_vm._v(" "),_vm._l((_vm.data.contactOwners),function(userName,userId){return _c('option',{key:userId,domProps:{"value":userId}},[_vm._v("\n                    "+_vm._s(userName)+"\n                ")])})],2)]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group mt-10"},[_c('button',{staticClass:"wperp-btn btn--default settings-button-reset pull-left",attrs:{"type":"button"},on:{"click":_vm.reset_mapping}},[_vm._v("\n                "+_vm._s(_vm.__( 'Reset', 'erp' ))+"\n            ")]),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--primary settings-button ml-10 mt-0",attrs:{"type":"button"},on:{"click":_vm.save_mapping}},[_vm._v("\n                "+_vm._s(_vm.__( 'Save Changes', 'erp' ))+"\n            ")]),_vm._v(" "),_c('div',{staticClass:"clearfix"})])])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-09de1c04", esExports)
-  }
-}
 
 /***/ }),
 /* 466 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "crm-contact-form-layout",
-    [
-      _vm._l(Object.keys(_vm.forms), function(formKey, index) {
-        return _c(
-          "div",
-          { key: index },
-          [
-            _c("crm-contact-form-single", {
-              attrs: {
-                formData: _vm.forms[formKey],
-                data: _vm.localizedData,
-                plugin: _vm.formName,
-                formId: parseInt(formKey)
-              },
-              on: { reset_contact_form_data: _vm.resetContactFormData }
-            }),
-            _vm._v(" "),
-            _c("hr", {
-              staticStyle: {
-                "border-top": "0px !important",
-                "border-bottom": "1px solid #e1e1e1 !important",
-                "padding-top": "15px",
-                "margin-bottom": "25px"
-              }
-            })
-          ],
-          1
-        )
-      })
-    ],
-    2
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('crm-contact-form-layout',[_vm._l((Object.keys( _vm.forms )),function(formKey,index){return _c('div',{key:index},[_c('crm-contact-form-single',{attrs:{"formData":_vm.forms[formKey],"data":_vm.localizedData,"plugin":_vm.formName,"formId":parseInt( formKey )},on:{"reset_contact_form_data":_vm.resetContactFormData}}),_vm._v(" "),_c('hr',{staticStyle:{"border-top":"0px !important","border-bottom":"1px solid #e1e1e1 !important","padding-top":"15px","margin-bottom":"25px"}})],1)})],2)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6ac6329c", esExports)
-  }
-}
 
 /***/ }),
 /* 467 */
@@ -8828,8 +5998,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmSubscription_vue__ = __webpack_require__(227);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dab4da5c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmSubscription_vue__ = __webpack_require__(468);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d3fb3858_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmSubscription_vue__ = __webpack_require__(468);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8846,29 +6015,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CrmSubscription_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dab4da5c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmSubscription_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d3fb3858_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CrmSubscription_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/crm/subscription/CrmSubscription.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-dab4da5c", Component.options)
-  } else {
-    hotAPI.reload("data-v-dab4da5c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -8878,29 +6030,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-crm",
-      sub_section_id: "subscription",
-      enable_content: true,
-      single_option: false
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-crm","sub_section_id":"subscription","enable_content":true,"single_option":false}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-dab4da5c", esExports)
-  }
-}
 
 /***/ }),
 /* 469 */
@@ -8909,8 +6042,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_WooCommerce_vue__ = __webpack_require__(228);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_34c3c8cd_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WooCommerce_vue__ = __webpack_require__(470);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1c5f1cde_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WooCommerce_vue__ = __webpack_require__(470);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8927,29 +6059,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_WooCommerce_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_34c3c8cd_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WooCommerce_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1c5f1cde_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WooCommerce_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/woocommerce/WooCommerce.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-34c3c8cd", Component.options)
-  } else {
-    hotAPI.reload("data-v-34c3c8cd", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -8959,77 +6074,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "erp-wc-sync" } },
-    [
-      _vm.notice
-        ? _c(
-            "base-layout",
-            {
-              attrs: {
-                section_id: "erp-woocommerce",
-                sub_section_id: "erp-woocommerce"
-              }
-            },
-            [
-              _c("div", { staticClass: "wc-sync-logo" }, [
-                _c("img", { attrs: { src: _vm.wooSyncLogo, id: "wc-sync-bg" } })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "wc-sync-notice" }, [
-                _c("h4", [
-                  _vm._v(_vm._s(_vm.__("Connect with WooCommerce", "erp")))
-                ]),
-                _vm._v(" "),
-                _c("p", { domProps: { innerHTML: _vm._s(_vm.notice) } })
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "wperp-form-group erp-wc-sync-notice-btn" },
-                [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "wperp-btn btn--primary",
-                      attrs: {
-                        href: _vm.btnLink,
-                        target: "_blank",
-                        id: "erp-wc-sync-notice-btn"
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                " +
-                          _vm._s(_vm.btnText) +
-                          "\n            "
-                      )
-                    ]
-                  )
-                ]
-              )
-            ]
-          )
-        : _vm._e()
-    ],
-    1
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"erp-wc-sync"}},[(_vm.notice)?_c('base-layout',{attrs:{"section_id":"erp-woocommerce","sub_section_id":"erp-woocommerce"}},[_c('div',{staticClass:"wc-sync-logo"},[_c('img',{attrs:{"src":_vm.wooSyncLogo,"id":"wc-sync-bg"}})]),_vm._v(" "),_c('div',{staticClass:"wc-sync-notice"},[_c('h4',[_vm._v(_vm._s(_vm.__("Connect with WooCommerce", "erp")))]),_vm._v(" "),_c('p',{domProps:{"innerHTML":_vm._s(_vm.notice)}})]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group erp-wc-sync-notice-btn"},[_c('a',{staticClass:"wperp-btn btn--primary",attrs:{"href":_vm.btnLink,"target":"_blank","id":"erp-wc-sync-notice-btn"}},[_vm._v("\n                "+_vm._s(_vm.btnText)+"\n            ")])])]):_vm._e()],1)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-34c3c8cd", esExports)
-  }
-}
 
 /***/ }),
 /* 471 */
@@ -9038,8 +6086,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GeneralEmail_vue__ = __webpack_require__(229);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5e500174_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralEmail_vue__ = __webpack_require__(472);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bb062996_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralEmail_vue__ = __webpack_require__(472);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -9056,29 +6103,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GeneralEmail_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5e500174_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralEmail_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bb062996_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GeneralEmail_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/general/GeneralEmail.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5e500174", Component.options)
-  } else {
-    hotAPI.reload("data-v-5e500174", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -9088,28 +6118,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("base-layout", {
-    attrs: {
-      section_id: "erp-email",
-      sub_section_id: "general",
-      enable_content: true
-    }
-  })
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"general","enable_content":true}})}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5e500174", esExports)
-  }
-}
 
 /***/ }),
 /* 473 */
@@ -9118,8 +6130,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_EmailConnect_vue__ = __webpack_require__(230);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1c79836f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailConnect_vue__ = __webpack_require__(483);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c53230b2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailConnect_vue__ = __webpack_require__(483);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -9136,29 +6147,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_EmailConnect_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1c79836f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailConnect_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c53230b2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailConnect_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/email-connect/EmailConnect.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1c79836f", Component.options)
-  } else {
-    hotAPI.reload("data-v-1c79836f", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -9168,99 +6162,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "smtp",
-        enable_content: true,
-        enableSubSectionTitle: false,
-        disableMenu: true,
-        disableSectionTitle: true,
-        options: _vm.options
-      }
-    },
-    [
-      _c(
-        "div",
-        { attrs: { slot: "extended-data" }, slot: "extended-data" },
-        [
-          _vm._t("extended-data", function() {
-            return [
-              _c("div", { staticClass: "wperp-form-group test-connection" }, [
-                _c("div", { staticClass: "connection-outgoing" }, [
-                  _c("label", { attrs: { for: "smtp_test_email_address" } }, [
-                    _vm._v(_vm._s(_vm.__("Test Mail", "erp")))
-                  ]),
-                  _vm._v(" "),
-                  _c("p", [
-                    _vm._v(
-                      _vm._s(
-                        _vm.__("An Email Address to Test the Connection", "erp")
-                      )
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.smtpTestEmail,
-                        expression: "smtpTestEmail"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    attrs: {
-                      placeholder: _vm.__("Email here", "erp"),
-                      id: "smtp_test_email_address"
-                    },
-                    domProps: { value: _vm.smtpTestEmail },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.smtpTestEmail = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "wperp-btn btn--secondary btn-test-connection",
-                      attrs: { id: "smtp-test-connection" },
-                      on: { click: _vm.testConnection }
-                    },
-                    [_vm._v(_vm._s(_vm.__("Send Test Email", "erp")))]
-                  )
-                ])
-              ])
-            ]
-          })
-        ],
-        2
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"smtp","enable_content":true,"enableSubSectionTitle":false,"disableMenu":true,"disableSectionTitle":true,"options":_vm.options}},[_c('div',{attrs:{"slot":"extended-data"},slot:"extended-data"},[_vm._t("extended-data",function(){return [_c('div',{staticClass:"wperp-form-group test-connection"},[_c('div',{staticClass:"connection-outgoing"},[_c('label',{attrs:{"for":"smtp_test_email_address"}},[_vm._v(_vm._s(_vm.__( 'Test Mail', 'erp' )))]),_vm._v(" "),_c('p',[_vm._v(_vm._s(_vm.__( 'An Email Address to Test the Connection', 'erp' )))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.smtpTestEmail),expression:"smtpTestEmail"}],staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__( 'Email here', 'erp' ),"id":"smtp_test_email_address"},domProps:{"value":(_vm.smtpTestEmail)},on:{"input":function($event){if($event.target.composing){ return; }_vm.smtpTestEmail=$event.target.value}}}),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--secondary btn-test-connection",attrs:{"id":"smtp-test-connection"},on:{"click":_vm.testConnection}},[_vm._v(_vm._s(_vm.__( 'Send Test Email', 'erp' )))])])])]})],2)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-248d80f5", esExports)
-  }
-}
 
 /***/ }),
 /* 475 */
@@ -9269,8 +6174,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GoogleEmail_vue__ = __webpack_require__(233);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_69867eb2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GoogleEmail_vue__ = __webpack_require__(476);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_08f010d4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GoogleEmail_vue__ = __webpack_require__(476);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -9287,29 +6191,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_GoogleEmail_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_69867eb2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GoogleEmail_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_08f010d4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_GoogleEmail_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/email-connect/GoogleEmail.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-69867eb2", Component.options)
-  } else {
-    hotAPI.reload("data-v-69867eb2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -9319,80 +6206,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "gmail",
-        enable_content: true,
-        enableSubSectionTitle: false,
-        disableMenu: true,
-        disableSectionTitle: true
-      }
-    },
-    [
-      _c("template", { slot: "extended-data" }, [
-        _vm.gmailConnected !== null && _vm.gmailConnected.status
-          ? _c("div", { staticStyle: { "margin-bottom": "30px" } }, [
-              _c(
-                "a",
-                {
-                  staticClass: "button",
-                  attrs: { href: _vm.gmailConnected.link, target: "_blank" }
-                },
-                [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(
-                        _vm.__("Click to Authorize your gmail account", "erp")
-                      ) +
-                      "\n            "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _vm.gmailConnected.is_connected
-                ? _c(
-                    "a",
-                    {
-                      staticClass: "button",
-                      staticStyle: { "margin-left": "20px" },
-                      attrs: {
-                        href: _vm.gmailConnected.disconnect_url,
-                        target: "_blank"
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                " +
-                          _vm._s(_vm.__("Disconnect", "erp")) +
-                          "\n            "
-                      )
-                    ]
-                  )
-                : _vm._e()
-            ])
-          : _vm._e()
-      ])
-    ],
-    2
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"gmail","enable_content":true,"enableSubSectionTitle":false,"disableMenu":true,"disableSectionTitle":true}},[_c('template',{slot:"extended-data"},[(_vm.gmailConnected !== null && _vm.gmailConnected.status)?_c('div',{staticStyle:{"margin-bottom":"30px"}},[_c('a',{staticClass:"button",attrs:{"href":_vm.gmailConnected.link,"target":"_blank"}},[_vm._v("\n                "+_vm._s(_vm.__( 'Click to Authorize your gmail account', 'erp' ))+"\n            ")]),_vm._v(" "),(_vm.gmailConnected.is_connected)?_c('a',{staticClass:"button",staticStyle:{"margin-left":"20px"},attrs:{"href":_vm.gmailConnected.disconnect_url,"target":"_blank"}},[_vm._v("\n                "+_vm._s(_vm.__( 'Disconnect', 'erp' ))+"\n            ")]):_vm._e()]):_vm._e()])],2)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-69867eb2", esExports)
-  }
-}
 
 /***/ }),
 /* 477 */
@@ -9401,8 +6218,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ImapEmail_vue__ = __webpack_require__(234);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_731408d0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImapEmail_vue__ = __webpack_require__(478);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_828b23dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImapEmail_vue__ = __webpack_require__(478);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -9419,29 +6235,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ImapEmail_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_731408d0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImapEmail_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_828b23dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ImapEmail_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-731408d0", Component.options)
-  } else {
-    hotAPI.reload("data-v-731408d0", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -9451,62 +6250,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "imap",
-        enable_content: true,
-        enableSubSectionTitle: false,
-        disableMenu: true,
-        disableSectionTitle: true
-      }
-    },
-    [
-      _c("template", { slot: "extended-data" }, [
-        _c("div", { staticClass: "test-connection" }, [
-          _c("div", { staticClass: "connection-incoming" }, [
-            _c("label", [_vm._v(_vm._s(_vm.__("Test Connection", "erp")))]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                _vm._s(
-                  _vm.__(
-                    "Click on the Above Button Before Saving the Setting",
-                    "erp"
-                  )
-                )
-              )
-            ]),
-            _vm._v(" "),
-            _c("button", {
-              staticClass: "wperp-btn btn--secondary btn-test-connection",
-              attrs: { type: "button" },
-              domProps: { innerHTML: _vm._s(_vm.imapTestString) },
-              on: { click: _vm.testImapConnection }
-            })
-          ])
-        ])
-      ])
-    ],
-    2
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"imap","enable_content":true,"enableSubSectionTitle":false,"disableMenu":true,"disableSectionTitle":true}},[_c('template',{slot:"extended-data"},[_c('div',{staticClass:"test-connection"},[_c('div',{staticClass:"connection-incoming"},[_c('label',[_vm._v(_vm._s(_vm.__( 'Test Connection', 'erp' )))]),_vm._v(" "),_c('p',[_vm._v(_vm._s(_vm.__( 'Click on the Above Button Before Saving the Setting', 'erp' )))]),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--secondary btn-test-connection",attrs:{"type":"button"},domProps:{"innerHTML":_vm._s(_vm.imapTestString)},on:{"click":_vm.testImapConnection}})])])])],2)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-731408d0", esExports)
-  }
-}
 
 /***/ }),
 /* 479 */
@@ -9515,8 +6262,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_MailgunEmail_vue__ = __webpack_require__(235);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5306e798_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MailgunEmail_vue__ = __webpack_require__(480);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5c2941bf_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MailgunEmail_vue__ = __webpack_require__(480);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -9533,29 +6279,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_MailgunEmail_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5306e798_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MailgunEmail_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5c2941bf_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MailgunEmail_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5306e798", Component.options)
-  } else {
-    hotAPI.reload("data-v-5306e798", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -9565,100 +6294,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "mailgun",
-        enable_content: true,
-        enableSubSectionTitle: false,
-        disableMenu: true,
-        disableSectionTitle: true,
-        options: _vm.options
-      }
-    },
-    [
-      _c(
-        "div",
-        { attrs: { slot: "extended-data" }, slot: "extended-data" },
-        [
-          _vm._t("extended-data", function() {
-            return [
-              _c("div", { staticClass: "wperp-form-group test-connection" }, [
-                _c("div", { staticClass: "connection-outgoing" }, [
-                  _c("label", { attrs: { for: "erp_mailgun_test_email" } }, [
-                    _vm._v(_vm._s(_vm.__("Test Mail", "erp")))
-                  ]),
-                  _vm._v(" "),
-                  _c("p", [
-                    _vm._v(
-                      _vm._s(
-                        _vm.__("An Email Address to Test the Connection", "erp")
-                      )
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.erp_mailgun_test_email,
-                        expression: "erp_mailgun_test_email"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    attrs: {
-                      placeholder: _vm.__("Email here", "erp"),
-                      id: "erp_mailgun_test_email",
-                      type: "email"
-                    },
-                    domProps: { value: _vm.erp_mailgun_test_email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.erp_mailgun_test_email = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "wperp-btn btn--secondary btn-test-connection",
-                      attrs: { id: "mailgun-test-connection" },
-                      on: { click: _vm.testConnection }
-                    },
-                    [_vm._v(_vm._s(_vm.__("Send Test Email", "erp")))]
-                  )
-                ])
-              ])
-            ]
-          })
-        ],
-        2
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"mailgun","enable_content":true,"enableSubSectionTitle":false,"disableMenu":true,"disableSectionTitle":true,"options":_vm.options}},[_c('div',{attrs:{"slot":"extended-data"},slot:"extended-data"},[_vm._t("extended-data",function(){return [_c('div',{staticClass:"wperp-form-group test-connection"},[_c('div',{staticClass:"connection-outgoing"},[_c('label',{attrs:{"for":"erp_mailgun_test_email"}},[_vm._v(_vm._s(_vm.__( 'Test Mail', 'erp' )))]),_vm._v(" "),_c('p',[_vm._v(_vm._s(_vm.__( 'An Email Address to Test the Connection', 'erp' )))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.erp_mailgun_test_email),expression:"erp_mailgun_test_email"}],staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__( 'Email here', 'erp' ),"id":"erp_mailgun_test_email","type":"email"},domProps:{"value":(_vm.erp_mailgun_test_email)},on:{"input":function($event){if($event.target.composing){ return; }_vm.erp_mailgun_test_email=$event.target.value}}}),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--secondary btn-test-connection",attrs:{"id":"mailgun-test-connection"},on:{"click":_vm.testConnection}},[_vm._v(_vm._s(_vm.__('Send Test Email', 'erp')))])])])]})],2)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5306e798", esExports)
-  }
-}
 
 /***/ }),
 /* 481 */
@@ -9667,8 +6306,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_WpMail_vue__ = __webpack_require__(236);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_29133bb1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WpMail_vue__ = __webpack_require__(482);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6a82543a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WpMail_vue__ = __webpack_require__(482);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -9685,29 +6323,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_WpMail_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_29133bb1_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WpMail_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6a82543a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_WpMail_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/email-connect/WpMail.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-29133bb1", Component.options)
-  } else {
-    hotAPI.reload("data-v-29133bb1", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -9717,263 +6338,20 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "wpmail",
-        enable_content: true,
-        enableSubSectionTitle: false,
-        disableMenu: true,
-        disableSectionTitle: true,
-        options: _vm.options
-      }
-    },
-    [
-      _c(
-        "div",
-        { attrs: { slot: "extended-data" }, slot: "extended-data" },
-        [
-          _vm._t("extended-data", function() {
-            return [
-              _c("div", { staticClass: "wperp-form-group test-connection" }, [
-                _c("div", { staticClass: "connection-outgoing" }, [
-                  _c("label", { attrs: { for: "erp_wpmail_test_email" } }, [
-                    _vm._v(_vm._s(_vm.__("Test Mail", "erp")))
-                  ]),
-                  _vm._v(" "),
-                  _c("p", [
-                    _vm._v(
-                      _vm._s(
-                        _vm.__("An Email Address to Test the Connection", "erp")
-                      )
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.erp_wpmail_test_email,
-                        expression: "erp_wpmail_test_email"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    attrs: {
-                      placeholder: _vm.__("Email here", "erp"),
-                      id: "erp_wpmail_test_email",
-                      type: "email"
-                    },
-                    domProps: { value: _vm.erp_wpmail_test_email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.erp_wpmail_test_email = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "wperp-btn btn--secondary btn-test-connection",
-                      attrs: { id: "wpmail-test-connection" },
-                      on: { click: _vm.testConnection }
-                    },
-                    [_vm._v(_vm._s(_vm.__("Send Test Email", "erp")))]
-                  )
-                ])
-              ])
-            ]
-          })
-        ],
-        2
-      )
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"wpmail","enable_content":true,"enableSubSectionTitle":false,"disableMenu":true,"disableSectionTitle":true,"options":_vm.options}},[_c('div',{attrs:{"slot":"extended-data"},slot:"extended-data"},[_vm._t("extended-data",function(){return [_c('div',{staticClass:"wperp-form-group test-connection"},[_c('div',{staticClass:"connection-outgoing"},[_c('label',{attrs:{"for":"erp_wpmail_test_email"}},[_vm._v(_vm._s(_vm.__( 'Test Mail', 'erp' )))]),_vm._v(" "),_c('p',[_vm._v(_vm._s(_vm.__( 'An Email Address to Test the Connection', 'erp' )))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.erp_wpmail_test_email),expression:"erp_wpmail_test_email"}],staticClass:"wperp-form-field",attrs:{"placeholder":_vm.__( 'Email here', 'erp' ),"id":"erp_wpmail_test_email","type":"email"},domProps:{"value":(_vm.erp_wpmail_test_email)},on:{"input":function($event){if($event.target.composing){ return; }_vm.erp_wpmail_test_email=$event.target.value}}}),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--secondary btn-test-connection",attrs:{"id":"wpmail-test-connection"},on:{"click":_vm.testConnection}},[_vm._v(_vm._s(_vm.__('Send Test Email', 'erp')))])])])]})],2)])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-29133bb1", esExports)
-  }
-}
 
 /***/ }),
 /* 483 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "email_connect",
-        enable_content: false,
-        enableSubSectionTitle: false
-      }
-    },
-    [
-      _c("div", { staticClass: "email-connect-area" }, [
-        _c("div", { staticClass: "email-card email-connect-outgoing" }, [
-          _c("h4", [_vm._v(_vm._s(_vm.__("Outgoing Email Setting", "erp")))]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "email-icons outgoing-email-icons" },
-            _vm._l(_vm.outgoingConnections, function(connection) {
-              return _c(
-                "div",
-                {
-                  key: connection.slug,
-                  class:
-                    "email-icon pointer " +
-                    connection.slug +
-                    " " +
-                    (connection.slug === _vm.activeOutgoingEmail
-                      ? "active-email-icon"
-                      : ""),
-                  on: {
-                    click: function($event) {
-                      return _vm.toggleActiveConnection(connection, "outgoing")
-                    }
-                  }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: connection.isEnabled
-                        ? connection.enableIcon
-                        : connection.disableIcon,
-                      alt: ""
-                    }
-                  }),
-                  _vm._v(" "),
-                  connection.isEnabled
-                    ? _c(
-                        "span",
-                        { staticClass: "checkbox-icon checkbox-active" },
-                        [_c("i", { staticClass: "fa fa-check-circle" })]
-                      )
-                    : _c("span", {
-                        staticClass: "checkbox-icon checkbox-inactive",
-                        on: {
-                          click: function($event) {
-                            return _vm.toggleActiveConnection(
-                              connection,
-                              "outgoing"
-                            )
-                          }
-                        }
-                      }),
-                  _vm._v(" "),
-                  _c("p", [_vm._v(_vm._s(connection.name))])
-                ]
-              )
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _vm.activeOutgoingEmail === "smtp"
-            ? _c("div", [_c("smtp-email")], 1)
-            : _vm.activeOutgoingEmail === "mailgun"
-            ? _c("div", [_c("mailgun-email")], 1)
-            : _c("div", [_c("wp-mail")], 1)
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "email-card email-connect-incoming" }, [
-          _c("h4", [_vm._v(_vm._s(_vm.__("Incoming Email Setting", "erp")))]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "email-icons" },
-            _vm._l(_vm.incomingConnections, function(connection) {
-              return _c(
-                "div",
-                {
-                  key: connection.slug,
-                  class:
-                    "email-icon pointer " +
-                    (connection.slug === _vm.activeIncomingEmail
-                      ? "active-email-icon"
-                      : ""),
-                  on: {
-                    click: function($event) {
-                      return _vm.toggleActiveConnection(connection, "incoming")
-                    }
-                  }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: connection.isEnabled
-                        ? connection.enableIcon
-                        : connection.disableIcon,
-                      alt: ""
-                    }
-                  }),
-                  _vm._v(" "),
-                  connection.isEnabled
-                    ? _c(
-                        "span",
-                        { staticClass: "checkbox-icon checkbox-active" },
-                        [_c("i", { staticClass: "fa fa-check-circle" })]
-                      )
-                    : _c("span", {
-                        staticClass: "checkbox-icon checkbox-inactive",
-                        on: {
-                          click: function($event) {
-                            return _vm.toggleActiveConnection(
-                              connection,
-                              "incoming"
-                            )
-                          }
-                        }
-                      }),
-                  _vm._v(" "),
-                  _c("p", [_vm._v(_vm._s(connection.name))])
-                ]
-              )
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _vm.activeIncomingEmail === "imap"
-            ? _c("div", [_c("imap-email")], 1)
-            : _c("div", [_c("google-email")], 1)
-        ])
-      ])
-    ]
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"email_connect","enable_content":false,"enableSubSectionTitle":false}},[_c('div',{staticClass:"email-connect-area"},[_c('div',{staticClass:"email-card email-connect-outgoing"},[_c('h4',[_vm._v(_vm._s(_vm.__( 'Outgoing Email Setting', 'erp' )))]),_vm._v(" "),_c('div',{staticClass:"email-icons outgoing-email-icons"},_vm._l((_vm.outgoingConnections),function(connection){return _c('div',{key:connection.slug,class:("email-icon pointer " + (connection.slug) + " " + (connection.slug === _vm.activeOutgoingEmail ? 'active-email-icon' : '')),on:{"click":function($event){return _vm.toggleActiveConnection(connection, 'outgoing')}}},[_c('img',{attrs:{"src":connection.isEnabled ? connection.enableIcon : connection.disableIcon,"alt":""}}),_vm._v(" "),(connection.isEnabled)?_c('span',{staticClass:"checkbox-icon checkbox-active"},[_c('i',{staticClass:"fa fa-check-circle"})]):_c('span',{staticClass:"checkbox-icon checkbox-inactive",on:{"click":function($event){return _vm.toggleActiveConnection(connection, 'outgoing')}}}),_vm._v(" "),_c('p',[_vm._v(_vm._s(connection.name))])])}),0),_vm._v(" "),(_vm.activeOutgoingEmail === 'smtp')?_c('div',[_c('smtp-email')],1):(_vm.activeOutgoingEmail === 'mailgun')?_c('div',[_c('mailgun-email')],1):_c('div',[_c('wp-mail')],1)]),_vm._v(" "),_c('div',{staticClass:"email-card email-connect-incoming"},[_c('h4',[_vm._v(_vm._s(_vm.__( 'Incoming Email Setting', 'erp' )))]),_vm._v(" "),_c('div',{staticClass:"email-icons"},_vm._l((_vm.incomingConnections),function(connection){return _c('div',{key:connection.slug,class:("email-icon pointer " + (connection.slug === _vm.activeIncomingEmail ? 'active-email-icon' : '')),on:{"click":function($event){return _vm.toggleActiveConnection(connection, 'incoming')}}},[_c('img',{attrs:{"src":connection.isEnabled ? connection.enableIcon : connection.disableIcon,"alt":""}}),_vm._v(" "),(connection.isEnabled)?_c('span',{staticClass:"checkbox-icon checkbox-active"},[_c('i',{staticClass:"fa fa-check-circle"})]):_c('span',{staticClass:"checkbox-icon checkbox-inactive",on:{"click":function($event){return _vm.toggleActiveConnection(connection, 'incoming')}}}),_vm._v(" "),_c('p',[_vm._v(_vm._s(connection.name))])])}),0),_vm._v(" "),(_vm.activeIncomingEmail === 'imap')?_c('div',[_c('imap-email')],1):_c('div',[_c('google-email')],1)])])])}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1c79836f", esExports)
-  }
-}
 
 /***/ }),
 /* 484 */
@@ -9982,8 +6360,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_EmailTemplate_vue__ = __webpack_require__(237);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0adc08c5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailTemplate_vue__ = __webpack_require__(485);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a15a290e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailTemplate_vue__ = __webpack_require__(485);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -10000,29 +6377,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_EmailTemplate_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0adc08c5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailTemplate_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a15a290e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailTemplate_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/templates/EmailTemplate.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0adc08c5", Component.options)
-  } else {
-    hotAPI.reload("data-v-0adc08c5", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -10032,361 +6392,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: "erp-email",
-        sub_section_id: "templates",
-        enable_content: false,
-        single_option: false,
-        enableSubSectionTitle: false
-      }
-    },
-    [
-      _c("h3", { staticClass: "sub-section-title pull-left" }, [
-        _vm._v(_vm._s(_vm.__("Saved Replies", "erp")))
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "wperp-btn btn--primary settings-button header-right-button",
-          attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              return _vm.popupModal({}, "create")
-            }
-          }
-        },
-        [
-          _c("i", { staticClass: "fa fa-plus" }),
-          _vm._v(" " + _vm._s(_vm.__("Add New", "erp")) + "\n    ")
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "clearfix" }),
-      _vm._v(" "),
-      _c("table", { staticClass: "erp-settings-table widefat" }, [
-        _c("thead", [
-          _c("tr", [
-            _c("th", [_vm._v(_vm._s(_vm.__("Template Name", "erp")))]),
-            _vm._v(" "),
-            _c("th", [_vm._v(_vm._s(_vm.__("Subject", "erp")))]),
-            _vm._v(" "),
-            _c("th", [_vm._v(_vm._s(_vm.__("Enable/Disable", "erp")))])
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.templates, function(template, index) {
-            return _c("tr", { key: index, attrs: { valign: "top" } }, [
-              _c("td", [_vm._v(_vm._s(template.name))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(template.subject))]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "span",
-                  {
-                    staticClass: "action",
-                    on: {
-                      click: function($event) {
-                        return _vm.popupModal(template, "edit")
-                      }
-                    }
-                  },
-                  [_c("i", { staticClass: "fa fa-pencil" })]
-                ),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    staticClass: "action",
-                    on: {
-                      click: function($event) {
-                        return _vm.popupDeleteModal(template)
-                      }
-                    }
-                  },
-                  [_c("i", { staticClass: "fa fa-trash" })]
-                )
-              ])
-            ])
-          }),
-          0
-        )
-      ]),
-      _vm._v(" "),
-      _c("modal", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.isVisibleModal,
-            expression: "isVisibleModal"
-          }
-        ],
-        attrs: {
-          title:
-            _vm.modalMode === "create"
-              ? _vm.__("Add new Template", "erp")
-              : _vm.__("Edit", "erp"),
-          header: true,
-          footer: true,
-          hasForm: true
-        },
-        on: {
-          close: function($event) {
-            return _vm.popupModal({}, _vm.modalMode)
-          }
-        },
-        scopedSlots: _vm._u([
-          {
-            key: "body",
-            fn: function() {
-              return [
-                _c(
-                  "form",
-                  {
-                    staticClass: "wperp-form",
-                    attrs: { method: "post" },
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.onFormSubmit.apply(null, arguments)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "wperp-form-group" }, [
-                      _c("label", [
-                        _vm._v(_vm._s(_vm.__("Name", "erp")) + " "),
-                        _c("span", { staticClass: "required" }, [_vm._v("*")])
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.singleTemplate.name,
-                            expression: "singleTemplate.name"
-                          }
-                        ],
-                        staticClass: "wperp-form-field",
-                        attrs: { required: "" },
-                        domProps: { value: _vm.singleTemplate.name },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.singleTemplate,
-                              "name",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "wperp-form-group" }, [
-                      _c("label", [_vm._v(_vm._s(_vm.__("Subject", "erp")))]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.singleTemplate.subject,
-                            expression: "singleTemplate.subject"
-                          }
-                        ],
-                        staticClass: "wperp-form-field",
-                        domProps: { value: _vm.singleTemplate.subject },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.singleTemplate,
-                              "subject",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticStyle: { "margin-bottom": "60px" } }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "wperp-form-group",
-                          staticStyle: {
-                            clear: "both",
-                            position: "absolute",
-                            right: "18px"
-                          }
-                        },
-                        [
-                          _c("label", [
-                            _vm._v(_vm._s(_vm.__("Short Codes", "erp")))
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "select",
-                            {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.singleTemplate.shortCode,
-                                  expression: "singleTemplate.shortCode"
-                                }
-                              ],
-                              staticClass: "wperp-form-field",
-                              on: {
-                                change: [
-                                  function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      _vm.singleTemplate,
-                                      "shortCode",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  },
-                                  _vm.appendShortCode
-                                ]
-                              }
-                            },
-                            _vm._l(_vm.shortCodes, function(
-                              shortCode,
-                              key,
-                              index
-                            ) {
-                              return _c("option", { key: index }, [
-                                _vm._v(
-                                  "\n                                " +
-                                    _vm._s(key) +
-                                    "\n                            "
-                                )
-                              ])
-                            }),
-                            0
-                          )
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "wperp-form-group" },
-                      [
-                        _c("label", [_vm._v(_vm._s(_vm.__("Body", "erp")))]),
-                        _vm._v(" "),
-                        _c("VueTrix", {
-                          attrs: {
-                            placeholder: "Enter content",
-                            localStorage: ""
-                          },
-                          model: {
-                            value: _vm.singleTemplate.template,
-                            callback: function($$v) {
-                              _vm.$set(_vm.singleTemplate, "template", $$v)
-                            },
-                            expression: "singleTemplate.template"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ]
-                )
-              ]
-            },
-            proxy: true
-          },
-          {
-            key: "footer",
-            fn: function() {
-              return [
-                _c(
-                  "span",
-                  { on: { click: _vm.onFormSubmit } },
-                  [
-                    _c("submit-button", {
-                      attrs: {
-                        text:
-                          _vm.modalMode === "create"
-                            ? _vm.__("Add New", "erp")
-                            : _vm.__("Save", "erp"),
-                        customClass: "pull-right"
-                      }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "span",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.popupModal({}, _vm.modalMode)
-                      }
-                    }
-                  },
-                  [
-                    _c("submit-button", {
-                      staticStyle: { "margin-right": "10px" },
-                      attrs: {
-                        text: _vm.__("Cancel", "erp"),
-                        customClass: "wperp-btn-cancel pull-right"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]
-            },
-            proxy: true
-          }
-        ])
-      })
-    ],
-    1
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":"erp-email","sub_section_id":"templates","enable_content":false,"single_option":false,"enableSubSectionTitle":false}},[_c('h3',{staticClass:"sub-section-title pull-left"},[_vm._v(_vm._s(_vm.__('Saved Replies', 'erp')))]),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--primary settings-button header-right-button",attrs:{"type":"button"},on:{"click":function($event){return _vm.popupModal({}, 'create')}}},[_c('i',{staticClass:"fa fa-plus"}),_vm._v(" "+_vm._s(_vm.__('Add New', 'erp'))+"\n    ")]),_vm._v(" "),_c('div',{staticClass:"clearfix"}),_vm._v(" "),_c('table',{staticClass:"erp-settings-table widefat"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Template Name', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Subject', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Enable/Disable', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.templates),function(template,index){return _c('tr',{key:index,attrs:{"valign":"top"}},[_c('td',[_vm._v(_vm._s(template.name))]),_vm._v(" "),_c('td',[_vm._v(_vm._s(template.subject))]),_vm._v(" "),_c('td',[_c('span',{staticClass:"action",on:{"click":function($event){return _vm.popupModal(template, 'edit')}}},[_c('i',{staticClass:"fa fa-pencil"})]),_vm._v(" "),_c('span',{staticClass:"action",on:{"click":function($event){return _vm.popupDeleteModal(template)}}},[_c('i',{staticClass:"fa fa-trash"})])])])}),0)]),_vm._v(" "),_c('modal',{directives:[{name:"show",rawName:"v-show",value:(_vm.isVisibleModal),expression:"isVisibleModal"}],attrs:{"title":_vm.modalMode === 'create' ? _vm.__('Add new Template', 'erp') : _vm.__('Edit', 'erp'),"header":true,"footer":true,"hasForm":true},on:{"close":function($event){return _vm.popupModal({}, _vm.modalMode)}},scopedSlots:_vm._u([{key:"body",fn:function(){return [_c('form',{staticClass:"wperp-form",attrs:{"method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.onFormSubmit.apply(null, arguments)}}},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Name', 'erp'))+" "),_c('span',{staticClass:"required"},[_vm._v("*")])]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.singleTemplate.name),expression:"singleTemplate.name"}],staticClass:"wperp-form-field",attrs:{"required":""},domProps:{"value":(_vm.singleTemplate.name)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.singleTemplate, "name", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Subject', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.singleTemplate.subject),expression:"singleTemplate.subject"}],staticClass:"wperp-form-field",domProps:{"value":(_vm.singleTemplate.subject)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.singleTemplate, "subject", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticStyle:{"margin-bottom":"60px"}},[_c('div',{staticClass:"wperp-form-group",staticStyle:{"clear":"both","position":"absolute","right":"18px"}},[_c('label',[_vm._v(_vm._s(_vm.__('Short Codes', 'erp')))]),_vm._v(" "),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.singleTemplate.shortCode),expression:"singleTemplate.shortCode"}],staticClass:"wperp-form-field",on:{"change":[function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.$set(_vm.singleTemplate, "shortCode", $event.target.multiple ? $$selectedVal : $$selectedVal[0])},_vm.appendShortCode]}},_vm._l((_vm.shortCodes),function(shortCode,key,index){return _c('option',{key:index},[_vm._v("\n                                "+_vm._s(key)+"\n                            ")])}),0)])]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Body', 'erp')))]),_vm._v(" "),_c('VueTrix',{attrs:{"placeholder":"Enter content","localStorage":""},model:{value:(_vm.singleTemplate.template),callback:function ($$v) {_vm.$set(_vm.singleTemplate, "template", $$v)},expression:"singleTemplate.template"}})],1)])]},proxy:true},{key:"footer",fn:function(){return [_c('span',{on:{"click":_vm.onFormSubmit}},[_c('submit-button',{attrs:{"text":_vm.modalMode === 'create' ? _vm.__('Add New', 'erp') : _vm.__('Save', 'erp'),"customClass":"pull-right"}})],1),_vm._v(" "),_c('span',{on:{"click":function($event){return _vm.popupModal({}, _vm.modalMode)}}},[_c('submit-button',{staticStyle:{"margin-right":"10px"},attrs:{"text":_vm.__('Cancel', 'erp'),"customClass":"wperp-btn-cancel pull-right"}})],1)]},proxy:true}])})],1)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0adc08c5", esExports)
-  }
-}
 
 /***/ }),
 /* 486 */
@@ -10395,10 +6404,8 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_EmailNotification_vue__ = __webpack_require__(238);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_12aaadb6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailNotification_vue__ = __webpack_require__(488);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6a1bfcf7_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailNotification_vue__ = __webpack_require__(488);
 function injectStyle (ssrContext) {
-  if (disposed) return
   __webpack_require__(487)
 }
 var normalizeComponent = __webpack_require__(0)
@@ -10412,34 +6419,17 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-12aaadb6"
+var __vue_scopeId__ = "data-v-6a1bfcf7"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_EmailNotification_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_12aaadb6_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailNotification_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6a1bfcf7_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_EmailNotification_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/email/notifications/EmailNotification.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-12aaadb6", Component.options)
-  } else {
-    hotAPI.reload("data-v-12aaadb6", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -10455,424 +6445,13 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "base-layout",
-    {
-      attrs: {
-        section_id: _vm.section,
-        sub_section_id: _vm.subSection,
-        enable_content: false
-      }
-    },
-    [
-      _c("div", { attrs: { id: "erp-email-templates" } }, [
-        _c(
-          "ul",
-          { staticClass: "sub-sub-menu" },
-          _vm._l(_vm.options.sub_sections, function(menu, key, index) {
-            return _c("li", { key: key }, [
-              _c(
-                "a",
-                {
-                  class: key === _vm.module ? "router-link-active" : "",
-                  on: {
-                    click: function($event) {
-                      return _vm.setModule(key)
-                    }
-                  }
-                },
-                [
-                  _c("span", { staticClass: "menu-name" }, [
-                    _vm._v(_vm._s(menu))
-                  ])
-                ]
-              )
-            ])
-          }),
-          0
-        ),
-        _vm._v(" "),
-        _c(
-          "table",
-          { staticClass: "erp-settings-table widefat email-template-table" },
-          [
-            _c("thead", [
-              _c(
-                "tr",
-                _vm._l(_vm.columns, function(column, index) {
-                  return _c("th", { key: index, class: column.class }, [
-                    _vm._v(_vm._s(column.name))
-                  ])
-                }),
-                0
-              )
-            ]),
-            _vm._v(" "),
-            Object.keys(_vm.emails).length
-              ? _c(
-                  "tbody",
-                  _vm._l(_vm.emails, function(email, index) {
-                    return _c("tr", { key: index, attrs: { valign: "top" } }, [
-                      _c("td", [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "template-name",
-                            on: {
-                              click: function($event) {
-                                return _vm.configureTemplate(email)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(email.name) +
-                                "\n                        "
-                            )
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "hide-sm" }, [
-                        _vm._v(_vm._s(email.description))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          email.disable_allowed
-                            ? _c("radio-switch", {
-                                attrs: {
-                                  value: email.is_enabled,
-                                  id: email.id
-                                },
-                                on: {
-                                  toggle: function($event) {
-                                    return _vm.toggleStatus(email, index)
-                                  }
-                                }
-                              })
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "wperp-btn btn--primary button",
-                            attrs: { id: email.option_id },
-                            on: {
-                              click: function($event) {
-                                return _vm.configureTemplate(email)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(_vm.__("Configure", "erp")) +
-                                "\n                        "
-                            )
-                          ]
-                        )
-                      ])
-                    ])
-                  }),
-                  0
-                )
-              : _c("tbody", [
-                  _c("tr", { attrs: { "col-span": _vm.numColumns } }, [
-                    _c("th", [
-                      _vm._v(_vm._s(_vm.__("No templates found.", "erp")))
-                    ])
-                  ])
-                ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _vm.showModal
-        ? _c("modal", {
-            attrs: {
-              title: _vm.__("Configure Template", "erp"),
-              header: true,
-              footer: true,
-              hasForm: true
-            },
-            on: { close: _vm.toggleModal },
-            scopedSlots: _vm._u(
-              [
-                _vm.singleTemplate
-                  ? {
-                      key: "body",
-                      fn: function() {
-                        return [
-                          _c("h4", [_vm._v(_vm._s(_vm.singleTemplate.title))]),
-                          _vm._v(" "),
-                          _c("p", [
-                            _vm._v(_vm._s(_vm.singleTemplate.description))
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "form",
-                            {
-                              staticClass: "wperp-form",
-                              attrs: { method: "post" },
-                              on: {
-                                submit: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.onSubmit.apply(null, arguments)
-                                }
-                              }
-                            },
-                            [
-                              _vm.singleTemplate.disable_allowed
-                                ? _c(
-                                    "div",
-                                    { staticClass: "wperp-form-group" },
-                                    [
-                                      _c("label", [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.__("Disable/Enable", "erp")
-                                          )
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("radio-switch", {
-                                        attrs: { id: _vm.singleTemplate.id },
-                                        on: { toggle: _vm.switchValue },
-                                        model: {
-                                          value: _vm.singleTemplate.is_enable,
-                                          callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.singleTemplate,
-                                              "is_enable",
-                                              $$v
-                                            )
-                                          },
-                                          expression: "singleTemplate.is_enable"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "wperp-form-group" }, [
-                                _c("label", [
-                                  _vm._v(_vm._s(_vm.__("Subject", "erp")))
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.singleTemplate.subject,
-                                      expression: "singleTemplate.subject"
-                                    }
-                                  ],
-                                  staticClass: "wperp-form-field",
-                                  domProps: {
-                                    value: _vm.singleTemplate.subject
-                                  },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        _vm.singleTemplate,
-                                        "subject",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "wperp-form-group" }, [
-                                _c("label", [
-                                  _vm._v(_vm._s(_vm.__("Heading", "erp")))
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.singleTemplate.heading,
-                                      expression: "singleTemplate.heading"
-                                    }
-                                  ],
-                                  staticClass: "wperp-form-field",
-                                  domProps: {
-                                    value: _vm.singleTemplate.heading
-                                  },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        _vm.singleTemplate,
-                                        "heading",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "wperp-form-group" },
-                                [
-                                  _c("label", [
-                                    _vm._v(_vm._s(_vm.__("Body", "erp")))
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("vue-trix", {
-                                    attrs: { placeholder: "Enter content" },
-                                    model: {
-                                      value: _vm.singleTemplate.body,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.singleTemplate,
-                                          "body",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "singleTemplate.body"
-                                    }
-                                  })
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _vm.shortCodes.length
-                                ? _c(
-                                    "div",
-                                    { staticClass: "wperp-form-group" },
-                                    [
-                                      _c(
-                                        "label",
-                                        [
-                                          _c("span", [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.__("Template Tags", "erp")
-                                              )
-                                            )
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("tooltip", {
-                                            attrs: {
-                                              input: {
-                                                tooltip: true,
-                                                tooltip_text: _vm.__(
-                                                  "You may use these template tags inside subject, heading, body and those will be replaced by original values",
-                                                  "erp"
-                                                )
-                                              }
-                                            }
-                                          })
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "div",
-                                        { staticClass: "email-template-tags" },
-                                        _vm._l(_vm.shortCodes, function(
-                                          tag,
-                                          key
-                                        ) {
-                                          return _c("span", { key: key }, [
-                                            _vm._v(_vm._s(tag))
-                                          ])
-                                        }),
-                                        0
-                                      )
-                                    ]
-                                  )
-                                : _vm._e()
-                            ]
-                          )
-                        ]
-                      },
-                      proxy: true
-                    }
-                  : {
-                      key: "default",
-                      fn: function(undefined) {
-                        return _c("div", { staticClass: "regen-sync-loader" })
-                      }
-                    },
-                {
-                  key: "footer",
-                  fn: function() {
-                    return [
-                      _c(
-                        "span",
-                        { on: { click: _vm.onSubmit } },
-                        [
-                          _c("submit-button", {
-                            attrs: {
-                              text: _vm.__("Save", "erp"),
-                              customClass: "pull-right"
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "span",
-                        { on: { click: _vm.toggleModal } },
-                        [
-                          _c("submit-button", {
-                            staticStyle: { "margin-right": "7px" },
-                            attrs: {
-                              text: _vm.__("Cancel", "erp"),
-                              customClass: "wperp-btn-cancel pull-right"
-                            }
-                          })
-                        ],
-                        1
-                      )
-                    ]
-                  },
-                  proxy: true
-                }
-              ],
-              null,
-              true
-            )
-          })
-        : _vm._e()
-    ],
-    1
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('base-layout',{attrs:{"section_id":_vm.section,"sub_section_id":_vm.subSection,"enable_content":false}},[_c('div',{attrs:{"id":"erp-email-templates"}},[_c('ul',{staticClass:"sub-sub-menu"},_vm._l((_vm.options.sub_sections),function(menu,key,index){return _c('li',{key:key},[_c('a',{class:key === _vm.module? 'router-link-active': '',on:{"click":function($event){return _vm.setModule(key)}}},[_c('span',{staticClass:"menu-name"},[_vm._v(_vm._s(menu))])])])}),0),_vm._v(" "),_c('table',{staticClass:"erp-settings-table widefat email-template-table"},[_c('thead',[_c('tr',_vm._l((_vm.columns),function(column,index){return _c('th',{key:index,class:column.class},[_vm._v(_vm._s(column.name))])}),0)]),_vm._v(" "),(Object.keys(_vm.emails).length)?_c('tbody',_vm._l((_vm.emails),function(email,index){return _c('tr',{key:index,attrs:{"valign":"top"}},[_c('td',[_c('span',{staticClass:"template-name",on:{"click":function($event){return _vm.configureTemplate(email)}}},[_vm._v("\n                            "+_vm._s(email.name)+"\n                        ")])]),_vm._v(" "),_c('td',{staticClass:"hide-sm"},[_vm._v(_vm._s(email.description))]),_vm._v(" "),_c('td',[(email.disable_allowed)?_c('radio-switch',{attrs:{"value":email.is_enabled,"id":email.id},on:{"toggle":function($event){return _vm.toggleStatus(email, index)}}}):_vm._e()],1),_vm._v(" "),_c('td',[_c('button',{staticClass:"wperp-btn btn--primary button",attrs:{"id":email.option_id},on:{"click":function($event){return _vm.configureTemplate(email)}}},[_vm._v("\n                            "+_vm._s(_vm.__('Configure', 'erp'))+"\n                        ")])])])}),0):_c('tbody',[_c('tr',{attrs:{"col-span":_vm.numColumns}},[_c('th',[_vm._v(_vm._s(_vm.__('No templates found.', 'erp')))])])])])]),_vm._v(" "),(_vm.showModal)?_c('modal',{attrs:{"title":_vm.__('Configure Template', 'erp'),"header":true,"footer":true,"hasForm":true},on:{"close":_vm.toggleModal},scopedSlots:_vm._u([(_vm.singleTemplate)?{key:"body",fn:function(){return [_c('h4',[_vm._v(_vm._s(_vm.singleTemplate.title))]),_vm._v(" "),_c('p',[_vm._v(_vm._s(_vm.singleTemplate.description))]),_vm._v(" "),_c('form',{staticClass:"wperp-form",attrs:{"method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.onSubmit.apply(null, arguments)}}},[(_vm.singleTemplate.disable_allowed)?_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Disable/Enable', 'erp')))]),_vm._v(" "),_c('radio-switch',{attrs:{"id":_vm.singleTemplate.id},on:{"toggle":_vm.switchValue},model:{value:(_vm.singleTemplate.is_enable),callback:function ($$v) {_vm.$set(_vm.singleTemplate, "is_enable", $$v)},expression:"singleTemplate.is_enable"}})],1):_vm._e(),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Subject', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.singleTemplate.subject),expression:"singleTemplate.subject"}],staticClass:"wperp-form-field",domProps:{"value":(_vm.singleTemplate.subject)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.singleTemplate, "subject", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Heading', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.singleTemplate.heading),expression:"singleTemplate.heading"}],staticClass:"wperp-form-field",domProps:{"value":(_vm.singleTemplate.heading)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.singleTemplate, "heading", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Body', 'erp')))]),_vm._v(" "),_c('vue-trix',{attrs:{"placeholder":"Enter content"},model:{value:(_vm.singleTemplate.body),callback:function ($$v) {_vm.$set(_vm.singleTemplate, "body", $$v)},expression:"singleTemplate.body"}})],1),_vm._v(" "),(_vm.shortCodes.length)?_c('div',{staticClass:"wperp-form-group"},[_c('label',[_c('span',[_vm._v(_vm._s(_vm.__('Template Tags', 'erp')))]),_vm._v(" "),_c('tooltip',{attrs:{"input":{
+                                tooltip: true,
+                                tooltip_text: _vm.__('You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp')
+                            }}})],1),_vm._v(" "),_c('div',{staticClass:"email-template-tags"},_vm._l((_vm.shortCodes),function(tag,key){return _c('span',{key:key},[_vm._v(_vm._s(tag))])}),0)]):_vm._e()])]},proxy:true}:{key:"default",fn:function(undefined){return _c('div',{staticClass:"regen-sync-loader"})}},{key:"footer",fn:function(){return [_c('span',{on:{"click":_vm.onSubmit}},[_c('submit-button',{attrs:{"text":_vm.__('Save', 'erp'),"customClass":"pull-right"}})],1),_vm._v(" "),_c('span',{on:{"click":_vm.toggleModal}},[_c('submit-button',{staticStyle:{"margin-right":"7px"},attrs:{"text":_vm.__('Cancel', 'erp'),"customClass":"wperp-btn-cancel pull-right"}})],1)]},proxy:true}],null,true)}):_vm._e()],1)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-12aaadb6", esExports)
-  }
-}
 
 /***/ }),
 /* 489 */
@@ -10881,8 +6460,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Integration_vue__ = __webpack_require__(239);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16127a71_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Integration_vue__ = __webpack_require__(490);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d24e332_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Integration_vue__ = __webpack_require__(490);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -10899,29 +6477,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Integration_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_16127a71_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Integration_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5d24e332_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Integration_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/integration/Integration.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-16127a71", Component.options)
-  } else {
-    hotAPI.reload("data-v-16127a71", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -10931,293 +6492,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "erp-integration" } },
-    [
-      _c(
-        "base-layout",
-        { attrs: { section_id: _vm.section, sub_section_id: _vm.section } },
-        [
-          _c("table", { staticClass: "erp-settings-table widefat" }, [
-            _c("thead", [
-              _c(
-                "tr",
-                _vm._l(_vm.columns, function(column, index) {
-                  return _c("th", { key: index }, [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(column) +
-                        "\n                    "
-                    )
-                  ])
-                }),
-                0
-              )
-            ]),
-            _vm._v(" "),
-            Object.keys(_vm.integrations).length
-              ? _c(
-                  "tbody",
-                  _vm._l(_vm.integrations, function(item, key) {
-                    return _c("tr", { key: key, attrs: { valign: "top" } }, [
-                      _c("td", [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "integration-title",
-                            on: {
-                              click: function($event) {
-                                return _vm.configure(item, key)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(item.title) +
-                                "\n                        "
-                            )
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(item.description))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "wperp-btn btn--primary",
-                            attrs: { id: item.id },
-                            on: {
-                              click: function($event) {
-                                return _vm.configure(item, key)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(_vm.__("Configure", "erp")) +
-                                "\n                        "
-                            )
-                          ]
-                        )
-                      ])
-                    ])
-                  }),
-                  0
-                )
-              : _c("tbody", [
-                  _c("tr", { attrs: { "col-span": _vm.numColumns } }, [
-                    _c("th", [
-                      _vm._v(_vm._s(_vm.__("No templates found.", "erp")))
-                    ])
-                  ])
-                ])
-          ]),
-          _vm._v(" "),
-          _vm.showModal
-            ? _c("modal", {
-                attrs: {
-                  title: _vm.singleItem.title + _vm.__(" Integration", "erp"),
-                  header: true,
-                  footer: true,
-                  hasForm: true
-                },
-                on: { close: _vm.toggleModal },
-                scopedSlots: _vm._u(
-                  [
-                    {
-                      key: "body",
-                      fn: function() {
-                        return [
-                          _vm.singleItem.id === "erp-sms"
-                            ? _c(
-                                "div",
-                                { staticClass: "wperp-form-group" },
-                                [
-                                  _c(
-                                    "label",
-                                    {
-                                      attrs: { for: "erp-sms-selected-gateway" }
-                                    },
-                                    [
-                                      _vm._v(
-                                        _vm._s(_vm.__("Active Gateway", "erp"))
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("multi-select", {
-                                    attrs: {
-                                      options: _vm.fieldOptions,
-                                      multiple: false,
-                                      id: "erp-sms-selected-gateway"
-                                    },
-                                    on: { select: _vm.onSelect },
-                                    model: {
-                                      value: _vm.selectedField,
-                                      callback: function($$v) {
-                                        _vm.selectedField = $$v
-                                      },
-                                      expression: "selectedField"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c(
-                            "base-content-layout",
-                            {
-                              key: _vm.componentKey,
-                              ref: "base",
-                              attrs: {
-                                section_id: _vm.section,
-                                sub_section_id: _vm.subSection,
-                                sub_sub_section_id: _vm.singleItem.id,
-                                inputs: _vm.formFields,
-                                single_option: _vm.singleItem.single_option,
-                                hide_submit: true,
-                                options: _vm.options
-                              }
-                            },
-                            [
-                              _vm.extraContent
-                                ? _c(
-                                    "div",
-                                    {
-                                      attrs: { slot: "extended-data" },
-                                      slot: "extended-data"
-                                    },
-                                    [
-                                      _vm._t("extended-data", function() {
-                                        return [
-                                          _vm.singleItem.id === "erp-dm"
-                                            ? _c(
-                                                "div",
-                                                {
-                                                  staticClass:
-                                                    "wperp-form-group"
-                                                },
-                                                [
-                                                  _c("label", {
-                                                    attrs: {
-                                                      for:
-                                                        "dropbox-connection-test"
-                                                    }
-                                                  }),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "button",
-                                                    {
-                                                      staticClass:
-                                                        "wperp-btn btn--secondary",
-                                                      attrs: {
-                                                        id:
-                                                          "dropbox-connection-test"
-                                                      },
-                                                      on: {
-                                                        click:
-                                                          _vm.testConnection
-                                                      }
-                                                    },
-                                                    [
-                                                      _vm._v(
-                                                        "\n                                    " +
-                                                          _vm._s(
-                                                            _vm.__(
-                                                              "Test Dropbox Connection",
-                                                              "erp"
-                                                            )
-                                                          ) +
-                                                          "\n                                "
-                                                      )
-                                                    ]
-                                                  )
-                                                ]
-                                              )
-                                            : _vm._e()
-                                        ]
-                                      })
-                                    ],
-                                    2
-                                  )
-                                : _vm._e()
-                            ]
-                          )
-                        ]
-                      },
-                      proxy: true
-                    },
-                    {
-                      key: "footer",
-                      fn: function() {
-                        return [
-                          !_vm.hideSubmit
-                            ? _c(
-                                "span",
-                                { on: { click: _vm.onSubmit } },
-                                [
-                                  _c("submit-button", {
-                                    attrs: {
-                                      text: _vm.__("Save", "erp"),
-                                      customClass: "pull-right"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            { on: { click: _vm.toggleModal } },
-                            [
-                              _c("submit-button", {
-                                staticStyle: { "margin-right": "7px" },
-                                attrs: {
-                                  text: _vm.__("Cancel", "erp"),
-                                  customClass: "wperp-btn-cancel pull-right"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ]
-                      },
-                      proxy: true
-                    }
-                  ],
-                  null,
-                  true
-                )
-              })
-            : _vm._e()
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"erp-integration"}},[_c('base-layout',{attrs:{"section_id":_vm.section,"sub_section_id":_vm.section}},[_c('table',{staticClass:"erp-settings-table widefat"},[_c('thead',[_c('tr',_vm._l((_vm.columns),function(column,index){return _c('th',{key:index},[_vm._v("\n                        "+_vm._s(column)+"\n                    ")])}),0)]),_vm._v(" "),(Object.keys(_vm.integrations).length)?_c('tbody',_vm._l((_vm.integrations),function(item,key){return _c('tr',{key:key,attrs:{"valign":"top"}},[_c('td',[_c('span',{staticClass:"integration-title",on:{"click":function($event){return _vm.configure(item, key)}}},[_vm._v("\n                            "+_vm._s(item.title)+"\n                        ")])]),_vm._v(" "),_c('td',[_vm._v(_vm._s(item.description))]),_vm._v(" "),_c('td',[_c('button',{staticClass:"wperp-btn btn--primary",attrs:{"id":item.id},on:{"click":function($event){return _vm.configure(item, key)}}},[_vm._v("\n                            "+_vm._s(_vm.__('Configure', 'erp'))+"\n                        ")])])])}),0):_c('tbody',[_c('tr',{attrs:{"col-span":_vm.numColumns}},[_c('th',[_vm._v(_vm._s(_vm.__('No templates found.', 'erp')))])])])]),_vm._v(" "),(_vm.showModal)?_c('modal',{attrs:{"title":_vm.singleItem.title + _vm.__(' Integration', 'erp'),"header":true,"footer":true,"hasForm":true},on:{"close":_vm.toggleModal},scopedSlots:_vm._u([{key:"body",fn:function(){return [(_vm.singleItem.id === 'erp-sms')?_c('div',{staticClass:"wperp-form-group"},[_c('label',{attrs:{"for":"erp-sms-selected-gateway"}},[_vm._v(_vm._s(_vm.__( 'Active Gateway', 'erp' )))]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.fieldOptions,"multiple":false,"id":"erp-sms-selected-gateway"},on:{"select":_vm.onSelect},model:{value:(_vm.selectedField),callback:function ($$v) {_vm.selectedField=$$v},expression:"selectedField"}})],1):_vm._e(),_vm._v(" "),_c('base-content-layout',{key:_vm.componentKey,ref:"base",attrs:{"section_id":_vm.section,"sub_section_id":_vm.subSection,"sub_sub_section_id":_vm.singleItem.id,"inputs":_vm.formFields,"single_option":_vm.singleItem.single_option,"hide_submit":true,"options":_vm.options}},[(_vm.extraContent)?_c('div',{attrs:{"slot":"extended-data"},slot:"extended-data"},[_vm._t("extended-data",function(){return [(_vm.singleItem.id === 'erp-dm')?_c('div',{staticClass:"wperp-form-group"},[_c('label',{attrs:{"for":"dropbox-connection-test"}}),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--secondary",attrs:{"id":"dropbox-connection-test"},on:{"click":_vm.testConnection}},[_vm._v("\n                                    "+_vm._s(_vm.__('Test Dropbox Connection', 'erp'))+"\n                                ")])]):_vm._e()]})],2):_vm._e()])]},proxy:true},{key:"footer",fn:function(){return [(! _vm.hideSubmit)?_c('span',{on:{"click":_vm.onSubmit}},[_c('submit-button',{attrs:{"text":_vm.__('Save', 'erp'),"customClass":"pull-right"}})],1):_vm._e(),_vm._v(" "),_c('span',{on:{"click":_vm.toggleModal}},[_c('submit-button',{staticStyle:{"margin-right":"7px"},attrs:{"text":_vm.__('Cancel', 'erp'),"customClass":"wperp-btn-cancel pull-right"}})],1)]},proxy:true}],null,true)}):_vm._e()],1)],1)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-16127a71", esExports)
-  }
-}
 
 /***/ }),
 /* 491 */
@@ -11226,8 +6504,7 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_License_vue__ = __webpack_require__(240);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d305506a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_License_vue__ = __webpack_require__(492);
-var disposed = false
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ce3f96d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_License_vue__ = __webpack_require__(492);
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -11244,29 +6521,12 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_License_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d305506a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_License_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ce3f96d_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_License_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "includes/Settings/assets/src/components/license/License.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d305506a", Component.options)
-  } else {
-    hotAPI.reload("data-v-d305506a", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -11276,134 +6536,10 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "erp-license" } },
-    [
-      _c(
-        "base-layout",
-        { attrs: { section_id: _vm.section, sub_section_id: _vm.section } },
-        [
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.saveSettings.apply(null, arguments)
-                }
-              }
-            },
-            [
-              _c("table", { staticClass: "erp-settings-table widefat" }, [
-                _c("thead", [
-                  _c(
-                    "tr",
-                    _vm._l(_vm.columns, function(column, index) {
-                      return _c("th", { key: index }, [
-                        _vm._v(
-                          "\n                            " +
-                            _vm._s(column) +
-                            "\n                        "
-                        )
-                      ])
-                    }),
-                    0
-                  )
-                ]),
-                _vm._v(" "),
-                _vm.extensions
-                  ? _c(
-                      "tbody",
-                      _vm._l(_vm.extensions, function(item, key) {
-                        return _c(
-                          "tr",
-                          { key: key, attrs: { valign: "top" } },
-                          [
-                            _c("td", [
-                              _c("strong", [_vm._v(_vm._s(item.name))])
-                            ]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(item.version))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: item.license,
-                                    expression: "item.license"
-                                  }
-                                ],
-                                attrs: { type: "text" },
-                                domProps: { value: item.license },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      item,
-                                      "license",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              })
-                            ]),
-                            _vm._v(" "),
-                            _c("td", {
-                              domProps: { innerHTML: _vm._s(item.status) }
-                            })
-                          ]
-                        )
-                      }),
-                      0
-                    )
-                  : _c("tbody", [
-                      _c("tr", { attrs: { "col-span": _vm.numColumns } }, [
-                        _c("th", [
-                          _vm._v(_vm._s(_vm.__("No extensions found.", "erp")))
-                        ])
-                      ])
-                    ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "wperp-form-group" },
-                [
-                  _c("submit-button", {
-                    attrs: { text: _vm.__("Save Changes", "erp") }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "clearfix" })
-                ],
-                1
-              )
-            ]
-          )
-        ]
-      )
-    ],
-    1
-  )
-}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"erp-license"}},[_c('base-layout',{attrs:{"section_id":_vm.section,"sub_section_id":_vm.section}},[_c('form',{on:{"submit":function($event){$event.preventDefault();return _vm.saveSettings.apply(null, arguments)}}},[_c('table',{staticClass:"erp-settings-table widefat"},[_c('thead',[_c('tr',_vm._l((_vm.columns),function(column,index){return _c('th',{key:index},[_vm._v("\n                            "+_vm._s(column)+"\n                        ")])}),0)]),_vm._v(" "),(_vm.extensions)?_c('tbody',_vm._l((_vm.extensions),function(item,key){return _c('tr',{key:key,attrs:{"valign":"top"}},[_c('td',[_c('strong',[_vm._v(_vm._s(item.name))])]),_vm._v(" "),_c('td',[_vm._v(_vm._s(item.version))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(item.license),expression:"item.license"}],attrs:{"type":"text"},domProps:{"value":(item.license)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(item, "license", $event.target.value)}}})]),_vm._v(" "),_c('td',{domProps:{"innerHTML":_vm._s(item.status)}})])}),0):_c('tbody',[_c('tr',{attrs:{"col-span":_vm.numColumns}},[_c('th',[_vm._v(_vm._s(_vm.__( 'No extensions found.', 'erp' )))])])])]),_vm._v(" "),_c('div',{staticClass:"wperp-form-group"},[_c('submit-button',{attrs:{"text":_vm.__( 'Save Changes', 'erp' )}}),_vm._v(" "),_c('div',{staticClass:"clearfix"})],1)])])],1)}
 var staticRenderFns = []
-render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-d305506a", esExports)
-  }
-}
 
 /***/ }),
 /* 493 */
