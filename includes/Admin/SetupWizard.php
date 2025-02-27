@@ -134,9 +134,11 @@ class SetupWizard {
             <meta name="viewport" content="width=device-width" />
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title><?php esc_html_e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
-            <?php wp_print_scripts( 'erp-setup' ); ?>
-            <?php do_action( 'admin_print_styles' ); ?>
-            <?php // do_action( 'admin_head' ); ?>
+            <?php 
+                wp_print_scripts( 'erp-setup' );
+                wp_enqueue_emoji_styles();
+                do_action( 'admin_print_styles' );
+            ?>
         </head>
         <body class="erp-setup wp-core-ui">
             <h1 class="erp-logo"><a href="http://wperp.com/"><?php esc_html_e( 'WP ERP', 'erp' ); ?></a></h1>
