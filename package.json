@@ -16,7 +16,9 @@
     "build": "cross-env WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot",
     "lint": "eslint --config eslintrc.js --ext .js,.vue .",
-    "lint-fix": "npm run lint -- --fix"
+    "lint-fix": "npm run lint -- --fix",
+    "wp-build": "wp-scripts build",
+    "wp-start": "wp-scripts start"
   },
   "dependencies": {
     "@popperjs/core": "^2.4.4",
@@ -122,6 +124,7 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^2.11.2",
     "webpack-merge": "^4.2.2",
-    "wp-vue-i18n": "^1.1.4"
+    "wp-vue-i18n": "^1.1.4",
+    "@wordpress/scripts": "^27.0.0"
   }
 }
