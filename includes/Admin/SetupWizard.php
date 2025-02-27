@@ -839,7 +839,7 @@ class SetupWizard {
                     <tr>
                         <th scope="row"><label for="gen_financial_month"><?php echo esc_html( $day ); ?></label></th>
                         <td>
-                            <?php wp_kses_post( erp_html_form_input( [
+                            <?php ( erp_html_form_input( [
                                 'name'     => 'day[' . $key . ']',
                                 'value'    => $working_days[ $key ],
                                 'type'     => 'select',

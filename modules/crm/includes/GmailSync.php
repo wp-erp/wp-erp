@@ -77,7 +77,7 @@ class GmailSync {
     }
 
     public function update_profile() {
-        $profile = $this->gmail->users->getProfile( $this->userid );
+        $profile = @$this->gmail->users->getProfile( $this->userid );
         $this->update_historyid( $profile->getHistoryId() );
         $this->set_inbound_email( $profile->getEmailAddress() );
 
