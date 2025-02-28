@@ -31,9 +31,6 @@ class SetupWizard {
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ] );
         }
-
-
-        add_action( 'admin_menu', [ $this,'unadorned_announcement_bar_settings_page'] );
     }
 
     /**
