@@ -1,0 +1,293 @@
+/**
+ * ERP Onboarding Styles
+ */
+
+/* Reset & Base Styles */
+.erp-onboarding-container * {
+    box-sizing: border-box;
+  }
+  
+  .erp-onboarding-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: #444;
+    line-height: 1.5;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  /* Header */
+  .erp-onboarding-header {
+    background: #23282d;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .erp-onboarding-header h1 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 500;
+  }
+  
+  .erp-onboarding-logo {
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  /* Progress Bar */
+  .erp-onboarding-progress {
+    height: 6px;
+    background: #e5e5e5;
+    position: relative;
+  }
+  
+  .erp-onboarding-progress-bar {
+    height: 100%;
+    background: #0073aa;
+    transition: width 0.3s ease;
+  }
+  
+  /* Content Layout */
+  .erp-onboarding-content {
+    display: flex;
+    min-height: 500px;
+  }
+  
+  /* Sidebar */
+  .erp-onboarding-sidebar {
+    width: 280px;
+    background: #f7f7f7;
+    border-right: 1px solid #e1e1e1;
+    padding: 20px 0;
+  }
+  
+  .erp-step {
+    padding: 12px 20px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .erp-step.active {
+    background: #f0f0f0;
+    font-weight: 600;
+  }
+  
+  .erp-step.completed .erp-step-number {
+    background: #0073aa;
+    color: #fff;
+  }
+  
+  .erp-step.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .erp-step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e1e1e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 12px;
+  }
+  
+  .erp-step-title {
+    flex: 1;
+  }
+  
+  /* Main Content Area */
+  .erp-onboarding-main {
+    flex: 1;
+    padding: 30px;
+    background: #fff;
+  }
+  
+  /* Page Styles */
+  .erp-onboarding-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .page-header {
+    margin-bottom: 30px;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    color: #23282d;
+  }
+  
+  .subtitle {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .page-content {
+    flex: 1;
+  }
+  
+  .page-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e1e1;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Welcome Page */
+  .welcome-card {
+    display: flex;
+    background: #f9f9f9;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-image {
+    width: 200px;
+    object-fit: cover;
+    background: #e5f2f8;
+    padding: 20px;
+  }
+  
+  .welcome-text {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .welcome-text h2 {
+    margin-top: 0;
+    color: #0073aa;
+  }
+  
+  .welcome-text ul {
+    margin-left: 20px;
+  }
+  
+  .welcome-text li {
+    margin-bottom: 8px;
+  }
+  
+  /* Form Elements */
+  .form-row {
+    display: flex;
+    margin: 0 -10px 15px;
+  }
+  
+  .form-group {
+    flex: 1;
+    margin: 0 10px 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+  
+  .error {
+    border-color: #dc3232;
+  }
+  
+  .error-message {
+    color: #dc3232;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  /* Button Styles */
+  .button {
+    background: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #555;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  
+  .button:hover {
+    background: #f0f0f0;
+  }
+  
+  .button-primary {
+    background: #0073aa;
+    border-color: #006799;
+    color: #fff;
+  }
+  
+  .button-primary:hover {
+    background: #006799;
+    color: #fff;
+  }
+  
+  .button-large {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  
+  /* Footer */
+  .erp-onboarding-footer {
+    background: #f7f7f7;
+    padding: 15px 20px;
+    border-top: 1px solid #e1e1e1;
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+  }
+  
+  /* Responsive Adjustments */
+  @media screen and (max-width: 782px) {
+    .erp-onboarding-content {
+      flex-direction: column;
+    }
+    
+    .erp-onboarding-sidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #e1e1e1;
+    }
+    
+    .welcome-card {
+      flex-direction: column;
+    }
+    
+    .welcome-image {
+      width: 100%;
+      max-height: 200px;
+    }
+    
+    .form-row {
+      flex-direction: column;
+    }
+  }
