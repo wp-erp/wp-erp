@@ -32,7 +32,7 @@ class SetupWizard {
             add_action( 'admin_init', [ $this, 'setup_wizard' ] );
         }
 
-      
+
         add_action( 'admin_enqueue_scripts', 'unadorned_announcement_bar_settings_page_enqueue_style_script' );
 
         add_action( 'admin_menu', [ $this,'unadorned_announcement_bar_settings_page'] );
@@ -66,15 +66,15 @@ class SetupWizard {
         if ( 'settings_page_unadorned-announcement-bar' !== $admin_page ) {
             return;
         }
-    
+
         $asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
-    
+
         if ( ! file_exists( $asset_file ) ) {
             return;
         }
-    
+
         $asset = include $asset_file;
-    
+
         wp_enqueue_script(
             'unadorned-announcement-bar-script',
             plugins_url( 'build/index.js', __FILE__ ),
@@ -150,14 +150,15 @@ class SetupWizard {
 
         wp_register_script( 'erp-select2', WPERP_ASSETS . '/vendor/select2/select2.full.min.js', false, false, true );
         wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2' ], gmdate( 'Ymd' ), true );
-
+        // This script enqueues the compiled React app
+        wp_enqueue_style( 'erp-onboarding', ( WPERP_URL ) . '/modules/onboarding/assets/js/admin.css', array(), WPERP_VERSION );
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
             call_user_func( $this->steps[ $this->step ]['handler'] );
         }
 
         ob_start();
         $this->setup_wizard_header();
-        $this->setup_wizard_steps();
+        // $this->setup_wizard_steps();
         $this->setup_wizard_content();
         $this->setup_wizard_footer();
         exit;
@@ -180,9 +181,12 @@ class SetupWizard {
             <meta name="viewport" content="width=device-width" />
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title><?php esc_html_e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
-            <?php wp_print_scripts( 'erp-setup' ); ?>
-            <?php do_action( 'admin_print_styles' ); ?>
-            <?php // do_action( 'admin_head' ); ?>
+            <?php
+                wp_print_scripts( 'erp-setup' );
+                wp_enqueue_emoji_styles();
+                do_action( 'admin_print_styles' );
+            ?>
+            <script src="<?php echo ( WPERP_URL ) . '/modules/onboarding/assets/js/admin.js' ?>"></script>
         </head>
         <body class="erp-setup wp-core-ui">
             <h1 class="erp-logo"><a href="http://wperp.com/"><?php esc_html_e( 'WP ERP', 'erp' ); ?></a></h1>
@@ -228,7 +232,8 @@ class SetupWizard {
      */
     public function setup_wizard_content() {
         echo '<div class="erp-setup-content">';
-        call_user_func( $this->steps[ $this->step ]['view'] );
+        // call_user_func( $this->steps[ $this->step ]['view'] );
+            echo  '<div id="erp-onboarding-app"></div>';
         echo '</div>';
     }
 
