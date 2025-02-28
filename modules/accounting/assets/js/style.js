@@ -1,10 +1,2 @@
-pluginWebpack([5],{
-
-/***/ 810:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ })
-
-},[810]);
+pluginWebpack([5],{790:function(n,c){}},[790]);
+//# sourceMappingURL=style.js.map
