@@ -4,6 +4,7 @@ config.codekit
 # Composer
 /vendor/
 node_modules
+node_modules copy
 build
 .DS_Store
 nbproject
