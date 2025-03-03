@@ -525,13 +525,18 @@ class Employee {
             ! empty( $work['reporting_to'] ) ||
             ! empty( $work['location'] )
         ) {
-            $this->update_job_info( [
+           $job_history =  $this->update_job_info( [
                 'date'         => $work['hiring_date'],
                 'designation'  => isset( $work['designation'] ) ? $work['designation'] : '',
                 'department'   => isset( $work['department'] ) ? $work['department'] : '',
                 'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
                 'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
             ] );
+
+            // // This job history id will be used for update reporting to employee in while importing employee csv
+            if ( ! empty( $GLOBALS['job_info'] ) ) {
+                $GLOBALS['job_info'][$user_id]['id'] = $job_history['id'];
+            }
         }
 
         $data['personal']['user_email'] = $user_email;

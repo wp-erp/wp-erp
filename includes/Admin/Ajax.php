@@ -229,6 +229,8 @@ class Ajax {
                 'postal_code',
             ],
         ];
+        $reporting_to = []; // for mapping reporting to after import employee
+        $GLOBALS['job_info'] = []; // for processing job history after import employee
 
         foreach ( $csv_data as $line ) {
 
@@ -293,6 +295,8 @@ class Ajax {
                                     } else {
                                         $line_data['work'][ $key ] = array_search( $line[ $value ], $locations, true );
                                     }
+                                }elseif( $key === 'reporting_to' && $line[ $value ] !== '' ) {
+                                    $line_data['work'][ $key ] = $line[ $value ];
                                 } else {
                                     $line_data['work'][ $key ] = $line[ $value ];
                                 }
@@ -321,6 +325,18 @@ class Ajax {
                 }
 
                 $item_insert_id = erp_hr_employee_create( $line_data );
+                
+                if ( ! is_wp_error( $item_insert_id ) && ! empty( $line_data['work']['reporting_to'] ) ) {
+                    /**
+                     * Add reporting to array for processing job history after import employee
+                     */
+                    $reporting_to[] = [
+                        'user_id'      => $item_insert_id,
+                        'reporting_to' => $line_data['work']['reporting_to'],
+                    ];
+
+                    $GLOBALS['job_info'][$item_insert_id]['user_id'] = $item_insert_id;
+                }
 
                 if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
                     continue;
@@ -381,7 +397,68 @@ class Ajax {
 
             ++ $count;
         }
+        $this->map_reporting_to_employee( $reporting_to );
+        $this->update_reporting_history( $GLOBALS['job_info'] );
         return $count;
+    }
+
+    /**
+     * Map reporting to employee by email
+     * 
+     * @param array $reporting_to
+     *
+     * @return void
+     */
+    function map_reporting_to_employee( $reporting_to ) {
+        global $wpdb;
+    
+        foreach ( $reporting_to as $value ) {
+            if ( ! empty( $value['reporting_to'] ) && ! empty( $value['user_id'] ) ) {
+                $reporting_employee = get_user_by( 'email', $value['reporting_to'] );
+
+                if ( $reporting_employee ) {
+                    $reporting_employee_id = $reporting_employee->ID;
+    
+                    
+                     // Update reporting to employee id in erp_hr_employees table
+                    $wpdb->query(
+                        $wpdb->prepare(
+                            "UPDATE {$wpdb->prefix}erp_hr_employees SET reporting_to = %d WHERE user_id = %d",
+                            $reporting_employee_id,
+                            $value['user_id']
+                        )
+                    );
+                    /**
+                     * Add reporting to employee id to job history array for processing job history after import employee
+                     */
+                    $GLOBALS['job_info'][$value['user_id']][ 'reporting_to'] = $reporting_employee_id;
+                }
+            }
+        }
+    }
+
+    /**
+     * Update reporting history by history id
+     *
+     * @param array $job_history
+     *
+     * @return void
+     */
+    function update_reporting_history($job_history) {
+        global $wpdb;
+        foreach ( $job_history as $value ) {
+            if ( ! empty( $value["id"] ) ) {
+                $wpdb->query(
+                    $wpdb->prepare(
+                        "UPDATE {$wpdb->prefix}erp_hr_employee_history SET data = %d WHERE id = %d",
+                        $value['reporting_to'],
+                        $value["id"]
+
+                    )
+                );
+            }
+        }
+        unset( $GLOBALS['job_info']  );
     }
 
     /**
