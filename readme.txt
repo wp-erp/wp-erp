@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 1.13.4
+Stable tag: 1.14.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,18 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.14.0 -> March 05, 2025 =
+* 🪝 [Added] Dynamic department and designation creation during CSV import with employee allocation
+* 🪝 [Added] Sample employee data in CSV file with standardized format
+* 🪝 [Added] Employee ID support for export and import functionality
+* 🛠️ [Improved] Enhanced readability of exported employee CSV data
+* 🛠️ [Improved] Refined employee export and import process
+* 🛠️ [Improved] Updated export format for better compatibility
+* 🐞 [Fixed] Resolved CSV import issues for employee data
+* 🐞 [Fixed] Eliminated deprecated error warnings during onboarding
+* 🐞 [Fixed] Addressed authorization security vulnerability in WP ERP (Subscriber+) for company location deletion
+* 🐞 [Fixed] Corrected text domains and translation inconsistencies
 
 = v1.13.4 -> January 08, 2025 =
 * 🪝 [Added] New Column "Requested On" Leave Request Table.
