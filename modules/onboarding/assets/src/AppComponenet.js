@@ -5,9 +5,8 @@ import App from './components/App';
 
 export default function AppComponenet() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/">
             <div>
-                <h1>Hello Onboarding</h1>
                 <App />
             </div>
         </BrowserRouter>
