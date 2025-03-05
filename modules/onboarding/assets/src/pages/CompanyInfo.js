@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * CompanyInfo Page Component
@@ -6,6 +7,10 @@ import React, { useState } from 'react';
  * Form for collecting company information as part of the onboarding process
  */
 const CompanyInfo = ({ onComplete }) => {
+
+  const navigate = useNavigate();
+
+  
   // State for form fields
   const [formData, setFormData] = useState({
     name: '',
@@ -74,14 +79,14 @@ const CompanyInfo = ({ onComplete }) => {
       console.log('Submitted company data:', formData);
       
       // Move to next step
-      onComplete();
+      navigate('?page=erp-setup&step=module');
     }
   };
   
   return (
     <div className="erp-onboarding-page company-info-page">
       <div className="page-header">
-        <h1>Company Information</h1>
+        <h1>Com beshi Information</h1>
         <p className="subtitle">Tell us about your business to get started</p>
       </div>
       
