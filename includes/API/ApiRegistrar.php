@@ -27,12 +27,13 @@ class ApiRegistrar {
     public function register_rest_routes() {
         $controllers = [
             '\WeDevs\ERP\API\UtilityController',
-            
         ];
-        if(!is_admin()) {
-            $controllers[] = '\WeDevs\ERP\Onboarding\API\OnboardingController';
-            $controllers[] ='\WeDevs\ERP\Onboarding\API\LeaveManagementController';
-        }
+
+        $controllers[] = '\WeDevs\ERP\Onboarding\API\OnboardingController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\DepartmentController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\DesignationController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\LeaveManagementController';
+
 
         if ( erp_is_module_active( 'CRM' ) ) {
             $controllers = array_merge( $controllers, [
