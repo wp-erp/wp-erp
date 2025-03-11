@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import App from './components/App';
 
 export default function AppComponenet() {
     return (
-        <BrowserRouter basename="/">
-            <div>
+        <HashRouter>
+            <div className="erp-onboarding-container">
                 <App />
             </div>
-        </BrowserRouter>
+        </HashRouter>
     );
 }

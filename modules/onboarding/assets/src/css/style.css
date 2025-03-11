@@ -291,3 +291,163 @@
       flex-direction: column;
     }
   }
+
+/* Company Details Page */
+.company-details .form-group {
+  margin-bottom: 20px;
+}
+
+.company-details .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.company-details input,
+.company-details select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Department and Designation Page */
+.department-designation .tabs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.department-designation .tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.department-designation .tab.active {
+  border-color: #2271b1;
+  background: #f0f6fc;
+}
+
+.department-designation .add-new {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.department-designation .items-list {
+  display: grid;
+  gap: 10px;
+}
+
+.department-designation .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.department-designation .delete-button {
+  border: none;
+  background: none;
+  color: #dc3232;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Common Styles */
+.page-header {
+  margin-bottom: 30px;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.error-message {
+  color: #dc3232;
+  margin: 10px 0;
+}
+
+.form-actions {
+  margin-top: 30px;
+}
+
+.required {
+  color: #dc3232;
+  margin-left: 4px;
+}
+
+/* Import Employee Page */
+.import-employee .upload-area {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+.import-employee .upload-area:hover {
+  border-color: #2271b1;
+  background: #f0f6fc;
+}
+
+.import-employee .upload-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.import-employee .download-sample {
+  display: block;
+  margin: 20px auto 0;
+  color: #2271b1;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.import-employee .mapping-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.import-employee .mapping-table {
+  margin: 20px 0;
+}
+
+.import-employee .mapping-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.import-employee .mapping-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.import-employee .success-message {
+  text-align: center;
+  padding: 40px;
+}
+
+.import-employee .success-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}

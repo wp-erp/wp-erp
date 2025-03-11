@@ -7,7 +7,7 @@ use WP_REST_Server;
 use WP_Error;
 
 class DesignationController extends WP_REST_Controller {
-    
+
     public function __construct() {
         $this->namespace = 'erp/v1';
         $this->rest_base = 'onboarding/designations';
@@ -18,12 +18,12 @@ class DesignationController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_designations'],
-                'permission_callback' => [$this, 'get_permissions_check'],
+                // 'permission_callback' => [$this, 'get_permissions_check'],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'create_designation'],
-                'permission_callback' => [$this, 'update_permissions_check'],
+                // 'permission_callback' => [$this, 'update_permissions_check'],
                 'args'                => $this->get_designation_args(),
             ],
         ]);
@@ -32,12 +32,12 @@ class DesignationController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_designation'],
-                'permission_callback' => [$this, 'get_permissions_check'],
+                // 'permission_callback' => [$this, 'get_permissions_check'],
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [$this, 'delete_designation'],
-                'permission_callback' => [$this, 'update_permissions_check'],
+                // 'permission_callback' => [$this, 'update_permissions_check'],
             ],
         ]);
     }
@@ -57,7 +57,7 @@ class DesignationController extends WP_REST_Controller {
 
     public function get_designation($request) {
         $designation = erp_hr_get_designation($request['id']);
-        
+
         if (!$designation) {
             return new WP_Error('not_found', 'Designation not found', ['status' => 404]);
         }
@@ -78,8 +78,8 @@ class DesignationController extends WP_REST_Controller {
     }
 
     public function delete_designation($request) {
-        
-         // first check this Designation exist 
+
+         // first check this Designation exist
          $designation = \WeDevs\ERP\HRM\Models\Designation::find( $request['id'] );
          if ( ! $designation ) {
              return new WP_Error('not_found', 'Designation not found', ['status' => 404]);
