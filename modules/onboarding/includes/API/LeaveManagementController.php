@@ -7,10 +7,10 @@ use WP_REST_Server;
 use WP_Error;
 
 class LeaveManagementController extends WP_REST_Controller {
-    
+
     public function __construct() {
         $this->namespace = 'erp/v1';
-        $this->rest_base = 'onboarding/leave-years';        
+        $this->rest_base = 'onboarding/leave-years';
     }
 
     public function register_routes() {
@@ -65,10 +65,10 @@ class LeaveManagementController extends WP_REST_Controller {
 
     public function get_leave_year($request) {
         global $wpdb;
-        
-        $table_name = $wpdb->prefix . 'erp_hr_leave_years';
+
+        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
         $id = (int) $request['id'];
-        
+
         $result = $wpdb->get_row(
             $wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", $id),
             ARRAY_A
@@ -81,23 +81,46 @@ class LeaveManagementController extends WP_REST_Controller {
         return rest_ensure_response($result);
     }
 
-    public function create_leave_year($request) {
+    public function xcreate_leave_year($request) {
         global $wpdb;
-        
+
         $table_name = $wpdb->prefix . 'erp_hr_financial_years';
-        
-        $data = [
-            'year'       => sanitize_text_field($request['year']),
-            'start_date' => sanitize_text_field($request['start_date']),
-            'end_date'   => sanitize_text_field($request['end_date']),
-            'created_at' => current_time('mysql'),
-            'updated_at' => current_time('mysql'),
-            'created_by' =>  get_current_user_id(),
-            'updated_by' =>  get_current_user_id(),
-        ];
+        // return  $request->get_body();
+        // Check if entries already exist for this year
+        $existing = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id FROM {$table_name} WHERE year = %s",
+                sanitize_text_field($request['year'])
+            )
+        );
+
+        if ($existing) {
+            return new WP_Error(
+                'duplicate_entry',
+                'A leave year entry already exists for this year',
+                ['status' => 400]
+            );
+        }
+
+        $years = $request['year'];
+        $start_dates = $request['start_date'];
+        $end_dates = $request['end_date'];
+
+        $data = [];
+        for ($i = 0; $i < count($years); $i++) {
+            $data[] = [
+                'year'       => sanitize_text_field($years[$i]),
+                'start_date' => sanitize_text_field($start_dates[$i]),
+                'end_date'   => sanitize_text_field($end_dates[$i]),
+                'created_at' => current_time('mysql'),
+                'updated_at' => current_time('mysql'),
+                'created_by' => get_current_user_id(),
+                'updated_by' => get_current_user_id(),
+            ];
+        }
 
         $format = ['%s', '%s', '%s', '%s', '%s'];
-        
+
         $inserted = $wpdb->insert($table_name, $data, $format);
 
         if (!$inserted) {
@@ -105,16 +128,241 @@ class LeaveManagementController extends WP_REST_Controller {
         }
 
         $data['id'] = $wpdb->insert_id;
-        
+
         return rest_ensure_response($data);
     }
 
+    public function reate_leave_year($request) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
+
+        // Validate input
+        $years = $request['year'];
+        $start_dates = $request['start_date'];
+        $end_dates = $request['end_date'];
+
+        // Validate input arrays have same length
+        if (
+            !is_array($years) ||
+            !is_array($start_dates) ||
+            !is_array($end_dates) ||
+            count($years) !== count($start_dates) ||
+            count($years) !== count($end_dates)
+        ) {
+            return new WP_Error(
+                'invalid_input',
+                'Invalid input: Years, start dates, and end dates must be arrays of equal length',
+                ['status' => 400]
+            );
+        }
+
+        // Prepare data and check for duplicates
+        $data = [];
+        $duplicate_years = [];
+
+        foreach ($years as $i => $year) {
+            $year = sanitize_text_field($year);
+            $start_date = sanitize_text_field($start_dates[$i]);
+            $end_date = sanitize_text_field($end_dates[$i]);
+
+            // Check if entry already exists for this year
+            $existing = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT id FROM {$table_name} WHERE year = %s",
+                    $year
+                )
+            );
+
+            if ($existing) {
+                $duplicate_years[] = $year;
+                continue; // Skip this entry
+            }
+
+            $data[] = [
+                'year'       => $year,
+                'start_date' => $start_date,
+                'end_date'   => $end_date,
+                'created_at' => current_time('mysql'),
+                'updated_at' => current_time('mysql'),
+                'created_by' => get_current_user_id(),
+                'updated_by' => get_current_user_id(),
+            ];
+        }
+
+        // If no valid entries, return error
+        if (empty($data)) {
+            return new WP_Error(
+                'no_valid_entries',
+                'No valid leave year entries could be created. All years may already exist.',
+                [
+                    'status' => 400,
+                    'duplicate_years' => $duplicate_years
+                ]
+            );
+        }
+
+        // Batch insert
+        $format = ['%s', '%s', '%s', '%s', '%s', '%d', '%d'];
+        $inserted = $wpdb->insert($table_name, $data, $format);
+
+        if (!$inserted) {
+            return new WP_Error('insert_error', 'Could not create any leave years', ['status' => 500]);
+        }
+
+        // Prepare response
+        $response = [
+            'created_entries' => $data,
+            'skipped_years' => $duplicate_years
+        ];
+
+        return rest_ensure_response($response);
+    }
+
+    public function create_leave_year($request) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
+
+        // multiple entries from request
+        $years = $request['year'];
+        $start_dates = $request['start_date'];
+        $end_dates = $request['end_date'];
+
+        // Validate input arrays have same length
+        if (
+            !is_array($years) ||
+            !is_array($start_dates) ||
+            !is_array($end_dates) ||
+            count($years) !== count($start_dates) ||
+            count($years) !== count($end_dates)
+        ) {
+            return new WP_Error(
+                'invalid_input',
+                'Invalid input: Years, start dates, and end dates must be arrays of equal length',
+                ['status' => 400]
+            );
+        }
+
+        // Prepare data and check for duplicates
+        $data = [];
+        $duplicate_years = [];
+        $financial_year_ids = [];
+
+
+        foreach ($years as $i => $year) {
+            $year = sanitize_text_field($year);
+            $start_date = sanitize_text_field($start_dates[$i]);
+            $end_date = sanitize_text_field($end_dates[$i]);
+
+            // Check if entry already exists for this year
+            $existing = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT id FROM {$table_name} WHERE fy_name = %s",
+                    $year
+                )
+            );
+
+            if ($existing) {
+                $duplicate_years[] = $year;
+                continue; // Skip this entry
+            }
+
+            $data[] = [
+                'fy_name'      => sanitize_text_field( wp_unslash( $year ) ),
+                'start_date' => strtotime( sanitize_text_field( wp_unslash( $start_date ) ) ),
+                'end_date'   => strtotime( sanitize_text_field( wp_unslash( $end_date ) ) ),
+                'created_at' => gmdate( 'Y-m-d' ),
+                'created_by' => get_current_user_id(),
+            ];
+        }
+
+
+        if (empty($data)) {
+            return new WP_Error(
+                'no_valid_entries',
+                'No valid leave year entries could be created. All years may already exist.',
+                [
+                    'status' => 400,
+                    'duplicate_years' => $duplicate_years
+                ]
+            );
+        }
+
+        $format = ['%s', '%s', '%s', '%s', '%d'];
+        foreach ($data as $row) {
+            $inserted = $wpdb->insert($table_name, $row, $format );
+            if (!$inserted) {
+                return new WP_Error('insert_error', 'Could not create some leave years', ['status' => 500]);
+            }
+            $financial_year_ids[] = $wpdb->insert_id;
+        }
+
+        if($request['generate_default_leave_policies'] == 'yes') {
+            $this->generate_prefault_leave_policies( $financial_year_ids );
+        }
+
+
+        $response = [
+            'created_entries' => $data,
+            'skipped_years' => $duplicate_years
+        ];
+
+        return rest_ensure_response($response);
+    }
+
+    function generate_prefault_leave_policies( $financial_year_ids ) {
+       $casual_leave_id = erp_hr_insert_leave_policy_name( ['name' => 'Casual Leave']);
+       $sick_leave_id = erp_hr_insert_leave_policy_name( ['name' => 'Sick Leave']);
+
+       foreach ( $financial_year_ids as $f_year ) {
+
+            $data = array(
+                    'leave_id'            => $casual_leave_id,
+                    'employee_type'       => '-1',
+                    'description'         => 'Casual Leave',
+                    'days'                => 14,
+                    'color'               => '#009682',
+                    'department_id'       => '-1',
+                    'designation_id'      => '-1',
+                    'location_id'         => '-1',
+                    'gender'              => '-1',
+                    'marital'             => '-1',
+                    'f_year'              => $f_year,
+                    'applicable_from'     => 0,
+                    'apply_for_new_users' => 0,
+                );
+            erp_hr_leave_insert_policy( $data );
+         }
+
+        foreach ( $financial_year_ids as $f_year ) {
+            $data = array(
+                'leave_id'            => $sick_leave_id,
+                'employee_type'       => '-1',
+                'description'         => 'Sick Leave',
+                'days'                => 14,
+                'color'               => '#c90000',
+                'department_id'       => '-1',
+                'designation_id'      => '-1',
+                'location_id'         => '-1',
+                'gender'              => '-1',
+                'marital'             => '-1',
+                'f_year'              => $f_year,
+                'applicable_from'     => 0,
+                'apply_for_new_users' => 0,
+            );
+            erp_hr_leave_insert_policy( $data );
+        }
+
+    }
+
+
     public function update_leave_year($request) {
         global $wpdb;
-        
-        $table_name = $wpdb->prefix . 'erp_hr_leave_years';
+
+        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
         $id = (int) $request['id'];
-        
+
         $data = [
             'year'       => sanitize_text_field($request['year']),
             'start_date' => sanitize_text_field($request['start_date']),
@@ -125,7 +373,7 @@ class LeaveManagementController extends WP_REST_Controller {
         $format = ['%s', '%s', '%s', '%s'];
         $where = ['id' => $id];
         $where_format = ['%d'];
-        
+
         $updated = $wpdb->update($table_name, $data, $where, $format, $where_format);
 
         if ($updated === false) {
@@ -133,16 +381,16 @@ class LeaveManagementController extends WP_REST_Controller {
         }
 
         $data['id'] = $id;
-        
+
         return rest_ensure_response($data);
     }
 
     public function delete_leave_year($request) {
         global $wpdb;
-        
-        $table_name = $wpdb->prefix . 'erp_hr_leave_years';
+
+        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
         $id = (int) $request['id'];
-        
+
         $deleted = $wpdb->delete(
             $table_name,
             ['id' => $id],
@@ -158,21 +406,19 @@ class LeaveManagementController extends WP_REST_Controller {
 
     private function get_leave_year_args() {
         return [
-            'year' => [
-                'required'          => true,
-                'type'             => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'start_date' => [
-                'required'          => true,
-                'type'             => 'string',
-                'format'           => 'date',
-            ],
-            'end_date' => [
-                'required'          => true,
-                'type'             => 'string',
-                'format'           => 'date',
-            ],
+            // 'year' => [
+            //     'required'          => true,
+            //     'type'             => 'string',
+            //     'sanitize_callback' => 'sanitize_text_field',
+            // ],
+            // 'start_date' => [
+            //     'required'          => true,
+            //     'type'             => 'string',
+            // ],
+            // 'end_date' => [
+            //     'required'          => true,
+            //     'type'             => 'string',
+            // ],
         ];
     }
 }

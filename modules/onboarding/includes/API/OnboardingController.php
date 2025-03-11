@@ -9,7 +9,7 @@ class OnboardingController extends WP_REST_Controller {
     
     public function __construct() {
         $this->namespace = 'erp/v1';
-        $this->rest_base = 'onboarding';
+        $this->rest_base = 'onboarding/';
     }
 
     public function register_routes() {
@@ -28,63 +28,7 @@ class OnboardingController extends WP_REST_Controller {
             ],
         ]);
 
-        // Departments API
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/departments', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [$this, 'get_departments'],
-                'permission_callback' => [$this, 'get_permissions_check'],
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [$this, 'create_department'],
-                'permission_callback' => [$this, 'update_permissions_check'],
-                'args'                => $this->get_department_args(),
-            ],
-        ]);
 
-        // Single Department API
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/departments/(?P<id>[\d]+)', [
-            // [
-            //     'methods'             => WP_REST_Server::READABLE,
-            //     'callback'            => [$this, 'get_department'],
-            //     'permission_callback' => [$this, 'get_permissions_check'],
-            // ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [$this, 'delete_department'],
-                'permission_callback' => [$this, 'update_permissions_check'],
-            ],
-        ]);
-
-        // Designations API
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/designations', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [$this, 'get_designations'],
-                'permission_callback' => [$this, 'get_permissions_check'],
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [$this, 'create_designation'],
-                'permission_callback' => [$this, 'update_permissions_check'],
-                'args'                => $this->get_designation_args(),
-            ],
-        ]);
-
-        // Single Designation API
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/designations/(?P<id>[\d]+)', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [$this, 'get_designation'],
-                'permission_callback' => [$this, 'get_permissions_check'],
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [$this, 'delete_designation'],
-                'permission_callback' => [$this, 'update_permissions_check'],
-            ],
-        ]);
     }
 
     // Permission checks
