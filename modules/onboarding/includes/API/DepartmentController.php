@@ -7,7 +7,7 @@ use WP_REST_Server;
 use WP_Error;
 
 class DepartmentController extends WP_REST_Controller {
-    
+
     public function __construct() {
         $this->namespace = 'erp/v1';
         $this->rest_base = 'onboarding/departments';
@@ -18,12 +18,12 @@ class DepartmentController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_departments'],
-                'permission_callback' => [$this, 'get_permissions_check'],
+                // 'permission_callback' => [$this, 'get_permissions_check'],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'create_department'],
-                'permission_callback' => [$this, 'update_permissions_check'],
+                // 'permission_callback' => [$this, 'update_permissions_check'],
                 'args'                => $this->get_department_args(),
             ],
         ]);
@@ -32,7 +32,7 @@ class DepartmentController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [$this, 'delete_department'],
-                'permission_callback' => [$this, 'update_permissions_check'],
+                // 'permission_callback' => [$this, 'update_permissions_check'],
             ],
         ]);
     }
@@ -66,7 +66,7 @@ class DepartmentController extends WP_REST_Controller {
     }
 
     public function delete_department($request) {
-        // first check this department exist 
+        // first check this department exist
         $resp = \WeDevs\ERP\HRM\Models\Department::find( $request['id'] );
         if ( ! $resp ) {
             return new WP_Error('not_found', 'Department not found', ['status' => 404]);
@@ -78,7 +78,7 @@ class DepartmentController extends WP_REST_Controller {
         if (!$deleted) {
             return new WP_Error('not_deleted', 'Department could not be deleted', ['status' => 500]);
         }
-        
+
         $departments = new \WeDevs\ERP\HRM\Models\Department();
         $departments = $departments->all(['id', 'title as name']);
 

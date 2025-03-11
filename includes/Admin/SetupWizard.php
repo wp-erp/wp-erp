@@ -144,7 +144,6 @@ class SetupWizard {
             <script src="<?php echo ( WPERP_URL ) . '/modules/onboarding/assets/js/admin.js' ?>"></script>
         </head>
         <body class="erp-setup wp-core-ui">
-            <h1 class="erp-logo"><a href="http://wperp.com/"><?php esc_html_e( 'WP ERP', 'erp' ); ?></a></h1>
         <?php
     }
 

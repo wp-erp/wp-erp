@@ -6,10 +6,10 @@ use WP_REST_Server;
 use WP_Error;
 
 class OnboardingController extends WP_REST_Controller {
-    
+
     public function __construct() {
         $this->namespace = 'erp/v1';
-        $this->rest_base = 'onboarding/';
+        $this->rest_base = 'onboarding';
     }
 
     public function register_routes() {
@@ -42,10 +42,10 @@ class OnboardingController extends WP_REST_Controller {
 
     // Company Settings Methods
     public function get_company_settings($request) {
-        
+
         $company_name = get_option('_erp_company', [])['name'];
         $erp_settings_general = get_option('erp_settings_general', []);
-        
+
         $response_setting = [];
         $response_setting['company_name'] = $company_name;
         $response_setting['company_start'] = $erp_settings_general['gen_com_start'];
@@ -73,7 +73,7 @@ class OnboardingController extends WP_REST_Controller {
 
     public function get_department($request) {
         $department = erp_hr_get_department($request['id']);
-        
+
         if (!$department) {
             return new WP_Error('not_found', 'Department not found', ['status' => 404]);
         }
@@ -111,7 +111,7 @@ class OnboardingController extends WP_REST_Controller {
 
     public function get_designation($request) {
         $designation = erp_hr_get_designation($request['id']);
-        
+
         if (!$designation) {
             return new WP_Error('not_found', 'Designation not found', ['status' => 404]);
         }
