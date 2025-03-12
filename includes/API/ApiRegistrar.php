@@ -33,6 +33,7 @@ class ApiRegistrar {
         $controllers[] ='\WeDevs\ERP\Onboarding\API\DepartmentController';
         $controllers[] ='\WeDevs\ERP\Onboarding\API\DesignationController';
         $controllers[] ='\WeDevs\ERP\Onboarding\API\LeaveManagementController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\WorkDaysController';
 
 
         if ( erp_is_module_active( 'CRM' ) ) {

@@ -11,11 +11,8 @@ import ImportEmployee from './pages/ImportEmployee';
 document.addEventListener('DOMContentLoaded', function() {
   const container = document.getElementById('erp-onboarding-app');
   // const import_component = document.getElementById('csv_import_react');
-  
+
   if (container) {
     ReactDOM.render(<AppComponenet />, container);
-  }
-  if (import_component) {
-    // ReactDOM.render(<ImportEmployee />, container);
   }
 });

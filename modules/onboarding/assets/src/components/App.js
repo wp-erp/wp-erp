@@ -11,6 +11,8 @@ import ProgressBar from './ProgressBar';
 import CompanyDetails from '../pages/CompanyDetails';
 import DepartmentDesignation from '../pages/DepartmentDesignation';
 import ImportEmployee from '../pages/ImportEmployee';
+import LeaveManagement from '../pages/LeaveManagement';
+import WorkdaySetup from '../pages/WorkdaySetup';
 
 
 
@@ -24,6 +26,8 @@ const App = () => {
           <Route path="/" element={<Navigate to="/company-details" />} />
           <Route path="/company-details" element={<CompanyDetails />} />
           <Route path="/department-designation" element={<DepartmentDesignation />} />
+          <Route path="/leave" element={<LeaveManagement />} />
+          <Route path="/workdays" element={<WorkdaySetup />} />
           <Route path="/import-employee" element={<ImportEmployee />} />
         </Routes>
       </div>

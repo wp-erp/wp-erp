@@ -21,12 +21,12 @@
   
   /* Header */
   .erp-onboarding-header {
-    background: #23282d;
-    color: #fff;
-    padding: 15px 20px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
   .erp-onboarding-header h1 {
@@ -41,15 +41,77 @@
   }
   
   /* Progress Bar */
-  .erp-onboarding-progress {
-    height: 6px;
-    background: #e5e5e5;
-    position: relative;
+  .erp-onboarding-progress-container {
+    padding: 2rem;
+    background: #f8f9fa;
   }
-  
+
+  .erp-onboarding-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    flex: 1;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .step-label {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .step-item.active .step-number {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+  }
+
+  .step-item.active .step-label {
+    color: #2271b1;
+    font-weight: 600;
+  }
+
+  .step-item.completed .step-number {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+  }
+
+  .erp-onboarding-progress {
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: -48px;
+  }
+
   .erp-onboarding-progress-bar {
     height: 100%;
-    background: #0073aa;
+    background: #2271b1;
     transition: width 0.3s ease;
   }
   
@@ -141,11 +203,12 @@
   }
   
   .page-actions {
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
     border-top: 1px solid #e1e1e1;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 1rem;
   }
   
   /* Welcome Page */
@@ -224,16 +287,17 @@
   
   /* Button Styles */
   .button {
-    background: #f7f7f7;
-    border: 1px solid #ccc;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    color: #555;
-    padding: 8px 16px;
+    color: #444;
+    padding: 0.75rem 1.5rem;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5;
     text-decoration: none;
     transition: all 0.2s ease;
+    font-weight: 500;
   }
   
   .button:hover {
@@ -241,13 +305,14 @@
   }
   
   .button-primary {
-    background: #0073aa;
-    border-color: #006799;
+    background: #2271b1;
+    border-color: #2271b1;
     color: #fff;
   }
   
   .button-primary:hover {
-    background: #006799;
+    background: #135e96;
+    border-color: #135e96;
     color: #fff;
   }
   
@@ -293,45 +358,155 @@
   }
 
 /* Company Details Page */
+.company-details {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
 .company-details .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .company-details .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 .company-details input,
 .company-details select {
   width: 100%;
-  padding: 10px;
+  padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 14px;
+  color: #444;
+}
+
+.company-details label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 14px;
+  color: #444;
+  font-weight: 500;
+}
+
+/* Department and Designation Page */
+.department-designation {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 /* Department and Designation Page */
 .department-designation .tabs {
   display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.department-designation .selected-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.department-designation .selected-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #E3F0FF;
+  border: 1px solid #2271b1;
+  border-radius: 3px;
+  color: #2271b1;
+  font-size: 13px;
+}
+
+.department-designation .selected-tag .remove {
+  cursor: pointer;
+  color: #2271b1;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.department-designation .selected-tag .remove:hover {
+  color: #135e96;
+}
+
+.department-designation .dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.department-designation .dropdown-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #444;
+  background: white;
+}
+
+.department-designation .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.department-designation .dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.department-designation .dropdown-item:hover {
+  background: #f0f6fc;
 }
 
 .department-designation .tab {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px;
+  padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 4px;
   background: white;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .department-designation .tab.active {
   border-color: #2271b1;
   background: #f0f6fc;
+}
+
+.department-designation .tab-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.department-designation .tab-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  text-align: center;
 }
 
 .department-designation .add-new {
@@ -450,4 +625,299 @@
 .import-employee .success-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+
+/* workdays css */
+
+.erp-workday-setup {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.workday-setup-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.workday-setup-header h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.workdays-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.workday-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.workday-item:last-child {
+  border-bottom: none;
+}
+
+.day-label {
+  width: 120px;
+  font-weight: 500;
+}
+
+.day-settings {
+  display: flex;
+  gap: 10px;
+}
+
+.day-type-button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.day-type-button:hover {
+  background: #f5f5f5;
+}
+
+.day-type-button.active {
+  background: #2271b1;
+  color: white;
+  border-color: #2271b1;
+}
+
+.form-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.button.button-primary {
+  padding: 10px 24px;
+  height: auto;
+  font-size: 15px;
+}
+
+/* end workdays css */
+
+/* leave management css */
+
+.erp-leave-management {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.leave-management-header {
+  margin-bottom: 30px;
+}
+
+.leave-management-header h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.leave-management-header p {
+  color: #666;
+  margin: 0;
+}
+
+.leave-years-container {
+  margin-bottom: 20px;
+}
+
+.leave-year-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.leave-year-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.leave-year-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.remove-year {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 20px;
+}
+
+.input-group {
+  flex: 1;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.input-group input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-leave-year {
+  margin-bottom: 20px;
+}
+
+.add-leave-year i {
+  margin-right: 5px;
+}
+
+.generate-policies-option {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.generate-policies-option label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-actions {
+  margin-top: 30px;
+  text-align: right;
+}
+
+.button-primary {
+  padding: 8px 20px;
+  font-size: 14px;
+}
+
+/* end of leave mamagement css */
+
+.erp-onboarding-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-left .logo {
+  width: 40px;
+  height: 40px;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #23282d;
+}
+
+.header-right .skip-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.erp-onboarding-progress-container {
+  padding: 2rem;
+  background: #f8f9fa;
+}
+
+.erp-onboarding-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  flex: 1;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.step-item.active .step-number {
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+}
+
+.step-item.active .step-label {
+  color: #2271b1;
+  font-weight: 600;
+}
+
+.step-item.completed .step-number {
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+}
+
+.erp-onboarding-progress {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: -48px;
+}
+
+.erp-onboarding-progress-bar {
+  height: 100%;
+  background: #2271b1;
+  transition: width 0.3s ease;
 }

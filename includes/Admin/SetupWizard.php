@@ -100,16 +100,16 @@ class SetupWizard {
         $this->step = isset( $_GET['step'] ) ? sanitize_text_field( wp_unslash( $_GET['step'] ) ) : current( array_keys( $this->steps ) );
         $suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '';
 
-        wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
-        wp_enqueue_style( 'erp-setup', WPERP_ASSETS . '/css/setup.css', [ 'dashicons', 'install' ] );
+        // wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
+        // wp_enqueue_style( 'erp-setup', WPERP_ASSETS . '/css/setup.css', [ 'dashicons', 'install' ] );
 
-        wp_register_script( 'erp-select2', WPERP_ASSETS . '/vendor/select2/select2.full.min.js', false, false, true );
-        wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2' ], gmdate( 'Ymd' ), true );
+        // wp_register_script( 'erp-select2', WPERP_ASSETS . '/vendor/select2/select2.full.min.js', false, false, true );
+        // wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2' ], gmdate( 'Ymd' ), true );
         // This script enqueues the compiled React app
         wp_enqueue_style( 'erp-onboarding', ( WPERP_URL ) . '/modules/onboarding/assets/js/admin.css', array(), WPERP_VERSION );
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
-            call_user_func( $this->steps[ $this->step ]['handler'] );
-        }
+        // if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
+        //     call_user_func( $this->steps[ $this->step ]['handler'] );
+        // }
 
         ob_start();
         $this->setup_wizard_header();
@@ -152,9 +152,7 @@ class SetupWizard {
      */
     public function setup_wizard_footer() {
         ?>
-            <?php if ( 'next_steps' === $this->step ) { ?>
-                <a class="erp-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'erp' ); ?></a>
-            <?php } ?>
+            
             </body>
         </html>
         <?php

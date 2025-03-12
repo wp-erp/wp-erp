@@ -81,144 +81,6 @@ class LeaveManagementController extends WP_REST_Controller {
         return rest_ensure_response($result);
     }
 
-    public function xcreate_leave_year($request) {
-        global $wpdb;
-
-        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
-        // return  $request->get_body();
-        // Check if entries already exist for this year
-        $existing = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT id FROM {$table_name} WHERE year = %s",
-                sanitize_text_field($request['year'])
-            )
-        );
-
-        if ($existing) {
-            return new WP_Error(
-                'duplicate_entry',
-                'A leave year entry already exists for this year',
-                ['status' => 400]
-            );
-        }
-
-        $years = $request['year'];
-        $start_dates = $request['start_date'];
-        $end_dates = $request['end_date'];
-
-        $data = [];
-        for ($i = 0; $i < count($years); $i++) {
-            $data[] = [
-                'year'       => sanitize_text_field($years[$i]),
-                'start_date' => sanitize_text_field($start_dates[$i]),
-                'end_date'   => sanitize_text_field($end_dates[$i]),
-                'created_at' => current_time('mysql'),
-                'updated_at' => current_time('mysql'),
-                'created_by' => get_current_user_id(),
-                'updated_by' => get_current_user_id(),
-            ];
-        }
-
-        $format = ['%s', '%s', '%s', '%s', '%s'];
-
-        $inserted = $wpdb->insert($table_name, $data, $format);
-
-        if (!$inserted) {
-            return new WP_Error('insert_error', 'Could not create leave year', ['status' => 500]);
-        }
-
-        $data['id'] = $wpdb->insert_id;
-
-        return rest_ensure_response($data);
-    }
-
-    public function reate_leave_year($request) {
-        global $wpdb;
-
-        $table_name = $wpdb->prefix . 'erp_hr_financial_years';
-
-        // Validate input
-        $years = $request['year'];
-        $start_dates = $request['start_date'];
-        $end_dates = $request['end_date'];
-
-        // Validate input arrays have same length
-        if (
-            !is_array($years) ||
-            !is_array($start_dates) ||
-            !is_array($end_dates) ||
-            count($years) !== count($start_dates) ||
-            count($years) !== count($end_dates)
-        ) {
-            return new WP_Error(
-                'invalid_input',
-                'Invalid input: Years, start dates, and end dates must be arrays of equal length',
-                ['status' => 400]
-            );
-        }
-
-        // Prepare data and check for duplicates
-        $data = [];
-        $duplicate_years = [];
-
-        foreach ($years as $i => $year) {
-            $year = sanitize_text_field($year);
-            $start_date = sanitize_text_field($start_dates[$i]);
-            $end_date = sanitize_text_field($end_dates[$i]);
-
-            // Check if entry already exists for this year
-            $existing = $wpdb->get_row(
-                $wpdb->prepare(
-                    "SELECT id FROM {$table_name} WHERE year = %s",
-                    $year
-                )
-            );
-
-            if ($existing) {
-                $duplicate_years[] = $year;
-                continue; // Skip this entry
-            }
-
-            $data[] = [
-                'year'       => $year,
-                'start_date' => $start_date,
-                'end_date'   => $end_date,
-                'created_at' => current_time('mysql'),
-                'updated_at' => current_time('mysql'),
-                'created_by' => get_current_user_id(),
-                'updated_by' => get_current_user_id(),
-            ];
-        }
-
-        // If no valid entries, return error
-        if (empty($data)) {
-            return new WP_Error(
-                'no_valid_entries',
-                'No valid leave year entries could be created. All years may already exist.',
-                [
-                    'status' => 400,
-                    'duplicate_years' => $duplicate_years
-                ]
-            );
-        }
-
-        // Batch insert
-        $format = ['%s', '%s', '%s', '%s', '%s', '%d', '%d'];
-        $inserted = $wpdb->insert($table_name, $data, $format);
-
-        if (!$inserted) {
-            return new WP_Error('insert_error', 'Could not create any leave years', ['status' => 500]);
-        }
-
-        // Prepare response
-        $response = [
-            'created_entries' => $data,
-            'skipped_years' => $duplicate_years
-        ];
-
-        return rest_ensure_response($response);
-    }
-
     public function create_leave_year($request) {
         global $wpdb;
 
@@ -230,18 +92,27 @@ class LeaveManagementController extends WP_REST_Controller {
         $end_dates = $request['end_date'];
 
         // Validate input arrays have same length
-        if (
-            !is_array($years) ||
-            !is_array($start_dates) ||
-            !is_array($end_dates) ||
-            count($years) !== count($start_dates) ||
-            count($years) !== count($end_dates)
-        ) {
+        if (!is_array($years) || !is_array($start_dates) || !is_array($end_dates) ||
+            count($years) !== count($start_dates) || count($years) !== count($end_dates)) {
             return new WP_Error(
                 'invalid_input',
                 'Invalid input: Years, start dates, and end dates must be arrays of equal length',
                 ['status' => 400]
             );
+        }
+
+        // Validate date formats and ranges
+        foreach ($years as $i => $year) {
+            $start = strtotime($start_dates[$i]);
+            $end = strtotime($end_dates[$i]);
+            
+            if (!$start || !$end || $start >= $end) {
+                return new WP_Error(
+                    'invalid_dates',
+                    'Invalid date range: Start date must be before end date',
+                    ['status' => 400]
+                );
+            }
         }
 
         // Prepare data and check for duplicates
