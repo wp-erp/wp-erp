@@ -52,11 +52,11 @@ const ImportEmployee = ({ onComplete }) => {
     formData.append('mapping', JSON.stringify(mappingFields));
 
     try {
-      const response = await axios.post('/wp-json/erp/v1/onboarding/import-employees', formData);
-      setSuccess(true);
-      setImportCount(response.data.count || 0);
+      // const response = await axios.post('/wp-json/erp/v1/onboarding/import-employees', formData);
+      // setSuccess(true);
+      // setImportCount(response.data.count || 0);
       setTimeout(() => {
-        navigate('/module-selection');
+        navigate('/leave');
       }, 2000);
     } catch (error) {
       console.error('Import failed:', error);

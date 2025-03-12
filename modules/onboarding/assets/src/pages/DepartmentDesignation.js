@@ -104,37 +104,98 @@ const DepartmentDesignation = ({ onComplete }) => {
 
         <div className="content-area">
           <div className="add-new">
-            <input
-              type="text"
-              value={newItem}
-              onChange={(e) => setNewItem(e.target.value)}
-              placeholder={`Add new ${activeTab.slice(0, -1)}`}
-            />
-            <button 
-              onClick={handleAdd}
-              disabled={loading || !newItem.trim()}
-              className="button button-primary"
-            >
-              Add
-            </button>
+            <div className="department-select">
+              <div className="select-input">
+                <input
+                  type="text"
+                  value={newItem}
+                  onChange={(e) => setNewItem(e.target.value)}
+                  placeholder={`Add new ${activeTab.slice(0, -1)}`}
+                  className="select-search"
+                />
+                <div className="selected-items">
+                  {(activeTab === 'departments' ? departments : designations).map(item => (
+                    <div key={item.id} className="selected-tag">
+                      <span>{item.title || item.name}</span>
+                      <button 
+                        onClick={() => handleDelete(item.id)}
+                        className="tag-remove"
+                        disabled={loading}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <button 
+                onClick={handleAdd}
+                disabled={loading || !newItem.trim()}
+                className="button button-primary add-button"
+              >
+                Add
+              </button>
+            </div>
           </div>
 
           {error && <div className="error-message">{error}</div>}
 
-          <div className="items-list">
-            {(activeTab === 'departments' ? departments : designations).map(item => (
-              <div key={item.id} className="item">
-                <span>{item.title || item.name}</span>
-                <button 
-                  onClick={() => handleDelete(item.id)}
-                  className="delete-button"
-                  disabled={loading}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
+          <style jsx="true">{`
+            .department-select {
+              position: relative;
+              width: 100%;
+            }
+
+            .select-input {
+              border: 1px solid #ddd;
+              border-radius: 4px;
+              padding: 8px;
+              background: white;
+              min-height: 42px;
+            }
+
+            .select-search {
+              border: none;
+              outline: none;
+              width: 100%;
+              padding: 4px;
+              margin-bottom: 8px;
+            }
+
+            .selected-items {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+            }
+
+            .selected-tag {
+              display: flex;
+              align-items: center;
+              background: #e8f0fe;
+              border-radius: 16px;
+              padding: 4px 12px;
+              font-size: 14px;
+              color: #1a73e8;
+            }
+
+            .tag-remove {
+              background: none;
+              border: none;
+              color: #5f6368;
+              margin-left: 8px;
+              cursor: pointer;
+              padding: 0 4px;
+              font-size: 16px;
+            }
+
+            .tag-remove:hover {
+              color: #d93025;
+            }
+
+            .add-button {
+              margin-top: 12px;
+            }
+          `}</style>
         </div>
 
         <div className="page-actions">

@@ -58,7 +58,7 @@ class OnboardingController extends WP_REST_Controller {
         $settings = [
             'company_name'     => sanitize_text_field($request['company_name']),
             'gen_com_start'    => sanitize_text_field($request['company_start']),
-            'gen_financial_month'   => sanitize_text_field($request['financial_year']),
+            'gen_financial_month'   => sanitize_text_field($request['company_financial_month']),
         ];
 
         update_option('erp_company_settings', $settings);
@@ -154,10 +154,9 @@ class OnboardingController extends WP_REST_Controller {
                 'type'             => 'string',
                 'format'           => 'date',
             ],
-            'financial_year' => [
+            'company_financial_month' => [
                 'required'          => true,
                 'type'             => 'string',
-                'format'           => 'date',
             ],
         ];
     }
