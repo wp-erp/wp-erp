@@ -90,18 +90,62 @@ const DepartmentDesignation = ({ onComplete }) => {
             className={`tab ${activeTab === 'departments' ? 'active' : ''}`}
             onClick={() => setActiveTab('departments')}
           >
-            <span className="icon">👥</span>
-            Departments
+            <div className="icon">👥</div>
+            <span>Departments</span>
           </button>
           <button 
             className={`tab ${activeTab === 'designations' ? 'active' : ''}`}
             onClick={() => setActiveTab('designations')}
           >
-            <span className="icon">💼</span>
-            Designations
+            <div className="icon">💼</div>
+            <span>Designations</span>
           </button>
         </div>
 
+        <style jsx="true">{`
+          .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+          }
+
+          .tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 200px;
+            height: 150px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .tab:hover {
+            border-color: #2271b1;
+            background: #f0f6fc;
+          }
+
+          .tab.active {
+            border-color: #2271b1;
+            background: #f0f6fc;
+          }
+
+          .tab .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+          }
+
+          .tab span {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1d2327;
+          }
+        `}</style>
         <div className="content-area">
           <div className="add-new">
             <div className="department-select">
@@ -200,7 +244,7 @@ const DepartmentDesignation = ({ onComplete }) => {
 
         <div className="page-actions">
           <button 
-            onClick={() => navigate('/import-employee')}
+            onClick={() => navigate('/leave')}
             className="button button-primary"
             disabled={loading}
           >
