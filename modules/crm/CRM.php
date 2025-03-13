@@ -122,7 +122,7 @@ class CRM {
         new ContactFormsIntegration();
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
-            include WPERP_CRM_PATH . '/includes/cli/commands.php';
+            include WPERP_CRM_PATH . '/includes/CLI/Commands.php';
         }
     }
 
