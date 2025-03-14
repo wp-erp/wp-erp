@@ -71,7 +71,8 @@ class LeaveRequestsListTable extends \WP_List_Table {
             'cb'          => '<input type="checkbox" />',
             'name'        => __( 'Employee Name', 'erp' ),
             'policy'      => __( 'Policy', 'erp' ),
-            'request'     => __( 'Request', 'erp' ),
+            'request'     => __( 'Request For', 'erp' ),
+            'created_at'  => __( 'Requested On', 'erp' ),
             'available'   => __( 'Available', 'erp' ),
             'status'      => __( 'Status', 'erp' ),
             'reason'      => __( 'Reason', 'erp' ),
@@ -97,6 +98,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
         global $wpdb;
 
         switch ( $column_name ) {
+
+            case 'created_at':
+                return erp_format_date( $item->created_at );
+
             case 'policy':
                 return esc_html( $item->policy_name );
 
@@ -236,9 +241,13 @@ class LeaveRequestsListTable extends \WP_List_Table {
      */
     public function get_sortable_columns() {
         $sortable_columns = [
-            'from_date' => [ 'start_date', false ],
+            'request' => [ 'start_date', false ],
             'to_date'   => [ 'end_date', false ],
             'name'      => [ 'display_name', false ],
+            'status'    => [ 'last_status', true ],
+            'created_at'   => [ 'id', true ],
+            'policy'    => [ 'policy', true ],
+            'available'    => [ 'available', true ],
         ];
 
         return $sortable_columns;
@@ -354,7 +363,7 @@ class LeaveRequestsListTable extends \WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = [ $columns, $hidden, $sortable ];
 
-        $per_page          = 20;
+        $per_page          = 30;
         $current_page      = $this->get_pagenum();
         $offset            = ( $current_page - 1 ) * $per_page;
         $this->page_status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '2';
@@ -495,11 +504,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                 $filters['filter_leave_year'] = gmdate( 'M d, Y', strtotime( $start_date ) ) . ' - ' . gmdate( 'M d, Y', strtotime( $end_date ) );
                 $custom_date_html = '<div class="input-component" id="custom-input" style="display: flex; justify-content: space-between;">
                                      <div style="display: flex">
-                                     <label for="start_date">From
+                                     <label for="start_date">' . esc_html__( 'From', 'erp' ) . '
                                      <input autocomplete="off" name="start_date" id="start_date" class="erp-leave-date-field" type="text" required value='. esc_attr( $start_date ) .'>&nbsp;
                                      </div>
                                      <div>
-                                     <label for="end_date">To
+                                     <label for="end_date">' . esc_html__( 'To', 'erp' ) . '
                                      <input autocomplete="off" name="end_date" id="end_date" class="erp-leave-date-field" type="text" required value='. esc_attr( $end_date ) .'>
                                      </div>
                                      </div>';
@@ -510,7 +519,16 @@ class LeaveRequestsListTable extends \WP_List_Table {
 
         $employee_name = ! empty( $_GET['employee_name'] ) ? sanitize_text_field( wp_unslash( $_GET['employee_name'] ) ) : '';
         ?>
+        <style>
+         table.leaves th#available {
+             width: inherit;
+         }
+         table.leaves th#request {
+            /* width: 150px; */
+            width: inherit;
 
+        }
+        </style>
         <div id="wperp-filter-dropdown" class="wperp-filter-dropdown" style="margin: -46px 0 0 0;">
             <div id="search-main">
                 <?php
@@ -587,10 +605,10 @@ class LeaveRequestsListTable extends \WP_List_Table {
                                         continue;
                                     }
                                     $checked = '';
-                                    if ( ! empty( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
+                                    if ( ! empty( $_GET['filter_leave_status'] ) && is_array( $_GET['filter_leave_status'] ) && in_array( $key, $_GET['filter_leave_status'] ) ) {
                                         $checked = 'checked';
                                     }
-                                    echo sprintf( "<input name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_attr($checked), esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
+                                    echo sprintf( "<input  name='filter_leave_status[]' %s class='filter_leave_status leave-status' id='%s' type='checkbox' value='%s' ><label class='checkbox' for='%s'><span>%s</span></label>\n", esc_attr($checked), esc_html( $key ), esc_html( $key ), esc_html( $key ), esc_html( $title['label'] ) );
                                 }
                                 ?>
                             </div>
@@ -600,11 +618,11 @@ class LeaveRequestsListTable extends \WP_List_Table {
                             <div>
                                 <?php
                                 $filter_leave_years = [
-                                    ''       => 'Filter by date',
-                                    '1'      => 'Last week',
-                                    '2'      => 'Last month',
-                                    '3'      => 'Last 3 months',
-                                    'custom' => 'Custom',
+                                    ''       => __( 'Filter by date', 'erp' ),
+                                    '1'      => __( 'Last week', 'erp' ),
+                                    '2'      => __( 'Last month', 'erp' ),
+                                    '3'      => __( 'Last 3 months', 'erp' ),
+                                    'custom' => __( 'Custom', 'erp' ),
                                 ];
                                 ?>
                                 <select name='filter_leave_year' id='filter_leave_year'>

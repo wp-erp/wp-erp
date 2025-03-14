@@ -1,3 +1,15 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
+
+if ( $employee->get_status() == 'terminated' && ! current_user_can( 'erp_hr_manager' ) || ! is_admin() ) {
+    wp_die( __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
+}
+
+?>
+
 <div class="wrap erp erp-hr-employees erp-employee-single">
 
     <?php
