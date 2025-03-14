@@ -12,6 +12,46 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 class NewEmployeeWelcome extends Email {
     use Hooker;
 
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $title;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $subject;
+
+    /**
+     * @var string
+     */
+    public $heading;
+
+    /**
+     * @var array
+     */
+    public $find;
+
+    /**
+     * @var array
+     */
+    public $replace;
+
+    /**
+     * @var int
+     */
+    public $employee_id;
+
     public function __construct() {
         $this->id             = 'employee-welcome';
         $this->title          = __( 'Employee welcome', 'erp' );
@@ -65,7 +105,7 @@ class NewEmployeeWelcome extends Email {
             'dept-title'      => $employee->get_department( 'view' ),
             'status'          => $employee->get_status(),
             'type'            => $employee->get_type(),
-            'joined-date'     => $employee->get_joined_date(),
+            'joined-date'     => $employee->get_hiring_date(),
             'reporting-to'    => $employee->get_reporting_to() ? erp_hr_get_employee_name( $employee->get_reporting_to() ) : '',
             'compnay-name'    => $company->name,
             'compnay-address' => $company->get_formatted_address(),
