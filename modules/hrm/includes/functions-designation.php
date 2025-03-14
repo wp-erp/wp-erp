@@ -203,3 +203,12 @@ function erp_hr_get_designation_dropdown( $selected = '' ) {
 function erp_hr_count_designation() {
     return \WeDevs\ERP\HRM\Models\Designation::count();
 }
+
+/**
+ *  get all designations from database
+ *  example output: [1 => 'Department 1', 2 => 'Department 2']
+ * */
+function erp_hr_get_designations_fresh() {
+    $designations = \WeDevs\ERP\HRM\Models\Designation::all(['id', 'title']);
+    return array_column( $designations->toArray(), 'title', 'id');
+}

@@ -63,7 +63,7 @@
                         $emp_hdate = new DateTime( $employee->get_hiring_date() );
                         $cur_date  = new DateTime( gmdate( 'd-m-Y' ) );
                         $interval  = $cur_date->diff( $emp_hdate );
-                        echo esc_html( '( ' . $interval->y . ' years, ' . $interval->m . ' months, ' . $interval->d . ' days )' );
+                        echo esc_html( '( ' . $interval->y . esc_html__( ' years, ', 'erp' ) . $interval->m . esc_html__( ' months, ', 'erp' ) . $interval->d . esc_html__( ' days )', 'erp' ) );
                     ?>
                 </li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>
@@ -229,7 +229,7 @@
                                     if ( 'percentage' === $result_type ) {
                                         echo esc_html( $result->gpa ) . '%';
                                     } elseif ( $result_type === 'grade' ) {
-                                        echo esc_html( $result->gpa ) . ' out of ' . esc_html( $result->scale );
+                                        echo esc_html( $result->gpa ) . esc_html__( ' out of ', 'erp' ) . esc_html( $result->scale );
                                     }
                                     ?>
                                 </td>
