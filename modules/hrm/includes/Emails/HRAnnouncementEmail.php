@@ -11,6 +11,16 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 class HRAnnouncementEmail extends Email {
     use Hooker;
 
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    public $find;
+
     public function __construct() {
         $this->id             = 'hr-announcement-email';
         $this->find           = [];
