@@ -91,7 +91,7 @@ class HRM {
         new LeaveEntitlementBGProcess();
         // cli command
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
-            include WPERP_HRM_PATH . '/includes/cli/commands.php';
+            include WPERP_HRM_PATH . '/includes/CLI/Commands.php';
         }
     }
 
