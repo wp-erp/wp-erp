@@ -2880,7 +2880,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] <=> $b['position'];
 		}
 	);
 
@@ -3099,7 +3099,7 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] <=> $b['position'];
 		}
 	);
 
@@ -3393,7 +3393,7 @@ function filter_enabled_email( $email ) {
  * @author  Ugur Mirza ZEYREK
  * @contributor Travis Grenell
  */
-function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+function erp_wp_insert_rows( $row_arrays, $wp_table_name, $update = false, $primary_key = null ) {
 	global $wpdb;
 	$wp_table_name = esc_sql( $wp_table_name );
 	// Setup arrays for Actual Values, and Placeholders.
