@@ -183,7 +183,7 @@ function erp_acct_get_owners_equity( $args, $type ) {
  * @return bool
  */
 function erp_acct_has_date_diff( $date1, $date2 ) {
-    $interval = date_diff( date_create( $date1 ), date_create( $date2 ) );
+    $interval = date_diff( date_create( $date1 ?? '' ), date_create( $date2 ) );
 
     // if difference is `0` OR `1` day
     if ( '2' > $interval->format( '%a' ) ) {

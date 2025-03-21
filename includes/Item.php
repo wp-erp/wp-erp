@@ -53,7 +53,7 @@ abstract class Item {
      */
     public function __get( $key ) {
         if ( isset( $this->data->$key ) ) {
-            return is_array( $this->data->$key ) ? stripslashes_deep( $this->data->$key ) : stripslashes( $this->data->$key );
+            return is_array( $this->data->$key ) ? \stripslashes_deep( $this->data->$key ) : stripslashes( $this->data->$key );
         }
     }
 
