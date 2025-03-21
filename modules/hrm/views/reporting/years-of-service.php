@@ -10,7 +10,7 @@
 
         foreach ( $all_user_id as $user_id ) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-            $date     = date_parse_from_format( 'Y-m-d', $employee->hiring_date );
+            $date     = date_parse_from_format( 'Y-m-d', $employee->hiring_date ?? '' );
             $month    = $date['month'];
             $day      = $date['day'];
 

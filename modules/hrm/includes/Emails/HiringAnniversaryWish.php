@@ -7,10 +7,45 @@ use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
- * Birthday wish
+ * Work anniversary wish email
  */
 class HiringAnniversaryWish extends Email {
     use Hooker;
+
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $title;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $subject;
+
+    /**
+     * @var string
+     */
+    public $heading;
+
+    /**
+     * @var array
+     */
+    public $find;
+
+    /**
+     * @var array
+     */
+    public $replace;
 
     public function __construct() {
         $this->id             = 'hiring-anniversary-wish';
@@ -41,6 +76,14 @@ class HiringAnniversaryWish extends Email {
         return $diff->y;
     }
 
+    /**
+     * Trigger sending email
+     *
+     * @param int    $employee_user_id
+     * @param string $hiring_date
+     *
+     * @return void
+     */
     public function trigger( $employee_user_id = null, $hiring_date = null ) {
         if ( ! $employee_user_id ) {
             return;

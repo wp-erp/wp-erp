@@ -46,6 +46,42 @@ class ContactTaxonomy {
     public $labels = [];
 
     /**
+     * Singular name of the taxonomy
+     *
+     * @since 1.3.6
+     *
+     * @var string
+     */
+    public $tax_singular = '';
+
+    /**
+     * Plural name of the taxonomy
+     *
+     * @since 1.3.6
+     *
+     * @var string
+     */
+    public $tax_plural = '';
+
+    /**
+     * Lowercase singular name of the taxonomy
+     *
+     * @since 1.3.6
+     *
+     * @var string
+     */
+    public $tax_singular_low = '';
+
+    /**
+     * Lowercase plural name of the taxonomy
+     *
+     * @since 1.3.6
+     *
+     * @var string
+     */
+    public $tax_plural_low = '';
+    
+    /**
      * Main constructor
      *
      * @since 1.3.6
