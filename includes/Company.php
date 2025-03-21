@@ -107,7 +107,7 @@ class Company {
             $url   = $this->placeholder_logo();
         } else {
             $image = wp_get_attachment_image_src( $logo_id, 'medium' );
-            $url   = $image[0];
+            $url   = $image[0] ?? '';
         }
 
         $image = sprintf( '<img src="%s" alt="%s" />', esc_url( $url ), esc_attr( $this->name ) );

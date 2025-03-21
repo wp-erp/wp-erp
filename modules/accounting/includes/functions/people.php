@@ -421,7 +421,7 @@ function erp_acct_get_people_id_by_user_id( $user_id ) {
 
     $row = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE user_id = %d LIMIT 1", $user_id ) );
 
-    return $row->id;
+    return isset($row->id) ? intval($row->id) : null;
 }
 
 /**
