@@ -48,11 +48,11 @@ class BirthdayWish extends Email {
 
     public function __construct() {
         $this->id             = 'birthday-wish';
-        $this->title          = __( 'Birthday Wish', 'erp' );
-        $this->description    = __( 'Birthday wish email to employees.', 'erp' );
+        $this->title          = 'Birthday Wish';
+        $this->description    = 'Birthday wish email to employees.';
 
-        $this->subject        = __( 'Birthday Wish to {full_name}', 'erp' );
-        $this->heading        = __( 'Happy Birthday :)', 'erp' );
+        $this->subject        = 'Birthday Wish to {full_name}';
+        $this->heading        = 'Happy Birthday :)';
 
         $this->find = [
             'full-name'       => '{full_name}',

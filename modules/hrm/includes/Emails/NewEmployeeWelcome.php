@@ -54,11 +54,11 @@ class NewEmployeeWelcome extends Email {
 
     public function __construct() {
         $this->id             = 'employee-welcome';
-        $this->title          = __( 'Employee welcome', 'erp' );
-        $this->description    = __( 'Welcome email to new employees.', 'erp' );
+        $this->title          =  'Employee welcome';
+        $this->description    =  'Welcome email to new employees.';
 
-        $this->subject        = __( 'Welcome {employee_name} to {company_name}', 'erp' );
-        $this->heading        = __( 'Welcome Onboard!', 'erp' );
+        $this->subject        =  'Welcome {employee_name} to {company_name}';
+        $this->heading        =  'Welcome Onboard!';
 
         $this->find = [
             'full-name'       => '{full_name}',

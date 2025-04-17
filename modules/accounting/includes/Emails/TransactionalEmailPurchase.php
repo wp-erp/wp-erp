@@ -13,11 +13,11 @@ class TransactionalEmailPurchase extends Email {
 
     public function __construct() {
         $this->id             = 'transectional-email-purchase';
-        $this->title          = __( 'New transaction purchase', 'erp' );
-        $this->description    = __( 'New purchase notification alert', 'erp' );
+        $this->title          =  'New transaction purchase';
+        $this->description    =  'New purchase notification alert';
 
-        $this->subject        = __( 'An purchase has been created', 'erp' );
-        $this->heading        = __( 'New transaction purchase', 'erp' );
+        $this->subject        =  'An purchase has been created';
+        $this->heading        =  'New transaction purchase';
 
         $this->find = [
             'vendor_name'  => '{vendor_name}',

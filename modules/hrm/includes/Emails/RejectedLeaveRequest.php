@@ -13,11 +13,11 @@ class RejectedLeaveRequest extends Email {
 
     public function __construct() {
         $this->id             = 'rejected-leave-request';
-        $this->title          = __( 'Rejected Leave Request', 'erp' );
-        $this->description    = __( 'Rejected leave request notification to employee.', 'erp' );
+        $this->title          =  'Rejected Leave Request';
+        $this->description    =  'Rejected leave request notification to employee.';
 
-        $this->subject        = __( 'Your leave request has been rejected', 'erp' );
-        $this->heading        = __( 'Leave Request Rejected', 'erp' );
+        $this->subject        =  'Your leave request has been rejected';
+        $this->heading        =  'Leave Request Rejected';
 
         $this->find = [
             'full-name'    => '{employee_name}',

@@ -48,11 +48,11 @@ class BirthdayGreetings extends Email {
 
     public function __construct() {
         $this->id             = 'birthday-greetings';
-        $this->title          = __( 'Birthday Greetings To Contacts', 'erp' );
-        $this->description    = __( 'Birthday greetings email to contacts.', 'erp' );
+        $this->title          =  'Birthday Greetings To Contacts';
+        $this->description    =  'Birthday greetings email to contacts.';
 
-        $this->subject        = __( 'Birthday Greetings to {first_name} {last_name}', 'erp' );
-        $this->heading        = __( 'Happy Birthday :)', 'erp' );
+        $this->subject        =  'Birthday Greetings to {first_name} {last_name}';
+        $this->heading        =  'Happy Birthday :)';
 
         $this->find = [
             'first-name'      => '{first_name}',

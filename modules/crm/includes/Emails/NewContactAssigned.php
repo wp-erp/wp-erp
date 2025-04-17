@@ -13,11 +13,11 @@ class NewContactAssigned extends Email {
 
     public function __construct() {
         $this->id          = 'new-contact-assigned';
-        $this->title       = __( 'New Contact Assigned', 'erp' );
-        $this->description = __( 'New contact assigned notification to employee.', 'erp' );
+        $this->title       =  'New Contact Assigned';
+        $this->description =  'New contact assigned notification to employee.';
 
-        $this->subject     = __( 'New contact has been assigned to you', 'erp' );
-        $this->heading     = __( 'New Contact Assigned', 'erp' );
+        $this->subject     =  'New contact has been assigned to you';
+        $this->heading     =  'New Contact Assigned';
 
         $this->find = [
             'employee_name'   => '{employee_name}',

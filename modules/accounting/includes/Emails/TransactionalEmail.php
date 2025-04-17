@@ -48,11 +48,11 @@ class TransactionalEmail extends Email {
 
     public function __construct() {
         $this->id             = 'transectional-email';
-        $this->title          = __( 'New transaction invoice', 'erp' );
-        $this->description    = __( 'New invoice notification alert', 'erp' );
+        $this->title          = 'New transaction invoice';
+        $this->description    =  'New invoice notification alert';
 
-        $this->subject        = __( 'New invoice has been created', 'erp' );
-        $this->heading        = __( 'New transaction invoice', 'erp' );
+        $this->subject        =  'New invoice has been created';
+        $this->heading        =  'New transaction invoice';
 
         $this->find = [
             'customer_name' => '{customer_name}',

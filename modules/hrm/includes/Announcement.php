@@ -25,11 +25,11 @@ class Announcement {
      */
     public function __construct() {
         $this->assign_type = [
-            ''                   => __( '-- Select --', 'erp' ),
-            'all_employee'       => __( 'All Employees', 'erp' ),
-            'selected_employee'  => __( 'Selected Employee', 'erp' ),
-            'by_department'      => __( 'By Department', 'erp' ),
-            'by_designation'     => __( 'By Designation', 'erp' ),
+            ''                   =>  '-- Select --',
+            'all_employee'       =>  'All Employees',
+            'selected_employee'  =>  'Selected Employee',
+            'by_department'      =>  'By Department',
+            'by_designation'     =>  'By Designation',
         ];
 
         $this->action( 'init', 'post_types' );

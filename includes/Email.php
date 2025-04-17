@@ -128,7 +128,7 @@ class Email extends Settings_Page {
      */
     public $sending = false;
 
-    
+
 
     /**
      * List of preg* regular expression patterns to search for,
@@ -470,34 +470,34 @@ class Email extends Settings_Page {
     public function init_form_fields() {
         $this->form_fields = [
             [
-                'title'       => __( 'Is Enabled', 'erp' ),
+                'title'       =>  'Is Enabled', 
                 'id'          => 'is_enable',
                 'type'        => 'checkbox',
                 'default'     => $this->is_enable,
             ],
             [
-                'title'       => __( 'Subject', 'erp' ),
+                'title'       =>  'Subject', 
                 'id'          => 'subject',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
+                'description' => sprintf(  'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.',  $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
                 'desc_tip'    => true,
             ],
             [
-                'title'       => __( 'Email Heading', 'erp' ),
+                'title'       =>  'Email Heading', 
                 'id'          => 'heading',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
+                'description' => sprintf(  'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.',  $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
                 'desc_tip'    => true,
             ],
             [
-                'title'             => __( 'Email Body', 'erp' ),
+                'title'             =>  'Email Body', 
                 'type'              => 'wysiwyg',
                 'id'                => 'body',
-                'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
+                'description'       => sprintf(  'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.',  $this->heading ),
                 'placeholder'       => '',
                 'default'           => '',
                 'desc_tip'          => true,

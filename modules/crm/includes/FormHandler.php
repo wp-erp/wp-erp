@@ -20,7 +20,7 @@ class FormHandler {
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
 
-        $crm = sanitize_title( esc_html__( 'CRM', 'erp' ) );
+        $crm = sanitize_title(  'CRM' );
         add_action( 'admin_init', [ $this, 'contact_groups_bulk_action' ] );
     }
 
