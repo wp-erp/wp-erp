@@ -3726,7 +3726,6 @@ function erp_is_valid_currency_amount( $amount ) {
  * @return array
  */
 function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
-    error_log(print_r( [$new_data, $old_data, $is_seriazie], true ));
 
 	$old_value   = $new_value   = array();
 	$changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
