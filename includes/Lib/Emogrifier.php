@@ -356,7 +356,7 @@ class Emogrifier {
             if ( function_exists( 'mb_convert_encoding' ) ) {
                 return mb_convert_encoding( $xmlDocument->saveHTML(), self::ENCODING, 'HTML-ENTITIES' );
             } else {
-                return htmlspecialchars_decode( mb_convert_encoding( html_entity_decode( $xmlDocument->saveHTML() ?? "", ENT_COMPAT, self::ENCODING ), self::ENCODING ) );
+                return htmlspecialchars_decode( utf8_encode( html_entity_decode( $xmlDocument->saveHTML(), ENT_COMPAT, self::ENCODING ) ) );
             }
         } else {
             return $xmlDocument->saveHTML();
@@ -533,7 +533,7 @@ class Emogrifier {
             $bodyWithoutUnprocessableTags = $this->html;
         }
 
-        return htmlspecialchars( $bodyWithoutUnprocessableTags, ENT_COMPAT | ENT_HTML401, self::ENCODING, false );
+        return htmlspecialchars_decode( html_entity_decode( $bodyWithoutUnprocessableTags, ENT_COMPAT, self::ENCODING ) );
     }
 
     /**
