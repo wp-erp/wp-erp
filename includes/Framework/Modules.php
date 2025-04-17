@@ -48,23 +48,23 @@ class Modules {
     public function init_modules() {
         $this->modules = [
             'hrm' => [
-                'title'       => __( 'HR Management', 'erp' ),
+                'title'       =>  'HR Management',
                 'slug'        => 'erp-hrm',
-                'description' => __( 'Human Resource Management', 'erp' ),
+                'description' =>  'Human Resource Management',
                 'callback'    => '\WeDevs\ERP\HRM\Main\HRM',
                 'modules'     => apply_filters( 'erp_hr_modules', [] ),
             ],
             'crm' => [
-                'title'       => __( 'CR Management', 'erp' ),
+                'title'       =>  'CR Management',
                 'slug'        => 'erp-crm',
-                'description' => __( 'Customer Relationship Management', 'erp' ),
+                'description' =>  'Customer Relationship Management',
                 'callback'    => '\WeDevs\ERP\CRM\Main\CRM',
                 'modules'     => apply_filters( 'erp_crm_modules', [] ),
             ],
             'accounting' => [
-                'title'       => __( 'Accounting', 'erp' ),
+                'title'       =>  'Accounting',
                 'slug'        => 'erp-accounting',
-                'description' => __( 'Accounting Management', 'erp' ),
+                'description' =>  'Accounting Management',
                 'callback'    => '\WeDevs\ERP\Accounting\Main\Accounting',
                 'modules'     => apply_filters( 'erp_ac_modules', [] ),
             ],
@@ -230,7 +230,7 @@ class Modules {
 
         foreach ( $modules as $module_name ) {
             if ( ! in_array( $module_name, $erp_module_names ) ) {
-                return new WP_Error( 'invalid-module-name', sprintf( __( 'Invalid module name %s', 'erp' ), $module_name ) );
+                return new WP_Error( 'invalid-module-name', sprintf(  'Invalid module name %s',  $module_name ) );
             }
         }
 
@@ -323,8 +323,8 @@ class Modules {
 
             $this->modules_extensions = [
                 'inventory' => [
-                    'name'          => __('Inventory', 'erp'),
-                    'description'   => __('Manage and display your products purchase, order and stock.', 'erp'),
+                    'name'          => 'Inventory', 
+                    'description'   => 'Manage and display your products purchase, order and stock.', 
                     'thumbnail'     => $thumbnail_dir . '/inventory.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
@@ -336,8 +336,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/inventory/',
                 ],
                 'payment_gateway' => [
-                    'name'          => __('Payment Gateway', 'erp'),
-                    'description'   => __('Manage all payment gateways for ERP Accounting module.', 'erp'),
+                    'name'          => 'Payment Gateway', 
+                    'description'   => 'Manage all payment gateways for ERP Accounting module.', 
                     'thumbnail'     => $thumbnail_dir . '/payment-gateway.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
@@ -349,8 +349,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/payment-gateway/',
                 ],
                 'woocommerce' => [
-                    'name'          => __('WooCommerce', 'erp'),
-                    'description'   => __('WooCommerce integration with CRM and Accounting modules in ERP.', 'erp'),
+                    'name'          => 'WooCommerce', 
+                    'description'   => 'WooCommerce integration with CRM and Accounting modules in ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/woocommerce.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
@@ -362,8 +362,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/woocommerce-crm/',
                 ],
                 'deals' => [
-                    'name'          => __('Deals', 'erp'),
-                    'description'   => __('Deal Management add-on for WP ERP - CRM Module.', 'erp'),
+                    'name'          => 'Deals', 
+                    'description'   => 'Deal Management add-on for WP ERP - CRM Module.', 
                     'thumbnail'     => $thumbnail_dir . '/deals.png',
                     'is_pro'        => false,
                     'is_hrm'        => false,
@@ -375,8 +375,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/deals/',
                 ],
                 'asset_management' => [
-                    'name'          => __('Asset Manager', 'erp'),
-                    'description'   => __('Manage assets, allocate to employees and keep track.', 'erp'),
+                    'name'          => 'Asset Manager', 
+                    'description'   => 'Manage assets, allocate to employees and keep track.', 
                     'thumbnail'     => $thumbnail_dir . '/asset-management.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -388,8 +388,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/asset-manager/',
                 ],
                 'attendance' => [
-                    'name'          => __('Attendance', 'erp'),
-                    'description'   => __('Employee Attendance Add-On for WP ERP.', 'erp'),
+                    'name'          => 'Attendance', 
+                    'description'   => 'Employee Attendance Add-On for WP ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/attendance.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -401,8 +401,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/attendance/',
                 ],
                 'custom_field_builder' => [
-                    'name'          => __('Custom Field Builder', 'erp'),
-                    'description'   => __('Adds extra custom fields to employee, contacts, companies and other people types.', 'erp'),
+                    'name'          => 'Custom Field Builder', 
+                    'description'   => 'Adds extra custom fields to employee, contacts, companies and other people types.', 
                     'thumbnail'     => $thumbnail_dir . '/custom-field-builder.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -414,8 +414,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/custom-field-builder/',
                 ],
                 'document_manager' => [
-                    'name'          => __('Document Manager', 'erp'),
-                    'description'   => __('Manage your employee and company documents.', 'erp'),
+                    'name'          => 'Document Manager', 
+                    'description'   => 'Manage your employee and company documents.', 
                     'thumbnail'     => $thumbnail_dir . '/document-manager.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -427,8 +427,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/document-manager/',
                 ],
                 'hr_training' => [
-                    'name'          => __('HR Training', 'erp'),
-                    'description'   => __('Employee Training Add-On for WP-ERP.', 'erp'),
+                    'name'          => 'HR Training', 
+                    'description'   => 'Employee Training Add-On for WP-ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/hr-training.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -440,8 +440,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/training/',
                 ],
                 'payroll' => [
-                    'name'          => __('Payroll', 'erp'),
-                    'description'   => __('Manage your employee payroll.', 'erp'),
+                    'name'          => 'Payroll', 
+                    'description'   => 'Manage your employee payroll.', 
                     'thumbnail'     => $thumbnail_dir . '/payroll.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -453,8 +453,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/payroll/',
                 ],
                 'recruitment' => [
-                    'name'          => __('Recruitment', 'erp'),
-                    'description'   => __('Recruitment solution for WP-ERP. Create job posting and hire employee for your company.', 'erp'),
+                    'name'          => 'Recruitment', 
+                    'description'   => 'Recruitment solution for WP-ERP. Create job posting and hire employee for your company.', 
                     'thumbnail'     => $thumbnail_dir . '/recruitment.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -466,8 +466,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/recruitment/',
                 ],
                 'reimbursement' => [
-                    'name'          => __('Reimbursement', 'erp'),
-                    'description'   => __('Reimbursement addon for WP ERP - Accounting module.', 'erp'),
+                    'name'          => 'Reimbursement', 
+                    'description'   => 'Reimbursement addon for WP ERP - Accounting module.', 
                     'thumbnail'     => $thumbnail_dir . '/reimbursement.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -479,8 +479,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/reimbursement/',
                 ],
                 'sms_notification' => [
-                    'name'          => __('SMS Notification', 'erp'),
-                    'description'   => __('Send SMS notifications to employees and CRM contacts.', 'erp'),
+                    'name'          => 'SMS Notification', 
+                    'description'   => 'Send SMS notifications to employees and CRM contacts.', 
                     'thumbnail'     => $thumbnail_dir . '/sms-notification.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -492,8 +492,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/sms-notification/',
                 ],
                 'workflow' => [
-                    'name'          => __('Workflow', 'erp'),
-                    'description'   => __('Workflow Automation System.', 'erp'),
+                    'name'          => 'Workflow', 
+                    'description'   => 'Workflow Automation System.', 
                     'thumbnail'     => $thumbnail_dir . '/workflow.png',
                     'is_pro'        => false,
                     'is_hrm'        => true,
@@ -505,8 +505,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/workflow/',
                 ],
                 'advanced_leave' => [
-                    'name'          => __('Advanced Leave Management', 'erp'),
-                    'description'   => __('Advanced Leave Management for WP ERP.', 'erp'),
+                    'name'          => 'Advanced Leave Management', 
+                    'description'   => 'Advanced Leave Management for WP ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/advance-leave-management.png',
                     'is_pro'        => true,
                     'is_hrm'        => true,
@@ -518,8 +518,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/advanced-leave-management/',
                 ],
                 'awesome_support' => [
-                    'name'          => __('Awesome Support', 'erp'),
-                    'description'   => __('WP ERP and Awesome Support integration.', 'erp'),
+                    'name'          => 'Awesome Support', 
+                    'description'   => 'WP ERP and Awesome Support integration.', 
                     'thumbnail'     => $thumbnail_dir . '/awesome-support.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
@@ -531,8 +531,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/awesome-support-sync/',
                 ],
                 'gravity_forms' => [
-                    'name'          => __('Gravity Forms Integration', 'erp'),
-                    'description'   => __('Gravity Forms integration for WP ERP.', 'erp'),
+                    'name'          => 'Gravity Forms Integration', 
+                    'description'   => 'Gravity Forms integration for WP ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/gravity-forms.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
@@ -544,8 +544,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/crm-gravity-forms/',
                 ],
                 'help_scout' => [
-                    'name'          => __('HelpScout Integration', 'erp'),
-                    'description'   => __('HelpScout integration for WP ERP.', 'erp'),
+                    'name'          => 'HelpScout Integration', 
+                    'description'   => 'HelpScout integration for WP ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/help-scout.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
@@ -557,8 +557,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/help-scout-integration/',
                 ],
                 'hr_frontend' => [
-                    'name'          => __('HR Frontend', 'erp'),
-                    'description'   => __('Provides a brand new dashboard experience for WordPress ERP.', 'erp'),
+                    'name'          => 'HR Frontend', 
+                    'description'   => 'Provides a brand new dashboard experience for WordPress ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/hr-frontend.png',
                     'is_pro'        => true,
                     'is_hrm'        => true,
@@ -570,8 +570,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/hr-frontend/',
                 ],
                 'hubspot' => [
-                    'name'          => __('HubSpot Contacts Sync', 'erp'),
-                    'description'   => __('Sync your CRM contacts with HubSpot.', 'erp'),
+                    'name'          => 'HubSpot Contacts Sync', 
+                    'description'   => 'Sync your CRM contacts with HubSpot.', 
                     'thumbnail'     => $thumbnail_dir . '/hubspot.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
@@ -583,8 +583,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/hubspot-contacts-sync/',
                 ],
                 'mailchimp' => [
-                    'name'          => __('Mailchimp Contacts Sync', 'erp'),
-                    'description'   => __('Sync your CRM contacts with mailchimp.', 'erp'),
+                    'name'          => 'Mailchimp Contacts Sync', 
+                    'description'   => 'Sync your CRM contacts with mailchimp.', 
                     'thumbnail'     => $thumbnail_dir . '/mailchimp-contacts-sync.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
@@ -596,8 +596,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/mailchimp-contacts-sync/',
                 ],
                 'salesforce' => [
-                    'name'          => __('Salesforce Contacts Sync', 'erp'),
-                    'description'   => __('Sync your CRM contacts with salesforce.', 'erp'),
+                    'name'          => 'Salesforce Contacts Sync', 
+                    'description'   => 'Sync your CRM contacts with salesforce.', 
                     'thumbnail'     => $thumbnail_dir . '/salesforce-contacts-sync.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,
@@ -609,8 +609,8 @@ class Modules {
                     'module_link'   => 'https://wperp.com/downloads/salesforce-contact-sync/',
                 ],
                 'zendesk' => [
-                    'name'          => __('Zendesk', 'erp'),
-                    'description'   => __('Zendesk integration for WP ERP.', 'erp'),
+                    'name'          => 'Zendesk', 
+                    'description'   => 'Zendesk integration for WP ERP.', 
                     'thumbnail'     => $thumbnail_dir . '/zendesk.png',
                     'is_pro'        => true,
                     'is_hrm'        => false,

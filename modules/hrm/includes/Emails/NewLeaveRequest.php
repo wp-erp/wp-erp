@@ -13,11 +13,11 @@ class NewLeaveRequest extends Email {
 
     public function __construct() {
         $this->id             = 'new-leave-request';
-        $this->title          = __( 'New Leave Request', 'erp' );
-        $this->description    = __( 'New leave request notification to HR Manager.', 'erp' );
+        $this->title          =  'New Leave Request';
+        $this->description    =  'New leave request notification to HR Manager.';
 
-        $this->subject        = __( 'New leave request received', 'erp' );
-        $this->heading        = __( 'New Leave Request', 'erp' );
+        $this->subject        =  'New leave request received';
+        $this->heading        =  'New Leave Request';
 
         $this->find = [
             'full-name'    => '{employee_name}',
@@ -65,12 +65,13 @@ class NewLeaveRequest extends Email {
 
         $this->replace = [
             'full-name'    => $request->display_name,
-            'employee-url' => sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $request->user_id ), $request->display_name ),            'leave_type'   => $request->policy_name,
+            'employee-url' => sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $request->user_id ), $request->display_name ),
+            'leave_type'   => $request->policy_name,
             'date_from'    => erp_format_date( $request->start_date ),
             'date_to'      => erp_format_date( $request->end_date ),
             'no_days'      => $request->days,
             'reason'       => stripslashes( $request->reason ),
-            'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=leave' ), __( 'View Request', 'erp' ) ),
+            'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-hr&section=leave' ),  'View Request' ),
         ];
 
         $subject     = $this->get_subject();
@@ -122,28 +123,28 @@ class NewLeaveRequest extends Email {
     public function init_form_fields() {
         $this->form_fields = [
             [
-                'title'       => __( 'Subject', 'erp' ),
+                'title'       =>  'Subject',
                 'id'          => 'subject',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
+                'description' => sprintf(  'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.',  $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
                 'desc_tip'    => true,
             ],
             [
-                'title'       => __( 'Email Heading', 'erp' ),
+                'title'       =>  'Email Heading',
                 'id'          => 'heading',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
+                'description' => sprintf(  'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.',  $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
                 'desc_tip'    => true,
             ],
             [
-                'title'             => __( 'Email Body', 'erp' ),
+                'title'             =>  'Email Body',
                 'type'              => 'wysiwyg',
                 'id'                => 'body',
-                'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
+                'description'       => sprintf(  'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.',  $this->heading ),
                 'placeholder'       => '',
                 'default'           => '',
                 'desc_tip'          => true,

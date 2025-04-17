@@ -88,7 +88,7 @@ final class WeDevs_ERP {
     private $container = [];
 
     /**
-     * @var object
+     * @var WeDevs_ERP
      *
      * @since 1.2.1
      */

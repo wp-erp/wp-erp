@@ -49,11 +49,11 @@ class HiringAnniversaryWish extends Email {
 
     public function __construct() {
         $this->id             = 'hiring-anniversary-wish';
-        $this->title          = __( 'Work Anniversary Wish', 'erp' );
-        $this->description    = __( 'Work anniversary wish email to employees.', 'erp' );
+        $this->title          =  'Work Anniversary Wish';
+        $this->description    =  'Work anniversary wish email to employees.';
 
-        $this->subject        = __( 'Congratulation for Your Work Anniversary', 'erp' );
-        $this->heading        = __( 'Congratulation for Passing One More Year With Us :)', 'erp' );
+        $this->subject        =  'Congratulation for Your Work Anniversary';
+        $this->heading        =  'Congratulation for Passing One More Year With Us :)';
 
         $this->find = [
             'full-name'       => '{full_name}',

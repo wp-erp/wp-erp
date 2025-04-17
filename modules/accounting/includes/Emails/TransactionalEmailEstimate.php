@@ -13,11 +13,11 @@ class TransactionalEmailEstimate extends Email {
 
     public function __construct() {
         $this->id             = 'transectional-email-estimate';
-        $this->title          = __( 'New transaction estimate', 'erp' );
-        $this->description    = __( 'New estimate notification alert', 'erp' );
+        $this->title          =  'New transaction estimate';
+        $this->description    =  'New estimate notification alert';
 
-        $this->subject        = __( 'An estimate has been created', 'erp' );
-        $this->heading        = __( 'New transaction estimate', 'erp' );
+        $this->subject        =  'An estimate has been created';
+        $this->heading        =  'New transaction estimate';
 
         $this->find = [
             'customer_name' => '{customer_name}',

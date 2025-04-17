@@ -13,11 +13,11 @@ class TransactionalEmailPayPurchase extends Email {
 
     public function __construct() {
         $this->id             = 'transectional-email-pay-purchase';
-        $this->title          = __( 'New transaction pay purchase', 'erp' );
-        $this->description    = __( 'New pay purchase notification alert', 'erp' );
+        $this->title          =   'New transaction pay purchase';
+        $this->description    =  'New pay purchase notification alert';
 
-        $this->subject        = __( 'An invoice has been paid', 'erp' );
-        $this->heading        = __( 'New transaction pay purchase', 'erp' );
+        $this->subject        =  'An invoice has been paid';
+        $this->heading        =  'New transaction pay purchase';
 
         $this->find = [
             'vendor_name'  => '{vendor_name}',

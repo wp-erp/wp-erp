@@ -13,11 +13,11 @@ class NewTaskAssigned extends Email {
 
     public function __construct() {
         $this->id          = 'new-task-assigned';
-        $this->title       = __( 'New Task Assigned', 'erp' );
-        $this->description = __( 'New task assigned notification to employee.', 'erp' );
+        $this->title       =  'New Task Assigned';
+        $this->description =  'New task assigned notification to employee.';
 
-        $this->subject     = __( 'New task has been assigned to you', 'erp' );
-        $this->heading     = __( 'New Task Assigned', 'erp' );
+        $this->subject     =  'New task has been assigned to you';
+        $this->heading     =  'New Task Assigned';
 
         $this->find = [
             'employee_name' => '{employee_name}',
@@ -56,7 +56,7 @@ class NewTaskAssigned extends Email {
         $this->subject = $this->get_option( 'subject', $this->subject );
 
         $task_view_url      = admin_url( 'admin.php?page=erp-crm&section=task&sub-section=tasks' );
-        $task_description   = $activity->message . "<br><a style='background: #1A9ED4;color: #fff;padding: 6px 10px;margin: 0;border-radius: 3px;display: inline-block;text-decoration: none;' href='$task_view_url' target='_blank'> ". __( 'View Tasks', 'erp' ) ." </a><br><br>";
+        $task_description   = $activity->message . "<br><a style='background: #1A9ED4;color: #fff;padding: 6px 10px;margin: 0;border-radius: 3px;display: inline-block;text-decoration: none;' href='$task_view_url' target='_blank'> ".  'View Tasks' ." </a><br><br>";
 
         foreach ( $data['user_ids'] as $id ) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $id ) );

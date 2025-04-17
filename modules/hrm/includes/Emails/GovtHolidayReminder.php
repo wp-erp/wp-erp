@@ -13,11 +13,11 @@ class GovtHolidayReminder extends Email {
 
     public function __construct() {
         $this->id             = 'govt-holiday-reminder';
-        $this->title          = __( 'Upcoming government holiday reminder', 'erp' );
-        $this->description    = __( 'Government holiday reminder email to employees.', 'erp' );
+        $this->title          =  'Upcoming government holiday reminder';
+        $this->description    =  'Government holiday reminder email to employees.';
 
-        $this->subject        = __( 'Upcoming government holiday reminder', 'erp' );
-        $this->heading        = __( 'Reminder', 'erp' );
+        $this->subject        =  'Upcoming government holiday reminder';
+        $this->heading        =  'Reminder';
 
         $this->find = [
             'full-name'        => '{full_name}',
