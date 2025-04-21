@@ -40,7 +40,7 @@
         ?>
             <div id="emp-gender-ratio" style="width:50%;height:400px;"></div>
             <?php
-    } ) );
+    } ) . '');
         ?>
 
         <table class="widefat striped">
@@ -75,7 +75,7 @@
             ?>
             <div id="emp-gender-ratio-by-department" class="erp-report-chart"></div>
            <?php
-        } ) );
+        } ) . '' );
         ?>
 
         <table class="widefat striped">
