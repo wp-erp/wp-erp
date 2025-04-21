@@ -50,6 +50,10 @@ class Template {
     public $extra = [];
 
     /**
+     *
+     */
+    public $sections;
+    /**
      * Get id
      *
      * @return string

@@ -15,6 +15,26 @@ class Integration extends Settings_Page {
     public $integrations;
 
     /**
+     * Integration ID.
+     *
+     * @var string
+     */
+    public $id;
+
+    /**
+     * Integration title.
+     *
+     * @var string
+     */
+    public $title;
+    /**
+     * Integration description.
+     *
+     * @var string
+     */
+    public $description;
+
+    /**
      * Form option fields.
      *
      * @var array
