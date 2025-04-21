@@ -35,13 +35,13 @@
                 ?>
             <div id="emp-age-breakdown-chart" class="erp-report-chart"></div>
         <?php
-            } ) );
+            } ) . '');
 
             echo wp_kses_post( erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart-o"></i> Employee Age Breakdown by Department', 'erp' ), function () {
                 ?>
             <div id="emp-age-breakdown-by-department" class="erp-report-chart"></div>
         <?php
-            } ) );
+            } ). '' );
         ?>
         </div>
     </div>
