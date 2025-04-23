@@ -42,6 +42,17 @@ class Integration extends Settings_Page {
     public $form_fields = [];
 
     /**
+     * Extra settings.
+     *
+     * @var array
+     */
+    public $extra = [];
+
+    /**
+     * sub tab
+     */
+    public $sub_tab = [];
+    /**
      * Initializes the WeDevs_ERP() class
      *
      * Checks for an existing WeDevs_ERP() instance
