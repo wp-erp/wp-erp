@@ -442,5 +442,6 @@ function wperp() {
     return WeDevs_ERP::init();
 }
 
-// kick it off
-wperp();
+add_action('init', function(){
+    wperp();
+}, 1);
