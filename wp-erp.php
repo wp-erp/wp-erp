@@ -88,7 +88,7 @@ final class WeDevs_ERP {
     private $container = [];
 
     /**
-     * @var object
+     * @var WeDevs_ERP
      *
      * @since 1.2.1
      */
@@ -103,7 +103,7 @@ final class WeDevs_ERP {
      * Checks for an existing WeDevs_ERP() instance
      * and if it doesn't find one, creates it.
      *
-     * @return object
+     * @return WeDevs_ERP A single instance of this class.
      */
     public static function init() {
         if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WeDevs_ERP ) ) {
