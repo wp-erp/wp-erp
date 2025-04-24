@@ -193,7 +193,15 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('release', [
-        'uglify'
+        'clean',
+        'run:reset',
+        'run:makepot',
+        'run:removeDev',
+        'run:dumpautoload',
+        'copy',
+        'compress',
+        'run:composerInstall',
+        'run:dumpautoload'
     ]);
 
     grunt.registerTask('zip', [

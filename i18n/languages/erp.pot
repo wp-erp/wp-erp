@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.14.0\n"
+"Project-Id-Version: WP ERP 1.15.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2025-03-14 09:07:39+00:00\n"
+"POT-Creation-Date: 2025-04-24 10:04:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,7 +48,7 @@ msgid "More"
 msgstr ""
 
 #: assets/js/erp-settings.js:1 includes/Framework/ERP_Settings_Page.php:474
-#: includes/Settings/Template.php:495
+#: includes/Settings/Template.php:499
 #: includes/Settings/assets/src/components/base/ImagePicker.vue:7
 #: includes/Settings/assets/src/components/base/ImagePicker.vue:16
 #: modules/accounting/assets/src/admin/components/base/Media.vue:28
@@ -263,7 +263,7 @@ msgstr ""
 #: includes/Admin/AddProMenu.php:280 includes/Admin/AddProMenu.php:435
 #: includes/Admin/AdminMenu.php:132 includes/Admin/AdminMenu.php:138
 #: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
-#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:359
+#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:352
 msgid "Settings"
 msgstr ""
 
@@ -16201,10 +16201,10 @@ msgstr ""
 #: modules/accounting/includes/API/PaymentsController.php:261
 #: modules/accounting/includes/API/PeopleController.php:172
 #: modules/accounting/includes/API/PeopleController.php:196
-#: modules/accounting/includes/API/PurchasesController.php:171
-#: modules/accounting/includes/API/PurchasesController.php:222
-#: modules/accounting/includes/API/PurchasesController.php:285
-#: modules/accounting/includes/API/PurchasesController.php:337
+#: modules/accounting/includes/API/PurchasesController.php:172
+#: modules/accounting/includes/API/PurchasesController.php:223
+#: modules/accounting/includes/API/PurchasesController.php:286
+#: modules/accounting/includes/API/PurchasesController.php:338
 #: modules/accounting/includes/API/TaxAgenciesController.php:183
 #: modules/accounting/includes/API/TaxAgenciesController.php:237
 #: modules/accounting/includes/API/TaxAgenciesController.php:269
@@ -16280,7 +16280,7 @@ msgstr ""
 #: modules/accounting/includes/API/PayPurchasesController.php:434
 #: modules/accounting/includes/API/PaymentsController.php:450
 #: modules/accounting/includes/API/PeopleController.php:381
-#: modules/accounting/includes/API/PurchasesController.php:507
+#: modules/accounting/includes/API/PurchasesController.php:508
 #: modules/accounting/includes/API/TaxAgenciesController.php:424
 #: modules/accounting/includes/API/TaxCatsController.php:397
 #: modules/accounting/includes/API/TaxRateNamesController.php:384
@@ -16321,7 +16321,7 @@ msgstr ""
 #: modules/accounting/includes/API/PayPurchasesController.php:545
 #: modules/accounting/includes/API/PayPurchasesController.php:551
 #: modules/accounting/includes/API/PaymentsController.php:565
-#: modules/accounting/includes/API/PurchasesController.php:611
+#: modules/accounting/includes/API/PurchasesController.php:612
 #: modules/hrm/includes/API/AnnouncementsController.php:330
 msgid "Status for the resource."
 msgstr ""
@@ -17014,7 +17014,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:97
 #: modules/crm/views/contact/single.php:100
 #: modules/crm/views/js-templates/new-customer.php:222
-#: modules/hrm/views/employee/tab-general.php:100
+#: modules/hrm/views/employee/tab-general.php:107
 #: modules/hrm/views/js-templates/new-employee.php:489
 msgid "Country"
 msgstr ""
@@ -17724,7 +17724,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:95
 #: modules/crm/views/contact/single.php:98
 #: modules/crm/views/js-templates/new-customer.php:215
-#: modules/hrm/views/employee/tab-general.php:99
+#: modules/hrm/views/employee/tab-general.php:106
 #: modules/hrm/views/js-templates/new-employee.php:481
 msgid "City"
 msgstr ""
@@ -17775,7 +17775,6 @@ msgstr ""
 #: modules/hrm/views/leave/leave-entitlements.php:147
 #: modules/hrm/views/leave/leave-entitlements.php:159
 #: modules/hrm/views/leave/leave-entitlements.php:181
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
 msgid "- Select -"
 msgstr ""
 
@@ -18055,7 +18054,7 @@ msgstr ""
 
 #: includes/Admin/views/modules.php:554 includes/Framework/Modules.php:51
 #: includes/Framework/views/status-report.php:48 includes/Scripts.php:170
-#: includes/WeDevsERPInstaller.php:2139 modules/hrm/HRM.php:327
+#: includes/WeDevsERPInstaller.php:2151 modules/hrm/HRM.php:327
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
@@ -18065,17 +18064,17 @@ msgid "Human Resource Management"
 msgstr ""
 
 #: includes/Admin/views/modules.php:570 includes/Framework/Modules.php:58
-#: includes/WeDevsERPInstaller.php:2147
+#: includes/WeDevsERPInstaller.php:2159
 msgid "CR Management"
 msgstr ""
 
 #: includes/Admin/views/modules.php:572 includes/Framework/Modules.php:60
-#: includes/WeDevsERPInstaller.php:2149
+#: includes/WeDevsERPInstaller.php:2161
 msgid "Customer Relationship Management"
 msgstr ""
 
 #: includes/Admin/views/modules.php:588 includes/Framework/Modules.php:67
-#: includes/WeDevsERPInstaller.php:2155 includes/WeDevsERPInstaller.php:2157
+#: includes/WeDevsERPInstaller.php:2167 includes/WeDevsERPInstaller.php:2169
 msgid "Accounting Management"
 msgstr ""
 
@@ -18112,7 +18111,7 @@ msgstr ""
 msgid "Deactivate"
 msgstr ""
 
-#: includes/Admin/views/modules.php:787 wp-erp.php:360
+#: includes/Admin/views/modules.php:787 wp-erp.php:353
 msgid "Docs"
 msgstr ""
 
@@ -18258,7 +18257,7 @@ msgstr ""
 #: modules/crm/views/js-templates/customer-email-note.php:33
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:81
 #: modules/hrm/includes/LeaveRequestsListTable.php:511
-#: modules/hrm/views/employee/tab-general.php:145
+#: modules/hrm/views/employee/tab-general.php:152
 #: modules/hrm/views/js-templates/new-leave-request.php:63
 #: modules/hrm/views/js-templates/work-experience.php:36
 #: modules/hrm/views/leave/holiday.php:38
@@ -18273,7 +18272,7 @@ msgstr ""
 #: modules/crm/views/js-templates/customer-email-note.php:26
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:79
 #: modules/hrm/includes/LeaveRequestsListTable.php:507
-#: modules/hrm/views/employee/tab-general.php:144
+#: modules/hrm/views/employee/tab-general.php:151
 #: modules/hrm/views/js-templates/new-leave-request.php:49
 #: modules/hrm/views/js-templates/work-experience.php:25
 #: modules/hrm/views/leave/holiday.php:35
@@ -18292,7 +18291,7 @@ msgstr ""
 
 #: includes/Admin/views/tools.php:16 includes/Promotion.php:64
 #: includes/Promotion.php:67 includes/functions.php:893
-#: includes/functions.php:4099
+#: includes/functions.php:4100
 #: modules/accounting/includes/functions/transactions.php:970
 #: modules/accounting/includes/functions/transactions.php:1219
 msgid "%s"
@@ -18329,7 +18328,7 @@ msgid "Upgrade Now"
 msgstr ""
 
 #: includes/Admin/views/welcome-screen.php:4
-#: includes/WeDevsERPInstaller.php:385
+#: includes/WeDevsERPInstaller.php:392
 msgid "Welcome to WP ERP"
 msgstr ""
 
@@ -18375,7 +18374,7 @@ msgstr ""
 #: includes/Company.php:45 modules/crm/includes/functions-customer.php:3272
 #: modules/crm/views/company/single.php:96
 #: modules/crm/views/contact/single.php:99
-#: modules/hrm/views/employee/tab-general.php:101
+#: modules/hrm/views/employee/tab-general.php:108
 msgid "State"
 msgstr ""
 
@@ -18415,11 +18414,11 @@ msgstr ""
 msgid "Something went wrong, Please try again !"
 msgstr ""
 
-#: includes/Email.php:464
+#: includes/Email.php:473
 msgid "Is Enabled"
 msgstr ""
 
-#: includes/Email.php:470
+#: includes/Email.php:479
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:81
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:19
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:51
@@ -18433,17 +18432,17 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: includes/Email.php:473 modules/hrm/includes/Emails/NewLeaveRequest.php:128
+#: includes/Email.php:482 modules/hrm/includes/Emails/NewLeaveRequest.php:128
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
 "subject: <code>%s</code>."
 msgstr ""
 
-#: includes/Email.php:479 modules/hrm/includes/Emails/NewLeaveRequest.php:134
+#: includes/Email.php:488 modules/hrm/includes/Emails/NewLeaveRequest.php:134
 msgid "Email Heading"
 msgstr ""
 
-#: includes/Email.php:482 includes/Email.php:491
+#: includes/Email.php:491 includes/Email.php:500
 #: modules/hrm/includes/Emails/NewLeaveRequest.php:137
 #: modules/hrm/includes/Emails/NewLeaveRequest.php:146
 msgid ""
@@ -18451,17 +18450,17 @@ msgid ""
 "Leave blank to use the default heading: <code>%s</code>."
 msgstr ""
 
-#: includes/Email.php:488 modules/hrm/includes/Emails/NewLeaveRequest.php:143
+#: includes/Email.php:497 modules/hrm/includes/Emails/NewLeaveRequest.php:143
 msgid "Email Body"
 msgstr ""
 
-#: includes/Email.php:514
+#: includes/Email.php:523
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:97
 #: modules/hrm/includes/Emails/NewLeaveRequest.php:169
 msgid "Template Tags"
 msgstr ""
 
-#: includes/Email.php:516 modules/hrm/includes/Emails/NewLeaveRequest.php:171
+#: includes/Email.php:525 modules/hrm/includes/Emails/NewLeaveRequest.php:171
 msgid ""
 "You may use these template tags inside subject, heading, body and those "
 "will be replaced by original values"
@@ -18472,17 +18471,17 @@ msgid "Something went wrong! Please check your input."
 msgstr ""
 
 #: includes/Framework/ERP_Settings_Page.php:470
-#: includes/Settings/Template.php:491
+#: includes/Settings/Template.php:495
 msgid "Delete this image?"
 msgstr ""
 
 #: includes/Framework/ERP_Settings_Page.php:736
-#: includes/Settings/Template.php:757
+#: includes/Settings/Template.php:761
 msgid "Hard Crop?"
 msgstr ""
 
 #: includes/Framework/ERP_Settings_Page.php:763
-#: includes/Settings/Template.php:784
+#: includes/Settings/Template.php:788
 msgid "Select a page&hellip;"
 msgstr ""
 
@@ -19330,7 +19329,7 @@ msgstr ""
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/hrm/includes/Employee.php:1445
 #: modules/hrm/includes/LeaveReportEmployeeBased.php:135
-#: modules/hrm/views/employee/tab-general.php:293
+#: modules/hrm/views/employee/tab-general.php:300
 #: modules/hrm/views/js-templates/dependents.php:5
 #: modules/hrm/views/reporting/headcount.php:146
 msgid "Name"
@@ -20035,7 +20034,6 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/base/SubmitButton.vue:12
 #: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:34
 #: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:71
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
 msgid "Submit"
 msgstr ""
 
@@ -20196,17 +20194,17 @@ msgstr ""
 msgid "Accountig Management"
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:21 includes/WeDevsERPInstaller.php:1724
+#: includes/Updates/update-1.1.17.php:21 includes/WeDevsERPInstaller.php:1732
 msgid "ERP Subscription"
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:33 includes/WeDevsERPInstaller.php:1736
+#: includes/Updates/update-1.1.17.php:33 includes/WeDevsERPInstaller.php:1744
 #: modules/crm/includes/Admin/Settings.php:147
 #: modules/crm/includes/Subscription.php:456
 msgid "Confirm your subscription to %s"
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:35 includes/WeDevsERPInstaller.php:1738
+#: includes/Updates/update-1.1.17.php:35 includes/WeDevsERPInstaller.php:1746
 #: modules/crm/includes/Admin/Settings.php:155
 #: modules/crm/includes/Subscription.php:458
 msgid ""
@@ -20223,25 +20221,25 @@ msgid ""
 "%s"
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:39 includes/WeDevsERPInstaller.php:1742
+#: includes/Updates/update-1.1.17.php:39 includes/WeDevsERPInstaller.php:1750
 #: modules/crm/includes/Admin/Settings.php:180
 #: modules/crm/includes/Subscription.php:684
 msgid "You are now subscribed!"
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:40 includes/WeDevsERPInstaller.php:1743
+#: includes/Updates/update-1.1.17.php:40 includes/WeDevsERPInstaller.php:1751
 #: modules/crm/includes/Admin/Settings.php:187
 #: modules/crm/includes/Subscription.php:719
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:41 includes/WeDevsERPInstaller.php:1744
+#: includes/Updates/update-1.1.17.php:41 includes/WeDevsERPInstaller.php:1752
 #: modules/crm/includes/Admin/Settings.php:199
 #: modules/crm/includes/Subscription.php:693
 msgid "You are now unsubscribed"
 msgstr ""
 
-#: includes/Updates/update-1.1.17.php:42 includes/WeDevsERPInstaller.php:1745
+#: includes/Updates/update-1.1.17.php:42 includes/WeDevsERPInstaller.php:1753
 #: modules/crm/includes/Admin/Settings.php:206
 #: modules/crm/includes/Subscription.php:738
 msgid "You are successfully unsubscribed from list(s):"
@@ -20271,7 +20269,7 @@ msgstr ""
 msgid "Error at #ROW %d"
 msgstr ""
 
-#: includes/WeDevsERPInstaller.php:2141
+#: includes/WeDevsERPInstaller.php:2153
 msgid "Human Resource Mnanagement"
 msgstr ""
 
@@ -21205,7 +21203,7 @@ msgstr ""
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1072 vendor/appsero/client/src/Insights.php:725
+#: includes/functions.php:1072
 msgid "Once Weekly"
 msgstr ""
 
@@ -21252,15 +21250,15 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:3803
+#: includes/functions.php:3804
 msgid "Sorry! You are not allowed to access this page."
 msgstr ""
 
-#: includes/functions.php:3955
+#: includes/functions.php:3956
 msgid "ERP data reset completed"
 msgstr ""
 
-#: includes/functions.php:4035
+#: includes/functions.php:4036
 msgid "Something went wrong when resetting. Please try again."
 msgstr ""
 
@@ -22321,7 +22319,7 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:139
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:119
-#: modules/hrm/views/employee/tab-general.php:211
+#: modules/hrm/views/employee/tab-general.php:218
 msgid "Additional Notes"
 msgstr ""
 
@@ -23259,7 +23257,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:49
 #: modules/accounting/assets/src/admin/components/transactions/purchases/Purchases.vue:53
 #: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:354
-#: modules/accounting/includes/API/PurchasesController.php:370
+#: modules/accounting/includes/API/PurchasesController.php:371
 #: modules/accounting/includes/functions/common.php:474
 msgid "Purchase"
 msgstr ""
@@ -23404,8 +23402,8 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/Overview.vue:32
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/Overview.vue:43
 #: modules/accounting/assets/src/admin/components/reports/sales-tax/Overview.vue:54
-#: modules/crm/views/reports.php:28 modules/crm/views/reports.php:50
-#: modules/hrm/views/reporting.php:36 modules/hrm/views/reporting.php:64
+#: modules/crm/views/reports.php:29 modules/crm/views/reports.php:51
+#: modules/hrm/views/reporting.php:40 modules/hrm/views/reporting.php:68
 msgid "View Report"
 msgstr ""
 
@@ -24162,7 +24160,7 @@ msgstr ""
 #: modules/accounting/includes/API/InvoicesController.php:607
 #: modules/accounting/includes/API/PayPurchasesController.php:462
 #: modules/accounting/includes/API/PaymentsController.php:473
-#: modules/accounting/includes/API/PurchasesController.php:538
+#: modules/accounting/includes/API/PurchasesController.php:539
 msgid "Date for the resource."
 msgstr ""
 
@@ -24189,7 +24187,7 @@ msgstr ""
 
 #: modules/accounting/includes/API/BillsController.php:256
 #: modules/accounting/includes/API/InvoicesController.php:296
-#: modules/accounting/includes/API/PurchasesController.php:291
+#: modules/accounting/includes/API/PurchasesController.php:292
 msgid "Invalid edit permission for update."
 msgstr ""
 
@@ -24202,7 +24200,7 @@ msgstr ""
 #: modules/accounting/includes/API/PayBillsController.php:468
 #: modules/accounting/includes/API/PayPurchasesController.php:440
 #: modules/accounting/includes/API/PaymentsController.php:456
-#: modules/accounting/includes/API/PurchasesController.php:513
+#: modules/accounting/includes/API/PurchasesController.php:514
 msgid "Voucher no. for the resource."
 msgstr ""
 
@@ -24214,7 +24212,7 @@ msgstr ""
 #: modules/accounting/includes/API/BillsController.php:565
 #: modules/accounting/includes/API/InvoicesController.php:616
 #: modules/accounting/includes/API/PayBillsController.php:488
-#: modules/accounting/includes/API/PurchasesController.php:547
+#: modules/accounting/includes/API/PurchasesController.php:548
 msgid "Due date for the resource."
 msgstr ""
 
@@ -24234,7 +24232,7 @@ msgstr ""
 #: modules/accounting/includes/API/PayBillsController.php:473
 #: modules/accounting/includes/API/PayPurchasesController.php:471
 #: modules/accounting/includes/API/PaymentsController.php:514
-#: modules/accounting/includes/API/PurchasesController.php:556
+#: modules/accounting/includes/API/PurchasesController.php:557
 msgid "List of line items data."
 msgstr ""
 
@@ -24468,8 +24466,8 @@ msgid "An invoice of %1$s has been %2$s for %3$s"
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:601
-#: modules/accounting/includes/API/PurchasesController.php:521
-#: modules/accounting/includes/API/PurchasesController.php:530
+#: modules/accounting/includes/API/PurchasesController.php:522
+#: modules/accounting/includes/API/PurchasesController.php:531
 msgid "Customer id for the resource."
 msgstr ""
 
@@ -24489,48 +24487,48 @@ msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:651
 #: modules/accounting/includes/API/PayPurchasesController.php:476
-#: modules/accounting/includes/API/PurchasesController.php:561
+#: modules/accounting/includes/API/PurchasesController.php:562
 msgid "Product id."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:656
 #: modules/accounting/includes/API/InvoicesController.php:664
 #: modules/accounting/includes/API/PayPurchasesController.php:481
-#: modules/accounting/includes/API/PurchasesController.php:566
+#: modules/accounting/includes/API/PurchasesController.php:567
 msgid "Product type."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:669
-#: modules/accounting/includes/API/PurchasesController.php:571
+#: modules/accounting/includes/API/PurchasesController.php:572
 msgid "Product quantity."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:674
 #: modules/accounting/includes/API/PayPurchasesController.php:486
-#: modules/accounting/includes/API/PurchasesController.php:576
+#: modules/accounting/includes/API/PurchasesController.php:577
 msgid "Unit price."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:679
 #: modules/accounting/includes/API/PayPurchasesController.php:491
 #: modules/accounting/includes/API/PayPurchasesController.php:496
-#: modules/accounting/includes/API/PurchasesController.php:581
+#: modules/accounting/includes/API/PurchasesController.php:582
 msgid "Discount."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:684
-#: modules/accounting/includes/API/PurchasesController.php:586
+#: modules/accounting/includes/API/PurchasesController.php:587
 msgid "Tax."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:689
-#: modules/accounting/includes/API/PurchasesController.php:591
+#: modules/accounting/includes/API/PurchasesController.php:592
 msgid "Tax percent."
 msgstr ""
 
 #: modules/accounting/includes/API/InvoicesController.php:694
 #: modules/accounting/includes/API/PayPurchasesController.php:501
-#: modules/accounting/includes/API/PurchasesController.php:596
+#: modules/accounting/includes/API/PurchasesController.php:597
 msgid "Item total."
 msgstr ""
 
@@ -24541,7 +24539,7 @@ msgstr ""
 #: modules/accounting/includes/API/PayPurchasesController.php:445
 #: modules/accounting/includes/API/PayPurchasesController.php:524
 #: modules/accounting/includes/API/PaymentsController.php:557
-#: modules/accounting/includes/API/PurchasesController.php:603
+#: modules/accounting/includes/API/PurchasesController.php:604
 msgid "Type for the resource."
 msgstr ""
 
@@ -24722,7 +24720,7 @@ msgstr ""
 msgid "Address line 2"
 msgstr ""
 
-#: modules/accounting/includes/API/PurchasesController.php:373
+#: modules/accounting/includes/API/PurchasesController.php:374
 msgid "A purchase of %1$s has been %2$s for %3$s"
 msgstr ""
 
@@ -25839,7 +25837,7 @@ msgid "Imported "
 msgstr ""
 
 #: modules/crm/assets/js/crm-contacts.js:1888
-#: modules/hrm/views/employee/tab-general.php:232
+#: modules/hrm/views/employee/tab-general.php:239
 msgid " out of "
 msgstr ""
 
@@ -27543,11 +27541,11 @@ msgstr ""
 #: modules/crm/views/contact/single.php:171
 #: modules/hrm/views/employee/tab-general.php:9
 #: modules/hrm/views/employee/tab-general.php:41
-#: modules/hrm/views/employee/tab-general.php:85
-#: modules/hrm/views/employee/tab-general.php:126
-#: modules/hrm/views/employee/tab-general.php:191
-#: modules/hrm/views/employee/tab-general.php:277
-#: modules/hrm/views/employee/tab-general.php:349
+#: modules/hrm/views/employee/tab-general.php:92
+#: modules/hrm/views/employee/tab-general.php:133
+#: modules/hrm/views/employee/tab-general.php:198
+#: modules/hrm/views/employee/tab-general.php:284
+#: modules/hrm/views/employee/tab-general.php:356
 #: modules/hrm/views/reporting/headcount.php:88
 msgid "Click to toggle"
 msgstr ""
@@ -27631,8 +27629,8 @@ msgstr ""
 
 #: modules/crm/views/contact/single.php:91
 #: modules/crm/views/js-templates/new-customer.php:155
-#: modules/hrm/views/employee/tab-general.php:106
-#: modules/hrm/views/employee/tab-general.php:295
+#: modules/hrm/views/employee/tab-general.php:113
+#: modules/hrm/views/employee/tab-general.php:302
 #: modules/hrm/views/js-templates/dependents.php:25
 #: modules/hrm/views/js-templates/new-employee.php:380
 msgid "Date of Birth"
@@ -28136,13 +28134,13 @@ msgid "Fax Number"
 msgstr ""
 
 #: modules/crm/views/js-templates/new-customer.php:199
-#: modules/hrm/views/employee/tab-general.php:97
+#: modules/hrm/views/employee/tab-general.php:104
 #: modules/hrm/views/js-templates/new-employee.php:461
 msgid "Address 1"
 msgstr ""
 
 #: modules/crm/views/js-templates/new-customer.php:207
-#: modules/hrm/views/employee/tab-general.php:98
+#: modules/hrm/views/employee/tab-general.php:105
 #: modules/hrm/views/js-templates/new-employee.php:471
 msgid "Address 2"
 msgstr ""
@@ -29469,13 +29467,13 @@ msgid "Cannot create an employee. Please check all the fields and try again."
 msgstr ""
 
 #: modules/hrm/includes/Employee.php:1370
-#: modules/hrm/views/employee/tab-general.php:206
+#: modules/hrm/views/employee/tab-general.php:213
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
 #: modules/hrm/includes/Employee.php:1371
-#: modules/hrm/views/employee/tab-general.php:207
+#: modules/hrm/views/employee/tab-general.php:214
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
@@ -29494,7 +29492,7 @@ msgid "Result type"
 msgstr ""
 
 #: modules/hrm/includes/Employee.php:1375
-#: modules/hrm/views/employee/tab-general.php:210
+#: modules/hrm/views/employee/tab-general.php:217
 msgid "Result"
 msgstr ""
 
@@ -29615,19 +29613,19 @@ msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
 #: modules/hrm/includes/Employee.php:2542
-#: modules/hrm/views/employee/tab-general.php:360
+#: modules/hrm/views/employee/tab-general.php:367
 #: modules/hrm/views/js-templates/employee-terminate.php:17
 msgid "Termination Type"
 msgstr ""
 
 #: modules/hrm/includes/Employee.php:2544
-#: modules/hrm/views/employee/tab-general.php:361
+#: modules/hrm/views/employee/tab-general.php:368
 #: modules/hrm/views/js-templates/employee-terminate.php:30
 msgid "Termination Reason"
 msgstr ""
 
 #: modules/hrm/includes/Employee.php:2546
-#: modules/hrm/views/employee/tab-general.php:362
+#: modules/hrm/views/employee/tab-general.php:369
 msgid "Eligible for Hire"
 msgstr ""
 
@@ -30019,7 +30017,7 @@ msgid "Location"
 msgstr ""
 
 #: modules/hrm/includes/LeavePoliciesListTable.php:174
-#: modules/hrm/views/employee/tab-general.php:107
+#: modules/hrm/views/employee/tab-general.php:114
 #: modules/hrm/views/js-templates/new-employee.php:404
 #: modules/hrm/views/leave/leave-entitlements.php:128
 #: modules/hrm/views/leave/new-policy.php:240
@@ -30930,24 +30928,28 @@ msgstr ""
 msgid "Date of Hire"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:66
+#: modules/hrm/views/employee/tab-general.php:64
+msgid "No hiring date"
+msgstr ""
+
+#: modules/hrm/views/employee/tab-general.php:71
 msgid " years, "
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:66
+#: modules/hrm/views/employee/tab-general.php:71
 msgid " months, "
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:66
+#: modules/hrm/views/employee/tab-general.php:71
 msgid " days )"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:69
+#: modules/hrm/views/employee/tab-general.php:76
 #: modules/hrm/views/js-templates/new-employee.php:237
 msgid "Source of Hire"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:70
+#: modules/hrm/views/employee/tab-general.php:77
 #: modules/hrm/views/employee/tab-job.php:4
 #: modules/hrm/views/employee/tab-job.php:8
 #: modules/hrm/views/employee/tab-job.php:14
@@ -30956,85 +30958,85 @@ msgstr ""
 msgid "Employee Status"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:71
+#: modules/hrm/views/employee/tab-general.php:78
 #: modules/hrm/views/js-templates/new-employee.php:277
 msgid "Work Phone"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:72
+#: modules/hrm/views/employee/tab-general.php:79
 #: modules/hrm/views/js-templates/new-employee.php:100
 #: modules/hrm/views/leave/leave-entitlements.php:73
 #: modules/hrm/views/leave/new-policy.php:104
 msgid "Employee Type"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:81
+#: modules/hrm/views/employee/tab-general.php:88
 #: modules/hrm/views/js-templates/new-employee.php:295
 msgid "Personal Details"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:93
+#: modules/hrm/views/employee/tab-general.php:100
 #: modules/hrm/views/js-templates/new-employee.php:300
 msgid "Blood Group"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:94
+#: modules/hrm/views/employee/tab-general.php:101
 msgid "Spouse's Name"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:95
+#: modules/hrm/views/employee/tab-general.php:102
 msgid "Father's Name"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:96
+#: modules/hrm/views/employee/tab-general.php:103
 msgid "Mother's Name"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:102
+#: modules/hrm/views/employee/tab-general.php:109
 msgid "Zip/Postal Code"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:104
+#: modules/hrm/views/employee/tab-general.php:111
 msgid "Mobile No."
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:105
+#: modules/hrm/views/employee/tab-general.php:112
 msgid "Personal Email"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:108
+#: modules/hrm/views/employee/tab-general.php:115
 #: modules/hrm/views/js-templates/new-employee.php:391
 msgid "Nationality"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:109
+#: modules/hrm/views/employee/tab-general.php:116
 #: modules/hrm/views/js-templates/new-employee.php:417
 #: modules/hrm/views/leave/leave-entitlements.php:141
 #: modules/hrm/views/leave/new-policy.php:252
 msgid "Marital Status"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:110
+#: modules/hrm/views/employee/tab-general.php:117
 msgid "Driver License"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:111
+#: modules/hrm/views/employee/tab-general.php:118
 #: modules/hrm/views/js-templates/new-employee.php:440
 msgid "Hobbies"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:122
-#: modules/hrm/views/employee/tab-general.php:162
-#: modules/hrm/views/employee/tab-general.php:180
+#: modules/hrm/views/employee/tab-general.php:129
+#: modules/hrm/views/employee/tab-general.php:169
+#: modules/hrm/views/employee/tab-general.php:187
 msgid "Work Experience"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:142
+#: modules/hrm/views/employee/tab-general.php:149
 #: modules/hrm/views/js-templates/work-experience.php:5
 msgid "Previous Company"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:143
+#: modules/hrm/views/employee/tab-general.php:150
 #: modules/hrm/views/employee/tab-job.php:216
 #: modules/hrm/views/js-templates/job-info-history-edit.php:41
 #: modules/hrm/views/js-templates/job-info.php:41
@@ -31044,112 +31046,112 @@ msgstr ""
 msgid "Job Title"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:146
+#: modules/hrm/views/employee/tab-general.php:153
 #: modules/hrm/views/js-templates/work-experience.php:47
 msgid "Job Description"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:162
+#: modules/hrm/views/employee/tab-general.php:169
 msgid "Update Experience"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:176
+#: modules/hrm/views/employee/tab-general.php:183
 msgid "No work experiences found."
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:180
+#: modules/hrm/views/employee/tab-general.php:187
 msgid "Create Experience"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:180
+#: modules/hrm/views/employee/tab-general.php:187
 msgid "+ Add Experience"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:187
-#: modules/hrm/views/employee/tab-general.php:247
-#: modules/hrm/views/employee/tab-general.php:266
+#: modules/hrm/views/employee/tab-general.php:194
+#: modules/hrm/views/employee/tab-general.php:254
+#: modules/hrm/views/employee/tab-general.php:273
 msgid "Education"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:208
+#: modules/hrm/views/employee/tab-general.php:215
 msgid "Field(s) of Study"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:209
+#: modules/hrm/views/employee/tab-general.php:216
 #: modules/hrm/views/js-templates/education-form.php:35
 msgid "Year of Completion"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:212
+#: modules/hrm/views/employee/tab-general.php:219
 #: modules/hrm/views/js-templates/education-form.php:105
 msgid "Interests"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:213
+#: modules/hrm/views/employee/tab-general.php:220
 #: modules/hrm/views/js-templates/education-form.php:114
 msgid "Expiration date"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:247
+#: modules/hrm/views/employee/tab-general.php:254
 msgid "Update Info"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:261
+#: modules/hrm/views/employee/tab-general.php:268
 msgid "No education information found."
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:266
+#: modules/hrm/views/employee/tab-general.php:273
 msgid "Add Education"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:266
+#: modules/hrm/views/employee/tab-general.php:273
 msgid "+ Add Education"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:273
-#: modules/hrm/views/employee/tab-general.php:317
+#: modules/hrm/views/employee/tab-general.php:280
+#: modules/hrm/views/employee/tab-general.php:324
 msgid "Dependents"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:294
+#: modules/hrm/views/employee/tab-general.php:301
 #: modules/hrm/views/js-templates/dependents.php:15
 msgid "Relationship"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:317
+#: modules/hrm/views/employee/tab-general.php:324
 msgid "Update Dependent"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:331
+#: modules/hrm/views/employee/tab-general.php:338
 msgid "No dependent information found."
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:336
+#: modules/hrm/views/employee/tab-general.php:343
 msgid "Dependent"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:336
+#: modules/hrm/views/employee/tab-general.php:343
 msgid "Add Dependent"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:336
+#: modules/hrm/views/employee/tab-general.php:343
 msgid "+ Add Dependents"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:345
+#: modules/hrm/views/employee/tab-general.php:352
 msgid "Termination"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:359
+#: modules/hrm/views/employee/tab-general.php:366
 #: modules/hrm/views/js-templates/employee-terminate.php:6
 msgid "Termination Date"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:365
+#: modules/hrm/views/employee/tab-general.php:372
 msgid "Update Termination"
 msgstr ""
 
-#: modules/hrm/views/employee/tab-general.php:365
+#: modules/hrm/views/employee/tab-general.php:372
 msgid "Change Termination"
 msgstr ""
 
@@ -32013,286 +32015,41 @@ msgstr ""
 msgid "Select bulk action"
 msgstr ""
 
-#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
-msgid "This is a dummy plugin"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
-msgid "There was an error when reading this WXR file"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
-msgid ""
-"Details are shown above. The importer will now try again with a different "
-"parser..."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
-msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
-msgid "Sorry, there has been an error."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
-msgid "The file does not exist, please try again."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-msgid "All done."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
-msgid "Have fun!"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
-msgid "Remember to update the passwords and roles of imported users."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
-msgid ""
-"The export file could not be found at <code>%s</code>. It is likely that "
-"this was caused by a permissions problem."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
-msgid ""
-"This WXR file (version %s) may not be supported by this version of the "
-"importer. Please consider updating."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
-msgid ""
-"Failed to import author %s. Their posts will be attributed to the current "
-"user."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
-msgid "Assign Authors"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
-msgid ""
-"To make it easier for you to edit and save the imported content, you may "
-"want to reassign the author of the imported item to an existing user of "
-"this site. For example, you may want to import all the entries as "
-"<code>admin</code>s entries."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
-msgid ""
-"If a new user is created by WordPress, a new password will be randomly "
-"generated and the new user&#8217;s role will be set as %s. Manually "
-"changing the new user&#8217;s details will be necessary."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
-msgid "Import Attachments"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
-msgid "Download and import file attachments"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
-msgid "Import author:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
-msgid "or create new user with login name:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
-msgid "as a new user:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
-msgid "assign posts to an existing user:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
-msgid "or assign posts to an existing user:"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
-msgid ""
-"Failed to create new user for %s. Their posts will be attributed to the "
-"current user."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
-msgid "Failed to import category %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
-msgid "Failed to import post tag %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
-msgid "Failed to import %s %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
-msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
-msgid "%s &#8220;%s&#8221; already exists."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
-msgid "Failed to import %s &#8220;%s&#8221;"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
-msgid "Menu item skipped due to missing menu slug"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
-msgid "Menu item skipped due to invalid menu slug: %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
-msgid "Fetching attachments is not enabled"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
-msgid "Invalid file type"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
-msgid "Remote server did not respond"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
-msgid "Remote server returned error response %1$d %2$s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
-msgid "Remote file is incorrect size"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
-msgid "Zero size file downloaded"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
-msgid "Remote file is too large, limit is %s"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
-msgid "Import WordPress"
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
-msgid ""
-"A new version of this importer is available. Please update to version %s to "
-"ensure compatibility with newer export files."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
-msgid ""
-"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
-"the posts, pages, comments, custom fields, categories, and tags into this "
-"site."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
-msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
-msgid ""
-"Import <strong>posts, pages, comments, custom fields, categories, and "
-"tags</strong> from a WordPress export file."
-msgstr ""
-
-#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
-msgid "This is a dummy theme"
-msgstr ""
-
-#: vendor/wp-cli/core-command/src/Core_Command.php:749
-msgid "Wildcard DNS may not be configured correctly."
-msgstr ""
-
-#: vendor/wp-cli/entity-command/src/Site_Command.php:157
-msgid "Uncategorized"
-msgstr ""
-
-#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
-#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
-msgid "Export Error"
-msgstr ""
-
-#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:770
-msgid " Try again"
-msgstr ""
-
-#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:776
-msgid "API error. Try Again."
-msgstr ""
-
-#: vendor/wp-cli/media-command/src/Media_Command.php:159
-msgid "image"
-msgid_plural "images"
-msgstr[0] ""
-msgstr[1] ""
-
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:247
-msgid "Inactive Widgets"
-msgstr ""
-
-#: vendor/wp-cli/wp-cli/php/utils-wp.php:250
-msgid "Drag widgets here to remove them from the sidebar but keep their settings."
-msgstr ""
-
-#: wp-erp.php:222
+#: wp-erp.php:232
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
 
-#: wp-erp.php:223
+#: wp-erp.php:233
 msgid "<h2>Your installed PHP Version is: "
 msgstr ""
 
-#: wp-erp.php:224
+#: wp-erp.php:234
 msgid "<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>"
 msgstr ""
 
-#: wp-erp.php:224
+#: wp-erp.php:234
 msgid "</strong> or greater"
 msgstr ""
 
-#: wp-erp.php:225
+#: wp-erp.php:235
 msgid "<p>The version of your PHP is "
 msgstr ""
 
-#: wp-erp.php:225
+#: wp-erp.php:235
 msgid "unsupported and old"
 msgstr ""
 
-#: wp-erp.php:226
+#: wp-erp.php:236
 msgid ""
 "You should update your PHP software or contact your host regarding this "
 "matter.</p>"
 msgstr ""
 
-#: wp-erp.php:229
+#: wp-erp.php:239
 msgid "Plugin Activation Error"
 msgstr ""
 
-#: wp-erp.php:427
+#: wp-erp.php:420
 #. translators: %s: review url
 msgid ""
 "If you like WPERP please leave us a <a href=\"%s\" target=\"_blank\" "
@@ -32326,18 +32083,4 @@ msgstr ""
 #: i18n/states/US.php:20
 msgctxt "US state of Georgia"
 msgid "Georgia"
-msgstr ""
-
-#: vendor/wp-cli/core-command/src/Core_Command.php:491
-#: vendor/wp-cli/core-command/src/Core_Command.php:565
-#. translators: placeholder is blog name
-#. translators: placeholder is user supplied title
-msgctxt "Default network name"
-msgid "%s Sites"
-msgstr ""
-
-#: vendor/wp-cli/entity-command/src/Site_Command.php:160
-#. translators: Default category slug
-msgctxt "Default category slug"
-msgid "Uncategorized"
 msgstr ""
