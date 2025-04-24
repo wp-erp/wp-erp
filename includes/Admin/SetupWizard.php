@@ -134,7 +134,7 @@ class SetupWizard {
             <meta name="viewport" content="width=device-width" />
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title><?php esc_html_e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
-            <?php 
+            <?php
                 wp_print_scripts( 'erp-setup' );
                 wp_enqueue_emoji_styles();
                 do_action( 'admin_print_styles' );
@@ -846,7 +846,7 @@ class SetupWizard {
                                 'value'    => $working_days[ $key ],
                                 'type'     => 'select',
                                 'options'  => $options,
-                            ] ) ); ?>
+                            ] ).'' ); ?>
                         </td>
                     </tr>
                 <?php

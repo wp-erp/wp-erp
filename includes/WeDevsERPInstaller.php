@@ -31,7 +31,7 @@ class WeDevsERPInstaller {
     public function __construct() {
         $this->set_default_modules();
 
-        register_activation_hook( WPERP_FILE, [ $this, 'activate' ] );
+        // register_activation_hook( WPERP_FILE, [ $this, 'activate' ] );
         register_deactivation_hook( WPERP_FILE, [ $this, 'deactivate' ] );
 
         $this->action( 'admin_menu', 'welcome_screen_menu' );
@@ -49,6 +49,13 @@ class WeDevsERPInstaller {
      * @return void
      */
     public function activate() {
+        error_log(print_r( [" WeDevsERPInstaller::activate "], true ));
+        if ( !  function_exists( 'slugify' ) ) {
+            require_once WPERP_PATH . '/modules/accounting/includes/functions/common.php';
+        }
+        if ( ! function_exists( 'erp_get_version' ) ) {
+            require_once WPERP_PATH . '/includes/functions.php';
+        }
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
 
@@ -1702,7 +1709,8 @@ Account Manager
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         foreach ( $table_schema as $table ) {
-            dbDelta( $table );
+              $erp_table_created =  dbDelta( $table );
+           error_log(print_r($erp_table_created, true));
         }
     }
 
@@ -1806,6 +1814,7 @@ Account Manager
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_chart_of_accounts` LIMIT 0, 1" ) ) {
             $charts = [ 'Asset', 'Liability', 'Equity', 'Income', 'Expense', 'Asset & Liability', 'Bank' ];
 
+
             for ( $i = 0; $i < count( $charts ); $i++ ) {
                 $wpdb->insert( "{$wpdb->prefix}erp_acct_chart_of_accounts", [
                     'name' => $charts[ $i ],
@@ -1840,6 +1849,9 @@ Account Manager
                 );
             }
 
+            if (! function_exists( 'erp_acct_get_chart_id_by_slug' ) ) {
+                require_once WPERP_PATH . '/modules/accounting/includes/functions/ledger-accounts.php';
+            }
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[ $array_key ] as $value ) {
                     if ( in_array( $value['code'], $old_codes ) ) {

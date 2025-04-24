@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.7.2
+Tested up to: 6.8
 Requires PHP: 7.2
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,12 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.15.0 -> Apr 23, 2025 =
+* 🐞 [Fixed] PHP-8 Deprecated Errors
+* 🐞 [Fixed] CLI file include errors
+* 🐞 [Fixed] Employee Profile Tab broken
+* 🐞 [Fixed] PHP Notice Early translation load error.
 
 = v1.14.0 -> March 05, 2025 =
 * 🪝 [Added] Dynamic department and designation creation during CSV import with employee allocation

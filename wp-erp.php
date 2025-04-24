@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.14.0
+ * Version: 1.15.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -59,6 +59,16 @@ use WeDevs\ERP\Framework\Modules;
 use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
+require_once __DIR__ . '/vendor/autoload.php';
+define( 'WPERP_VERSION', '1.15.0' );
+define( 'WPERP_FILE', __FILE__ );
+define( 'WPERP_PATH', dirname( WPERP_FILE ) );
+define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
+define( 'WPERP_MODULES', WPERP_PATH . '/modules' );
+define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
+define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
+define( 'WPERP_VIEWS', WPERP_INCLUDES . '/Admin/views' );
+
 /**
  * WeDevs_ERP class
  *
@@ -71,7 +81,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.14.0';
+    public $version = WPERP_VERSION;
 
     /**
      * Minimum PHP version required
@@ -132,7 +142,7 @@ final class WeDevs_ERP {
         }
 
         // Define constants
-        $this->define_constants();
+        // $this->define_constants();
 
         // Include required files
         $this->includes();
@@ -235,22 +245,6 @@ final class WeDevs_ERP {
     }
 
     /**
-     * Define the plugin constants
-     *
-     * @return void
-     */
-    private function define_constants() {
-        define( 'WPERP_VERSION', $this->version );
-        define( 'WPERP_FILE', __FILE__ );
-        define( 'WPERP_PATH', dirname( WPERP_FILE ) );
-        define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
-        define( 'WPERP_MODULES', WPERP_PATH . '/modules' );
-        define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
-        define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
-        define( 'WPERP_VIEWS', WPERP_INCLUDES . '/Admin/views' );
-    }
-
-    /**
      * Include the required files
      *
      * @return void
@@ -291,7 +285,6 @@ final class WeDevs_ERP {
     private function instantiate() {
         $this->setup_database();
 
-        new WeDevsERPInstaller();
         new AdminMenu();
 
         $this->container['modules'] = new Modules();
@@ -442,6 +435,13 @@ function wperp() {
     return WeDevs_ERP::init();
 }
 
+
 add_action('init', function(){
     wperp();
 }, 1);
+
+register_activation_hook( __FILE__, function() {
+
+    $installer = new WeDevsERPInstaller();
+    $installer->activate();
+} );
