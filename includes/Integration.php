@@ -15,12 +15,43 @@ class Integration extends Settings_Page {
     public $integrations;
 
     /**
+     * Integration ID.
+     *
+     * @var string
+     */
+    public $id;
+
+    /**
+     * Integration title.
+     *
+     * @var string
+     */
+    public $title;
+    /**
+     * Integration description.
+     *
+     * @var string
+     */
+    public $description;
+
+    /**
      * Form option fields.
      *
      * @var array
      */
     public $form_fields = [];
 
+    /**
+     * Extra settings.
+     *
+     * @var array
+     */
+    public $extra = [];
+
+    /**
+     * sub tab
+     */
+    public $sub_tab = [];
     /**
      * Initializes the WeDevs_ERP() class
      *

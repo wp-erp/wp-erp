@@ -10,6 +10,27 @@ namespace WeDevs\ERP;
 abstract class Item {
 
     /**
+     * Item ID
+     *
+     * @var int
+     */
+    public $id = 0;
+
+    /**
+     * Item data
+     *
+     * @var object
+     */
+    public $data = null;
+
+    /**
+     * Item name
+     *
+     * @var string
+     */
+    public $name = '';
+
+    /**
      * Initialize a item
      *
      * @param int|object  the item numeric id or a wpdb row
@@ -32,7 +53,7 @@ abstract class Item {
      */
     public function __get( $key ) {
         if ( isset( $this->data->$key ) ) {
-            return is_array( $this->data->$key ) ? stripslashes_deep( $this->data->$key ) : stripslashes( $this->data->$key );
+            return is_array( $this->data->$key ) ? \stripslashes_deep( $this->data->$key ) : stripslashes( $this->data->$key );
         }
     }
 

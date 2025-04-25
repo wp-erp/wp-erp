@@ -63,7 +63,7 @@ class CompanyController extends \WeDevs\ERP\API\REST_Controller {
             $url = $company->placeholder_logo();
         } else {
             $image = wp_get_attachment_image_src( $logo_id, 'medium' );
-            $url   = $image[0];
+            $url   = $image[0] ?? '';
         }
 
         $response = rest_ensure_response(
