@@ -19,7 +19,6 @@ class PurchasesController extends \WeDevs\ERP\API\REST_Controller {
      */
     protected $namespace = 'erp/v1';
 
-
     /**
      * Route base.
      *
