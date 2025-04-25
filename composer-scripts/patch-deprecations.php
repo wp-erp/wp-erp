@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This script patches the return type of specific methods in the Eloquent Model and Collection classes
+ * to avoid deprecation warnings in PHP 8.*.
+ *
+ * It adds the #[ReturnTypeWillChange] attribute to methods that are missing a return type declaration.
+ */
 function patchReturnType($file, $method) {
     $content = file_get_contents($file);
 
