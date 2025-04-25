@@ -225,7 +225,7 @@ class AdminMenu {
 
                 if (
                     ! $customer->id ||
-                    ! in_array( 'contact', (array) $customer->types, true )
+                    ! in_array( 'contact', (array) $customer->data->types, true )
                 ) {
                     wp_die( esc_html__( 'Contact not found!', 'erp' ), 404 );
                 }
@@ -263,7 +263,7 @@ class AdminMenu {
 
                 if (
                     ! $customer->id ||
-                    ! in_array( 'company', (array) $customer->types, true )
+                    ! in_array( 'company', (array) $customer->data->types, true )
                 ) {
                     wp_die( esc_html__( 'Company not found!', 'erp' ) );
                 }
