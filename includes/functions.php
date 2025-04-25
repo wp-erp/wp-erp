@@ -3053,6 +3053,13 @@ function erp_render_menu_header( $component ) {
  * @return object|false
  */
 function erp_web_feed() {
+	$transient_name = 'erp_web_feed_cache';
+	$cached_data = get_transient( $transient_name );
+
+	if ( $cached_data !== false ) {
+		return simplexml_load_string( $cached_data );
+	}
+
 	$url  = 'https://wperp.com/feed/';
 	$args = array(
 		'timeout'   => 15,
@@ -3064,6 +3071,8 @@ function erp_web_feed() {
 	$data = '';
 	if ( ! is_wp_error( $response ) ) {
 		$data = wp_remote_retrieve_body( $response );
+
+		set_transient( $transient_name, $data, DAY_IN_SECONDS );
 	}
 
 	return simplexml_load_string( $data );
