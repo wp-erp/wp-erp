@@ -49,7 +49,7 @@ class WeDevsERPInstaller {
      * @return void
      */
     public function activate() {
-        error_log(print_r( [" WeDevsERPInstaller::activate "], true ));
+
         if ( !  function_exists( 'slugify' ) ) {
             require_once WPERP_PATH . '/modules/accounting/includes/functions/common.php';
         }
@@ -1710,7 +1710,6 @@ Account Manager
 
         foreach ( $table_schema as $table ) {
               $erp_table_created =  dbDelta( $table );
-           error_log(print_r($erp_table_created, true));
         }
     }
 
