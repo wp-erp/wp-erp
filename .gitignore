@@ -3,7 +3,6 @@ config.codekit
 .codekit-cache
 # Composer
 /vendor/
-/vendor copy/
 node_modules
 build
 .DS_Store
