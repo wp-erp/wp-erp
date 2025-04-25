@@ -263,7 +263,7 @@ class AdminMenu {
 
                 if (
                     ! $customer->id ||
-                    ! in_array( 'company', (array) $customer->types, true )
+                    ! in_array( 'company', (array) $customer->data->types, true )
                 ) {
                     wp_die( esc_html__( 'Company not found!', 'erp' ) );
                 }
