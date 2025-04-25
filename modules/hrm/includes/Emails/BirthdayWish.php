@@ -6,10 +6,45 @@ use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
- * Birthday wish
+ * Birthday wish email
  */
 class BirthdayWish extends Email {
     use Hooker;
+
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $title;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $subject;
+
+    /**
+     * @var string
+     */
+    public $heading;
+
+    /**
+     * @var array
+     */
+    public $find;
+
+    /**
+     * @var array
+     */
+    public $replace;
 
     public function __construct() {
         $this->id             = 'birthday-wish';

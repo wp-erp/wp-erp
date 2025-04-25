@@ -61,7 +61,13 @@
         "phpcbf": [
             "./vendor/bin/phpcbf -p"
         ],
-        "phpcsf": "php-cs-fixer --config=./.php_cs fix"
+        "phpcsf": "php-cs-fixer --config=./.php_cs fix",
+        "post-install-cmd": [
+            "php composer-scripts/patch-deprecations.php"
+        ],
+        "post-update-cmd": [
+            "php composer-scripts/patch-deprecations.php"
+        ]
     },
     "autoload" : {
         "psr-4" : {
