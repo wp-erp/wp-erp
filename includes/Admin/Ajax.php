@@ -119,8 +119,7 @@ class Ajax {
         $fields = ! empty( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : [];
 
         $csv = new \ParseCsv\Csv();
-        $csv->encoding( null, 'UTF-8' );
-        $csv->parse( $file_tmpname );
+        $csv->auto( $file_tmpname );
 
         if ( empty( $csv->data ) ) {
             $this->send_error( __( 'No data found to import!', 'erp' ) );
@@ -128,178 +127,338 @@ class Ajax {
 
         $csv_data   = [];
         $csv_data[] = array_keys( $csv->data[0] );
+        $count  = 0;
 
         foreach ( $csv->data as $data_item ) {
             $csv_data[] = array_values( $data_item );
         }
 
         if ( ! empty( $csv_data ) ) {
-            $count  = 0;
-            $errors = [];
-
-            $errors = apply_filters( 'erp_validate_csv_data', $csv_data, $fields, $type );
-
-            if ( ! empty( $errors ) ) {
-                $error_html = '<ul class="erp-list">';
-
-                foreach ( $errors as $error ) {
-                    $error_html .= "<li>{$error}</li>";
-                }
-
-                $error_html = $error_html . '</ul>';
-
-                $this->send_error( $error_html );
-            }
-
-            foreach ( $csv_data as $line ) {
-                if ( empty( $line ) ) {
-                    continue;
-                }
-
-                $line_data = [];
-
-                if ( is_array( $fields ) && ! empty( $fields ) ) {
-                    foreach ( $fields as $key => $value ) {
-                        if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
-                            if ( $type === 'employee' ) {
-                                $employee_fields = [
-                                    'work'     => [
-                                        'designation',
-                                        'department',
-                                        'location',
-                                        'hiring_source',
-                                        'hiring_date',
-                                        'date_of_birth',
-                                        'reporting_to',
-                                        'pay_rate',
-                                        'pay_type',
-                                        'type',
-                                        'status',
-                                    ],
-                                    'personal' => [
-                                        'photo_id',
-                                        'user_id',
-                                        'first_name',
-                                        'middle_name',
-                                        'last_name',
-                                        'other_email',
-                                        'phone',
-                                        'work_phone',
-                                        'mobile',
-                                        'address',
-                                        'gender',
-                                        'marital_status',
-                                        'nationality',
-                                        'driving_license',
-                                        'hobbies',
-                                        'user_url',
-                                        'description',
-                                        'street_1',
-                                        'street_2',
-                                        'city',
-                                        'country',
-                                        'state',
-                                        'postal_code',
-                                    ],
-                                ];
-
-                                $departments  = erp_hr_get_departments_dropdown_raw();
-                                $designations = erp_hr_get_designation_dropdown_raw();
-
-                                if ( in_array( $key, $employee_fields['work'], true ) ) {
-                                    if ( $key === 'designation' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
-                                    } elseif ( $key === 'department' ) {
-                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
-                                    } else {
-                                        $line_data['work'][ $key ] = $line[ $value ];
-                                    }
-                                } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
-                                    $line_data['personal'][ $key ] = $line[ $value ];
-                                } else {
-                                    $line_data[ $key ] = $line[ $value ];
-                                }
-                            } else {
-                                $line_data[ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
-                                $line_data['type'] = $type;
-                            }
-                        }
-                    }
-                }
-
-                if ( 'employee' === $type ) {
-                    if ( ! isset( $line_data['work']['status'] ) ) {
-                        $line_data['work']['status'] = 'active';
-                    }
-
-                    $item_insert_id = erp_hr_employee_create( $line_data );
-
-                    if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
-                        continue;
-                    }
-                } else if ( 'vendor' === $type || 'customer' === $type ) {
-                    $item_insert_id = erp_insert_people( $line_data );
-
-                    if ( is_wp_error( $item_insert_id ) ) {
-                        continue;
-                    }
-                } else if ( 'contact' === $type || 'company' === $type ) {
-                    $contact_owner              = ! empty( $_POST['contact_owner'] )
-                                                  ? absint( wp_unslash( $_POST['contact_owner'] ) )
-                                                  : erp_crm_get_default_contact_owner();
-
-                    if ( 'contact' === $type && ( ! erp_crm_is_current_user_manager() ) && erp_crm_is_current_user_crm_agent() && $contact_owner !== get_current_user_id() ) {
-                        $this->send_error( __( 'You can only import your own contacts', 'erp' ) );
-                    }
-
-                    $line_data['contact_owner'] = $contact_owner;
-                    $people                     = erp_insert_people( $line_data, true );
-
-                    if ( is_wp_error( $people ) ) {
-                        continue;
-                    }
-
-                    $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
-                    $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-
-                    if ( ! $people->exists ) {
-                        $contact->update_life_stage( $life_stage );
-                    } else if ( ! $contact->get_life_stage() ) {
-                        $contact->update_life_stage( $life_stage );
-                    }
-
-                    if ( ! empty( $_POST['contact_group'] ) ) {
-                        $contact_group = absint( $_POST['contact_group'] );
-
-                        $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
-                            'group_id' => $contact_group,
-                            'user_id'  => $people->id,
-                        ] )->first();
-
-                        if ( empty( $existing_data ) ) {
-                            $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
-
-                            erp_crm_create_new_contact_subscriber( [
-                                'group_id'       => $contact_group,
-                                'user_id'        => $people->id,
-                                'status'         => 'subscribe',
-                                'subscribe_at'   => current_time( 'mysql' ),
-                                'unsubscribe_at' => null,
-                                'hash'           => $hash,
-                            ] );
-                        }
-                    }
-                }
-
-                ++ $count;
-            }
+            $this->validate_csv_data( $csv_data, $fields, $type );
+            $count =  $this->process_csv_data( $csv_data, $fields, $type, $count );
         }
 
         if ( 0 === $count ) {
             $this->send_error( __( 'Something went wrong or items already exist', 'erp' ) );
         }
 
-        $this->send_success( __( sprintf( '%d items have been imported successfully', $count ), 'erp' ) );
+        $this->send_success( sprintf( __( '%d items have been imported successfully', 'erp' ), $count ) );
+    }
+
+    /**
+     * Validate CSV data
+     *
+     * @param array  $csv_data
+     * @param array  $fields
+     * @param string $type
+     *
+     * @return void
+     */
+
+    public function validate_csv_data( $csv_data, $fields, $type ) {
+        $errors = [];
+
+        $errors = apply_filters( 'erp_validate_csv_data', $csv_data, $fields, $type );
+
+        if ( ! empty( $errors ) ) {
+            $error_html = '<ul class="erp-list">';
+
+            foreach ( $errors as $error ) {
+                $error_html .= "<li>{$error}</li>";
+            }
+
+            $error_html = $error_html . '</ul>';
+
+            $this->send_error( $error_html );
+        }
+    }
+
+    /**
+     * Process CSV data
+     *
+     * @param array  $csv_data
+     * @param array  $fields
+     * @param string $type
+     * @param int    $count
+     *
+     * @return int
+     */
+    public function process_csv_data( $csv_data, $fields, $type, $count ) {
+        unset( $csv_data[0] ); // remove the column head row
+       $designations =  erp_hr_get_designations_fresh();
+       $departments =  erp_hr_get_departments_fresh();
+       $employee_fields = [
+            'work'     => [
+                'designation',
+                'department',
+                'location',
+                'hiring_source',
+                'hiring_date',
+                'date_of_birth',
+                'reporting_to',
+                'pay_rate',
+                'pay_type',
+                'type',
+                'status',
+                'location',
+            ],
+            'personal' => [
+                'employee_id',
+                'photo_id',
+                'user_id',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'other_email',
+                'phone',
+                'work_phone',
+                'mobile',
+                'address',
+                'gender',
+                'marital_status',
+                'nationality',
+                'driving_license',
+                'hobbies',
+                'user_url',
+                'description',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ],
+        ];
+        $reporting_to = []; // for mapping reporting to after import employee
+        $GLOBALS['job_info'] = []; // for processing job history after import employee
+
+        foreach ( $csv_data as $line ) {
+
+            if ( empty( $line ) ) {
+                continue;
+            }
+
+            $line_data = [];
+
+            if ( is_array( $fields ) && ! empty( $fields ) ) {
+                foreach ( $fields as $key => $value ) {
+
+                    if ( ! empty( $line[ $value ] ) ) {
+                        if ( $type === 'employee' ) {
+
+
+                            if ( in_array( $key, $employee_fields['work'], true ) ) {
+                                if ( $key === 'designation' && ! empty( $line[ $value ] ) ) {
+                                   if( ! array_search( $line[ $value ], $designations, true ) ){
+
+                                        $result = erp_hr_create_designation(['title' => $line[ $value ]]);
+
+                                        if ( is_wp_error( $result ) ) {
+                                            error_log( $result->get_error_message() );
+                                        } else {
+                                            $line_data['work'][ $key ] = $result;
+                                            $designations[ $result ] = $line[ $value ]; // add the new item to existing designations list
+                                        }
+
+                                   }else{
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $designations, true );
+                                   }
+                                } elseif ( $key === 'department' && ! empty( $line[ $value ] ) ) {
+
+                                    if( ! array_search( $line[ $value ], $departments, true ) ){
+
+                                        $result = erp_hr_create_department(['title' => $line[ $value ]]);
+
+                                        if ( is_wp_error( $result ) ) {
+                                            error_log( $result->get_error_message() );
+                                        } else {
+                                            $line_data['work'][ $key ] = $result;
+                                            $departments[ $result ] = $line[ $value ]; // add the new item to existing departments list
+                                        }
+                                    }else{
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $departments, true );
+                                    }
+
+                                }elseif ( $key === 'type' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_employee_types(), true );
+                                }elseif ( $key === 'pay_type' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_pay_type(), true );
+                                }elseif ( $key === 'hiring_source' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_employee_sources(), true );
+                                }elseif ( $key === 'status' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], erp_hr_get_employee_statuses(), true );
+                                }elseif ( $key === 'location' ) {
+                                    $locations = erp_company_get_location_dropdown_raw();
+
+                                    if ( ! array_search( $line[ $value ], $locations ) ) {
+                                        $line_data['work'][ $key ] = '-1'; // default location
+                                    } else {
+                                        $line_data['work'][ $key ] = array_search( $line[ $value ], $locations, true );
+                                    }
+                                }elseif( $key === 'reporting_to' && $line[ $value ] !== '' ) {
+                                    $line_data['work'][ $key ] = $line[ $value ];
+                                } else {
+                                    $line_data['work'][ $key ] = $line[ $value ];
+                                }
+                            } elseif ( in_array( $key, $employee_fields['personal'], true ) ) {
+                                if ( $key === 'gender' ) {
+                                    $line_data['personal'][ $key ] = array_search( $line[ $value ], erp_hr_get_genders(), true );
+                                }elseif ( $key === 'marital_status' ) {
+                                    $line_data['personal'][ $key ] = array_search( $line[ $value ], erp_hr_get_marital_statuses(), true );
+                                }else {
+                                    $line_data['personal'][ $key ] = $line[ $value ];
+                                }
+                            } else {
+                                $line_data[ $key ] = $line[ $value ];
+                            }
+                        } else {
+                            $line_data[ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
+                            $line_data['type'] = $type;
+                        }
+                    }
+                }
+            }
+
+            if ( 'employee' === $type ) {
+                if ( ! isset( $line_data['work']['status'] ) ) {
+                    $line_data['work']['status'] = 'active';
+                }
+
+                $item_insert_id = erp_hr_employee_create( $line_data );
+                
+                if ( ! is_wp_error( $item_insert_id ) && ! empty( $line_data['work']['reporting_to'] ) ) {
+                    /**
+                     * Add reporting to array for processing job history after import employee
+                     */
+                    $reporting_to[] = [
+                        'user_id'      => $item_insert_id,
+                        'reporting_to' => $line_data['work']['reporting_to'],
+                    ];
+
+                    $GLOBALS['job_info'][$item_insert_id]['user_id'] = $item_insert_id;
+                }
+
+                if ( is_wp_error( $item_insert_id ) || is_string( $item_insert_id ) ) {
+                    continue;
+                }
+            } else if ( 'vendor' === $type || 'customer' === $type ) {
+                $item_insert_id = erp_insert_people( $line_data );
+
+                if ( is_wp_error( $item_insert_id ) ) {
+                    continue;
+                }
+            } else if ( 'contact' === $type || 'company' === $type ) {
+                $contact_owner              = ! empty( $_POST['contact_owner'] )
+                                              ? absint( wp_unslash( $_POST['contact_owner'] ) )
+                                              : erp_crm_get_default_contact_owner();
+
+                if ( 'contact' === $type && ( ! erp_crm_is_current_user_manager() ) && erp_crm_is_current_user_crm_agent() && $contact_owner !== get_current_user_id() ) {
+                    $this->send_error( __( 'You can only import your own contacts', 'erp' ) );
+                }
+
+                $line_data['contact_owner'] = $contact_owner;
+                $people                     = erp_insert_people( $line_data, true );
+
+                if ( is_wp_error( $people ) ) {
+                    continue;
+                }
+
+                $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
+                $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
+
+                if ( ! $people->exists ) {
+                    $contact->update_life_stage( $life_stage );
+                } else if ( ! $contact->get_life_stage() ) {
+                    $contact->update_life_stage( $life_stage );
+                }
+
+                if ( ! empty( $_POST['contact_group'] ) ) {
+                    $contact_group = absint( $_POST['contact_group'] );
+
+                    $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
+                        'group_id' => $contact_group,
+                        'user_id'  => $people->id,
+                    ] )->first();
+
+                    if ( empty( $existing_data ) ) {
+                        $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
+
+                        erp_crm_create_new_contact_subscriber( [
+                            'group_id'       => $contact_group,
+                            'user_id'        => $people->id,
+                            'status'         => 'subscribe',
+                            'subscribe_at'   => current_time( 'mysql' ),
+                            'unsubscribe_at' => null,
+                            'hash'           => $hash,
+                        ] );
+                    }
+                }
+            }
+
+            ++ $count;
+        }
+        $this->map_reporting_to_employee( $reporting_to );
+        $this->update_reporting_history( $GLOBALS['job_info'] );
+        return $count;
+    }
+
+    /**
+     * Map reporting to employee by email
+     * 
+     * @param array $reporting_to
+     *
+     * @return void
+     */
+    function map_reporting_to_employee( $reporting_to ) {
+        global $wpdb;
+    
+        foreach ( $reporting_to as $value ) {
+            if ( ! empty( $value['reporting_to'] ) && ! empty( $value['user_id'] ) ) {
+                $reporting_employee = get_user_by( 'email', $value['reporting_to'] );
+
+                if ( $reporting_employee ) {
+                    $reporting_employee_id = $reporting_employee->ID;
+    
+                    
+                     // Update reporting to employee id in erp_hr_employees table
+                    $wpdb->query(
+                        $wpdb->prepare(
+                            "UPDATE {$wpdb->prefix}erp_hr_employees SET reporting_to = %d WHERE user_id = %d",
+                            $reporting_employee_id,
+                            $value['user_id']
+                        )
+                    );
+                    /**
+                     * Add reporting to employee id to job history array for processing job history after import employee
+                     */
+                    $GLOBALS['job_info'][$value['user_id']][ 'reporting_to'] = $reporting_employee_id;
+                }
+            }
+        }
+    }
+
+    /**
+     * Update reporting history by history id
+     *
+     * @param array $job_history
+     *
+     * @return void
+     */
+    function update_reporting_history($job_history) {
+        global $wpdb;
+        foreach ( $job_history as $value ) {
+            if ( ! empty( $value["id"] ) ) {
+                $wpdb->query(
+                    $wpdb->prepare(
+                        "UPDATE {$wpdb->prefix}erp_hr_employee_history SET data = %d WHERE id = %d",
+                        $value['reporting_to'],
+                        $value["id"]
+
+                    )
+                );
+            }
+        }
+        unset( $GLOBALS['job_info']  );
     }
 
     /**
@@ -394,6 +553,12 @@ class Ajax {
      * @return void
      */
     public function location_remove() {
+
+        // check permission for deleting location
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( erp_get_message( ['type' => 'error_permission'] ) );
+        }
+
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
             return;
         }

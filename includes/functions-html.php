@@ -165,7 +165,7 @@ function erp_html_form_input( $args = [] ) {
             break;
 
         case 'textarea':
-            echo '<textarea ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '>' . esc_textarea( $field['value'] ) . '</textarea>';
+            echo '<textarea ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '>' . esc_textarea( $field['value'] ?? '' ) . '</textarea>';
             break;
 
         case 'wysiwyg':

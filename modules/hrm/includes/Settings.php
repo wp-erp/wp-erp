@@ -9,6 +9,13 @@ use WeDevs\ERP\Settings\Template;
  */
 class Settings extends Template {
 
+
+    public $id;
+    public $label;
+    public $sections;
+    public $icon;
+    public $single_option;
+
     /**
      * [__construct description]
      */

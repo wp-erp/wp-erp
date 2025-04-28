@@ -50,6 +50,10 @@ class Template {
     public $extra = [];
 
     /**
+     *
+     */
+    public $sections;
+    /**
      * Get id
      *
      * @return string
@@ -523,7 +527,7 @@ class Template {
                                 style="<?php echo esc_attr( $value['css'] ); ?>"
                                 class="<?php echo esc_attr( $value['class'] ); ?>"
                                 <?php echo esc_html( implode( ' ', $custom_attributes ) ); ?>
-                                ><?php echo esc_textarea( $option_value ); ?></textarea>
+                                ><?php echo esc_textarea( $option_value ?? '' ); ?></textarea>
 
                                 <?php echo wp_kses_post( $description ); ?>
                         </td>

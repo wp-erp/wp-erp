@@ -145,7 +145,7 @@ function erp_acct_get_price( $main_price, $args = [] ) {
         )
     );
 
-    $price           = number_format( abs( $main_price ), $decimals, $decimal_separator, $thousand_separator );
+    $price           = number_format( abs( $main_price ?? 0 ), $decimals, $decimal_separator, $thousand_separator );
     $formatted_price = $symbol ? sprintf( $price_format, $currency_symbol, $price ) : $price;
     $formatted_price = ( $main_price < 0 ) ? '(' . $formatted_price . ')' : $formatted_price;
 

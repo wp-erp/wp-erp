@@ -27,7 +27,7 @@ function erp_acct_cash_at_bank( $args, $type ) {
 
     $sql1       = $wpdb->prepare( "SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank );
     $ledgers_query_result = $wpdb->get_var( $sql1 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-    $ledger_ids = implode( ',', explode( ',', $ledgers_query_result ) ); // e.g. 4, 5
+    $ledger_ids = $ledgers_query_result ? implode( ',', explode( ',', $ledgers_query_result ) ) : null; // e.g. 4, 5
 
     if ( $ledger_ids ) {
         $sql2 = "SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance
@@ -183,7 +183,7 @@ function erp_acct_get_owners_equity( $args, $type ) {
  * @return bool
  */
 function erp_acct_has_date_diff( $date1, $date2 ) {
-    $interval = date_diff( date_create( $date1 ), date_create( $date2 ) );
+    $interval = date_diff( date_create( $date1 ?? '' ), date_create( $date2 ) );
 
     // if difference is `0` OR `1` day
     if ( '2' > $interval->format( '%a' ) ) {

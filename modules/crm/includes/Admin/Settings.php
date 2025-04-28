@@ -9,6 +9,10 @@ use WeDevs\ERP\Settings\Template;
  */
 class Settings extends Template {
 
+    public $id;
+    public $label;
+    public $sections;
+    public $icon;
     /**
      * Init CRMSettings initial data
      */
