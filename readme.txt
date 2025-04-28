@@ -324,11 +324,14 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
-= v1.15.0 -> Apr 23, 2025 =
-* 🐞 [Fixed] PHP-8 Deprecated Errors
-* 🐞 [Fixed] CLI file include errors
-* 🐞 [Fixed] Employee Profile Tab broken
+= v1.15.0 -> Apr 28, 2025 =
+* 🐞 [Fixed] Deprecated PHP 8 errors.
+* 🐞 [Fixed] CLI file include issues.
+* 🐞 [Fixed] Employee Profile Tabs broken
 * 🐞 [Fixed] PHP Notice Early translation load error.
+* 🐞 [Fixed] Inaccessibility of CRM Contacts and Companies.
+* 🪝 [Added] Compatibility with WordPress 6.8
+* 🪝 [Added] ERP dashboard load speed improvements by caching ERP latest blogs for 1 day.
 
 = v1.14.0 -> March 05, 2025 =
 * 🪝 [Added] Dynamic department and designation creation during CSV import with employee allocation
