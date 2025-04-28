@@ -10,8 +10,9 @@
             $sections = count( $reports );
 
             if ( $sections ) {
-                $left_column  = array_slice( $reports, 0, $sections / 2 );
-                $right_column = array_slice( $reports, $sections / 2 );
+
+                $left_column  = array_slice( $reports, 0, (int) ( $sections / 2 ) );
+                $right_column = array_slice( $reports, (int) ( $sections / 2 ) );
             }
             ?>
 

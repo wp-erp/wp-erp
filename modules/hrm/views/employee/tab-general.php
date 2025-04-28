@@ -60,10 +60,17 @@
                 <li>
                     <?php erp_print_key_value( __( 'Date of Hire', 'erp' ), '<span style="font-weight: bold">' . erp_format_date( $employee->get_hiring_date() ) . '</span>' ); ?>
                     <?php
-                        $emp_hdate = new DateTime( $employee->get_hiring_date() );
-                        $cur_date  = new DateTime( gmdate( 'd-m-Y' ) );
-                        $interval  = $cur_date->diff( $emp_hdate );
-                        echo esc_html( '( ' . $interval->y . esc_html__( ' years, ', 'erp' ) . $interval->m . esc_html__( ' months, ', 'erp' ) . $interval->d . esc_html__( ' days )', 'erp' ) );
+                    if (!$employee->get_hiring_date()) {
+                        esc_html_e('No hiring date', 'erp');
+                    } else {
+
+                        $emp_hdate = new DateTime($employee->get_hiring_date());
+
+                        $cur_date = new DateTime(gmdate('d-m-Y'));
+                        $interval = $cur_date->diff($emp_hdate);
+                        echo esc_html('( ' . $interval->y . esc_html__(' years, ', 'erp') . $interval->m . esc_html__(' months, ', 'erp') . $interval->d . esc_html__(' days )', 'erp'));
+                    }
+
                     ?>
                 </li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>

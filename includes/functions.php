@@ -1275,6 +1275,7 @@ function erp_get_import_export_fields() {
 				'user_email',
 			),
 			'fields'          => array(
+                'employee_id',
 				'first_name',
 				'middle_name',
 				'last_name',
@@ -1287,8 +1288,8 @@ function erp_get_import_export_fields() {
 				'date_of_birth',
 				'reporting_to',
 				'pay_rate',
-				'pay_type',
 				'type',
+				'pay_type',
 				'status',
 				'other_email',
 				'phone',
@@ -1489,7 +1490,8 @@ function erp_process_csv_export() {
 						if ( in_array( $field, $custom_fields, true ) ) {
 							$csv_items[ $index ][ $field ] = get_user_meta( $item->id, $field, true );
 						} else {
-							$csv_items[ $index ][ $field ] = $item->{$field};
+
+							$csv_items[ $index ][ $field ] = erp_hr_get_human_readable_name($item->id, $field, $item->{$field}, $item); // $item->{$field};
 						}
 					} elseif ( $is_people ) {
 						if ( in_array( $field, $custom_fields, true ) ) {
@@ -1508,6 +1510,171 @@ function erp_process_csv_export() {
 			erp_make_csv_file( $csv_items, $file_name );
 		}
 	}
+}
+
+
+function erp_hr_get_human_readable_name( $id, $field, $value, $item ) {
+
+    if ( ! $id ) {
+        return '';
+    }
+
+    switch ( $field ) {
+        case 'department':
+            return erp_hr_get_department_name( $id, $field, $value );
+            break;
+        case 'designation':
+            return erp_hr_get_designation_name( $id, $field, $value );
+            break;
+        case 'type':
+            return erp_hr_get_employee_type( $id, $field, $value );
+        case 'reporting_to':
+            return erp_hr_get_reporting_to( $id, $field, $value );
+            break;
+        case 'pay_type':
+            return erp_hr_get_pay_type_name( $id, $field, $value );
+            break;
+        case 'status':
+            return erp_hr_get_status_name( $id, $field, $value );
+            break;
+        case 'gender':
+            return erp_hr_get_gender_name( $id, $field, $value );
+            break;
+        case 'marital_status':
+            return erp_hr_get_marital_status_name( $id, $field, $value );
+            break;
+        case 'hiring_source':
+            return erp_hr_get_hiring_source_name( $id, $field, $value );
+            break;
+        case 'country':
+            return erp_get_country_name( $value );
+            break;
+        case 'state':
+            return erp_get_state_name(  $item->country, $value );
+            break;
+        case 'location':
+            return erp_get_location_name( $value );
+            break;
+        case 'nationality':
+            return erp_get_country_name(  $value );
+            break;
+
+        // case 'blood_group':
+        //     return erp_hr_get_blood_group( $id, $field, $value );
+        //     break;
+
+
+        default:
+            return $value;
+            break;
+    }
+}
+
+function erp_hr_get_department_name( $id, $field, $value ) {
+    $department = new \WeDevs\ERP\HRM\Models\Department();
+    $department = $department->find( $value );
+
+    if ( $department ) {
+        return $department->title;
+    }
+
+    return '';
+}
+
+function erp_hr_get_designation_name( $id, $field, $value ) {
+    $designation = new \WeDevs\ERP\HRM\Models\Designation();
+    $designation = $designation->find( $value );
+    if ( $designation ) {
+        return $designation->title;
+    }
+
+    return '';
+}
+
+function erp_hr_get_employee_type( $id, $field, $value ) {
+    $types = erp_hr_get_employee_types();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+function erp_hr_get_reporting_to( $id, $field, $value ) {
+    $user = get_user_by( 'id', $value );
+
+    if ( $user ) {
+        return $user->user_email;
+    }
+
+    return '';
+}
+
+function erp_hr_get_pay_type_name( $id, $field, $value ) {
+    $types = erp_hr_get_pay_type();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// gender
+function erp_hr_get_gender_name( $id, $field, $value ) {
+    $types = erp_hr_get_genders();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// employee status
+function erp_hr_get_status_name( $id, $field, $value ) {
+    $types = erp_hr_get_employee_statuses();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// marital status
+function erp_hr_get_marital_status_name( $id, $field, $value ) {
+    $types = erp_hr_get_marital_statuses();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+// hiring source
+function erp_hr_get_hiring_source_name( $id, $field, $value ) {
+    $types = erp_hr_get_employee_sources();
+
+    if ( isset( $types[ $value ] ) ) {
+        return $types[ $value ];
+    }
+
+    return '';
+}
+
+
+function erp_get_location_name( $location_id ) {
+    $location = new WeDevs\ERP\Admin\Models\CompanyLocations();
+    $location = $location->find( $location_id  );
+
+    if ( $location ) {
+        return $location->name;
+    }
+
+    return '';
 }
 
 /**
@@ -2051,7 +2218,7 @@ function erp_is_module_active( $module_key ) {
  * @param bool   $field_data (optional)
  * @param string $file_name
  */
-function erp_make_csv_file( $items, $file_name, $field_data = true ) {
+function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' ) {
 	$file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . gmdate( 'd_m_Y' ) . '.csv';
 
 	if ( empty( $items ) ) {
@@ -2081,7 +2248,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
 			$csv_row = array_map(
 				function ( $item_val ) {
 					if ( is_array( $item_val ) ) {
-							return implode( ', ', $item_val );
+						return implode( ', ', $item_val );
 					}
 
 					return $item_val;
@@ -2093,9 +2260,64 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
 		}
 	}
 
+    if ( 'employee' === $type ) {
+
+        $sample_data = get_sample_employee_data($items[0]);
+        foreach ( $sample_data as $item ) {
+            fputcsv( $output, $item );
+        }
+    }
 	exit();
 }
 
+
+/**
+ * Get sample employee data
+ *
+ * @return array
+ */
+function get_sample_employee_data($columns) {
+
+    $sample_data = array(
+        array(
+            'employee_id' => '12345',
+            'first_name' => 'John',
+            'middle_name' => 'Karim',
+            'last_name' => 'Desuza',
+            'email' => 'john.doe@example.com',
+            'designation' => 'Software Engineer',
+            'department' => 'Engineering',
+            'location' => 'Somewhere',
+            'hiring_source' => 'Direct',
+            'hire_date' => '2020-01-01',
+            'date_of_birth' => '1999-01-01',
+            'reporting_to' => 'someone@email.com',
+            'pay_rate' => '50000.00',
+            'type' => 'Full Time',
+            'pay_type' => 'Monthly',
+            'status' => 'Active',
+            'other_email' => 'other_email@something.com',
+            'phone' => '123-456-7890',
+            'work_phone' => '123-456-7890',
+            'mobile' => '123-456-7891',
+            'address' => '123 Main Street, Anytown, CA 12345',
+            'gender' => 'Male',
+            'marital_status' => 'Single',
+            'nationality' => 'Nationality',
+            'driving_license' => 'DRV-12345',
+            'hobbies' => 'Reading, Traveling',
+            'user_url' => 'https://example.com',
+            'description' => 'Sample employee data',
+            'street_1' => '123 Main Street',
+            'street_2' => 'Apt 123',
+            'city' => 'Anytown',
+            'country' => 'US',
+            'state' => 'CA',
+            'postal_code' => '12345',
+        ),
+    );
+    return $sample_data;
+}
 /**
  * Import/Export sample CSV download action hook
  *
@@ -2114,15 +2336,15 @@ function erp_import_export_download_sample() {
 		return;
 	}
 
-	$type   = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) );
+	$sample_type   = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) );
 	$fields = erp_get_import_export_fields();
 
-	if ( isset( $fields[ $type ] ) ) {
-		$keys      = $fields[ $type ]['fields'];
+	if ( isset( $fields[ $sample_type ] ) ) {
+		$keys      = $fields[ $sample_type ]['fields'];
 		$keys      = array_flip( $keys );
-		$file_name = "sample_csv_{$type}.csv";
+		$file_name = "sample_csv_{$sample_type}.csv";
 
-		erp_make_csv_file( array( $keys ), $file_name, false );
+		erp_make_csv_file( array( $keys ), $file_name, false, $sample_type );
 	}
 
 	return;
@@ -2658,7 +2880,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] <=> $b['position'];
 		}
 	);
 
@@ -2831,6 +3053,13 @@ function erp_render_menu_header( $component ) {
  * @return object|false
  */
 function erp_web_feed() {
+	$transient_name = 'erp_web_feed_cache';
+	$cached_data = get_transient( $transient_name );
+
+	if ( $cached_data !== false ) {
+		return simplexml_load_string( $cached_data );
+	}
+
 	$url  = 'https://wperp.com/feed/';
 	$args = array(
 		'timeout'   => 15,
@@ -2842,6 +3071,8 @@ function erp_web_feed() {
 	$data = '';
 	if ( ! is_wp_error( $response ) ) {
 		$data = wp_remote_retrieve_body( $response );
+
+		set_transient( $transient_name, $data, DAY_IN_SECONDS );
 	}
 
 	return simplexml_load_string( $data );
@@ -2877,7 +3108,7 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] <=> $b['position'];
 		}
 	);
 
@@ -3171,7 +3402,7 @@ function filter_enabled_email( $email ) {
  * @author  Ugur Mirza ZEYREK
  * @contributor Travis Grenell
  */
-function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+function erp_wp_insert_rows( $row_arrays, $wp_table_name, $update = false, $primary_key = null ) {
 	global $wpdb;
 	$wp_table_name = esc_sql( $wp_table_name );
 	// Setup arrays for Actual Values, and Placeholders.
@@ -3504,6 +3735,7 @@ function erp_is_valid_currency_amount( $amount ) {
  * @return array
  */
 function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
+
 	$old_value   = $new_value   = array();
 	$changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
 

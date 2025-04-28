@@ -328,11 +328,13 @@ class Employee {
             return new WP_Error( 'invalid-status', __( 'Please select a valid employee status', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['department'] ) && ! array_key_exists( $data['work']['department'], erp_hr_get_departments_dropdown_raw() ) ) {
+        if ( ! empty( $data['work']['department'] ) && ! array_key_exists( $data['work']['department'], erp_hr_get_departments_fresh() ) ) {
             return new WP_Error( 'invalid-department', __( 'Please select a valid employee department', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['designation'] ) && ! array_key_exists( $data['work']['designation'], erp_hr_get_designation_dropdown_raw() ) ) {
+        if ( ! empty( $data['work']['designation'] ) && ! array_key_exists( $data['work']['designation'], erp_hr_get_designations_fresh() ) ) {
+            error_log(print_r( [erp_hr_get_departments_fresh()], true ));
+
             return new WP_Error( 'invalid-designation', __( 'Please select a valid employee designation', 'erp' ) );
         }
 
@@ -340,9 +342,11 @@ class Employee {
             return new WP_Error( 'invalid-location', __( 'Please select a valid employee location', 'erp' ) );
         }
 
-        if ( ! empty( $data['work']['reporting_to'] ) && ! array_key_exists( $data['work']['reporting_to'], erp_hr_get_employees_dropdown_raw() ) ) {
-            return new WP_Error( 'invalid-reporting-to', __( 'Please select a valid employee reporting to', 'erp' ) );
-        }
+        // if ( ! empty( $data['work']['reporting_to'] ) && ! get_user_by('user_email', $data['work']['reporting_to']) ) {
+        //     error_log(print_r( [$data['work']['reporting_to'], get_user_by('user_email', $data['work']['reporting_to'])], true ));
+
+        //     return new WP_Error( 'invalid-reporting-to', __( 'Please select a valid employee reporting to', 'erp' ) );
+        // }
 
         if ( ! empty( $data['work']['hiring_source'] ) && ! array_key_exists( $data['work']['hiring_source'], erp_hr_get_employee_sources() ) && $data['work']['hiring_source'] !== '-1' ) {
             return new WP_Error( 'invalid-source', __( 'Please select a valid employee source', 'erp' ) );
@@ -521,13 +525,18 @@ class Employee {
             ! empty( $work['reporting_to'] ) ||
             ! empty( $work['location'] )
         ) {
-            $this->update_job_info( [
+           $job_history =  $this->update_job_info( [
                 'date'         => $work['hiring_date'],
                 'designation'  => isset( $work['designation'] ) ? $work['designation'] : '',
                 'department'   => isset( $work['department'] ) ? $work['department'] : '',
                 'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
                 'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
             ] );
+
+            // // This job history id will be used for update reporting to employee in while importing employee csv
+            if ( ! empty( $GLOBALS['job_info'] ) ) {
+                $GLOBALS['job_info'][$user_id]['id'] = $job_history['id'];
+            }
         }
 
         $data['personal']['user_email'] = $user_email;
