@@ -22,7 +22,7 @@ class People extends Item {
             $this->id   = (int) $item->id;
             $this->data = $item;
         } else {
-            $this->id   = 0;
+            $this->id = 0;
         }
     }
 
@@ -57,7 +57,7 @@ class People extends Item {
     public function get_full_name() {
         $full_name = '';
 
-        if ( ! empty( $this->types ) && in_array( 'company', $this->types ) ) {
+        if ( ! empty( $this->types ) && in_array( 'company', $this->types, true ) ) {
             $full_name = $this->company;
         } elseif ( $this->is_wp_user() ) {
             $user = \get_user_by( 'id', $this->user_id );
@@ -177,7 +177,7 @@ class People extends Item {
             return new WP_Error( 'unauthorized-erp-people-property', __( 'Unauthorized people property', 'erp' ) );
         }
 
-        $people = \WeDevs\ERP\Framework\Models\People::find( $this->id  );
-        $wor    = $people->update( [$property => $value] );
+        $people = \WeDevs\ERP\Framework\Models\People::find( $this->id );
+        $wor = $people->update( array( $property => $value ) );
     }
 }
