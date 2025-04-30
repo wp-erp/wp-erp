@@ -36,4 +36,4 @@ jobs:
           echo "::set-output name=files::$FILES"
 
       - name: Detect coding standard violations
-        run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
+        run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | vendor/bin/cs2pr --graceful-warnings
