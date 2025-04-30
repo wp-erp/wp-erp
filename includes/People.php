@@ -9,68 +9,6 @@ use WP_Error;
  */
 class People extends Item {
 
-    /**
-     * People ID
-     *
-     * @var int
-     */
-    public $id = 0;
-
-    /**
-     * People data
-     *
-     * @var object
-     */
-    public $data = null;
-
-    /**
-     * People types
-     *
-     * @var array
-     */
-    public $types = [];
-
-    /**
-     * People first name
-     *
-     * @var string
-     */
-    public $first_name = '';
-
-    /**
-     * People last name
-     *
-     * @var string
-     */
-    public $last_name = '';
-
-    /**
-     * People company name
-     *
-     * @var string
-     */
-    public $company = '';
-
-    /**
-     * People email
-     *
-     * @var string
-     */
-    public $email = '';
-
-    /**
-     * People website
-     *
-     * @var string
-     */
-    public $website = '';
-
-    /**
-     * People user id
-     *
-     * @var int
-     */
-    public $user_id = 0;
 
     /**
      * Generate people data
