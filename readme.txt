@@ -328,7 +328,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 * 🐞 [Fixed] CRM customer data attributes missing.
 * 🐞 [Fixed] Deprecated PHP Errors.
 * 🐞 [Improved] CRM customer name escaping.
-* 🪝 [Added] Job Tab Salary Blur option.
+* 🪝 [Added] Job Tab Salary Blur feature.
 
 = v1.15.0 -> Apr 28, 2025 =
 * 🐞 [Fixed] Deprecated PHP 8 errors.
