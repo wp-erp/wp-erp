@@ -47,7 +47,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                                 <?php echo wp_kses_post( $customer->get_avatar( 100 ) ); ?>
                             </div>
                             <div class="col-4 details">
-                                <h3><?php echo esc_attr( $customer->get_full_name() ); ?></h3>
+                                <h3><?php echo esc_html( $customer->get_full_name() ); ?></h3>
 
                                 <?php if ( $customer->get_email() ) { ?>
                                     <p>
