@@ -326,6 +326,8 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 = v1.15.1 -> Apr 28, 2025 =
 * 🐞 [Fixed] CRM customer data attributes missing.
+* 🐞 [Fixed] Deprecated PHP Errors.
+* 🐞 [Improved] CRM customer name escaping.
 
 = v1.15.0 -> Apr 28, 2025 =
 * 🐞 [Fixed] Deprecated PHP 8 errors.
