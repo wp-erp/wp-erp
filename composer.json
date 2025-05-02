@@ -27,13 +27,15 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.7",
-        "wp-coding-standards/wpcs": "dev-develop",
+        "wp-coding-standards/wpcs": "^3.1",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
         "tareq1988/wp-php-cs-fixer": "dev-master",
         "fzaninotto/faker": "^1.9@dev",
-        "phpcompatibility/phpcompatibility-wp": "dev-master",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
         "phpunit/phpunit": "^5.7.27",
-        "lucatume/wp-browser": "^2.2"
+        "lucatume/wp-browser": "^2.2",
+        "staabm/annotate-pull-request-from-checkstyle": "^1.8",
+        "phpcompatibility/phpcompatibility-all": "^1.1"
     },
     "repositories": [
         {
