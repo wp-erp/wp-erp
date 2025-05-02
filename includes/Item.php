@@ -31,6 +31,13 @@ abstract class Item {
     public $name = '';
 
     /**
+     * Item types
+     *
+     * @var array
+     */
+    public $types = array();
+
+    /**
      * Initialize a item
      *
      * @param int|object  the item numeric id or a wpdb row

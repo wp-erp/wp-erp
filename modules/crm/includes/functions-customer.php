@@ -699,7 +699,7 @@ function erp_crm_get_feed_activity( $args = [] ) {
             '*',
             $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ),
         ] )
-                                                       ->with( [
+        ->with( [
                 'contact'    => function ( $query ) {
                     $query->with( 'types' );
                 },
@@ -753,6 +753,8 @@ function erp_crm_get_feed_activity( $args = [] ) {
         }
 
         $results = $results->get()->toArray();
+
+        $feeds = [];
 
         foreach ( $results as $key => $value ) {
             $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
@@ -1175,7 +1177,7 @@ function erp_crm_get_contact_groups( $args = [] ) {
     $items        = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
-        $items = []; 
+        $items = [];
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
             $result = WeDevs\ERP\CRM\Models\ContactGroup::count();

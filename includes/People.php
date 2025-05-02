@@ -9,68 +9,6 @@ use WP_Error;
  */
 class People extends Item {
 
-    /**
-     * People ID
-     *
-     * @var int
-     */
-    public $id = 0;
-
-    /**
-     * People data
-     *
-     * @var object
-     */
-    public $data = null;
-
-    /**
-     * People types
-     *
-     * @var array
-     */
-    public $types = [];
-
-    /**
-     * People first name
-     *
-     * @var string
-     */
-    public $first_name = '';
-
-    /**
-     * People last name
-     *
-     * @var string
-     */
-    public $last_name = '';
-
-    /**
-     * People company name
-     *
-     * @var string
-     */
-    public $company = '';
-
-    /**
-     * People email
-     *
-     * @var string
-     */
-    public $email = '';
-
-    /**
-     * People website
-     *
-     * @var string
-     */
-    public $website = '';
-
-    /**
-     * People user id
-     *
-     * @var int
-     */
-    public $user_id = 0;
 
     /**
      * Generate people data
@@ -84,7 +22,7 @@ class People extends Item {
             $this->id   = (int) $item->id;
             $this->data = $item;
         } else {
-            $this->id   = 0;
+            $this->id = 0;
         }
     }
 
@@ -119,7 +57,7 @@ class People extends Item {
     public function get_full_name() {
         $full_name = '';
 
-        if ( ! empty( $this->types ) && in_array( 'company', $this->types ) ) {
+        if ( ! empty( $this->types ) && in_array( 'company', $this->types, true ) ) {
             $full_name = $this->company;
         } elseif ( $this->is_wp_user() ) {
             $user = \get_user_by( 'id', $this->user_id );
@@ -239,7 +177,7 @@ class People extends Item {
             return new WP_Error( 'unauthorized-erp-people-property', __( 'Unauthorized people property', 'erp' ) );
         }
 
-        $people = \WeDevs\ERP\Framework\Models\People::find( $this->id  );
-        $wor    = $people->update( [$property => $value] );
+        $people = \WeDevs\ERP\Framework\Models\People::find( $this->id );
+        $wor = $people->update( array( $property => $value ) );
     }
 }
