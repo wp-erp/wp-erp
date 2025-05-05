@@ -180,7 +180,7 @@
             } else {
 				?>
 
-                <?php esc_html_e( 'No work experiences found.', 'erp' ); ?>
+                <p><?php esc_html_e( 'No work experiences found.', 'erp' ); ?></p>
 
             <?php } ?>
             <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) { ?>
@@ -265,7 +265,7 @@
             } else {
                 ?>
 
-                <?php esc_html_e( 'No education information found.', 'erp' ); ?>
+                <p><?php esc_html_e( 'No education information found.', 'erp' ); ?></p>
 
             <?php } ?>
 
@@ -335,7 +335,7 @@
             } else {
                 ?>
 
-                <?php esc_html_e( 'No dependent information found.', 'erp' ); ?>
+                <p><?php esc_html_e( 'No dependent information found.', 'erp' ); ?></p>
 
             <?php } ?>
 
