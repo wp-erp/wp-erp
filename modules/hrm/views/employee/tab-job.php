@@ -134,13 +134,26 @@
             <thead>
                 <tr>
                     <th><?php esc_html_e( 'Date', 'erp' ); ?></th>
+                    <?php
+                    $hide_pay_rate = get_option( 'erp_hrm_hide_pay_rate', 'no' );
+                    if( $hide_pay_rate === 'yes' ){ ?>
+                        <th onclick="document.querySelectorAll('.pay-rate').forEach(el => el.classList.toggle('blur'))"><?php esc_html_e( 'Pay Rate', 'erp' ); ?></th>
+                   <?php } else {?>
                     <th><?php esc_html_e( 'Pay Rate', 'erp' ); ?></th>
+                    <?php } ?>
                     <th><?php esc_html_e( 'Pay Type', 'erp' ); ?></th>
                     <th><?php esc_html_e( 'Change Reason', 'erp' ); ?></th>
                     <th><?php esc_html_e( 'Comment', 'erp' ); ?></th>
                     <th class="action">&nbsp;</th>
                 </tr>
             </thead>
+            <?php if( $hide_pay_rate === 'yes' ){ ?>
+            <style>
+                .pay-rate.blur {
+                    filter: blur(6px);
+                }
+            </style>
+            <?php } ?>
             <tbody>
                 <?php
                 if ( ! empty( $histories['compensation'] ) ) {
@@ -156,9 +169,16 @@
                                     <span class="active_dot"></span>
                                 <?php endif; ?>
                             </td>
+                            <?php if( $hide_pay_rate  === 'yes' ){ ?>
+                            <td style="display: flex; align-items: center;">
+                                <span class="dashicons dashicons-visibility" style="cursor: pointer; margin-right: 5px;" onclick="this.parentNode.querySelector('.pay-rate').classList.toggle('blur')"></span>
+                                <span class="pay-rate blur"><?php echo ( ! empty( $compensation['pay_rate'] ) ) ? wp_kses_post( $compensation['pay_rate'] ) : '--'; ?></span>
+                            </td>
+                            <?php } else { ?>
                             <td>
                                 <?php echo ( ! empty( $compensation['pay_rate'] ) ) ? wp_kses_post( $compensation['pay_rate'] ) : '--'; ?>
                             </td>
+                            <?php } ?>
                             <td>
                                 <?php echo ( ! empty( $compensation['pay_type'] ) && array_key_exists( $compensation['pay_type'], $pay_type ) ) ? wp_kses_post( $pay_type[ $compensation['pay_type'] ] ) : '--'; ?>
                             </td>
