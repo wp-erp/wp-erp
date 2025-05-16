@@ -32,10 +32,11 @@
         "tareq1988/wp-php-cs-fixer": "dev-master",
         "fzaninotto/faker": "^1.9@dev",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "phpunit/phpunit": "^5.7.27",
+        "phpunit/phpunit": "^5.7",
         "lucatume/wp-browser": "^2.2",
         "staabm/annotate-pull-request-from-checkstyle": "^1.8",
-        "phpcompatibility/phpcompatibility-all": "^1.1"
+        "phpcompatibility/phpcompatibility-all": "^1.1",
+        "yoast/phpunit-polyfills": "^1.0"
     },
     "repositories": [
         {
