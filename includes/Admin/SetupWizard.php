@@ -152,7 +152,7 @@ class SetupWizard {
      */
     public function setup_wizard_footer() {
         ?>
-            
+
             </body>
         </html>
         <?php
@@ -847,7 +847,7 @@ class SetupWizard {
                                 'value'    => $working_days[ $key ],
                                 'type'     => 'select',
                                 'options'  => $options,
-                            ] ) ); ?>
+                            ] ).'' ); ?>
                         </td>
                     </tr>
                 <?php

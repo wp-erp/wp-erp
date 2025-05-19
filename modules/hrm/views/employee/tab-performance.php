@@ -126,7 +126,7 @@
                 } ?>
                     </td>
 
-                    <td><?php echo esc_textarea( $row->comments ); ?></td>
+                    <td><?php echo esc_textarea( $row->comments ?? '' ); ?></td>
 
                     <td class="action">
                         <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
@@ -181,8 +181,8 @@
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                     <td><?php echo esc_html( erp_format_date( $row->performance_date ) ); ?></td>
                     <td><?php echo esc_html( erp_format_date( $row->completion_date ) ); ?></td>
-                    <td><?php echo esc_textarea( $row->goal_description ); ?></td>
-                    <td><?php echo esc_textarea( $row->employee_assessment ); ?></td>
+                    <td><?php echo esc_textarea( $row->goal_description ?? '' ); ?></td>
+                    <td><?php echo esc_textarea( $row->employee_assessment ?? '' ); ?></td>
                     <td>
                         <?php
                         $reporting_user = new \WeDevs\ERP\HRM\Employee( intval( $row->supervisor ) );
@@ -191,7 +191,7 @@
                     echo esc_html( $reporting_user->get_full_name() );
                 } ?>
                     </td>
-                    <td><?php echo esc_textarea( $row->supervisor_assessment ); ?></td>
+                    <td><?php echo esc_textarea( $row->supervisor_assessment ?? '' ); ?></td>
 
                     <td class="action">
                         <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||

@@ -421,7 +421,7 @@ function erp_acct_get_people_id_by_user_id( $user_id ) {
 
     $row = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE user_id = %d LIMIT 1", $user_id ) );
 
-    return $row->id;
+    return isset($row->id) ? intval($row->id) : null;
 }
 
 /**
@@ -432,9 +432,17 @@ function erp_acct_get_people_id_by_user_id( $user_id ) {
 function erp_acct_get_people_name_by_people_id( $people_id ) {
     global $wpdb;
 
+    if ( ! $people_id ) {
+        return '';
+    }
+
     $row = $wpdb->get_row( $wpdb->prepare( "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = %d LIMIT 1", $people_id ) );
 
-    return $row->first_name . ' ' . $row->last_name;
+    if ( ! $row ) {
+        return '';
+    }
+
+    return trim( $row->first_name . ' ' . $row->last_name );
 }
 
 /**
