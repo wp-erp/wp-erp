@@ -142,7 +142,7 @@ class Ajax {
             $this->send_error( __( 'Something went wrong or items already exist', 'erp' ) );
         }
 
-        $this->send_success( __( sprintf( '%d items have been imported successfully', $count ), 'erp' ) );
+        $this->send_success( sprintf( __( '%d items have been imported successfully', 'erp' ), $count ) );
     }
 
     /**

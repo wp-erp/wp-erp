@@ -3,6 +3,7 @@ config.codekit
 .codekit-cache
 # Composer
 /vendor/
+/vendor copy/
 node_modules
 node_modules copy
 build

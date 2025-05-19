@@ -39,7 +39,7 @@ class TransactionalEmailPayPurchase extends Email {
         ];
     }
 
-    public function trigger( $receiver_email, $attachment = '', $voucher_no, $company ) {
+    public function trigger( $receiver_email, $attachment, $voucher_no, $company ) {
         $this->recipient   = $receiver_email;
         $this->heading     = $this->get_option( 'heading', $this->heading );
         $this->subject     = $this->get_option( 'subject', $this->subject );

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02e0116c20e3850ef4af213da9bbb303",
+    "content-hash": "b99fe62083ef83f446f2e14b11f1a75d",
     "packages": [
         {
             "name": "appsero/client",
@@ -5886,6 +5886,157 @@
             "time": "2019-12-27T09:44:58+00:00"
         },
         {
+            "name": "phpcompatibility/phpcompatibility-all",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPCompatibility/PHPCompatibilityAll.git",
+                "reference": "f0f6974c3e38763cdc39b75937a3121d81a67c20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityAll/zipball/f0f6974c3e38763cdc39b75937a3121d81a67c20",
+                "reference": "f0f6974c3e38763cdc39b75937a3121d81a67c20",
+                "shasum": ""
+            },
+            "require": {
+                "phpcompatibility/php-compatibility": "*",
+                "phpcompatibility/phpcompatibility-joomla": "*",
+                "phpcompatibility/phpcompatibility-paragonie": "*",
+                "phpcompatibility/phpcompatibility-passwordcompat": "*",
+                "phpcompatibility/phpcompatibility-symfony": "*",
+                "phpcompatibility/phpcompatibility-wp": "*"
+            },
+            "suggest": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+                "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+            },
+            "type": "phpcodesniffer-standard",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Wim Godden",
+                    "role": "lead"
+                },
+                {
+                    "name": "Juliette Reinders Folmer",
+                    "role": "lead"
+                }
+            ],
+            "description": "A set of rulesets for PHP_CodeSniffer to check for PHP cross-version compatibility issues and opportunities to modernize code in PHP projects.",
+            "homepage": "http://phpcompatibility.com/",
+            "keywords": [
+                "compatibility",
+                "joomla",
+                "paragonie",
+                "password_compat",
+                "phpcs",
+                "polyfills",
+                "standards",
+                "static analysis",
+                "symfony",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPCompatibility/PHPCompatibilityAll/issues",
+                "security": "https://github.com/PHPCompatibility/PHPCompatibilityAll/security/policy",
+                "source": "https://github.com/PHPCompatibility/PHPCompatibilityAll"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCompatibility",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2025-01-16T22:41:56+00:00"
+        },
+        {
+            "name": "phpcompatibility/phpcompatibility-joomla",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPCompatibility/PHPCompatibilityJoomla.git",
+                "reference": "1fda0a8e3fde8fed9eccd80111d17dfa41da224f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityJoomla/zipball/1fda0a8e3fde8fed9eccd80111d17dfa41da224f",
+                "reference": "1fda0a8e3fde8fed9eccd80111d17dfa41da224f",
+                "shasum": ""
+            },
+            "require": {
+                "phpcompatibility/php-compatibility": "^9.0",
+                "phpcompatibility/phpcompatibility-paragonie": "^1.0",
+                "phpcompatibility/phpcompatibility-symfony": "^1.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+            },
+            "suggest": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+                "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+            },
+            "type": "phpcodesniffer-standard",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Wim Godden",
+                    "role": "lead"
+                },
+                {
+                    "name": "Juliette Reinders Folmer",
+                    "role": "lead"
+                },
+                {
+                    "name": "Michael Babker",
+                    "role": "Joomla specialist"
+                }
+            ],
+            "description": "A ruleset for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by Joomla.",
+            "homepage": "http://phpcompatibility.com/",
+            "keywords": [
+                "compatibility",
+                "joomla",
+                "phpcs",
+                "standards",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPCompatibility/PHPCompatibilityJoomla/issues",
+                "security": "https://github.com/PHPCompatibility/PHPCompatibilityJoomla/security/policy",
+                "source": "https://github.com/PHPCompatibility/PHPCompatibilityJoomla"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCompatibility",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2025-01-16T22:24:17+00:00"
+        },
+        {
             "name": "phpcompatibility/phpcompatibility-paragonie",
             "version": "1.3.3",
             "source": {
@@ -5958,17 +6109,169 @@
             "time": "2024-04-24T21:30:46+00:00"
         },
         {
-            "name": "phpcompatibility/phpcompatibility-wp",
-            "version": "dev-master",
+            "name": "phpcompatibility/phpcompatibility-passwordcompat",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "01c1ff2704a58e46f0cb1ca9d06aee07b3589082"
+                "url": "https://github.com/PHPCompatibility/PHPCompatibilityPasswordCompat.git",
+                "reference": "68610ffc60484b422bc4d124a0f50f1ea41c8cff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/01c1ff2704a58e46f0cb1ca9d06aee07b3589082",
-                "reference": "01c1ff2704a58e46f0cb1ca9d06aee07b3589082",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityPasswordCompat/zipball/68610ffc60484b422bc4d124a0f50f1ea41c8cff",
+                "reference": "68610ffc60484b422bc4d124a0f50f1ea41c8cff",
+                "shasum": ""
+            },
+            "require": {
+                "phpcompatibility/php-compatibility": "^9.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "ircmaxell/password-compat": "dev-master"
+            },
+            "suggest": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+                "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+            },
+            "type": "phpcodesniffer-standard",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Wim Godden",
+                    "role": "lead"
+                },
+                {
+                    "name": "Juliette Reinders Folmer",
+                    "role": "lead"
+                }
+            ],
+            "description": "A ruleset for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by ircmaxell's password_compat library.",
+            "homepage": "http://phpcompatibility.com/",
+            "keywords": [
+                "compatibility",
+                "password_compat",
+                "phpcs",
+                "polyfill",
+                "standards",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPCompatibility/PHPCompatibilityPasswordCompat/issues",
+                "security": "https://github.com/PHPCompatibility/PHPCompatibilityPasswordCompat/security/policy",
+                "source": "https://github.com/PHPCompatibility/PHPCompatibilityPasswordCompat"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCompatibility",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2025-01-16T20:44:03+00:00"
+        },
+        {
+            "name": "phpcompatibility/phpcompatibility-symfony",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPCompatibility/PHPCompatibilitySymfony.git",
+                "reference": "fd7aa90db93663a6eeab5f32c23ab85f58c16a08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilitySymfony/zipball/fd7aa90db93663a6eeab5f32c23ab85f58c16a08",
+                "reference": "fd7aa90db93663a6eeab5f32c23ab85f58c16a08",
+                "shasum": ""
+            },
+            "require": {
+                "phpcompatibility/php-compatibility": "^9.0",
+                "phpcompatibility/phpcompatibility-paragonie": "^1.0",
+                "phpcompatibility/phpcompatibility-passwordcompat": "^1.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "symfony/polyfill-php54": "1.19",
+                "symfony/polyfill-php55": "1.19",
+                "symfony/polyfill-php56": "1.19",
+                "symfony/polyfill-php70": "1.19",
+                "symfony/polyfill-php71": "1.19",
+                "symfony/polyfill-php72": "1.30",
+                "symfony/polyfill-php73": "1.x-dev",
+                "symfony/polyfill-php74": "1.x-dev",
+                "symfony/polyfill-php80": "1.x-dev"
+            },
+            "suggest": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
+                "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
+            },
+            "type": "phpcodesniffer-standard",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Wim Godden",
+                    "role": "lead"
+                },
+                {
+                    "name": "Juliette Reinders Folmer",
+                    "role": "lead"
+                }
+            ],
+            "description": "A set of rulesets for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by the Symfony polyfill libraries.",
+            "homepage": "http://phpcompatibility.com/",
+            "keywords": [
+                "compatibility",
+                "phpcs",
+                "polyfill",
+                "standards",
+                "static analysis",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPCompatibility/PHPCompatibilitySymfony/issues",
+                "security": "https://github.com/PHPCompatibility/PHPCompatibilitySymfony/security/policy",
+                "source": "https://github.com/PHPCompatibility/PHPCompatibilitySymfony"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCompatibility",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2025-01-16T21:07:24+00:00"
+        },
+        {
+            "name": "phpcompatibility/phpcompatibility-wp",
+            "version": "2.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
+                "reference": "80ccb1a7640995edf1b87a4409fa584cd5869469"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/80ccb1a7640995edf1b87a4409fa584cd5869469",
+                "reference": "80ccb1a7640995edf1b87a4409fa584cd5869469",
                 "shasum": ""
             },
             "require": {
@@ -5982,7 +6285,6 @@
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.0 || This Composer plugin will sort out the PHP_CodeSniffer 'installed_paths' automatically.",
                 "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
             },
-            "default-branch": true,
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -6026,7 +6328,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-04-24T21:37:59+00:00"
+            "time": "2025-01-16T22:34:19+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -7666,6 +7968,58 @@
                 }
             ],
             "time": "2024-09-18T10:38:58+00:00"
+        },
+        {
+            "name": "staabm/annotate-pull-request-from-checkstyle",
+            "version": "1.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/staabm/annotate-pull-request-from-checkstyle.git",
+                "reference": "082e7f859860f6e79094b6ec86606bd6d0fe9014"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/staabm/annotate-pull-request-from-checkstyle/zipball/082e7f859860f6e79094b6ec86606bd6d0fe9014",
+                "reference": "082e7f859860f6e79094b6ec86606bd6d0fe9014",
+                "shasum": ""
+            },
+            "require": {
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
+                "php": "^5.3 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16.1"
+            },
+            "bin": [
+                "cs2pr"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Markus Staab"
+                }
+            ],
+            "keywords": [
+                "Github Actions",
+                "continous integration",
+                "dev"
+            ],
+            "support": {
+                "issues": "https://github.com/staabm/annotate-pull-request-from-checkstyle/issues",
+                "source": "https://github.com/staabm/annotate-pull-request-from-checkstyle/tree/1.8.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/staabm",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-05-08T15:56:45+00:00"
         },
         {
             "name": "symfony/console",
@@ -10554,16 +10908,16 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "dev-develop",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "2133137c33fa898df70b5f879a65d83af4dbb97d"
+                "reference": "9333efcbff231f10dfd9c56bb7b65818b4733ca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/2133137c33fa898df70b5f879a65d83af4dbb97d",
-                "reference": "2133137c33fa898df70b5f879a65d83af4dbb97d",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/9333efcbff231f10dfd9c56bb7b65818b4733ca7",
+                "reference": "9333efcbff231f10dfd9c56bb7b65818b4733ca7",
                 "shasum": ""
             },
             "require": {
@@ -10587,7 +10941,6 @@
                 "ext-iconv": "For improved results",
                 "ext-mbstring": "For improved results"
             },
-            "default-branch": true,
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -10617,7 +10970,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-10-05T00:46:24+00:00"
+            "time": "2024-03-25T16:39:00+00:00"
         },
         {
             "name": "zordius/lightncandy",
@@ -10681,10 +11034,8 @@
     "stability-flags": {
         "fzaninotto/faker": 20,
         "google/apiclient-services": 20,
-        "phpcompatibility/phpcompatibility-wp": 20,
         "tareq1988/wp-eloquent": 20,
-        "tareq1988/wp-php-cs-fixer": 20,
-        "wp-coding-standards/wpcs": 20
+        "tareq1988/wp-php-cs-fixer": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

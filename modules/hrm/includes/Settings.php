@@ -9,6 +9,13 @@ use WeDevs\ERP\Settings\Template;
  */
 class Settings extends Template {
 
+
+    public $id;
+    public $label;
+    public $sections;
+    public $icon;
+    public $single_option;
+
     /**
      * [__construct description]
      */
@@ -138,6 +145,12 @@ class Settings extends Template {
             'type'  => 'checkbox',
             'id'    => 'erp_hrm_remove_wp_user',
             'desc'  => __( 'Remove wp user on removing employee.', 'erp' ),
+        ];
+        $fields['miscellaneous'][] = [
+            'title' => __( 'Hide Pay Rate', 'erp' ),
+            'type'  => 'checkbox',
+            'id'    => 'erp_hrm_hide_pay_rate',
+            'desc'  => __( 'By default hide pay rate on employee profile.', 'erp' ),
         ];
         $fields['miscellaneous'][] =[
             'type'  => 'sectionend',

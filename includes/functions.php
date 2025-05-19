@@ -2880,7 +2880,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] <=> $b['position'];
 		}
 	);
 
@@ -3053,6 +3053,13 @@ function erp_render_menu_header( $component ) {
  * @return object|false
  */
 function erp_web_feed() {
+	$transient_name = 'erp_web_feed_cache';
+	$cached_data = get_transient( $transient_name );
+
+	if ( $cached_data !== false ) {
+		return simplexml_load_string( $cached_data );
+	}
+
 	$url  = 'https://wperp.com/feed/';
 	$args = array(
 		'timeout'   => 15,
@@ -3064,6 +3071,8 @@ function erp_web_feed() {
 	$data = '';
 	if ( ! is_wp_error( $response ) ) {
 		$data = wp_remote_retrieve_body( $response );
+
+		set_transient( $transient_name, $data, DAY_IN_SECONDS );
 	}
 
 	return simplexml_load_string( $data );
@@ -3099,7 +3108,7 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 	uasort(
 		$items,
 		function ( $a, $b ) {
-			return $a['position'] > $b['position'];
+			return $a['position'] <=> $b['position'];
 		}
 	);
 
@@ -3393,7 +3402,7 @@ function filter_enabled_email( $email ) {
  * @author  Ugur Mirza ZEYREK
  * @contributor Travis Grenell
  */
-function erp_wp_insert_rows( $row_arrays = array(), $wp_table_name, $update = false, $primary_key = null ) {
+function erp_wp_insert_rows( $row_arrays, $wp_table_name, $update = false, $primary_key = null ) {
 	global $wpdb;
 	$wp_table_name = esc_sql( $wp_table_name );
 	// Setup arrays for Actual Values, and Placeholders.
@@ -3726,6 +3735,7 @@ function erp_is_valid_currency_amount( $amount ) {
  * @return array
  */
 function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
+
 	$old_value   = $new_value   = array();
 	$changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
 

@@ -122,6 +122,15 @@ class Email extends Settings_Page {
     public $email_type = 'html';
 
     /**
+     * Email sending status
+     *
+     * @var bool
+     */
+    public $sending = false;
+
+    
+
+    /**
      * List of preg* regular expression patterns to search for,
      * used in conjunction with $replace.
      * https://raw.github.com/ushahidi/wp-silcc/master/class.html2text.inc
