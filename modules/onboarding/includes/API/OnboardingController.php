@@ -33,11 +33,31 @@ class OnboardingController extends WP_REST_Controller {
 
     // Permission checks
     public function get_permissions_check($request) {
-        return true;
+        $nonce = $request->get_header('X-WP-Nonce');
+
+        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('Invalid or missing nonce.', 'erp'),
+                ['status' => 403]
+            );
+        }
+
+        return current_user_can('manage_options');
     }
 
     public function update_permissions_check($request) {
-        return true;
+        $nonce = $request->get_header('X-WP-Nonce');
+
+        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('Invalid or missing nonce.', 'erp'),
+                ['status' => 403]
+            );
+        }
+
+        return current_user_can('manage_options');
     }
 
     // Company Settings Methods
