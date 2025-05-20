@@ -87,7 +87,29 @@ class Commands extends WP_CLI_Command {
 
         WP_CLI::success( $message );
     }
+
+    /**
+     * Generate random employees
+     *
+     * ## OPTIONS
+     *
+     * <count>
+     * : Number of employees to generate
+     *
+     * ## EXAMPLES
+     *
+     *     wp erp generate-employees 10
+     *
+     * @param array $args Command arguments
+     * @param array $assoc_args Command associative arguments
+     */
+    public function generate_employees($args, $assoc_args) {
+        $generator = new EmployeeGenerator();
+        $generator->generate_employees($args, $assoc_args);
+    }
 }
 
-WP_CLI::add_command( 'erp module activate', [ '\WeDevs\ERP\CLI\Commands', 'module_activate' ] );
-WP_CLI::add_command( 'erp module deactivate', [ '\WeDevs\ERP\CLI\Commands', 'module_deactivate' ] );
+// Register the commands
+WP_CLI::add_command('erp module activate', [ '\WeDevs\ERP\CLI\Commands', 'module_activate' ]);
+WP_CLI::add_command('erp module deactivate', [ '\WeDevs\ERP\CLI\Commands', 'module_deactivate' ]);
+WP_CLI::add_command('erp generate-employees', [ '\WeDevs\ERP\CLI\Commands', 'generate_employees' ]);
