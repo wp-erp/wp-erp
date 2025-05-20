@@ -43,10 +43,30 @@ class WorkDaysController extends WP_REST_Controller {
     }
 
     public function get_permissions_check($request) {
+        $nonce = $request->get_header('X-WP-Nonce');
+
+        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('Invalid or missing nonce.', 'erp'),
+                ['status' => 403]
+            );
+        }
+
         return current_user_can('erp_view_list');
     }
 
     public function update_permissions_check($request) {
+        $nonce = $request->get_header('X-WP-Nonce');
+
+        if (!$nonce || !wp_verify_nonce($nonce, 'wp_rest')) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('Invalid or missing nonce.', 'erp'),
+                ['status' => 403]
+            );
+        }
+
         return current_user_can('erp_manage_designation');
     }
 
