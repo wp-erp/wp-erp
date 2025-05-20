@@ -35,7 +35,8 @@
         "phpunit/phpunit": "^5.7.27",
         "lucatume/wp-browser": "^2.2",
         "staabm/annotate-pull-request-from-checkstyle": "^1.8",
-        "phpcompatibility/phpcompatibility-all": "^1.1"
+        "phpcompatibility/phpcompatibility-all": "^1.1",
+        "fakerphp/faker": "^1.9"
     },
     "repositories": [
         {
