@@ -141,6 +141,17 @@ class SetupWizard {
                 wp_enqueue_emoji_styles();
                 do_action( 'admin_print_styles' );
             ?>
+            <?php
+            $data = json_encode([
+
+            ]);
+            ?>
+            <script>
+                window.ErpOnboard = {
+                    nonce: "<?php echo wp_create_nonce('wp_rest') ?>",
+                    restUrl: "<?php echo esc_url_raw(rest_url()) ?>"
+                };
+            </script>
             <script src="<?php echo ( WPERP_URL ) . '/modules/onboarding/assets/js/admin.js' ?>"></script>
         </head>
         <body class="erp-setup wp-core-ui">
