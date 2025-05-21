@@ -18,7 +18,11 @@ const DepartmentDesignation = ({ onComplete }) => {
 
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get('/wp-json/erp/v1/onboarding/departments');
+      const response = await axios.get(`${ErpOnboard.restUrl}erp/v1/onboarding/departments`, {
+        headers: {
+          'X-WP-Nonce': ErpOnboard.nonce
+        }
+      });
       setDepartments(response.data);
     } catch (err) {
       console.error('Error fetching departments:', err);
@@ -27,7 +31,11 @@ const DepartmentDesignation = ({ onComplete }) => {
 
   const fetchDesignations = async () => {
     try {
-      const response = await axios.get('/wp-json/erp/v1/onboarding/designations');
+      const response = await axios.get(`${ErpOnboard.restUrl}erp/v1/onboarding/designations`, {
+        headers: {
+          'X-WP-Nonce': ErpOnboard.nonce
+        }
+      });
       setDesignations(response.data);
     } catch (err) {
       console.error('Error fetching designations:', err);
@@ -41,10 +49,18 @@ const DepartmentDesignation = ({ onComplete }) => {
 
     try {
       if (activeTab === 'departments') {
-        await axios.post('/wp-json/erp/v1/onboarding/departments', { name: newItem });
+        await axios.post(`${ErpOnboard.restUrl}erp/v1/onboarding/departments`, { name: newItem }, {
+          headers: {
+            'X-WP-Nonce': ErpOnboard.nonce
+          }
+        });
         await fetchDepartments();
       } else {
-        await axios.post('/wp-json/erp/v1/onboarding/designations', { name: newItem });
+        await axios.post(`${ErpOnboard.restUrl}erp/v1/onboarding/designations`, { name: newItem }, {
+          headers: {
+            'X-WP-Nonce': ErpOnboard.nonce
+          }
+        });
         await fetchDesignations();
       }
       setNewItem('');
@@ -59,10 +75,18 @@ const DepartmentDesignation = ({ onComplete }) => {
     setLoading(true);
     try {
       if (activeTab === 'departments') {
-        await axios.delete(`/wp-json/erp/v1/onboarding/departments/${id}`);
+        await axios.delete(`${ErpOnboard.restUrl}erp/v1/onboarding/departments/${id}`, {
+          headers: {
+            'X-WP-Nonce': ErpOnboard.nonce
+          }
+        });
         await fetchDepartments();
       } else {
-        await axios.delete(`/wp-json/erp/v1/onboarding/designations/${id}`);
+        await axios.delete(`${ErpOnboard.restUrl}erp/v1/onboarding/designations/${id}`, {
+          headers: {
+            'X-WP-Nonce': ErpOnboard.nonce
+          }
+        });
         await fetchDesignations();
       }
     } catch (err) {
@@ -86,14 +110,14 @@ const DepartmentDesignation = ({ onComplete }) => {
         </div>
 
         <div className="tabs">
-          <button 
+          <button
             className={`tab ${activeTab === 'departments' ? 'active' : ''}`}
             onClick={() => setActiveTab('departments')}
           >
             <div className="icon">👥</div>
             <span>Departments</span>
           </button>
-          <button 
+          <button
             className={`tab ${activeTab === 'designations' ? 'active' : ''}`}
             onClick={() => setActiveTab('designations')}
           >
@@ -161,7 +185,7 @@ const DepartmentDesignation = ({ onComplete }) => {
                   {(activeTab === 'departments' ? departments : designations).map(item => (
                     <div key={item.id} className="selected-tag">
                       <span>{item.title || item.name}</span>
-                      <button 
+                      <button
                         onClick={() => handleDelete(item.id)}
                         className="tag-remove"
                         disabled={loading}
@@ -172,7 +196,7 @@ const DepartmentDesignation = ({ onComplete }) => {
                   ))}
                 </div>
               </div>
-              <button 
+              <button
                 onClick={handleAdd}
                 disabled={loading || !newItem.trim()}
                 className="button button-primary add-button"
@@ -243,7 +267,7 @@ const DepartmentDesignation = ({ onComplete }) => {
         </div>
 
         <div className="page-actions">
-          <button 
+          <button
             onClick={() => navigate('/leave')}
             className="button button-primary"
             disabled={loading}

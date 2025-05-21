@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const LeaveManagement = () => {
     const navigate = useNavigate();
@@ -47,12 +48,36 @@ const LeaveManagement = () => {
         }));
     };
 
-    const submit =  () => {
-        // setTimeout(() => {
+    const fetchLeaveYears = async () => {
+        try {
+            const response = await axios.get(`${ErpOnboard.restUrl}erp/v1/onboarding/leave-years`, {
+                headers: {
+                    'X-WP-Nonce': ErpOnboard.nonce
+                }
+            });
+            setLeaveYears(response.data);
+        } catch (err) {
+            console.error('Error fetching leave years:', err);
+        }
+    };
+
+    const handleSave = async () => {
+        try {
+            await axios.post(`${ErpOnboard.restUrl}erp/v1/onboarding/leave-years`, {
+                year: years,
+                start_date: startDates,
+                end_date: endDates,
+                generate_default_leave_policies: generatePolicies ? 'yes' : 'no'
+            }, {
+                headers: {
+                    'X-WP-Nonce': ErpOnboard.nonce
+                }
+            });
             navigate('/workdays');
-        //   }, 2000);
-      };
-    
+        } catch (err) {
+            console.error('Error saving leave years:', err);
+        }
+    };
 
     return (
         <div className="erp-leave-management">
@@ -67,7 +92,7 @@ const LeaveManagement = () => {
                         <div className="leave-year-header">
                             <h4>{__('Leave Year', 'erp')} {year.id}</h4>
                             {leaveYears.length > 1 && (
-                                <button 
+                                <button
                                     className="remove-year"
                                     onClick={() => removeLeaveYear(year.id)}
                                 >
@@ -99,7 +124,7 @@ const LeaveManagement = () => {
                 ))}
             </div>
 
-            <button 
+            <button
                 className="add-leave-year button button-secondary"
                 onClick={addLeaveYear}
             >
@@ -119,7 +144,7 @@ const LeaveManagement = () => {
             </div>
 
             <div className="form-actions">
-                <button className="button button-primary" onClick={submit}>
+                <button className="button button-primary" onClick={handleSave}>
                     {__('Save Settings', 'erp')}
                 </button>
             </div>

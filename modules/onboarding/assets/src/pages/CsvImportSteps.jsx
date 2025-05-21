@@ -51,7 +51,7 @@ const CsvImportSteps = () => {
             description: __('Upload your CSV file containing employee data.', 'erp'),
             content: (
                 <div className="csv-upload-step">
-                    <div className="upload-zone" 
+                    <div className="upload-zone"
                          onDrop={(e) => {
                              e.preventDefault();
                              setFile(e.dataTransfer.files[0]);
@@ -60,10 +60,10 @@ const CsvImportSteps = () => {
                         <i className="fas fa-cloud-upload-alt"></i>
                         <h4>{__('Drag and Drop Your CSV File Here', 'erp')}</h4>
                         <p>{__('or', 'erp')}</p>
-                        <input type="file" 
-                               accept=".csv" 
-                               onChange={(e) => setFile(e.target.files[0])} 
-                               style={{display: 'none'}} 
+                        <input type="file"
+                               accept=".csv"
+                               onChange={(e) => setFile(e.target.files[0])}
+                               style={{display: 'none'}}
                                id="csv-file-input" />
                         <label className="button" htmlFor="csv-file-input">
                             {__('Browse File', 'erp')}
@@ -72,8 +72,8 @@ const CsvImportSteps = () => {
                     </div>
                     <div className="step-navigation">
                         <button className="button" onClick={() => setCurrentStep(2)}>{__('Back', 'erp')}</button>
-                        <button className="button button-primary" 
-                                onClick={() => setCurrentStep(4)} 
+                        <button className="button button-primary"
+                                onClick={() => setCurrentStep(4)}
                                 disabled={!file}>
                             {__('Next', 'erp')}
                         </button>
@@ -101,8 +101,8 @@ const CsvImportSteps = () => {
                     </div>
                     <div className="step-navigation">
                         <button className="button" onClick={() => setCurrentStep(3)}>{__('Back', 'erp')}</button>
-                        <button className="button button-primary" 
-                                onClick={() => setCurrentStep(5)} 
+                        <button className="button button-primary"
+                                onClick={() => setCurrentStep(5)}
                                 disabled={Object.keys(mappedFields).length === 0}>
                             {__('Next', 'erp')}
                         </button>
@@ -137,7 +137,7 @@ const CsvImportSteps = () => {
     ];
 
     return (
-        <div className="erp-csv-import-wizard">
+        <div className=" erp-onboarding-page erp-csv-import-wizard">
             <div className="step-indicator">
                 {steps.map((step, index) => (
                     <div key={index} className={`step ${currentStep === index + 1 ? 'active' : ''}`}>

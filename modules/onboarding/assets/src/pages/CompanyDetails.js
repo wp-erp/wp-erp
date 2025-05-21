@@ -18,18 +18,22 @@ const CompanyDetails = ({ onComplete }) => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  useEffect(() => {
+useEffect(() => {
     const fetchCompanySettings = async () => {
-      try {
-        const response = await axios.get('/wp-json/erp/v1/onboarding/company');
-        setFormData(response.data);
-      } catch (err) {
-        console.error('Error fetching company settings:', err);
-      }
+        try {
+            const response = await axios.get(`${ErpOnboard.restUrl}erp/v1/onboarding/company`, {
+                headers: {
+                    'X-WP-Nonce': ErpOnboard.nonce
+                }
+            });
+            setFormData(response.data);
+        } catch (err) {
+            console.error('Error fetching company settings:', err);
+        }
     };
 
     fetchCompanySettings();
-  }, []);
+}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +41,11 @@ const CompanyDetails = ({ onComplete }) => {
     setError(null);
 
     try {
-      await axios.put('/wp-json/erp/v1/onboarding/company', formData);
+      await axios.put(`${ErpOnboard.restUrl}erp/v1/onboarding/company`, formData, {
+        headers: {
+          'X-WP-Nonce': ErpOnboard.nonce
+        }
+      });
       onComplete && onComplete();
       navigate('/department-designation');
     } catch (err) {
@@ -112,8 +120,8 @@ const CompanyDetails = ({ onComplete }) => {
           {error && <div className="error-message">{error}</div>}
 
           <div className="form-actions">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="button button-primary"
               disabled={loading}
             >

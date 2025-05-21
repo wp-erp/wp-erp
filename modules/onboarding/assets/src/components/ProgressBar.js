@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const ProgressBar = () => {
   const location = useLocation();
-  
+
   const steps = [
     { path: '/company-details', label: 'Company Details' },
     { path: '/department-designation', label: 'Department & Designation' },
+    // { path: '/import-employee', label: 'Import Employee' },
     { path: '/leave', label: 'Leave Management' },
     { path: '/workdays', label: 'Workday Setup' },
-    { path: '/import-employee', label: 'Import Employee' }
   ];
 
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ProgressBar = () => {
     <div className="erp-onboarding-progress-container">
       <div className="erp-onboarding-steps">
         {steps.map((step, index) => (
-          <div 
+          <div
             key={step.path}
             className={`step-item ${index === currentStepIndex ? 'active' : ''} ${index < currentStepIndex ? 'completed' : ''}`}
             onClick={() => handleStepClick(index)}
@@ -38,8 +38,8 @@ const ProgressBar = () => {
         ))}
       </div>
       <div className="erp-onboarding-progress">
-        <div 
-          className="erp-onboarding-progress-bar" 
+        <div
+          className="erp-onboarding-progress-bar"
           style={{ width: `${percentage}%` }}
           role="progressbar"
           aria-valuenow={percentage}
