@@ -5,9 +5,9 @@ import axios from 'axios';
 const CompanyDetails = ({ onComplete }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    company_name: '',
-    company_start: '',
-    financial_year: 'January'
+    name: '',
+    gen_com_start: '',
+    gen_financial_month: '1'
   });
 
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const CompanyDetails = ({ onComplete }) => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-useEffect(() => {
+  useEffect(() => {
     const fetchCompanySettings = async () => {
         try {
             const response = await axios.get(`${ErpOnboard.restUrl}erp/v1/onboarding/company`, {
@@ -26,7 +26,15 @@ useEffect(() => {
                     'X-WP-Nonce': ErpOnboard.nonce
                 }
             });
-            setFormData(response.data);
+
+            // Format the date value for the date input
+            const formattedData = {
+                ...response.data,
+                gen_com_start: response.data.gen_com_start ? new Date(response.data.gen_com_start).toISOString().split('T')[0] : '',
+                // gen_financial_month: response.data?.gen_financial_month
+            };
+
+            setFormData(formattedData);
         } catch (err) {
             console.error('Error fetching company settings:', err);
         }
@@ -70,14 +78,14 @@ useEffect(() => {
 
         <form onSubmit={handleSubmit} className="company-form">
           <div className="form-group company-name-group">
-            <label htmlFor="company_name">
+            <label htmlFor="name">
               Company Name<span className="required">*</span>
             </label>
             <input
               type="text"
-              id="company_name"
-              value={formData.company_name}
-              onChange={(e) => setFormData({...formData, company_name: e.target.value})}
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
               placeholder="Company Name"
               required
               className="form-control"
@@ -86,32 +94,32 @@ useEffect(() => {
 
           <div className="form-row date-row">
             <div className="form-group date-group">
-              <label htmlFor="company_start">
+              <label htmlFor="gen_com_start">
                 Company Start Date<span className="required">*</span>
               </label>
               <input
                 type="date"
-                id="company_start"
-                value={formData.company_start}
-                onChange={(e) => setFormData({...formData, company_start: e.target.value})}
+                id="gen_com_start"
+                value={formData.gen_com_start}
+                onChange={(e) => setFormData({...formData, gen_com_start: e.target.value})}
                 required
                 className="form-control"
               />
             </div>
 
             <div className="form-group month-group">
-              <label htmlFor="financial_year">
+              <label htmlFor="gen_financial_month">
                 Financial Year Starts<span className="required">*</span>
               </label>
               <select
-                id="financial_year"
-                value={formData.financial_year}
-                onChange={(e) => setFormData({...formData, financial_year: e.target.value})}
+                id="gen_financial_month"
+                value={formData.gen_financial_month}
+                onChange={(e) => setFormData({...formData, gen_financial_month: e.target.value})}
                 required
                 className="form-control"
               >
-                {months.map(month => (
-                  <option key={month} value={month}>{month}</option>
+                {months.map((month, index) => (
+                  <option key={month} value={index + 1}>{month}</option>
                 ))}
               </select>
             </div>

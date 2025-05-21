@@ -84,7 +84,7 @@ if (false) {
 "use strict";
 
 
-var bind = __webpack_require__(15);
+var bind = __webpack_require__(16);
 
 // utils is a library of generic helper functions non-specific to axios
 
@@ -459,7 +459,7 @@ module.exports = {
 /* unused harmony export useSubmit */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router__ = __webpack_require__(8);
 /* unused harmony reexport AbortedDeferredError */
 /* unused harmony reexport Await */
 /* unused harmony reexport MemoryRouter */
@@ -511,7 +511,7 @@ module.exports = {
 /* unused harmony reexport useRouteError */
 /* unused harmony reexport useRouteLoaderData */
 /* unused harmony reexport useRoutes */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__remix_run_router__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__remix_run_router__ = __webpack_require__(9);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1607,11 +1607,60 @@ function usePrompt(_ref8) {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(43);
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var arrayWithHoles = __webpack_require__(44);
 
 var iterableToArrayLimit = __webpack_require__(45);
 
-var unsupportedIterableToArray = __webpack_require__(13);
+var unsupportedIterableToArray = __webpack_require__(14);
 
 var nonIterableRest = __webpack_require__(46);
 
@@ -1622,7 +1671,13 @@ function _slicedToArray(arr, i) {
 module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 4 */
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(47);
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 function _defineProperty(obj, key, value) {
@@ -1643,7 +1698,7 @@ function _defineProperty(obj, key, value) {
 module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1690,7 +1745,7 @@ module.exports = _defineProperty, module.exports.__esModule = true, module.expor
 /* unused harmony export useRoutes */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__remix_run_router__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__remix_run_router__ = __webpack_require__(9);
 /* unused harmony reexport AbortedDeferredError */
 /* unused harmony reexport NavigationType */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_1__remix_run_router__["k"]; });
@@ -3145,7 +3200,7 @@ function createMemoryRouter(routes, opts) {
 
 
 /***/ }),
-/* 6 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7135,61 +7190,6 @@ function getDoneFetcher(data) {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(43);
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
-
-module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(47);
-
-/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7198,7 +7198,7 @@ module.exports = __webpack_require__(47);
 
 var utils = __webpack_require__(1);
 var normalizeHeaderName = __webpack_require__(53);
-var enhanceError = __webpack_require__(17);
+var enhanceError = __webpack_require__(18);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -7214,10 +7214,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(18);
+    adapter = __webpack_require__(19);
   } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(18);
+    adapter = __webpack_require__(19);
   }
   return adapter;
 }
@@ -7336,6 +7336,32 @@ module.exports = defaults;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprintf__ = __webpack_require__(67);
+/* unused harmony reexport sprintf */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(25);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_i18n__ = __webpack_require__(76);
+/* unused harmony reexport defaultI18n */
+/* unused harmony reexport setLocaleData */
+/* unused harmony reexport resetLocaleData */
+/* unused harmony reexport getLocaleData */
+/* unused harmony reexport subscribe */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["a"]; });
+/* unused harmony reexport _x */
+/* unused harmony reexport _n */
+/* unused harmony reexport _nx */
+/* unused harmony reexport isRTL */
+/* unused harmony reexport hasTranslation */
+
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /**
  * Validate a hookName string.
  *
@@ -7371,7 +7397,7 @@ function validateHookName(hookName) {
 //# sourceMappingURL=validateHookName.js.map
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7468,10 +7494,10 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeToArray = __webpack_require__(14);
+var arrayLikeToArray = __webpack_require__(15);
 
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
@@ -7485,7 +7511,7 @@ function _unsupportedIterableToArray(o, minLen) {
 module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 function _arrayLikeToArray(arr, len) {
@@ -7501,7 +7527,7 @@ function _arrayLikeToArray(arr, len) {
 module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7519,7 +7545,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7596,7 +7622,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7645,7 +7671,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7654,11 +7680,11 @@ module.exports = function enhanceError(error, config, code, request, response) {
 var utils = __webpack_require__(1);
 var settle = __webpack_require__(54);
 var cookies = __webpack_require__(55);
-var buildURL = __webpack_require__(16);
+var buildURL = __webpack_require__(17);
 var buildFullPath = __webpack_require__(56);
 var parseHeaders = __webpack_require__(59);
 var isURLSameOrigin = __webpack_require__(60);
-var createError = __webpack_require__(19);
+var createError = __webpack_require__(20);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -7841,13 +7867,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(17);
+var enhanceError = __webpack_require__(18);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -7866,7 +7892,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7878,7 +7904,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7972,7 +7998,7 @@ module.exports = function mergeConfig(config1, config2) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7998,23 +8024,24 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_defineProperty__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_react_router_dom__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__ = __webpack_require__(11);
 
 
 
@@ -8033,7 +8060,7 @@ function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = null != arguments[i] ? arguments[i] : {};
     i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-      __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_defineProperty___default()(target, key, source[key]);
+      __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default()(target, key, source[key]);
     }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
       Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
     });
@@ -8043,21 +8070,21 @@ function _objectSpread(target) {
 
 
 
-var ImportEmployee = function ImportEmployee(_ref) {
-  var onComplete = _ref.onComplete;
+
+var ImportEmployee = function ImportEmployee() {
   var navigate = Object(__WEBPACK_IMPORTED_MODULE_5_react_router_dom__["c" /* useNavigate */])();
-  var _useState = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(null),
+  var _useState = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(1),
     _useState2 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState, 2),
-    file = _useState2[0],
-    setFile = _useState2[1];
-  var _useState3 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(''),
+    step = _useState2[0],
+    setStep = _useState2[1];
+  var _useState3 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(null),
     _useState4 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState3, 2),
-    fileName = _useState4[0],
-    setFileName = _useState4[1];
-  var _useState5 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(false),
+    file = _useState4[0],
+    setFile = _useState4[1];
+  var _useState5 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(''),
     _useState6 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState5, 2),
-    showMapping = _useState6[0],
-    setShowMapping = _useState6[1];
+    fileName = _useState6[0],
+    setFileName = _useState6[1];
   var _useState7 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(false),
     _useState8 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState7, 2),
     loading = _useState8[0],
@@ -8070,23 +8097,81 @@ var ImportEmployee = function ImportEmployee(_ref) {
     _useState12 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState11, 2),
     importCount = _useState12[0],
     setImportCount = _useState12[1];
-  var _useState13 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({
-      first_name: '',
-      middle_name: '',
-      last_name: '',
-      user_email: '',
-      department: '',
-      designation: ''
-    }),
+  var _useState13 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])(null),
     _useState14 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState13, 2),
-    mappingFields = _useState14[0],
-    setMappingFields = _useState14[1];
+    error = _useState14[0],
+    setError = _useState14[1];
+  var _useState15 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({}),
+    _useState16 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState15, 2),
+    employeeFields = _useState16[0],
+    setEmployeeFields = _useState16[1];
+  var _useState17 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({}),
+    _useState18 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState17, 2),
+    mappingFields = _useState18[0],
+    setMappingFields = _useState18[1];
+  var _useState19 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])([]),
+    _useState20 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState19, 2),
+    csvHeaders = _useState20[0],
+    setCsvHeaders = _useState20[1];
+  Object(__WEBPACK_IMPORTED_MODULE_4_react__["useEffect"])(function () {
+    fetchEmployeeFields();
+  }, []);
+  var fetchEmployeeFields = /*#__PURE__*/function () {
+    var _ref = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      var _ErpOnboard, response, _err$response, _err$response2, _err$response3, _err$response3$data;
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              if ((_ErpOnboard = ErpOnboard) !== null && _ErpOnboard !== void 0 && _ErpOnboard.nonce) {
+                _context.next = 4;
+                break;
+              }
+              setError(Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Authentication error. Please refresh the page.', 'erp'));
+              return _context.abrupt("return");
+            case 4:
+              _context.next = 6;
+              return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.get("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/import-employees"), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce,
+                  'Content-Type': 'application/json'
+                }
+              });
+            case 6:
+              response = _context.sent;
+              setEmployeeFields(response.data);
+              _context.next = 14;
+              break;
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](0);
+              console.error('Error fetching employee fields:', _context.t0);
+              if (((_err$response = _context.t0.response) === null || _err$response === void 0 ? void 0 : _err$response.status) === 401) {
+                setError(Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Your session has expired. Please refresh the page.', 'erp'));
+              } else if (((_err$response2 = _context.t0.response) === null || _err$response2 === void 0 ? void 0 : _err$response2.status) === 403) {
+                setError(Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('You do not have permission to access this feature.', 'erp'));
+              } else {
+                setError(((_err$response3 = _context.t0.response) === null || _err$response3 === void 0 ? void 0 : (_err$response3$data = _err$response3.data) === null || _err$response3$data === void 0 ? void 0 : _err$response3$data.message) || Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Failed to fetch employee fields', 'erp'));
+              }
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 10]]);
+    }));
+    return function fetchEmployeeFields() {
+      return _ref.apply(this, arguments);
+    };
+  }();
   var handleFileChange = function handleFileChange(e) {
     var selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type === 'text/csv') {
       setFile(selectedFile);
       setFileName(selectedFile.name);
-      setShowMapping(true);
+      readCsvHeaders(selectedFile);
+      setStep(2);
     }
   };
   var handleDrop = function handleDrop(e) {
@@ -8095,170 +8180,218 @@ var ImportEmployee = function ImportEmployee(_ref) {
     if (droppedFile && droppedFile.type === 'text/csv') {
       setFile(droppedFile);
       setFileName(droppedFile.name);
-      setShowMapping(true);
+      readCsvHeaders(droppedFile);
+      setStep(2);
     }
+  };
+  var readCsvHeaders = function readCsvHeaders(file) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var text = e.target.result;
+      var headers = text.split('\n')[0].split(',').map(function (h) {
+        return h.trim();
+      });
+      setCsvHeaders(headers);
+    };
+    reader.readAsText(file);
   };
   var handleMappingChange = function handleMappingChange(field, value) {
     setMappingFields(function (prev) {
-      return _objectSpread(_objectSpread({}, prev), {}, __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_defineProperty___default()({}, field, value));
+      return _objectSpread(_objectSpread({}, prev), {}, __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default()({}, field, value));
     });
   };
   var handleImport = /*#__PURE__*/function () {
-    var _ref2 = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      var formData;
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+    var _ref2 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+      var _ErpOnboard2;
+      var formData, response, _error$response, _error$response2, _error$response3, _error$response3$data;
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               setLoading(true);
+              setError(null);
+              if ((_ErpOnboard2 = ErpOnboard) !== null && _ErpOnboard2 !== void 0 && _ErpOnboard2.nonce) {
+                _context2.next = 6;
+                break;
+              }
+              setError(Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Authentication error. Please refresh the page.', 'erp'));
+              setLoading(false);
+              return _context2.abrupt("return");
+            case 6:
               formData = new FormData();
               formData.append('file', file);
               formData.append('mapping', JSON.stringify(mappingFields));
-              try {
-                // const response = await axios.post('/wp-json/erp/v1/onboarding/import-employees', formData);
-                // setSuccess(true);
-                // setImportCount(response.data.count || 0);
-                setTimeout(function () {
-                  navigate('/leave');
-                }, 2000);
-              } catch (error) {
-                console.error('Import failed:', error);
-              } finally {
-                setLoading(false);
+              _context2.prev = 9;
+              _context2.next = 12;
+              return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.post("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/import-employees"), formData, {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce,
+                  'Content-Type': 'multipart/form-data'
+                }
+              });
+            case 12:
+              response = _context2.sent;
+              setSuccess(true);
+              setImportCount(response.data.imported || 0);
+              setStep(4);
+              _context2.next = 21;
+              break;
+            case 18:
+              _context2.prev = 18;
+              _context2.t0 = _context2["catch"](9);
+              if (((_error$response = _context2.t0.response) === null || _error$response === void 0 ? void 0 : _error$response.status) === 401) {
+                setError(Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Your session has expired. Please refresh the page.', 'erp'));
+              } else if (((_error$response2 = _context2.t0.response) === null || _error$response2 === void 0 ? void 0 : _error$response2.status) === 403) {
+                setError(Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('You do not have permission to import employees.', 'erp'));
+              } else {
+                setError(((_error$response3 = _context2.t0.response) === null || _error$response3 === void 0 ? void 0 : (_error$response3$data = _error$response3.data) === null || _error$response3$data === void 0 ? void 0 : _error$response3$data.message) || Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import failed. Please try again.', 'erp'));
               }
-            case 5:
+            case 21:
+              _context2.prev = 21;
+              setLoading(false);
+              return _context2.finish(21);
+            case 24:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee);
+      }, _callee2, null, [[9, 18, 21, 24]]);
     }));
     return function handleImport() {
       return _ref2.apply(this, arguments);
     };
   }();
   var downloadSample = function downloadSample() {
-    window.location.href = '/wp-json/erp/v1/onboarding/sample-csv';
+    window.location.href = "".concat(ErpOnboard.restUrl, "erp/v1/onboarding/sample-csv");
   };
-  if (success) {
+  var renderStep1 = function renderStep1() {
     return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "erp-onboarding-page import-employee"
     }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "page-header"
     }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
       className: "step-count"
-    }, "3/5"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, "Import Employee")), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+    }, "3/5"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import Employee', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "page-content"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "section-header"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h1", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import Your Employees', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Upload a CSV file to import your employees.', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "upload-area",
+      onDrop: handleDrop,
+      onDragOver: function onDragOver(e) {
+        return e.preventDefault();
+      }
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "upload-icon"
+    }, "\uD83D\uDCC1"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h3", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Drag & Drop CSV File', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('or', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("input", {
+      type: "file",
+      id: "file-upload",
+      accept: ".csv",
+      onChange: handleFileChange,
+      style: {
+        display: 'none'
+      }
+    }), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("label", {
+      htmlFor: "file-upload",
+      className: "button button-secondary"
+    }, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Choose File', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
+      onClick: downloadSample,
+      className: "download-sample"
+    }, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Download Sample CSV', 'erp')))));
+  };
+  var renderStep2 = function renderStep2() {
+    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "erp-onboarding-page import-employee"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "page-header"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
+      className: "step-count"
+    }, "3/5"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import Employee', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "page-content"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "section-header"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h1", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('File Uploaded', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Map your CSV columns to employee fields.', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "file-info"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "file-name"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
+      className: "icon"
+    }, "\uD83D\uDCC4"), fileName), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
+      className: "button button-secondary",
+      onClick: function onClick() {
+        return setStep(1);
+      }
+    }, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Change File', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "mapping-section"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h3", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Map Fields', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "mapping-table"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "mapping-header"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('CSV Column', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Employee Field', 'erp'))), csvHeaders.map(function (header, index) {
+      return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+        key: index,
+        className: "mapping-row"
+      }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+        className: "csv-column"
+      }, header), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("select", {
+        value: mappingFields[header] || '',
+        onChange: function onChange(e) {
+          return handleMappingChange(header, e.target.value);
+        }
+      }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("option", {
+        value: ""
+      }, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Select Field', 'erp')), Object.entries(employeeFields).map(function (_ref3) {
+        var _ref4 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_ref3, 2),
+          category = _ref4[0],
+          fields = _ref4[1];
+        return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("optgroup", {
+          key: category,
+          label: category
+        }, Object.entries(fields).map(function (_ref5) {
+          var _ref6 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_ref5, 2),
+            key = _ref6[0],
+            label = _ref6[1];
+          return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("option", {
+            key: key,
+            value: key
+          }, label);
+        }));
+      })));
+    }))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "form-actions"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
+      onClick: handleImport,
+      className: "button button-primary",
+      disabled: loading
+    }, loading ? Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Importing...', 'erp') : Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import Employees', 'erp')))));
+  };
+  var renderStep4 = function renderStep4() {
+    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "erp-onboarding-page import-employee"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "page-header"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
+      className: "step-count"
+    }, "3/5"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import Employee', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+      className: "page-content"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "success-message"
     }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "success-icon"
-    }, "\uD83C\uDF89"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, "Successfully Imported"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, importCount, " employees has been imported")), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+    }, "\u2705"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Import Successful', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Successfully imported', 'erp'), " ", importCount, " ", Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('employees', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "form-actions"
     }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
       onClick: function onClick() {
-        return navigate('/module-selection');
+        return navigate('/leave');
       },
       className: "button button-primary"
-    }, "Next")));
-  }
-  return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "erp-onboarding-page import-employee"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "page-header"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
-    className: "step-count"
-  }, "3/5"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, "Import Employee")), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "page-content"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "section-header"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h1", null, "Import Employee"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, "Enter you company name and start date.")), !showMapping ? /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "upload-area",
-    onDrop: handleDrop,
-    onDragOver: function onDragOver(e) {
-      return e.preventDefault();
-    }
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "upload-icon"
-  }, "\u2601\uFE0F"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h3", null, "Upload a CSV file"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, "Drag and Drop CSV file here or"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("input", {
-    type: "file",
-    id: "file-upload",
-    accept: ".csv",
-    onChange: handleFileChange,
-    style: {
-      display: 'none'
-    }
-  }), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("label", {
-    htmlFor: "file-upload",
-    className: "button button-secondary"
-  }, "Choose File"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
-    onClick: downloadSample,
-    className: "download-sample"
-  }, "Download Sample CSV")) : /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "mapping-section"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h3", null, "Map Properties"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "mapping-table"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "mapping-header"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", null, "Columns (", file === null || file === void 0 ? void 0 : file.name, ")"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", null, "Profile Field")), Object.entries(mappingFields).map(function (_ref3) {
-    var _ref4 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_ref3, 2),
-      field = _ref4[0],
-      value = _ref4[1];
-    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-      key: field,
-      className: "mapping-row"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("label", null, field.replace('_', ' ').replace(/\b\w/g, function (l) {
-      return l.toUpperCase();
-    })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("select", {
-      value: value,
-      onChange: function onChange(e) {
-        return handleMappingChange(field, e.target.value);
-      }
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("option", {
-      value: ""
-    }, "Select Field"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("option", {
-      value: field
-    }, field.replace('_', ' ').replace(/\b\w/g, function (l) {
-      return l.toUpperCase();
-    }))));
-  })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
-    className: "mapping-actions"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
-    onClick: function onClick() {
-      return setShowMapping(false);
-    },
-    className: "button"
-  }, "Cancel"), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
-    onClick: handleImport,
-    className: "button button-primary",
-    disabled: loading
-  }, loading ? 'Importing...' : 'Import Employee')))));
+    }, Object(__WEBPACK_IMPORTED_MODULE_7__wordpress_i18n__["a" /* __ */])('Next', 'erp')))));
+  };
+  return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react___default.a.Fragment, null, step === 1 && renderStep1(), step === 2 && renderStep2(), step === 4 && renderStep4(), error && /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
+    className: "error-message"
+  }, error));
 };
 /* harmony default export */ __webpack_exports__["a"] = (ImportEmployee);
-
-/***/ }),
-/* 24 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprintf__ = __webpack_require__(72);
-/* unused harmony reexport sprintf */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__create_i18n__ = __webpack_require__(25);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__default_i18n__ = __webpack_require__(81);
-/* unused harmony reexport defaultI18n */
-/* unused harmony reexport setLocaleData */
-/* unused harmony reexport resetLocaleData */
-/* unused harmony reexport getLocaleData */
-/* unused harmony reexport subscribe */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__default_i18n__["a"]; });
-/* unused harmony reexport _x */
-/* unused harmony reexport _n */
-/* unused harmony reexport _nx */
-/* unused harmony reexport isRTL */
-/* unused harmony reexport hasTranslation */
-
-
-
-//# sourceMappingURL=index.js.map
 
 /***/ }),
 /* 25 */
@@ -8266,8 +8399,8 @@ var ImportEmployee = function ImportEmployee(_ref) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return createI18n; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__ = __webpack_require__(75);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_tannin__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_defineProperty__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_tannin__ = __webpack_require__(71);
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -8789,7 +8922,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_style_css__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__css_style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__css_style_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__AppComponenet__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_ImportEmployee__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_ImportEmployee__ = __webpack_require__(24);
 
 
 
@@ -8828,7 +8961,7 @@ if (true) {
   (function() {
 'use strict';
 
-var _assign = __webpack_require__(12);
+var _assign = __webpack_require__(13);
 
 // TODO: this is special because it gets imported during build.
 var ReactVersion = '17.0.2';
@@ -11214,7 +11347,7 @@ if (true) {
 'use strict';
 
 var React = __webpack_require__(0);
-var _assign = __webpack_require__(12);
+var _assign = __webpack_require__(13);
 var Scheduler = __webpack_require__(32);
 var tracing = __webpack_require__(34);
 
@@ -38529,13 +38662,13 @@ function AppComponenet() {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Header__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ProgressBar__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_CompanyDetails__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_DepartmentDesignation__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_ImportEmployee__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_LeaveManagement__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_ImportEmployee__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_LeaveManagement__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pages_WorkdaySetup__ = __webpack_require__(97);
 
 
@@ -38686,15 +38819,14 @@ var ProgressBar = function ProgressBar() {
   }, {
     path: '/department-designation',
     label: 'Department & Designation'
-  }, {
+  },
+  // { path: '/import-employee', label: 'Import Employee' },
+  {
     path: '/leave',
     label: 'Leave Management'
   }, {
     path: '/workdays',
     label: 'Workday Setup'
-  }, {
-    path: '/import-employee',
-    label: 'Import Employee'
   }];
   var navigate = Object(__WEBPACK_IMPORTED_MODULE_1_react_router_dom__["c" /* useNavigate */])();
   var currentStepIndex = steps.findIndex(function (step) {
@@ -38743,18 +38875,18 @@ var ProgressBar = function ProgressBar() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_react_router_dom__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_axios__);
 
 
@@ -38788,9 +38920,9 @@ var CompanyDetails = function CompanyDetails(_ref) {
   var onComplete = _ref.onComplete;
   var navigate = Object(__WEBPACK_IMPORTED_MODULE_5_react_router_dom__["c" /* useNavigate */])();
   var _useState = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({
-      company_name: '',
-      company_start: '',
-      financial_year: 'January'
+      name: '',
+      gen_com_start: '',
+      gen_financial_month: '1'
     }),
     _useState2 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState, 2),
     formData = _useState2[0],
@@ -38807,29 +38939,38 @@ var CompanyDetails = function CompanyDetails(_ref) {
   Object(__WEBPACK_IMPORTED_MODULE_4_react__["useEffect"])(function () {
     var fetchCompanySettings = /*#__PURE__*/function () {
       var _ref2 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response;
+        var response, formattedData;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.get('/wp-json/erp/v1/onboarding/company');
+                return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.get("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/company"), {
+                  headers: {
+                    'X-WP-Nonce': ErpOnboard.nonce
+                  }
+                });
               case 3:
                 response = _context.sent;
-                setFormData(response.data);
-                _context.next = 10;
+                // Format the date value for the date input
+                formattedData = _objectSpread(_objectSpread({}, response.data), {}, {
+                  gen_com_start: response.data.gen_com_start ? new Date(response.data.gen_com_start).toISOString().split('T')[0] : ''
+                  // gen_financial_month: response.data?.gen_financial_month
+                });
+                setFormData(formattedData);
+                _context.next = 11;
                 break;
-              case 7:
-                _context.prev = 7;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](0);
                 console.error('Error fetching company settings:', _context.t0);
-              case 10:
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[0, 8]]);
       }));
       return function fetchCompanySettings() {
         return _ref2.apply(this, arguments);
@@ -38848,7 +38989,11 @@ var CompanyDetails = function CompanyDetails(_ref) {
               setError(null);
               _context2.prev = 3;
               _context2.next = 6;
-              return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.put('/wp-json/erp/v1/onboarding/company', formData);
+              return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.put("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/company"), formData, {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
             case 6:
               onComplete && onComplete();
               navigate('/department-designation');
@@ -38895,16 +39040,16 @@ var CompanyDetails = function CompanyDetails(_ref) {
   }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "form-group company-name-group"
   }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("label", {
-    htmlFor: "company_name"
+    htmlFor: "name"
   }, "Company Name", /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
     className: "required"
   }, "*")), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("input", {
     type: "text",
-    id: "company_name",
-    value: formData.company_name,
+    id: "name",
+    value: formData.name,
     onChange: function onChange(e) {
       return setFormData(_objectSpread(_objectSpread({}, formData), {}, {
-        company_name: e.target.value
+        name: e.target.value
       }));
     },
     placeholder: "Company Name",
@@ -38915,16 +39060,16 @@ var CompanyDetails = function CompanyDetails(_ref) {
   }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "form-group date-group"
   }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("label", {
-    htmlFor: "company_start"
+    htmlFor: "gen_com_start"
   }, "Company Start Date", /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
     className: "required"
   }, "*")), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("input", {
     type: "date",
-    id: "company_start",
-    value: formData.company_start,
+    id: "gen_com_start",
+    value: formData.gen_com_start,
     onChange: function onChange(e) {
       return setFormData(_objectSpread(_objectSpread({}, formData), {}, {
-        company_start: e.target.value
+        gen_com_start: e.target.value
       }));
     },
     required: true,
@@ -38932,23 +39077,23 @@ var CompanyDetails = function CompanyDetails(_ref) {
   })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "form-group month-group"
   }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("label", {
-    htmlFor: "financial_year"
+    htmlFor: "gen_financial_month"
   }, "Financial Year Starts", /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("span", {
     className: "required"
   }, "*")), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("select", {
-    id: "financial_year",
-    value: formData.financial_year,
+    id: "gen_financial_month",
+    value: formData.gen_financial_month,
     onChange: function onChange(e) {
       return setFormData(_objectSpread(_objectSpread({}, formData), {}, {
-        financial_year: e.target.value
+        gen_financial_month: e.target.value
       }));
     },
     required: true,
     className: "form-control"
-  }, months.map(function (month) {
+  }, months.map(function (month, index) {
     return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("option", {
       key: month,
-      value: month
+      value: index + 1
     }, month);
   })))), error && /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "error-message"
@@ -39788,9 +39933,9 @@ module.exports = _nonIterableRest, module.exports.__esModule = true, module.expo
 
 
 var utils = __webpack_require__(1);
-var bind = __webpack_require__(15);
+var bind = __webpack_require__(16);
 var Axios = __webpack_require__(48);
-var mergeConfig = __webpack_require__(21);
+var mergeConfig = __webpack_require__(22);
 var defaults = __webpack_require__(10);
 
 /**
@@ -39824,9 +39969,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(22);
+axios.Cancel = __webpack_require__(23);
 axios.CancelToken = __webpack_require__(63);
-axios.isCancel = __webpack_require__(20);
+axios.isCancel = __webpack_require__(21);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -39851,10 +39996,10 @@ module.exports.default = axios;
 
 
 var utils = __webpack_require__(1);
-var buildURL = __webpack_require__(16);
+var buildURL = __webpack_require__(17);
 var InterceptorManager = __webpack_require__(49);
 var dispatchRequest = __webpack_require__(50);
-var mergeConfig = __webpack_require__(21);
+var mergeConfig = __webpack_require__(22);
 var validator = __webpack_require__(61);
 
 var validators = validator.validators;
@@ -40068,7 +40213,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(1);
 var transformData = __webpack_require__(51);
-var isCancel = __webpack_require__(20);
+var isCancel = __webpack_require__(21);
 var defaults = __webpack_require__(10);
 
 /**
@@ -40393,7 +40538,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(19);
+var createError = __webpack_require__(20);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -40807,7 +40952,7 @@ module.exports = {"_args":[["axios@0.21.4","/Users/wedevs/Local Sites/wperp/app/
 "use strict";
 
 
-var Cancel = __webpack_require__(22);
+var Cancel = __webpack_require__(23);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -40921,16 +41066,16 @@ module.exports = function isAxiosError(payload) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react_router_dom__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_axios__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_axios__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_axios__);
 
 
@@ -40978,7 +41123,11 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
             case 0:
               _context.prev = 0;
               _context.next = 3;
-              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.get('/wp-json/erp/v1/onboarding/departments');
+              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.get("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/departments"), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
             case 3:
               response = _context.sent;
               setDepartments(response.data);
@@ -41008,7 +41157,11 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.get('/wp-json/erp/v1/onboarding/designations');
+              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.get("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/designations"), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
             case 3:
               response = _context2.sent;
               setDesignations(response.data);
@@ -41049,8 +41202,12 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
                 break;
               }
               _context3.next = 8;
-              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.post('/wp-json/erp/v1/onboarding/departments', {
+              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.post("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/departments"), {
                 name: newItem
+              }, {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
               });
             case 8:
               _context3.next = 10;
@@ -41060,8 +41217,12 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
               break;
             case 12:
               _context3.next = 14;
-              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.post('/wp-json/erp/v1/onboarding/designations', {
+              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a.post("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/designations"), {
                 name: newItem
+              }, {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
               });
             case 14:
               _context3.next = 16;
@@ -41102,7 +41263,11 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
                 break;
               }
               _context4.next = 5;
-              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a["delete"]("/wp-json/erp/v1/onboarding/departments/".concat(id));
+              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a["delete"]("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/departments/").concat(id), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
             case 5:
               _context4.next = 7;
               return fetchDepartments();
@@ -41111,7 +41276,11 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
               break;
             case 9:
               _context4.next = 11;
-              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a["delete"]("/wp-json/erp/v1/onboarding/designations/".concat(id));
+              return __WEBPACK_IMPORTED_MODULE_5_axios___default.a["delete"]("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/designations/").concat(id), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
             case 11:
               _context4.next = 13;
               return fetchDesignations();
@@ -41219,202 +41388,10 @@ var DepartmentDesignation = function DepartmentDesignation(_ref) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_react_router_dom__ = __webpack_require__(2);
-
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-
-
-var LeaveManagement = function LeaveManagement() {
-  var navigate = Object(__WEBPACK_IMPORTED_MODULE_5_react_router_dom__["c" /* useNavigate */])();
-  var _useState = Object(__WEBPACK_IMPORTED_MODULE_3_react__["useState"])([{
-      id: 1,
-      startDate: '',
-      endDate: ''
-    }]),
-    _useState2 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default()(_useState, 2),
-    leaveYears = _useState2[0],
-    setLeaveYears = _useState2[1];
-  var _useState3 = Object(__WEBPACK_IMPORTED_MODULE_3_react__["useState"])(true),
-    _useState4 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default()(_useState3, 2),
-    generateDefaultPolicies = _useState4[0],
-    setGenerateDefaultPolicies = _useState4[1];
-  var validateDates = function validateDates(id, field, value) {
-    var year = leaveYears.find(function (y) {
-      return y.id === id;
-    });
-    if (!year) return true;
-    if (field === 'startDate' && year.endDate) {
-      return new Date(value) <= new Date(year.endDate);
-    } else if (field === 'endDate' && year.startDate) {
-      return new Date(value) >= new Date(year.startDate);
-    }
-    return true;
-  };
-  var addLeaveYear = function addLeaveYear() {
-    setLeaveYears([].concat(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray___default()(leaveYears), [{
-      id: leaveYears.length + 1,
-      startDate: '',
-      endDate: ''
-    }]));
-  };
-  var removeLeaveYear = function removeLeaveYear(id) {
-    if (leaveYears.length > 1) {
-      setLeaveYears(leaveYears.filter(function (year) {
-        return year.id !== id;
-      }));
-    }
-  };
-  var handleDateChange = function handleDateChange(id, field, value) {
-    if (!validateDates(id, field, value)) {
-      alert(Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('End date must be after start date', 'erp'));
-      return;
-    }
-    setLeaveYears(leaveYears.map(function (year) {
-      if (year.id === id) {
-        return _objectSpread(_objectSpread({}, year), {}, __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()({}, field, value));
-      }
-      return year;
-    }));
-  };
-  var submit = function submit() {
-    // setTimeout(() => {
-    navigate('/workdays');
-    //   }, 2000);
-  };
-  return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-    className: "erp-leave-management"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-    className: "leave-management-header"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Leave Management', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Configure your organization\'s leave year settings', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-    className: "leave-years-container"
-  }, leaveYears.map(function (year) {
-    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-      key: year.id,
-      className: "leave-year-item"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-      className: "leave-year-header"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("h4", null, Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Leave Year', 'erp'), " ", year.id), leaveYears.length > 1 && /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("button", {
-      className: "remove-year",
-      onClick: function onClick() {
-        return removeLeaveYear(year.id);
-      }
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("i", {
-      className: "fas fa-times"
-    }))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-      className: "date-inputs"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-      className: "input-group"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("label", null, Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Start Date', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("input", {
-      type: "date",
-      value: year.startDate,
-      onChange: function onChange(e) {
-        return handleDateChange(year.id, 'startDate', e.target.value);
-      },
-      required: true
-    })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-      className: "input-group"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("label", null, Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('End Date', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("input", {
-      type: "date",
-      value: year.endDate,
-      onChange: function onChange(e) {
-        return handleDateChange(year.id, 'endDate', e.target.value);
-      },
-      required: true
-    }))));
-  })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("button", {
-    className: "add-leave-year button button-secondary",
-    onClick: addLeaveYear
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("i", {
-    className: "fas fa-plus"
-  }), Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Add Another Leave Year', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-    className: "generate-policies-option"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("label", null, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("input", {
-    type: "checkbox",
-    checked: generateDefaultPolicies,
-    onChange: function onChange(e) {
-      return setGenerateDefaultPolicies(e.target.checked);
-    }
-  }), Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Generate pre-default leave policies for the current year', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("div", {
-    className: "form-actions"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3_react___default.a.createElement("button", {
-    className: "button button-primary",
-    onClick: submit
-  }, Object(__WEBPACK_IMPORTED_MODULE_4__wordpress_i18n__["a" /* __ */])('Save Settings', 'erp'))));
-};
-/* harmony default export */ __webpack_exports__["a"] = (LeaveManagement);
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayWithoutHoles = __webpack_require__(69);
-
-var iterableToArray = __webpack_require__(70);
-
-var unsupportedIterableToArray = __webpack_require__(13);
-
-var nonIterableSpread = __webpack_require__(71);
-
-function _toConsumableArray(arr) {
-  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
-}
-
-module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayLikeToArray = __webpack_require__(14);
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return arrayLikeToArray(arr);
-}
-
-module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-/* 70 */
-/***/ (function(module, exports) {
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-/* 71 */
-/***/ (function(module, exports) {
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-/* 72 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* unused harmony export sprintf */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize__ = __webpack_require__(68);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_memize___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_memize__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sprintf_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_sprintf_js__);
 /**
  * External dependencies
@@ -41458,7 +41435,7 @@ function sprintf(format) {
 //# sourceMappingURL=sprintf.js.map
 
 /***/ }),
-/* 73 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41631,7 +41608,7 @@ module.exports = memize;
 
 
 /***/ }),
-/* 74 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
@@ -41869,7 +41846,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
 
 
 /***/ }),
-/* 75 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41890,12 +41867,12 @@ function _defineProperty(obj, key, value) {
 }
 
 /***/ }),
-/* 76 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = Tannin;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_plural_forms__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_plural_forms__ = __webpack_require__(72);
 
 
 /**
@@ -42112,12 +42089,12 @@ Tannin.prototype.dcnpgettext = function( domain, context, singular, plural, n ) 
 
 
 /***/ }),
-/* 77 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = pluralForms;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_compile__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_compile__ = __webpack_require__(73);
 
 
 /**
@@ -42139,13 +42116,13 @@ function pluralForms( expression ) {
 
 
 /***/ }),
-/* 78 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = compile;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_postfix__ = __webpack_require__(79);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tannin_evaluate__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tannin_postfix__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tannin_evaluate__ = __webpack_require__(75);
 
 
 
@@ -42178,7 +42155,7 @@ function compile( expression ) {
 
 
 /***/ }),
-/* 79 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42310,7 +42287,7 @@ function postfix( expression ) {
 
 
 /***/ }),
-/* 80 */
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42428,7 +42405,7 @@ function evaluate( postfix, variables ) {
 
 
 /***/ }),
-/* 81 */
+/* 76 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42443,7 +42420,7 @@ function evaluate( postfix, variables ) {
 /* unused harmony export isRTL */
 /* unused harmony export hasTranslation */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__create_i18n__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__wordpress_hooks__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__wordpress_hooks__ = __webpack_require__(77);
 /**
  * Internal dependencies
  */
@@ -42593,7 +42570,7 @@ var hasTranslation = i18n.hasTranslation.bind(i18n);
 //# sourceMappingURL=default-i18n.js.map
 
 /***/ }),
-/* 82 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42616,7 +42593,7 @@ var hasTranslation = i18n.hasTranslation.bind(i18n);
 /* unused harmony export didFilter */
 /* unused harmony export actions */
 /* unused harmony export filters */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createHooks__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createHooks__ = __webpack_require__(78);
 /* unused harmony reexport createHooks */
 /**
  * Internal dependencies
@@ -42678,19 +42655,19 @@ var addAction = defaultHooks.addAction,
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 83 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export _Hooks */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_classCallCheck__ = __webpack_require__(84);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__createAddHook__ = __webpack_require__(85);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__createRemoveHook__ = __webpack_require__(86);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__createHasHook__ = __webpack_require__(87);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createRunHook__ = __webpack_require__(88);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__createCurrentHook__ = __webpack_require__(94);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__createDoingHook__ = __webpack_require__(95);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__createDidHook__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_classCallCheck__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__createAddHook__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__createRemoveHook__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__createHasHook__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createRunHook__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__createCurrentHook__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__createDoingHook__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__createDidHook__ = __webpack_require__(91);
 
 
 /**
@@ -42754,7 +42731,7 @@ function createHooks() {
 //# sourceMappingURL=createHooks.js.map
 
 /***/ }),
-/* 84 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42766,12 +42743,12 @@ function _classCallCheck(instance, Constructor) {
 }
 
 /***/ }),
-/* 85 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateNamespace_js__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validateHookName_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validateHookName_js__ = __webpack_require__(12);
 /**
  * Internal dependencies
  */
@@ -42877,12 +42854,12 @@ function createAddHook(hooks, storeKey) {
 //# sourceMappingURL=createAddHook.js.map
 
 /***/ }),
-/* 86 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateNamespace_js__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validateHookName_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__validateHookName_js__ = __webpack_require__(12);
 /**
  * Internal dependencies
  */
@@ -42977,7 +42954,7 @@ function createRemoveHook(hooks, storeKey) {
 //# sourceMappingURL=createRemoveHook.js.map
 
 /***/ }),
-/* 87 */
+/* 82 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43021,11 +42998,11 @@ function createHasHook(hooks, storeKey) {
 //# sourceMappingURL=createHasHook.js.map
 
 /***/ }),
-/* 88 */
+/* 83 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_toConsumableArray__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_esm_toConsumableArray__ = __webpack_require__(84);
 
 
 /**
@@ -43100,15 +43077,15 @@ function createRunHook(hooks, storeKey) {
 //# sourceMappingURL=createRunHook.js.map
 
 /***/ }),
-/* 89 */
+/* 84 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = _toConsumableArray;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrayWithoutHoles_js__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__iterableToArray_js__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__unsupportedIterableToArray_js__ = __webpack_require__(92);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nonIterableSpread_js__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__arrayWithoutHoles_js__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__iterableToArray_js__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__unsupportedIterableToArray_js__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nonIterableSpread_js__ = __webpack_require__(88);
 
 
 
@@ -43118,7 +43095,7 @@ function _toConsumableArray(arr) {
 }
 
 /***/ }),
-/* 90 */
+/* 85 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43130,7 +43107,7 @@ function _arrayWithoutHoles(arr) {
 }
 
 /***/ }),
-/* 91 */
+/* 86 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43140,7 +43117,7 @@ function _iterableToArray(iter) {
 }
 
 /***/ }),
-/* 92 */
+/* 87 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43157,7 +43134,7 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 /***/ }),
-/* 93 */
+/* 88 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43167,7 +43144,7 @@ function _nonIterableSpread() {
 }
 
 /***/ }),
-/* 94 */
+/* 89 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43194,7 +43171,7 @@ function createCurrentHook(hooks, storeKey) {
 //# sourceMappingURL=createCurrentHook.js.map
 
 /***/ }),
-/* 95 */
+/* 90 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43235,11 +43212,11 @@ function createDoingHook(hooks, storeKey) {
 //# sourceMappingURL=createDoingHook.js.map
 
 /***/ }),
-/* 96 */
+/* 91 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateHookName_js__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__validateHookName_js__ = __webpack_require__(12);
 /**
  * Internal dependencies
  */
@@ -43280,25 +43257,303 @@ function createDidHook(hooks, storeKey) {
 //# sourceMappingURL=createDidHook.js.map
 
 /***/ }),
+/* 92 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_toConsumableArray__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_toConsumableArray__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_react_router_dom__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_axios__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_axios__);
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+
+
+var LeaveManagement = function LeaveManagement() {
+  var navigate = Object(__WEBPACK_IMPORTED_MODULE_7_react_router_dom__["c" /* useNavigate */])();
+  var _useState = Object(__WEBPACK_IMPORTED_MODULE_5_react__["useState"])([{
+      id: 1,
+      startDate: '',
+      endDate: ''
+    }]),
+    _useState2 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState, 2),
+    leaveYears = _useState2[0],
+    setLeaveYears = _useState2[1];
+  var _useState3 = Object(__WEBPACK_IMPORTED_MODULE_5_react__["useState"])(true),
+    _useState4 = __WEBPACK_IMPORTED_MODULE_3__babel_runtime_helpers_slicedToArray___default()(_useState3, 2),
+    generateDefaultPolicies = _useState4[0],
+    setGenerateDefaultPolicies = _useState4[1];
+  var validateDates = function validateDates(id, field, value) {
+    var year = leaveYears.find(function (y) {
+      return y.id === id;
+    });
+    if (!year) return true;
+    if (field === 'startDate' && year.endDate) {
+      return new Date(value) <= new Date(year.endDate);
+    } else if (field === 'endDate' && year.startDate) {
+      return new Date(value) >= new Date(year.startDate);
+    }
+    return true;
+  };
+  var addLeaveYear = function addLeaveYear() {
+    setLeaveYears([].concat(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_toConsumableArray___default()(leaveYears), [{
+      id: leaveYears.length + 1,
+      startDate: '',
+      endDate: ''
+    }]));
+  };
+  var removeLeaveYear = function removeLeaveYear(id) {
+    if (leaveYears.length > 1) {
+      setLeaveYears(leaveYears.filter(function (year) {
+        return year.id !== id;
+      }));
+    }
+  };
+  var handleDateChange = function handleDateChange(id, field, value) {
+    if (!validateDates(id, field, value)) {
+      alert(Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('End date must be after start date', 'erp'));
+      return;
+    }
+    setLeaveYears(leaveYears.map(function (year) {
+      if (year.id === id) {
+        return _objectSpread(_objectSpread({}, year), {}, __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_defineProperty___default()({}, field, value));
+      }
+      return year;
+    }));
+  };
+  var fetchLeaveYears = /*#__PURE__*/function () {
+    var _ref = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator___default.a.mark(function _callee() {
+      var response;
+      return __WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return __WEBPACK_IMPORTED_MODULE_8_axios___default.a.get("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/leave-years"), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
+            case 3:
+              response = _context.sent;
+              setLeaveYears(response.data);
+              _context.next = 10;
+              break;
+            case 7:
+              _context.prev = 7;
+              _context.t0 = _context["catch"](0);
+              console.error('Error fetching leave years:', _context.t0);
+            case 10:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 7]]);
+    }));
+    return function fetchLeaveYears() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  var handleSave = /*#__PURE__*/function () {
+    var _ref2 = __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator___default.a.mark(function _callee2() {
+      return __WEBPACK_IMPORTED_MODULE_4__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return __WEBPACK_IMPORTED_MODULE_8_axios___default.a.post("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/leave-years"), {
+                year: years,
+                start_date: startDates,
+                end_date: endDates,
+                generate_default_leave_policies: generatePolicies ? 'yes' : 'no'
+              }, {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
+            case 3:
+              navigate('/workdays');
+              _context2.next = 9;
+              break;
+            case 6:
+              _context2.prev = 6;
+              _context2.t0 = _context2["catch"](0);
+              console.error('Error saving leave years:', _context2.t0);
+            case 9:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 6]]);
+    }));
+    return function handleSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+    className: "erp-leave-management"
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+    className: "leave-management-header"
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Leave Management', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Configure your organization\'s leave year settings', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+    className: "leave-years-container"
+  }, leaveYears.map(function (year) {
+    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+      key: year.id,
+      className: "leave-year-item"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+      className: "leave-year-header"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("h4", null, Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Leave Year', 'erp'), " ", year.id), leaveYears.length > 1 && /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("button", {
+      className: "remove-year",
+      onClick: function onClick() {
+        return removeLeaveYear(year.id);
+      }
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("i", {
+      className: "fas fa-times"
+    }))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+      className: "date-inputs"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+      className: "input-group"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("label", null, Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Start Date', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("input", {
+      type: "date",
+      value: year.startDate,
+      onChange: function onChange(e) {
+        return handleDateChange(year.id, 'startDate', e.target.value);
+      },
+      required: true
+    })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+      className: "input-group"
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("label", null, Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('End Date', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("input", {
+      type: "date",
+      value: year.endDate,
+      onChange: function onChange(e) {
+        return handleDateChange(year.id, 'endDate', e.target.value);
+      },
+      required: true
+    }))));
+  })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("button", {
+    className: "add-leave-year button button-secondary",
+    onClick: addLeaveYear
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("i", {
+    className: "fas fa-plus"
+  }), Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Add Another Leave Year', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+    className: "generate-policies-option"
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("label", null, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("input", {
+    type: "checkbox",
+    checked: generateDefaultPolicies,
+    onChange: function onChange(e) {
+      return setGenerateDefaultPolicies(e.target.checked);
+    }
+  }), Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Generate pre-default leave policies for the current year', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("div", {
+    className: "form-actions"
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_5_react___default.a.createElement("button", {
+    className: "button button-primary",
+    onClick: handleSave
+  }, Object(__WEBPACK_IMPORTED_MODULE_6__wordpress_i18n__["a" /* __ */])('Save Settings', 'erp'))));
+};
+/* harmony default export */ __webpack_exports__["a"] = (LeaveManagement);
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithoutHoles = __webpack_require__(94);
+
+var iterableToArray = __webpack_require__(95);
+
+var unsupportedIterableToArray = __webpack_require__(14);
+
+var nonIterableSpread = __webpack_require__(96);
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(15);
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports) {
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports) {
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
 /* 97 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_react_router_dom__ = __webpack_require__(2);
+
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 
+
+
+
 var WorkdaySetup = function WorkdaySetup() {
-  var _useState = Object(__WEBPACK_IMPORTED_MODULE_2_react__["useState"])({
+  var _useState = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({
       monday: 'full',
       tuesday: 'full',
       wednesday: 'full',
@@ -43307,9 +43562,86 @@ var WorkdaySetup = function WorkdaySetup() {
       saturday: 'non-working',
       sunday: 'non-working'
     }),
-    _useState2 = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default()(_useState, 2),
+    _useState2 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default()(_useState, 2),
     workdays = _useState2[0],
     setWorkdays = _useState2[1];
+  var _useState3 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({}),
+    _useState4 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default()(_useState3, 2),
+    options = _useState4[0],
+    setOptions = _useState4[1];
+  var _useState5 = Object(__WEBPACK_IMPORTED_MODULE_4_react__["useState"])({}),
+    _useState6 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default()(_useState5, 2),
+    days = _useState6[0],
+    setDays = _useState6[1];
+  var navigate = Object(__WEBPACK_IMPORTED_MODULE_7_react_router_dom__["c" /* useNavigate */])();
+  var fetchWorkdays = /*#__PURE__*/function () {
+    var _ref = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator___default.a.mark(function _callee() {
+      var response;
+      return __WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.get("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/workdays"), {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
+            case 3:
+              response = _context.sent;
+              setWorkdays(response.data.working_days);
+              setOptions(response.data.options);
+              setDays(response.data.days);
+              _context.next = 12;
+              break;
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](0);
+              console.error('Error fetching workdays:', _context.t0);
+            case 12:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 9]]);
+    }));
+    return function fetchWorkdays() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  var handleSave = /*#__PURE__*/function () {
+    var _ref2 = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(/*#__PURE__*/__WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator___default.a.mark(function _callee2() {
+      return __WEBPACK_IMPORTED_MODULE_3__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return __WEBPACK_IMPORTED_MODULE_6_axios___default.a.post("".concat(ErpOnboard.restUrl, "erp/v1/onboarding/workdays"), workdays, {
+                headers: {
+                  'X-WP-Nonce': ErpOnboard.nonce
+                }
+              });
+            case 3:
+              navigate('/leave');
+              _context2.next = 9;
+              break;
+            case 6:
+              _context2.prev = 6;
+              _context2.t0 = _context2["catch"](0);
+              console.error('Error saving workdays:', _context2.t0);
+            case 9:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 6]]);
+    }));
+    return function handleSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
   var handleWorkdayChange = function handleWorkdayChange(day, type) {
     setWorkdays(function (prev) {
       return _objectSpread(_objectSpread({}, prev), {}, __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()({}, day, type));
@@ -43317,54 +43649,55 @@ var WorkdaySetup = function WorkdaySetup() {
   };
   var getDayLabel = function getDayLabel(day) {
     var labels = {
-      monday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Monday', 'erp'),
-      tuesday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Tuesday', 'erp'),
-      wednesday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Wednesday', 'erp'),
-      thursday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Thursday', 'erp'),
-      friday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Friday', 'erp'),
-      saturday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Saturday', 'erp'),
-      sunday: Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Sunday', 'erp')
+      monday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Monday', 'erp'),
+      tuesday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Tuesday', 'erp'),
+      wednesday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Wednesday', 'erp'),
+      thursday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Thursday', 'erp'),
+      friday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Friday', 'erp'),
+      saturday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Saturday', 'erp'),
+      sunday: Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Sunday', 'erp')
     };
     return labels[day];
   };
-  return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+  return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "erp-workday-setup"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "workday-setup-header"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Workday Setup', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Configure your organization\'s weekly work schedule', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("h2", null, Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Workday Setup', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("p", null, Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Configure your organization\'s weekly work schedule', 'erp'))), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "workdays-container"
-  }, Object.entries(workdays).map(function (_ref) {
-    var _ref2 = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default()(_ref, 2),
-      day = _ref2[0],
-      type = _ref2[1];
-    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+  }, Object.entries(workdays).map(function (_ref3) {
+    var _ref4 = __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_slicedToArray___default()(_ref3, 2),
+      day = _ref4[0],
+      type = _ref4[1];
+    return /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       key: day,
       className: "workday-item"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "day-label"
-    }, getDayLabel(day)), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+    }, getDayLabel(day)), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
       className: "day-settings"
-    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("button", {
+    }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
       className: "day-type-button ".concat(type === 'full' ? 'active' : ''),
       onClick: function onClick() {
         return handleWorkdayChange(day, 'full');
       }
-    }, Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Full Day', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("button", {
+    }, Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Full Day', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
       className: "day-type-button ".concat(type === 'half' ? 'active' : ''),
       onClick: function onClick() {
         return handleWorkdayChange(day, 'half');
       }
-    }, Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Half Day', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("button", {
+    }, Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Half Day', 'erp')), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
       className: "day-type-button ".concat(type === 'non-working' ? 'active' : ''),
       onClick: function onClick() {
         return handleWorkdayChange(day, 'non-working');
       }
-    }, Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Non-working Day', 'erp'))));
-  })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("div", {
+    }, Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Non-working Day', 'erp'))));
+  })), /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("div", {
     className: "form-actions"
-  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement("button", {
-    className: "button button-primary"
-  }, Object(__WEBPACK_IMPORTED_MODULE_3__wordpress_i18n__["a" /* __ */])('Save Settings', 'erp'))));
+  }, /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement("button", {
+    className: "button button-primary",
+    onClick: handleSave
+  }, Object(__WEBPACK_IMPORTED_MODULE_5__wordpress_i18n__["a" /* __ */])('Save Settings', 'erp'))));
 };
 /* harmony default export */ __webpack_exports__["a"] = (WorkdaySetup);
 
