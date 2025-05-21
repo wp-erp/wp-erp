@@ -67,21 +67,24 @@ class OnboardingController extends WP_REST_Controller {
         $erp_settings_general = get_option('erp_settings_general', []);
 
         $response_setting = [];
-        $response_setting['company_name'] = $company_name;
-        $response_setting['company_start'] = $erp_settings_general['gen_com_start'];
-        $response_setting['company_financial_month'] = $erp_settings_general['gen_financial_month'];
+        $response_setting['name'] = $company_name;
+        $response_setting['gen_com_start'] = $erp_settings_general['gen_com_start'];
+        $response_setting['gen_financial_month'] = $erp_settings_general['gen_financial_month'];
 
         return rest_ensure_response($response_setting);
     }
 
     public function update_company_settings($request) {
         $settings = [
-            'company_name'     => sanitize_text_field($request['company_name']),
-            'gen_com_start'    => sanitize_text_field($request['company_start']),
-            'gen_financial_month'   => sanitize_text_field($request['company_financial_month']),
+            'name'     => sanitize_text_field($request['name']),
+            'gen_com_start'    => sanitize_text_field($request['gen_com_start']),
+            'gen_financial_month'   => sanitize_text_field($request['gen_financial_month']),
         ];
 
-        update_option('erp_company_settings', $settings);
+
+       $is_updated =  update_option('_erp_company', $settings);
+       $data = get_option('_erp_company');
+
         return rest_ensure_response($settings);
     }
 
@@ -164,19 +167,19 @@ class OnboardingController extends WP_REST_Controller {
     // Argument Definitions
     private function get_company_args() {
         return [
-            'company_name' => [
+            'name' => [
                 'required'          => true,
                 'type'             => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
-            'company_start' => [
+            'gen_com_start' => [
                 'required'          => true,
                 'type'             => 'string',
-                'format'           => 'date',
+                // 'format'           => 'date',
             ],
-            'company_financial_month' => [
+            'gen_financial_month' => [
                 'required'          => true,
-                'type'             => 'string',
+                // 'type'             => 'string',
             ],
         ];
     }
