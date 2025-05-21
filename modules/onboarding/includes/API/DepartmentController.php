@@ -18,12 +18,12 @@ class DepartmentController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_departments'],
-                // 'permission_callback' => [$this, 'get_permissions_check'],
+                'permission_callback' => [$this, 'get_permissions_check'],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'create_department'],
-                // 'permission_callback' => [$this, 'update_permissions_check'],
+                'permission_callback' => [$this, 'update_permissions_check'],
                 'args'                => $this->get_department_args(),
             ],
         ]);
@@ -32,7 +32,7 @@ class DepartmentController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [$this, 'delete_department'],
-                // 'permission_callback' => [$this, 'update_permissions_check'],
+                'permission_callback' => [$this, 'update_permissions_check'],
             ],
         ]);
     }

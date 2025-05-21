@@ -18,12 +18,12 @@ class WorkDaysController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_workdays'],
-                // 'permission_callback' => [$this, 'get_permissions_check'],
+                'permission_callback' => [$this, 'get_permissions_check'],
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'create_designation'],
-                // 'permission_callback' => [$this, 'update_permissions_check'],
+                'permission_callback' => [$this, 'update_permissions_check'],
                 'args'                => $this->get_designation_args(),
             ],
         ]);
@@ -32,12 +32,12 @@ class WorkDaysController extends WP_REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_designation'],
-                // 'permission_callback' => [$this, 'get_permissions_check'],
+                'permission_callback' => [$this, 'get_permissions_check'],
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [$this, 'delete_designation'],
-                // 'permission_callback' => [$this, 'update_permissions_check'],
+                'permission_callback' => [$this, 'update_permissions_check'],
             ],
         ]);
     }

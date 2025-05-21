@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const WorkdaySetup = () => {
     const [workdays, setWorkdays] = useState({
@@ -11,6 +13,37 @@ const WorkdaySetup = () => {
         saturday: 'non-working',
         sunday: 'non-working'
     });
+    const [options, setOptions] = useState({});
+    const [days, setDays] = useState({});
+    const navigate = useNavigate();
+
+    const fetchWorkdays = async () => {
+        try {
+            const response = await axios.get(`${ErpOnboard.restUrl}erp/v1/onboarding/workdays`, {
+                headers: {
+                    'X-WP-Nonce': ErpOnboard.nonce
+                }
+            });
+            setWorkdays(response.data.working_days);
+            setOptions(response.data.options);
+            setDays(response.data.days);
+        } catch (err) {
+            console.error('Error fetching workdays:', err);
+        }
+    };
+
+    const handleSave = async () => {
+        try {
+            await axios.post(`${ErpOnboard.restUrl}erp/v1/onboarding/workdays`, workdays, {
+                headers: {
+                    'X-WP-Nonce': ErpOnboard.nonce
+                }
+            });
+            navigate('/leave');
+        } catch (err) {
+            console.error('Error saving workdays:', err);
+        }
+    };
 
     const handleWorkdayChange = (day, type) => {
         setWorkdays(prev => ({
@@ -68,7 +101,7 @@ const WorkdaySetup = () => {
             </div>
 
             <div className="form-actions">
-                <button className="button button-primary">
+                <button className="button button-primary" onClick={handleSave}>
                     {__('Save Settings', 'erp')}
                 </button>
             </div>
