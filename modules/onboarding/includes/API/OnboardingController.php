@@ -63,29 +63,44 @@ class OnboardingController extends WP_REST_Controller {
     // Company Settings Methods
     public function get_company_settings($request) {
 
-        $company_name = get_option('_erp_company', [])['name'];
+        $company_name = get_option('_erp_company', [])['name'] ?? '';
         $erp_settings_general = get_option('erp_settings_general', []);
 
         $response_setting = [];
         $response_setting['name'] = $company_name;
-        $response_setting['gen_com_start'] = $erp_settings_general['gen_com_start'];
-        $response_setting['gen_financial_month'] = $erp_settings_general['gen_financial_month'];
+        $response_setting['gen_com_start'] = $erp_settings_general['gen_com_start'] ?? '';
+        $response_setting['gen_financial_month'] = $erp_settings_general['gen_financial_month'] ?? '';
 
         return rest_ensure_response($response_setting);
     }
 
     public function update_company_settings($request) {
-        $settings = [
-            'name'     => sanitize_text_field($request['name']),
-            'gen_com_start'    => sanitize_text_field($request['gen_com_start']),
-            'gen_financial_month'   => sanitize_text_field($request['gen_financial_month']),
-        ];
+
+        $response_setting = [];
+
+        // getting the company serialized data
+        $_erp_company = get_option('_erp_company', []);
+        $erp_settings_general = get_option('erp_settings_general', []);
 
 
-       $is_updated =  update_option('_erp_company', $settings);
-       $data = get_option('_erp_company');
+        $erp_settings_general['gen_com_start']    = sanitize_text_field($request['gen_com_start']);
+        $erp_settings_general['gen_financial_month'] = sanitize_text_field($request['gen_financial_month']);
 
-        return rest_ensure_response($settings);
+
+       $settings_general_updated =  update_option('erp_settings_general', $erp_settings_general);
+
+       $_erp_company['name'] = sanitize_text_field($request['name']);
+       $company_updated = update_option('_erp_company', $_erp_company);
+
+        if (is_wp_error($settings_general_updated) || is_wp_error($company_updated)) {
+            return new WP_Error('not_updated', 'Company settings could not be updated', ['status' => 500]);
+        }
+        $response_setting['name'] = $_erp_company['name'];
+        $response_setting['gen_com_start'] = $erp_settings_general['gen_com_start'];
+        $response_setting['gen_financial_month'] = $erp_settings_general['gen_financial_month'];
+        $response_setting['updated'] = true;
+        $response_setting['message'] = __('Company settings updated successfully', 'erp');
+        return rest_ensure_response($response_setting);
     }
 
     // Department Methods
@@ -175,11 +190,11 @@ class OnboardingController extends WP_REST_Controller {
             'gen_com_start' => [
                 'required'          => true,
                 'type'             => 'string',
-                // 'format'           => 'date',
+                'format'           => 'date',
             ],
             'gen_financial_month' => [
                 'required'          => true,
-                // 'type'             => 'string',
+                'type'             => 'string',
             ],
         ];
     }
