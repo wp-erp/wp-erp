@@ -272,3 +272,4 @@ var i18nJSConfig = {
 };
 
 module.exports = [mainConfig, reactConfig, i18nJSConfig];
+
