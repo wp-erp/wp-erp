@@ -128,7 +128,7 @@ class Email extends Settings_Page {
      */
     public $sending = false;
 
-    
+
 
     /**
      * List of preg* regular expression patterns to search for,
@@ -220,9 +220,13 @@ class Email extends Settings_Page {
      *
      * @return string
      */
-    public function format_string( $string ) {
-        return str_replace( $this->find, $this->replace, $string );
-    }
+   public function format_string( $string ) {
+    $find    = (array) $this->find;
+    $replace = is_null( $this->replace ) ? '' : $this->replace;
+
+    return str_replace( $find, $replace, $string );
+}
+
 
     /**
      * get_subject function.
