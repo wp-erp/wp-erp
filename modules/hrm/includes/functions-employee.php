@@ -1176,8 +1176,8 @@ function erp_hr_get_education_result_type_options( $selected = null ) {
  * @return bool True if the user has an employee record, false otherwise
  */
 function wperp_hrm_user_has_employee($user_id) {
-    // Returns true if Employee record exists for this user
-    return \WeDevs\ERP\HRM\Models\Employee::where('user_id', $user_id)->exists();
+    // Returns true if Employee record exists for this user, including trashed
+    return \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where('user_id', $user_id)->exists();
 }
 
 /**
