@@ -32,3 +32,9 @@ add_action( 'erp_hr_happened_birthday_today', 'erp_hr_send_birthday_wish_email',
 add_action( 'erp_daily_scheduled_events', 'erp_hr_holiday_reminder_to_employees' );
 
 add_action( 'erp_hr_people_menu', 'erp_hr_get_people_menu_html' );
+
+ // * Check if the bulk delete action is being performed on WP Users
+add_action('admin_init', 'intercept_bulk_wpuser_delete', 8);
+
+// Intercept single user deletion
+add_action('delete_user',  'intercept_single_user_delete', 9);
