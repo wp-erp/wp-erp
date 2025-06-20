@@ -373,8 +373,10 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             \WeDevs\ERP\HRM\Models\Announcement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
-            $wp_user->remove_role( erp_hr_get_manager_role() );
-            $wp_user->remove_role( erp_hr_get_employee_role() );
+            if ( $wp_user ) {
+                $wp_user->remove_role( erp_hr_get_manager_role() );
+                $wp_user->remove_role( erp_hr_get_employee_role() );
+            }
 
             //finally remove from WordPress user
             $remove_wp_user = get_option( 'erp_hrm_remove_wp_user', 'no' );
@@ -1163,4 +1165,83 @@ function erp_hr_get_education_result_type_options( $selected = null ) {
     }
 
     return $types;
+}
+
+
+/**
+ * Check if a user has an employee record
+ *
+ * @param int $user_id User ID
+ *
+ * @return bool True if the user has an employee record, false otherwise
+ */
+function wperp_hrm_user_has_employee($user_id) {
+    // Returns true if Employee record exists for this user
+    return \WeDevs\ERP\HRM\Models\Employee::where('user_id', $user_id)->exists();
+}
+
+/**
+ * Check if bulk delete action is being performed and if users have employee records
+ * If so, display an error message and stop further processing
+ *
+ * @return void
+ */
+function intercept_bulk_wpuser_delete() {
+    if (
+        is_admin() &&
+        isset($_REQUEST['action']) &&
+        $_REQUEST['action'] === 'delete' &&
+        !empty($_REQUEST['users'])
+    ) {
+        $users = (array) $_REQUEST['users'];
+        $users_with_employee = [];
+        foreach ($users as $user_id) {
+            if (wperp_hrm_user_has_employee($user_id)) {
+                $users_with_employee[] = $user_id;
+            }
+        }
+        if (!empty($users_with_employee)) {
+            // Prepare usernames, display names, and profile images for display
+            $items = [];
+            foreach ($users_with_employee as $uid) {
+            $user = get_userdata($uid);
+            if ($user) {
+                $avatar = get_avatar($uid, 32);
+                $login = esc_html($user->user_login);
+                $display = esc_html($user->display_name);
+                $items[] = '<li style="margin-bottom:4px;display:flex;align-items:center;">' . $avatar . '<span style="margin-left:8px;"><strong>' . $login . '</strong> <em>(' . $display . ')</em></span></li>';
+            }
+            }
+            // Show error page and stop further processing
+            $user_list = '<ul style="margin-left:20px;">' . implode('', $items) . '</ul>';
+
+            wp_die(
+            sprintf(
+                /* translators: %s: List of usernames */
+                __('The following users have associated Employee profiles in WP ERP HRM and cannot be deleted. Please delete the Employee profiles first:%s', 'erp'),
+                $user_list
+            ),
+            __('Cannot Delete Users', 'erp'),
+            ['back_link' => true]
+            );
+        }
+    }
+}
+
+/**
+ * Intercept single user delete action and prevent deletion if the user has an employee record
+ *
+ * @param int $user_id User ID
+ *
+ * @return void
+ */
+function intercept_single_user_delete($user_id) {
+    if (wperp_hrm_user_has_employee($user_id)) {
+        // Prevent deletion and redirect with error
+        wp_die(
+            __('This user has an associated Employee profile in WP ERP HRM. Please delete the Employee profile first.', 'erp'),
+            __('Cannot Delete User', 'erp'),
+            ['back_link' => true]
+        );
+    }
 }
