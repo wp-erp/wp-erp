@@ -3642,8 +3642,12 @@ function erp_is_valid_age( $age ) {
  * @return bool
  */
 function erp_is_valid_date( $date ) {
+	if ( is_null( $date ) ) {
+		return false;
+	}
+
 	try {
-		$dt = new DateTime( trim( $date ) );
+		$dt = new DateTime( trim( (string) $date ) );
 	} catch ( Exception $e ) {
 		return false;
 	}
@@ -3736,29 +3740,45 @@ function erp_is_valid_currency_amount( $amount ) {
  */
 function erp_get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
 
-	$old_value   = $new_value   = array();
-	$changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
+    $old_value = [];
+    $new_value = [];
 
-	foreach ( $changes_key as $key => $change_field_key ) {
-		// To avoid the error when the key is not set in the old data, we need to check if the key is set or not.
-		if ( isset( $old_data[ $change_field_key ] ) ) {
-			$old_value[ $change_field_key ] = $old_data[ $change_field_key ];
-		}
+    // Recursive diff finder
+    $find_changes = function( $new, $old, &$new_out, &$old_out ) use ( &$find_changes ) {
+        foreach ( $new as $key => $new_val ) {
+            $old_val = $old[$key] ?? null;
 
-		$new_value[ $change_field_key ] = $new_data[ $change_field_key ];
-	}
+            if ( is_array( $new_val ) && is_array( $old_val ) ) {
+                $new_out[$key] = [];
+                $old_out[$key] = [];
+                $find_changes( $new_val, $old_val, $new_out[$key], $old_out[$key] );
 
-	if ( ! $is_seriazie ) {
-		return array(
-			'new_value' => $new_value ? base64_encode( maybe_serialize( $new_value ) ) : '',
-			'old_value' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : '',
-		);
-	} else {
-		return array(
-			'new_value' => $new_value,
-			'old_value' => $old_value,
-		);
-	}
+                // Remove empty results
+                if ( empty( $new_out[$key] ) ) {
+                    unset( $new_out[$key], $old_out[$key] );
+                }
+
+            } elseif ( $new_val !== $old_val ) {
+                $new_out[$key] = $new_val;
+                $old_out[$key] = $old_val;
+            }
+        }
+    };
+
+    // Start recursive diff
+    $find_changes( $new_data, $old_data, $new_value, $old_value );
+
+    if ( ! $is_seriazie ) {
+        return array(
+            'new_value' => $new_value ? base64_encode( maybe_serialize( $new_value ) ) : '',
+            'old_value' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : '',
+        );
+    } else {
+        return array(
+            'new_value' => $new_value,
+            'old_value' => $old_value,
+        );
+    }
 }
 
 /**
