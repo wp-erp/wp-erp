@@ -66,6 +66,7 @@ final class Accounting {
         // trigger after accounting module loaded
         do_action( 'erp_accounting_loaded' );
 
+        if( is_admin() ){
         // pdf plugin is not installed notice
         if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
             if ( 'hide' !== get_option( 'pdf-notice-dismissed' ) ) {
@@ -74,6 +75,7 @@ final class Accounting {
         }
 
         add_action( 'wp_ajax_dismiss_pdf_notice', [ $this, 'dismiss_pdf_notice' ] );
+        }
     }
 
     /**

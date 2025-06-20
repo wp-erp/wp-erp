@@ -110,7 +110,7 @@ var mainConfig = {
         chunkFilename: 'chunks/[chunkhash].js',
         jsonpFunction: 'pluginWebpack'
     },
-
+    devtool: isProduction() ? 'source-map' : 'eval-source-map',
     resolve: {
         alias: {
             vue$: 'vue/dist/vue.esm.js',
@@ -121,6 +121,7 @@ var mainConfig = {
             settings: path.resolve('./includes/Settings/assets/src/'),
             admin: path.resolve('./modules/accounting/assets/src/admin/')
         },
+        extensions: ['.js', '.jsx', '.json'], // Add JSX support
         modules: [
             path.resolve('./node_modules'),
             path.resolve(path.join(__dirname, 'assets/src/'))
@@ -132,11 +133,20 @@ var mainConfig = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
-                query: {
-                    presets: ['@wordpress/babel-preset-default']
+                options: {
+
+                    presets: [
+                        '@babel/preset-env',
+                        '@wordpress/babel-preset-default',
+                        '@babel/preset-react'
+                    ],
+                    plugins: [
+                        '@babel/plugin-transform-runtime',
+                        '@babel/plugin-proposal-class-properties'
+                    ]
                 }
             },
             {
@@ -158,7 +168,10 @@ var mainConfig = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: extractCss.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader']
+                })
             },
             {
                 test: /\.(woff(2)?|ttf|eot|svg|gif|png)(\?v=\d+\.\d+\.\d+)?$/,
@@ -171,7 +184,83 @@ var mainConfig = {
                 }]
             }
         ]
-    }
+    },
+    performance: {
+        hints: isProduction() ? 'warning' : false
+    },
+};
+
+// React config for onboarding module
+const reactExtractCss = new ExtractTextPlugin({
+    filename: '../css/[name].css'
+});
+
+var reactConfig = {
+    entry: {
+        '../../modules/onboarding/assets/js/admin': './modules/onboarding/assets/src/main.js'
+    },
+    output: {
+        path: exportPath,
+        filename: '[name].js'
+    },
+    devtool: 'source-map',
+    resolve: {
+        extensions: ['.js', '.jsx', '.json', ".mjs"],
+        modules: [
+            path.resolve('./node_modules')
+        ]
+    },
+    plugins: [
+        reactExtractCss,
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(isProduction() ? 'production' : 'development')
+            }
+        })
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            ["@babel/preset-env", {
+                                "targets": {
+                                    "browsers": ["last 2 versions", "safari >= 7"]
+                                }
+                            }],
+                            "@babel/preset-react"
+                        ],
+                        plugins: [
+                            "@babel/plugin-transform-runtime",
+                            "@babel/plugin-proposal-class-properties",
+                            "@babel/plugin-proposal-object-rest-spread"
+                        ]
+                    }
+                }
+            },
+            {
+                test: /\.css$/,
+                use: reactExtractCss.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader']
+                })
+            },
+            {
+                test: /\.m?js$/, // Handle .js and .mjs files
+                exclude: /node_modules\/(?!react-router)/,
+                use: {
+                  loader: "babel-loader",
+                  options: {
+                    presets: ["@babel/preset-env", "@babel/preset-react"],
+                  },
+                },
+              },
+        ]
+    },
 };
 
 var i18nJSConfig = {
@@ -182,4 +271,4 @@ var i18nJSConfig = {
     }
 };
 
-module.exports = [mainConfig, i18nJSConfig];
+module.exports = [mainConfig, reactConfig, i18nJSConfig];

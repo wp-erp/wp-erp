@@ -79,10 +79,11 @@
             "WeDevs\\ERP\\CRM\\Main\\": "modules/crm",
             "WeDevs\\ERP\\CRM\\": "modules/crm/includes",
             "WeDevs\\ERP\\Accounting\\Main\\": "modules/accounting",
-            "WeDevs\\ERP\\Accounting\\": "modules/accounting/includes"
+            "WeDevs\\ERP\\Accounting\\": "modules/accounting/includes",
+            "WeDevs\\ERP\\Onboarding\\": "modules/onboarding/includes"
         },
         "classmap": [
-            "modules/hrm/HRM.php",
+            "modules/hrm/HRM.php", 
             "modules/crm/CRM.php",
             "modules/accounting/Accounting.php"
         ]

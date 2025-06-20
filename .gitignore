@@ -5,6 +5,7 @@ config.codekit
 /vendor/
 /vendor copy/
 node_modules
+node_modules copy
 build
 .DS_Store
 nbproject

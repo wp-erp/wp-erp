@@ -98,7 +98,7 @@ final class WeDevs_ERP {
     private $container = [];
 
     /**
-     * @var WeDevs_ERP
+     * @var WeDevs_ERP The single instance of the class
      *
      * @since 1.2.1
      */

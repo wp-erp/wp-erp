@@ -29,6 +29,13 @@ class ApiRegistrar {
             '\WeDevs\ERP\API\UtilityController',
         ];
 
+        $controllers[] = '\WeDevs\ERP\Onboarding\API\OnboardingController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\DepartmentController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\DesignationController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\LeaveManagementController';
+        $controllers[] ='\WeDevs\ERP\Onboarding\API\WorkDaysController';
+
+
         if ( erp_is_module_active( 'CRM' ) ) {
             $controllers = array_merge( $controllers, [
                 '\WeDevs\ERP\API\Contacts_Controller',
