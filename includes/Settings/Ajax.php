@@ -294,7 +294,7 @@ class Ajax {
 		$option_value = ! empty( $_REQUEST['option_value'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['option_value'] ) ) : '';
 
 		if ( ! empty( $option_id ) ) {
-			$email_option = get_option( $option_id );
+			$email_option = get_option( $option_id, array() );
 
 			if ( 'yes' === $option_value ) {
 				$email_option['is_enable'] = 'yes';
