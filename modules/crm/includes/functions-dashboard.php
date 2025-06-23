@@ -310,7 +310,7 @@ function erp_crm_dashboard_widget_latest_contact() {
                         <?php echo wp_kses_post( $contact_obj->get_avatar( 28 ) ); ?>
                     </div>
                     <div class="details">
-                        <p class="contact-name"><a href="<?php echo esc_attr( $contact_obj->get_details_url() ); ?>"><?php echo esc_attr( $contact_obj->get_full_name() ); ?></a></p>
+                        <p class="contact-name"><a href="<?php echo esc_url( $contact_obj->get_details_url() ); ?>"><?php echo esc_attr( $contact_obj->get_full_name() ); ?></a></p>
                         <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? esc_attr( $crm_life_stages[ $life_stage ] ) : ''; ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo wp_kses_post( sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) ) ); ?>"><i class="fa fa-clock-o"></i></span>
