@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.15.1
+ * Version: 1.16.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -60,7 +60,7 @@ use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
 require_once __DIR__ . '/vendor/autoload.php';
-define( 'WPERP_VERSION', '1.15.1' );
+define( 'WPERP_VERSION', '1.16.0' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
 define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );

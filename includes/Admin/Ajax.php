@@ -325,7 +325,7 @@ class Ajax {
                 }
 
                 $item_insert_id = erp_hr_employee_create( $line_data );
-                
+
                 if ( ! is_wp_error( $item_insert_id ) && ! empty( $line_data['work']['reporting_to'] ) ) {
                     /**
                      * Add reporting to array for processing job history after import employee
@@ -404,22 +404,22 @@ class Ajax {
 
     /**
      * Map reporting to employee by email
-     * 
+     *
      * @param array $reporting_to
      *
      * @return void
      */
     function map_reporting_to_employee( $reporting_to ) {
         global $wpdb;
-    
+
         foreach ( $reporting_to as $value ) {
             if ( ! empty( $value['reporting_to'] ) && ! empty( $value['user_id'] ) ) {
                 $reporting_employee = get_user_by( 'email', $value['reporting_to'] );
 
                 if ( $reporting_employee ) {
                     $reporting_employee_id = $reporting_employee->ID;
-    
-                    
+
+
                      // Update reporting to employee id in erp_hr_employees table
                     $wpdb->query(
                         $wpdb->prepare(
@@ -607,12 +607,39 @@ class Ajax {
 
                 <tbody>
                     <?php $i=1; ?>
-                    <?php foreach ( $old_value as $key => $value ) { ?>
+                    <?php foreach ( $old_value as $key => $value ) {
+                         if(is_array($value) && is_array($new_value[$key]) ) {
+                            foreach ($value as $sub_key => $sub_value) {
+                                if ( isset( $new_value[$key][$sub_key] ) ) {
+                                    ?>
+                                    <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                                        <td class="col-date"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $key ) ) . ' - ' . ucfirst( str_replace( '_', ' ', $sub_key ) ) ); ?></td>
+                                        <td><?php echo ( $sub_value ) ? esc_html( wp_unslash( $sub_value ) ) : '--'; ?></td>
+                                        <td><?php echo ( isset( $new_value[$key][$sub_key] ) && $new_value[$key][$sub_key] ) ? esc_html( wp_unslash( $new_value[$key][$sub_key] ) ) : '--'; ?></td>
+                                    </tr>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                                        <td class="col-date"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $key ) ) . ' - ' . ucfirst( str_replace( '_', ' ', $sub_key ) ) ); ?></td>
+                                        <td><?php echo ( $sub_value ) ? esc_html( wp_unslash( $sub_value ) ) : '--'; ?></td>
+                                        <td><?php echo '--'; ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                            }
+
+                         }else{
+
+
+                        ?>
+
                         <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
                             <td class="col-date"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $key ) ) ); ?></td>
                             <td><?php echo ( $value ) ? esc_html( wp_unslash( $value ) ) : '--'; ?></td>
                             <td><?php echo ( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
                         </tr>
+                        <?php } ?>
                     <?php $i++; } ?>
                 </tbody>
             </table>
