@@ -26,6 +26,18 @@
 
                     <div class="erp-grid-container employee-basic">
                         <div class="row">
+                            <div class="col-6">
+                                <h3 class=""><?php esc_html_e( 'Basic Information', 'erp' ); ?></h3>
+                                <span class="erp-required-fields-note">
+                                    <?php
+                                    printf(
+                                        /* translators: %s: asterisk symbol */
+                                        esc_html__( 'Fields marked with %s are required.', 'erp' ),
+                                        '<span class="required">*</span>'
+                                    );
+                                    ?>
+                                </span>
+                            </div>
                             <?php do_action( 'erp-hr-employee-form-top' ); ?>
                             <div class="col-3">
                                 <?php
@@ -154,6 +166,34 @@
                                 ] );
                                 ?>
                             </div>
+                            <div class="col-3 erp-hr-js-department" data-selected="{{ data.work.department }}">
+                                    <?php
+                                    erp_html_form_input( [
+                                        'label'       => __( 'Department', 'erp' ),
+                                        'name'        => 'work[department]',
+                                        'value'       => '',
+                                        'required'    => true,
+                                        'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
+                                        'custom_attr' => [ 'data-id' => 'erp-new-dept', 'data-add' => __( '+ New Department', 'erp' ) ],
+                                        'type'        => 'select',
+                                        'options'     => erp_hr_get_departments_dropdown_raw(),
+                                    ] );
+                                    ?>
+                                </div>
+                                <div class="col-3" data-selected="{{ data.work.designation }}">
+                                    <?php
+                                    erp_html_form_input( [
+                                        'label'       => __( 'Job Title', 'erp' ),
+                                        'name'        => 'work[designation]',
+                                        'value'       => '{{ data.work.designation }}',
+                                         'required'    => true,
+                                        'class'       => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
+                                        'custom_attr' => [ 'data-id' => 'erp-new-designation', 'data-add' => __( '+ New Designation', 'erp' ) ],
+                                        'type'        => 'select',
+                                        'options'     => erp_hr_get_designation_dropdown_raw(),
+                                    ] );
+                                    ?>
+                                </div>
                             <?php } ?>
 
                             <?php do_action( 'erp-hr-employee-form-basic' ); ?>
@@ -174,33 +214,9 @@
                                     <h3 class="modal-section-title"><?php esc_html_e( 'Work', 'erp' ); ?></h3>
                                 </div>
 
-                                <div class="col-3 erp-hr-js-department" data-selected="{{ data.work.department }}">
-                                    <?php
-                                    erp_html_form_input( [
-                                        'label'       => __( 'Department', 'erp' ),
-                                        'name'        => 'work[department]',
-                                        'value'       => '',
-                                        'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
-                                        'custom_attr' => [ 'data-id' => 'erp-new-dept', 'data-add' => __( '+ New Department', 'erp' ) ],
-                                        'type'        => 'select',
-                                        'options'     => erp_hr_get_departments_dropdown_raw(),
-                                    ] );
-                                    ?>
-                                </div>
 
-                                <div class="col-3" data-selected="{{ data.work.designation }}">
-                                    <?php
-                                    erp_html_form_input( [
-                                        'label'       => __( 'Job Title', 'erp' ),
-                                        'name'        => 'work[designation]',
-                                        'value'       => '{{ data.work.designation }}',
-                                        'class'       => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
-                                        'custom_attr' => [ 'data-id' => 'erp-new-designation', 'data-add' => __( '+ New Designation', 'erp' ) ],
-                                        'type'        => 'select',
-                                        'options'     => erp_hr_get_designation_dropdown_raw(),
-                                    ] );
-                                    ?>
-                                </div>
+
+
 
                                 <div class="col-3" data-selected="{{ data.work.location }}">
                                     <?php

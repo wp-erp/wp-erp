@@ -9,26 +9,41 @@
 function patchReturnType($file, $method) {
     $content = file_get_contents($file);
 
-    // Improved check to ensure attribute is not already present
-    $pattern = "/#[ \t]*\\\\?ReturnTypeWillChange[ \t]*\n[ \t]*public function[ \t]+" . preg_quote($method) . "[ \t]*\(/";
-    if (preg_match($pattern, $content)) {
-        echo "⚠️ Already patched: $method\n";
-        return;
-    }
+    // Check if method is already patched with the attribute
+    $alreadyPatched = preg_match(
+        '/#[ \t]*\\\\?ReturnTypeWillChange[ \t]*\n[ \t]*public function[ \t]+' . preg_quote($method) . '\s*\(/',
+        $content
+    );
 
-    // Now patch the method
-    $patchPattern = "/(public function[ \t]+" . preg_quote($method) . "[ \t]*\([^)]*\))/";
-    $replacement = "#[\\ReturnTypeWillChange]\n    $1";
+    // Alternatively, scan just before the method for attribute presence
+    if (! $alreadyPatched) {
+        // Match the method declaration with optional preceding attributes
+        $methodPattern = '/((?:\s*#\[.*?\]\s*)*)\s*(public function[ \t]+' . preg_quote($method) . '\s*\([^)]*\))/';
 
-    $patched = preg_replace($patchPattern, $replacement, $content, 1, $count);
+        $patched = preg_replace_callback($methodPattern, function($matches) use ($method) {
+            $attributes = $matches[1];
+            $signature  = $matches[2];
 
-    if ($count > 0) {
-        file_put_contents($file, $patched);
-        echo "✅ Patched: $method\n";
+            // Avoid duplicating ReturnTypeWillChange
+            if (stripos($attributes, 'ReturnTypeWillChange') !== false) {
+                echo "⚠️ Already patched: $method\n";
+                return $matches[0];
+            }
+
+            echo "✅ Patched: $method\n";
+            return "#[\\ReturnTypeWillChange]\n    " . $signature;
+        }, $content, 1, $count);
+
+        if ($count > 0) {
+            file_put_contents($file, $patched);
+        } else {
+            echo "❌ Could not patch: $method\n";
+        }
     } else {
-        echo "❌ Could not patch: $method\n";
+        echo "⚠️ Already patched: $method\n";
     }
 }
+
 
 // Example usage
 $targetModelFile = __DIR__ . '/../vendor/illuminate/database/Eloquent/Model.php';
