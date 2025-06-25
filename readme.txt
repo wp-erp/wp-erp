@@ -340,7 +340,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 #### 🧠 CRM
 * [Fixed] Email reply and note preview display issues in CRM.
-* [Fixed] CRM contact URL not working properly after contact creation.
+* [Fixed] CRM contact URL not working inside recently added contact dashboard widget.
 * [Improved] CRM log view – better data display and UI reliability.
 
 
