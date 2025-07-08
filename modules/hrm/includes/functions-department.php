@@ -37,6 +37,7 @@ function erp_hr_create_department( $args = [] ) {
         $dept = $department->create( $fields );
 
         do_action( 'erp_hr_dept_new', $dept->id, $fields );
+        erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $dept->id ] );
 
         return $dept->id;
     } else {
@@ -45,11 +46,10 @@ function erp_hr_create_department( $args = [] ) {
         $department->find( $dept_id )->update( $fields );
 
         do_action( 'erp_hr_dept_after_updated', $dept_id, $fields );
+        erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $dept_id ] );
 
         return $dept_id;
     }
-
-    erp_hrm_purge_cache( [ 'list' => 'department', 'department_id' => $dept_id ] );
 
     return false;
 }
