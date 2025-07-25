@@ -362,14 +362,14 @@ final class WeDevs_ERP {
 
         $offer = $this->get_offer();
         if ( ! $offer->status ) {
-            return;
+            // return;
         }
 
         ?>
             <style>
                 #wperp-notice .content {
                     display: flex;
-                    align-items: center;
+                    /* align-items: center; */
                 }
 
                 .wperp-promotional-offer-notice {
@@ -387,7 +387,7 @@ final class WeDevs_ERP {
                 .wperp-promotional-offer-notice a {
                     color: #fff;
                     display: inline-block;
-                    margin-top: 8px;
+                    margin-top: 18px;
                     border: 0.5px solid #4a90e2;
                     border-radius: 3px;
                     padding: 2px 5px 1px 5px;
