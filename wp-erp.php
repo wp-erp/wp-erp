@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.16.0
+ * Version: 1.16.1
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -60,7 +60,7 @@ use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
 require_once __DIR__ . '/vendor/autoload.php';
-define( 'WPERP_VERSION', '1.16.0' );
+define( 'WPERP_VERSION', '1.16.1' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
 define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
@@ -466,7 +466,7 @@ final class WeDevs_ERP {
             }
 
             $promo_notice = wp_remote_retrieve_body( $response );
-            set_transient( 'wperp_promo_notice', $promo_notice, 20 );
+            set_transient( 'wperp_promo_notice', $promo_notice, 6 * HOUR_IN_SECONDS );
         }
 
         $promo_notice = json_decode( $promo_notice, true );
