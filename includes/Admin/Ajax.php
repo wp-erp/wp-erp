@@ -36,6 +36,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp_import_csv', 'import_csv' );
         $this->action( 'wp_ajax_erp_acct_get_sample_csv_url', 'generate_csv_url' );
         $this->action( 'wp_ajax_erp_reset_data', 'erp_reset_data' );
+        $this->action( 'wp_ajax_erp_dismiss_offer', 'dismiss_offer' );
     }
 
     /**
@@ -1063,5 +1064,35 @@ class Ajax {
                 'redirected_url' => admin_url( "admin.php?page=erp-setup" ),
             ]
         );
+    }
+
+    /**
+     * Dismiss promotion notice
+     *
+     * @since 1.16.2
+     *
+     * @return void
+     */
+    public function dismiss_offer() {
+
+        if ( empty( $_POST['nonce'] ) && ! isset( $_POST['wperp_offer_key'] ) ) {
+
+            return;
+        }
+
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'wperp-dismiss-offer-notice' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'erp' ) );
+            return;
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( __( 'You have no permission to do that', 'erp' ) );
+            return;
+        }
+
+        $offer_key    = 'wperp_offer_notice';
+        $disabled_key = sanitize_text_field( wp_unslash( $_POST['wperp_offer_key'] ) );
+
+        update_option( $offer_key, $disabled_key );
     }
 }
