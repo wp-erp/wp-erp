@@ -2,6 +2,7 @@
 
 An open-source ERP (Enterprise Resource Planning) solution for WordPress. View [documentation](https://wperp.com/documentation/?utm_medium=referral&utm_source=github&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
 
+[Try inside WordPress Playground](https://playground.wordpress.net/?mode=seamless#{%22$schema%22:%22https://playground.wordpress.net/blueprint-schema.json%22,%22meta%22:{%22title%22:%22WP%20ERP%20Local%20Dev%22,%22author%22:%22WP%20ERP%22},%22preferredVersions%22:{%22php%22:%228.3%22,%22wp%22:%22latest%22},%22features%22:{%22networking%22:true},%22plugins%22:[%22erp%22],%22login%22:true,%22landingPage%22:%22/wp-admin/%22})
 ## Core Components
 
 -   HRM - Human Resource Management
