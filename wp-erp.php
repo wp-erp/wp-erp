@@ -339,7 +339,7 @@ final class WeDevs_ERP {
 
         // Admin footer text
         add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ], 10, 1 );
-        add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
+        //add_action( 'admin_notices', array( $this, 'promotional_offer' ) );
 
     }
 
@@ -362,7 +362,7 @@ final class WeDevs_ERP {
 
         $offer = $this->get_offer();
         if ( ! $offer->status ) {
-            // return;
+            return;
         }
 
         ?>
