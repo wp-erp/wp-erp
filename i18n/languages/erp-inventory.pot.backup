@@ -1,0 +1,804 @@
+# Copyright (C) 2020 weDevs
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP ERP - Inventory 1.3.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp-inventory\n"
+"POT-Creation-Date: 2020-02-04 09:15:46+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: wp-vue-i18n 1.1.4\n"
+
+# automatic translation
+#: assets/js/admin.js:228 assets/src/admin/components/InventoryProducts.vue:48
+#: assets/src/admin/components/InventoryProductsReport.vue:43
+msgid "Product Name"
+msgstr "nombre del producto"
+
+# automatic translation
+#: assets/js/admin.js:229 assets/src/admin/components/InventoryProducts.vue:49
+#: assets/src/admin/components/InventoryProductsReport.vue:44
+#: deprecated/includes/class-inventory.php:245
+msgid "Sale Price"
+msgstr "Precio de venta"
+
+# automatic translation
+#: assets/js/admin.js:230 assets/src/admin/components/InventoryProducts.vue:50
+#: assets/src/admin/components/InventoryProductsReport.vue:45
+#: deprecated/includes/class-inventory.php:199
+msgid "Cost Price"
+msgstr "Precio de coste"
+
+# automatic translation
+#: assets/js/admin.js:231 assets/src/admin/components/InventoryProducts.vue:51
+#: assets/src/admin/components/InventoryProductsReport.vue:46
+#: deprecated/includes/class-inventory.php:487
+msgid "Stock"
+msgstr "Valores"
+
+# automatic translation
+#: assets/js/admin.js:232 assets/src/admin/components/InventoryProducts.vue:52
+#: assets/src/admin/components/InventoryProductsReport.vue:47
+msgid "Product Category"
+msgstr "categoria de producto"
+
+# automatic translation
+#: assets/js/admin.js:233 assets/src/admin/components/InventoryProducts.vue:53
+#: assets/src/admin/components/InventoryProductsReport.vue:48
+msgid "Tax Category"
+msgstr "Categoría de impuestos"
+
+# automatic translation
+#: assets/js/admin.js:234 assets/js/admin.js:828
+#: assets/src/admin/components/InventoryProducts.vue:54
+#: assets/src/admin/components/InventoryProductsReport.vue:49
+#: assets/src/admin/components/InventoryPurchaseReport.vue:56
+#: deprecated/includes/admin/views/reports/purchase-report.php:32
+#: deprecated/includes/admin/views/reports/sales-report.php:31
+msgid "Vendor"
+msgstr "Vendedor"
+
+# automatic translation
+#: assets/js/admin.js:536
+#: assets/src/admin/components/InventoryHistoryReport.vue:89
+msgid "Inventory Item List"
+msgstr "Lista de artículos de inventario"
+
+# automatic translation
+#: assets/js/admin.js:536
+#: assets/src/admin/components/InventoryHistoryReport.vue:90
+msgid "Inventory Item Summary"
+msgstr "Resumen de artículos de inventario"
+
+# automatic translation
+#: assets/js/admin.js:539 assets/js/admin.js:545
+#: assets/src/admin/components/InventoryHistoryReport.vue:94
+#: assets/src/admin/components/InventoryHistoryReport.vue:100
+#: deprecated/includes/admin/views/reports/inventory-report.php:65
+#: deprecated/includes/admin/views/reports/inventory-report.php:95
+msgid "Item Name"
+msgstr "Nombre del árticulo"
+
+# automatic translation
+#: assets/js/admin.js:540
+#: assets/src/admin/components/InventoryHistoryReport.vue:95
+msgid "Unit Cost price"
+msgstr "Precio de costo unitario"
+
+# automatic translation
+#: assets/js/admin.js:541
+#: assets/src/admin/components/InventoryHistoryReport.vue:96
+#: deprecated/includes/admin/views/reports/inventory-report.php:68
+msgid "Unit Sale Price"
+msgstr "Precio de venta unitario"
+
+# automatic translation
+#: assets/js/admin.js:542
+#: assets/src/admin/components/InventoryHistoryReport.vue:97
+#: deprecated/includes/admin/views/reports/inventory-report.php:70
+msgid "Quantity on Hand"
+msgstr "Cantidad en mano"
+
+# automatic translation
+#: assets/js/admin.js:546
+#: assets/src/admin/components/InventoryHistoryReport.vue:101
+#: deprecated/includes/admin/views/reports/inventory-report.php:97
+msgid "Purchases"
+msgstr "compras"
+
+# automatic translation
+#: assets/js/admin.js:547
+#: assets/src/admin/components/InventoryHistoryReport.vue:102
+#: deprecated/includes/admin/views/reports/inventory-report.php:98
+msgid "COGS"
+msgstr "COGS"
+
+# automatic translation
+#: assets/js/admin.js:548
+#: assets/src/admin/components/InventoryHistoryReport.vue:103
+#: deprecated/includes/admin/views/reports/inventory-report.php:100
+#: deprecated/includes/class-inventory.php:244
+msgid "Sales"
+msgstr "Ventas"
+
+# automatic translation
+#: assets/js/admin.js:688 assets/js/admin.js:826
+#: assets/src/admin/components/InventoryPurchaseReport.vue:54
+#: assets/src/admin/components/InventorySalesReport.vue:54
+msgid "Voucher No"
+msgstr "Nº de cupón"
+
+# automatic translation
+#: assets/js/admin.js:689 assets/js/admin.js:827
+#: assets/src/admin/components/InventoryPurchaseReport.vue:55
+#: assets/src/admin/components/InventorySalesReport.vue:55
+#: deprecated/includes/admin/views/reports/inventory-report.php:37
+#: deprecated/includes/admin/views/reports/purchase-report.php:30
+#: deprecated/includes/admin/views/reports/sales-report.php:29
+#: deprecated/includes/class-inventory.php:313
+msgid "Date"
+msgstr "Fecha"
+
+# automatic translation
+#: assets/js/admin.js:690
+#: assets/src/admin/components/InventorySalesReport.vue:56
+msgid "Customer"
+msgstr "Cliente"
+
+# automatic translation
+#: assets/js/admin.js:691 assets/js/admin.js:829
+#: assets/src/admin/components/InventoryPurchaseReport.vue:57
+#: assets/src/admin/components/InventorySalesReport.vue:57
+#: deprecated/includes/class-inventory.php:77
+#: deprecated/includes/class-inventory.php:78
+#: deprecated/includes/class-inventory.php:79 wp-erp-inventory.php:427
+msgid "Product"
+msgstr "Producto"
+
+# automatic translation
+#: assets/js/admin.js:692 assets/js/admin.js:830
+#: assets/src/admin/components/InventoryPurchaseReport.vue:58
+#: assets/src/admin/components/InventorySalesReport.vue:58
+#: deprecated/includes/admin/views/reports/purchase-report.php:36
+#: deprecated/includes/admin/views/reports/sales-report.php:35
+#: deprecated/includes/class-inventory.php:316
+msgid "Quantity"
+msgstr "Cantidad"
+
+# automatic translation
+#: assets/js/admin.js:693
+#: assets/src/admin/components/InventorySalesReport.vue:59
+#: deprecated/includes/class-inventory.php:220
+#: deprecated/includes/class-inventory.php:266
+msgid "Tax Rate"
+msgstr "Tasa de impuesto"
+
+# automatic translation
+#: assets/js/admin.js:694
+#: assets/src/admin/components/InventorySalesReport.vue:60
+msgid "Discount"
+msgstr "Descuento"
+
+# automatic translation
+#: assets/js/admin.js:695 assets/js/admin.js:831
+#: assets/src/admin/components/InventoryPurchaseReport.vue:59
+#: assets/src/admin/components/InventorySalesReport.vue:61
+#: deprecated/includes/admin/views/reports/purchase-report.php:38
+#: deprecated/includes/admin/views/reports/sales-report.php:37
+msgid "Amount"
+msgstr "Monto"
+
+# automatic translation
+#: assets/js/admin.js:1138 assets/js/admin.js:1206 assets/js/admin.js:1320
+#: assets/js/admin.js:1633 assets/js/admin.js:1829
+msgid "div"
+msgstr "división"
+
+# automatic translation
+#: assets/js/admin.js:2025 assets/js/admin.js:2142 assets/js/admin.js:2253
+msgid "li"
+msgstr "li"
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReport.vue:3
+#: assets/src/admin/components/InventoryHistoryReportFront.vue:3
+#: deprecated/includes/admin/views/reports/inventory-report.php:2
+#: deprecated/includes/admin/views/reports/purchase-report.php:2
+#: deprecated/includes/admin/views/reports/sales-report.php:2
+#: wp-erp-inventory.php:453
+msgid "Inventory Report"
+msgstr "Reporte de inventario"
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReport.vue:15
+#: assets/src/admin/components/InventoryPurchaseReport.vue:10
+#: assets/src/admin/components/InventorySalesReport.vue:10
+msgid "Filter"
+msgstr "Filtrar"
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReport.vue:20
+#: assets/src/admin/components/InventoryPurchaseReport.vue:17
+#: assets/src/admin/components/InventorySalesReport.vue:17
+msgid "Print"
+msgstr "Impresión"
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReport.vue:26
+msgid "Inventory Report Name"
+msgstr "Nombre del informe de inventario"
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReport.vue:30
+#: assets/src/admin/components/InventoryPurchaseReport.vue:23
+#: assets/src/admin/components/InventorySalesReport.vue:23
+msgid "to"
+msgstr "a"
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReportFront.vue:4
+msgid ""
+"Product purchase and sales history will be shown here with date between "
+"facility."
+msgstr ""
+"El historial de compras y ventas de productos se mostrará aquí con la fecha "
+"entre las instalaciones."
+
+# automatic translation
+#: assets/src/admin/components/InventoryHistoryReportFront.vue:8
+#: assets/src/admin/components/InventoryPurchaseReportFront.vue:6
+#: assets/src/admin/components/InventorySalesReportFront.vue:7
+msgid "View Report"
+msgstr "Vista del informe"
+
+# automatic translation
+#: assets/src/admin/components/InventoryProducts.vue:5
+#: assets/src/admin/components/InventoryProductsReport.vue:5
+msgid "Inventory Products"
+msgstr "Productos de inventario"
+
+# automatic translation
+#: assets/src/admin/components/InventoryPurchaseReport.vue:3
+msgid "Inventory Purchase Report"
+msgstr "Informe de compra de inventario"
+
+# automatic translation
+#: assets/src/admin/components/InventoryPurchaseReportFront.vue:3
+#: wp-erp-inventory.php:445
+msgid "Product Purchase"
+msgstr "Compra de productos"
+
+# automatic translation
+#: assets/src/admin/components/InventoryPurchaseReportFront.vue:4
+#: wp-erp-inventory.php:446
+msgid "Product Purchases history will be shown here with date between facility"
+msgstr ""
+"El historial de compras de productos se mostrará aquí con la fecha entre "
+"las instalaciones"
+
+# automatic translation
+#: assets/src/admin/components/InventorySalesReport.vue:3
+msgid "Inventory Sales Report"
+msgstr "Informe de ventas de inventario"
+
+# automatic translation
+#: assets/src/admin/components/InventorySalesReportFront.vue:3
+#: wp-erp-inventory.php:449
+msgid "Product Sales"
+msgstr "Venta de productos"
+
+# automatic translation
+#: assets/src/admin/components/InventorySalesReportFront.vue:4
+#: wp-erp-inventory.php:450
+msgid "Product Sales history will be shown here with date between facility"
+msgstr ""
+"El historial de ventas de productos se mostrará aquí con la fecha entre las "
+"instalaciones"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:13
+msgid "Item Reports"
+msgstr "Informes de artículos"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:17
+msgid "-- Select desire report --"
+msgstr "-- Seleccionar informe de deseo --"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:18
+msgid "Inventory item detail"
+msgstr "Detalle del artículo del inventario"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:19
+msgid "Inventory item list"
+msgstr "lista de elementos del inventario"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:20
+msgid "Inventory item summary"
+msgstr "Resumen de artículos de inventario"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:24
+#: deprecated/includes/admin/views/reports/purchase-report.php:17
+#: deprecated/includes/admin/views/reports/sales-report.php:16
+msgid "Search"
+msgstr "Búsqueda"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:38
+#: deprecated/includes/admin/views/reports/purchase-report.php:31
+#: deprecated/includes/admin/views/reports/sales-report.php:30
+msgid "Reference No"
+msgstr "Numero de referencia"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:39
+msgid "Contact"
+msgstr "Contacto"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:40
+msgid "Value Movement"
+msgstr "Movimiento de valor"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:41
+msgid "QoH Movement"
+msgstr "Movimiento QoH"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:42
+msgid "Margin"
+msgstr "Margen"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:43
+msgid "Profit per item"
+msgstr "Beneficio por artículo"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:66
+msgid "Description"
+msgstr "Descripción"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:67
+msgid "Unit Cost Price"
+msgstr "Precio de costo unitario"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:69
+msgid "Total Value"
+msgstr "Valor total"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:83
+#: deprecated/includes/admin/views/reports/inventory-report.php:113
+#: deprecated/includes/admin/views/reports/purchase-report.php:54
+#: deprecated/includes/admin/views/reports/sales-report.php:53
+msgid "Total :"
+msgstr "Total :"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:96
+msgid "Opening Balance"
+msgstr "Saldo de apertura"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/inventory-report.php:99
+msgid "Closing Balance"
+msgstr "Balance de cierre"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/purchase-report.php:13
+msgid "Purchase Reports"
+msgstr "Informes de compra"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/purchase-report.php:23
+#: deprecated/includes/admin/views/reports/sales-report.php:22
+msgid "Export to CSV"
+msgstr "Exportar a CSV"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/purchase-report.php:33
+#: deprecated/includes/admin/views/reports/sales-report.php:32
+msgid "Tax Rate %"
+msgstr "Tasa de impuesto %"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/purchase-report.php:34
+#: deprecated/includes/admin/views/reports/sales-report.php:33
+msgid "Tax Amount"
+msgstr "Importe del impuesto"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/purchase-report.php:35
+#: deprecated/includes/admin/views/reports/sales-report.php:34
+msgid "Discount %"
+msgstr "Descuento %"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/purchase-report.php:37
+#: deprecated/includes/admin/views/reports/sales-report.php:36
+#: deprecated/includes/class-inventory.php:317
+msgid "Unit Price"
+msgstr "Precio unitario"
+
+# automatic translation
+#: deprecated/includes/admin/views/reports/sales-report.php:12
+msgid "Sales Reports"
+msgstr "Informes de ventas"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:29
+msgid "-- Select --"
+msgstr "-- Seleccionar --"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:30
+msgid "All Employees"
+msgstr "Todos los empleados"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:31
+msgid "Selected Employee"
+msgstr "Empleado seleccionado"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:55
+msgid "Inventory product"
+msgstr "Producto de inventario"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:80
+msgid "Add Product"
+msgstr "Agregar producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:81
+msgid "Add New Product"
+msgstr "Añadir nuevo producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:82
+msgid "Edit"
+msgstr "Editar"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:83
+msgid "Edit Product"
+msgstr "Editar producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:84
+msgid "New Product"
+msgstr "Nuevo producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:85
+#: deprecated/includes/class-inventory.php:86
+msgid "View Product"
+msgstr "Ver el producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:87
+msgid "Search Product"
+msgstr "Buscar producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:88
+msgid "No Product Found"
+msgstr "No se encontró ningún producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:89
+msgid "No Product found in trash"
+msgstr "No se encontró ningún producto en la basura"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:90
+msgid "Parent Product"
+msgstr "Producto principal"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:107
+msgid "Search category"
+msgstr "Categoría de búsqueda"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:108
+msgid "All category"
+msgstr "Toda la categoría"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:109
+msgid "Parent category"
+msgstr "Categoría principal"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:110
+msgid "Parent category:"
+msgstr "Categoría principal:"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:111
+msgid "Edit category"
+msgstr "Editar categoria"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:112
+msgid "Update category"
+msgstr "Actualizar categoría"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:113
+msgid "Add New category"
+msgstr "Añadir nueva categoria"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:114
+msgid "New category Name"
+msgstr "Nombre de la nueva categoría"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:115
+msgid "Product category"
+msgstr "Categoria de producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:137
+msgid "Product Settings"
+msgstr "Configuración del producto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:148
+msgid "Stock available"
+msgstr "Stock disponible"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:176
+msgid "Inventory Item"
+msgstr "Elemento de inventario"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:177
+msgid "Inventory asset account"
+msgstr "Cuenta de activos de inventario"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:190
+#: deprecated/includes/class-inventory.php:484
+msgid "Item code"
+msgstr "Código del objeto"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:198
+msgid "Purchase"
+msgstr "Compra"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:206
+msgid "Purchase account"
+msgstr "Cuenta de compra"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:225
+#: deprecated/includes/class-inventory.php:270
+msgid "- Select -"
+msgstr "- Seleccionar -"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:235
+msgid "Purchase Description"
+msgstr "Descripción de compra"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:252
+msgid "Sales account"
+msgstr "Cuenta de ventas"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:280
+msgid "Sales Description"
+msgstr "Descripción de ventas"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:289
+msgid "Miscellaneous"
+msgstr "Misceláneas"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:290
+msgid "Short Description"
+msgstr "Breve descripción"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:314
+msgid "Type"
+msgstr "Escribe"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:315
+msgid "Reference"
+msgstr "Referencia"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:318
+msgid "Total"
+msgstr "Total"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:351
+msgid "No transaction found"
+msgstr "No se encontró ninguna transacción"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:482
+msgid "Image"
+msgstr "Imagen"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:483
+msgid "Name"
+msgstr "Nombre"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:485
+msgid "Cost price"
+msgstr "Precio de coste"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:486
+msgid "Sale price"
+msgstr "Precio de venta"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:488
+msgid "Created On"
+msgstr "Creado en"
+
+# automatic translation
+#: deprecated/includes/class-inventory.php:489
+msgid "Modified"
+msgstr "Modificado"
+
+# automatic translation
+#: deprecated/includes/functions-inventory.php:16
+msgid "&#8212; Select &#8212;"
+msgstr "&#8212; Seleccione &#8212;"
+
+# automatic translation
+#: includes/classes/class-admin.php:23 wp-erp-inventory.php:658
+#: wp-erp-inventory.php:674
+msgid "Inventory"
+msgstr "Inventario"
+
+# automatic translation
+#: wp-erp-inventory.php:244
+msgid "Product item code must be unique."
+msgstr "El código del artículo del producto debe ser único."
+
+# automatic translation
+#: wp-erp-inventory.php:248
+msgid "Please enter numeric number value in any price fields."
+msgstr "Ingrese el valor del número numérico en cualquier campo de precio."
+
+# automatic translation
+#: wp-erp-inventory.php:252
+msgid "Cost price should be less than sale price."
+msgstr "El precio de costo debe ser menor que el precio de venta."
+
+# automatic translation
+#: wp-erp-inventory.php:257
+msgid "Given file is not csv. Please give a csv file."
+msgstr "El archivo dado no es csv. Proporcione un archivo csv."
+
+# automatic translation
+#: wp-erp-inventory.php:262
+msgid "Products imported successfully."
+msgstr "Productos importados con éxito."
+
+# automatic translation
+#: wp-erp-inventory.php:267
+msgid "Please give an unique product name in your csv file then import again."
+msgstr ""
+"Proporcione un nombre de producto único en su archivo csv y luego vuelva a "
+"importarlo."
+
+# automatic translation
+#: wp-erp-inventory.php:272
+msgid ""
+"Item code should not be empty. Please enter unique item code value in your "
+"csv file then import again."
+msgstr ""
+"El código del artículo no debe estar vacío. Ingrese el valor del código de "
+"artículo único en su archivo csv y luego vuelva a importar."
+
+# automatic translation
+#: wp-erp-inventory.php:277
+msgid ""
+"Item code should be unique. One of your item code value is matching to your "
+"published product's item code. Please enter unique item code value in your "
+"csv file then try again."
+msgstr ""
+"El código del artículo debe ser único. Uno de los valores de su código de "
+"artículo coincide con el código de artículo de su producto publicado. "
+"Ingrese el valor del código de artículo único en su archivo csv y vuelva a "
+"intentarlo."
+
+# automatic translation
+#: wp-erp-inventory.php:282
+msgid ""
+"Product name should not be empty. Please enter product name in your csv "
+"file then import again."
+msgstr ""
+"El nombre del producto no debe estar vacío. Ingrese el nombre del producto "
+"en su archivo csv y luego vuelva a importarlo."
+
+# automatic translation
+#: wp-erp-inventory.php:287
+msgid "Product importing failed"
+msgstr "No se pudo importar el producto"
+
+# automatic translation
+#: wp-erp-inventory.php:304
+msgid "Import Products"
+msgstr "Productos de importación"
+
+# automatic translation
+#: wp-erp-inventory.php:454
+msgid ""
+"Product purchase and sales history will be shown here with date between "
+"facility"
+msgstr ""
+"El historial de compras y ventas de productos se mostrará aquí con la fecha "
+"entre las instalaciones"
+
+# automatic translation
+#: wp-erp-inventory.php:660
+msgid "Product categories"
+msgstr "Categorías de Producto"
+
+# automatic translation
+#: wp-erp-inventory.php:680
+msgid "Product Categories"
+msgstr "Categorías de Producto"
+
+# automatic translation
+#. Plugin Name of the plugin/theme
+msgid "WP ERP - Inventory"
+msgstr "WP ERP - Inventario"
+
+# automatic translation
+#. Plugin URI of the plugin/theme
+msgid "http://wperp.com/downloads/inventory/"
+msgstr "http://wperp.com/downloads/inventario/"
+
+# automatic translation
+#. Description of the plugin/theme
+msgid "Manage and display your products purchase, order and stock."
+msgstr "Gestione y visualice la compra, pedido y stock de sus productos."
+
+# automatic translation
+#. Author of the plugin/theme
+msgid "weDevs"
+msgstr "weDevs"
+
+# automatic translation
+#. Author URI of the plugin/theme
+msgid "http://wedevs.com"
+msgstr "http://wedevs.com"
+
+#: deprecated/includes/class-inventory.php:105
+#: deprecated/includes/class-inventory.php:106
+msgctxt "erp-inventory"
+msgid "Product category"
+msgstr ""
