@@ -76,16 +76,17 @@ function erp_hr_get_employees( $args = [] ) {
 
     $cache_key_counts = 'erp-get-employees-count-' . md5( serialize( $args ) ) . " : $last_changed";
     $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
+    $usermeta_table = apply_filters( 'erp_usermeta_table_name', $wpdb->prefix . 'usermeta' );
 
     if ( false === $results ) {
 
         $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
         $employees    = \WeDevs\ERP\HRM\Models\Employee::select( [ $employee_tbl . '.user_id', 'display_name' ] )
             ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' )
-            ->leftJoin( "{$wpdb->prefix}usermeta as gender", function ( $join ) use ( $employee_tbl ) {
+            ->leftJoin( "{$usermeta_table} as gender", function ( $join ) use ( $employee_tbl ) {
                 $join->on( $employee_tbl . '.user_id', '=', 'gender.user_id' )->where( 'gender.meta_key', '=', 'gender' );
             } )
-            ->leftJoin( "{$wpdb->prefix}usermeta as marital_status", function ( $join ) use ( $employee_tbl ) {
+            ->leftJoin( "{$usermeta_table} as marital_status", function ( $join ) use ( $employee_tbl ) {
                 $join->on( $employee_tbl . '.user_id', '=', 'marital_status.user_id' )->where( 'marital_status.meta_key', '=', 'marital_status' );
             } );
 

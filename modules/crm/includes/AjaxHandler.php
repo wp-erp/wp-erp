@@ -367,6 +367,16 @@ class AjaxHandler {
 		erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
 
 		$customer_data = $customer->to_array();
+
+		/**
+		 * Fires after a contact is saved.
+		 *
+		 * @param object $customer   The customer object.
+		 * @param int    $customer_id The customer ID.
+		 * @param array  $customer_data The customer data.
+		 */
+		do_action( 'erp_crm_after_save_contact_data', $customer, $customer_id, $customer_data );
+
 		$statuses      = erp_crm_customer_get_status_count( $data['type'] );
 
 		$this->send_success(
@@ -872,6 +882,13 @@ class AjaxHandler {
 			erp_crm_update_contact_owner( $output['assign_contact_id'], $output['erp_select_assign_contact'], 'id' );
 		}
 
+		/**
+		 * Fires after a contact is assigned to an owner.
+		 *
+		 * @param array $output The output data.
+		 */
+		do_action( 'erp_assign_contact_owner', $output );
+
 		$this->send_success( __( 'Assign to agent successfully', 'erp' ) );
 	}
 
@@ -1369,7 +1386,10 @@ class AjaxHandler {
 				$headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
 
 				$contact_owner_id = $contact->get_contact_owner();
-				$server_host      = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+				$server_host = apply_filters(
+					'erp_crm_activity_server_host',
+					isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
+				);
 				$message_id       = md5( uniqid( time() ) ) . ".{$user_id}.{$contact_owner_id}.r2@{$server_host}";
 
 				$custom_headers = array(

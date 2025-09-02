@@ -155,13 +155,19 @@ class Imap {
         $emails = [];
 
         foreach ( $email_ids as $email_id ) {
-            $emails[] = [
-                'id'          => $email_id,
-                'subject'     => $this->get_subject( $email_id ),
-                'body'        => $this->get_body( $email_id ),
-                'attachments' => $this->get_attachments( $email_id ),
-                'headers'     => $this->get_headers( $email_id ),
-            ];
+            $emails[] = apply_filters(
+                'erp_imap_email_info',
+                [
+                    'id'          => $email_id,
+                    'subject'     => $this->get_subject( $email_id ),
+                    'body'        => $this->get_body( $email_id ),
+                    'attachments' => $this->get_attachments( $email_id ),
+                    'headers'     => $this->get_headers( $email_id ),
+                ],
+                $email_id,
+                $this,
+                $this->connection
+            );
         }
 
         return $emails;
@@ -223,6 +229,8 @@ class Imap {
         if ( $body == '' ) {
             $body = $this->get_part( $email_id, 'TEXT/PLAIN' );
         }
+
+        $body = apply_filters( 'erp_imap_email_body_content', $body, $email_id );
 
         return $body;
     }

@@ -3059,8 +3059,8 @@ function erp_web_feed() {
 	if ( $cached_data !== false ) {
 		return simplexml_load_string( $cached_data );
 	}
-
-	$url  = 'https://wperp.com/feed/';
+	
+	$url = apply_filters( 'erp_web_feed_url', 'https://wperp.com/feed/' );
 	$args = array(
 		'timeout'   => 15,
 		'sslverify' => false,

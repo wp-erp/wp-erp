@@ -195,7 +195,10 @@ class ContactSubscriberListTable extends \WP_List_Table {
 
         if ( current_user_can( 'erp_crm_delete_contact', $contact->id ) ) {
             $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), esc_html__( 'Edit this item', 'erp' ), esc_html__( 'Edit', 'erp' ) );
-            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-group_id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, $group_id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
+
+            if( apply_filters( 'erp_crm_contact_can_delete_subscriber', true ) ) {
+                $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-group_id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, $group_id, esc_html__( 'Delete this item', 'erp' ), esc_html__( 'Delete', 'erp' ) );
+            }
         }
 
         $full_name = $contact->get_full_name();
