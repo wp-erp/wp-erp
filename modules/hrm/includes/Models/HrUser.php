@@ -18,11 +18,11 @@ class HrUser extends User {
 
     public function getTable() {
         global $wpdb;
-        
+
         if ( is_multisite() ) {
-		    return $wpdb->usermeta;
-	    }
-        
+            return $wpdb->usermeta;
+        }
+
         return $this->getConnection()->db->prefix . 'users';
     }
 }
