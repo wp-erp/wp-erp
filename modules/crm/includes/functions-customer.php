@@ -2713,7 +2713,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
          */
         if( apply_filters( 'erp_crm_skip_owner_email_notification', false, $to_email, $email ) ) {
             // Update email counter
-            update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+            update_option( 'wp_erp_inbound_email_count', (int) get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
             return $customer_feed_data;
         }
 
@@ -2727,7 +2727,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
     }
 
     // Update email counter
-    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+    update_option( 'wp_erp_inbound_email_count', (int) get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 
     return $customer_feed_data;
 }

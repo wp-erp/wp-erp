@@ -76,7 +76,7 @@ function erp_hr_get_employees( $args = [] ) {
 
     $cache_key_counts = 'erp-get-employees-count-' . md5( serialize( $args ) ) . " : $last_changed";
     $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
-    $usermeta_table = apply_filters( 'erp_usermeta_table_name', $wpdb->prefix . 'usermeta' );
+    $usermeta_table = apply_filters( 'erp_hrm_usermeta_table_name', $wpdb->prefix . 'usermeta' );
 
     if ( false === $results ) {
 

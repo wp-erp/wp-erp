@@ -887,7 +887,7 @@ class AjaxHandler {
 		 *
 		 * @param array $output The output data.
 		 */
-		do_action( 'erp_assign_contact_owner', $output );
+		do_action( 'erp_crm_assign_contact_owner', $output );
 
 		$this->send_success( __( 'Assign to agent successfully', 'erp' ) );
 	}

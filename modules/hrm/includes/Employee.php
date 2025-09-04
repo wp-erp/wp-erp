@@ -2147,7 +2147,7 @@ class Employee {
              * @param int                                   $offset Offset for pagination.
              * @param object                                $user   The ERP user model.
              */
-            $query = apply_filters( 'erp_crm_get_notes_query', $query, $limit, $offset, $this->erp_user );
+            $query = apply_filters( 'erp_hrm_get_notes_query', $query, $limit, $offset, $this->erp_user );
 
             return $query->get();
     }
