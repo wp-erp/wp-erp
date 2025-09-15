@@ -7,7 +7,7 @@ $customer_table->prepare_items();
 
     <h2>
         <?php esc_html_e( 'Contacts', 'erp' ); ?>
-        <?php if ( current_user_can( 'erp_crm_create_groups' ) ) { ?>
+        <?php if ( current_user_can( 'erp_crm_create_groups' ) && apply_filters( 'erp_crm_user_can_create_groups', true ) ) { ?>
             <a href="#" id="erp-new-contact-group" class="erp-new-contact-group add-new-h2" title="<?php esc_attr_e( 'Add New Contact Group ', 'erp' ); ?>"><?php esc_html_e( 'Add New Contact Group', 'erp' ); ?></a>
         <?php } ?>
 
