@@ -17,6 +17,14 @@ class HrUser extends User {
     }
 
     public function getTable() {
-        return $this->getConnection()->db->prefix . 'users';
+        $default_user_table = $this->getConnection()->db->prefix . 'users';
+
+        /**
+         * Filter the table name used for the HrUser model.
+         *
+         * @param string $default_user_table The default table name.
+         * @param HrUser $this          The current model instance.
+         */
+        return apply_filters( 'erp_hrm_user_table', $default_user_table, $this );
     }
 }

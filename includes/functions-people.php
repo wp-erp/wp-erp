@@ -107,7 +107,7 @@ function erp_get_peoples( $args = [] ) {
         }
 
         if ( erp_is_module_active( 'CRM' ) ) {
-            if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+            if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() && apply_filters( 'erp_crm_limit_contacts_to_owner', true ) ) {
                 $current_user_id = get_current_user_id();
                 $sql['where'][]  = $wpdb->prepare( "AND people.contact_owner = %d", $current_user_id );
             }

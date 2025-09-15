@@ -197,7 +197,7 @@ class GmailSync {
         ];
     }
 
-    public function save_attachments( $attachments ) {
+    public function save_attachments( $attachments, $deal_id = 0 ) {
         global $wp_filesystem;
         require_once ABSPATH . 'wp-admin/includes/file.php';
         WP_Filesystem();
@@ -215,6 +215,8 @@ class GmailSync {
             wp_mkdir_p( $dir );
         }
 
+        do_action( 'erp_crm_after_create_save_attachment_directory', $deal_id );
+
         foreach ( $attachments as $key => $item ) {
             $name = $item['name'];
             $file = wp_check_filetype( $item['name'] );
@@ -231,6 +233,7 @@ class GmailSync {
                 //remove image data
                 unset( $attachments[$key]['data'] );
                 unset( $attachments[$key]['id'] );
+                do_action( 'erp_crm_after_save_attachment', $dir, $name, $file, $deal_id,  $subdir  );
             } else {
                 unset( $attachments[$key] );
             }
@@ -270,7 +273,10 @@ class GmailSync {
     public function process_emails( $emails ) {
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+        $http_host = apply_filters(
+            'erp_crm_activity_server_host',
+            isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
+        );
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $http_host;
 
         foreach ( $emails as $email ) {
@@ -294,6 +300,7 @@ class GmailSync {
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
                         $customer_feed_data = erp_crm_save_email_activity( $email, $this->get_inbound_email() );
+                        do_action( 'erp_crm_r1_email_activity', $email );
                         break;
 
                     case 'r2':

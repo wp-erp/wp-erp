@@ -925,11 +925,13 @@ class EmployeesController extends REST_Controller {
 
         $histories = $employee->get_job_histories( $module );
 
-        for ( $i = 0; $i < count( $histories['job'] ); $i ++ ) {
-            $reports_to = new Employee( $histories['job'][ $i ]['reporting_to'] );
+        if ( isset( $histories['job'] ) ) {
+            for ( $i = 0; $i < count( $histories['job'] ); $i ++ ) {
+                $reports_to = new Employee( $histories['job'][ $i ]['reporting_to'] );
 
-            if ( $employee->is_employee() ) {
-                $histories['job'][ $i ]['reporting_to_full_name'] = $reports_to->display_name;
+                if ( $employee->is_employee() ) {
+                    $histories['job'][ $i ]['reporting_to_full_name'] = $reports_to->display_name;
+                }
             }
         }
 

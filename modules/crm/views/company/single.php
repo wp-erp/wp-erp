@@ -2,6 +2,7 @@
 if (
     ! current_user_can( erp_crm_get_manager_role() ) &&
     ! current_user_can( 'manage_options' ) &&
+    ! apply_filters( 'erp_crm_user_can_access_single_company_view', false ) &&
     intval( $customer->contact_owner ) !== get_current_user_id()
 ) {
     wp_die( esc_html__( 'Unauthorized request.', 'erp' ), 401 );

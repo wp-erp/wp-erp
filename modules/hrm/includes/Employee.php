@@ -2134,11 +2134,22 @@ class Employee {
      * @return array
      */
     public function get_notes( $limit = 30, $offset = 0 ) {
-        return $this->erp_user
+        $query = $this->erp_user
             ->notes()
             ->skip( $offset )
-            ->take( $limit )
-            ->get();
+            ->take( $limit );
+            
+            /**
+             * Filter the notes query builder before executing the query.
+             *
+             * @param \Illuminate\Database\Eloquent\Builder $query  The query builder instance.
+             * @param int                                   $limit  The number of notes to fetch.
+             * @param int                                   $offset Offset for pagination.
+             * @param object                                $user   The ERP user model.
+             */
+            $query = apply_filters( 'erp_hrm_get_notes_query', $query, $limit, $offset, $this->erp_user );
+
+            return $query->get();
     }
 
     /**
