@@ -103,7 +103,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $banks = erp_acct_get_ledgers_by_chart_id( 7 );
 
     if ( $bank_only && empty( $banks ) ) {
-        return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
+        return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.', 'erp' ), [ 'status' => 204 ] );
     }
 
     foreach ( $banks as $bank ) {
