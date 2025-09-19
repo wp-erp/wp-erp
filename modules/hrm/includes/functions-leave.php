@@ -1759,7 +1759,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
             if ( $status === 3 ) { // reject this request
                 // 1. Get latest approval_status_id for current request
                 if ( ! $request->latest_approval_status->id ) {
-                    return new WP_Error( 'no-approval-status', esc_attr__( 'Invalid Request: No previous records found for given request.' ) );
+                    return new WP_Error( 'no-approval-status', esc_attr__( 'Invalid Request: No previous records found for given request.', 'erp' ) );
                 }
                 $old_approval_status_id = $request->latest_approval_status->id;
 
@@ -2795,7 +2795,7 @@ function import_holidays_csv( $file ) {
         }
 
         $days = erp_date_duration( $start, $end );
-        $days = $days . ' ' . _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
+        $days = $days . ' ' . _n( 'day', 'days', $days, 'erp' );
 
         $parsed_data[] = [
             'title'       => $title,

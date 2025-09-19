@@ -583,7 +583,7 @@ class PurchasesController extends \WeDevs\ERP\API\REST_Controller {
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'tax'          => [
-                            'description' => __( 'Tax.' ),
+                            'description' => __( 'Tax.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],

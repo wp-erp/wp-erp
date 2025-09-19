@@ -18,7 +18,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
     <h2>
         <?php
         esc_html_e( 'Contact #', 'erp' );
-        echo esc_html_e( $customer->id, 'erp' );
+        esc_html_e( $customer->id, 'erp' );
         ?>
         <a href="<?php echo esc_url_raw( $contact_list_url ); ?>" id="erp-contact-list" class="add-new-h2"><?php esc_html_e( 'Back to Contact list', 'erp' ); ?></a>
 
