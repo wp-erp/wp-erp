@@ -15,59 +15,107 @@ class Promotion {
         add_action( 'wp_ajax_erp-dismiss-promotional-offer-notice-temp', array( $this, 'dismiss_promotional_offer' ) );
     }
 
-    /**
-     * Promotional offer notice
+     /**
+     * Get prmotion data
      *
-     * @since 1.1.15
+     * @since 1.0.0
      *
      * @return void
      */
     public function promotional_offer() {
-        // Show only to Admins
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-
-        if ( ! isset( $_GET['page'] ) || 0 !== strpos( sanitize_text_field( wp_unslash( $_GET['page'] ) ), 'erp' ) ) {
+        // Check if inside the wp-project-manager page
+        if ( ! isset( $_GET['page'] ) ) {
             return;
         }
 
-        $promo_notice  = get_transient( 'erp_promo_notice' );
-
-        if ( false === $promo_notice ) {
-            $promo_notice_url = 'http://wperp.com/wp-json/erp/v1/promotions';
-            $response         = wp_remote_get( $promo_notice_url, [ 'timeout' => 15 ] );
-
-            if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
-                return;
-            }
-
-            $promo_notice = wp_remote_retrieve_body( $response );
-            set_transient( 'erp_promo_notice', $promo_notice, DAY_IN_SECONDS );
-        }
-
-        $promo_notice = json_decode( $promo_notice, true );
-        $current_time = erp_current_datetime()->setTimezone( new \DateTimeZone( 'America/New_York' ) )->format( 'Y-m-d H:i:s T' );
-
-        if ( $current_time > $promo_notice['end_date'] || $current_time < $promo_notice['start_date'] ) {
+        $offer = $this->get_offer();
+        if ( ! $offer->status ) {
             return;
         }
 
-        $offer            = new \stdClass;
-        $offer->link      = $promo_notice['action_url'];
-        $offer->key       = "erp-{$promo_notice['key']}";
-        $offer->btn_txt   = ! empty( $promo_notice['action_title'] ) ? $promo_notice['action_title'] : __( 'Get Now', 'erp' );
-        $offer->message   = [];
-        $offer->message[] = sprintf( __( '<strong>%s</strong>', 'erp' ), $promo_notice['title'] );
+        ?>
+            <style>
+                #wperp-notice .content {
+                    display: flex;
+                    /* align-items: center; */
+                }
 
-        if ( ! empty( $promo_notice['description'] ) ) {
-            $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['description'] );
-        }
+                .wperp-promotional-offer-notice {
+                    background: linear-gradient(30deg, #f2f2f2, #4a90e2);
+                    color: #444;
+                    border-left: 5px solid #4a90e2;
+                }
 
-        $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['content'] );
-        $offer->message   = implode( '<br>', $offer->message );
+                .wperp-promotional-offer-notice p {
+                    font-size: 16px;
+                    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                    color: #444;
+                }
 
-        return $this->generate_notice( $offer );
+                .wperp-promotional-offer-notice a {
+                    color: #fff;
+                    display: inline-block;
+                    margin-top: 18px;
+                    border: 0.5px solid #4a90e2;
+                    border-radius: 3px;
+                    padding: 2px 5px 1px 5px;
+                    text-decoration: none;
+                    font-size: 16px;
+                    padding: 4px 10px;
+                    font-weight: 300;
+                    background: #4a90e2;
+                    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+                }
+
+                .wperp-promotional-offer-notice a:hover {
+                    color: #fff;
+                    border: 0.5px solid #357abd;
+                    background: #357abd;
+                }
+                .welcome-panel .welcome-panel-close:before, .tagchecklist .ntdelbutton .remove-tag-icon:before, #bulk-titles .ntdelbutton:before, .notice-dismiss:before{
+                    color:white;
+                }
+            </style>
+
+            <div class="notice notice-success is-dismissible wperp-promotional-offer-notice" id="wperp-notice">
+                <div class="content">
+                <p style="margin-right:14px ;">
+                        <img height="100" src="https://ps.w.org/erp/assets/icon-256x256.gif?rev=2818774" alt="">
+                </p>
+                <p>
+                        <?php echo wp_kses( $offer->message, [ 'strong' => [], 'br' => [] ] ); ?>
+                        <br>
+                        <a class="link" target="_blank" href="<?php echo esc_url( $offer->link ); ?>">
+                            <?php printf( esc_html__( '%s', 'erp' ), $offer->btn_txt ); ?>
+                        </a>
+                    </p>
+
+                </div>
+            </div>
+
+            <script type='text/javascript'>
+
+                jQuery('body').on('click', '#wperp-notice .notice-dismiss', function(e) {
+                    e.preventDefault();
+
+                    jQuery.ajax({
+                        type: 'POST',
+                        data: {
+                            action: 'erp_dismiss_offer',
+                            nonce: '<?php echo esc_attr( wp_create_nonce( 'wperp-dismiss-offer-notice' ) ); ?>',
+                            wperp_offer_key: '<?php echo esc_attr( $offer->key ); ?>'
+                        },
+                        url: '<?php echo esc_url( admin_url( "admin-ajax.php" ) ); ?>',
+                        success: function (res) {
+
+                        }
+                    });
+                });
+            </script>
+        <?php
     }
 
     /**
@@ -141,6 +189,57 @@ class Promotion {
         </style>
         <?php
     }
+
+
+     /**
+     * Retrieves offer data.
+     *
+     * @return object
+     */
+    public function get_offer() {
+        $offer         = new \stdClass;
+        $offer->status = false;
+        $promo_notice  = get_transient( 'wperp_promo_notice' );
+
+        if ( false === $promo_notice ) {
+            $promo_notice_url = 'https://raw.githubusercontent.com/wp-erp/erp-utils/refs/heads/main/promotions.json';
+            $response         = wp_remote_get( $promo_notice_url, array( 'timeout' => 15 ) );
+
+            if ( is_wp_error( $response ) || $response['response']['code'] !== 200 ) {
+                return $offer;
+            }
+
+            $promo_notice = wp_remote_retrieve_body( $response );
+            set_transient( 'wperp_promo_notice', $promo_notice, 6 * HOUR_IN_SECONDS );
+        }
+
+        $promo_notice = json_decode( $promo_notice, true );
+        $current_time = new \DateTimeImmutable( 'now', new \DateTimeZone('America/New_York') );
+        $current_time = $current_time->format( 'Y-m-d H:i:s T' );
+        $disabled_key = get_option( 'wperp_offer_notice' );
+
+        if ( $current_time >= $promo_notice['start_date'] && $current_time <= $promo_notice['end_date'] ) {
+            $offer->link      = $promo_notice['action_url'];
+            $offer->key       = $promo_notice['key'];
+            $offer->btn_txt   = ! empty( $promo_notice['action_title'] ) ? $promo_notice['action_title'] : 'Get Now';
+            $offer->message   = [];
+            $offer->message[] = sprintf( __( '<strong>%s</strong>', 'erp' ), $promo_notice['title'] );
+
+            if ( ! empty( $promo_notice['description'] ) ) {
+                $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['description'] );
+            }
+
+            $offer->message[] = sprintf( __( '%s', 'erp' ), $promo_notice['content'] );
+            $offer->message   = implode( '<br>', $offer->message );
+
+            if ( $disabled_key != $promo_notice['key'] ) {
+                $offer->status = true;
+            }
+        }
+
+        return $offer;
+    }
+
 
     /**
      * Dismiss promotion notice
