@@ -118,7 +118,6 @@ final class Accounting {
         $actual_link = "{$host}{$uri}";
 
         echo '<div class="updated notice is-dismissible notice-pdf"><p>';
-        // translators: %1$s: 'install' or 'active', %2$s: link, %3$s: type
         echo wp_kses_post( sprintf(
             // translators: %1$s: 'install' or 'active', %2$s: link, %3$s: type
             __( 'Please %1$s <a href="%2$serp-pdf=%3$s">WP ERP PDF</a> extension to get PDF export feature.', 'erp' ),
