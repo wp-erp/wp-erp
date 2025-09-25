@@ -169,10 +169,8 @@
     }
     /* end responsive style */
 
-
     .erp_pro_addons_wrapper {
         padding: 42px 0;
-        font-family: 'Lato', sans-serif;
         width: 884px;
         margin: 0 auto;
 
@@ -182,6 +180,17 @@
         display: flex;
         justify-content: space-between;
         flex-flow: row wrap;
+    }
+
+    .erp_pro_addons_wrapper .banner_section p.discount-offer {
+        font-size: 14px !important;
+        font-weight: 400;
+        line-height: 20px;
+        color: #ffffff !important;
+    }
+
+    .erp_pro_addons_wrapper .banner_section p.discount-offer .discount-code {
+        color: #00F4FF !important;
     }
 
     /*=======================
@@ -328,21 +337,104 @@
     =======================*/
 
     .erp_pro_addons_wrapper .banner_section {
-        opacity: 0.75;
-        background-image: linear-gradient(180deg, #0396FF 0%, #ABDCFF 100%);
-        border-radius: 5px;
+        background: url('<?php echo esc_url_raw( WPERP_ASSETS . '/images/wperp-addons/banner-bg.png' ); ?>') center center / cover no-repeat;
+        background-attachment: local;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         height: 364px;
         padding: 0 49px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .erp_pro_addons_wrapper .banner_section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+        z-index: 1;
     }
 
     .erp_pro_addons_wrapper .banner_section .image-item {
         margin-right: 35px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .erp_pro_addons_wrapper .banner_section .details {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Responsive adjustments for banner section */
+    @media (max-width: 768px) {
+        .erp_pro_addons_wrapper .banner_section {
+            height: auto;
+            min-height: 300px;
+            padding: 30px 20px;
+            flex-direction: column;
+            text-align: center;
+            background-size: cover;
+            background-position: center center;
+        }
+        
+        .erp_pro_addons_wrapper .banner_section .image-item {
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+        
+        .erp_pro_addons_wrapper .banner_section img {
+            margin-top: 0;
+            max-width: 200px;
+            height: auto;
+        }
+        
+        .erp_pro_addons_wrapper .banner_section h1 {
+            font-size: 24px;
+            line-height: 32px;
+        }
+        
+        .erp_pro_addons_wrapper .banner_section .button-wrap {
+            margin-top: 30px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .erp_pro_addons_wrapper .banner_section {
+            padding: 20px 15px;
+            min-height: 280px;
+            background-size: cover;
+            background-position: center center;
+        }
+        
+        .erp_pro_addons_wrapper .banner_section h1 {
+            font-size: 20px;
+            line-height: 28px;
+        }
+        
+        .erp_pro_addons_wrapper .banner_section .button-wrap .btn {
+            display: block;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .erp_pro_addons_wrapper .get-started-btn {
+            margin-right: 0;
+        }
     }
 
     .erp_pro_addons_wrapper .banner_section img {
         margin-top: 30px;
+    }
+
+    .erp_pro_addons_wrapper .banner_section .button-wrap {
+        margin-top: 48px;
     }
 
     .erp_pro_addons_wrapper .banner_section .button-wrap .btn {
@@ -350,23 +442,21 @@
         display: inline;
     }
 
-
-    .erp_pro_addons_wrapper .banner_section  h1{
-        font-size: 27.5px;
+    .erp_pro_addons_wrapper .banner_section h1 {
+        font-size: 28px;
         color: #FFFFFF;
-        letter-spacing: 0.25px;
-        line-height: 35.4px;
-        font-weight: 900;
+        letter-spacing: 0;
+        line-height: 36px;
+        font-weight: 700;
         margin-bottom: 20px;
+        font-weight: bold;
     }
 
     .erp_pro_addons_wrapper .btn {
-        border-radius: 3.15px;
+        border-radius: 4px;
         font-weight: 700;
         font-size: 12px;
-        color: #FFFFFF;
         letter-spacing: 0.1px;
-        background: #24C030;
         display: inline-block;
         text-decoration: none;
         padding: 10px 28px;
@@ -375,31 +465,19 @@
 
     .erp_pro_addons_wrapper .get-started-btn {
         margin-right: 15px;
-        box-shadow: 0 12px 31px 0 rgba(7,157,128,0.42);
+        background: #fff;
+        color: #000;
     }
 
-    .erp_pro_addons_wrapper .get-started-btn img {
-        position: relative;
-        top: 2px;
-        left: 4px;
-        transition: .3s linear 0s;
-    }
-
-    .erp_pro_addons_wrapper .button-wrap .btn:hover {
-        background: #15af21;
-        color: #ffffff;
-    }
-
-    .erp_pro_addons_wrapper .get-started-btn:hover img {
-        left: 7px;
+    .erp_pro_addons_wrapper .get-started-btn:hover {
+        background: #ddd;
     }
 
     .erp_pro_addons_wrapper .try-demo-btn {
-        background: #FFFFFF;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.07);
-        color: #334E68;
+        color: #FFFFFF;
+        border: 1px solid #fff;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
         text-decoration: none;
-        padding: 10px 18px;
     }
 
     .erp_pro_addons_wrapper .pro-btn{
@@ -551,17 +629,22 @@
     }
 
     .erp_pro_addons_wrapper .say_hello_section h3{
-        font-size: 36px;
+        font-size: 32px;
         color: #FFFFFF;
-        letter-spacing: 0.33px;
+        letter-spacing: 0;
+        line-height: 36px;
         text-align: center;
         margin: 0;
-        font-weight: 700;
-        margin: 0 0 28px
+        padding: 0;
     }
 
-    .erp_pro_addons_wrapper .say_hello_section h3 span{
+    .erp_pro_addons_wrapper .say_hello_section h3.discount{
         color: #00F4FF;
+    }
+
+    .erp_pro_addons_wrapper .say_hello_section p.discount-text {
+        margin-top: 24px;
+        color: #fff;
     }
 
     .erp_pro_addons_wrapper .say_hello_section p{
@@ -656,27 +739,19 @@ if ( false === $add_ons || empty( $add_ons ) ) {
     <div class="erp_pro_addons_wrapper">
         <div class="banner_section">
             <div class="image-item">
-                <img width="383" src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/wperp-addons/banner-image.png' ); ?>" alt="">
+                <img width="383" src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/wperp-addons/wp-erp-discount.gif' ); ?>" alt="">
             </div>
             <div class="details">
-                <a href="https://wperp.com/pro/" target="_blank" class="btn pro-btn"><?php echo esc_html( 'WP ERP Pro' ); ?></a>
-                <h1>
+                <h1><?php esc_html_e( 'Upgrade to WP ERP Pro & Unlock the Full Power of Business Management', 'erp' ); ?></h1>
+                <p class="discount-offer">
                     <?php
-                    printf(
-                        /* translators: 1) <br> tag, 2) <br> tag */
-                        esc_html__( 'The Ultimate Company %1$ s& Business Management %2$s Solution', 'erp' ),
-                        '<br>',
-                        '<br>'
-                    );
+                    /* translators: 1) opening <span> tag for code, 2) closing </span> tag */
+                    printf( esc_html__( 'Use code %1$sUPGRADE10%2$s to get 10%% off all plans!', 'erp' ), '<span class="discount-code">', '</span>' );
                     ?>
-                </h1>
+                </p>
                 <div class="button-wrap">
-                    <a target="_blank" href="https://wperp.com/pricing/" class="btn get-started-btn">
-                        <?php esc_html_e( 'Get Started Now', 'erp' ); ?> <img width="12" src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/wperp-addons/arrow-right.png' ); ?>" alt="">
-                    </a>
-                    <a target="_blank" href="https://wperp.com/demo/" class="btn try-demo-btn">
-                        <?php esc_html_e( 'Try Demo', 'erp' ); ?>
-                    </a>
+                    <a href="https://wperp.com/pricing/?utm_source=dashboard&utm_medium=page&utm_campaign=freetopro" target="_blank" class="btn get-started-btn"><?php esc_html_e( 'Redeem Now', 'erp' ); ?></a>
+                    <a href="https://wperp.com/demo/" target="_blank" class="btn try-demo-btn"><?php esc_html_e( 'Try Demo', 'erp' ); ?></a>
                 </div>
             </div>
         </div>
@@ -1006,13 +1081,15 @@ if ( false === $add_ons || empty( $add_ons ) ) {
                         printf( esc_html__( 'Say Hello to WP ERP %1$sPro%2$s', 'erp' ), '<span>', '</span>' );
                     ?>
                 </h3>
-                <p>
+                <h3 class="discount">
+                <?php esc_html_e( 'with 10% Off', 'erp' ); ?>
+                </h3>
+                <p class="discount-text">
                     <?php
-                    /* translators: 1) <br> tag */
-                    printf( esc_html__( 'And goodbye to papers, spreadsheets, wasted time, %s uncertainty, frustration - run business smoothly.', 'erp' ), '<br>' );
+                        echo esc_html__( 'Use code UPGRADE10 and unlock WP ERP Pro today', 'erp' )
                     ?>
                 </p>
-                <a target="_blank" href="https://wperp.com/pro/"><?php esc_html_e( 'Get Started Now', 'erp' ); ?> <img width="12" src="<?php echo esc_url_raw( WPERP_ASSETS . '/images/wperp-addons/arrow-right.png' ); ?>" alt=""></a>
+                <a target="_blank" href="https://wperp.com/pricing/?utm_source=dashboard&utm_medium=page&utm_campaign=freetopro"><?php esc_html_e( 'Upgrade Now', 'erp' ); ?></a>
             </div>
         </div>
         <!-- end say hello section -->
