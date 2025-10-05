@@ -54,7 +54,7 @@
             <input type="hidden" name="type" value="headcount">
             <select name="year">
             <?php
-                echo '<option value="-1">-' . esc_html_e( 'Select Year', 'erp' ) . '-</option>';
+                echo '<option value="-1">-' . esc_html__( 'Select Year', 'erp' ) . '-</option>';
 
                 for ( $i = $current_year; $i >= $start_year; $i-- ) {
                     echo '<option value="' . esc_attr( $i ) . '"' . selected( $query_year, $i ) . '>' . esc_html( $i ) . '</option>';
