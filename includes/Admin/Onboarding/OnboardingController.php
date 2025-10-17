@@ -159,29 +159,28 @@ class OnboardingController extends REST_Controller {
             update_option( 'erp_enable_leave_management', (bool) $data['enableLeaveManagement'] );
         }
 
-        // Save working days - correct format
-        if ( ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] ) ) {
-            error_log( 'ERP Onboarding: Saving workingDays: ' . print_r( $data['workingDays'], true ) );
+        // Save working days - use defaults if not provided
+        $default_working_days = [
+            'mon' => '8',
+            'tue' => '8',
+            'wed' => '8',
+            'thu' => '8',
+            'fri' => '8',
+            'sat' => '0',
+            'sun' => '0',
+        ];
 
-            // Get the CURRENT settings (which includes company data saved above)
-            $current_settings = get_option( 'erp_settings_general', [] );
-            error_log( 'ERP Onboarding: Current settings before workdays: ' . print_r( $current_settings, true ) );
+        $working_days_to_save = ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] )
+            ? $data['workingDays']
+            : $default_working_days;
 
-            // Add working days to current settings
-            foreach ( $data['workingDays'] as $day => $hours ) {
-                $day_key = 'erp_' . strtolower( sanitize_text_field( $day ) );
-                // Store the hours value directly (8 = full day, 4 = half day, 0 = non-working)
-                $current_settings[ $day_key ] = sanitize_text_field( $hours );
-                error_log( "ERP Onboarding: Set {$day_key} = {$hours}" );
-            }
-
-            error_log( 'ERP Onboarding: Final settings with workdays: ' . print_r( $current_settings, true ) );
-
-            // Save back to database
-            update_option( 'erp_settings_general', $current_settings );
-        } else {
-            error_log( 'ERP Onboarding: workingDays is empty or not an array!' );
+        // Save to individual options (what HR Settings reads from)
+        foreach ( $working_days_to_save as $day => $hours ) {
+            update_option( sanitize_text_field( $day ), sanitize_text_field( $hours ) );
         }
+
+        // Also save to HR workdays option for consistency
+        update_option( 'erp_settings_erp-hr_workdays', $working_days_to_save );
 
         // Save working hours
         if ( ! empty( $data['workingHours'] ) && is_array( $data['workingHours'] ) ) {
