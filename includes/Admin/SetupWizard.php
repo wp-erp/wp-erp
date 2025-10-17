@@ -94,6 +94,7 @@ class SetupWizard {
                                : '',
             'sampleCsvUrl'  => WPERP_ASSETS . '/sample/wperp_employee_list.csv',
             'docsUrl'       => 'https://wperp.com/documentation/',
+            'congratulationImageUrl' => $onboarding_url . '/images/congratulation.png',
         ] );
 
         ob_start();
@@ -317,35 +318,26 @@ class SetupWizard {
         check_admin_referer( 'erp-setup' );
 
         $company_name     = isset( $_POST['company_name'] ) ? sanitize_text_field( wp_unslash( $_POST['company_name'] ) ) : '';
-        $business_type    = isset( $_POST['business_type'] ) ? sanitize_text_field( wp_unslash( $_POST['business_type'] ) ) : '';
-        $financial_month  = isset( $_POST['gen_financial_month'] ) ? sanitize_text_field( wp_unslash( $_POST['gen_financial_month'] ) ) : '';
+        $financial_month  = isset( $_POST['gen_financial_month'] ) ? sanitize_text_field( wp_unslash( $_POST['gen_financial_month'] ) ) : '1';
         $company_started  = isset( $_POST['gen_com_start'] ) ? sanitize_text_field( wp_unslash( $_POST['gen_com_start'] ) ) : '';
-        $base_currency    = isset( $_POST['base_currency'] ) ? sanitize_text_field( wp_unslash( $_POST['base_currency'] ) ) : '';
-        $date_format      = isset( $_POST['date_format'] ) ? sanitize_text_field( wp_unslash( $_POST['date_format'] ) ) : '';
-        $share_essentials = isset( $_POST['share_essentials'] ) ? sanitize_text_field( wp_unslash( $_POST['share_essentials'] ) ) : '';
-        $company          = new \WeDevs\ERP\Company();
-        $allowed          = '1';
+        
+        $company = new \WeDevs\ERP\Company();
 
-        if ( $share_essentials === $allowed ) {
-            // Appsero Tracker allow
-            \WeDevs\ERP\Tracker::get_instance()->optin();
-        } else {
-            // Appsero Tracker disallow
-            \WeDevs\ERP\Tracker::get_instance()->optout();
-        }
-
+        // Update company name
         $company->update( [
-            'name'          => $company_name,
-            'business_type' => $business_type,
+            'name' => $company_name,
         ] );
 
-        update_option( 'erp_settings_general', [
+        // Get existing settings to preserve other fields
+        $existing_settings = get_option( 'erp_settings_general', [] );
+        
+        // Only update the fields from Step 1
+        $updated_settings = array_merge( $existing_settings, [
             'gen_financial_month' => $financial_month,
             'gen_com_start'       => $company_started,
-            'date_format'         => $date_format,
-            'erp_currency'        => $base_currency,
-            'erp_debug_mode'      => 0,
         ] );
+        
+        update_option( 'erp_settings_general', $updated_settings );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;

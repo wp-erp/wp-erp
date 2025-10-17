@@ -82,10 +82,13 @@ const config = {
             {
                 test: /\.(png|jpg|gif|svg)$/,
                 use: [{
-                    loader: 'url-loader',
+                    loader: 'file-loader',
                     options: {
-                        limit: 8192,
-                        name: 'images/[name].[ext]'
+                        name: 'images/[name].[ext]',
+                        publicPath: (url) => {
+                            // Return relative path from dist folder
+                            return url;
+                        }
                     }
                 }]
             },

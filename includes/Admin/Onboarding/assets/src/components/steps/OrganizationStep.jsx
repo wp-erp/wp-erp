@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const OrganizationStep = ({ onNext, onBack, initialData = {} }) => {
+const OrganizationStep = ({ onNext, initialData = {} }) => {
     const [selectedCard, setSelectedCard] = useState(null);
     const [selectedItems, setSelectedItems] = useState({
         departments: initialData.departments || [],
@@ -33,11 +33,14 @@ const OrganizationStep = ({ onNext, onBack, initialData = {} }) => {
             ? departmentSuggestions
             : designationSuggestions;
 
+    // Show all suggestions filtered by input (including selected ones)
     const filteredSuggestions = currentSuggestions.filter(
-        item =>
-            !selectedItems[selectedCard]?.includes(item) &&
-            item.toLowerCase().includes(inputValue.toLowerCase())
+        item => item.toLowerCase().includes(inputValue.toLowerCase())
     );
+    
+    const isItemSelected = (item) => {
+        return selectedItems[selectedCard]?.includes(item) || false;
+    };
 
     const handleCardClick = cardType => {
         if (selectedCard === cardType) {
@@ -65,6 +68,25 @@ const OrganizationStep = ({ onNext, onBack, initialData = {} }) => {
             });
         }
         setInputValue("");
+    };
+    
+    const toggleTag = value => {
+        if (!value.trim() || !selectedCard) return;
+        
+        const currentItems = selectedItems[selectedCard] || [];
+        if (currentItems.includes(value)) {
+            // Remove if already selected
+            setSelectedItems({
+                ...selectedItems,
+                [selectedCard]: currentItems.filter(item => item !== value)
+            });
+        } else {
+            // Add if not selected
+            setSelectedItems({
+                ...selectedItems,
+                [selectedCard]: [...currentItems, value]
+            });
+        }
     };
 
     const removeTag = (type, value) => {
@@ -159,7 +181,7 @@ const OrganizationStep = ({ onNext, onBack, initialData = {} }) => {
                                     />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 m-0">
+                            <h3 className="text-base font-semibold text-gray-900 m-0">
                                 Designations
                             </h3>
                         </div>
@@ -168,26 +190,76 @@ const OrganizationStep = ({ onNext, onBack, initialData = {} }) => {
                     {/* Multiselect Section (shown when card is selected) */}
                     {selectedCard && (
                         <div className="mb-8">
-                            <div className="multiselect-container relative">
-                                <input
-                                    ref={inputRef}
-                                    type="text"
-                                    value={inputValue}
-                                    onChange={e => {
-                                        setInputValue(e.target.value);
-                                        setShowSuggestions(true);
-                                    }}
-                                    onKeyDown={handleInputKeyDown}
-                                    onFocus={() => setShowSuggestions(true)}
-                                    onBlur={() => {
-                                        setTimeout(
-                                            () => setShowSuggestions(false),
-                                            200
-                                        );
-                                    }}
-                                    className="input"
-                                    placeholder={`Type and press Enter to add ${selectedCard}...`}
-                                />
+                            <div className="multiselect-container">
+                                {/* Input with dropdown */}
+                                <div className="relative">
+                                    <input
+                                        ref={inputRef}
+                                        type="text"
+                                        value={inputValue}
+                                        onChange={e => {
+                                            setInputValue(e.target.value);
+                                            setShowSuggestions(true);
+                                        }}
+                                        onKeyDown={handleInputKeyDown}
+                                        onFocus={() => setShowSuggestions(true)}
+                                        onBlur={() => {
+                                            setTimeout(
+                                                () => setShowSuggestions(false),
+                                                200
+                                            );
+                                        }}
+                                        className="input"
+                                        placeholder={`Type and press Enter to add ${selectedCard}...`}
+                                    />
+
+                                    {/* Suggestions List */}
+                                    {showSuggestions &&
+                                        filteredSuggestions.length > 0 && (
+                                            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 shadow-lg z-50 max-h-48 overflow-y-auto">
+                                                {filteredSuggestions.map(
+                                                    (suggestion, index) => {
+                                                        const selected = isItemSelected(suggestion);
+                                                        return (
+                                                            <div
+                                                                key={index}
+                                                                className={`px-4 py-2.5 cursor-pointer transition-colors flex items-center justify-between ${
+                                                                    selected 
+                                                                        ? 'bg-blue-50 hover:bg-blue-100' 
+                                                                        : 'hover:bg-gray-50'
+                                                                }`}
+                                                                onClick={() =>
+                                                                    toggleTag(suggestion)
+                                                                }
+                                                            >
+                                                                <span className={selected ? 'text-gray-900 font-medium' : 'text-gray-700'}>
+                                                                    {suggestion}
+                                                                </span>
+                                                                {selected && (
+                                                                    <svg 
+                                                                        width="16" 
+                                                                        height="16" 
+                                                                        viewBox="0 0 16 16" 
+                                                                        fill="none" 
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        className="flex-shrink-0 ml-2"
+                                                                    >
+                                                                        <path 
+                                                                            d="M13.3332 4L5.99984 11.3333L2.6665 8" 
+                                                                            stroke="#3B82F6" 
+                                                                            strokeWidth="2" 
+                                                                            strokeLinecap="round" 
+                                                                            strokeLinejoin="round"
+                                                                        />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+                                                )}
+                                            </div>
+                                        )}
+                                </div>
 
                                 {/* Tags List */}
                                 {selectedItems[selectedCard]?.length > 0 && (
@@ -232,39 +304,12 @@ const OrganizationStep = ({ onNext, onBack, initialData = {} }) => {
                                         )}
                                     </div>
                                 )}
-
-                                {/* Suggestions List */}
-                                {showSuggestions &&
-                                    filteredSuggestions.length > 0 && (
-                                        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 shadow-lg z-10 max-h-48 overflow-y-auto">
-                                            {filteredSuggestions.map(
-                                                (suggestion, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
-                                                        onClick={() =>
-                                                            addTag(suggestion)
-                                                        }
-                                                    >
-                                                        {suggestion}
-                                                    </div>
-                                                )
-                                            )}
-                                        </div>
-                                    )}
                             </div>
                         </div>
                     )}
 
-                    {/* Button Container */}
-                    <div className="mt-20 flex justify-between items-center">
-                        <button
-                            type="button"
-                            onClick={onBack}
-                            className="btn-secondary"
-                        >
-                            Back
-                        </button>
+                    {/* Button Container - matches erp-button-container with exact margin */}
+                    <div className="mt-138.8px text-center">
                         <button
                             type="submit"
                             className="btn-primary no-underline"

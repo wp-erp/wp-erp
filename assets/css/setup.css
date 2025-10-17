@@ -387,7 +387,7 @@ body.erp-setup {
 
 /* Button Container */
 .erp-button-container {
-    margin-top: 138.8px;
+    margin-top: 100px;
     text-align: center;
 }
 
@@ -719,7 +719,7 @@ body.erp-setup {
 }
 
 .erp-tab-content {
-    min-height: 400px;
+    min-height: 502px;
 }
 
 .erp-tab-pane {
@@ -916,7 +916,7 @@ body.erp-setup {
 .erp-import-success p {
     margin: 0;
     font-size: 14px;
-    color: #64748B;
+    color: #64748b;
     line-height: 24px;
 }
 
@@ -957,7 +957,7 @@ body.erp-setup {
     opacity: 1;
     border-radius: 6px;
     padding: 9px 17px 9px 15px;
-    background: #3B82F6;
+    background: #3b82f6;
     border: none;
     color: white;
     font-size: 14px;
@@ -974,7 +974,7 @@ body.erp-setup {
 
 /* Toggle Section */
 .erp-toggle-section {
-    background: #E0F2FE;
+    background: #e0f2fe;
     border-radius: 8px;
     padding: 32px;
     margin-top: 32px;
@@ -1022,8 +1022,8 @@ body.erp-setup {
     top: -2px;
     width: 20px;
     height: 20px;
-    background: #FFFFFF;
-    border: 1px solid #CBD5E1;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
     border-radius: 50%;
     transition: left 0.3s ease;
     z-index: 10;
@@ -1031,18 +1031,18 @@ body.erp-setup {
 
 .toggle-description {
     flex: 1;
-    color: #64748B;
+    color: #64748b;
     font-size: 14px;
     line-height: 20px;
 }
 
 /* Switch States */
 .switch-input:checked + .switch-label .switch-track {
-    background: #3B82F6;
+    background: #3b82f6;
 }
 
 .switch-input:not(:checked) + .switch-label .switch-track {
-    background: #CBD5E1;
+    background: #cbd5e1;
 }
 
 .switch-input:checked + .switch-label .switch-handle {
@@ -1087,18 +1087,18 @@ body.erp-setup {
     display: inline-block;
     padding: 8px 16px;
     border-radius: 6px;
-    border: 1px solid #CBD5E1;
+    border: 1px solid #cbd5e1;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .erp-option-btn.selected {
-    background: #3B82F6;
-    color: #FFFFFF;
+    background: #3b82f6;
+    color: #ffffff;
 }
 
 .erp-option-btn:not(.selected) {
-    background: #FFFFFF;
+    background: #ffffff;
     color: #000000;
 }
 
@@ -1114,7 +1114,7 @@ body.erp-setup {
     margin: 32px auto;
     max-width: 640px;
     max-height: 340px;
-    border: 1px solid #CBD5E1;
+    border: 1px solid #cbd5e1;
 }
 
 .confetti-icon {
@@ -1129,7 +1129,7 @@ body.erp-setup {
 }
 
 .erp-congratulations-card p {
-    color: #64748B;
+    color: #64748b;
     font-size: 14px;
     line-height: 20px;
     margin: 0;
@@ -1144,7 +1144,7 @@ body.erp-setup {
 .erp-go-to-dashboard-btn {
     padding: 12px 24px;
     font-size: 16px;
-    background: #3B82F6;
+    background: #3b82f6;
     border: none;
     border-radius: 6px;
     color: white;

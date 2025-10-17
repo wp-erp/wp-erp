@@ -37,17 +37,17 @@ class OnboardingController extends REST_Controller {
                 'callback'            => [ $this, 'save_basic_info' ],
                 'permission_callback' => [ $this, 'check_permission' ],
                 'args'                => [
-                    'businessName' => [
+                    'companyName' => [
                         'required'          => true,
                         'type'              => 'string',
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'industry' => [
+                    'companyStartDate' => [
                         'required'          => true,
                         'type'              => 'string',
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'employees' => [
+                    'financialYearStarts' => [
                         'required'          => true,
                         'type'              => 'string',
                         'sanitize_callback' => 'sanitize_text_field',
@@ -174,23 +174,47 @@ class OnboardingController extends REST_Controller {
      * @return WP_REST_Response|WP_Error
      */
     public function save_basic_info( $request ) {
-        $data = [
-            'business_name' => $request->get_param( 'businessName' ),
-            'industry'      => $request->get_param( 'industry' ),
-            'employees'     => $request->get_param( 'employees' ),
+        $company_name         = $request->get_param( 'companyName' );
+        $company_start_date   = $request->get_param( 'companyStartDate' );
+        $financial_year_starts = $request->get_param( 'financialYearStarts' );
+
+        // Convert month name to number (1-12)
+        $month_map = [
+            'january' => '1', 'february' => '2', 'march' => '3', 'april' => '4',
+            'may' => '5', 'june' => '6', 'july' => '7', 'august' => '8',
+            'september' => '9', 'october' => '10', 'november' => '11', 'december' => '12',
         ];
+        $financial_month = isset( $month_map[ strtolower( $financial_year_starts ) ] ) 
+            ? $month_map[ strtolower( $financial_year_starts ) ] 
+            : '1';
 
-        update_option( 'erp_onboarding_basic', $data );
+        // Update Company object (same as old setup wizard)
+        $company = new \WeDevs\ERP\Company();
+        $company->update( [
+            'name' => $company_name,
+        ] );
 
-        // Also update company name in ERP settings
-        $company_settings = get_option( 'erp_settings_general', [] );
-        $company_settings['company_name'] = $data['business_name'];
-        update_option( 'erp_settings_general', $company_settings );
+        // Update general settings (same as old setup wizard)
+        $general_settings = get_option( 'erp_settings_general', [] );
+        $general_settings['gen_financial_month'] = $financial_month;
+        $general_settings['gen_com_start']       = $company_start_date;
+        update_option( 'erp_settings_general', $general_settings );
+
+        // Store onboarding data
+        update_option( 'erp_onboarding_basic', [
+            'company_name'          => $company_name,
+            'company_start_date'    => $company_start_date,
+            'financial_year_starts' => $financial_year_starts,
+        ] );
 
         return rest_ensure_response( [
             'success' => true,
             'message' => __( 'Basic information saved successfully', 'erp' ),
-            'data'    => $data,
+            'data'    => [
+                'company_name'          => $company_name,
+                'company_start_date'    => $company_start_date,
+                'financial_year_starts' => $financial_year_starts,
+            ],
         ] );
     }
 
@@ -297,17 +321,89 @@ class OnboardingController extends REST_Controller {
     }
 
     /**
-     * Complete onboarding process
+     * Complete onboarding process - Save all data atomically
      *
      * @param \WP_REST_Request $request
      * @return WP_REST_Response|WP_Error
      */
     public function complete_onboarding( $request ) {
+        // Get all form data
+        $data = $request->get_json_params();
+        
+        if ( empty( $data ) ) {
+            $data = [];
+        }
+
+        // 1. Save Basic Settings (Step 1)
+        if ( ! empty( $data['companyName'] ) ) {
+            $company = new \WeDevs\ERP\Company();
+            $company->update( [
+                'name' => sanitize_text_field( $data['companyName'] ),
+            ] );
+        }
+
+        // Get existing settings to preserve unrelated fields
+        $existing_settings = get_option( 'erp_settings_general', [] );
+        
+        $updated_settings = array_merge( $existing_settings, [
+            'gen_financial_month' => isset( $data['financialYearStarts'] ) ? sanitize_text_field( $data['financialYearStarts'] ) : '1',
+            'gen_com_start'       => isset( $data['companyStartDate'] ) ? sanitize_text_field( $data['companyStartDate'] ) : '',
+        ] );
+        
+        update_option( 'erp_settings_general', $updated_settings );
+
+        // 2. Save Organization (Departments & Designations) (Step 2)
+        if ( ! empty( $data['departments'] ) && is_array( $data['departments'] ) ) {
+            foreach ( $data['departments'] as $department ) {
+                if ( ! empty( $department ) ) {
+                    erp_hr_create_department( [
+                        'title' => sanitize_text_field( $department ),
+                    ] );
+                }
+            }
+        }
+
+        if ( ! empty( $data['designations'] ) && is_array( $data['designations'] ) ) {
+            foreach ( $data['designations'] as $designation ) {
+                if ( ! empty( $designation ) ) {
+                    erp_hr_create_designation( [
+                        'title' => sanitize_text_field( $designation ),
+                    ] );
+                }
+            }
+        }
+
+        // 3. Save Import Settings (Step 3) - Handle later if needed
+        // CSV file upload would be handled separately if present
+
+        // 4. Save Module & Workday Settings (Step 4)
+        if ( isset( $data['enableLeaveManagement'] ) ) {
+            // Save leave management preference
+            update_option( 'erp_enable_leave_management', (bool) $data['enableLeaveManagement'] );
+        }
+
+        if ( ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] ) ) {
+            foreach ( $data['workingDays'] as $day => $isWorking ) {
+                $day_key = strtolower( sanitize_text_field( $day ) );
+                // 8 = full day, 0 = non-working
+                $value = $isWorking ? '8' : '0';
+                update_option( $day_key, $value );
+            }
+        }
+
+        if ( ! empty( $data['workingHours'] ) && is_array( $data['workingHours'] ) ) {
+            update_option( 'erp_working_hours', [
+                'start' => sanitize_text_field( $data['workingHours']['start'] ?? '09:00' ),
+                'end'   => sanitize_text_field( $data['workingHours']['end'] ?? '17:00' ),
+            ] );
+        }
+
         // Mark onboarding as complete
         update_option( 'erp_onboarding_completed', true );
         update_option( 'erp_onboarding_completed_at', current_time( 'mysql' ) );
+        update_option( 'erp_setup_wizard_ran', '1' );
 
-        // Remove the onboarding redirect flag if it exists
+        // Remove the onboarding redirect flag
         delete_option( 'erp_activation_redirect' );
 
         return rest_ensure_response( [

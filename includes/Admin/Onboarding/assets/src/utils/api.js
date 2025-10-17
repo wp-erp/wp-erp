@@ -42,8 +42,8 @@ export const saveModuleSettings = (data) => {
   return apiClient.post('/onboarding/modules', data);
 };
 
-export const completeOnboarding = () => {
-  return apiClient.post('/onboarding/complete');
+export const completeOnboarding = (data) => {
+  return apiClient.post('/onboarding/complete', data);
 };
 
 export const getOnboardingStatus = () => {
