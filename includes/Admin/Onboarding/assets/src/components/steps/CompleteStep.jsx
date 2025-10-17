@@ -23,12 +23,12 @@ const CompleteStep = ({ onComplete }) => {
 
           {/* Heading - matches setup.css h2 styling */}
           <h2 className="text-xl font-medium text-black m-0 mb-1">
-            Congratulations!
+            You're All Set!
           </h2>
 
           {/* Description - matches setup.css p styling */}
           <p className="text-slate-500 text-sm leading-5 m-0 font-normal">
-            Your WP ERP is now ready to use. Let's get started!
+            Your WP ERP is configured and ready to go. Start managing your business now!
           </p>
         </div>
 

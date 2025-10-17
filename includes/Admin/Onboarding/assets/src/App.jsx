@@ -9,11 +9,11 @@ import CompleteStep from './components/steps/CompleteStep';
 import { completeOnboarding, getOnboardingStatus } from './utils/api';
 
 const STEPS = [
-  { id: 'basic', name: '1. Basic Setting', component: BasicStep },
-  { id: 'organization', name: '2. Department and Designation', component: OrganizationStep },
-  { id: 'import', name: '3. Import Employees', component: ImportStep },
-  { id: 'module', name: '4. Leave and Workday Setup', component: ModuleStep },
-  { id: 'complete', name: '5. Complete', component: CompleteStep },
+  { id: 'basic', name: 'Company Profile', component: BasicStep },
+  { id: 'organization', name: 'Teams & Roles', component: OrganizationStep },
+  { id: 'import', name: 'Add Employees', component: ImportStep },
+  { id: 'module', name: 'Work Schedule', component: ModuleStep },
+  { id: 'complete', name: 'Ready!', component: CompleteStep },
 ];
 
 function App() {

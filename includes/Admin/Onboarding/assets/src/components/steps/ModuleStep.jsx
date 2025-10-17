@@ -177,11 +177,11 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
             <div className="max-w-640px mx-auto overflow-visible">
                 {/* Heading - matches h1 from setup.css */}
                 <h1 className="text-black text-30px font-normal leading-9 text-center m-0 mb-3">
-                    Leave and Workday Setup
+                    Work Schedule
                 </h1>
                 {/* Subtitle - matches .subtitle from setup.css */}
                 <p className="text-center text-slate-500 text-base m-0 mb-16 leading-6">
-                    Configure your leave management and working schedule.
+                    Configure leave policies and working hours
                 </p>
 
                 <form onSubmit={handleSubmit} className="mb-0">
@@ -459,7 +459,7 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                         left: formData.enableLeaveManagement
                                                             ? "17px"
                                                             : "2px",
-                                                        boarder:
+                                                        border:
                                                             "1px solid #CBD5E1",
                                                         boxShadow:
                                                             "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"

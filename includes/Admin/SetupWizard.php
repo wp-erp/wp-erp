@@ -23,9 +23,11 @@ class SetupWizard {
      */
     public function __construct() {
 
-        // if we are here, we assume we don't need to run the wizard again
-        // and the user doesn't need to be redirected here
-        update_option( 'erp_setup_wizard_ran', '1' );
+        // NOTE: Don't set 'erp_setup_wizard_ran' here in constructor!
+        // This flag should only be set when onboarding is COMPLETED (via API),
+        // not when the wizard page is accessed. Setting it here prevents re-accessing the wizard.
+        // See OnboardingController.php line 181 where it's properly set on completion.
+        // update_option( 'erp_setup_wizard_ran', '1' ); // REMOVED - causes redirect bug
 
         if ( apply_filters( 'erp_enable_setup_wizard', true ) && current_user_can( 'manage_options' ) ) {
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
@@ -48,29 +50,38 @@ class SetupWizard {
             return;
         }
 
+        // Allow resetting onboarding for testing: ?page=erp-setup&reset=1
+        if ( isset( $_GET['reset'] ) && $_GET['reset'] === '1' && current_user_can( 'manage_options' ) ) {
+            delete_option( 'erp_onboarding_completed' );
+            delete_option( 'erp_onboarding_completed_at' );
+            delete_option( 'erp_setup_wizard_ran' );
+            wp_safe_redirect( admin_url( 'index.php?page=erp-setup' ) );
+            exit;
+        }
+
         $this->steps = [
             'basic' => [
-                'name'    => __( 'Basic Setting', 'erp' ),
+                'name'    => __( 'Company Profile', 'erp' ),
                 'view'    => [ $this, 'setup_step_basic' ],
                 'handler' => [ $this, 'setup_step_basic_save' ],
             ],
             'organization' => [
-                'name'    => __( 'Department and Designation', 'erp' ),
+                'name'    => __( 'Teams & Roles', 'erp' ),
                 'view'    => [ $this, 'setup_step_organization' ],
                 'handler' => [ $this, 'setup_step_organization_save' ],
             ],
             'import_employees' => [
-                'name'    => __( 'Import Employees', 'erp' ),
+                'name'    => __( 'Add Employees', 'erp' ),
                 'view'    => [ $this, 'setup_step_import_employees' ],
                 'handler' => [ $this, 'setup_step_import_employees_save' ],
             ],
             'module' => [
-                'name'    => __( 'Leave and Workday Setup', 'erp' ),
+                'name'    => __( 'Work Schedule', 'erp' ),
                 'view'    => [ $this, 'setup_step_module' ],
                 'handler' => [ $this, 'setup_step_module_save' ],
             ],
             'complete' => [
-                'name'    => __( 'Complete', 'erp' ),
+                'name'    => __( 'Ready!', 'erp' ),
                 'view'    => [ $this, 'setup_step_ready' ],
                 'handler' => '',
             ],
