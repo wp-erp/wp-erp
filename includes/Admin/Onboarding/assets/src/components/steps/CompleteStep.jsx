@@ -3,6 +3,9 @@ const CompleteStep = ({ onComplete }) => {
     onComplete();
   };
 
+  // Get the congratulation image URL from WordPress localized script
+  const congratulationImageUrl = window.wpErpOnboarding?.congratulationImageUrl || '';
+
   return (
     <div>
       {/* Matches erp-setup-content from setup.css - 640px constraint with auto margins */}
@@ -10,8 +13,12 @@ const CompleteStep = ({ onComplete }) => {
         {/* Congratulations Card - matches erp-congratulations-card from setup.css */}
         <div className="bg-white rounded-2xl p-24 text-center my-8 max-w-640px max-h-340px border border-gray-300">
           {/* Confetti Icon - with celebrate animation */}
-          <div className="mb-6" style={{ animation: 'celebrate 0.5s ease' }}>
-            🎉
+          <div className="mb-6 flex justify-center" style={{ animation: 'celebrate 0.5s ease' }}>
+            {congratulationImageUrl ? (
+              <img src={congratulationImageUrl} alt="Congratulations" className="w-16 h-16" />
+            ) : (
+              <span style={{ fontSize: '64px' }}>🎉</span>
+            )}
           </div>
 
           {/* Heading - matches setup.css h2 styling */}

@@ -1,4 +1,4 @@
-const Progress = ({ currentStep, totalSteps, stepName }) => {
+const Progress = ({ currentStep, totalSteps, stepName, error }) => {
   return (
     // Matches erp-progress-container from setup.css
     <div className="w-640px mx-auto mb-16 flex flex-col gap-6">
@@ -24,6 +24,12 @@ const Progress = ({ currentStep, totalSteps, stepName }) => {
       {stepName && (
         <div className="text-center text-slate-500 text-sm leading-[14px] font-normal">
           {stepName}
+        </div>
+      )}
+      {/* Error Message - shown below step label (sub-header) */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-2">
+          <p className="text-red-800 text-sm m-0">{error}</p>
         </div>
       )}
     </div>
