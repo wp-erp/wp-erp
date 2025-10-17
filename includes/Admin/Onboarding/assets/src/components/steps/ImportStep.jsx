@@ -63,8 +63,11 @@ const ImportStep = ({ onNext, initialData = {} }) => {
   };
 
   const downloadSample = () => {
-    const sampleUrl = window.wpErpOnboarding?.sampleCsvUrl || '/wp-content/plugins/wp-erp/assets/sample/wperp_employee_list.csv';
-    window.location.href = sampleUrl;
+    // Use the old Vue-based dynamic CSV URL with nonce
+    const sampleUrl = window.wpErpOnboarding?.sampleCsvUrl;
+    if (sampleUrl) {
+      window.location.href = sampleUrl;
+    }
   };
 
   return (

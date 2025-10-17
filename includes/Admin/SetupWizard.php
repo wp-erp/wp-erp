@@ -85,14 +85,19 @@ class SetupWizard {
         wp_enqueue_script( 'wperp-onboarding', $onboarding_url . '/onboarding.js', [], WPERP_VERSION, true );
 
         // Localize script with necessary data
+        $page           = '?page=erp-hr&section=people&sub-section=employee&action=download_sample&type=employee';
+        $csv_nonce      = 'erp-import-export-nonce';
+        $csv_sample_url = wp_nonce_url( $page, $csv_nonce );
+
         wp_localize_script( 'wperp-onboarding', 'wpErpOnboarding', [
             'nonce'         => wp_create_nonce( 'wp_rest' ),
+            'importNonce'   => wp_create_nonce( 'erp-import-export-nonce' ),
             'apiUrl'        => rest_url( 'erp/v1' ),
             'adminUrl'      => admin_url(),
             'logoUrl'       => file_exists( WPERP_PATH . '/assets/images/wperp-logo.png' )
                                ? WPERP_ASSETS . '/images/wperp-logo.png'
                                : '',
-            'sampleCsvUrl'  => WPERP_ASSETS . '/sample/wperp_employee_list.csv',
+            'sampleCsvUrl'  => admin_url( 'admin.php' . $csv_sample_url ),
             'docsUrl'       => 'https://wperp.com/documentation/',
             'congratulationImageUrl' => $onboarding_url . '/images/congratulation.png',
         ] );
@@ -705,25 +710,67 @@ class SetupWizard {
 
         // Handle leave management form data if HRM is active
         if ( in_array( 'hrm', $modules ) ) {
+            // Handle leave years array (React onboarding format)
+            if ( isset( $_POST['leaveYears'] ) && is_array( $_POST['leaveYears'] ) ) {
+                $leave_years = [];
+                foreach ( $_POST['leaveYears'] as $year_data ) {
+                    if ( ! empty( $year_data['fy_name'] ) && ! empty( $year_data['start_date'] ) && ! empty( $year_data['end_date'] ) ) {
+                        $leave_years[] = [
+                            'fy_name'     => sanitize_text_field( wp_unslash( $year_data['fy_name'] ) ),
+                            'start_date'  => sanitize_text_field( wp_unslash( $year_data['start_date'] ) ),
+                            'end_date'    => sanitize_text_field( wp_unslash( $year_data['end_date'] ) ),
+                            'description' => 'Year for leave',
+                        ];
+                    }
+                }
+
+                // Save leave years using the same function as Vue settings
+                if ( ! empty( $leave_years ) ) {
+                    $result = erp_settings_save_leave_years( $leave_years );
+                    if ( is_wp_error( $result ) ) {
+                        // Log error but continue setup process
+                        error_log( 'ERP Setup: Failed to save leave years - ' . $result->get_error_message() );
+                    }
+                }
+            }
+
+            // Handle legacy single leave year format (for backward compatibility)
             $leave_year = isset( $_POST['leave_year'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_year'] ) ) : '';
             $leave_start_date = isset( $_POST['leave_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_start_date'] ) ) : '';
             $leave_end_date = isset( $_POST['leave_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['leave_end_date'] ) ) : '';
-            $generate_default_policies = isset( $_POST['generate_default_policies'] ) ? '1' : '0';
-            
-            // Store leave management settings
-            update_option( 'erp_setup_leave_year', $leave_year );
-            update_option( 'erp_setup_leave_start_date', $leave_start_date );
-            update_option( 'erp_setup_leave_end_date', $leave_end_date );
-            update_option( 'erp_setup_generate_default_policies', $generate_default_policies );
-            
-            // Handle workday settings
-            if ( isset( $_POST['workday'] ) && is_array( $_POST['workday'] ) && count( $_POST['workday'] ) === 7 ) {
+
+            if ( ! empty( $leave_year ) && ! empty( $leave_start_date ) && ! empty( $leave_end_date ) ) {
+                update_option( 'erp_setup_leave_year', $leave_year );
+                update_option( 'erp_setup_leave_start_date', $leave_start_date );
+                update_option( 'erp_setup_leave_end_date', $leave_end_date );
+            }
+
+            // Handle enable leave management toggle
+            $enable_leave_management = isset( $_POST['enableLeaveManagement'] ) ? '1' : '0';
+            update_option( 'erp_setup_generate_default_policies', $enable_leave_management );
+
+            // Handle workday settings (React onboarding format with short keys: mon, tue, etc.)
+            if ( isset( $_POST['workingDays'] ) && is_array( $_POST['workingDays'] ) ) {
+                $valid_days = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
+
+                foreach ( $_POST['workingDays'] as $day => $value ) {
+                    $day = sanitize_text_field( wp_unslash( $day ) );
+                    $value = sanitize_text_field( wp_unslash( $value ) );
+
+                    // Save directly if it's already using short keys (mon, tue, etc.)
+                    if ( in_array( $day, $valid_days ) ) {
+                        update_option( $day, $value );
+                    }
+                }
+            }
+            // Legacy workday format (for backward compatibility)
+            elseif ( isset( $_POST['workday'] ) && is_array( $_POST['workday'] ) && count( $_POST['workday'] ) === 7 ) {
                 $workday_settings = [];
                 foreach ( $_POST['workday'] as $day => $value ) {
                     $day = sanitize_text_field( wp_unslash( $day ) );
                     $value = sanitize_text_field( wp_unslash( $value ) );
                     $workday_settings[ $day ] = $value;
-                    
+
                     // Save each day to individual options (matching the original setup wizard behavior)
                     update_option( $day, $value );
                 }
