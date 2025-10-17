@@ -1,0 +1,249 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Onboarding Styles with  prefix - Converted from setup.css */
+@layer components {
+    /* Container */
+    .onboarding-container {
+        @apply min-h-screen;
+        background-color: #f9f9f9;
+    }
+
+    /* Card - matches erp-card from setup.css */
+    .onboarding-card {
+        @apply bg-white rounded-2xl border p-12 transition-all duration-200;
+        border-color: #cbd5e1;
+    }
+
+    /* Primary Button - matches erp-btn-continue */
+    .btn-primary {
+        @apply inline-flex items-center gap-2 px-8 py-3 font-semibold text-white bg-blue-500 rounded-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 border-0 cursor-pointer;
+        font-size: 15px;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary::after {
+        content: "→";
+        font-size: 18px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    /* Secondary Button - matches erp-btn-cancel */
+    .btn-secondary {
+        @apply px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md transition-all duration-200 hover:bg-gray-50 hover:border-gray-400 cursor-pointer;
+    }
+
+    /* Input Fields - matches form inputs from setup.css */
+    .input {
+        @apply w-full px-4 py-3 bg-white border rounded-md transition-all duration-200 focus:outline-none focus:border-blue-500 focus:ring-2;
+        font-size: 15px;
+        color: #323232;
+        border-color: #CBD5E1 !important;
+        box-shadow: 0px 1px 2px 0px #0000000D;
+    }
+
+    .input::placeholder {
+        @apply text-gray-400;
+    }
+
+    /* Date Input - Custom calendar icon */
+    .input[type="date"] {
+        @apply relative;
+        background-image: url("data:image/svg+xml,%3Csvg width='17' height='18' viewBox='0 0 17 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.04199 1.69922V3.57422M12.792 1.69922V3.57422M0.916992 14.8242V5.44922C0.916992 4.41368 1.75646 3.57422 2.79199 3.57422H14.042C15.0775 3.57422 15.917 4.41368 15.917 5.44922V14.8242M0.916992 14.8242C0.916992 15.8598 1.75646 16.6992 2.79199 16.6992H14.042C15.0775 16.6992 15.917 15.8598 15.917 14.8242M0.916992 14.8242V8.57422C0.916992 7.53868 1.75646 6.69922 2.79199 6.69922H14.042C15.0775 6.69922 15.917 7.53868 15.917 8.57422V14.8242M8.41699 9.82422H8.42324V9.83047H8.41699V9.82422ZM8.41699 11.6992H8.42324V11.7055H8.41699V11.6992ZM8.41699 13.5742H8.42324V13.5805H8.41699V13.5742ZM6.54199 11.6992H6.54824V11.7055H6.54199V11.6992ZM6.54199 13.5742H6.54824V13.5805H6.54199V13.5742ZM4.66699 11.6992H4.67324V11.7055H4.66699V11.6992ZM4.66699 13.5742H4.67324V13.5805H4.66699V13.5742ZM10.292 9.82422H10.2982V9.83047H10.292V9.82422ZM10.292 11.6992H10.2982V11.7055H10.292V11.6992ZM10.292 13.5742H10.2982V13.5805H10.292V13.5742ZM12.167 9.82422H12.1732V9.83047H12.167V9.82422ZM12.167 11.6992H12.1732V11.7055H12.167V11.6992Z' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 17px 18px;
+        padding-right: 40px;
+    }
+
+    /* Hide default calendar icon in webkit browsers */
+    .input[type="date"]::-webkit-calendar-picker-indicator {
+        @apply opacity-0 cursor-pointer;
+        position: absolute;
+        right: 12px;
+        width: 17px;
+        height: 18px;
+    }
+
+    /* Label - matches setup.css form labels */
+    .label {
+        @apply block text-sm font-medium mb-2;
+        color: #334155;
+    }
+
+    /* Progress Bar - matches erp-progress-bar */
+    .progress-bar {
+        @apply h-0.5 transition-all duration-300;
+        background-color: #cbd5e1;
+    }
+
+    .progress-bar-active {
+        @apply bg-blue-500;
+    }
+
+    /* Select Dropdown - matches setup.css select styling */
+    .select {
+        @apply w-full px-4 py-3 pr-10 bg-white border-gray-300 rounded-md shadow-sm appearance-none cursor-pointer transition-all duration-200 focus:outline-none focus:border-blue-500 focus:ring-2 hover:border-gray-400;
+        font-size: 15px;
+        color: #374151;
+        border-color: #cbd5e1;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+    }
+
+    .select:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Card Selection - matches erp-card from setup.css */
+    .selection-card {
+        @apply flex-1 bg-white text-center cursor-pointer transition-all duration-200 relative;
+        width: 223px;
+        height: 160px;
+        border-radius: 16px;
+        border: 1px solid #cbd5e1;
+        opacity: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .selection-card:hover {
+        border: 2px solid #3b82f6;
+    }
+
+    .selection-card.selected {
+        border: 2px solid #3b82f6;
+    }
+
+    /* CSV Upload Box - matches erp-csv-upload-wrapper */
+    .csv-upload-wrapper {
+        @apply p-10 bg-white rounded-xl;
+        border: 1.5px solid #cbd5e1;
+    }
+
+    /* Toggle/Switch - matches switch styles from setup.css */
+    .switch {
+        @apply relative inline-flex w-9 h-4 flex-shrink-0 cursor-pointer rounded-lg border-2 border-transparent transition-colors duration-300 ease-in-out;
+    }
+
+    .switch-handle {
+        @apply absolute w-5 h-5 bg-white border rounded-full transition-all duration-300 ease-in-out z-10;
+        top: -2px;
+        border-color: #cbd5e1;
+    }
+
+    .switch:not(.active) {
+        background-color: #cbd5e1;
+    }
+
+    .switch.active {
+        @apply bg-blue-500;
+    }
+
+    .switch:not(.active) .switch-handle {
+        left: -2px;
+    }
+
+    .switch.active .switch-handle {
+        @apply left-4;
+    }
+
+    /* Tags - matches erp-tag from setup.css */
+    .tag {
+        @apply inline-flex items-center px-3 py-2.5 bg-blue-50 rounded-md text-sm text-blue-700 relative;
+        gap: 6px;
+    }
+
+    .tag-text {
+        @apply font-medium;
+    }
+
+    .tag-remove {
+        @apply hidden w-4 h-4 p-0 bg-transparent border-0 text-blue-700 cursor-pointer items-center justify-center transition-colors hover:text-blue-800;
+    }
+
+    .tag:hover .tag-remove {
+        @apply flex;
+    }
+
+    /* Multiselect Container */
+    .multiselect-container {
+        @apply w-full;
+    }
+
+    /* Modal Styles */
+    .modal {
+        @apply fixed top-0 left-0 w-full h-full flex items-center justify-center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999999;
+    }
+
+    .modal-content {
+        @apply bg-white rounded-xl flex flex-col shadow-2xl;
+        width: 90%;
+        max-width: 700px;
+        max-height: 90vh;
+    }
+
+    .modal-header {
+        @apply p-8 border-b border-gray-200 flex items-center justify-center relative;
+    }
+
+    .modal-close {
+        @apply absolute right-8 bg-transparent border-0 text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-all hover:bg-gray-100 hover:text-gray-900;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        @apply inline-block border-2 border-white rounded-full animate-spin mr-2 align-middle;
+        width: 14px;
+        height: 14px;
+        border-top-color: transparent;
+    }
+}
+
+/* Reset styles to prevent WordPress admin conflicts */
+.setup-root * {
+    box-sizing: border-box;
+}
+
+.setup-root {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animations */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes celebrate {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

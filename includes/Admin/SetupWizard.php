@@ -77,24 +77,27 @@ class SetupWizard {
         ];
 
         $this->step = isset( $_GET['step'] ) ? sanitize_text_field( wp_unslash( $_GET['step'] ) ) : current( array_keys( $this->steps ) );
-        $suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '';
 
-        wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
-        wp_enqueue_style( 'erp-tiptip', WPERP_ASSETS . '/vendor/tiptip/tipTip.css', false, WPERP_VERSION );
-        wp_enqueue_style( 'erp-setup', WPERP_ASSETS . '/css/setup.css', [ 'dashicons' ], WPERP_VERSION );
+        // Enqueue React onboarding app
+        $onboarding_url = WPERP_URL . '/includes/Admin/Onboarding/assets/dist';
 
-        wp_register_script( 'erp-tiptip', WPERP_ASSETS . '/vendor/tiptip/jquery.tipTip.min.js', [ 'jquery' ], WPERP_VERSION, true );
-        wp_register_script( 'erp-select2', WPERP_ASSETS . '/vendor/select2/select2.full.min.js', false, false, true );
-        wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
+        wp_enqueue_style( 'wperp-onboarding', $onboarding_url . '/onboarding.css', [], WPERP_VERSION );
+        wp_enqueue_script( 'wperp-onboarding', $onboarding_url . '/onboarding.js', [], WPERP_VERSION, true );
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
-            call_user_func( $this->steps[ $this->step ]['handler'] );
-        }
+        // Localize script with necessary data
+        wp_localize_script( 'wperp-onboarding', 'wpErpOnboarding', [
+            'nonce'         => wp_create_nonce( 'wp_rest' ),
+            'apiUrl'        => rest_url( 'erp/v1' ),
+            'adminUrl'      => admin_url(),
+            'logoUrl'       => file_exists( WPERP_PATH . '/assets/images/wperp-logo.png' )
+                               ? WPERP_ASSETS . '/images/wperp-logo.png'
+                               : '',
+            'sampleCsvUrl'  => WPERP_ASSETS . '/sample/wperp_employee_list.csv',
+            'docsUrl'       => 'https://wperp.com/documentation/',
+        ] );
 
         ob_start();
-        $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
+        $this->setup_wizard_header_react();
         $this->setup_wizard_footer();
         exit;
     }
@@ -146,6 +149,27 @@ class SetupWizard {
                 }
                 ?>
             </h1>
+        <?php
+    }
+
+    /**
+     * Setup Wizard Header for React App
+     */
+    public function setup_wizard_header_react() {
+        ?>
+        <!DOCTYPE html>
+        <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
+        <head>
+            <meta name="viewport" content="width=device-width" />
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title><?php esc_html_e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
+            <?php
+                wp_print_styles( 'wperp-onboarding' );
+                wp_print_scripts( 'wperp-onboarding' );
+            ?>
+        </head>
+        <body class="wperp-setup-root">
+            <div id="wperp-onboarding-root"></div>
         <?php
     }
 
