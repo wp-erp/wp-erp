@@ -2,24 +2,25 @@ import { useState } from "react";
 
 const ModuleStep = ({ onNext, initialData = {} }) => {
     const [selectedCard, setSelectedCard] = useState("leave");
+    const [errors, setErrors] = useState([]);
     const [formData, setFormData] = useState({
         enableLeaveManagement: initialData.enableLeaveManagement ?? true,
         leaveYears: initialData.leaveYears || [
             {
                 id: Date.now(),
-                year: "",
-                startDate: "",
-                endDate: ""
+                fy_name: "",
+                start_date: "",
+                end_date: ""
             }
         ],
         workingDays: initialData.workingDays || {
-            monday: "full",
-            tuesday: "full",
-            wednesday: "full",
-            thursday: "full",
-            friday: "full",
-            saturday: "non-working",
-            sunday: "non-working"
+            mon: "8",
+            tue: "8",
+            wed: "8",
+            thu: "8",
+            fri: "8",
+            sat: "0",
+            sun: "0"
         },
         workingHours: initialData.workingHours || {
             start: "09:00",
@@ -29,6 +30,8 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
 
     const handleCardClick = cardType => {
         setSelectedCard(cardType);
+        // Clear errors when switching cards
+        setErrors([]);
     };
 
     const handleToggle = field => {
@@ -74,9 +77,9 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                 ...prev.leaveYears,
                 {
                     id: Date.now(),
-                    year: "",
-                    startDate: "",
-                    endDate: ""
+                    fy_name: "",
+                    start_date: "",
+                    end_date: ""
                 }
             ]
         }));
@@ -91,19 +94,81 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
         }
     };
 
+    const validateLeaveYears = () => {
+        const errors = [];
+        const yearNames = [];
+
+        // Only validate if we're on the leave card
+        if (selectedCard === "leave") {
+            formData.leaveYears.forEach((year, index) => {
+                const rowNum = index + 1;
+
+                // Check if name is empty
+                if (!year.fy_name || year.fy_name.trim() === "") {
+                    errors.push(`Please give a financial year name on row #${rowNum}`);
+                }
+
+                // Check if start date is empty
+                if (!year.start_date) {
+                    errors.push(`Please give a financial year start date on row #${rowNum}`);
+                }
+
+                // Check if end date is empty
+                if (!year.end_date) {
+                    errors.push(`Please give a financial year end date on row #${rowNum}`);
+                }
+
+                // Check if end date is greater than start date
+                if (year.start_date && year.end_date) {
+                    const startTime = new Date(year.start_date).getTime();
+                    const endTime = new Date(year.end_date).getTime();
+
+                    if (endTime <= startTime) {
+                        errors.push(`End date must be greater than the start date on row #${rowNum}`);
+                    }
+                }
+
+                // Check for duplicate names
+                if (year.fy_name && year.fy_name.trim() !== "") {
+                    if (yearNames.includes(year.fy_name.trim())) {
+                        errors.push(`Duplicate financial year name "${year.fy_name}" on row #${rowNum}`);
+                    } else {
+                        yearNames.push(year.fy_name.trim());
+                    }
+                }
+            });
+        }
+
+        return errors;
+    };
+
     const handleSubmit = e => {
         e.preventDefault();
+
+        // Validate leave years
+        const validationErrors = validateLeaveYears();
+
+        if (validationErrors.length > 0) {
+            // Set errors to display
+            setErrors(validationErrors);
+            // Scroll to top to show errors
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Clear any previous errors
+        setErrors([]);
         onNext(formData);
     };
 
     const days = [
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday"
+        { key: "mon", label: "Monday" },
+        { key: "tue", label: "Tuesday" },
+        { key: "wed", label: "Wednesday" },
+        { key: "thu", label: "Thursday" },
+        { key: "fri", label: "Friday" },
+        { key: "sat", label: "Saturday" },
+        { key: "sun", label: "Sunday" }
     ];
 
     return (
@@ -120,6 +185,25 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                 </p>
 
                 <form onSubmit={handleSubmit} className="mb-0">
+                    {/* Error Messages */}
+                    {errors.length > 0 && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+                            <div className="flex items-start">
+                                <svg className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-medium text-red-800 mb-2">Please fix the following errors:</h3>
+                                    <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                                        {errors.map((error, index) => (
+                                            <li key={index}>{error}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Card Selection - matches Step 2 pattern */}
                     <div className="flex gap-5 mb-16 px-85px justify-center">
                         {/* Leave Management Card */}
@@ -194,22 +278,22 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                 htmlFor={`leaveYear-${leaveYear.id}`}
                                                 className="label"
                                             >
-                                                Leave Year
+                                                Name
                                             </label>
                                             <div className="flex gap-3 items-start">
                                                 <input
                                                     type="text"
                                                     id={`leaveYear-${leaveYear.id}`}
-                                                    value={leaveYear.year}
+                                                    value={leaveYear.fy_name}
                                                     onChange={e =>
                                                         handleLeaveYearChange(
                                                             leaveYear.id,
-                                                            "year",
+                                                            "fy_name",
                                                             e.target.value
                                                         )
                                                     }
                                                     className="input flex-1"
-                                                    placeholder="Leave Year"
+                                                    placeholder="Leave Year Name"
                                                 />
                                                 {formData.leaveYears.length >
                                                     1 && (
@@ -256,11 +340,11 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                 <input
                                                     type="date"
                                                     id={`startDate-${leaveYear.id}`}
-                                                    value={leaveYear.startDate}
+                                                    value={leaveYear.start_date}
                                                     onChange={e =>
                                                         handleLeaveYearChange(
                                                             leaveYear.id,
-                                                            "startDate",
+                                                            "start_date",
                                                             e.target.value
                                                         )
                                                     }
@@ -280,11 +364,11 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                 <input
                                                     type="date"
                                                     id={`endDate-${leaveYear.id}`}
-                                                    value={leaveYear.endDate}
+                                                    value={leaveYear.end_date}
                                                     onChange={e =>
                                                         handleLeaveYearChange(
                                                             leaveYear.id,
-                                                            "endDate",
+                                                            "end_date",
                                                             e.target.value
                                                         )
                                                     }
@@ -421,27 +505,27 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                 <div className="flex flex-col gap-4">
                                     {days.map(day => (
                                         <div
-                                            key={day}
+                                            key={day.key}
                                             className="flex items-center justify-between py-3"
                                         >
-                                            <div className="font-medium min-w-[100px] capitalize text-sm">
-                                                {day}
+                                            <div className="font-medium min-w-[100px] text-sm">
+                                                {day.label}
                                             </div>
                                             <div className="flex gap-2">
                                                 <label className="inline-block">
                                                     <input
                                                         type="radio"
-                                                        name={`day-${day}`}
+                                                        name={`day-${day.key}`}
                                                         checked={
                                                             formData
                                                                 .workingDays[
-                                                                day
-                                                            ] === "full"
+                                                                day.key
+                                                            ] === "8"
                                                         }
                                                         onChange={() =>
                                                             handleDayToggle(
-                                                                day,
-                                                                "full"
+                                                                day.key,
+                                                                "8"
                                                             )
                                                         }
                                                         className="hidden"
@@ -450,8 +534,8 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                         className={`inline-block px-5 py-3 rounded-md cursor-pointer transition-all duration-200 font-normal text-center ${
                                                             formData
                                                                 .workingDays[
-                                                                day
-                                                            ] === "full"
+                                                                day.key
+                                                            ] === "8"
                                                                 ? "bg-blue-500 text-white border border-blue-500"
                                                                 : "bg-white text-black border border-gray-300"
                                                         }`}
@@ -470,17 +554,17 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                 <label className="inline-block">
                                                     <input
                                                         type="radio"
-                                                        name={`day-${day}`}
+                                                        name={`day-${day.key}`}
                                                         checked={
                                                             formData
                                                                 .workingDays[
-                                                                day
-                                                            ] === "half"
+                                                                day.key
+                                                            ] === "4"
                                                         }
                                                         onChange={() =>
                                                             handleDayToggle(
-                                                                day,
-                                                                "half"
+                                                                day.key,
+                                                                "4"
                                                             )
                                                         }
                                                         className="hidden"
@@ -489,8 +573,8 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                         className={`inline-block px-5 py-3 rounded-md cursor-pointer transition-all duration-200 font-normal text-center ${
                                                             formData
                                                                 .workingDays[
-                                                                day
-                                                            ] === "half"
+                                                                day.key
+                                                            ] === "4"
                                                                 ? "bg-blue-500 text-white border border-blue-500"
                                                                 : "bg-white text-black border border-gray-300"
                                                         }`}
@@ -509,17 +593,17 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                 <label className="inline-block">
                                                     <input
                                                         type="radio"
-                                                        name={`day-${day}`}
+                                                        name={`day-${day.key}`}
                                                         checked={
                                                             formData
                                                                 .workingDays[
-                                                                day
-                                                            ] === "non-working"
+                                                                day.key
+                                                            ] === "0"
                                                         }
                                                         onChange={() =>
                                                             handleDayToggle(
-                                                                day,
-                                                                "non-working"
+                                                                day.key,
+                                                                "0"
                                                             )
                                                         }
                                                         className="hidden"
@@ -528,8 +612,8 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                         className={`inline-block px-5 py-3 rounded-md cursor-pointer transition-all duration-200 font-normal text-center ${
                                                             formData
                                                                 .workingDays[
-                                                                day
-                                                            ] === "non-working"
+                                                                day.key
+                                                            ] === "0"
                                                                 ? "bg-blue-500 text-white border border-blue-500"
                                                                 : "bg-white text-black border border-gray-300"
                                                         }`}

@@ -7,8 +7,9 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [importedCount, setImportedCount] = useState(0);
 
-  // Profile fields and required fields from WordPress
+  // Profile fields and required fields from WordPress (based on existing sample CSV)
   const profileFields = [
+    'employee_id',
     'first_name',
     'middle_name',
     'last_name',
@@ -16,13 +17,32 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
     'designation',
     'department',
     'location',
+    'hiring_source',
     'hiring_date',
     'date_of_birth',
     'reporting_to',
     'pay_rate',
-    'pay_type',
     'type',
-    'status'
+    'pay_type',
+    'status',
+    'other_email',
+    'phone',
+    'work_phone',
+    'mobile',
+    'address',
+    'gender',
+    'marital_status',
+    'nationality',
+    'driving_license',
+    'hobbies',
+    'user_url',
+    'description',
+    'street_1',
+    'street_2',
+    'city',
+    'country',
+    'state',
+    'postal_code'
   ];
 
   const requiredFields = ['first_name', 'last_name', 'user_email'];
@@ -93,7 +113,7 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
     formData.append('action', 'erp_import_csv');
     formData.append('type', 'employee');
     formData.append('csv_file', file);
-    formData.append('_wpnonce', window.wpErpOnboarding?.nonce || '');
+    formData.append('_wpnonce', window.wpErpOnboarding?.importNonce || '');
 
     // Add field mappings
     Object.entries(fieldMappings).forEach(([field, columnIndex]) => {

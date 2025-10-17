@@ -26,28 +26,12 @@ const apiClient = axios.create({
 });
 
 // API methods
-export const saveBasicSettings = (data) => {
-  return apiClient.post('/onboarding/basic', data);
-};
-
-export const saveOrganization = (data) => {
-  return apiClient.post('/onboarding/organization', data);
-};
-
-export const importEmployees = (data) => {
-  return apiClient.post('/onboarding/import-employees', data);
-};
-
-export const saveModuleSettings = (data) => {
-  return apiClient.post('/onboarding/modules', data);
+export const getOnboardingStatus = () => {
+  return apiClient.get('/onboarding/status');
 };
 
 export const completeOnboarding = (data) => {
   return apiClient.post('/onboarding/complete', data);
-};
-
-export const getOnboardingStatus = () => {
-  return apiClient.get('/onboarding/status');
 };
 
 export default apiClient;
