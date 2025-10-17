@@ -342,14 +342,26 @@ class OnboardingController extends REST_Controller {
             ] );
         }
 
+        // Convert month name to number (1-12) to match existing system format
+        $month_map = [
+            'january' => '1', 'february' => '2', 'march' => '3', 'april' => '4',
+            'may' => '5', 'june' => '6', 'july' => '7', 'august' => '8',
+            'september' => '9', 'october' => '10', 'november' => '11', 'december' => '12',
+        ];
+        $financial_month = isset( $data['financialYearStarts'] )
+            ? ( isset( $month_map[ strtolower( $data['financialYearStarts'] ) ] )
+                ? $month_map[ strtolower( $data['financialYearStarts'] ) ]
+                : '1' )
+            : '1';
+
         // Get existing settings to preserve unrelated fields
         $existing_settings = get_option( 'erp_settings_general', [] );
-        
+
         $updated_settings = array_merge( $existing_settings, [
-            'gen_financial_month' => isset( $data['financialYearStarts'] ) ? sanitize_text_field( $data['financialYearStarts'] ) : '1',
+            'gen_financial_month' => $financial_month,
             'gen_com_start'       => isset( $data['companyStartDate'] ) ? sanitize_text_field( $data['companyStartDate'] ) : '',
         ] );
-        
+
         update_option( 'erp_settings_general', $updated_settings );
 
         // 2. Save Organization (Departments & Designations) (Step 2)
@@ -383,10 +395,10 @@ class OnboardingController extends REST_Controller {
         }
 
         if ( ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] ) ) {
-            foreach ( $data['workingDays'] as $day => $isWorking ) {
+            foreach ( $data['workingDays'] as $day => $status ) {
                 $day_key = strtolower( sanitize_text_field( $day ) );
-                // 8 = full day, 0 = non-working
-                $value = $isWorking ? '8' : '0';
+                // 8 = full day, 0 = non-working (status values: "full" or "non-working")
+                $value = ( $status === 'full' ) ? '8' : '0';
                 update_option( $day_key, $value );
             }
         }
