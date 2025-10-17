@@ -67,10 +67,13 @@ class OnboardingController extends REST_Controller {
     public function complete_onboarding( $request ) {
         // Get all form data
         $data = $request->get_json_params();
-        
+
         if ( empty( $data ) ) {
             $data = [];
         }
+
+        // Debug: Log received data
+        error_log( 'ERP Onboarding Data Received: ' . print_r( $data, true ) );
 
         // 1. Save Basic Settings (Step 1)
         if ( ! empty( $data['companyName'] ) ) {
@@ -158,13 +161,26 @@ class OnboardingController extends REST_Controller {
 
         // Save working days - correct format
         if ( ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] ) ) {
-            $existing_workdays = get_option( 'erp_settings_general', [] );
+            error_log( 'ERP Onboarding: Saving workingDays: ' . print_r( $data['workingDays'], true ) );
+
+            // Get the CURRENT settings (which includes company data saved above)
+            $current_settings = get_option( 'erp_settings_general', [] );
+            error_log( 'ERP Onboarding: Current settings before workdays: ' . print_r( $current_settings, true ) );
+
+            // Add working days to current settings
             foreach ( $data['workingDays'] as $day => $hours ) {
                 $day_key = 'erp_' . strtolower( sanitize_text_field( $day ) );
                 // Store the hours value directly (8 = full day, 4 = half day, 0 = non-working)
-                $existing_workdays[ $day_key ] = sanitize_text_field( $hours );
+                $current_settings[ $day_key ] = sanitize_text_field( $hours );
+                error_log( "ERP Onboarding: Set {$day_key} = {$hours}" );
             }
-            update_option( 'erp_settings_general', $existing_workdays );
+
+            error_log( 'ERP Onboarding: Final settings with workdays: ' . print_r( $current_settings, true ) );
+
+            // Save back to database
+            update_option( 'erp_settings_general', $current_settings );
+        } else {
+            error_log( 'ERP Onboarding: workingDays is empty or not an array!' );
         }
 
         // Save working hours

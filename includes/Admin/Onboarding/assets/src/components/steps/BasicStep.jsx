@@ -50,11 +50,11 @@ const BasicStep = ({ onNext, initialData = {} }) => {
       <div className="max-w-640px mx-auto overflow-visible">
         {/* Heading - matches h1 from setup.css */}
         <h1 className="text-black text-30px font-normal leading-9 text-center m-0 mb-3">
-          Company Details
+          Company Profile
         </h1>
         {/* Subtitle - matches .subtitle from setup.css */}
         <p className="text-center text-slate-500 text-base m-0 mb-16 leading-6">
-          Enter you company name, start date and financial year starts
+          Tell us about your company and financial year
         </p>
 
         {/* Form - matches erp-setup-form */}
