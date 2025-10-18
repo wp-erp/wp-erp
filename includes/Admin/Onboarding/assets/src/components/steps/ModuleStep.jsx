@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ModuleStep = ({ onNext, initialData = {} }) => {
     const [selectedCard, setSelectedCard] = useState("leave");
     const [errors, setErrors] = useState([]);
     const [formData, setFormData] = useState({
         enableLeaveManagement: initialData.enableLeaveManagement ?? true,
-        leaveYears: initialData.leaveYears || [
-            {
+        leaveYears: initialData.leaveYears && initialData.leaveYears.length > 0 
+            ? initialData.leaveYears.map(fy => ({
+                id: fy.id || Date.now() + Math.random(),
+                fy_name: fy.fy_name || "",
+                start_date: fy.start_date || "",
+                end_date: fy.end_date || ""
+            }))
+            : [{
                 id: Date.now(),
                 fy_name: "",
                 start_date: "",
                 end_date: ""
-            }
-        ],
+            }],
         workingDays: initialData.workingDays || {
             mon: "8",
             tue: "8",
@@ -27,6 +32,21 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
             end: "17:00"
         }
     });
+
+    // Update form data when initialData changes
+    useEffect(() => {
+        if (initialData.leaveYears && initialData.leaveYears.length > 0) {
+            setFormData(prev => ({
+                ...prev,
+                leaveYears: initialData.leaveYears.map(fy => ({
+                    id: fy.id || Date.now() + Math.random(),
+                    fy_name: fy.fy_name || "",
+                    start_date: fy.start_date || "",
+                    end_date: fy.end_date || ""
+                }))
+            }));
+        }
+    }, [initialData.leaveYears]);
 
     const handleCardClick = cardType => {
         setSelectedCard(cardType);
@@ -472,9 +492,11 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                         <p className="text-slate-500 text-sm leading-5 m-0">
                                             Generate pre-default leave policies
                                             for the current year (WPERP will
-                                            automatically assign predefined
-                                            leaves like Sick Leave/Casual leave
-                                            to the current year
+                                            automatically create leave types like
+                                            Sick Leave, Casual Leave, Annual Leave,
+                                            Maternity Leave, and Paternity Leave
+                                            with appropriate leave days for the first
+                                            financial year)
                                         </p>
                                     </div>
                                 </div>

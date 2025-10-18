@@ -11,21 +11,38 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
     const inputRef = useRef(null);
 
     const departmentSuggestions = [
-        "HR and Admin",
-        "Engineering",
-        "Sales",
-        "Content Marketing",
-        "Design",
-        "Digital Marketing"
+        "General Management",
+        "Operations Department",
+        "Finance Department",
+        "Sales Department",
+        "Human Resource Department",
+        "Purchase Department",
+        "Engineering Department",
+        "Production Department",
+        "Procurement Department"
     ];
 
     const designationSuggestions = [
-        "Manager",
-        "Senior Developer",
-        "Developer",
-        "Designer",
-        "Team Lead",
-        "Consultant"
+        "President",
+        "Vice President",
+        "CEO",
+        "Managing Director",
+        "Product Manager",
+        "Project Manager",
+        "Program Manager",
+        "Operations Manager",
+        "Marketing Manager",
+        "Business Manager",
+        "Technology Manager",
+        "Finance/Accounts Manager",
+        "Human Resource Manager",
+        "Hiring Manager",
+        "Senior Engineer",
+        "Engineer",
+        "Junior Engineer",
+        "Business Executive",
+        "Marketing Executive",
+        "Customer Support Executive"
     ];
 
     const currentSuggestions =
