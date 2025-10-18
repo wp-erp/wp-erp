@@ -154,9 +154,15 @@ class OnboardingController extends REST_Controller {
             }
         }
 
-        // Save leave management preference
+        // Save leave management preference and create default leave types/policies
         if ( isset( $data['enableLeaveManagement'] ) ) {
-            update_option( 'erp_enable_leave_management', (bool) $data['enableLeaveManagement'] );
+            $enable_leave = (bool) $data['enableLeaveManagement'];
+            update_option( 'erp_enable_leave_management', $enable_leave );
+            
+            // If enabled, create default leave types and policies for the first financial year
+            if ( $enable_leave && ! empty( $data['leaveYears'] ) ) {
+                $this->create_default_leave_policies( $data['leaveYears'] );
+            }
         }
 
         // Save working days - use defaults if not provided
@@ -286,5 +292,111 @@ class OnboardingController extends REST_Controller {
         }
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Create default leave types and policies
+     *
+     * @param array $leave_years Financial years array
+     * @return void
+     */
+    private function create_default_leave_policies( $leave_years ) {
+        // Only create for the first financial year
+        $first_fy = $leave_years[0] ?? null;
+        
+        if ( empty( $first_fy['fy_name'] ) || empty( $first_fy['start_date'] ) || empty( $first_fy['end_date'] ) ) {
+            return;
+        }
+
+        // Get the first financial year ID from database
+        $financial_years = erp_get_hr_financial_years();
+        $first_year_id = null;
+        
+        foreach ( $financial_years as $fy ) {
+            if ( $fy['fy_name'] === $first_fy['fy_name'] ) {
+                $first_year_id = $fy['id'];
+                break;
+            }
+        }
+
+        if ( ! $first_year_id ) {
+            return;
+        }
+
+        // Define default leave types with their configurations
+        $default_leave_types = [
+            [
+                'name'        => 'Sick Leave',
+                'description' => 'Leave for medical reasons and health issues',
+                'days'        => 14,
+                'color'       => '#EF4444',
+            ],
+            [
+                'name'        => 'Casual Leave',
+                'description' => 'Short-term leave for personal matters',
+                'days'        => 10,
+                'color'       => '#3B82F6',
+            ],
+            [
+                'name'        => 'Annual Leave',
+                'description' => 'Paid vacation leave for rest and recreation',
+                'days'        => 15,
+                'color'       => '#10B981',
+            ],
+            [
+                'name'        => 'Maternity Leave',
+                'description' => 'Leave for childbirth and postnatal care',
+                'days'        => 90,
+                'color'       => '#F59E0B',
+            ],
+            [
+                'name'        => 'Paternity Leave',
+                'description' => 'Leave for fathers after childbirth',
+                'days'        => 7,
+                'color'       => '#8B5CF6',
+            ],
+        ];
+
+        foreach ( $default_leave_types as $leave_type_data ) {
+            // Create leave type (name)
+            $leave_type_id = erp_hr_insert_leave_policy_name( [
+                'name'        => $leave_type_data['name'],
+                'description' => $leave_type_data['description'],
+            ] );
+
+            // Skip if leave type creation failed or already exists
+            if ( is_wp_error( $leave_type_id ) ) {
+                // Try to find existing leave type by name
+                $existing_leave = \WeDevs\ERP\HRM\Models\Leave::where( 'name', $leave_type_data['name'] )->first();
+                if ( $existing_leave ) {
+                    $leave_type_id = $existing_leave->id;
+                } else {
+                    continue;
+                }
+            }
+
+            // Create leave policy for this leave type
+            $policy_data = [
+                'leave_id'            => $leave_type_id,
+                'employee_type'       => -1,  // All employees
+                'department_id'       => 0,   // All departments
+                'designation_id'      => 0,   // All designations
+                'location_id'         => 0,   // All locations
+                'gender'              => '',  // All genders
+                'marital'             => '',  // All marital statuses
+                'f_year'              => $first_year_id,
+                'description'         => $leave_type_data['description'],
+                'days'                => $leave_type_data['days'],
+                'color'               => $leave_type_data['color'],
+                'applicable_from'     => 0,   // Immediately applicable
+                'apply_for_new_users' => 1,   // Apply for new users
+            ];
+
+            $policy_id = erp_hr_leave_insert_policy( $policy_data );
+
+            if ( is_wp_error( $policy_id ) ) {
+                error_log( 'ERP Onboarding: Failed to create leave policy for ' . $leave_type_data['name'] . ' - ' . $policy_id->get_error_message() );
+            }
+        }
     }
 }

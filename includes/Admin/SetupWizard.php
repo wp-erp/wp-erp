@@ -52,9 +52,29 @@ class SetupWizard {
 
         // Allow resetting onboarding for testing: ?page=erp-setup&reset=1
         if ( isset( $_GET['reset'] ) && $_GET['reset'] === '1' && current_user_can( 'manage_options' ) ) {
+            // Perform complete data reset - removes all ERP data including:
+            // - Employees
+            // - Leave policies and leave types
+            // - Financial years
+            // - Departments and designations
+            // - All other ERP data
+            $reset_result = erp_reset_data();
+            
+            if ( is_wp_error( $reset_result ) ) {
+                wp_die( 
+                    esc_html__( 'Failed to reset ERP data. Please try again or use Tools > Reset from the main menu.', 'erp' ),
+                    esc_html__( 'Reset Failed', 'erp' ),
+                    [ 'back_link' => true ]
+                );
+            }
+            
+            // Clean up any remaining onboarding-specific options
             delete_option( 'erp_onboarding_completed' );
             delete_option( 'erp_onboarding_completed_at' );
-            delete_option( 'erp_setup_wizard_ran' );
+            delete_option( 'erp_enable_leave_management' );
+            delete_option( 'erp_working_hours' );
+            
+            // After successful reset, redirect to setup wizard
             wp_safe_redirect( admin_url( 'index.php?page=erp-setup' ) );
             exit;
         }

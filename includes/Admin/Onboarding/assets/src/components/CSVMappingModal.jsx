@@ -159,27 +159,46 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
       .join(' ');
   };
 
+  // Get the congratulation image URL from WordPress localized script (same as CompleteStep)
+  const congratulationImageUrl = window.wpErpOnboarding?.congratulationImageUrl || '';
+
   if (showSuccess) {
     return (
       <div className="erp-modal">
         <div className="erp-modal-overlay" onClick={onClose}></div>
         <div className="erp-modal-content">
-          <div className="erp-modal-body">
-            <div className="erp-import-success">
-              <div className="erp-success-icon">
-                <svg width="54" height="55" viewBox="0 0 54 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="27" cy="27.5" r="27" fill="#10B981" fillOpacity="0.1"/>
-                  <path d="M18 27.5L24 33.5L36 21.5" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+          <div className="erp-modal-body flex flex-col justify-center items-center min-h-full">
+            {/* Matches CompleteStep design - with border, same fonts and layout */}
+            <div className="bg-white rounded-2xl p-24 text-center border border-gray-300">
+              {/* Confetti Icon - with celebrate animation (same as CompleteStep) */}
+              <div className="mb-6 flex justify-center" style={{ animation: 'celebrate 0.5s ease' }}>
+                {congratulationImageUrl ? (
+                  <img src={congratulationImageUrl} alt="Congratulations" className="w-16 h-16" />
+                ) : (
+                  <span style={{ fontSize: '64px' }}>🎉</span>
+                )}
               </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">Successfully Imported</h3>
-              <p className="text-gray-600 text-sm">{importedCount} employees have been imported</p>
+
+              {/* Heading - matches CompleteStep h2 styling */}
+              <h2 className="text-xl font-medium text-black m-0 mb-1">
+                You're All Set!
+              </h2>
+
+              {/* Description - matches CompleteStep p styling */}
+              <p className="text-slate-500 text-sm leading-5 m-0 font-normal">
+                {importedCount} employees have been imported successfully!
+              </p>
             </div>
-          </div>
-          <div className="erp-modal-footer">
-            <button type="button" className="erp-btn-continue-setup" onClick={handleContinue}>
-              Continue →
-            </button>
+
+            {/* Continue Button - positioned at the very end */}
+            <div className="text-center mt-12">
+              <button
+                onClick={handleContinue}
+                className="btn-primary no-underline"
+              >
+                Continue
+              </button>
+            </div>
           </div>
         </div>
       </div>
