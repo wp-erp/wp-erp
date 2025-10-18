@@ -54,7 +54,11 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
     const filteredSuggestions = currentSuggestions.filter(
         item => item.toLowerCase().includes(inputValue.toLowerCase())
     );
-    
+
+    // Check if input value is a custom entry (not in predefined list)
+    const isCustomEntry = inputValue.trim() &&
+        !currentSuggestions.some(item => item.toLowerCase() === inputValue.toLowerCase());
+
     const isItemSelected = (item) => {
         return selectedItems[selectedCard]?.includes(item) || false;
     };
@@ -227,13 +231,45 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
                                             );
                                         }}
                                         className="input"
-                                        placeholder={`Type and press Enter to add ${selectedCard}...`}
+                                        placeholder={`Select from list or type to add custom ${selectedCard}...`}
                                     />
 
                                     {/* Suggestions List */}
                                     {showSuggestions &&
-                                        filteredSuggestions.length > 0 && (
+                                        (filteredSuggestions.length > 0 || isCustomEntry) && (
                                             <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 shadow-lg z-50 max-h-48 overflow-y-auto">
+                                                {/* Custom entry option - shown first if user is typing something new */}
+                                                {isCustomEntry && (
+                                                    <div
+                                                        className="px-4 py-2.5 cursor-pointer transition-colors flex items-center gap-2 hover:bg-gray-50 border-b border-gray-200"
+                                                        onClick={() => {
+                                                            addTag(inputValue.trim());
+                                                            setShowSuggestions(false);
+                                                        }}
+                                                    >
+                                                        <svg
+                                                            width="16"
+                                                            height="16"
+                                                            viewBox="0 0 16 16"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            className="flex-shrink-0"
+                                                        >
+                                                            <path
+                                                                d="M8 3.33334V12.6667M3.33333 8H12.6667"
+                                                                stroke="#3B82F6"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                        <span className="text-gray-900 font-medium">
+                                                            Add "{inputValue.trim()}"
+                                                        </span>
+                                                    </div>
+                                                )}
+
+                                                {/* Predefined suggestions */}
                                                 {filteredSuggestions.map(
                                                     (suggestion, index) => {
                                                         const selected = isItemSelected(suggestion);
@@ -241,8 +277,8 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
                                                             <div
                                                                 key={index}
                                                                 className={`px-4 py-2.5 cursor-pointer transition-colors flex items-center justify-between ${
-                                                                    selected 
-                                                                        ? 'bg-blue-50 hover:bg-blue-100' 
+                                                                    selected
+                                                                        ? 'bg-blue-50 hover:bg-blue-100'
                                                                         : 'hover:bg-gray-50'
                                                                 }`}
                                                                 onClick={() =>
@@ -253,19 +289,19 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
                                                                     {suggestion}
                                                                 </span>
                                                                 {selected && (
-                                                                    <svg 
-                                                                        width="16" 
-                                                                        height="16" 
-                                                                        viewBox="0 0 16 16" 
-                                                                        fill="none" 
+                                                                    <svg
+                                                                        width="16"
+                                                                        height="16"
+                                                                        viewBox="0 0 16 16"
+                                                                        fill="none"
                                                                         xmlns="http://www.w3.org/2000/svg"
                                                                         className="flex-shrink-0 ml-2"
                                                                     >
-                                                                        <path 
-                                                                            d="M13.3332 4L5.99984 11.3333L2.6665 8" 
-                                                                            stroke="#3B82F6" 
-                                                                            strokeWidth="2" 
-                                                                            strokeLinecap="round" 
+                                                                        <path
+                                                                            d="M13.3332 4L5.99984 11.3333L2.6665 8"
+                                                                            stroke="#3B82F6"
+                                                                            strokeWidth="2"
+                                                                            strokeLinecap="round"
                                                                             strokeLinejoin="round"
                                                                         />
                                                                     </svg>
