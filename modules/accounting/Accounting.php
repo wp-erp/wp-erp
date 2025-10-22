@@ -237,7 +237,6 @@ final class Accounting {
         new REST_API();
         new Assets();
         new SendEmail();
-        new UserProfile();
     }
 
     /**
