@@ -682,6 +682,41 @@ function erp_format_date( $date, $format = false ) {
 }
 
 /**
+ * Parse date from configured format to MySQL format (Y-m-d)
+ *
+ * @since 1.14.1
+ *
+ * @param string $date the date string
+ *
+ * @return string|false formatted date in Y-m-d format or false on failure
+ */
+function erp_parse_date_to_mysql( $date ) {
+	if ( empty( $date ) ) {
+		return '';
+	}
+
+	// Get the configured date format
+	$date_format = erp_get_date_format();
+
+	// Try to parse the date with the configured format
+	$parsed_date = \DateTime::createFromFormat( $date_format, $date );
+
+	// If parsing succeeds, return in Y-m-d format
+	if ( $parsed_date && $parsed_date->format( $date_format ) === $date ) {
+		return $parsed_date->format( 'Y-m-d' );
+	}
+
+	// Fallback: try to parse with strtotime for flexible parsing
+	$timestamp = strtotime( $date );
+	if ( false !== $timestamp ) {
+		return gmdate( 'Y-m-d', $timestamp );
+	}
+
+	// If all parsing attempts fail, return the original value
+	return $date;
+}
+
+/**
  * Extract dates between two date range
  *
  * @param string $start_date example: 2016-12-16 00:00:00
@@ -1557,6 +1592,10 @@ function erp_hr_get_human_readable_name( $id, $field, $value, $item ) {
             break;
         case 'nationality':
             return erp_get_country_name(  $value );
+            break;
+        case 'hiring_date':
+        case 'date_of_birth':
+            return erp_format_date( $value );
             break;
 
         // case 'blood_group':
