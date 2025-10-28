@@ -1560,9 +1560,8 @@ function erp_hr_get_human_readable_name( $id, $field, $value, $item ) {
             break;
         case 'hiring_date':
         case 'date_of_birth':
-        case 'hiring_date':
         case 'termination_date':
-            return  ( $value );
+            return  $value;
             break;
         // case 'blood_group':
         //     return erp_hr_get_blood_group( $id, $field, $value );
@@ -3064,7 +3063,7 @@ function erp_web_feed() {
 	if ( $cached_data !== false ) {
 		return simplexml_load_string( $cached_data );
 	}
-	
+
 	$url = apply_filters( 'erp_web_feed_url', 'https://wperp.com/feed/' );
 	$args = array(
 		'timeout'   => 15,
