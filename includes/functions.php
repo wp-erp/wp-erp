@@ -684,11 +684,15 @@ function erp_format_date( $date, $format = false ) {
 /**
  * Parse date from configured format to MySQL format (Y-m-d)
  *
+ * This function attempts to parse a date string from the configured date format
+ * and convert it to MySQL's Y-m-d format. It handles various date formats by
+ * first trying the configured format, then falling back to strtotime for flexible parsing.
+ *
  * @since 1.14.1
  *
  * @param string $date the date string
  *
- * @return string|false formatted date in Y-m-d format or false on failure
+ * @return string formatted date in Y-m-d format or empty string if parsing fails
  */
 function erp_parse_date_to_mysql( $date ) {
 	if ( empty( $date ) ) {
@@ -712,7 +716,11 @@ function erp_parse_date_to_mysql( $date ) {
 		return gmdate( 'Y-m-d', $timestamp );
 	}
 
-	// If all parsing attempts fail, return empty string to prevent database errors
+	// If all parsing attempts fail, return empty string
+	// Empty string is returned (not null/false) because:
+	// 1. The validation layer catches invalid dates before reaching this function
+	// 2. Date fields are optional and can accept empty strings in the database
+	// 3. This is consistent with other date handling in the codebase
 	return '';
 }
 
