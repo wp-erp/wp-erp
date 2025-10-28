@@ -712,8 +712,8 @@ function erp_parse_date_to_mysql( $date ) {
 		return gmdate( 'Y-m-d', $timestamp );
 	}
 
-	// If all parsing attempts fail, return the original value
-	return $date;
+	// If all parsing attempts fail, return empty string to prevent database errors
+	return '';
 }
 
 /**
