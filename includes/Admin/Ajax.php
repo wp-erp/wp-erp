@@ -298,6 +298,9 @@ class Ajax {
                                     }
                                 }elseif( $key === 'reporting_to' && $line[ $value ] !== '' ) {
                                     $line_data['work'][ $key ] = $line[ $value ];
+                                }elseif ( $key === 'hiring_date' || $key === 'date_of_birth' ) {
+                                    // Convert date from configured format to Y-m-d format for database storage
+                                    $line_data['work'][ $key ] = erp_parse_date_to_mysql( $line[ $value ] );
                                 } else {
                                     $line_data['work'][ $key ] = $line[ $value ];
                                 }

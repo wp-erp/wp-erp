@@ -493,8 +493,23 @@ class ValidateData {
      * @return string
      */
     public function is_valid_date( $column, $value, $field_name ) {
-        if ( ! preg_match( '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value ) && ! empty( $value ) ) {
-            return __( "{$field_name} should be a valid date. Ex: YYYY-MM-DD", 'erp' );
+        if ( empty( $value ) ) {
+            return;
+        }
+
+        // Get the configured date format from settings
+        $date_format = erp_get_date_format();
+        
+        // Try to parse the date with the configured format
+        $date = \DateTime::createFromFormat( $date_format, $value );
+        
+        // If parsing fails with configured format, check if it's a valid date in any common format
+        if ( ! $date || $date->format( $date_format ) !== $value ) {
+            // Fallback: try to parse with strtotime
+            $timestamp = strtotime( $value );
+            if ( false === $timestamp ) {
+                return __( sprintf( "{$field_name} should be a valid date. Ex: %s", erp_format_date( time() ) ), 'erp' );
+            }
         }
     }
 
