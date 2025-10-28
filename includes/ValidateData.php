@@ -508,7 +508,9 @@ class ValidateData {
             // Fallback: try to parse with strtotime
             $timestamp = strtotime( $value );
             if ( false === $timestamp ) {
-                return __( sprintf( "{$field_name} should be a valid date. Ex: %s", erp_format_date( time() ) ), 'erp' );
+                $example_date = erp_format_date( time() );
+                // translators: %1$s: field name, %2$s: example date
+                return sprintf( __( '%1$s should be a valid date. Ex: %2$s', 'erp' ), $field_name, $example_date );
             }
         }
     }
