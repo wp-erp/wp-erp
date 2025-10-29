@@ -26,6 +26,10 @@ class Promotion {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
+        // Don't show if ERP Pro exists
+        if ( defined( 'ERP_PRO_PLUGIN_VERSION' ) ) {
+            return;
+        }
         // Check if inside the wp-project-manager page
         if ( ! isset( $_GET['page'] ) ) {
             return;
