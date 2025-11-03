@@ -3927,6 +3927,13 @@ function erp_reset_data() {
 			'erp_ac_agency',
 		);
 
+		// Temporarily remove hooks that prevent deletion of users with employee profiles
+		// These hooks are meant to prevent accidental deletion, but during reset we intentionally
+		// want to delete all ERP data including employee profiles
+		remove_action( 'delete_user', 'intercept_single_user_delete', 9 );
+		remove_action( 'admin_init', 'intercept_bulk_wpuser_delete', 8 );
+		remove_action( 'delete_user', 'erp_hr_employee_on_delete' );
+
 		// Delete users table data related to the employees/people
 		$users = $wpdb->get_results( "SELECT user_id FROM {$wpdb->prefix}erp_peoples WHERE user_id <> 0" );
 
@@ -3954,6 +3961,11 @@ function erp_reset_data() {
 				$user->remove_role( $erp_role );
 			}
 		}
+
+		// Restore the hooks after user deletion is complete
+		add_action( 'delete_user', 'erp_hr_employee_on_delete' );
+		add_action( 'admin_init', 'intercept_bulk_wpuser_delete', 8 );
+		add_action( 'delete_user', 'intercept_single_user_delete', 9 );
 
 		$tables = $wpdb->get_results(
 			"SELECT TABLE_NAME FROM information_schema.TABLES
@@ -4043,10 +4055,16 @@ function erp_reset_data() {
 		$plugin_wp_erp = end( $wp_erp_url ) . '/wp-erp.php';
 		deactivate_plugins( $plugin_wp_erp );
 
+		// Set a flag to prevent installer from recreating default data during reset
+		update_option( 'erp_reset_in_progress', true );
+
 		// Activate and add deafult modules
 		activate_plugin( $plugin_wp_erp );
 		$all_modules = wperp()->modules->get_modules();
 		update_option( 'erp_modules', $all_modules );
+
+		// Clear the reset flag after activation
+		delete_option( 'erp_reset_in_progress' );
 
 		// If ERP Pro is installed & activated, do the same for this
 		if ( function_exists( 'wp_erp_pro' ) ) {
