@@ -117,6 +117,13 @@
 
         <slot name="extended-data"></slot>
 
+        <!-- Onboarding button for general settings -->
+        <div class="wperp-form-group" v-if="section_id === 'general' && sub_section_id === 'general'">
+            <button type="button" class="wperp-btn btn--secondary" @click="startOnboarding" style="margin-right: 10px;">
+                {{ __('Start Onboarding', 'erp') }}
+            </button>
+        </div>
+
         <div class="wperp-form-group" v-if="! hide_submit">
             <submit-button :text="__('Save Changes', 'erp')" />
             <div class="clearfix"></div>
@@ -375,6 +382,13 @@ export default {
          */
         changeRadioInput( index, key ) {
             this.fields[index]['value'] = key;
+        },
+
+        /**
+         * Redirect to onboarding page
+         */
+        startOnboarding() {
+            window.location.href = erp_settings_var.admin_url + '?page=erp-setup';
         },
     },
 
