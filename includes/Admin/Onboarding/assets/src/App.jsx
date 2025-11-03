@@ -6,7 +6,7 @@ import OrganizationStep from './components/steps/OrganizationStep';
 import ImportStep from './components/steps/ImportStep';
 import ModuleStep from './components/steps/ModuleStep';
 import CompleteStep from './components/steps/CompleteStep';
-import { completeOnboarding, getOnboardingStatus } from './utils/api';
+import { completeOnboarding, getOnboardingStatus, saveStepData } from './utils/api';
 
 const STEPS = [
   { id: 'basic', name: 'Company Profile', component: BasicStep },
@@ -28,14 +28,6 @@ function App() {
       try {
         const response = await getOnboardingStatus();
         const data = response.data;
-
-        // If onboarding is already completed, redirect to dashboard
-        if (data.completed) {
-          if (window.wpErpOnboarding?.adminUrl) {
-            window.location.href = window.wpErpOnboarding.adminUrl;
-          }
-          return;
-        }
 
         // Pre-fill form with existing data from database
         setFormData({
@@ -84,12 +76,27 @@ function App() {
     loadInitialData();
   }, []);
 
-  const handleNext = (stepData) => {
-    // Collect data without saving - save everything at the end
+  const handleNext = async (stepData) => {
+    // Merge step data with existing form data
     const updatedData = { ...formData, ...stepData };
     setFormData(updatedData);
     setError(null);
-    
+
+    // Save data for current step (except import step which is handled separately)
+    const currentStepId = STEPS[currentStep].id;
+    if (currentStepId !== 'import' && currentStepId !== 'complete') {
+      setLoading(true);
+      try {
+        await saveStepData(updatedData);
+      } catch (err) {
+        console.error('Error saving step data:', err);
+        setError(err.response?.data?.message || 'Failed to save data. Please try again.');
+        setLoading(false);
+        return; // Don't proceed to next step if save fails
+      }
+      setLoading(false);
+    }
+
     // Move to next step
     setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
   };
@@ -99,9 +106,8 @@ function App() {
   };
 
   const handleSkip = () => {
-    if (window.wpErpOnboarding?.adminUrl) {
-      window.location.href = window.wpErpOnboarding.adminUrl;
-    }
+    // Skip current step and move to next step
+    setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
   };
 
   const handleComplete = async () => {

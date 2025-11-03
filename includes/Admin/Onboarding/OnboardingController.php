@@ -39,6 +39,15 @@ class OnboardingController extends REST_Controller {
             ],
         ] );
 
+        // Save step data - saves data after each step
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/save-step', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'save_step' ],
+                'permission_callback' => [ $this, 'check_permission' ],
+            ],
+        ] );
+
         // Get onboarding status and initial data
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/status', [
             [
@@ -59,21 +68,53 @@ class OnboardingController extends REST_Controller {
     }
 
     /**
-     * Complete onboarding process - Save all data atomically
+     * Complete onboarding process - Create leave policies and mark complete
+     *
+     * Note: All data is already saved via save_step() on each step.
+     * This method only handles leave policy creation if enabled.
      *
      * @param \WP_REST_Request $request
      * @return WP_REST_Response|WP_Error
      */
     public function complete_onboarding( $request ) {
-        // Get all form data
         $data = $request->get_json_params();
 
         if ( empty( $data ) ) {
             $data = [];
         }
 
-        // Debug: Log received data
-        error_log( 'ERP Onboarding Data Received: ' . print_r( $data, true ) );
+        // Create default leave policies if leave management is enabled
+        $enable_leave = get_option( 'erp_enable_leave_management', false );
+
+        if ( $enable_leave && ! empty( $data['leaveYears'] ) ) {
+            // Check if policies already exist to avoid duplicates
+            global $wpdb;
+            $policies_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_leave_policies" );
+
+            if ( (int) $policies_count === 0 ) {
+                $this->create_default_leave_policies( $data['leaveYears'] );
+            }
+        }
+
+        return rest_ensure_response( [
+            'success'      => true,
+            'message'      => __( 'Onboarding completed successfully!', 'erp' ),
+            'redirect_url' => admin_url( 'admin.php?page=erp' ),
+        ] );
+    }
+
+    /**
+     * Save step data - called after each step (except import)
+     *
+     * @param \WP_REST_Request $request
+     * @return WP_REST_Response|WP_Error
+     */
+    public function save_step( $request ) {
+        $data = $request->get_json_params();
+
+        if ( empty( $data ) ) {
+            $data = [];
+        }
 
         // 1. Save Basic Settings (Step 1)
         if ( ! empty( $data['companyName'] ) ) {
@@ -83,55 +124,82 @@ class OnboardingController extends REST_Controller {
             ] );
         }
 
-        // Convert month name to number (1-12) to match existing system format
-        $month_map = [
-            'january' => '1', 'february' => '2', 'march' => '3', 'april' => '4',
-            'may' => '5', 'june' => '6', 'july' => '7', 'august' => '8',
-            'september' => '9', 'october' => '10', 'november' => '11', 'december' => '12',
-        ];
-        $financial_month = isset( $data['financialYearStarts'] )
-            ? ( isset( $month_map[ strtolower( $data['financialYearStarts'] ) ] )
-                ? $month_map[ strtolower( $data['financialYearStarts'] ) ]
-                : '1' )
-            : '1';
+        if ( isset( $data['financialYearStarts'] ) || isset( $data['companyStartDate'] ) ) {
+            $month_map = [
+                'january' => '1', 'february' => '2', 'march' => '3', 'april' => '4',
+                'may' => '5', 'june' => '6', 'july' => '7', 'august' => '8',
+                'september' => '9', 'october' => '10', 'november' => '11', 'december' => '12',
+            ];
 
-        // Get existing settings to preserve unrelated fields
-        $existing_settings = get_option( 'erp_settings_general', [] );
+            $existing_settings = get_option( 'erp_settings_general', [] );
+            $updated_settings = $existing_settings;
 
-        $updated_settings = array_merge( $existing_settings, [
-            'gen_financial_month' => $financial_month,
-            'gen_com_start'       => isset( $data['companyStartDate'] ) ? sanitize_text_field( $data['companyStartDate'] ) : '',
-        ] );
+            if ( isset( $data['financialYearStarts'] ) ) {
+                $financial_month = isset( $month_map[ strtolower( $data['financialYearStarts'] ) ] )
+                    ? $month_map[ strtolower( $data['financialYearStarts'] ) ]
+                    : '1';
+                $updated_settings['gen_financial_month'] = $financial_month;
+            }
 
-        update_option( 'erp_settings_general', $updated_settings );
+            if ( isset( $data['companyStartDate'] ) ) {
+                $updated_settings['gen_com_start'] = sanitize_text_field( $data['companyStartDate'] );
+            }
+
+            update_option( 'erp_settings_general', $updated_settings );
+        }
 
         // 2. Save Organization (Departments & Designations) (Step 2)
-        if ( ! empty( $data['departments'] ) && is_array( $data['departments'] ) ) {
+        if ( isset( $data['departments'] ) && is_array( $data['departments'] ) ) {
+            // Get existing departments
+            $existing_departments = erp_hr_get_departments( [ 'number' => -1 ] );
+            $existing_dept_names = array_map( function( $dept ) {
+                return strtolower( trim( $dept->title ) );
+            }, $existing_departments );
+
+            // Only add departments that don't exist
             foreach ( $data['departments'] as $department ) {
                 if ( ! empty( $department ) ) {
-                    erp_hr_create_department( [
-                        'title' => sanitize_text_field( $department ),
-                    ] );
+                    $dept_name_lower = strtolower( trim( sanitize_text_field( $department ) ) );
+
+                    // Check if department already exists (case-insensitive)
+                    if ( ! in_array( $dept_name_lower, $existing_dept_names ) ) {
+                        erp_hr_create_department( [
+                            'title' => sanitize_text_field( $department ),
+                        ] );
+                        // Add to existing list to prevent duplicates within same save
+                        $existing_dept_names[] = $dept_name_lower;
+                    }
                 }
             }
         }
 
-        if ( ! empty( $data['designations'] ) && is_array( $data['designations'] ) ) {
+        if ( isset( $data['designations'] ) && is_array( $data['designations'] ) ) {
+            // Get existing designations
+            $existing_designations = erp_hr_get_designations( [ 'number' => -1 ] );
+            $existing_desig_names = array_map( function( $desig ) {
+                return strtolower( trim( $desig->title ) );
+            }, $existing_designations );
+
+            // Only add designations that don't exist
             foreach ( $data['designations'] as $designation ) {
                 if ( ! empty( $designation ) ) {
-                    erp_hr_create_designation( [
-                        'title' => sanitize_text_field( $designation ),
-                    ] );
+                    $desig_name_lower = strtolower( trim( sanitize_text_field( $designation ) ) );
+
+                    // Check if designation already exists (case-insensitive)
+                    if ( ! in_array( $desig_name_lower, $existing_desig_names ) ) {
+                        erp_hr_create_designation( [
+                            'title' => sanitize_text_field( $designation ),
+                        ] );
+                        // Add to existing list to prevent duplicates within same save
+                        $existing_desig_names[] = $desig_name_lower;
+                    }
                 }
             }
         }
 
-        // 3. Save Import Settings (Step 3)
-        // CSV file upload is handled separately via existing import system
+        // 3. Skip Import (Step 3) - handled separately
 
         // 4. Save Module & Workday Settings (Step 4)
-
-        // Save leave years (financial years for leave management)
         if ( ! empty( $data['leaveYears'] ) && is_array( $data['leaveYears'] ) ) {
             $leave_years = [];
             foreach ( $data['leaveYears'] as $leave_year ) {
@@ -145,50 +213,22 @@ class OnboardingController extends REST_Controller {
                 }
             }
 
-            // Save all leave years using the same function as the old setup wizard
             if ( ! empty( $leave_years ) ) {
-                $result = erp_settings_save_leave_years( $leave_years );
-                if ( is_wp_error( $result ) ) {
-                    error_log( 'ERP Onboarding: Failed to save leave years - ' . $result->get_error_message() );
-                }
+                erp_settings_save_leave_years( $leave_years );
             }
         }
 
-        // Save leave management preference and create default leave types/policies
         if ( isset( $data['enableLeaveManagement'] ) ) {
-            $enable_leave = (bool) $data['enableLeaveManagement'];
-            update_option( 'erp_enable_leave_management', $enable_leave );
-            
-            // If enabled, create default leave types and policies for the first financial year
-            if ( $enable_leave && ! empty( $data['leaveYears'] ) ) {
-                $this->create_default_leave_policies( $data['leaveYears'] );
+            update_option( 'erp_enable_leave_management', (bool) $data['enableLeaveManagement'] );
+        }
+
+        if ( ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] ) ) {
+            foreach ( $data['workingDays'] as $day => $hours ) {
+                update_option( sanitize_text_field( $day ), sanitize_text_field( $hours ) );
             }
+            update_option( 'erp_settings_erp-hr_workdays', $data['workingDays'] );
         }
 
-        // Save working days - use defaults if not provided
-        $default_working_days = [
-            'mon' => '8',
-            'tue' => '8',
-            'wed' => '8',
-            'thu' => '8',
-            'fri' => '8',
-            'sat' => '0',
-            'sun' => '0',
-        ];
-
-        $working_days_to_save = ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] )
-            ? $data['workingDays']
-            : $default_working_days;
-
-        // Save to individual options (what HR Settings reads from)
-        foreach ( $working_days_to_save as $day => $hours ) {
-            update_option( sanitize_text_field( $day ), sanitize_text_field( $hours ) );
-        }
-
-        // Also save to HR workdays option for consistency
-        update_option( 'erp_settings_erp-hr_workdays', $working_days_to_save );
-
-        // Save working hours
         if ( ! empty( $data['workingHours'] ) && is_array( $data['workingHours'] ) ) {
             update_option( 'erp_working_hours', [
                 'start' => sanitize_text_field( $data['workingHours']['start'] ?? '09:00' ),
@@ -196,18 +236,9 @@ class OnboardingController extends REST_Controller {
             ] );
         }
 
-        // Mark onboarding as complete
-        update_option( 'erp_onboarding_completed', true );
-        update_option( 'erp_onboarding_completed_at', current_time( 'mysql' ) );
-        update_option( 'erp_setup_wizard_ran', '1' );
-
-        // Remove the onboarding redirect flag
-        delete_option( 'erp_activation_redirect' );
-
         return rest_ensure_response( [
-            'success'      => true,
-            'message'      => __( 'Onboarding completed successfully!', 'erp' ),
-            'redirect_url' => admin_url( 'admin.php?page=erp' ),
+            'success' => true,
+            'message' => __( 'Step data saved successfully!', 'erp' ),
         ] );
     }
 
@@ -218,7 +249,6 @@ class OnboardingController extends REST_Controller {
      * @return WP_REST_Response
      */
     public function get_status( $request ) {
-        $completed = get_option( 'erp_onboarding_completed', false );
         $company   = new \WeDevs\ERP\Company();
         $general_settings = get_option( 'erp_settings_general', [] );
 
@@ -250,18 +280,31 @@ class OnboardingController extends REST_Controller {
                 $leave_years[] = [
                     'id'         => $fy['id'],
                     'fy_name'    => $fy['fy_name'],
-                    'start_date' => $fy['start_date'],
-                    'end_date'   => $fy['end_date'],
+                    // Convert timestamp to Y-m-d format for date inputs
+                    'start_date' => is_numeric( $fy['start_date'] ) ? date( 'Y-m-d', $fy['start_date'] ) : $fy['start_date'],
+                    'end_date'   => is_numeric( $fy['end_date'] ) ? date( 'Y-m-d', $fy['end_date'] ) : $fy['end_date'],
                 ];
             }
         }
 
-        // Get working days
+        // Get working days - check individual options first, then fallback to workdays option
         $workingDays = [];
         $days = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
+        $saved_workdays = get_option( 'erp_settings_erp-hr_workdays', [] );
+
         foreach ( $days as $day ) {
-            $day_key = 'erp_' . $day;
-            $workingDays[ $day ] = $general_settings[ $day_key ] ?? '8';
+            // Try individual option first (saved by onboarding)
+            $day_value = get_option( $day, null );
+
+            if ( $day_value !== null ) {
+                $workingDays[ $day ] = $day_value;
+            } elseif ( isset( $saved_workdays[ $day ] ) ) {
+                // Fallback to workdays option
+                $workingDays[ $day ] = $saved_workdays[ $day ];
+            } else {
+                // Default: Mon-Fri = 8hrs, Sat-Sun = 0hrs
+                $workingDays[ $day ] = in_array( $day, [ 'sat', 'sun' ] ) ? '0' : '8';
+            }
         }
 
         // Get working hours
@@ -270,8 +313,12 @@ class OnboardingController extends REST_Controller {
             'end'   => '17:00',
         ] );
 
+        // Check if leave policies already exist
+        global $wpdb;
+        $policies_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_leave_policies" );
+        $has_leave_policies = (int) $policies_count > 0;
+
         $data = [
-            'completed' => (bool) $completed,
             // Step 1 - Basic
             'companyName'          => $company->name ?? '',
             'companyStartDate'     => $general_settings['gen_com_start'] ?? '',
@@ -282,14 +329,11 @@ class OnboardingController extends REST_Controller {
             // Step 3 - Import (handled separately)
             // Step 4 - Module & Workday
             'leaveYears'           => $leave_years,
-            'enableLeaveManagement' => (bool) get_option( 'erp_enable_leave_management', true ),
+            'enableLeaveManagement' => $has_leave_policies ? false : (bool) get_option( 'erp_enable_leave_management', true ),
+            'hasLeavePolicies'     => $has_leave_policies,
             'workingDays'          => $workingDays,
             'workingHours'         => $working_hours,
         ];
-
-        if ( $completed ) {
-            $data['completed_at'] = get_option( 'erp_onboarding_completed_at' );
-        }
 
         return rest_ensure_response( $data );
     }

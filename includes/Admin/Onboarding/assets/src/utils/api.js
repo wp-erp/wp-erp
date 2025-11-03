@@ -30,6 +30,10 @@ export const getOnboardingStatus = () => {
   return apiClient.get('/onboarding/status');
 };
 
+export const saveStepData = (data) => {
+  return apiClient.post('/onboarding/save-step', data);
+};
+
 export const completeOnboarding = (data) => {
   return apiClient.post('/onboarding/complete', data);
 };

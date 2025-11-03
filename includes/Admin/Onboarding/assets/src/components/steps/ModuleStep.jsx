@@ -429,8 +429,9 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                             <div
                                 className="rounded-lg p-8 mb-6"
                                 style={{
-                                    backgroundColor: "#e0f2fe",
-                                    border: "1px solid #bfdbfe"
+                                    backgroundColor: initialData.hasLeavePolicies ? "#f1f5f9" : "#e0f2fe",
+                                    border: initialData.hasLeavePolicies ? "1px solid #cbd5e1" : "1px solid #bfdbfe",
+                                    opacity: initialData.hasLeavePolicies ? 0.6 : 1
                                 }}
                             >
                                 <div className="flex items-center gap-4">
@@ -442,18 +443,20 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                                 formData.enableLeaveManagement
                                             }
                                             onChange={() =>
-                                                handleToggle(
+                                                !initialData.hasLeavePolicies && handleToggle(
                                                     "enableLeaveManagement"
                                                 )
                                             }
+                                            disabled={initialData.hasLeavePolicies}
                                             className="sr-only"
                                         />
                                         <label
                                             htmlFor="enableLeaveManagement"
-                                            className="flex items-center cursor-pointer"
+                                            className="flex items-center"
                                             style={{
                                                 display: "flex",
-                                                visibility: "visible"
+                                                visibility: "visible",
+                                                cursor: initialData.hasLeavePolicies ? "not-allowed" : "pointer"
                                             }}
                                         >
                                             <span
@@ -490,13 +493,11 @@ const ModuleStep = ({ onNext, initialData = {} }) => {
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-slate-500 text-sm leading-5 m-0">
-                                            Generate pre-default leave policies
-                                            for the current year (WPERP will
-                                            automatically create leave types like
-                                            Sick Leave, Casual Leave, Annual Leave,
-                                            Maternity Leave, and Paternity Leave
-                                            with appropriate leave days for the first
-                                            financial year)
+                                            {initialData.hasLeavePolicies ? (
+                                                <>Leave policies have already been generated. You can manage them from HR → Leave → Policies.</>
+                                            ) : (
+                                                <>Generate pre-default leave policies for the current year (WPERP will automatically create leave types like Sick Leave, Casual Leave, Annual Leave, Maternity Leave, and Paternity Leave with appropriate leave days for the first financial year)</>
+                                            )}
                                         </p>
                                     </div>
                                 </div>
