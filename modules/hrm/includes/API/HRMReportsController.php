@@ -174,7 +174,7 @@ class HRMReportsController extends REST_Controller {
         ];
 
         if ( ! in_array( $request['type'], [ 'summary', 'list' ] ) ) {
-            return new WP_Error( 'rest_performance_invalid_type', __( 'Invalid Type received' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_performance_invalid_type', __( 'Invalid Type received', 'erp' ), [ 'status' => 400 ] );
         }
 
         $formatted_items = [];
