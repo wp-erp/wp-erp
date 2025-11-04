@@ -200,7 +200,7 @@ class ValidateData {
                 return $this->validate_field( 'Date of birth', $dt_value, $type, 'max:20|is_date:true' );
 
             case 'reporting_to':
-                return $this->validate_field( 'Reporting to', $dt_value, $type, 'max:20|' );
+                return $this->validate_field( 'Reporting to', $dt_value, $type, 'max:60|email:true' );
 
             case 'pay_rate':
                 return $this->validate_field( 'Pay rate', $dt_value, $type, 'is_valid_amount:true' );
