@@ -662,6 +662,16 @@ class Ajax {
      * @return void
      */
     public function check_people() {
+        // Verify nonce for CSRF protection
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
+            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+        }
+
+        // Check if user has permission to access contact data
+        if ( ! current_user_can( 'erp_crm_list_contact' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $email = isset( $_REQUEST['email'] ) ? sanitize_email( wp_unslash( $_REQUEST['email'] ) ) : false;
 
         if ( ! $email ) {
@@ -676,10 +686,12 @@ class Ajax {
             $peep = \WeDevs\ERP\Framework\Models\People::with( 'types' )->whereUserId( $user->ID )->first();
 
             if ( null === $peep ) {
-                $user->data->types = 'wp_user';
-                $people            = $user;
+                // Create a simple object for WP users not in ERP
+                $people = new \stdClass();
+                $people->id = null; // No ERP ID for WP-only users
+                $people->types = array( 'wp_user' );
             } else {
-                $people        = (object) $peep->toArray();
+                $people = (object) $peep->toArray();
                 $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
             }
         }
@@ -689,8 +701,15 @@ class Ajax {
             $this->send_error();
         }
 
+        // Return only essential, non-sensitive information
+        $safe_data = array(
+            'exists' => true,
+            'id' => isset( $people->id ) ? $people->id : null,
+            'types' => isset( $people->types ) ? $people->types : array()
+        );
+
         // seems like we found one
-        $this->send_success( $people );
+        $this->send_success( $safe_data );
     }
 
     /**
