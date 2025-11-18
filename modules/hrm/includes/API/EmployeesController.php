@@ -1542,6 +1542,16 @@ class EmployeesController extends REST_Controller {
             if ( in_array( 'roles', $include_params ) ) {
                 $data['roles'] = $item->get_roles();
             }
+
+            // Include job histories if requested
+            if ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) {
+                $histories = $item->get_job_histories( 'all' );
+                
+                // Format for frontend consumption
+                $data['employment_history'] = isset( $histories['employee'] ) ? $histories['employee'] : [];
+                $data['compensation_history'] = isset( $histories['compensation'] ) ? $histories['compensation'] : [];
+                $data['job_history'] = isset( $histories['job'] ) ? $histories['job'] : [];
+            }
         }
 
         $data = array_merge( $data, $additional_fields );
