@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.8.2
-Requires PHP: 7.2
-Stable tag: 1.16.6
+Tested up to: 6.8
+Requires PHP: 7.3
+Stable tag: 1.16.7
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -324,10 +324,16 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
+= v1.16.7 → November 28, 2025
+--------------------------
+* [Fixed] Subscriber level authorization to prevent fetching CRM data .
+* [Fixed] Translation and escaping.
+
+
 = v1.16.6 → November 4, 2025
 --------------------------
 * [Added] Employee name display in the Birthday widget.
-* [Fix] Tooltip flickering issue in the Birthday widget.
+* [Fixed] Tooltip flickering issue in the Birthday widget.
 * [Fixed] Date format issue in Employee CSV import/export.
 * [Fixed] Text domain inconsistency in some files.
 * [Update] Validation rules for the reporting_to email field; increased allowed email length..

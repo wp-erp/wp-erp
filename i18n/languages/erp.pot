@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.16.6\n"
+"Project-Id-Version: WP ERP 1.16.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2025-11-04 11:07:00+00:00\n"
+"POT-Creation-Date: 2025-11-28 11:42:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,251 +28,6 @@ msgstr ""
 
 #: modules/crm/views/js-templates/customer-import-users.php:111
 msgid "100"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/base/Dropdown.vue:8
-#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
-msgid "Dropdown"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
-msgid "Oops! No item found."
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
-#: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:73
-msgid "More"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Framework/ERP_Settings_Page.php:474
-#: includes/Settings/Template.php:499
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
-#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
-#: modules/accounting/assets/src/admin/components/base/Media.vue:28
-msgid "Upload Image"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
-msgid "Select date"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Admin/views/tools/general.php:64
-#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
-#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
-#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
-#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
-#: includes/Settings/assets/src/components/license/License.vue:34
-msgid "Save Changes"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
-msgid "Get WooCommerce Extension"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
-msgid "Activate WooCommerce"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
-msgid "Get WP ERP Pro"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
-msgid "Test Connection"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
-msgid "Testing Connection"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:69
-msgid " Test Connection"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:75
-msgid " OK"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:227
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:233
-#: modules/accounting/assets/src/admin/components/people/People.vue:97
-#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:109
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:94
-#: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:89
-#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:74
-#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:74
-#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:84
-#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:78
-#: modules/crm/assets/js/crm-contacts.js:306
-#: modules/crm/assets/js/crm-contacts.js:1157
-#: modules/crm/includes/CampaignListTable.php:89
-#: modules/crm/includes/CampaignListTable.php:115
-#: modules/crm/includes/ContactGroupListTable.php:123
-#: modules/crm/includes/ContactGroupListTable.php:159
-#: modules/crm/includes/ContactSubscriberListTable.php:200
-#: modules/crm/includes/ContactSubscriberListTable.php:219
-#: modules/crm/includes/functions-localize.php:14
-#: modules/hrm/assets/js/requests.js:311
-#: modules/hrm/includes/DepartmentListTable.php:216
-#: modules/hrm/includes/DepartmentWalker.php:43
-#: modules/hrm/includes/DesignationListTable.php:85
-#: modules/hrm/includes/DesignationListTable.php:110
-#: modules/hrm/includes/EmployeeListTable.php:231
-#: modules/hrm/includes/EntitlementListTable.php:228
-#: modules/hrm/includes/EntitlementListTable.php:268
-#: modules/hrm/includes/LeavePoliciesListTable.php:214
-#: modules/hrm/includes/LeavePoliciesListTable.php:261
-#: modules/hrm/includes/LeavePolicyNameListTable.php:41
-#: modules/hrm/includes/LeavePolicyNameListTable.php:113
-#: modules/hrm/includes/LeaveRequestsListTable.php:274
-#: modules/hrm/includes/LeaveRequestsListTable.php:301
-#: modules/hrm/views/employee/tab-notes-row.php:19
-#: modules/hrm/views/employee/tab-notes.php:48
-#: modules/hrm/views/js-templates/row-dept.php:11
-#: modules/hrm/views/js-templates/row-desig.php:11
-#: modules/hrm/views/js-templates/row-employee.php:12
-#: modules/hrm/views/leave/holiday.php:114
-#: modules/hrm/views/leave/holiday.php:155
-msgid "Delete"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:228
-msgid "Are you sure to delete this ?"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:119
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:83
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:231
-#: includes/Settings/assets/src/components/integration/Integration.vue:99
-#: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
-#: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
-#: modules/accounting/assets/src/admin/components/people/ImportModal.vue:61
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:140
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:252
-#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:33
-#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:51
-#: modules/accounting/assets/src/admin/components/products/ExportModal.vue:59
-#: modules/accounting/assets/src/admin/components/products/ImportModal.vue:158
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:67
-#: modules/crm/assets/js/crm-contacts.js:742
-#: modules/crm/assets/js/vue-table.js:402
-#: modules/crm/views/company/single.php:155
-#: modules/crm/views/contact/single.php:162
-#: modules/crm/views/js-templates/customer-email-note.php:66
-#: modules/crm/views/js-templates/customer-log-activity.php:77
-#: modules/crm/views/js-templates/customer-newnote.php:42
-#: modules/crm/views/js-templates/customer-schedule-note.php:141
-#: modules/crm/views/js-templates/customer-tasks-note.php:68
-#: modules/hrm/HRM.php:238 modules/hrm/assets/js/requests.js:582
-#: modules/hrm/includes/AnnouncementListTable.php:259
-#: modules/hrm/includes/EmployeeListTable.php:93
-#: modules/hrm/includes/LeaveRequestsListTable.php:666
-#: modules/hrm/views/requests.php:42
-msgid "Cancel"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:160
-#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:18
-msgid "Template Name"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Settings/Email.php:458
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:164
-#: includes/Settings/assets/src/components/integration/Integration.vue:148
-#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
-#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
-#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:75
-#: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:277
-#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
-#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:62
-#: modules/crm/includes/SubscriptionWidget.php:71
-#: modules/crm/views/js-templates/new-contact-group.php:16
-#: modules/hrm/includes/LeavePoliciesListTable.php:167
-#: modules/hrm/includes/LeavePolicyNameListTable.php:80
-#: modules/hrm/views/employee/tab-leave.php:134
-#: modules/hrm/views/js-templates/holiday.php:49
-#: modules/hrm/views/js-templates/new-dept.php:11
-#: modules/hrm/views/js-templates/new-designation.php:9
-#: modules/hrm/views/leave/holiday.php:97
-#: modules/hrm/views/leave/new-policy.php:120
-#: modules/hrm/views/leave/policy-name.php:50
-msgid "Description"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:168
-msgid "Disable / Enable"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Settings/Integration.php:15
-#: includes/Settings/assets/src/components/integration/Integration.vue:147
-msgid "Integration"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/license/License.vue:59
-msgid "Extension"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Framework/views/status-report.php:643
-#: includes/Settings/assets/src/components/license/License.vue:60
-msgid "Version"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/license/License.vue:61
-msgid "License Key"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Admin/views/tools.php:37
-#: includes/Settings/assets/src/components/license/License.vue:62
-#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:33
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:17
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:99
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:17
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:96
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:17
-#: modules/crm/includes/ContactSubscriberListTable.php:174
-#: modules/hrm/assets/js/requests.js:135 modules/hrm/assets/js/requests.js:172
-#: modules/hrm/assets/js/requests.js:181 modules/hrm/assets/js/requests.js:190
-#: modules/hrm/includes/EmployeeListTable.php:214
-#: modules/hrm/includes/LeaveRequestsListTable.php:77
-#: modules/hrm/views/employee/tab-leave.php:136
-#: modules/hrm/views/reporting/headcount.php:151
-msgid "Status"
-msgstr ""
-
-#: assets/js/erp-settings.js:1 includes/Admin/AddProMenu.php:187
-#: includes/Admin/AddProMenu.php:280 includes/Admin/AddProMenu.php:435
-#: includes/Admin/AdminMenu.php:132 includes/Admin/AdminMenu.php:138
-#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
-#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:352
-msgid "Settings"
-msgstr ""
-
-#: assets/js/erp-settings.js:1
-#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
-#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
-#: modules/accounting/assets/src/admin/components/products/Search.vue:9
-#: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:36
-msgid "Search"
 msgstr ""
 
 #: i18n/countries.php:14
@@ -16511,6 +16266,14 @@ msgstr ""
 msgid "Assign Bulk Shift"
 msgstr ""
 
+#: includes/Admin/AddProMenu.php:187 includes/Admin/AddProMenu.php:280
+#: includes/Admin/AddProMenu.php:435 includes/Admin/AdminMenu.php:132
+#: includes/Admin/AdminMenu.php:138
+#: includes/Settings/assets/src/components/menu/SettingsMenu.vue:3
+#: modules/accounting/includes/Classes/Admin.php:155 wp-erp.php:352
+msgid "Settings"
+msgstr ""
+
 #: includes/Admin/AddProMenu.php:220 includes/Framework/Modules.php:443
 msgid "Payroll"
 msgstr ""
@@ -16635,9 +16398,9 @@ msgstr ""
 msgid "Create Invoice"
 msgstr ""
 
-#: includes/Admin/Ajax.php:53 includes/Admin/Ajax.php:795
-#: includes/Admin/Ajax.php:997 includes/Admin/Ajax.php:1046
-#: modules/crm/includes/AjaxHandler.php:122
+#: includes/Admin/Ajax.php:53 includes/Admin/Ajax.php:672
+#: includes/Admin/Ajax.php:814 includes/Admin/Ajax.php:1016
+#: includes/Admin/Ajax.php:1065 modules/crm/includes/AjaxHandler.php:122
 #: modules/crm/includes/AjaxHandler.php:243
 #: modules/crm/includes/AjaxHandler.php:289
 #: modules/crm/includes/AjaxHandler.php:403
@@ -16785,59 +16548,108 @@ msgstr ""
 msgid "Log changes"
 msgstr ""
 
-#: includes/Admin/Ajax.php:668 includes/Admin/Ajax.php:715
+#: includes/Admin/Ajax.php:667 includes/Framework/Traits/Ajax.php:19
+#: modules/crm/includes/AjaxHandler.php:118
+#: modules/crm/includes/AjaxHandler.php:239
+#: modules/crm/includes/AjaxHandler.php:285
+#: modules/crm/includes/AjaxHandler.php:316
+#: modules/crm/includes/AjaxHandler.php:399
+#: modules/crm/includes/AjaxHandler.php:425
+#: modules/crm/includes/AjaxHandler.php:500
+#: modules/crm/includes/AjaxHandler.php:537
+#: modules/crm/includes/AjaxHandler.php:590
+#: modules/crm/includes/AjaxHandler.php:637
+#: modules/crm/includes/AjaxHandler.php:682
+#: modules/crm/includes/AjaxHandler.php:702
+#: modules/crm/includes/AjaxHandler.php:733
+#: modules/crm/includes/AjaxHandler.php:767
+#: modules/crm/includes/AjaxHandler.php:806
+#: modules/crm/includes/AjaxHandler.php:859
+#: modules/crm/includes/AjaxHandler.php:905
+#: modules/crm/includes/AjaxHandler.php:959
+#: modules/crm/includes/AjaxHandler.php:996
+#: modules/crm/includes/AjaxHandler.php:1024
+#: modules/crm/includes/AjaxHandler.php:1056
+#: modules/crm/includes/AjaxHandler.php:1073
+#: modules/crm/includes/AjaxHandler.php:1116
+#: modules/crm/includes/AjaxHandler.php:1155
+#: modules/crm/includes/AjaxHandler.php:1187
+#: modules/crm/includes/AjaxHandler.php:1228
+#: modules/crm/includes/AjaxHandler.php:1294
+#: modules/crm/includes/AjaxHandler.php:1576
+#: modules/crm/includes/AjaxHandler.php:1603
+#: modules/crm/includes/AjaxHandler.php:1665
+#: modules/crm/includes/AjaxHandler.php:1734
+#: modules/crm/includes/AjaxHandler.php:1761
+#: modules/crm/includes/AjaxHandler.php:1788
+#: modules/crm/includes/AjaxHandler.php:1811
+#: modules/crm/includes/AjaxHandler.php:1853
+#: modules/crm/includes/AjaxHandler.php:1894
+#: modules/crm/includes/AjaxHandler.php:1934
+#: modules/crm/includes/AjaxHandler.php:1987
+#: modules/crm/includes/ContactForms/ERPSettingsContactForms.php:182
+#: modules/crm/includes/ContactForms/ERPSettingsContactForms.php:252
+#: modules/crm/includes/Subscription.php:253
+#: modules/crm/includes/Subscription.php:784
+#: modules/hrm/includes/AjaxHandler.php:1254
+#: modules/hrm/includes/LeavePolicyNameListTable.php:139
+#: modules/hrm/includes/LeavePolicyNameListTable.php:146
+msgid "Error: Nonce verification failed"
+msgstr ""
+
+#: includes/Admin/Ajax.php:678 includes/Admin/Ajax.php:734
 #: includes/Settings/Ajax.php:337 modules/hrm/includes/AjaxHandler.php:1374
 msgid "No email address provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:711 includes/Settings/Ajax.php:326
+#: includes/Admin/Ajax.php:730 includes/Settings/Ajax.php:326
 msgid "No host address provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:719 includes/Settings/Ajax.php:341
+#: includes/Admin/Ajax.php:738 includes/Settings/Ajax.php:341
 msgid "No email password provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:723 includes/Settings/Ajax.php:330
+#: includes/Admin/Ajax.php:742 includes/Settings/Ajax.php:330
 msgid "No port address provided"
 msgstr ""
 
-#: includes/Admin/Ajax.php:741
+#: includes/Admin/Ajax.php:760
 msgid "Your IMAP connection is established."
 msgstr ""
 
-#: includes/Admin/Ajax.php:777
+#: includes/Admin/Ajax.php:796
 msgid "No credential set yet !"
 msgstr ""
 
-#: includes/Admin/Ajax.php:970 includes/Admin/Ajax.php:1084
-#: includes/Promotion.php:257 modules/accounting/Accounting.php:133
+#: includes/Admin/Ajax.php:989 includes/Admin/Ajax.php:1103
+#: includes/Promotion.php:257 modules/accounting/Accounting.php:138
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/Admin/Ajax.php:974 includes/Admin/Ajax.php:1089
+#: includes/Admin/Ajax.php:993 includes/Admin/Ajax.php:1108
 #: includes/Lib/WeFormsUpsell.php:312 includes/Lib/WeFormsUpsell.php:414
-#: includes/Promotion.php:261 modules/accounting/Accounting.php:137
+#: includes/Promotion.php:261 modules/accounting/Accounting.php:142
 msgid "You have no permission to do that"
 msgstr ""
 
-#: includes/Admin/Ajax.php:1026
+#: includes/Admin/Ajax.php:1045
 msgid "Redirecting..."
 msgstr ""
 
-#: includes/Admin/Ajax.php:1029
+#: includes/Admin/Ajax.php:1048
 msgid "Invalid input."
 msgstr ""
 
-#: includes/Admin/Ajax.php:1052
+#: includes/Admin/Ajax.php:1071
 msgid "Invalid confirmation text. Please give valid confirmation text."
 msgstr ""
 
-#: includes/Admin/Ajax.php:1058
+#: includes/Admin/Ajax.php:1077
 msgid "Sorry, Something went wrong. Please try again !"
 msgstr ""
 
-#: includes/Admin/Ajax.php:1063
+#: includes/Admin/Ajax.php:1082
 msgid ""
 "Resetted WP ERP successfully. You will be redirected soon. Please Setup WP "
 "ERP again or Skip to continue."
@@ -18243,6 +18055,15 @@ msgstr ""
 msgid "New Transaction"
 msgstr ""
 
+#: includes/Admin/views/tools/general.php:64
+#: includes/Settings/assets/src/components/act/financial-year/AcFinancialYears.vue:42
+#: includes/Settings/assets/src/components/crm/contact-forms/CrmContactFormSingle.vue:94
+#: includes/Settings/assets/src/components/hr/leave-years/HRLeaveYears.vue:41
+#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:121
+#: includes/Settings/assets/src/components/license/License.vue:34
+msgid "Save Changes"
+msgstr ""
+
 #: includes/Admin/views/tools/misc.php:3
 #: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:23
 #: includes/Settings/assets/src/components/email/email-connect/SmtpEmail.vue:22
@@ -18317,6 +18138,25 @@ msgstr ""
 
 #: includes/Admin/views/tools.php:36
 msgid "Misc."
+msgstr ""
+
+#: includes/Admin/views/tools.php:37
+#: includes/Settings/assets/src/components/license/License.vue:62
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:33
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:70
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesStats.vue:17
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:99
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesStats.vue:17
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:96
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesStats.vue:17
+#: modules/crm/includes/ContactSubscriberListTable.php:174
+#: modules/hrm/assets/js/requests.js:135 modules/hrm/assets/js/requests.js:172
+#: modules/hrm/assets/js/requests.js:181 modules/hrm/assets/js/requests.js:190
+#: modules/hrm/includes/EmployeeListTable.php:214
+#: modules/hrm/includes/LeaveRequestsListTable.php:77
+#: modules/hrm/views/employee/tab-leave.php:136
+#: modules/hrm/views/reporting/headcount.php:151
+msgid "Status"
 msgstr ""
 
 #: includes/Admin/views/tools.php:39
@@ -18480,6 +18320,14 @@ msgstr ""
 #: includes/Framework/ERP_Settings_Page.php:470
 #: includes/Settings/Template.php:495
 msgid "Delete this image?"
+msgstr ""
+
+#: includes/Framework/ERP_Settings_Page.php:474
+#: includes/Settings/Template.php:499
+#: includes/Settings/assets/src/components/base/ImagePicker.vue:7
+#: includes/Settings/assets/src/components/base/ImagePicker.vue:16
+#: modules/accounting/assets/src/admin/components/base/Media.vue:28
+msgid "Upload Image"
 msgstr ""
 
 #: includes/Framework/ERP_Settings_Page.php:736
@@ -18658,55 +18506,6 @@ msgstr ""
 
 #: includes/Framework/Modules.php:613
 msgid "Zendesk integration for WP ERP."
-msgstr ""
-
-#: includes/Framework/Traits/Ajax.php:19
-#: modules/crm/includes/AjaxHandler.php:118
-#: modules/crm/includes/AjaxHandler.php:239
-#: modules/crm/includes/AjaxHandler.php:285
-#: modules/crm/includes/AjaxHandler.php:316
-#: modules/crm/includes/AjaxHandler.php:399
-#: modules/crm/includes/AjaxHandler.php:425
-#: modules/crm/includes/AjaxHandler.php:500
-#: modules/crm/includes/AjaxHandler.php:537
-#: modules/crm/includes/AjaxHandler.php:590
-#: modules/crm/includes/AjaxHandler.php:637
-#: modules/crm/includes/AjaxHandler.php:682
-#: modules/crm/includes/AjaxHandler.php:702
-#: modules/crm/includes/AjaxHandler.php:733
-#: modules/crm/includes/AjaxHandler.php:767
-#: modules/crm/includes/AjaxHandler.php:806
-#: modules/crm/includes/AjaxHandler.php:859
-#: modules/crm/includes/AjaxHandler.php:905
-#: modules/crm/includes/AjaxHandler.php:959
-#: modules/crm/includes/AjaxHandler.php:996
-#: modules/crm/includes/AjaxHandler.php:1024
-#: modules/crm/includes/AjaxHandler.php:1056
-#: modules/crm/includes/AjaxHandler.php:1073
-#: modules/crm/includes/AjaxHandler.php:1116
-#: modules/crm/includes/AjaxHandler.php:1155
-#: modules/crm/includes/AjaxHandler.php:1187
-#: modules/crm/includes/AjaxHandler.php:1228
-#: modules/crm/includes/AjaxHandler.php:1294
-#: modules/crm/includes/AjaxHandler.php:1576
-#: modules/crm/includes/AjaxHandler.php:1603
-#: modules/crm/includes/AjaxHandler.php:1665
-#: modules/crm/includes/AjaxHandler.php:1734
-#: modules/crm/includes/AjaxHandler.php:1761
-#: modules/crm/includes/AjaxHandler.php:1788
-#: modules/crm/includes/AjaxHandler.php:1811
-#: modules/crm/includes/AjaxHandler.php:1853
-#: modules/crm/includes/AjaxHandler.php:1894
-#: modules/crm/includes/AjaxHandler.php:1934
-#: modules/crm/includes/AjaxHandler.php:1987
-#: modules/crm/includes/ContactForms/ERPSettingsContactForms.php:182
-#: modules/crm/includes/ContactForms/ERPSettingsContactForms.php:252
-#: modules/crm/includes/Subscription.php:253
-#: modules/crm/includes/Subscription.php:784
-#: modules/hrm/includes/AjaxHandler.php:1254
-#: modules/hrm/includes/LeavePolicyNameListTable.php:139
-#: modules/hrm/includes/LeavePolicyNameListTable.php:146
-msgid "Error: Nonce verification failed"
 msgstr ""
 
 #: includes/Framework/views/status-page.php:6
@@ -19346,6 +19145,11 @@ msgstr ""
 msgid "The name of the current active theme."
 msgstr ""
 
+#: includes/Framework/views/status-report.php:643
+#: includes/Settings/assets/src/components/license/License.vue:60
+msgid "Version"
+msgstr ""
+
 #: includes/Framework/views/status-report.php:644
 msgid "The installed version of the current active theme."
 msgstr ""
@@ -19789,6 +19593,29 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
+#: includes/Settings/Email.php:458
+#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:164
+#: includes/Settings/assets/src/components/integration/Integration.vue:148
+#: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:61
+#: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:61
+#: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:75
+#: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:277
+#: modules/accounting/assets/src/admin/components/tax/NewTaxCategory.vue:23
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:62
+#: modules/crm/includes/SubscriptionWidget.php:71
+#: modules/crm/views/js-templates/new-contact-group.php:16
+#: modules/hrm/includes/LeavePoliciesListTable.php:167
+#: modules/hrm/includes/LeavePolicyNameListTable.php:80
+#: modules/hrm/views/employee/tab-leave.php:134
+#: modules/hrm/views/js-templates/holiday.php:49
+#: modules/hrm/views/js-templates/new-dept.php:11
+#: modules/hrm/views/js-templates/new-designation.php:9
+#: modules/hrm/views/leave/holiday.php:97
+#: modules/hrm/views/leave/new-policy.php:120
+#: modules/hrm/views/leave/policy-name.php:50
+msgid "Description"
+msgstr ""
+
 #: includes/Settings/Email.php:526
 #: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:46
 #: includes/Settings/assets/src/components/integration/Integration.vue:31
@@ -19964,6 +19791,11 @@ msgstr ""
 msgid "Switching testing or production mode"
 msgstr ""
 
+#: includes/Settings/Integration.php:15
+#: includes/Settings/assets/src/components/integration/Integration.vue:147
+msgid "Integration"
+msgstr ""
+
 #: includes/Settings/Integration.php:35
 msgid "Integration Management"
 msgstr ""
@@ -20028,6 +19860,11 @@ msgstr ""
 msgid "End date"
 msgstr ""
 
+#: includes/Settings/assets/src/components/base/Dropdown.vue:8
+#: modules/accounting/assets/src/admin/components/base/Dropdown.vue:8
+msgid "Dropdown"
+msgstr ""
+
 #: includes/Settings/assets/src/components/base/ShowErrors.vue:4
 #: modules/accounting/assets/src/admin/components/base/ShowErrors.vue:4
 msgid "Please complete these fields"
@@ -20075,8 +19912,25 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:14
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:39
+msgid "Test Connection"
+msgstr ""
+
 #: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:15
 msgid "Click on the Above Button Before Saving the Setting"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:50
+msgid "Testing Connection"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:69
+msgid " Test Connection"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/email-connect/ImapEmail.vue:75
+msgid " OK"
 msgstr ""
 
 #: includes/Settings/assets/src/components/email/email-connect/MailgunEmail.vue:14
@@ -20144,6 +19998,46 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:119
+#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:83
+#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:231
+#: includes/Settings/assets/src/components/integration/Integration.vue:99
+#: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
+#: modules/accounting/assets/src/admin/components/people/ExportModal.vue:56
+#: modules/accounting/assets/src/admin/components/people/ImportModal.vue:61
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:140
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:252
+#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:33
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:51
+#: modules/accounting/assets/src/admin/components/products/ExportModal.vue:59
+#: modules/accounting/assets/src/admin/components/products/ImportModal.vue:158
+#: modules/accounting/assets/src/admin/components/transactions/TransactionsFilter.vue:67
+#: modules/crm/assets/js/crm-contacts.js:742
+#: modules/crm/assets/js/vue-table.js:402
+#: modules/crm/views/company/single.php:155
+#: modules/crm/views/contact/single.php:162
+#: modules/crm/views/js-templates/customer-email-note.php:66
+#: modules/crm/views/js-templates/customer-log-activity.php:77
+#: modules/crm/views/js-templates/customer-newnote.php:42
+#: modules/crm/views/js-templates/customer-schedule-note.php:141
+#: modules/crm/views/js-templates/customer-tasks-note.php:68
+#: modules/hrm/HRM.php:238 modules/hrm/assets/js/requests.js:582
+#: modules/hrm/includes/AnnouncementListTable.php:259
+#: modules/hrm/includes/EmployeeListTable.php:93
+#: modules/hrm/includes/LeaveRequestsListTable.php:666
+#: modules/hrm/views/requests.php:42
+msgid "Cancel"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:160
+#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:18
+msgid "Template Name"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/notifications/EmailNotification.vue:168
+msgid "Disable / Enable"
+msgstr ""
+
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:20
 #: includes/functions.php:3303
 msgid "Enable/Disable"
@@ -20155,6 +20049,53 @@ msgstr ""
 
 #: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:57
 msgid "Short Codes"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:227
+#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:233
+#: modules/accounting/assets/src/admin/components/people/People.vue:97
+#: modules/accounting/assets/src/admin/components/people/PeopleTransaction.vue:109
+#: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:94
+#: modules/accounting/assets/src/admin/components/tax/SingleTaxRate.vue:89
+#: modules/accounting/assets/src/admin/components/tax/TaxAgencies.vue:74
+#: modules/accounting/assets/src/admin/components/tax/TaxCategories.vue:74
+#: modules/accounting/assets/src/admin/components/tax/TaxRates.vue:84
+#: modules/accounting/assets/src/admin/components/tax/TaxZones.vue:78
+#: modules/crm/assets/js/crm-contacts.js:306
+#: modules/crm/assets/js/crm-contacts.js:1157
+#: modules/crm/includes/CampaignListTable.php:89
+#: modules/crm/includes/CampaignListTable.php:115
+#: modules/crm/includes/ContactGroupListTable.php:123
+#: modules/crm/includes/ContactGroupListTable.php:159
+#: modules/crm/includes/ContactSubscriberListTable.php:200
+#: modules/crm/includes/ContactSubscriberListTable.php:219
+#: modules/crm/includes/functions-localize.php:14
+#: modules/hrm/assets/js/requests.js:311
+#: modules/hrm/includes/DepartmentListTable.php:216
+#: modules/hrm/includes/DepartmentWalker.php:43
+#: modules/hrm/includes/DesignationListTable.php:85
+#: modules/hrm/includes/DesignationListTable.php:110
+#: modules/hrm/includes/EmployeeListTable.php:231
+#: modules/hrm/includes/EntitlementListTable.php:228
+#: modules/hrm/includes/EntitlementListTable.php:268
+#: modules/hrm/includes/LeavePoliciesListTable.php:214
+#: modules/hrm/includes/LeavePoliciesListTable.php:261
+#: modules/hrm/includes/LeavePolicyNameListTable.php:41
+#: modules/hrm/includes/LeavePolicyNameListTable.php:113
+#: modules/hrm/includes/LeaveRequestsListTable.php:274
+#: modules/hrm/includes/LeaveRequestsListTable.php:301
+#: modules/hrm/views/employee/tab-notes-row.php:19
+#: modules/hrm/views/employee/tab-notes.php:48
+#: modules/hrm/views/js-templates/row-dept.php:11
+#: modules/hrm/views/js-templates/row-desig.php:11
+#: modules/hrm/views/js-templates/row-employee.php:12
+#: modules/hrm/views/leave/holiday.php:114
+#: modules/hrm/views/leave/holiday.php:155
+msgid "Delete"
+msgstr ""
+
+#: includes/Settings/assets/src/components/email/templates/EmailTemplate.vue:228
+msgid "Are you sure to delete this ?"
 msgstr ""
 
 #: includes/Settings/assets/src/components/integration/Integration.vue:46
@@ -20169,12 +20110,40 @@ msgstr ""
 msgid "Test Dropbox Connection"
 msgstr ""
 
+#: includes/Settings/assets/src/components/layouts/BaseContentLayout.vue:76
+msgid "Select date"
+msgstr ""
+
 #: includes/Settings/assets/src/components/license/License.vue:28
 msgid "No extensions found."
 msgstr ""
 
+#: includes/Settings/assets/src/components/license/License.vue:59
+msgid "Extension"
+msgstr ""
+
+#: includes/Settings/assets/src/components/license/License.vue:61
+msgid "License Key"
+msgstr ""
+
+#: includes/Settings/assets/src/components/menu/SettingsSubMenu.vue:14
+#: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:73
+msgid "More"
+msgstr ""
+
+#: includes/Settings/assets/src/components/searchbar/SearchBar.vue:5
+#: modules/accounting/assets/src/admin/components/people/PeopleSearch.vue:9
+#: modules/accounting/assets/src/admin/components/products/Search.vue:9
+#: modules/crm/views/contact-groups.php:20 modules/hrm/views/employee.php:36
+msgid "Search"
+msgstr ""
+
 #: includes/Settings/assets/src/components/searchbar/SearchBar.vue:30
 msgid "Sorry ! Nothings found for your query. Please try again !"
+msgstr ""
+
+#: includes/Settings/assets/src/components/select/MultiSelect.vue:18
+msgid "Oops! No item found."
 msgstr ""
 
 #: includes/Settings/assets/src/components/select/MultiSelect.vue:70
@@ -20184,6 +20153,18 @@ msgstr ""
 
 #: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:12
 msgid "Connect with WooCommerce"
+msgstr ""
+
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:83
+msgid "Get WooCommerce Extension"
+msgstr ""
+
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:85
+msgid "Activate WooCommerce"
+msgstr ""
+
+#: includes/Settings/assets/src/components/woocommerce/WooCommerce.vue:89
+msgid "Get WP ERP Pro"
 msgstr ""
 
 #: includes/Updates/BP/ERPACCTBGProcess1_5_0.php:251
@@ -21266,11 +21247,19 @@ msgstr ""
 msgid "Something went wrong when resetting. Please try again."
 msgstr ""
 
-#: modules/accounting/Accounting.php:122
-#. translators: %1$s: type, %2$s: link, %3$s: type
+#: modules/accounting/Accounting.php:123
+#. translators: %1$s: 'install' or 'active', %2$s: link, %3$s: type
 msgid ""
 "Please %1$s <a href=\"%2$serp-pdf=%3$s\">WP ERP PDF</a> extension to get "
 "PDF export feature."
+msgstr ""
+
+#: modules/accounting/Accounting.php:124
+msgid "install"
+msgstr ""
+
+#: modules/accounting/Accounting.php:124
+msgid "active"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bank-accounts/BankAccounts.vue:6
