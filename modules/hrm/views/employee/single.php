@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 if ( $employee->get_status() == 'terminated' && ! current_user_can( 'erp_hr_manager' ) || ! is_admin() ) {
-    wp_die( __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
+    wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'erp' ) );
 }
 
 ?>

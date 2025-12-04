@@ -93,7 +93,7 @@ class Promotion {
                         <?php echo wp_kses( $offer->message, [ 'strong' => [], 'br' => [] ] ); ?>
                         <br>
                         <a class="link" target="_blank" href="<?php echo esc_url( $offer->link ); ?>">
-                            <?php printf( esc_html__( '%s', 'erp' ), $offer->btn_txt ); ?>
+                            <?php echo esc_html( $offer->btn_txt ); ?>
                         </a>
                     </p>
 

@@ -429,10 +429,16 @@ class ValidateData {
     public function check_unique_contact( $column, $value, $field_name ) {
         global $wpdb;
 
+        // Whitelist allowed columns for security
+        $allowed_columns = array( 'name', 'email', 'phone', 'mobile' );
+        if ( ! in_array( $column, $allowed_columns, true ) ) {
+            return;
+        }
+
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_peoples WHERE $column = %s",
-                [ $value ]
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_peoples WHERE {$column} = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column name is validated against whitelist above.
+                $value
             )
         );
 
@@ -451,9 +457,15 @@ class ValidateData {
     public function check_unique_employee( $column, $value, $field_name ) {
         global $wpdb;
 
+        // Whitelist allowed columns for security
+        $allowed_columns = array( 'employee_id', 'user_email', 'email' );
+        if ( ! in_array( $column, $allowed_columns, true ) ) {
+            return;
+        }
+
         $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees as emp LEFT JOIN {$wpdb->prefix}users as users ON emp.user_id = users.ID WHERE $column = %s",
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees as emp LEFT JOIN {$wpdb->prefix}users as users ON emp.user_id = users.ID WHERE {$column} = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column name is validated against whitelist above.
                 $value
             )
         );
@@ -473,10 +485,16 @@ class ValidateData {
     public function check_unique_product( $column, $value, $field_name ) {
         global $wpdb;
 
-        $result =  $wpdb->get_var(
+        // Whitelist allowed columns for security
+        $allowed_columns = array( 'name', 'sku', 'product_type_id' );
+        if ( ! in_array( $column, $allowed_columns, true ) ) {
+            return;
+        }
+
+        $result = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_acct_products WHERE $column = %s",
-                [ $value ]
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_acct_products WHERE {$column} = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column name is validated against whitelist above.
+                $value
             )
         );
 
