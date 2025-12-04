@@ -1217,12 +1217,14 @@ function intercept_bulk_wpuser_delete() {
             $user_list = '<ul style="margin-left:20px;">' . implode('', $items) . '</ul>';
 
             wp_die(
-            sprintf(
-                /* translators: %s: List of usernames */
-                __('The following users have associated Employee profiles in WP ERP HRM and cannot be deleted. Please delete the Employee profiles first:%s', 'erp'),
-                $user_list
+            wp_kses_post(
+                sprintf(
+                    /* translators: %s: List of usernames */
+                    __('The following users have associated Employee profiles in WP ERP HRM and cannot be deleted. Please delete the Employee profiles first:%s', 'erp'),
+                    $user_list
+                )
             ),
-            __('Cannot Delete Users', 'erp'),
+            esc_html__('Cannot Delete Users', 'erp'),
             ['back_link' => true]
             );
         }
@@ -1240,8 +1242,8 @@ function intercept_single_user_delete($user_id) {
     if (wperp_hrm_user_has_employee($user_id)) {
         // Prevent deletion and redirect with error
         wp_die(
-            __('This user has an associated Employee profile in WP ERP HRM. Please delete the Employee profile first.', 'erp'),
-            __('Cannot Delete User', 'erp'),
+            esc_html__('This user has an associated Employee profile in WP ERP HRM. Please delete the Employee profile first.', 'erp'),
+            esc_html__('Cannot Delete User', 'erp'),
             ['back_link' => true]
         );
     }
