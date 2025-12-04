@@ -2496,14 +2496,23 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                 $add_or = ( $j === count( $val ) - 1 ) ? '' : ' OR ';
 
                                 if ( 'has_not' === $search_val ) {
-                                    $custom_sql['where'][] = $wpdb->prepare( "( $name.meta_key=%s AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $add_or", $field );
+                                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $name is a sanitized table alias constructed from controlled internal values.
+                                    $custom_sql['where'][] = $wpdb->prepare( "( {$name}.meta_key=%s AND ( {$name}.meta_value is null OR {$name}.meta_value = '' ) ) {$add_or}", $field );
                                 } elseif ( 'if_has' === $search_val ) {
-                                    $custom_sql['where'][] = $wpdb->prepare( "( $name.meta_key=%s AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $add_or", $field );
+                                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $name is a sanitized table alias constructed from controlled internal values.
+                                    $custom_sql['where'][] = $wpdb->prepare( "( {$name}.meta_key=%s AND ( {$name}.meta_value is not null AND {$name}.meta_value != '' ) ) {$add_or}", $field );
                                 } elseif ( 'BETWEEN' === $search_condition ) {
                                     $formatted_val         = explode( ',', $search_val );
-                                    $custom_sql['where'][] = $wpdb->prepare( "( $name.meta_key=%s AND ( $name.meta_value >= %s AND $name.meta_value <= %s ) ) $add_or", $field, $formatted_val[0], $formatted_val[1] );
+                                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $name is a sanitized table alias constructed from controlled internal values.
+                                    $custom_sql['where'][] = $wpdb->prepare( "( {$name}.meta_key=%s AND ( {$name}.meta_value >= %s AND {$name}.meta_value <= %s ) ) {$add_or}", $field, $formatted_val[0], $formatted_val[1] );
                                 } else {
-                                    $custom_sql['where'][] =  $wpdb->prepare( "( $name.meta_key=%s AND $name.meta_value $search_condition %s ) $add_or", $field, $search_val );
+                                    // Whitelist allowed SQL operators for security
+                                    $allowed_operators = array( '=', '!=', '<', '>', 'LIKE', 'NOT LIKE' );
+                                    if ( ! in_array( $search_condition, $allowed_operators, true ) ) {
+                                        $search_condition = '=';
+                                    }
+                                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $name is a sanitized table alias and $search_condition is validated against whitelist above.
+                                    $custom_sql['where'][] = $wpdb->prepare( "( {$name}.meta_key=%s AND {$name}.meta_value {$search_condition} %s ) {$add_or}", $field, $search_val );
                                 }
 
                                 $j ++;
@@ -4297,7 +4306,20 @@ function erp_crm_check_company_contact_relations( $id, $id_type ) {
             if ( $id_type === 'contact' ) {
                 $id_type = 'customer';
             }
-            $rel_count = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_crm_customer_companies WHERE {$id_type}_id = {$id}" );
+
+            // Whitelist allowed id_type values for security
+            $allowed_id_types = array( 'customer', 'company' );
+            if ( ! in_array( $id_type, $allowed_id_types, true ) ) {
+                return 0;
+            }
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column name is validated against whitelist above.
+            $rel_count = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT count(*) FROM {$wpdb->prefix}erp_crm_customer_companies WHERE {$id_type}_id = %d",
+                    absint( $id )
+                )
+            );
 
             return $rel_count;
         }
