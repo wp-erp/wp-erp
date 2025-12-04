@@ -329,7 +329,8 @@ class AjaxHandler {
 		/***** Check if file is csv start */
 		$mimes = array( 'application/vnd.ms-excel', 'text/csv' );
 
-		if ( in_array( sanitize_mime_type( wp_unslash( $_FILES['ics']['type'] ) ), $mimes, true ) ) {
+		$file_type = isset( $_FILES['ics']['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES['ics']['type'] ) ) : '';
+		if ( in_array( $file_type, $mimes, true ) ) {
 			$import_csv_data = import_holidays_csv( $temp_name );
 			$this->send_success( $import_csv_data );
 		}
@@ -398,20 +399,29 @@ class AjaxHandler {
 		$error_list = array();
 		$response   = '';
 
-		foreach ( $_POST['title'] as $key => $title ) {
-			$data[ $key ]['title'] = sanitize_text_field( wp_unslash( $title ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+		$titles = isset( $_POST['title'] ) && is_array( $_POST['title'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['title'] ) ) : array();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+		$starts = isset( $_POST['start'] ) && is_array( $_POST['start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['start'] ) ) : array();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+		$ends = isset( $_POST['end'] ) && is_array( $_POST['end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['end'] ) ) : array();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+		$descriptions = isset( $_POST['description'] ) && is_array( $_POST['description'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['description'] ) ) : array();
+
+		foreach ( $titles as $key => $title ) {
+			$data[ $key ]['title'] = $title;
 		}
 
-		foreach ( $_POST['start'] as $key => $start ) {
-			$data[ $key ]['start'] = sanitize_text_field( wp_unslash( $start ) );
+		foreach ( $starts as $key => $start ) {
+			$data[ $key ]['start'] = $start;
 		}
 
-		foreach ( $_POST['end'] as $key => $end ) {
-			$data[ $key ]['end'] = sanitize_text_field( wp_unslash( $end ) );
+		foreach ( $ends as $key => $end ) {
+			$data[ $key ]['end'] = $end;
 		}
 
-		foreach ( $_POST['description'] as $key => $description ) {
-			$data[ $key ]['description'] = sanitize_text_field( wp_unslash( $description ) );
+		foreach ( $descriptions as $key => $description ) {
+			$data[ $key ]['description'] = $description;
 		}
 
 		foreach ( $data as $holiday ) {
