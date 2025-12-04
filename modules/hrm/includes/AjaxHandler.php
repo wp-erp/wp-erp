@@ -399,14 +399,13 @@ class AjaxHandler {
 		$error_list = array();
 		$response   = '';
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
-		$titles = isset( $_POST['title'] ) && is_array( $_POST['title'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['title'] ) ) : array();
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
-		$starts = isset( $_POST['start'] ) && is_array( $_POST['start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['start'] ) ) : array();
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
-		$ends = isset( $_POST['end'] ) && is_array( $_POST['end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['end'] ) ) : array();
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+		// Extract and sanitize POST data - nonce already verified above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$titles       = isset( $_POST['title'] ) && is_array( $_POST['title'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['title'] ) ) : array();
+		$starts       = isset( $_POST['start'] ) && is_array( $_POST['start'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['start'] ) ) : array();
+		$ends         = isset( $_POST['end'] ) && is_array( $_POST['end'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['end'] ) ) : array();
 		$descriptions = isset( $_POST['description'] ) && is_array( $_POST['description'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['description'] ) ) : array();
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		foreach ( $titles as $key => $title ) {
 			$data[ $key ]['title'] = $title;

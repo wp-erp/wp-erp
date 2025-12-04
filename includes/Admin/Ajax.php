@@ -1069,7 +1069,8 @@ class Ajax {
             $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
         }
 
-        $reset_text = isset( $_POST['erp_reset_confirmation'] ) ? sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) ) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+        $reset_text = sanitize_text_field( wp_unslash( $_POST['erp_reset_confirmation'] ) );
 
         if ( 'Reset' !== $reset_text ) {
             $this->send_error( esc_html__( 'Invalid confirmation text. Please give valid confirmation text.', 'erp' ) );
