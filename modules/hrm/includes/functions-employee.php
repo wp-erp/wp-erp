@@ -1194,7 +1194,8 @@ function intercept_bulk_wpuser_delete() {
         $_REQUEST['action'] === 'delete' &&
         !empty($_REQUEST['users'])
     ) {
-        $users = (array) $_REQUEST['users'];
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- This is a filter hook for user deletion, nonce is verified by WordPress core. Values are cast to int via absint below.
+        $users = array_map( 'absint', (array) wp_unslash( $_REQUEST['users'] ) );
         $users_with_employee = [];
         foreach ($users as $user_id) {
             if (wperp_hrm_user_has_employee($user_id)) {

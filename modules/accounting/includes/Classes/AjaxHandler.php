@@ -56,7 +56,7 @@ class AjaxHandler {
             $this->send_error( erp_get_message ( [ 'type' => 'error_permission' ] ) );
         }
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce already verified above, data is sanitized in the loop below.
         $fyears = isset( $_POST['fyears'] ) && is_array( $_POST['fyears'] ) ? wp_unslash( $_POST['fyears'] ) : array();
 
         if ( empty( $fyears ) ) {
