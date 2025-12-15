@@ -212,6 +212,7 @@ class LeaveRequestsController extends REST_Controller {
             'employee_id'   => (int) $employee->employee_id,
             'employee_name' => $employee->display_name,
             'avatar_url'    => $employee->get_avatar_url( 80 ),
+            'status'       => (int) $item->status,
             'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
             'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
             'reason'        => $item->reason,
