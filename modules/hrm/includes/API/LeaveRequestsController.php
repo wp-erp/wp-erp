@@ -207,7 +207,8 @@ class LeaveRequestsController extends REST_Controller {
             $args['start_date'] = erp_current_datetime()->setTime( 0, 0 )->getTimestamp(); //today
             $args['end_date']   = erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp();
         }
-
+        
+        $args['status'] = $request['status'] ?? $args['status'] ?? '';
         $leave_requests = erp_hr_get_leave_requests( $args );
         $items          = $leave_requests['data'];
         $total          = $leave_requests['total'];
