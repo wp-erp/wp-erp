@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.16.5
+ * Version: 1.16.7
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -60,7 +60,7 @@ use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
 require_once __DIR__ . '/vendor/autoload.php';
-define( 'WPERP_VERSION', '1.16.5' );
+define( 'WPERP_VERSION', '1.16.6' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
 define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
@@ -351,7 +351,7 @@ final class WeDevs_ERP {
     public function plugin_action_links( $links ) {
         $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp' ) . '</a>';
         $links[] = '<a target="_blank" href="https://wperp.com/documentation/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">' . __( 'Docs', 'erp' ) . '</a>';
-        $links[] = '<a target="_blank" href="https://wperp.com/pricing/?nocache">' . __( 'Upgrade to Pro', 'erp' ) . '</a>';
+        $links[] = '<a target="_blank" href="https://wperp.com/pricing/?nocache=&utm_source=plugindashboard&utm_medium=upgradetopro&utm_campaign=pluginlist" style="font-weight:bold; color:#17b517;">' . __( 'Upgrade to Pro', 'erp' ) . '</a>';
         $links[] = '<a target="_blank" href="https://wperp.com/contact/">' . __( 'Get Support', 'erp' ) . '</a>';
 
         return $links;
