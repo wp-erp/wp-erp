@@ -207,7 +207,7 @@ class LeaveRequestsController extends REST_Controller {
             $args['start_date'] = erp_current_datetime()->setTime( 0, 0 )->getTimestamp(); //today
             $args['end_date']   = erp_current_datetime()->modify( 'last day of next month' )->setTime( 23, 59, 59 )->getTimestamp();
         }
-        
+
         $args['status'] = $request['status'] ?? $args['status'] ?? '';
         $leave_requests = erp_hr_get_leave_requests( $args );
         $items          = $leave_requests['data'];
@@ -229,7 +229,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Get a specific leave request
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -250,7 +250,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Create a leave request
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
@@ -279,7 +279,7 @@ class LeaveRequestsController extends REST_Controller {
 
     /**     * Update a leave request
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -322,7 +322,7 @@ class LeaveRequestsController extends REST_Controller {
 
     /**     * Approve a leave request
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -341,12 +341,7 @@ class LeaveRequestsController extends REST_Controller {
 
         $comments = isset($request['comments']) ? sanitize_textarea_field($request['comments']) : '';
 
-        $data = [
-            'status'  => 1, // Approved
-            'remarks' => $comments,
-        ];
-
-        $updated = erp_hr_leave_request_update_status($id, $data);
+         $updated = erp_hr_leave_request_update_status($id, 1, $comments);
 
         if (is_wp_error($updated)) {
             return $updated;
@@ -361,7 +356,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Reject a leave request
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -384,12 +379,10 @@ class LeaveRequestsController extends REST_Controller {
             return new WP_Error('rest_leave_request_missing_reason', __('Rejection reason is required.', 'erp'), ['status' => 400]);
         }
 
-        $data = [
-            'status'  => 3, // Rejected
-            'remarks' => $reason,
-        ];
 
-        $updated = erp_hr_leave_request_update_status($id, $data);
+        // $updated = erp_hr_leave_request_update_status($id, $data);
+
+        $updated = erp_hr_leave_request_update_status($id, 3, $reason);
 
         if (is_wp_error($updated)) {
             return $updated;
@@ -404,7 +397,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Delete a leave request
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -437,7 +430,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Bulk approve leave requests
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -475,12 +468,9 @@ class LeaveRequestsController extends REST_Controller {
                 continue;
             }
 
-            $data = [
-                'status'  => 1, // Approved
-                'remarks' => $comments,
-            ];
 
-            $updated = erp_hr_leave_request_update_status($id, $data);
+
+            $updated = erp_hr_leave_request_update_status($id, 1, $comments);
 
             if (is_wp_error($updated)) {
                 $results['failed'][] = [
@@ -505,7 +495,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Bulk reject leave requests
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -547,12 +537,8 @@ class LeaveRequestsController extends REST_Controller {
                 continue;
             }
 
-            $data = [
-                'status'  => 3, // Rejected
-                'remarks' => $reason,
-            ];
 
-            $updated = erp_hr_leave_request_update_status($id, $data);
+            $updated = erp_hr_leave_request_update_status($id, 3, $reason);
 
             if (is_wp_error($updated)) {
                 $results['failed'][] = [
@@ -577,7 +563,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Bulk delete leave requests
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -630,7 +616,7 @@ class LeaveRequestsController extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request request object
+     * @param \WP_REST_Request $request request object
      *
      * @return array $prepared_item
      */
@@ -670,13 +656,14 @@ class LeaveRequestsController extends REST_Controller {
      * Prepare a single user output for response
      *
      * @param object          $item
-     * @param WP_REST_Request $request           request object
+     * @param \WP_REST_Request $request           request object
      * @param array           $additional_fields (optional)
      *
      * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $employee = new Employee( $item->user_id );
+error_log(print_r( [$item], true ));
 
         $data = [
             'id'            => (int) $item->id,
@@ -689,6 +676,10 @@ class LeaveRequestsController extends REST_Controller {
             'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
             'reason'        => $item->reason,
             'comments'      => isset( $item->comments ) ? $item->comments : '',
+            'applied_on'    => erp_format_date( $item->created_at, 'Y-m-d H:i:s' ),
+            'policy_name'   => isset( $item->policy_name ) ? $item->policy_name : '',
+            'applied_days'   => (float) $item->days,
+            'available_days' => (float) $item->available,
         ];
 
         if ( isset( $request['include'] ) ) {
@@ -698,10 +689,10 @@ class LeaveRequestsController extends REST_Controller {
                 $policies_controller = new LeavePoliciesController();
 
                 $policy_id      = (int) $item->policy_id;
-                $data['policy'] = null;
+
 
                 if ( $policy_id ) {
-                    $policy         = $policies_controller->get_policy( ['id' => $policy_id ] );
+                    $policy         = $policies_controller->get_policy( array( 'id' => $policy_id ) );
                     $data['policy'] = ! is_wp_error( $policy ) ? $policy->get_data() : null;
                 }
             }
