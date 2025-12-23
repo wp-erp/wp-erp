@@ -58,6 +58,7 @@ class GoogleAuth {
         $client->addScope( Google_Service_Gmail::GMAIL_READONLY );
         $client->setRedirectUri( $this->get_redirect_url() );
         $client->setApprovalPrompt( 'force' );
+        $client->setState( wp_create_nonce( 'erp_google_auth' ) );
 
         $token = get_option( 'erp_google_access_token' );
 
@@ -101,7 +102,11 @@ class GoogleAuth {
     }
 
     public function get_disconnect_url() {
-        return add_query_arg( 'erp-auth-dc', 'google', admin_url( 'options-general.php' ) );
+        return wp_nonce_url(
+            add_query_arg( 'erp-auth-dc', 'google', admin_url( 'options-general.php' ) ),
+            'erp_google_disconnect',
+            'erp_nonce'
+        );
     }
 
     public function is_active() {
@@ -146,20 +151,44 @@ class GoogleAuth {
         if ( !isset( $_GET['erp-auth'] ) || !isset( $_GET['code'] ) ) {
             return;
         }
+
+        // Check user capability
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You do not have permission to perform this action.', 'erp' ) );
+        }
+
+        // Verify state parameter for CSRF protection
+        if ( ! isset( $_GET['state'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['state'] ) ), 'erp_google_auth' ) ) {
+            wp_die( esc_html__( 'Security check failed. Please try again.', 'erp' ) );
+        }
+
         $this->set_access_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) );
 
         wperp()->google_sync->update_profile();
 
-        wp_redirect( $this->get_settings_url() );
+        wp_safe_redirect( $this->get_settings_url() );
+        exit;
     }
 
     public function disconnect_account() {
         if ( !isset( $_GET['erp-auth-dc'] ) ) {
             return;
         }
+
+        // Check user capability
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You do not have permission to perform this action.', 'erp' ) );
+        }
+
+        // Verify nonce
+        if ( ! isset( $_GET['erp_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['erp_nonce'] ) ), 'erp_google_disconnect' ) ) {
+            wp_die( esc_html__( 'Security check failed. Please try again.', 'erp' ) );
+        }
+
         $this->clear_account_data();
 
-        wp_redirect( $this->get_settings_url() );
+        wp_safe_redirect( $this->get_settings_url() );
+        exit;
     }
 
     public function clear_account_data() {
