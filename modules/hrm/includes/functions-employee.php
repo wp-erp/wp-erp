@@ -1194,7 +1194,8 @@ function intercept_bulk_wpuser_delete() {
         $_REQUEST['action'] === 'delete' &&
         !empty($_REQUEST['users'])
     ) {
-        $users = (array) $_REQUEST['users'];
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- This is a filter hook for user deletion, nonce is verified by WordPress core. Values are cast to int via absint below.
+        $users = array_map( 'absint', (array) wp_unslash( $_REQUEST['users'] ) );
         $users_with_employee = [];
         foreach ($users as $user_id) {
             if (wperp_hrm_user_has_employee($user_id)) {
@@ -1217,12 +1218,14 @@ function intercept_bulk_wpuser_delete() {
             $user_list = '<ul style="margin-left:20px;">' . implode('', $items) . '</ul>';
 
             wp_die(
-            sprintf(
-                /* translators: %s: List of usernames */
-                __('The following users have associated Employee profiles in WP ERP HRM and cannot be deleted. Please delete the Employee profiles first:%s', 'erp'),
-                $user_list
+            wp_kses_post(
+                sprintf(
+                    /* translators: %s: List of usernames */
+                    __('The following users have associated Employee profiles in WP ERP HRM and cannot be deleted. Please delete the Employee profiles first:%s', 'erp'),
+                    $user_list
+                )
             ),
-            __('Cannot Delete Users', 'erp'),
+            esc_html__('Cannot Delete Users', 'erp'),
             ['back_link' => true]
             );
         }
@@ -1240,8 +1243,8 @@ function intercept_single_user_delete($user_id) {
     if (wperp_hrm_user_has_employee($user_id)) {
         // Prevent deletion and redirect with error
         wp_die(
-            __('This user has an associated Employee profile in WP ERP HRM. Please delete the Employee profile first.', 'erp'),
-            __('Cannot Delete User', 'erp'),
+            esc_html__('This user has an associated Employee profile in WP ERP HRM. Please delete the Employee profile first.', 'erp'),
+            esc_html__('Cannot Delete User', 'erp'),
             ['back_link' => true]
         );
     }

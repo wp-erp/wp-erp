@@ -56,7 +56,10 @@ class AjaxHandler {
             $this->send_error( erp_get_message ( [ 'type' => 'error_permission' ] ) );
         }
 
-        if ( empty( $_POST['fyears'] ) ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce already verified above, data is sanitized in the loop below.
+        $fyears = isset( $_POST['fyears'] ) && is_array( $_POST['fyears'] ) ? wp_unslash( $_POST['fyears'] ) : array();
+
+        if ( empty( $fyears ) ) {
             $this->send_error( __( 'Financial year data is required', 'erp' ) );
         }
 
@@ -67,7 +70,7 @@ class AjaxHandler {
         $user_id      = get_current_user_id();
         $current_date = erp_current_datetime()->format( 'Y-m-d' );
 
-        foreach ( $_POST['fyears'] as $index => $data ) {
+        foreach ( $fyears as $index => $data ) {
             if ( empty( $data['name'] ) ) {
                 $this->send_error( sprintf( __( 'Please give a financial year name on row #%d', 'erp' ),  $index + 1 ) );
             }
@@ -81,10 +84,10 @@ class AjaxHandler {
             }
 
             $insert_data[ $index ] = [
-                'name'        => sanitize_text_field( wp_unslash( $data['name'] ) ),
-                'start_date'  => sanitize_text_field( wp_unslash( $data['start_date'] ) ),
-                'end_date'    => sanitize_text_field( wp_unslash( $data['end_date'] ) ),
-                'description' => ! empty( $data['description'] ) ? sanitize_text_field( wp_unslash( $data['description'] ) ) : '',
+                'name'        => sanitize_text_field( $data['name'] ),
+                'start_date'  => sanitize_text_field( $data['start_date'] ),
+                'end_date'    => sanitize_text_field( $data['end_date'] ),
+                'description' => ! empty( $data['description'] ) ? sanitize_text_field( $data['description'] ) : '',
                 'created_at'  => $current_date,
                 'created_by'  => $user_id,
             ];
@@ -93,7 +96,7 @@ class AjaxHandler {
                 $this->send_error( sprintf( __( 'End date must be greater than the first date on row #%d', 'erp' ),  $index + 1 ) );
             }
 
-            if ( in_array( $insert_data[ $index ]['name'], $year_names ) ) {
+            if ( in_array( $insert_data[ $index ]['name'], $year_names, true ) ) {
                 $this->send_error( sprintf( __( 'Duplicate financial year name %1$s on row #%2$s', 'erp' ), $insert_data[ $index ]['name'], $index + 1 ) );
             }
 
