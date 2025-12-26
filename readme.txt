@@ -324,7 +324,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
-= v1.16.8 → December 24, 2025
+= v1.16.8 → December 26, 2025
 --------------------------
 * [Fixed] System Reset Tool.
 * [Fixed] Fix broken access control in GoogleAuth disconnect_account.
