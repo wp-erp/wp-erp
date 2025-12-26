@@ -69,95 +69,91 @@ Here are some of the key benefits you get with WP ERP, the pioneer WordPress ERP
 * **Notification Emails with Templates & Shortcodes:** Send automated notifications using customizable email templates and shortcodes.
 * **Support & Documentation:** Access helpful documentation and receive support when you need it.
 
-= ♦️Free WordPress HR MANAGEMENT directly from your dashboard♦️ =
+= HR Management Without the Complexity =
 
-Create your very own HR system for your company just the way you like!
+Create your very own HRM system for your company, just the way you like it!
 
-Free features of [WP ERP HR Manager](https://wperp.com/hr/) module:-
+Free Features of [WP ERP HR Manager Module](https://wperp.com/hr/) module:
 
-* Manage all company information
-* Manage locations
-* Easy employee management system
-* Add & list departments & designations
-* Create employee profiles with editing privilege
-* Share announcements
-* Manage holidays
-* Allow employees to request leave
-* Manage employee leaves, leave policies, and attendance
-* Create Reports based on employee age & gender, headcount, salary, and year of service
+* **Manage All Company Information:** Keep your company details organized and up to date.
+* **Manage Locations:** Add and manage various company locations easily.
+* **Easy Employee Management:** Effortlessly handle employee details and track their progress.
+* **Departments & Designations:** Add and list departments, roles, and designations within your company.
+* **Create Employee Profiles:** Build detailed profiles for each employee, with editing privileges.
+* **Share Announcements:** Communicate important company-wide announcements to employees.
+* **Manage Holidays:** Keep track of public and company-specific holidays.
+* **Leave Requests:** Allow employees to submit leave requests directly through the system.
+* **Leave Policies & Attendance:** Set leave policies and manage attendance with ease.
+* **Employee Reports:** Generate reports based on employee age, gender, headcount, salary, and years of service.
 
-= ♦️Free CLIENT MANAGEMENT – KEEP CUSTOMERS ONLINE AT YOUR FINGERTIPS!♦️ =
+= Free CRM – Manage Clients Without the Mess =
 
-With the WP ERP CRM module, the process of converting leads to customers is much easier, organized, and seamless.
+The WP ERP CRM module helps you manage leads, customers, and contacts in a clean and organized way. It's built to make your follow-ups smarter and your relationships stronger, right from your WordPress dashboard.
 
-Free features of [WP ERP CRM](https://wperp.com/crm/) module:
+Free Features of [WP ERP CRM Module](https://wperp.com/crm/):
 
-* Create contacts with life stages to prioritize service
-* Create contact groups
-* Make notes for each customer
-* Use Activity logs to see all deals
-* Schedule meetings & calls directly
-* Create company profiles
-* Filter contacts using keywords or attributes
-* Save search filters & conditions
-* Assign contacts & tasks to the right agents
-* Create a CRM activity report including customers & business growth
+* **Create Contacts with Life Stages:** Organize leads, prospects, and customers by priority.
+* **Contact Groups:** Group contacts for better segmentation and communication.
+* **Customer Notes:** Add notes to keep track of important details and updates.
+* **Activity Logs:** View a complete history of customer interactions and deals.
+* **Schedule Meetings and Calls:** Plan activities directly from the contact profile.
+* **Company Profiles:** Store business details alongside individual contacts.
+* **Smart Filtering:** Use keywords or attributes to find the exact contact you need.
+* **Saved Filters:** Save your favorite search conditions for quick access later.
+* **Assign Tasks and Contacts:** Let the right agent handle the right customer at the right time.
+* **CRM Reports:** Generate activity reports that show customer progress and business growth.
 
-= ♦️Free ACCOUNTING MODULE MADE FOR NON-ACCOUNTANTS♦️ =
+= Free WordPress Accounting Made for Non-Accountants =
 
-This is the perfect accounting module for anyone who is un-initiated with accounting. The simple intuitive interface makes it easy for anyone to get started.
+You don’t need to be a finance expert to handle your business accounts. The WP ERP Accounting module is built for anyone who wants a simple way to manage money. The interface is clean, and everything just makes sense—even if you’ve never used an accounting tool before.
 
-Free features of [WP ERP Accounting](https://wperp.com/accounting/) module:
+Free Features of [WP ERP Accounting Module](https://wperp.com/accounting/):
 
-* Get a dashboard to track all incomes, expenses, receivables, payables, balances, etc
-* Get various reports like ledger reports, trial balances, income statements, sales tax reports, balance sheets, etc
-* Set a financial year or fiscal year
-* Set opening balance for all accounts
-* Create a closing balance sheet for a financial year
-* Get preloaded ledger accounts for assets, liabilities, expenses, income, etc
-* Add custom ledger accounts or bank accounts according to your needs
-* Manage sales using invoices
-* Create quotations for estimation
-* Receive payments from customers
-* Create a bill for any customer, vendor, or employee
-* Pay bills against any bill
-* Make direct expenses or issue a check
-* Get a Purchase report of products/services
-* Make payments to vendors
-* Create products/product categories
-* Create unlimited users like vendors, customers, etc
-* Partial payments for any transactions
-* Create unlimited bank accounts, manage, and view economics in a graph
-* Produce journal entries for any transaction
-* Create tax rates, tax agencies, tax zones & tax categories for invoices
-* Pay tax to agencies
-* Send pdf copy of all transactions via email
-* Filter reports by date range
-* Print all transactions or reports
+* **Visual Dashboard:** Track income, expenses, receivables, payables, and account balances at a glance.
+* **Reports That Make Sense:** Get trial balances, ledgers, income statements, sales tax reports, and balance sheets.
+* **Set Financial or Fiscal Year:** Choose your accounting year easily.
+* **Opening & Closing Balances:** Add opening balances and generate closing sheets for each year.
+* **Ready-to-Use Ledgers:** Comes with default ledgers for assets, liabilities, income, and expenses.
+* **Custom Accounts:** Add new ledger or bank accounts based on your business needs.
+* **Invoice Management:** Create and send invoices for products or services.
+* **Quotations & Estimates:** Share estimates with clients before closing the deal.
+* **Receive Payments:** Accept full or partial payments from customers.
+* **Create Bills:** Generate bills for vendors, employees, or customers.
+* **Pay Bills:** Make payments and track them easily.
+* **Direct Expenses & Cheques:** Record direct expenses or issue cheques when needed.
+* **Purchase Reports:** See what you’ve bought and from whom.
+* **Vendor Payments:** Track and manage outgoing payments to vendors.
+* **Product Management:** Add products and organize them into categories.
+* **Unlimited Users:** Create as many vendors, customers, or contacts as needed.
+* **Partial Payments:** Handle split payments without confusion.
+* **Bank Account Management:** Add multiple bank accounts and track your finances with simple graphs.
+* **Journal Entries:** Create manual entries for any custom transaction.
+* **Tax Management:** Set tax rates, agencies, zones, and categories. Pay taxes to the proper agency.
+* **PDF & Email Support:** Send PDF copies of invoices, bills, and transactions by email.
+* **Filter by Date:** Sort reports and transactions by date range.
+* **Print Support:** Print any report or transaction whenever needed.
 
-Getting Started with WP ERP is only a matter of moments.
+Getting started with WP ERP is only a matter of moments.
 
-Check out the detailed [documentation](https://wperp.com/documentation/) created by us to help you to run WP ERP in the best way.
+Check out the detailed [documentation](https://wperp.com/documentation/) created by us to help you run WP ERP in the best way.
 
-== ♦ WP ERP PRO – PREMIUM EXTENSIONS & FEATURES ♦ ==
+== 🔥ERP PRO – PREMIUM EXTENSIONS & FEATURES🔥 ==
 
-Automate & Manage your growing business even better using Human Resources, Customer Relations, and Accounts Management right inside your WordPress
+Upgrade your WP ERP experience and manage your growing business with more control, automation, and flexibility. Everything runs inside your WordPress dashboard.
 
-= Why WP ERP Pro =
+= Why ERP Pro? =
 
-Build a modern, convenient and reliable business management system for your company
+* Build a reliable and scalable business management system.
+* Get 9 powerful premium extensions with a single plan.
+* Pick and use only the features your business needs.
+* Enjoy priority support from our expert team.
+* Pay only for what you use with user-based pricing.
+* Upgrade or downgrade anytime, no hassle.
+* Unlock advanced CRM tools like WooCommerce CRM.
+* Improve HR with Advanced Leave Management and Frontend Access.
+* Track your WooCommerce store finances with WooCommerce Accounting integration.
 
-* Gain access to nine powerful extensions and different features with a single purchase
-* Add only those individual extensions which suit your business
-* Get priority support from our support team
-* Save money: User-based Pricing
-* Easy & simple to upgrade or downgrade
-* Get powerful CRM integrations including a WooCommerce CRM
-* Take advantage of advanced leave management
-* Manage WooCommerce store’s finance better with a powerful WooCommerce Accounting system
-
-
-= What you will get =
+= What you will get with ERP Pro =
 
 Take your business to the next level with 9 accessible premium extensions & different features
 
@@ -1871,5 +1867,6 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 = 1.6.0 =
 This is a major release of ERP. Before update please take a backup of your existing database. Also if you are using WP ERP - HR Frontend, WP ERP - Attendance or WP ERP - Workflow extensions, please update those after you update ERP
+
 
 
