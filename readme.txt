@@ -1,4 +1,4 @@
-=== WP ERP | Complete HR solution with recruitment & job listings | WooCommerce CRM & Accounting ===
+=== ERP | Complete HR solution with recruitment & job listings | WooCommerce CRM & Accounting ===
 Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
@@ -1875,3 +1875,4 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 = 1.6.0 =
 This is a major release of ERP. Before update please take a backup of your existing database. Also if you are using WP ERP - HR Frontend, WP ERP - Attendance or WP ERP - Workflow extensions, please update those after you update ERP
+
