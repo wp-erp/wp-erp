@@ -161,6 +161,8 @@ function erp_hr_get_employees( $args = [] ) {
 
         $results = erp_array_to_object( $results );
 
+        do_action( 'erp_hr_get_employees_result', $results );
+
         foreach ( $results as $key => $row ) {
             if ( true === $args['no_object'] ) {
                 $users[] = $row;

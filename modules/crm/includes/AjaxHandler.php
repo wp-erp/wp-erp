@@ -712,6 +712,8 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
+		do_action( 'erp_crm_remove_contact_company', $id );
+
 		$response = erp_crm_customer_remove_company( $id );
 
 		if ( is_wp_error( $response ) ) {
