@@ -201,10 +201,12 @@ class FormHandler {
     public function tools_test_mail() {
         if ( isset( $_POST['erp_send_test_email'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-test-email-nonce' ) ) {
             $to      = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
+            // translators: %s is the site name
             $subject = sprintf( __( 'Test email from %s', 'erp' ), get_bloginfo( 'name' ) );
             $body    = isset( $_POST['body'] ) ? sanitize_text_field( wp_unslash( $_POST['body'] ) ) : '';
 
             if ( empty( $body ) ) {
+                // translators: %1$s is the site URL, %2$s is the current date/time
                 $body = sprintf( __( 'This test email proves that your WordPress installation at %1$s can send emails.\n\nSent: %2$s', 'erp' ), get_bloginfo( 'url' ), gmdate( 'r' ) );
             }
 

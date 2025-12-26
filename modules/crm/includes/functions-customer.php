@@ -1058,7 +1058,8 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                $body = sprintf( __( 'You have a schedule after %s %s at %s%s', 'erp' ), isset( $extra['notification_time_interval'] ) ? $extra['notification_time_interval'] : '', isset( $extra['notification_time'] ) ? $extra['notification_time'] : '', erp_current_datetime()->modify( $activity['start_date'] )->format( 'F j, Y, g:i a' ), empty( $extra['client_time_zone'] ) ? '' : ( '(' . $extra['client_time_zone'] . ')' ) );
+                // translators: %1$s is the notification time interval, %2$s is the notification time, %3$s is the formatted date and time, %4$s is the client timezone (optional)
+                $body = sprintf(__('You have a schedule after %1$s %2$s at %3$s%4$s', 'erp'), isset($extra['notification_time_interval']) ? $extra['notification_time_interval'] : '', isset($extra['notification_time']) ? $extra['notification_time'] : '', erp_current_datetime()->modify($activity['start_date'])->format('F j, Y, g:i a'), empty($extra['client_time_zone']) ? '' : ('(' . $extra['client_time_zone'] . ')'));
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
             erp_crm_update_schedule_notification_flag( $activity['id'], true );
@@ -2684,7 +2685,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
             'erp_crm_activity_server_host',
             isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
         );
-        
+
         $message_id  = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
 
         $custom_headers = [
@@ -3225,6 +3226,7 @@ function erp_crm_insert_save_replies( $args = [] ) {
 
         $old_value  = base64_encode( maybe_serialize( $current_data ) );
         $new_value  = base64_encode( maybe_serialize( $args ) );
+        // translators: %s is the name of the item that was updated
         $message    = sprintf( __( '<strong>%s</strong> has been updated', 'erp' ), $current_data['name'] );
         $changetype = 'edit';
     } else {
@@ -3233,6 +3235,7 @@ function erp_crm_insert_save_replies( $args = [] ) {
 
         $old_value  = '';
         $new_value  = '';
+        // translators: %s is the name of the item that was created
         $message    = sprintf( __( '<strong>%s</strong> has been created', 'erp' ), $args['name'] );
         $changetype = 'add';
     }
@@ -3595,6 +3598,7 @@ function erp_user_bulk_actions_notices() {
     global $pagenow;
 
     if ( $pagenow === 'users.php' && isset( $_REQUEST['created'] ) && (int) $_REQUEST['created'] ) {
+        // translators: %s is the number of contacts created
         $message = wp_kses_post( sprintf( __( '%s contacts created.', 'erp' ), number_format_i18n( sanitize_text_field( wp_unslash( $_REQUEST['created'] ) ) ) ) );
         echo wp_kses_post( "<div class='updated'><p>{$message}</p></div>" );
     }

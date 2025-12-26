@@ -61,6 +61,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => ucfirst( $data['type'] ),
             'changetype'    => 'add',
+            // translators: %1$s is the customer name, %2$s is the customer type (contact/company)
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been created', 'erp' ), $name, $data['type'] ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -118,6 +119,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => ucfirst( $type ),
             'changetype'    => 'edit',
+            // translators: %1$s is the customer name, %2$s is the customer type (contact/company)
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been updated', 'erp' ), $name, $type ),
             'created_by'    => get_current_user_id(),
             'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
@@ -144,6 +146,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => ucfirst( $type ),
             'changetype'    => 'delete',
+            // translators: %1$s is the customer name, %2$s is the customer type, %3$s is the action (deleted/trashed)
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been %3$s', 'erp' ), $name, $type, $action ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -165,6 +168,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => ucfirst( $data['type'] ),
             'changetype'    => 'delete',
+            // translators: %1$s is the customer name, %2$s is the customer type (contact/company)
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been restored from trash', 'erp' ), $customer->get_full_name(), $data['type'] ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -208,6 +212,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => 'Customer Activity',
             'changetype'    => 'add',
+            // translators: %1$s is the activity type, %2$s is the activity title, %3$s is the contact name, %4$s is the list of invited users
             'message'       => sprintf(
                 __( 'A <strong>%1$s</strong> %2$s has been created for <strong>%3$s</strong> %4$s', 'erp' ),
                 $this->key_to_title( $data['type'] ),
@@ -235,6 +240,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => 'Contact Group',
             'changetype'    => 'add',
+            // translators: %1$s is the group name, %2$s is the group type (private/public)
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s contact group has been created', 'erp' ), $data['name'], $type ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -256,6 +262,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => 'Contact Group',
             'changetype'    => 'delete',
+            // translators: %1$s is the group name, %2$s is the group type (private/public)
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s contact group has been deleted', 'erp' ), $data['name'], $type ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -279,6 +286,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => 'Contact Group',
             'changetype'    => 'add',
+            // translators: %1$s is the customer name, %2$s is the contact group name
             'message'       => sprintf( __( '<strong>%1$s</strong> has been subscribed to <strong>%2$s</strong> contact group', 'erp' ), $customer->get_full_name(), $group['name'] ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -312,6 +320,7 @@ class Log {
             'component'     => 'CRM',
             'sub_component' => $sub_component,
             'changetype'    => 'add',
+            // translators: %1$s is the assigned entity name, %2$s is the assigned entity type, %3$s is the target entity name, %4$s is the target entity type
             'message'       => sprintf( __( '<strong>%1$s</strong> %2$s has been assigned to <strong>%3$s</strong> %4$s', 'erp' ), $assigned->get_full_name(), $assigned_type, $assigned_to->get_full_name(), $assigned_to_type ),
             'created_by'    => get_current_user_id(),
         ] );

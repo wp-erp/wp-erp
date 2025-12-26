@@ -153,6 +153,7 @@ class AuditlogListTable extends \WP_List_Table {
             case 'message':
                 if ( $audit_log->changetype == 'edit' ) {
                     if ( !empty( $audit_log->old_value ) && !empty( $audit_log->new_value ) ) {
+                        // translators: %1$s is the audit log message, %2$d is the log ID, %3$s is the tooltip text
                         return sprintf( __( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s"> (view changes)</a>', 'erp' ), htmlspecialchars_decode( $audit_log->message ), $audit_log->id, __( 'View what elements are changes', 'erp' ) );
                     } else {
                         return htmlspecialchars_decode( $audit_log->message );

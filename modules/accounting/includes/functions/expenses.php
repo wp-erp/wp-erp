@@ -36,7 +36,7 @@ function erp_acct_get_expenses( $args = [] ) {
     $sql .= $wpdb->prepare("FROM {$wpdb->prefix}erp_acct_expenses WHERE `trn_by_ledger_id` IS NOT NULL ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
 
     erp_disable_mysql_strict_mode();
-    
+
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
@@ -56,7 +56,7 @@ function erp_acct_get_expenses( $args = [] ) {
 function erp_acct_get_expense( $expense_no ) {
     global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT   
+    $sql = $wpdb->prepare("SELECT
                 expense.id,
                 expense.voucher_no,
                 expense.people_id,
@@ -622,6 +622,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $expense_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $expense_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : null;
+    // translators: %s is the voucher number
     $expense_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Expense created with voucher no %s', 'erp' ), $voucher_no );
     $expense_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $expense_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;

@@ -125,6 +125,7 @@ class NewLeaveRequest extends Email {
                 'title'       => __( 'Subject', 'erp' ),
                 'id'          => 'subject',
                 'type'        => 'text',
+                // translators: %s is the default email subject
                 'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
@@ -134,6 +135,7 @@ class NewLeaveRequest extends Email {
                 'title'       => __( 'Email Heading', 'erp' ),
                 'id'          => 'heading',
                 'type'        => 'text',
+                // translators: %s is the default email heading
                 'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
@@ -143,6 +145,7 @@ class NewLeaveRequest extends Email {
                 'title'             => __( 'Email Body', 'erp' ),
                 'type'              => 'wysiwyg',
                 'id'                => 'body',
+                // translators: %s is the default email heading
                 'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder'       => '',
                 'default'           => '',

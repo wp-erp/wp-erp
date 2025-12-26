@@ -453,7 +453,9 @@ class Subscription {
             return;
         }
 
+        // translators: %s is the site name
         $subject_default = sprintf( __( 'Confirm your subscription to %s', 'erp' ), get_bloginfo( 'name' ) );
+        // translators: %s is the site name
         $content_default = sprintf(
             __( "Hello!\n\nThanks so much for signing up for our newsletter.\nWe need you to activate your subscription to the list(s): [contact_groups_to_confirm] by clicking the link below: \n\n[activation_link]Click here to confirm your subscription.[/activation_link]\n\nThank you,\n\n%s", 'erp' ),
             get_bloginfo( 'name' )

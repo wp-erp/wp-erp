@@ -97,6 +97,7 @@ class HrLog {
     public function create_employee( $emp_id, $fields ) {
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee has been created', 'erp' ), $fields['personal']['first_name'] ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -120,6 +121,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -149,6 +151,7 @@ class HrLog {
         if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
+            // translators: %s is the employee name
             $message = sprintf( __( '<strong>%s</strong> employee has been edited', 'erp' ), $old_data['first_name'] );
 
             array_walk( $changes, function ( &$key ) {
@@ -207,6 +210,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee experience has been created', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -232,6 +236,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee experience has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -252,6 +257,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee education has been created', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -277,6 +283,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee education has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -297,6 +304,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee dependents has been created', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -322,6 +330,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee dependents has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -342,6 +351,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee employment status has been created', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -370,6 +380,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee employment status has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -390,6 +401,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee compensation has been created', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -418,6 +430,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee compensation has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -438,6 +451,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee job info has been created', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -466,6 +480,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'employee',
+            // translators: %s is the employee name
             'message'       => sprintf( __( '<strong>%s</strong> employee job info has been deleted', 'erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -485,6 +500,7 @@ class HrLog {
     public function create_department( $dept_id, $fields ) {
         erp_log()->add( [
             'sub_component' => 'department',
+            // translators: %s is the department title
             'message'       => sprintf( __( '<strong>%s</strong> department has been created', 'erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -508,6 +524,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'department',
+            // translators: %s is the department title
             'message'       => sprintf( __( '<strong>%s</strong> department has been deleted', 'erp' ), $department->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -559,6 +576,7 @@ class HrLog {
                 }
             } );
 
+            // translators: %s is the department title
             $message = sprintf( __( '<strong>%s</strong> department has been edited', 'erp' ), $old_department['title'] );
         }
 
@@ -587,6 +605,7 @@ class HrLog {
     public function create_designation( $desig_id, $fields ) {
         erp_log()->add( [
             'sub_component' => 'designation',
+            // translators: %s is the designation title
             'message'       => sprintf( __( '<strong>%s</strong> designation has been created', 'erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id(),
         ] );
@@ -608,6 +627,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'designation',
+            // translators: %s is the designation title
             'message'       => sprintf( __( '<strong>%s</strong> designation has been deleted', 'erp' ), $desig->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -637,6 +657,7 @@ class HrLog {
         if ( empty( $changes['old_value'] ) && empty( $changes['new_value'] ) ) {
             $message = false;
         } else {
+            // translators: %s is the designation title
             $message = sprintf( __( '<strong>%s</strong> designation has been updated', 'erp' ), $old_desig['title'] );
         }
 
@@ -668,6 +689,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'leave',
+            // translators: %d is the policy ID
             'message'       => sprintf( __( '<strong>policy %d</strong> has been created', 'erp' ), $policy_id ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
@@ -691,6 +713,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'leave',
+            // translators: %s is the policy name
             'message'       => sprintf( __( '<strong>%s</strong> policy has been deleted', 'erp' ), $policy->name ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -795,6 +818,7 @@ class HrLog {
                 }
             } );
 
+            // translators: %s is the policy description
             $message = sprintf( __( '<strong>%s</strong> policy has been updated', 'erp' ), $old_policy['description'] );
         }
 
@@ -828,7 +852,9 @@ class HrLog {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $request['user_id'] ) );
 
-        $message = sprintf( __( '<strong>%s</strong> took leave from <strong>%s</strong> to <strong>%s</strong> for <strong>%d</strong> days', 'erp' ),
+        // translators: %1$s is the employee name, %2$s is the start date, %3$s is the end date, %4$d is the number of days
+        $message = sprintf(
+            __('<strong>%1$s</strong> took leave from <strong>%2$s</strong> to <strong>%3$s</strong> for <strong>%4$d</strong> days', 'erp'),
             $employee->get_full_name(),
             erp_format_date( $request['start_date'] ),
             erp_format_date( $request['end_date'] ),
@@ -877,6 +903,7 @@ class HrLog {
             } );
         }
 
+        // translators: %s is the employee name
         $message = sprintf( __( 'A leave request by <strong>%s</strong> has been updated', 'erp' ),
             $employee->get_full_name()
         );
@@ -906,6 +933,7 @@ class HrLog {
             return;
         }
 
+        // translators: %s is the employee name
         $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for', 'erp' ), erp_hr_get_employee_name( intval( $fields['user_id'] ) ) );
 
         erp_log()->add( [
@@ -933,6 +961,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'leave',
+            // translators: %s is the holiday title
             'message'       => sprintf( __( 'A new holiday named <strong>%s</strong> has been created', 'erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
@@ -961,6 +990,7 @@ class HrLog {
 
         erp_log()->add( [
             'sub_component' => 'leave',
+            // translators: %s is the holiday title
             'message'       => sprintf( __( '<strong>%s</strong> holiday has been deleted', 'erp' ), $holiday->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
@@ -1007,6 +1037,7 @@ class HrLog {
                     unset( $key['end'] );
                 }
             } );
+            // translators: %s is the holiday title
             $message = sprintf( __( '<strong>%s</strong> holiday has been updated', 'erp' ), $old_holiday['title'] );
         }
 
@@ -1045,9 +1076,11 @@ class HrLog {
         $overview = add_query_arg( [ 'page' => 'erp-hr' ], admin_url( 'admin.php' ) );
 
         if ( 'publish' === $old_status ) {
+            // translators: %s is the announcement title
             $message     = sprintf( __( '<strong>%s</strong> announcement has been updated', 'erp' ), $post->post_title );
             $change_type = 'edit';
         } else {
+            // translators: %s is the announcement title
             $message     = sprintf( __( '<strong>%s</strong> announcement has been created', 'erp' ), $post->post_title );
             $change_type = 'add';
         }

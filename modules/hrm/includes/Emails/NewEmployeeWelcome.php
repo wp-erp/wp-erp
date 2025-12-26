@@ -132,7 +132,9 @@ class NewEmployeeWelcome extends Email {
             $password = '<a class="button sm" href="' . network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $employee->user_login ), 'login' ) . '">' . __( 'Set Your Password', 'erp' ) . '</a>';
 
             $login_info = '<h3>' . __( 'Login Details:', 'erp' ) . '</h3>';
+            // translators: %s is the username
             $login_info .= sprintf( __( 'Username: <em>%s</em>', 'erp' ), $employee->user_login ) . '<br>';
+            // translators: %s is the password reset link
             $login_info .= sprintf( __( 'Password: %s', 'erp' ), $password ) . '<br>';
 
             $this->replace['login-info'] = $login_info;

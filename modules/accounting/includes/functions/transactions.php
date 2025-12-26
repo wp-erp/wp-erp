@@ -760,9 +760,9 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
                 pay_purchase.status AS pay_purchase_status';
         }
 
-        
+
         $orderby = ( 'ASC' === sanitize_text_field($args['order']) ) ? 'voucher.id ASC' : 'voucher.id DESC';
-        
+
         $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
             LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase.voucher_no = voucher.id
             LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase ON pay_purchase.voucher_no = voucher.id
@@ -895,7 +895,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_id = $transaction->trn_no;
     }
 
-    $title = isset( $transaction->estimate ) && (int) $transaction->estimate ? __( 'Estimate', 'erp' ) : __( $type, 'erp' );
+    $title = isset($transaction->estimate) && (int) $transaction->estimate ? __('Estimate', 'erp') : esc_html($type);
     //Set type
     $trn_pdf->set_type( $title );
 
@@ -967,7 +967,8 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
                 );
             }
 
-            $trn_pdf->add_badge( sprintf( __( '%s', 'erp' ), erp_acct_get_formatted_status( $transaction->status ) ) );
+            // translators: %s is the transaction status
+            $trn_pdf->add_badge(erp_acct_get_formatted_status($transaction->status));
             $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), erp_acct_format_amount( $transaction->amount ) );
             $trn_pdf->add_total( __( 'DISCOUNT', 'erp' ), erp_acct_format_amount( $transaction->discount ) );
             $trn_pdf->add_total( __( 'TAX', 'erp' ), erp_acct_format_amount( $transaction->tax ) );
@@ -1216,7 +1217,8 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
                 $trn_pdf->add_paragraph( $transaction->particulars );
             }
 
-            $trn_pdf->add_badge( sprintf( __( '%s', 'erp' ), erp_acct_get_formatted_status( $transaction->status ) ) );
+            // translators: %s is the transaction status
+            $trn_pdf->add_badge(erp_acct_get_formatted_status($transaction->status));
             $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), erp_acct_format_amount( $subtotal ) );
             $trn_pdf->add_total( __( 'VAT', 'erp' ), erp_acct_format_amount( $transaction->tax ) );
             $trn_pdf->add_total( __( 'TOTAL', 'erp' ), erp_acct_format_amount( $transaction->amount ) );

@@ -300,6 +300,7 @@ class PayBillsController extends \WeDevs\ERP\API\REST_Controller {
                 'sub_component' => __( 'Pay Bill', 'erp' ),
                 'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
                 'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                // translators: %1$s is the payment amount, %2$s is the operation, %3$s is the vendor name
                 'message'       => sprintf( __( 'A bill payment of %1$s has been %2$s for %3$s', 'erp' ), $data['amount'], $operation, erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),

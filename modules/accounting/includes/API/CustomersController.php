@@ -475,6 +475,7 @@ class CustomersController extends \WeDevs\ERP\API\REST_Controller {
                 'sub_component' => __( 'Customer', 'erp' ),
                 'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
                 'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                // translators: %s is the operation performed (created/updated)
                 'message'       => '<strong>' . $data['first_name'] . ' ' . $data['last_name'] . '</strong>' . sprintf( __( ' customer has been %s', 'erp' ), $operation ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),

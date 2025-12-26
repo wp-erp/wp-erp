@@ -230,6 +230,7 @@ class Modules {
 
         foreach ( $modules as $module_name ) {
             if ( ! in_array( $module_name, $erp_module_names ) ) {
+                // translators: %s is the invalid module name
                 return new WP_Error( 'invalid-module-name', sprintf( __( 'Invalid module name %s', 'erp' ), $module_name ) );
             }
         }

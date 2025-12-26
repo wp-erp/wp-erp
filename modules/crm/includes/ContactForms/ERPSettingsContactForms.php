@@ -114,6 +114,7 @@ class ERPSettingsContactForms {
                 [
                     'title' => $plugins[ $sub_section ]['title'],
                     'type'  => 'title',
+                    // translators: %s is the plugin title
                     'desc'  => sprintf(
                                 '%s' . __( "You don't have any form created with %s!", 'erp' ) . '%s',
                                 '<section class="notice notice-warning cfi-hide-submit"><p>',
@@ -208,6 +209,7 @@ class ERPSettingsContactForms {
                     return ucwords( str_replace( '_', ' ', $option ) );
                 }, $required_options );
 
+                // translators: %s is a comma-separated list of required field names
                 $response['msg'] = sprintf(
                     __( '%s fields are required', 'erp' ),
                     implode( ', ', $required_options )
