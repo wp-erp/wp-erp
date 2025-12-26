@@ -1224,6 +1224,7 @@ function erp_hr_leave_insert_request( $args = [] ) {
     $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' );
 
     if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end ) ) {
+        // translators: %1$s is the financial year start date, %2$s is the financial year end date
         return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
     }
 
@@ -1795,6 +1796,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                 $f_year_end   = $request->entitlement->financial_year->end_date;
 
                 if ( ( $request->start_date < $f_year_start || $request->start_date > $f_year_end ) || ( $request->end_date < $f_year_start || $request->end_date > $f_year_end ) ) {
+                    // translators: %1$s is the financial year start date, %2$s is the financial year end date
                     return new WP_Error( 'invalid-date-range', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
                 }
 
@@ -2790,7 +2792,8 @@ function import_holidays_csv( $file ) {
         }
 
         if ( ! empty( $line_error ) ) {
-            $error_msg .= __( '<strong>Error at #ROW ' . ( $data_key + 1 ) . '</strong>', 'erp' ) . '<br>';
+            // translators: %d is the row number where error occurred
+            $error_msg .= sprintf(__('<strong>Error at #ROW %d</strong>', 'erp'), ($data_key + 1)) . '<br>';
             $error_msg .= $line_error;
         }
 

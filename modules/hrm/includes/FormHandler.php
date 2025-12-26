@@ -1328,13 +1328,11 @@ class FormHandler {
 				$policy_exist = LeavePolicy::where( 'f_year', $f_id )->first();
 
 				if ( $policy_exist ) {
+					// translators: %s is the financial year name
 					$errors->add(
-						esc_html__(
-							sprintf( 'Existing leave year associated with policy won\'t be updated. e.g. %s', $fname ),
-							'erp'
-						)
-					);
-
+						sprintf(
+							esc_html__('Existing leave year associated with policy won\'t be updated. e.g. %s', 'erp'),
+							$fname
 					// we shouldn't update if there's an associated policy
 					// so, let's move on to next loop
 					continue;

@@ -135,7 +135,7 @@ class LeaveReportEmployeeBased extends \WP_List_Table {
         $columns = [ 'name' => __( 'Name', 'erp' ) ];
 
         foreach ( $this->policies as $policy ) {
-            $columns[ $policy->leave_id ] = __( $policy->name, 'erp' );
+            $columns[$policy->leave_id] = esc_html($policy->name);
         }
 
         return $columns;

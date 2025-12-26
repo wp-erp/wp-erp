@@ -440,13 +440,15 @@ class AjaxHandler {
 
 		if ( count( $valid_import ) > 0 ) {
 			$html_class = 'updated notice';
-			$response  .= sprintf( __( 'Successfully imported %u data<br>', 'erp' ), count( $valid_import ) );
+            // translators: %u is the number of imported records
+            $response = sprintf(__('Successfully imported %u records', 'erp'), count($valid_import));
 		}
 
 		if ( count( $error_list ) > 0 ) {
-			$html_class = 'error  notice';
+            $html_class = 'error notice';
 			$err_string = implode( ',', $error_list );
-			$response  .= sprintf( __( 'Something went wrong! Failed to import line no  %s.', 'erp' ), $err_string );
+            // translators: %s is the comma-separated list of line numbers that failed
+            $response = sprintf(__('Import failed on row(s): %s', 'erp'), $err_string);
 		}
 
 		$response = "<div class='{$html_class}'><p>{$response}</p></div>";
@@ -1936,7 +1938,8 @@ class AjaxHandler {
 		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
 
 		if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end ) ) {
-			$this->send_error( sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+            // translators: %1$s is the financial year start date, %2$s is the financial year end date
+            $this->send_error(sprintf(esc_attr__('Invalid leave duration. Please apply between %1$s and %2$s.', 'erp'), erp_format_date($f_year_start), erp_format_date($f_year_end)));
 		}
 
 		// handle overlapped leaves
@@ -2498,7 +2501,8 @@ class AjaxHandler {
 		$item_status = 'deleted' !== $action ? 'pending ' : '';
 
 		if ( 1 === count( $result ) ) {
-			$this->send_success( sprintf( __( '1 %1$s item has been %2$s successfully', 'erp' ), $item_status, $action ) );
+            // translators: %1$s is the item status, %2$s is the action performed
+            $this->send_success( sprintf( __( '1 %1$s item has been %2$s successfully', 'erp' ), $item_status, $action ) );
 		}
 
 		$this->send_success(

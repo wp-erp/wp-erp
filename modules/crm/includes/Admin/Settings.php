@@ -144,6 +144,7 @@ class Settings extends Template {
             'title'   => __( 'Email subject', 'erp' ),
             'id'      => 'email_subject',
             'type'    => 'text',
+            // translators: %s is the site name
             'default' => sprintf( __( 'Confirm your subscription to %s', 'erp' ), get_bloginfo( 'name' ) ),
         ];
 
@@ -151,6 +152,7 @@ class Settings extends Template {
             'title'   => __( 'Email content', 'erp' ),
             'id'      => 'email_content',
             'type'    => 'textarea',
+            // translators: %s is the site name
             'default' => sprintf(
                 __( "Hello!\n\nThanks so much for signing up for our newsletter.\nWe need you to activate your subscription to the list(s): [contact_groups_to_confirm] by clicking the link below: \n\n[activation_link]Click here to confirm your subscription.[/activation_link]\n\nThank you,\n\n%s", 'erp' ),
                 get_bloginfo( 'name' )

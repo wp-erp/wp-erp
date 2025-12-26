@@ -44,7 +44,7 @@ foreach ( $reports as $report ) {
         <tbody>
             <?php
             foreach ( $data as $key => $value ) {
-                echo '<tr><td>' . esc_html__( $key, 'erp' ) . '</td>';
+                echo '<tr><td>' . esc_html($key) . '</td>';
                 echo '<td>' . esc_html( $value ) . '</td></tr>';
 
                 $total += $value;

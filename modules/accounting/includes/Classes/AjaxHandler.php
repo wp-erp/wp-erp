@@ -69,14 +69,17 @@ class AjaxHandler {
 
         foreach ( $_POST['fyears'] as $index => $data ) {
             if ( empty( $data['name'] ) ) {
+                // translators: %d is the row number
                 $this->send_error( sprintf( __( 'Please give a financial year name on row #%d', 'erp' ),  $index + 1 ) );
             }
 
             if ( empty( $data['start_date'] ) ) {
+                // translators: %d is the row number
                 $this->send_error( sprintf( __( 'Please give a financial year start date on row #%d', 'erp' ),  $index + 1 ) );
             }
 
             if ( empty( $data['end_date'] ) ) {
+                // translators: %d is the row number
                 $this->send_error( sprintf( __( 'Please give a financial year end date on row #%d', 'erp' ),  $index + 1 ) );
             }
 
@@ -90,10 +93,12 @@ class AjaxHandler {
             ];
 
             if ( strtotime( $insert_data[ $index ]['end_date'] ) <= strtotime( $insert_data[ $index ]['start_date'] ) ) {
+                // translators: %d is the row number
                 $this->send_error( sprintf( __( 'End date must be greater than the first date on row #%d', 'erp' ),  $index + 1 ) );
             }
 
             if ( in_array( $insert_data[ $index ]['name'], $year_names ) ) {
+                // translators: %1$s is the financial year name, %2$s is the row number
                 $this->send_error( sprintf( __( 'Duplicate financial year name %1$s on row #%2$s', 'erp' ), $insert_data[ $index ]['name'], $index + 1 ) );
             }
 

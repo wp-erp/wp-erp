@@ -702,9 +702,11 @@ class TaxRatesController extends \WeDevs\ERP\API\REST_Controller {
 
         if ( ! $is_payment ) {
             $sub_comp = __( 'Tax Rate', 'erp' );
+            // translators: %s is the operation performed (created/updated)
             $message  = sprintf( __( 'A tax rate has been %s', 'erp' ), $operation );
         } else {
             $sub_comp = __( 'Tax Payment', 'erp' );
+            // translators: %1$s is the payment amount, %2$s is the operation performed
             $message  = sprintf( __( 'A tax payment of %1$s has been %2$s', 'erp' ), $data['amount'], $operation );
         }
 

@@ -80,7 +80,7 @@ class ContactTaxonomy {
      * @var string
      */
     public $tax_plural_low = '';
-    
+
     /**
      * Main constructor
      *
@@ -252,21 +252,37 @@ class ContactTaxonomy {
             'menu_name'                  => $this->tax_plural,
             'name'                       => $this->tax_plural,
             'singular_name'              => $this->tax_singular,
+            // translators: %s is the plural taxonomy name
             'search_items'               => sprintf( __( 'Search %s', 'erp' ), $this->tax_plural ),
+            // translators: %s is the plural taxonomy name
             'popular_items'              => sprintf( __( 'Popular %s', 'erp' ), $this->tax_plural ),
+            // translators: %s is the plural taxonomy name
             'all_items'                  => sprintf( __( 'All %s', 'erp' ), $this->tax_plural ),
+            // translators: %s is the singular taxonomy name
             'parent_item'                => sprintf( __( 'Parent %s', 'erp' ), $this->tax_singular ),
+            // translators: %s is the singular taxonomy name
             'parent_item_colon'          => sprintf( __( 'Parent %s:', 'erp' ), $this->tax_singular ),
+            // translators: %s is the singular taxonomy name
             'edit_item'                  => sprintf( __( 'Edit %s', 'erp' ), $this->tax_singular ),
+            // translators: %s is the singular taxonomy name
             'view_item'                  => sprintf( __( 'View %s', 'erp' ), $this->tax_singular ),
+            // translators: %s is the singular taxonomy name
             'update_item'                => sprintf( __( 'Update %s', 'erp' ), $this->tax_singular ),
+            // translators: %s is the singular taxonomy name
             'add_new_item'               => sprintf( __( 'Add New %s', 'erp' ), $this->tax_singular ),
+            // translators: %s is the singular taxonomy name
             'new_item_name'              => sprintf( __( 'New %s Name', 'erp' ), $this->tax_singular ),
+            // translators: %s is the plural taxonomy name (lowercase)
             'separate_items_with_commas' => sprintf( __( 'Separate %s with commas', 'erp' ), $this->tax_plural_low ),
+            // translators: %s is the plural taxonomy name (lowercase)
             'add_or_remove_items'        => sprintf( __( 'Add or remove %s', 'erp' ), $this->tax_plural_low ),
+            // translators: %s is the plural taxonomy name (lowercase)
             'choose_from_most_used'      => sprintf( __( 'Choose from most used %s', 'erp' ), $this->tax_plural_low ),
+            // translators: %s is the plural taxonomy name (lowercase)
             'not_found'                  => sprintf( __( 'No %s found', 'erp' ), $this->tax_plural_low ),
+            // translators: %s is the singular taxonomy name
             'no_item'                    => sprintf( __( 'No %s', 'erp' ), $this->tax_singular ),
+            // translators: %s is the plural taxonomy name (lowercase)
             'no_items'                   => sprintf( __( 'No %s', 'erp' ), $this->tax_plural_low ),
         ] );
     }
@@ -340,8 +356,10 @@ class ContactTaxonomy {
         // Add to bulk actions array
         if ( ! empty( $terms ) ) {
             foreach ( $terms as $term ) {
-                $actions[ "add-{$term->slug}-{$this->taxonomy}"    ] = sprintf( esc_html__( 'Add to %s %s', 'erp' ), $term->name, $tax->labels->singular_name );
-                $actions[ "remove-{$term->slug}-{$this->taxonomy}" ] = sprintf( esc_html__( 'Remove from %s %s', 'erp' ), $term->name, $tax->labels->singular_name );
+                // translators: %1$s is the term name, %2$s is the taxonomy singular name
+                $actions["add-{$term->slug}-{$this->taxonomy}"] = sprintf(esc_html__('Add to %1$s %2$s', 'erp'), $term->name, $tax->labels->singular_name);
+                // translators: %1$s is the term name, %2$s is the taxonomy singular name
+                $actions["remove-{$term->slug}-{$this->taxonomy}"] = sprintf(esc_html__('Remove from %1$s %2$s', 'erp'), $term->name, $tax->labels->singular_name);
             }
         }
 

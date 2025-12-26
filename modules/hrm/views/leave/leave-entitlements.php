@@ -30,6 +30,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
         }
 
         if ( isset( $_GET['affected' ] ) ) {
+            // translators: %d is the number of employees entitled
             erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $_GET['affected'] ) ) ), 'updated', true );
         }
 
@@ -41,6 +42,7 @@ $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['ta
             echo wp_kses_post( $errors->display() );
 
             if ( isset( $form_data['affected'] ) ) {
+                // translators: %d is the number of employees entitled
                 erp_html_show_notice( sprintf( __( '%d Employee(s) has been entitled to this leave policy.', 'erp' ), sanitize_text_field( wp_unslash( $form_data['affected'] ) ) ), 'updated', true );
             }
         }
