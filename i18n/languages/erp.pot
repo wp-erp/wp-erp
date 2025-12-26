@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.16.7\n"
+"Project-Id-Version: WP ERP 1.16.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2025-11-28 11:42:44+00:00\n"
+"POT-Creation-Date: 2025-12-24 11:25:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20025,6 +20025,8 @@ msgstr ""
 #: modules/hrm/includes/AnnouncementListTable.php:259
 #: modules/hrm/includes/EmployeeListTable.php:93
 #: modules/hrm/includes/LeaveRequestsListTable.php:666
+#: modules/hrm/includes/functions-employee.php:1321
+#: modules/hrm/includes/functions-employee.php:1406
 #: modules/hrm/views/requests.php:42
 msgid "Cancel"
 msgstr ""
@@ -26680,6 +26682,16 @@ msgstr ""
 msgid "View Tasks"
 msgstr ""
 
+#: modules/crm/includes/GoogleAuth.php:157
+#: modules/crm/includes/GoogleAuth.php:180
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: modules/crm/includes/GoogleAuth.php:162
+#: modules/crm/includes/GoogleAuth.php:185
+msgid "Security check failed. Please try again."
+msgstr ""
+
 #: modules/crm/includes/Log.php:64
 msgid "<strong>%1$s</strong> %2$s has been created"
 msgstr ""
@@ -30493,25 +30505,59 @@ msgstr ""
 msgid "Pecentage"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:1222
+#: modules/hrm/includes/functions-employee.php:1268
 #. translators: %s: List of usernames
 msgid ""
 "The following users have associated Employee profiles in WP ERP HRM and "
 "cannot be deleted. Please delete the Employee profiles first:%s"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:1225
+#: modules/hrm/includes/functions-employee.php:1271
 msgid "Cannot Delete Users"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:1243
-msgid ""
-"This user has an associated Employee profile in WP ERP HRM. Please delete "
-"the Employee profile first."
+#: modules/hrm/includes/functions-employee.php:1293
+#. translators: %s: List of usernames
+msgid "The following users have associated Employee profiles in WP ERP HRM:%s"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:1244
-msgid "Cannot Delete User"
+#: modules/hrm/includes/functions-employee.php:1298
+#: modules/hrm/includes/functions-employee.php:1391
+msgid "What would you like to do?"
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1318
+msgid "Delete Employee Profiles and WordPress Users"
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1324
+#: modules/hrm/includes/functions-employee.php:1409
+msgid ""
+"Warning: This action cannot be undone. All employee data including leave "
+"records, notes, and history will be permanently deleted."
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1330
+msgid "Employee Profiles Found"
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1359
+msgid "You cannot delete yourself."
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1385
+#. translators: 1: username, 2: display name
+msgid ""
+"User <strong>%1$s</strong> (%2$s) has an associated Employee profile in WP "
+"ERP HRM."
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1403
+msgid "Delete Employee Profile and WordPress User"
+msgstr ""
+
+#: modules/hrm/includes/functions-employee.php:1415
+msgid "Employee Profile Found"
 msgstr ""
 
 #: modules/hrm/includes/functions-leave.php:227
