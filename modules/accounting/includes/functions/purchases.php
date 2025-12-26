@@ -721,6 +721,7 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
             [
                 'ledger_id'   => $purchase_vat_ledger_id,
                 'trn_no'      => $purchase_data['voucher_no'],
+                // translators: %1$s is the voucher number
                 'particulars' => sprintf( __( 'Purchase Vat of voucher no- %1$s', 'erp' ), $purchase_data['voucher_no'] ),
                 'debit'       => $purchase_data['tax'],
                 'credit'      => 0,

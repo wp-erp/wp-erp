@@ -39,11 +39,12 @@ class ValidateData {
             foreach ( $processed_data as $pdata_key => $pdata_val ) {
                 $pdata_key_arr = explode( '_', $pdata_key );
 
+                // translators: %d is the row number in the CSV file
                 $errors[] = '<strong>' . sprintf( __( "Error at #ROW %d", 'erp' ), $pdata_key_arr[1] + 1 ) . '</strong>';
 
                 foreach ( $pdata_val as $pdval ) {
                     foreach ( $pdval['errors'] as $err ) {
-                        $errors[] = __( sprintf( "%s", $err ), 'erp' );
+                        $errors[] = $err;
                     }
                 }
             }

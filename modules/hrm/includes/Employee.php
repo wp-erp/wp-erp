@@ -259,12 +259,14 @@ class Employee {
             $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
 
             if ( $erp_user ) {
+                // translators: %s is the employee ID
                 return new WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist. Please use different one.', 'erp' ), $employee_id ) );
             }
         }
 
         if ( isset( $user_email ) && ! empty( $user_email ) ) {
             if ( erp_is_employee_exist( $user_email, $user_id ) ) {
+                // translators: %s is the employee email
                 return new WP_Error( 'employee-email-exist', sprintf( __( 'Employee with the employee email %s already exist. Please use different one.', 'erp' ), $user_email ) );
             }
         }
@@ -1377,6 +1379,7 @@ class Employee {
 
         foreach ( $requires as $key => $value ) {
             if ( empty( $args[ $key ] ) ) {
+                // translators: %s is the field name
                 return $this->send_error( 'empty-' . $key, sprintf( __( '%s is required.', 'erp' ), $value ) );
             }
         }
@@ -1448,6 +1451,7 @@ class Employee {
 
         foreach ( $requires as $key => $value ) {
             if ( empty( $args[ $key ] ) ) {
+                // translators: %s is the field name
                 return $this->send_error( 'empty-' . $key, sprintf( __( '%s is required.', 'erp' ), $value ) );
             }
         }
@@ -2138,15 +2142,15 @@ class Employee {
             ->notes()
             ->skip( $offset )
             ->take( $limit );
-            
-            /**
-             * Filter the notes query builder before executing the query.
-             *
-             * @param \Illuminate\Database\Eloquent\Builder $query  The query builder instance.
-             * @param int                                   $limit  The number of notes to fetch.
-             * @param int                                   $offset Offset for pagination.
-             * @param object                                $user   The ERP user model.
-             */
+
+        /**
+         * Filter the notes query builder before executing the query.
+         *
+         * @param \Illuminate\Database\Eloquent\Builder $query  The query builder instance.
+         * @param int                                   $limit  The number of notes to fetch.
+         * @param int                                   $offset Offset for pagination.
+         * @param object                                $user   The ERP user model.
+         */
             $query = apply_filters( 'erp_hrm_get_notes_query', $query, $limit, $offset, $this->erp_user );
 
             return $query->get();

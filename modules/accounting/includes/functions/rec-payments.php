@@ -449,6 +449,7 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : null;
     $payment_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $payment_data['voucher_type']     = isset( $data['type'] ) ? $data['type'] : '';
+    // translators: %s is the voucher number
     $payment_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice receipt created with voucher no %s', 'erp' ), $voucher_no );
     $payment_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $payment_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;

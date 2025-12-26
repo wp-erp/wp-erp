@@ -414,7 +414,8 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
             // Adds every 5 minutes to the existing schedules.
             $schedules[ $this->identifier . '_cron_interval' ] = [
                 'interval' => MINUTE_IN_SECONDS * $interval,
-                'display'  => sprintf( __( 'Every %d Minutes' ), $interval ),
+                // translators: %d is the number of minutes
+                'display'  => sprintf(__('Every %d Minutes', 'erp'), $interval),
             ];
 
             return $schedules;

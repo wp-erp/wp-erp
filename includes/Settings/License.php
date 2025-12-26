@@ -48,6 +48,7 @@ class License extends Template {
         $fields = [
             [
                 'title' => __( 'License Manager', 'erp' ),
+                // translators: %s is the URL to the account page
                 'desc'  => sprintf( __( 'Enter your extension license keys here to receive updates for purchased extensions. Visit <a href="%s" target="_blank">your account</a> page.', 'erp' ), 'https://wperp.com/my-account/' ),
                 'type'  => 'title',
                 'id'    => 'integration_settings',

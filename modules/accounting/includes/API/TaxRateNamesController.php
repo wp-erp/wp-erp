@@ -317,6 +317,7 @@ class TaxRateNamesController extends \WeDevs\ERP\API\REST_Controller {
                 'sub_component' => __( 'Tax', 'erp' ),
                 'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
                 'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                // translators: %s is the operation performed (created/updated)
                 'message'       => '<strong>' . $data['tax_rate_name'] . '</strong>' . sprintf( __( ' tax zone has been %s', 'erp' ), $operation ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),

@@ -488,6 +488,7 @@ class InvoicesController extends REST_Controller {
                 'sub_component' => __( 'Invoice', 'erp' ),
                 'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
                 'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                // translators: %1$s is the invoice amount, %2$s is the operation, %3$s is the customer name
                 'message'       => sprintf( __( 'An invoice of %1$s has been %2$s for %3$s', 'erp' ), $data['amount'], $operation, erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),

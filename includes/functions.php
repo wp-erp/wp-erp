@@ -890,7 +890,7 @@ function erp_months_dropdown( $title = false ) {
 	}
 
 	for ( $m = 1; $m <= 12; $m++ ) {
-		$months[ $m ] = sprintf( __( '%s', 'erp' ), gmdate( 'F', mktime( 0, 0, 0, $m, 1 ) ) );
+		$months[$m] = gmdate('F', mktime(0, 0, 0, $m, 1));
 	}
 
 	return $months;
@@ -3153,7 +3153,7 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 			$link = $item['direct_link'];
 		}
 
-		$html .= sprintf( '<li class="%s"><a href="%s">%s</a></li>', $class, $link, __( $item['title'], 'erp' ) );
+		$html .= sprintf('<li class="%s"><a href="%s">%s</a></li>', $class, $link, esc_html($item['title']));
 	}
 
 	$html .= '</ul>';

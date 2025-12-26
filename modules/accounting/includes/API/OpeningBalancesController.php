@@ -375,7 +375,7 @@ class OpeningBalancesController extends \WeDevs\ERP\API\REST_Controller {
                 'sub_component' => __( 'Opening Balance', 'erp' ),
                 'old_value'     => '',
                 'new_value'     => '',
-                // translators: %1$s: amount, %2$s: id
+                // translators: %1$s is the opening balance amount, %2$s is the user ID who created it
                 'message'       => sprintf( __( 'A opening balance of %1$s has been created by %2$s', 'erp' ), $data['amount'], get_current_user_id() ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),

@@ -382,6 +382,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $pay_bill_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $pay_bill_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
+    // translators: %s is the voucher number
     $pay_bill_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Bill payment created with voucher no %s', 'erp' ), $voucher_no );
     $pay_bill_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_bill_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';

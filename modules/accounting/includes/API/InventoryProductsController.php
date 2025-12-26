@@ -391,6 +391,7 @@ class InventoryProductsController extends \WeDevs\ERP\API\REST_Controller {
                 'sub_component' => __( 'Product', 'erp' ),
                 'old_value'     => isset( $changes['old_value'] ) ? $changes['old_value'] : '',
                 'new_value'     => isset( $changes['new_value'] ) ? $changes['new_value'] : '',
+                // translators: %1$s is the product name, %2$s is the operation performed
                 'message'       => sprintf( __( '<strong>%1$s</strong> product has been %2$s', 'erp' ), $data['name'], $operation ),
                 'changetype'    => $action,
                 'created_by'    => get_current_user_id(),
