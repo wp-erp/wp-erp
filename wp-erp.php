@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WP ERP
+ * Plugin Name: ERP
  * Description: An Open Source ERP Solution for WordPress. Built-in HR, CRM and Accounting system for WordPress
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.16.8
+ * Version: 1.16.9
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -60,7 +60,7 @@ use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
 require_once __DIR__ . '/vendor/autoload.php';
-define( 'WPERP_VERSION', '1.16.8' );
+define( 'WPERP_VERSION', '1.16.9' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
 define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
@@ -231,7 +231,7 @@ final class WeDevs_ERP {
 
         $error  = __( '<h1>An Error Occured</h1>', 'erp' );
         $error .= __( '<h2>Your installed PHP Version is: ', 'erp' ) . PHP_VERSION . '</h2>';
-        $error .= __( '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>', 'erp' ) . $this->min_php . __( '</strong> or greater', 'erp' );
+        $error .= __( '<p>The <strong>ERP</strong> plugin requires PHP version <strong>', 'erp' ) . $this->min_php . __( '</strong> or greater', 'erp' );
         $error .= __( '<p>The version of your PHP is ', 'erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'erp' ) . '</strong></a>.';
         $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'erp' );
         wp_die(
