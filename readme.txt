@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.16.8
+Stable tag: 1.16.9
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@ Manage your business with a complete ERP system featuring powerful HR management
 
 [ERP](https://wperp.com/) is the only complete Enterprise Resource Planning (ERP) solution built specifically for WordPress. It helps you manage your business, employees, and finances all in one place, directly from your WordPress dashboard.
 
-You can manage HR, CRM, accounting, and even connect your WooCommerce store using powerful CRM tools to handle customer relationships more effectively. 
+You can manage HR, CRM, accounting, and even connect your WooCommerce store using powerful CRM tools to handle customer relationships more effectively.
 
 The WooCommerce CRM module helps you see customer activity, order history, and interactions, all in one place.
 
@@ -220,12 +220,12 @@ This may have bugs and lack many features. If you want to contribute to this pro
 
 = Our other popular WordPress plugins =
 
-* **[Dokan Multivendor Plugin](https://dokan.co/wordpress/):** Your go-to WordPress plugin to build any type of multivendor marketplace. 
+* **[Dokan Multivendor Plugin](https://dokan.co/wordpress/):** Your go-to WordPress plugin to build any type of multivendor marketplace.
 * **[WP User Frontend](https://wedevs.com/wp-user-frontend-pro/):** All in One Frontend Post Submission, Membership, Profile Builder, & WordPress Editor Plugin.
 * **[WP Project Manager](https://wedevs.com/wp-project-manager-pro/):** Best Project Management Plugin for WordPress with Kanban Board, Gantt Chart, and Task Manager.
 * **[weDocs](https://wedocs.co/):** Ultimate Knowledge base and documentation solution for your business.
-* **[HappyAddons](https://happyaddons.com/):** Slick, customizable, and impressive widget collection for Elementor page builder. 
-* **[weMail](https://getwemail.io/):** Your all-in-one plugin for email marketing, lead generation, opt-in forms, email newsletters, A/B testing, and automation. 
+* **[HappyAddons](https://happyaddons.com/):** Slick, customizable, and impressive widget collection for Elementor page builder.
+* **[weMail](https://getwemail.io/):** Your all-in-one plugin for email marketing, lead generation, opt-in forms, email newsletters, A/B testing, and automation.
 
 
 == Installation ==
