@@ -327,6 +327,13 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 == Changelog ==
 
+= v1.16.9 → January 1, 2026
+--------------------------
+* [Fixed] Leave year timezone issue.
+* [Added] REST endpoints for leave request management (updating, approving, rejecting, and deleting individual leave requests, as well as bulk operations)
+* [Added] Status field to Leave Requests response
+* [Fixed] Change Plugin name according to WordPress.org guidelines
+
 = v1.16.8 → December 26, 2025
 --------------------------
 * [Fixed] System Reset Tool.
