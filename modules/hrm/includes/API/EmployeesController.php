@@ -604,7 +604,10 @@ class EmployeesController extends REST_Controller {
     public function delete_employee( WP_REST_Request $request ) {
         $id = (int) $request['user_id'];
 
-        erp_employee_delete( $id );
+        // Check if force delete is requested (for permanent deletion from trash)
+        $force = isset( $request['force'] ) && filter_var( $request['force'], FILTER_VALIDATE_BOOLEAN );
+
+        erp_employee_delete( $id, $force );
         $response = rest_ensure_response( true );
 
         return new WP_REST_Response( $response, 204 );
