@@ -1,0 +1,19 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "ERP for WordPress",
+    "author": "wedevs"
+  },
+  "plugins": [
+    "erp"
+  ],
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "landingPage": "/wp-admin/",
+  "preferredVersions": {
+    "php": "7.4",
+    "wp": "latest"
+  }
+}
