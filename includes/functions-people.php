@@ -359,7 +359,7 @@ function erp_get_peoples_count( $type = 'contact' ) {
  *
  * @param int $id
  *
- * @return array
+ * @return object
  */
 function erp_get_people( $id = 0 ) {
     return erp_get_people_by( 'id', $id );
