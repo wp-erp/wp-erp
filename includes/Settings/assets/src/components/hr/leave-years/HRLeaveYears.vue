@@ -155,8 +155,8 @@ export default {
                         if (response.data.length > 0) {
                             self.years_data = [];
                             response.data.forEach((item) => {
-                                item.start_date = self.formatDateFromTimestamp( item.start_date );
-                                item.end_date   = self.formatDateFromTimestamp( item.end_date );
+                                // item.start_date = self.formatDateFromTimestamp( item.start_date ); todo:check and remove later
+                                // item.end_date   = self.formatDateFromTimestamp( item.end_date );
                                 self.years_data.push(item);
                             });
                         }
