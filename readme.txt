@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.8
-Requires PHP: 7.3
-Stable tag: 1.16.7
+Tested up to: 6.9
+Requires PHP: 7.4
+Stable tag: 1.16.10
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -323,6 +323,22 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.16.10 → January 14, 2026
+--------------------------
+* [Fixed] Duplicate Accounting Manager roles when accounting module is active [#1521](https://github.com/wp-erp/wp-erp/pull/1521).
+
+= v1.16.9 → January 1, 2026
+--------------------------
+* [Fixed] Leave year timezone issue.
+* [Added] REST endpoints for leave request management (updating, approving, rejecting, and deleting individual leave requests, as well as bulk operations)
+* [Added] Status field to Leave Requests response
+* [Fixed] Change Plugin name according to WordPress.org guidelines
+
+= v1.16.8 → December 26, 2025
+--------------------------
+* [Fixed] System Reset Tool.
+* [Fixed] Fix broken access control in GoogleAuth disconnect_account.
 
 = v1.16.7 → November 28, 2025
 --------------------------
