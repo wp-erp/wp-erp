@@ -322,7 +322,7 @@ class AnnouncementsController extends REST_Controller {
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                        'sanitize_callback' => 'wp_kses_post',
                     ],
                     'required'    => true,
                 ],
