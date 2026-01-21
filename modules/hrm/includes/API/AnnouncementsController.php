@@ -142,9 +142,56 @@ class AnnouncementsController extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_announcement( $request ) {
+
+
+        // Validate recipient_type
+        $valid_recipient_types = ['all_employee', 'selected_employee'];
+        if (! in_array($request['recipient_type'], $valid_recipient_types)) {
+            return new WP_Error(
+                'rest_invalid_recipient_type',
+                __('Invalid recipient type. Must be either "all_employee" or "selected_employee".', 'erp'),
+                ['status' => 400]
+            );
+        }
+
+        // Validate employees field when recipient_type is selected_employee
+        if ($request['recipient_type'] === 'selected_employee') {
+            if (empty($request['employees'])) {
+                return new WP_Error(
+                    'rest_missing_employees',
+                    __('Employees field is required when recipient type is "selected_employee".', 'erp'),
+                    ['status' => 400]
+                );
+            }
+
+            // Validate employee IDs
+            $employees = explode(',', str_replace(' ', '', $request['employees']));
+            $employees = array_filter(array_map('absint', $employees));
+
+            if (empty($employees)) {
+                return new WP_Error(
+                    'rest_invalid_employees',
+                    __('Invalid employee IDs provided.', 'erp'),
+                    ['status' => 400]
+                );
+            }
+        }
+
         $item = $this->prepare_item_for_database( $request );
 
-        $id   = wp_insert_post( $item );
+        $id = wp_insert_post($item);
+
+        if (is_wp_error($id)) {
+            return $id;
+        }
+
+        if (! $id) {
+            return new WP_Error(
+                'rest_announcement_create_failed',
+                __('Failed to create announcement.', 'erp'),
+                ['status' => 500]
+            );
+        }
 
         $type = ( $request['recipient_type'] == 'all_employee' ) ? 'all_employee' : 'selected_employee';
 
@@ -184,9 +231,57 @@ class AnnouncementsController extends REST_Controller {
             return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
+        // Validate recipient_type
+        if (isset($request['recipient_type'])) {
+            $valid_recipient_types = ['all_employee', 'selected_employee'];
+            if (! in_array($request['recipient_type'], $valid_recipient_types)) {
+                return new WP_Error(
+                    'rest_invalid_recipient_type',
+                    __('Invalid recipient type. Must be either "all_employee" or "selected_employee".', 'erp'),
+                    ['status' => 400]
+                );
+            }
+
+            // Validate employees field when recipient_type is selected_employee
+            if ($request['recipient_type'] === 'selected_employee') {
+                if (empty($request['employees'])) {
+                    return new WP_Error(
+                        'rest_missing_employees',
+                        __('Employees field is required when recipient type is "selected_employee".', 'erp'),
+                        ['status' => 400]
+                    );
+                }
+
+                // Validate employee IDs
+                $employees = explode(',', str_replace(' ', '', $request['employees']));
+                $employees = array_filter(array_map('absint', $employees));
+
+                if (empty($employees)) {
+                    return new WP_Error(
+                        'rest_invalid_employees',
+                        __('Invalid employee IDs provided.', 'erp'),
+                        ['status' => 400]
+                    );
+                }
+            }
+        }
+
         $item = $this->prepare_item_for_database( $request );
 
-        $id           = wp_insert_post( $item );
+        $id = wp_insert_post($item);
+
+        if (is_wp_error($id)) {
+            return $id;
+        }
+
+        if (! $id) {
+            return new WP_Error(
+                'rest_announcement_update_failed',
+                __('Failed to update announcement.', 'erp'),
+                ['status' => 500]
+            );
+        }
+
         $announcement = get_post( $id );
 
         $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
@@ -330,6 +425,7 @@ class AnnouncementsController extends REST_Controller {
                     'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
+                    'enum'        => [ 'draft', 'publish', 'pending'],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
@@ -338,10 +434,19 @@ class AnnouncementsController extends REST_Controller {
                     'description' => __( 'Recipient type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
+                    'enum'        => ['all_employee', 'selected_employee'],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'employees'       => [
+                    'description' => __('Comma-separated employee IDs (required when recipient_type is selected_employee).', 'erp'),
+                    'type'        => 'string',
+                    'context'     => ['edit'],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
             ],
         ];
