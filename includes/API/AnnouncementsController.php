@@ -345,10 +345,20 @@ class AnnouncementsController extends REST_Controller {
                     'description' => __( 'Recipient type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
+                    'recipient_type' => [ 'all_employee', 'selected_employee' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'employees'      => [
+                    'description' => __( 'Employees for the resource.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => false,
                 ],
             ],
         ];
