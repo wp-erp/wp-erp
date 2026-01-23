@@ -467,10 +467,21 @@ error_log(print_r( [$items], true ));
 
         foreach ( $items as $item ) {
             $additional_fields = [];
-            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
+            error_log('=== Before prepare_item_for_response ===');
+            error_log('Item type: ' . get_class($item));
+            error_log('Additional fields: ' . print_r($additional_fields, true));
+
+            $data = $this->prepare_item_for_response($item, $request, $additional_fields);
+
+            error_log('=== After prepare_item_for_response ===');
+            error_log(print_r($data->get_data(), true));
+
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
-        // error_log(print_r( ['format items'=>$formatted_items], true ));
+
+        error_log('=== Final Formatted Items ===');
+        error_log(print_r($formatted_items, true));
 
         $response = rest_ensure_response( $formatted_items );
         // error_log(print_r( ['format items ensure reponse'=>$response], true ));
@@ -1629,7 +1640,41 @@ error_log(print_r( [$items], true ));
             'postal_code'     => '',
         ];
 
-        $data = wp_parse_args( $item->get_data( [], true ), $default );
+        $data = $item->get_data([], true);
+
+        // Clean up any numeric keys that may have been added
+        $data = array_filter($data, function ($key) {
+            return !is_numeric($key) || $key === 'user_id' || $key === 'employee_id';
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Merge with defaults
+        $data = wp_parse_args($data, $default);
+
+        // Clean up complex objects that shouldn't be serialized
+        foreach ($data as $key => $value) {
+            // Convert Eloquent Collections to arrays
+            if ($value instanceof \Illuminate\Database\Eloquent\Collection) {
+                $data[$key] = $value->first() ? $value->first()->id : 0;
+            }
+
+            // Convert WP_REST_Response objects to their data
+            if ($value instanceof \WP_REST_Response) {
+                $data[$key] = $value->get_data()['user_id'] ?? 0;
+            }
+
+            // Remove empty string values from numeric keys
+            if (is_numeric($key) && empty($value)) {
+                unset($data[$key]);
+            }
+        }
+
+        // Merge additional fields
+        $data = array_merge($data, $additional_fields);
+
+        // Final cleanup of numeric keys
+        $data = array_filter($data, function ($key) {
+            return !is_numeric($key);
+        }, ARRAY_FILTER_USE_KEY);
 
         // Always add human-readable labels for enum fields
         // $data = $this->add_enum_labels($data, $item);
@@ -1672,8 +1717,8 @@ error_log(print_r( [$items], true ));
             }
         }
 
-        $data = array_merge( $data, $additional_fields );
-error_log(print_r( [$data], true ));
+        error_log(print_r([$data, $additional_fields], true));
+        $data = array_merge($data, $additional_fields);
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
