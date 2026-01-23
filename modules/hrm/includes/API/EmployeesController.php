@@ -489,6 +489,7 @@ class EmployeesController extends REST_Controller {
 
         $item     = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $item );
+        error_log(print_r([$response], true));
 
         return $response;
     }
@@ -1229,16 +1230,18 @@ class EmployeesController extends REST_Controller {
             ]
         );
 
-        if ( ! is_wp_error( $request_id ) ) {
-            // notification email
-            $emailer = wperp()->emailer->get_email( 'NewLeaveRequest' );
+        if (is_wp_error($request_id)) {
+            return $request_id;
+        }
 
-            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
-                $emailer->trigger( $request_id );
-            }
+        $emailer = wperp()->emailer->get_email('NewLeaveRequest');
+
+        if (is_a($emailer, '\WeDevs\ERP\Email')) {
+            $emailer->trigger($request_id);
         }
 
         $response = rest_ensure_response( $request_id );
+
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request_id ) ) );
 
@@ -1462,9 +1465,108 @@ class EmployeesController extends REST_Controller {
     }
 
     /**
+     * Format options array to consistent structure
+     *
+     * @param array $options Raw options array
+     *
+     * @return array
+     */
+    protected function format_enum_options($options) {
+        $formatted = [];
+
+        foreach ($options as $key => $label) {
+            $formatted[] = [
+                'value' => $key,
+                'label' => $label,
+            ];
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Add enum field metadata with labels and options
+     *
+     * @param array    $data    Employee data
+     * @param Employee $item    Employee object
+     * @param string   $context Request context (view or edit)
+     *
+     * @return array
+     */
+    protected function add_enum_metadata($data, Employee $item, $context = 'view') {
+        $enum_fields = [
+            'pay_type'       => [
+                'getter'  => 'erp_hr_get_pay_type',
+                'method'  => null,
+            ],
+            'hiring_source'  => [
+                'getter'  => 'erp_hr_get_hiring_sources',
+                'method'  => 'get_hiring_source',
+            ],
+            'type'           => [
+                'getter'  => 'erp_hr_get_employee_types',
+                'method'  => 'get_type',
+            ],
+            'status'         => [
+                'getter'  => 'erp_hr_get_employee_statuses',
+                'method'  => 'get_status',
+            ],
+            'gender'         => [
+                'getter'  => 'erp_hr_get_genders',
+                'method'  => 'get_gender',
+            ],
+            'marital_status' => [
+                'getter'  => 'erp_hr_get_marital_statuses',
+                'method'  => 'get_marital_status',
+            ],
+            'blood_group'    => [
+                'getter'  => 'erp_hr_get_blood_groups',
+                'method'  => 'get_bloog_group',
+            ],
+        ];
+
+        foreach ($enum_fields as $field_key => $config) {
+            // Skip if field is empty or has default value
+            if (empty($data[$field_key]) || $data[$field_key] === '-1') {
+                continue;
+            }
+
+            // Get current label
+            $label = '';
+            if (! empty($config['method']) && method_exists($item, $config['method'])) {
+                $label = $item->{$config['method']}('view');
+            } else {
+                // Fallback to getting from options array
+                $options = function_exists($config['getter']) ? call_user_func($config['getter']) : [];
+                if (isset($options[$data[$field_key]])) {
+                    $label = $options[$data[$field_key]];
+                }
+            }
+
+            // For view context, just add simple label
+            if ($context === 'view') {
+                $data[$field_key . '_label'] = $label;
+            } else {
+                // For edit context, add full metadata with options
+                $options = function_exists($config['getter']) ? call_user_func($config['getter']) : [];
+
+                $data[$field_key . '_meta'] = [
+                    'value'   => $data[$field_key],
+                    'label'   => $label,
+                    'options' => $this->format_enum_options($options),
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Prepare a single user output for response
      *
-     * @param array $additional_fields
+     * @param Employee        $item              Employee object
+     * @param WP_REST_Request $request           Request object
+     * @param array           $additional_fields Additional fields
      *
      * @return mixed|object|WP_REST_Response
      */
@@ -1506,6 +1608,12 @@ class EmployeesController extends REST_Controller {
         ];
 
         $data = wp_parse_args( $item->get_data( [], true ), $default );
+
+        // Get request context (defaults to 'view')
+        $context = ! empty($request['context']) ? $request['context'] : 'view';
+
+        // Add enum metadata based on context
+        $data = $this->add_enum_metadata($data, $item, $context);
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
