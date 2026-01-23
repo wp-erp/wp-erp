@@ -7,6 +7,7 @@ use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
+use WeDevs\ERP\Admin\Models\CompanyLocations;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -460,6 +461,7 @@ class EmployeesController extends REST_Controller {
 
         $args['count'] = true;
         $total_items   = erp_hr_get_employees( $args );
+error_log(print_r( [$items], true ));
 
         $formatted_items = [];
 
@@ -468,8 +470,13 @@ class EmployeesController extends REST_Controller {
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
+        // error_log(print_r( ['format items'=>$formatted_items], true ));
+
         $response = rest_ensure_response( $formatted_items );
+        // error_log(print_r( ['format items ensure reponse'=>$response], true ));
+
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
+        // error_log(print_r( ['format collection'=>$response], true ));
 
         return $response;
     }
@@ -489,7 +496,6 @@ class EmployeesController extends REST_Controller {
 
         $item     = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $item );
-        error_log(print_r([$response], true));
 
         return $response;
     }
@@ -1485,43 +1491,42 @@ class EmployeesController extends REST_Controller {
     }
 
     /**
-     * Add enum field metadata with labels and options
+     * Add human-readable labels for enum fields
      *
-     * @param array    $data    Employee data
-     * @param Employee $item    Employee object
-     * @param string   $context Request context (view or edit)
+     * @param array    $data Employee data
+     * @param Employee $item Employee object
      *
      * @return array
      */
-    protected function add_enum_metadata($data, Employee $item, $context = 'view') {
+    protected function add_enum_labels($data, Employee $item) {
         $enum_fields = [
             'pay_type'       => [
-                'getter'  => 'erp_hr_get_pay_type',
-                'method'  => null,
+                'getter' => 'erp_hr_get_pay_type',
+                'method' => null,
             ],
             'hiring_source'  => [
-                'getter'  => 'erp_hr_get_hiring_sources',
-                'method'  => 'get_hiring_source',
+                'getter' => 'erp_hr_get_hiring_sources',
+                'method' => 'get_hiring_source',
             ],
             'type'           => [
-                'getter'  => 'erp_hr_get_employee_types',
-                'method'  => 'get_type',
+                'getter' => 'erp_hr_get_employee_types',
+                'method' => 'get_type',
             ],
             'status'         => [
-                'getter'  => 'erp_hr_get_employee_statuses',
-                'method'  => 'get_status',
+                'getter' => 'erp_hr_get_employee_statuses',
+                'method' => 'get_status',
             ],
             'gender'         => [
-                'getter'  => 'erp_hr_get_genders',
-                'method'  => 'get_gender',
+                'getter' => 'erp_hr_get_genders',
+                'method' => 'get_gender',
             ],
             'marital_status' => [
-                'getter'  => 'erp_hr_get_marital_statuses',
-                'method'  => 'get_marital_status',
+                'getter' => 'erp_hr_get_marital_statuses',
+                'method' => 'get_marital_status',
             ],
             'blood_group'    => [
-                'getter'  => 'erp_hr_get_blood_groups',
-                'method'  => 'get_bloog_group',
+                'getter' => 'erp_hr_get_blood_groups',
+                'method' => 'get_bloog_group',
             ],
         ];
 
@@ -1531,7 +1536,7 @@ class EmployeesController extends REST_Controller {
                 continue;
             }
 
-            // Get current label
+            // Get label for the current value
             $label = '';
             if (! empty($config['method']) && method_exists($item, $config['method'])) {
                 $label = $item->{$config['method']}('view');
@@ -1543,18 +1548,35 @@ class EmployeesController extends REST_Controller {
                 }
             }
 
-            // For view context, just add simple label
-            if ($context === 'view') {
-                $data[$field_key . '_label'] = $label;
-            } else {
-                // For edit context, add full metadata with options
-                $options = function_exists($config['getter']) ? call_user_func($config['getter']) : [];
+            // Always add label in the same consistent format
+            $data[$field_key . '_label'] = $label;
+        }
 
-                $data[$field_key . '_meta'] = [
-                    'value'   => $data[$field_key],
-                    'label'   => $label,
-                    'options' => $this->format_enum_options($options),
-                ];
+        return $data;
+    }
+
+    /**
+     * Add enum field options when explicitly requested
+     *
+     * @param array $data Employee data
+     *
+     * @return array
+     */
+    protected function add_enum_options($data) {
+        $enum_getters = [
+            'pay_type'       => 'erp_hr_get_pay_type',
+            'hiring_source'  => 'erp_hr_get_hiring_sources',
+            'type'           => 'erp_hr_get_employee_types',
+            'status'         => 'erp_hr_get_employee_statuses',
+            'gender'         => 'erp_hr_get_genders',
+            'marital_status' => 'erp_hr_get_marital_statuses',
+            'blood_group'    => 'erp_hr_get_blood_groups',
+        ];
+
+        foreach ($enum_getters as $field_key => $getter) {
+            if (function_exists($getter)) {
+                $options = call_user_func($getter);
+                $data[$field_key . '_options'] = $this->format_enum_options($options);
             }
         }
 
@@ -1609,11 +1631,8 @@ class EmployeesController extends REST_Controller {
 
         $data = wp_parse_args( $item->get_data( [], true ), $default );
 
-        // Get request context (defaults to 'view')
-        $context = ! empty($request['context']) ? $request['context'] : 'view';
-
-        // Add enum metadata based on context
-        $data = $this->add_enum_metadata($data, $item, $context);
+        // Always add human-readable labels for enum fields
+        // $data = $this->add_enum_labels($data, $item);
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
@@ -1641,9 +1660,20 @@ class EmployeesController extends REST_Controller {
             if ( in_array( 'roles', $include_params ) ) {
                 $data['roles'] = $item->get_roles();
             }
+
+             if ( in_array( 'location', $include_params ) && ! empty( $item->get_location() ) ) {
+                $data['location'] = CompanyLocations::all([
+                    'name', 'address_1', 'address_2', 'city', 'state', 'zip', 'country'
+                ]);
+            }
+
+            if (in_array('enum_options', $include_params)) {
+                $data = $this->add_enum_options($data);
+            }
         }
 
         $data = array_merge( $data, $additional_fields );
+error_log(print_r( [$data], true ));
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
