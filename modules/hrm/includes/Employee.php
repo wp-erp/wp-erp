@@ -208,6 +208,7 @@ class Employee {
                     $this->data['personal'][ $key ] = $this->$key;
                 }
                 $this->data['personal']['full_name'] = $this->get_full_name();
+                $this->data['personal']['photo_id'] = $this->get_photo_id();
             }
         }
     }
