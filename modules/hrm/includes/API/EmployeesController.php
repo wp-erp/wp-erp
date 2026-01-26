@@ -461,33 +461,21 @@ class EmployeesController extends REST_Controller {
 
         $args['count'] = true;
         $total_items   = erp_hr_get_employees( $args );
-error_log(print_r( [$items], true ));
 
         $formatted_items = [];
 
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            error_log('=== Before prepare_item_for_response ===');
-            error_log('Item type: ' . get_class($item));
-            error_log('Additional fields: ' . print_r($additional_fields, true));
 
             $data = $this->prepare_item_for_response($item, $request, $additional_fields);
-
-            error_log('=== After prepare_item_for_response ===');
-            error_log(print_r($data->get_data(), true));
 
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
-        error_log('=== Final Formatted Items ===');
-        error_log(print_r($formatted_items, true));
-
         $response = rest_ensure_response( $formatted_items );
-        // error_log(print_r( ['format items ensure reponse'=>$response], true ));
 
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
-        // error_log(print_r( ['format collection'=>$response], true ));
 
         return $response;
     }
@@ -1717,7 +1705,6 @@ error_log(print_r( [$items], true ));
             }
         }
 
-        error_log(print_r([$data, $additional_fields], true));
         $data = array_merge($data, $additional_fields);
 
         // Wrap the data in a response object
