@@ -84,17 +84,17 @@ $security         = $system_status->get_security_info();
 			</td>
 		</tr>
 		<tr>
-			<td data-export-label="Contacts"><?php esc_html( esc_html_e( 'Contacts', 'erp' ) ); ?>:</td>
+			<td data-export-label="Contacts"><?php esc_html_e( 'Contacts', 'erp' ); ?>:</td>
 			<td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total contacts count.', 'erp' ) ) ); ?></td>
 			<td><?php echo esc_html( \WeDevs\ERP\Framework\Models\People::type( 'contact' )->count() ); ?></td>
 		</tr>
         <tr>
-            <td data-export-label="No of CRM Manager"><?php esc_html( esc_html_e( 'No of CRM Manager', 'erp' ) ); ?>:</td>
+            <td data-export-label="No of CRM Manager"><?php esc_html_e( 'No of CRM Manager', 'erp' ); ?>:</td>
             <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total CRM Manager count.', 'erp' ) ) ); ?></td>
             <td><?php echo absint( $system_status->get_erp_user_count( 'crm_manager' ) ); ?></td>
         </tr>
         <tr>
-            <td data-export-label="No of CRM Agent"><?php esc_html( esc_html_e( 'No of CRM Agent', 'erp' ) ); ?>:</td>
+            <td data-export-label="No of CRM Agent"><?php esc_html_e( 'No of CRM Agent', 'erp' ); ?>:</td>
             <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total CRM Agent count.', 'erp' ) ) ); ?></td>
             <td><?php echo absint( $system_status->get_erp_user_count( 'crm_agent' ) ); ?></td>
         </tr>
@@ -114,7 +114,7 @@ $security         = $system_status->get_security_info();
 			</td>
 		</tr>
         <tr>
-            <td data-export-label="No of Accounting Manager"><?php esc_html( esc_html_e( 'No of Accounting Manager', 'erp' ) ); ?>:</td>
+            <td data-export-label="No of Accounting Manager"><?php esc_html_e( 'No of Accounting Manager', 'erp' ); ?>:</td>
             <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'Total Accounting Manager count.', 'erp' ) ) ); ?></td>
             <td><?php echo esc_html( $system_status->get_erp_user_count( 'accounting_manager' ) ); ?></td>
         </tr>
@@ -134,7 +134,7 @@ $security         = $system_status->get_security_info();
             </td>
         </tr>
         <tr>
-            <td data-export-label="No of Unique Users"><?php esc_html( esc_html_e( 'No of Unique Users', 'erp' ) ); ?>:</td>
+            <td data-export-label="No of Unique Users"><?php esc_html_e( 'No of Unique Users', 'erp' ); ?>:</td>
             <td class="help"><?php echo wp_kses_post( erp_help_tip( esc_html__( 'No of unique users including Employees, HR Manager, CRM Manager, CRM Agent and Accounting Manager.', 'erp' ) ) ); ?></td>
             <td><?php echo esc_html( $system_status->get_erp_user_count( 'active_users' ) ); ?></td>
         </tr>
