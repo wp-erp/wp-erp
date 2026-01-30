@@ -28,3 +28,23 @@ class Commands extends WP_CLI_Command {
 }
 
 WP_CLI::add_command( 'crm', 'WeDevs\ERP\CRM\CLI\Commands' );
+
+// Load seed commands.
+$seed_dir = __DIR__ . '/Seed';
+
+if ( is_dir( $seed_dir ) ) {
+    // Load base classes first.
+    $base_files = [ 'AbstractCrmSeeder.php', 'CrmDataProvider.php' ];
+
+    foreach ( $base_files as $file ) {
+        $file_path = $seed_dir . '/' . $file;
+        if ( file_exists( $file_path ) ) {
+            require_once $file_path;
+        }
+    }
+
+    // Load all Seed*.php files.
+    foreach ( glob( $seed_dir . '/Seed*.php' ) as $seed_file ) {
+        require_once $seed_file;
+    }
+}
