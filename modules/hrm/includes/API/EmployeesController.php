@@ -1186,6 +1186,7 @@ class EmployeesController extends REST_Controller {
 
         $f_year = erp_hr_get_financial_year_from_date();
 
+
         if ( empty( $f_year ) ) {
             return new WP_Error( 'rest_invalid_financial_year', __( 'No financial year defined for current year.', 'erp' ), [ 'status' => 404 ] );
         }
@@ -1193,7 +1194,7 @@ class EmployeesController extends REST_Controller {
         $args = [
             'user_id'   => $user_id,
             'f_year'    => $f_year->id,
-            'status'    => 1,
+            'status'    => $request['status'] ? $request['status'] : '',
             'orderby'   => 'created_at',
             'policy_id' => 0,
             'number'    => -1,
