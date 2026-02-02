@@ -1320,7 +1320,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         'request_id'     => 0,
         'user_id'        => 0,
         'policy_id'      => 0,
-        'status'         => '',
+        'status'         => $args['status'] ?? '',
         'year'           => 0,
         'f_year'         => 0,
         'number'         => 20,
