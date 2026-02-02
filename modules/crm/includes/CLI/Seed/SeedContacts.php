@@ -51,11 +51,11 @@ class SeedContacts extends AbstractCrmSeeder {
 
             // Generate unique email.
             $base_email = strtolower( $first_name . '.' . $last_name );
-            $email      = $base_email . '@example.test';
+            $email      = $base_email . '@example.com';
             $counter    = 1;
 
             while ( in_array( $email, $used_emails, true ) ) {
-                $email = $base_email . $counter . '@example.test';
+                $email = $base_email . $counter . '@example.com';
                 $counter++;
             }
 
