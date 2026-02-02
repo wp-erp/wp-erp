@@ -11,7 +11,24 @@ abstract class AbstractCrmSeeder extends WP_CLI_Command {
      * Ensure admin user is authenticated.
      */
     protected function ensure_admin() {
-        wp_set_current_user( 1 );
+        // Attempt to find an administrator user instead of assuming ID 1.
+        $admin_users = get_users(
+            [
+                'role'    => 'administrator',
+                'orderby' => 'ID',
+                'order'   => 'ASC',
+                'number'  => 1,
+                'fields'  => 'ID',
+            ]
+        );
+
+        if ( ! empty( $admin_users ) && ! is_wp_error( $admin_users ) ) {
+            wp_set_current_user( (int) $admin_users[0] );
+            return;
+        }
+
+        // If no administrator user can be found, abort with a clear error.
+        WP_CLI::error( 'No administrator user account found to authenticate CRM seeder.' );
     }
 
     /**
