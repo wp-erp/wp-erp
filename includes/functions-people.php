@@ -74,6 +74,7 @@ function erp_get_peoples( $args = [] ) {
             'other',
             'website',
             'fax',
+            'notes',
             'street_1',
             'street_2',
             'city',
