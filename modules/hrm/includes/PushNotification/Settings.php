@@ -101,6 +101,13 @@ class Settings extends Integration {
                 'desc'    => __( 'Send push notifications when a new announcement is published.', 'erp' ),
                 'default' => '',
             ],
+            [
+                'title'   => __( 'Enable for Holidays', 'erp' ),
+                'type'    => 'checkbox',
+                'id'      => 'erp_push_enable_holiday',
+                'desc'    => __( 'Send push notifications to all employees when a new holiday is created.', 'erp' ),
+                'default' => '',
+            ],
         ];
     }
 
