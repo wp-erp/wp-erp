@@ -94,6 +94,10 @@ class Module {
         // Holiday hook.
         add_action( 'erp_hr_new_holiday', [ $this, 'on_new_holiday' ], 10, 2 );
 
+        // Birthday hooks (fired per employee by cron, same as birthday wish email).
+        add_action( 'erp_hr_happened_birthday_today', [ $this, 'on_birthday' ],                   10, 1 );
+        add_action( 'erp_hr_happened_birthday_today', [ $this, 'on_birthday_notify_colleagues' ], 20, 1 );
+
         // Add checkbox to announcement creation form.
         add_action( 'hr_announcement_table_last', [ $this, 'announcement_push_checkbox' ] );
     }
@@ -257,6 +261,40 @@ class Module {
     }
 
     /**
+     * Dispatch a birthday push notification to the employee.
+     *
+     * @since 1.0.0
+     *
+     * @param int $user_id WordPress user ID of the birthday employee.
+     *
+     * @return void
+     */
+    public function on_birthday( $user_id ) {
+        if ( ! $this->handler || ! $this->is_push_enabled_for( 'birthday' ) ) {
+            return;
+        }
+
+        $this->handler->on_birthday( $user_id );
+    }
+
+    /**
+     * Notify all other employees about their colleague's birthday.
+     *
+     * @since 1.0.0
+     *
+     * @param int $user_id WordPress user ID of the birthday employee.
+     *
+     * @return void
+     */
+    public function on_birthday_notify_colleagues( $user_id ) {
+        if ( ! $this->handler || ! $this->is_push_enabled_for( 'birthday_colleagues' ) ) {
+            return;
+        }
+
+        $this->handler->on_birthday_notify_colleagues( $user_id );
+    }
+
+    /**
      * Check whether push notifications are enabled for a particular feature.
      *
      * @since 1.0.0
@@ -270,6 +308,8 @@ class Module {
             'leave'        => 'erp_push_enable_leave',
             'announcement' => 'erp_push_enable_announcement',
             'holiday'      => 'erp_push_enable_holiday',
+            'birthday'            => 'erp_push_enable_birthday',
+            'birthday_colleagues' => 'erp_push_birthday_notify_all',
         ];
 
         if ( ! isset( $option_map[ $feature ] ) ) {

@@ -108,6 +108,20 @@ class Settings extends Integration {
                 'desc'    => __( 'Send push notifications to all employees when a new holiday is created.', 'erp' ),
                 'default' => '',
             ],
+            [
+                'title'   => __( 'Enable for Birthdays', 'erp' ),
+                'type'    => 'checkbox',
+                'id'      => 'erp_push_enable_birthday',
+                'desc'    => __( 'Send a birthday push notification to the employee on their birthday.', 'erp' ),
+                'default' => '',
+            ],
+            [
+                'title'   => __( 'Notify All Employees on Birthday', 'erp' ),
+                'type'    => 'checkbox',
+                'id'      => 'erp_push_birthday_notify_all',
+                'desc'    => __( 'Also notify all other employees about their colleague\'s birthday.', 'erp' ),
+                'default' => '',
+            ],
         ];
     }
 

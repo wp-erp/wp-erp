@@ -244,6 +244,87 @@ class NotificationHandler {
     }
 
     /**
+     * Send a birthday push notification to the employee.
+     *
+     * Mirrors erp_hr_send_birthday_wish_email() which is fired on the same hook.
+     *
+     * @since 1.0.0
+     *
+     * @param int $user_id WordPress user ID of the birthday employee.
+     *
+     * @return void
+     */
+    public function on_birthday( $user_id ) {
+        $user_id = absint( $user_id );
+
+        if ( ! $user_id ) {
+            return;
+        }
+
+        $name = $this->get_employee_name( $user_id );
+
+        $this->notification->send(
+            [ $user_id ],
+            __( 'Happy Birthday!', 'erp' ),
+            ! empty( $name )
+                ? sprintf( __( 'Wishing you a very happy birthday, %s!', 'erp' ), $name )
+                : __( 'Wishing you a very happy birthday!', 'erp' ),
+            [
+                'type'    => 'birthday',
+                'user_id' => $user_id,
+            ]
+        );
+    }
+
+    /**
+     * Notify all other employees about their colleague's birthday.
+     *
+     * @since 1.0.0
+     *
+     * @param int $user_id WordPress user ID of the birthday employee.
+     *
+     * @return void
+     */
+    public function on_birthday_notify_colleagues( $user_id ) {
+        $user_id = absint( $user_id );
+
+        if ( ! $user_id ) {
+            return;
+        }
+
+        $name = $this->get_employee_name( $user_id );
+
+        if ( empty( $name ) ) {
+            return;
+        }
+
+        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
+
+        if ( empty( $employees ) ) {
+            return;
+        }
+
+        $other_ids = array_values( array_filter( array_map( function( $emp ) use ( $user_id ) {
+            $id = isset( $emp->user_id ) ? absint( $emp->user_id ) : 0;
+            return ( $id && $id !== $user_id ) ? $id : 0;
+        }, $employees ) ) );
+
+        if ( empty( $other_ids ) ) {
+            return;
+        }
+
+        $this->notification->send(
+            $other_ids,
+            __( 'Birthday Today!', 'erp' ),
+            sprintf( __( "Today is %s's birthday. Wish them well!", 'erp' ), $name ),
+            [
+                'type'    => 'birthday_colleague',
+                'user_id' => $user_id,
+            ]
+        );
+    }
+
+    /**
      * Retrieve the display name for an employee.
      *
      * @since 1.0.0
