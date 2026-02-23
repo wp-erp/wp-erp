@@ -184,6 +184,66 @@ class NotificationHandler {
     }
 
     /**
+     * Send a push notification to all employees when a new holiday is created.
+     *
+     * Mirrors the behaviour of erp_hr_holiday_reminder_to_employees() which
+     * sends an email to every employee for upcoming holidays.
+     *
+     * @since 1.0.0
+     *
+     * @param int   $holiday_id Holiday ID.
+     * @param array $args       Holiday data: title, start, end, etc.
+     *
+     * @return void
+     */
+    public function on_new_holiday( $holiday_id, $args ) {
+        if ( empty( $holiday_id ) || empty( $args['title'] ) ) {
+            return;
+        }
+
+        $title = ! empty( $args['title'] ) ? sanitize_text_field( $args['title'] ) : __( 'New Holiday', 'erp' );
+
+        $holiday_start = isset( $args['start'] ) ? erp_current_datetime()->modify( $args['start'] ) : null;
+        $holiday_end   = isset( $args['end'] )   ? erp_current_datetime()->modify( $args['end'] )   : null;
+
+        if ( $holiday_start && $holiday_end ) {
+            $day_diff = $holiday_start->diff( $holiday_end )->days;
+
+            if ( 0 === $day_diff ) {
+                $message = $holiday_start->format( 'l, F j, Y' );
+            } else {
+                $message = $holiday_start->format( 'l, F j, Y' ) . ' – ' . $holiday_end->format( 'l, F j, Y' );
+            }
+        } else {
+            $message = __( 'Holiday', 'erp' );
+        }
+
+        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
+
+        if ( empty( $employees ) ) {
+            return;
+        }
+
+        $user_ids = array_values( array_filter( array_map( function( $emp ) {
+            return isset( $emp->user_id ) ? absint( $emp->user_id ) : 0;
+        }, $employees ) ) );
+
+        if ( empty( $user_ids ) ) {
+            return;
+        }
+
+        $this->notification->send(
+            $user_ids,
+            $title,
+            $message,
+            [
+                'type'       => 'holiday',
+                'holiday_id' => absint( $holiday_id ),
+            ]
+        );
+    }
+
+    /**
      * Retrieve the display name for an employee.
      *
      * @since 1.0.0

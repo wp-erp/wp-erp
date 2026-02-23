@@ -91,6 +91,9 @@ class Module {
         // Announcement hook.
         add_action( 'hr_announcement_insert_assignment', [ $this, 'on_announcement' ], 10, 2 );
 
+        // Holiday hook.
+        add_action( 'erp_hr_new_holiday', [ $this, 'on_new_holiday' ], 10, 2 );
+
         // Add checkbox to announcement creation form.
         add_action( 'hr_announcement_table_last', [ $this, 'announcement_push_checkbox' ] );
     }
@@ -236,6 +239,24 @@ class Module {
     }
 
     /**
+     * Dispatch a push notification to all employees when a holiday is created.
+     *
+     * @since 1.0.0
+     *
+     * @param int   $holiday_id Holiday ID.
+     * @param array $args       Holiday data (title, start, end, etc.).
+     *
+     * @return void
+     */
+    public function on_new_holiday( $holiday_id, $args ) {
+        if ( ! $this->handler || ! $this->is_push_enabled_for( 'holiday' ) ) {
+            return;
+        }
+
+        $this->handler->on_new_holiday( $holiday_id, $args );
+    }
+
+    /**
      * Check whether push notifications are enabled for a particular feature.
      *
      * @since 1.0.0
@@ -248,6 +269,7 @@ class Module {
         $option_map = [
             'leave'        => 'erp_push_enable_leave',
             'announcement' => 'erp_push_enable_announcement',
+            'holiday'      => 'erp_push_enable_holiday',
         ];
 
         if ( ! isset( $option_map[ $feature ] ) ) {
