@@ -123,6 +123,18 @@ class Settings extends Integration {
                 'default' => '',
             ],
         ];
+        // if pro version is active, add job apply notification settings
+        if( defined( 'ERP_PRO_PLUGIN_VERSION' ) ) {
+            $this->form_fields = array_merge( $this->form_fields, [
+                [
+                    'title'   => __( 'Enable for Job Applications', 'erp' ),
+                    'type'    => 'checkbox',
+                    'id'      => 'erp_push_enable_job_apply',
+                    'desc'    => __( 'Send push notifications to HR when a new job application is submitted.', 'erp' ),
+                    'default' => '',
+                ],
+            ] );
+        }
     }
 
     /**
