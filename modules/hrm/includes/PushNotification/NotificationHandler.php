@@ -325,6 +325,60 @@ class NotificationHandler {
     }
 
     /**
+     * Notify HR managers when a new job application is submitted.
+     *
+     * @since 1.0.0
+     *
+     * @param array $data Application data: job_id, applicant_id, stage, exam_detail.
+     *
+     * @return void
+     */
+    public function on_job_apply( $data ) {
+        if ( empty( $data['job_id'] ) || empty( $data['applicant_id'] ) ) {
+            return;
+        }
+
+        $job_id      = absint( $data['job_id'] );
+        $applicant_id = absint( $data['applicant_id'] );
+
+        $job_title = get_the_title( $job_id );
+
+        global $wpdb;
+        $applicant = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = %d",
+                $applicant_id
+            )
+        );
+
+        $applicant_name = $applicant
+            ? trim( $applicant->first_name . ' ' . $applicant->last_name )
+            : __( 'A new applicant', 'erp' );
+
+        $title   = __( 'New Job Application', 'erp' );
+        $message = $job_title
+            ? sprintf( __( '%1$s has applied for %2$s.', 'erp' ), $applicant_name, $job_title )
+            : sprintf( __( '%s has submitted a new job application.', 'erp' ), $applicant_name );
+
+        $manager_ids = $this->get_hr_manager_ids();
+
+        if ( empty( $manager_ids ) ) {
+            return;
+        }
+
+        $this->notification->send(
+            $manager_ids,
+            $title,
+            $message,
+            [
+                'type'        => 'job_apply',
+                'job_id'      => $job_id,
+                'applicant_id' => $applicant_id,
+            ]
+        );
+    }
+
+    /**
      * Retrieve the display name for an employee.
      *
      * @since 1.0.0

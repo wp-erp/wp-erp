@@ -98,6 +98,9 @@ class Module {
         add_action( 'erp_hr_happened_birthday_today', [ $this, 'on_birthday' ],                   10, 1 );
         add_action( 'erp_hr_happened_birthday_today', [ $this, 'on_birthday_notify_colleagues' ], 20, 1 );
 
+        // Job apply hook.
+        add_action( 'erp_rec_applied_job', [ $this, 'on_job_apply' ], 10, 1 );
+
         // Add checkbox to announcement creation form.
         add_action( 'hr_announcement_table_last', [ $this, 'announcement_push_checkbox' ] );
     }
@@ -278,6 +281,23 @@ class Module {
     }
 
     /**
+     * Dispatch a push notification to HR managers when a new job application is submitted.
+     *
+     * @since 1.0.0
+     *
+     * @param array $data Application data: job_id, applicant_id, stage, exam_detail.
+     *
+     * @return void
+     */
+    public function on_job_apply( $data ) {
+        if ( ! $this->handler || ! $this->is_push_enabled_for( 'job_apply' ) ) {
+            return;
+        }
+
+        $this->handler->on_job_apply( $data );
+    }
+
+    /**
      * Notify all other employees about their colleague's birthday.
      *
      * @since 1.0.0
@@ -305,11 +325,12 @@ class Module {
      */
     private function is_push_enabled_for( $feature ) {
         $option_map = [
-            'leave'        => 'erp_push_enable_leave',
-            'announcement' => 'erp_push_enable_announcement',
-            'holiday'      => 'erp_push_enable_holiday',
+            'leave'               => 'erp_push_enable_leave',
+            'announcement'        => 'erp_push_enable_announcement',
+            'holiday'             => 'erp_push_enable_holiday',
             'birthday'            => 'erp_push_enable_birthday',
             'birthday_colleagues' => 'erp_push_birthday_notify_all',
+            'job_apply'           => 'erp_push_enable_job_apply',
         ];
 
         if ( ! isset( $option_map[ $feature ] ) ) {
