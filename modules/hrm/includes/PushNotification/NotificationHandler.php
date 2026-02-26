@@ -184,38 +184,29 @@ class NotificationHandler {
     }
 
     /**
-     * Send a push notification to all employees when a new holiday is created.
+     * Send push reminders for holidays starting in exactly $days_before days.
      *
-     * Mirrors the behaviour of erp_hr_holiday_reminder_to_employees() which
-     * sends an email to every employee for upcoming holidays.
+     * Called daily by cron via Module::on_holiday_reminder_check().
+     * Mirrors the email pattern in erp_hr_holiday_reminder_to_employees().
      *
      * @since 1.0.0
      *
-     * @param int   $holiday_id Holiday ID.
-     * @param array $args       Holiday data: title, start, end, etc.
+     * @param int $days_before Number of days before the holiday start to send the reminder.
      *
      * @return void
      */
-    public function on_new_holiday( $holiday_id, $args ) {
-        if ( empty( $holiday_id ) || empty( $args['title'] ) ) {
+    public function on_holiday_reminder( $days_before ) {
+        $days_before = max( 1, absint( $days_before ) );
+
+        $target_day = erp_current_datetime()->modify( "+{$days_before} days" )->format( 'Y-m-d' );
+
+        $holidays = ( new \WeDevs\ERP\HRM\Models\LeaveHoliday() )
+            ->whereDate( 'start', $target_day )
+            ->get()
+            ->toArray();
+
+        if ( empty( $holidays ) ) {
             return;
-        }
-
-        $title = ! empty( $args['title'] ) ? sanitize_text_field( $args['title'] ) : __( 'New Holiday', 'erp' );
-
-        $holiday_start = isset( $args['start'] ) ? erp_current_datetime()->modify( $args['start'] ) : null;
-        $holiday_end   = isset( $args['end'] )   ? erp_current_datetime()->modify( $args['end'] )   : null;
-
-        if ( $holiday_start && $holiday_end ) {
-            $day_diff = $holiday_start->diff( $holiday_end )->days;
-
-            if ( 0 === $day_diff ) {
-                $message = $holiday_start->format( 'l, F j, Y' );
-            } else {
-                $message = $holiday_start->format( 'l, F j, Y' ) . ' – ' . $holiday_end->format( 'l, F j, Y' );
-            }
-        } else {
-            $message = __( 'Holiday', 'erp' );
         }
 
         $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
@@ -232,15 +223,35 @@ class NotificationHandler {
             return;
         }
 
-        $this->notification->send(
-            $user_ids,
-            $title,
-            $message,
-            [
-                'type'       => 'holiday',
-                'holiday_id' => absint( $holiday_id ),
-            ]
-        );
+        foreach ( $holidays as $holiday ) {
+            $title = ! empty( $holiday['title'] )
+                ? sanitize_text_field( $holiday['title'] )
+                : __( 'Upcoming Holiday', 'erp' );
+
+            $holiday_start = erp_current_datetime()->modify( $holiday['start'] );
+            $holiday_end   = erp_current_datetime()->modify( $holiday['end'] );
+            $day_diff      = $holiday_start->diff( $holiday_end )->days;
+
+            if ( 0 === $day_diff ) {
+                $date_str = $holiday_start->format( 'l, F j, Y' );
+            } else {
+                $date_str = $holiday_start->format( 'l, F j, Y' ) . ' – ' . $holiday_end->format( 'l, F j, Y' );
+            }
+
+            $message = 1 === $days_before
+                ? sprintf( __( 'Reminder: %s is tomorrow (%s).', 'erp' ), $title, $date_str )
+                : sprintf( __( 'Reminder: %s is in %d days (%s).', 'erp' ), $title, $days_before, $date_str );
+
+            $this->notification->send(
+                $user_ids,
+                $title,
+                $message,
+                [
+                    'type'       => 'holiday_reminder',
+                    'holiday_id' => absint( $holiday['id'] ),
+                ]
+            );
+        }
     }
 
     /**

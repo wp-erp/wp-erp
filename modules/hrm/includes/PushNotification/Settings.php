@@ -102,10 +102,29 @@ class Settings extends Integration {
                 'default' => '',
             ],
             [
-                'title'   => __( 'Enable for Holidays', 'erp' ),
+                'title'   => __( 'Enable Holiday Reminders', 'erp' ),
                 'type'    => 'checkbox',
                 'id'      => 'erp_push_enable_holiday',
-                'desc'    => __( 'Send push notifications to all employees when a new holiday is created.', 'erp' ),
+                'desc'    => __( 'Send push notifications to all employees before an upcoming holiday.', 'erp' ),
+                'default' => '',
+            ],
+            [
+                'title'   => __( 'Holiday Reminder — Days Before', 'erp' ),
+                'type'    => 'select',
+                'id'      => 'erp_push_holiday_days_before',
+                'desc'    => __( 'Send the reminder this many days before the holiday. Choose a preset or enter a custom value below.', 'erp' ),
+                'default' => '1',
+                'options' => [
+                    '1' => __( '1 day before', 'erp' ),
+                    '3' => __( '3 days before', 'erp' ),
+                    '7' => __( '7 days before', 'erp' ),
+                ],
+            ],
+            [
+                'title'   => __( 'Holiday Reminder — Custom Days (overrides preset)', 'erp' ),
+                'type'    => 'text',
+                'id'      => 'erp_push_holiday_custom_days',
+                'desc'    => __( 'Enter a whole number to override the preset above (e.g. 5 = 5 days before). Leave blank to use the preset.', 'erp' ),
                 'default' => '',
             ],
             [
