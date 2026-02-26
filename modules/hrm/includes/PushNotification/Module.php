@@ -91,8 +91,8 @@ class Module {
         // Announcement hook.
         add_action( 'hr_announcement_insert_assignment', [ $this, 'on_announcement' ], 10, 2 );
 
-        // Holiday hook.
-        add_action( 'erp_hr_new_holiday', [ $this, 'on_new_holiday' ], 10, 2 );
+        // Holiday reminder: runs daily via cron, fires N days before holiday start.
+        add_action( 'erp_daily_scheduled_events', [ $this, 'on_holiday_reminder_check' ] );
 
         // Birthday hooks (fired per employee by cron, same as birthday wish email).
         add_action( 'erp_hr_happened_birthday_today', [ $this, 'on_birthday' ],                   10, 1 );
@@ -246,21 +246,39 @@ class Module {
     }
 
     /**
-     * Dispatch a push notification to all employees when a holiday is created.
+     * Daily cron callback: send holiday push reminders to all employees
+     * the configured number of days before each upcoming holiday.
      *
      * @since 1.0.0
      *
-     * @param int   $holiday_id Holiday ID.
-     * @param array $args       Holiday data (title, start, end, etc.).
-     *
      * @return void
      */
-    public function on_new_holiday( $holiday_id, $args ) {
+    public function on_holiday_reminder_check() {
         if ( ! $this->handler || ! $this->is_push_enabled_for( 'holiday' ) ) {
             return;
         }
 
-        $this->handler->on_new_holiday( $holiday_id, $args );
+        $days_before = $this->get_holiday_reminder_days();
+        $this->handler->on_holiday_reminder( $days_before );
+    }
+
+    /**
+     * Resolve the configured number of days before a holiday to send the reminder.
+     *
+     * Custom days field takes priority over the preset dropdown.
+     *
+     * @since 1.0.0
+     *
+     * @return int Always >= 1.
+     */
+    private function get_holiday_reminder_days() {
+        $custom = absint( $this->get_option( 'erp_push_holiday_custom_days', '' ) );
+        if ( $custom > 0 ) {
+            return $custom;
+        }
+
+        $preset = absint( $this->get_option( 'erp_push_holiday_days_before', 1 ) );
+        return max( 1, $preset );
     }
 
     /**
