@@ -385,6 +385,7 @@ class NotificationHandler {
                 'type'        => 'job_apply',
                 'job_id'      => $job_id,
                 'applicant_id' => $applicant_id,
+                'application_id' => isset( $data['application_id'] ) ? absint( $data['application_id'] ) : 0,
             ]
         );
     }
