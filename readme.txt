@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.9
+Tested up to: 6.9.1
 Requires PHP: 7.4
-Stable tag: 1.16.9
+Stable tag: 1.16.11
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -326,6 +326,20 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+
+= v1.16.11 → February 9, 2026
+--------------------------
+* [Fixed] Announcement API formating [#1542](https://github.com/wp-erp/wp-erp/pull/1542).
+* [Fixed] Announcement API validation [#1544](https://github.com/wp-erp/wp-erp/pull/1544).
+* [Fixed] Employee API photo id not showing [#1546](https://github.com/wp-erp/wp-erp/pull/1545).
+* [Enhancement] Employee API meta data status [#1546](https://github.com/wp-erp/wp-erp/pull/1546).
+* [Added] CRM CLI seeders for contacts, companies, activities, deals [#1548](https://github.com/wp-erp/wp-erp/pull/1548).
+* [Added] HRM CLI seeders for demo data generation [#1549](https://github.com/wp-erp/wp-erp/pull/1549).
+* [Fixed] Fix SQL injection in CRM contacts orderby parameter (#1550)(https://github.com/wp-erp/wp-erp/pull/1550).
+
+= v1.16.10 → January 14, 2026
+--------------------------
+* [Fixed] Duplicate Accounting Manager roles when accounting module is active [#1521](https://github.com/wp-erp/wp-erp/pull/1521).
 
 = v1.16.9 → January 1, 2026
 --------------------------
