@@ -40,9 +40,14 @@ function erp_hr_dashboard_widget_birthday() {
             foreach ( $todays_birthday as $user ) {
                 $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
                 <li>
-                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>" class="erp-tips" title="<?php echo esc_attr( $employee->get_full_name() ); ?>">
+                    <a href="<?php echo esc_url( $employee->get_details_url() ); ?>" class="erp-tips" title="<?php echo esc_attr( $employee->get_full_name() ); ?>" style="display: inline-block; height: 32px;">
                         <?php echo wp_kses_post( $employee->get_avatar( 32 ) ); ?>
-                    </a> &nbsp;
+                        <span style="margin: 0 8px; padding: 5px;">
+                            <?php echo esc_html( $employee->get_full_name() ); ?>
+                        </span>
+
+                         <!-- show user name -->
+                    </a>
                 </li>
             <?php
             } ?>

@@ -2654,6 +2654,13 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $extra_data['attachments'] = $email['attachments'];
     }
 
+    $extra_data = apply_filters(
+        'erp_crm_email_activity_extra_data',
+        $extra_data,
+        $email,
+        $inbound_email_address
+    );
+
     $save_data = [
         'user_id'       => $email['cid'],
         'created_by'    => $email['sid'],
@@ -2746,6 +2753,13 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     if ( isset( $email['attachments'] ) ) {
         $extra_data['attachments'] = $email['attachments'];
     }
+
+    $extra_data = apply_filters(
+        'erp_crm_contact_owner_email_activity_extra_data',
+        $extra_data,
+        $email,
+        $inbound_email_address
+    );
 
     $save_data = [
         'user_id'       => $email['cid'],

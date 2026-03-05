@@ -52,6 +52,9 @@ class HRM {
         $this->init_filters();
 
         do_action( 'erp_hrm_loaded' );
+
+        // Bootstrap push notification module.
+        \WeDevs\ERP\HRM\PushNotification\Module::init();
     }
 
     /**

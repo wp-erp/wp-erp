@@ -73,7 +73,7 @@ class SubscriptionWidget extends \WP_Widget {
             </label>
         </p>
 
-        <label><?php esc_attr_e( 'Contact Groups' ); ?>:</label>
+        <label><?php esc_attr_e( 'Contact Groups', 'erp' ); ?>:</label>
         <ul style="margin-top: 5px;">
             <?php foreach ( $erp_contact_groups as $group ) { ?>
                 <li>

@@ -26,6 +26,7 @@
         "modules/crm/assets/less",
         "node_modules",
         "tests",
-        "vendor/google/apiclient/examples"
+        "vendor/google/apiclient/examples",
+        ".wordpress-org"
     ]
 }

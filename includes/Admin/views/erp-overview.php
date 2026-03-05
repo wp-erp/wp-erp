@@ -21,7 +21,7 @@
                         <li><a target="_blank" href="<?php echo esc_url( $entry->link . '?utm_source=ERP+Dashboard&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs' ); ?>" title="<?php echo esc_attr( $entry->title ); ?>"><?php echo esc_html( $entry->title ); ?></a></li>
                         <?php } ?>
                     <?php } else {
-                        echo '<li>' . esc_html_e( 'No available blog right now.', 'erp' ) . '</li>';
+                        echo '<li>' . esc_html__( 'No available blog right now.', 'erp' ) . '</li>';
                     } ?>
                 </ul>
 

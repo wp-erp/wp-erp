@@ -7,6 +7,7 @@ use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
+use WeDevs\ERP\Admin\Models\CompanyLocations;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -71,7 +72,11 @@ class EmployeesController extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    $user_id = (int) $request['user_id'];
+                    $current_user_id = get_current_user_id();
+
+                    // Allow users to view their own profile or if they have erp_list_employee capability
+                    return ( $user_id === $current_user_id ) || current_user_can( 'erp_list_employee' );
                 },
             ],
             [
@@ -389,14 +394,25 @@ class EmployeesController extends REST_Controller {
                 'methods'               => WP_REST_Server::CREATABLE,
                 'callback'              => [ $this, 'upload_photo' ],
                 'permission_callback'   => function ( $request ) {
-                    return current_user_can( 'erp_create_employee' );
+                    // Allow ERP employees or users with erp_create_employee capability
+                    if ( current_user_can( 'erp_create_employee' ) ) {
+                        return true;
+                    }
+
+                    $employee = new Employee( get_current_user_id() );
+
+                    return $employee->is_employee();
                 },
             ],
             [
                 'methods'               => WP_REST_Server::EDITABLE,
                 'callback'              => [ $this, 'update_photo' ],
-                'permission_callback'   => function () {
-                    return current_user_can( 'erp_create_employee' );
+                'permission_callback'   => function ( $request ) {
+                    $user_id = isset( $request['user_id'] ) ? (int) $request['user_id'] : 0;
+                    $current_user_id = get_current_user_id();
+
+                    // Allow users to update their own photo or if they have erp_create_employee capability
+                    return ( $user_id === $current_user_id ) || current_user_can( 'erp_create_employee' );
                 },
             ],
         ] );
@@ -465,10 +481,15 @@ class EmployeesController extends REST_Controller {
 
         foreach ( $items as $item ) {
             $additional_fields = [];
-            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
+
+            $data = $this->prepare_item_for_response($item, $request, $additional_fields);
+
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
+
         $response = rest_ensure_response( $formatted_items );
+
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
 
         return $response;
@@ -595,7 +616,10 @@ class EmployeesController extends REST_Controller {
     public function delete_employee( WP_REST_Request $request ) {
         $id = (int) $request['user_id'];
 
-        erp_employee_delete( $id );
+        // Check if force delete is requested (for permanent deletion from trash)
+        $force = isset( $request['force'] ) && filter_var( $request['force'], FILTER_VALIDATE_BOOLEAN );
+
+        erp_employee_delete( $id, $force );
         $response = rest_ensure_response( true );
 
         return new WP_REST_Response( $response, 204 );
@@ -1229,16 +1253,18 @@ class EmployeesController extends REST_Controller {
             ]
         );
 
-        if ( ! is_wp_error( $request_id ) ) {
-            // notification email
-            $emailer = wperp()->emailer->get_email( 'NewLeaveRequest' );
+        if (is_wp_error($request_id)) {
+            return $request_id;
+        }
 
-            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
-                $emailer->trigger( $request_id );
-            }
+        $emailer = wperp()->emailer->get_email('NewLeaveRequest');
+
+        if (is_a($emailer, '\WeDevs\ERP\Email')) {
+            $emailer->trigger($request_id);
         }
 
         $response = rest_ensure_response( $request_id );
+
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request_id ) ) );
 
@@ -1462,9 +1488,124 @@ class EmployeesController extends REST_Controller {
     }
 
     /**
+     * Format options array to consistent structure
+     *
+     * @param array $options Raw options array
+     *
+     * @return array
+     */
+    protected function format_enum_options($options) {
+        $formatted = [];
+
+        foreach ($options as $key => $label) {
+            $formatted[] = [
+                'value' => $key,
+                'label' => $label,
+            ];
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Add human-readable labels for enum fields
+     *
+     * @param array    $data Employee data
+     * @param Employee $item Employee object
+     *
+     * @return array
+     */
+    protected function add_enum_labels($data, Employee $item) {
+        $enum_fields = [
+            'pay_type'       => [
+                'getter' => 'erp_hr_get_pay_type',
+                'method' => null,
+            ],
+            'hiring_source'  => [
+                'getter' => 'erp_hr_get_hiring_sources',
+                'method' => 'get_hiring_source',
+            ],
+            'type'           => [
+                'getter' => 'erp_hr_get_employee_types',
+                'method' => 'get_type',
+            ],
+            'status'         => [
+                'getter' => 'erp_hr_get_employee_statuses',
+                'method' => 'get_status',
+            ],
+            'gender'         => [
+                'getter' => 'erp_hr_get_genders',
+                'method' => 'get_gender',
+            ],
+            'marital_status' => [
+                'getter' => 'erp_hr_get_marital_statuses',
+                'method' => 'get_marital_status',
+            ],
+            'blood_group'    => [
+                'getter' => 'erp_hr_get_blood_groups',
+                'method' => 'get_bloog_group',
+            ],
+        ];
+
+        foreach ($enum_fields as $field_key => $config) {
+            // Skip if field is empty or has default value
+            if (empty($data[$field_key]) || $data[$field_key] === '-1') {
+                continue;
+            }
+
+            // Get label for the current value
+            $label = '';
+            if (! empty($config['method']) && method_exists($item, $config['method'])) {
+                $label = $item->{$config['method']}('view');
+            } else {
+                // Fallback to getting from options array
+                $options = function_exists($config['getter']) ? call_user_func($config['getter']) : [];
+                if (isset($options[$data[$field_key]])) {
+                    $label = $options[$data[$field_key]];
+                }
+            }
+
+            // Always add label in the same consistent format
+            $data[$field_key . '_label'] = $label;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Add enum field options when explicitly requested
+     *
+     * @param array $data Employee data
+     *
+     * @return array
+     */
+    protected function add_enum_options($data) {
+        $enum_getters = [
+            'pay_type'       => 'erp_hr_get_pay_type',
+            'hiring_source'  => 'erp_hr_get_hiring_sources',
+            'type'           => 'erp_hr_get_employee_types',
+            'status'         => 'erp_hr_get_employee_statuses',
+            'gender'         => 'erp_hr_get_genders',
+            'marital_status' => 'erp_hr_get_marital_statuses',
+            'blood_group'    => 'erp_hr_get_blood_groups',
+        ];
+
+        foreach ($enum_getters as $field_key => $getter) {
+            if (function_exists($getter)) {
+                $options = call_user_func($getter);
+                $data[$field_key . '_options'] = $this->format_enum_options($options);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Prepare a single user output for response
      *
-     * @param array $additional_fields
+     * @param Employee        $item              Employee object
+     * @param WP_REST_Request $request           Request object
+     * @param array           $additional_fields Additional fields
      *
      * @return mixed|object|WP_REST_Response
      */
@@ -1505,7 +1646,44 @@ class EmployeesController extends REST_Controller {
             'postal_code'     => '',
         ];
 
-        $data = wp_parse_args( $item->get_data( [], true ), $default );
+        $data = $item->get_data([], true);
+
+        // Clean up any numeric keys that may have been added
+        $data = array_filter($data, function ($key) {
+            return !is_numeric($key) || $key === 'user_id' || $key === 'employee_id';
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Merge with defaults
+        $data = wp_parse_args($data, $default);
+
+        // Clean up complex objects that shouldn't be serialized
+        foreach ($data as $key => $value) {
+            // Convert Eloquent Collections to arrays
+            if ($value instanceof \Illuminate\Database\Eloquent\Collection) {
+                $data[$key] = $value->first() ? $value->first()->id : 0;
+            }
+
+            // Convert WP_REST_Response objects to their data
+            if ($value instanceof \WP_REST_Response) {
+                $data[$key] = $value->get_data()['user_id'] ?? 0;
+            }
+
+            // Remove empty string values from numeric keys
+            if (is_numeric($key) && empty($value)) {
+                unset($data[$key]);
+            }
+        }
+
+        // Merge additional fields
+        $data = array_merge($data, $additional_fields);
+
+        // Final cleanup of numeric keys
+        $data = array_filter($data, function ($key) {
+            return !is_numeric($key);
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Always add human-readable labels for enum fields
+        // $data = $this->add_enum_labels($data, $item);
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
@@ -1533,9 +1711,29 @@ class EmployeesController extends REST_Controller {
             if ( in_array( 'roles', $include_params ) ) {
                 $data['roles'] = $item->get_roles();
             }
+
+            // Include job histories if requested
+            if ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) {
+                $histories = $item->get_job_histories( 'all' );
+
+                // Format for frontend consumption
+                $data['employment_history'] = isset( $histories['employee'] ) ? $histories['employee'] : [];
+                $data['compensation_history'] = isset( $histories['compensation'] ) ? $histories['compensation'] : [];
+                $data['job_history'] = isset( $histories['job'] ) ? $histories['job'] : [];
+            }
+
+            if ( in_array( 'location', $include_params ) && ! empty( $item->get_location() ) ) {
+                $data['location'] = CompanyLocations::all([
+                    'name', 'address_1', 'address_2', 'city', 'state', 'zip', 'country'
+                ]);
+            }
+
+            if ( in_array( 'enum_options', $include_params ) ) {
+                $data = $this->add_enum_options( $data );
+            }
         }
 
-        $data = array_merge( $data, $additional_fields );
+        $data = array_merge($data, $additional_fields);
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );

@@ -1,0 +1,429 @@
+<?php
+namespace WeDevs\ERP\HRM\PushNotification;
+
+// don't call the file directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+/**
+ * Orchestrates push notifications for WP ERP events.
+ *
+ * @since 1.0.0
+ */
+class NotificationHandler {
+
+    /**
+     * The push notification provider.
+     *
+     * @var NotificationInterface
+     */
+    private $notification;
+
+    /**
+     * Constructor.
+     *
+     * @since 1.0.0
+     *
+     * @param NotificationInterface $notification Push notification provider instance.
+     */
+    public function __construct( NotificationInterface $notification ) {
+        $this->notification = $notification;
+    }
+
+    /**
+     * Notify HR managers when an employee submits a new leave request.
+     *
+     * @since 1.0.0
+     *
+     * @param int   $request_id Leave request ID.
+     * @param array $request    Leave request data array.
+     *
+     * @return void
+     */
+    public function on_leave_request_new( $request_id, $request ) {
+        if ( empty( $request_id ) || empty( $request ) ) {
+            return;
+        }
+
+        $employee_id   = isset( $request['user_id'] ) ? absint( $request['user_id'] ) : 0;
+        $employee_name = $this->get_employee_name( $employee_id );
+
+        $title   = __( 'New Leave Request', 'erp' );
+        $message = sprintf( __( '%s has submitted a new leave request.', 'erp' ), $employee_name );
+
+        $manager_ids = $this->get_hr_manager_ids();
+
+        if ( empty( $manager_ids ) ) {
+            return;
+        }
+
+        $this->notification->send(
+            $manager_ids,
+            $title,
+            $message,
+            [
+                'type'             => 'leave_request_new',
+                'leave_request_id' => absint( $request_id ),
+            ]
+        );
+    }
+
+    /**
+     * Notify the employee when their leave request is approved.
+     *
+     * @since 1.0.0
+     *
+     * @param int   $request_id Leave request ID.
+     * @param array $request    Leave request data array.
+     *
+     * @return void
+     */
+    public function on_leave_request_approved( $request_id, $request ) {
+        if ( empty( $request_id ) || empty( $request ) ) {
+            return;
+        }
+
+        $employee_id = isset( $request['user_id'] ) ? absint( $request['user_id'] ) : 0;
+
+        if ( ! $employee_id ) {
+            return;
+        }
+
+        $title   = __( 'Leave Request Approved', 'erp' );
+        $message = __( 'Your leave request has been approved.', 'erp' );
+
+        $this->notification->send(
+            [ $employee_id ],
+            $title,
+            $message,
+            [
+                'type'             => 'leave_request_approved',
+                'leave_request_id' => absint( $request_id ),
+            ]
+        );
+    }
+
+    /**
+     * Notify the employee when their leave request is rejected.
+     *
+     * @since 1.0.0
+     *
+     * @param int   $request_id Leave request ID.
+     * @param array $request    Leave request data array.
+     *
+     * @return void
+     */
+    public function on_leave_request_rejected( $request_id, $request ) {
+        if ( empty( $request_id ) || empty( $request ) ) {
+            return;
+        }
+
+        $employee_id = isset( $request['user_id'] ) ? absint( $request['user_id'] ) : 0;
+
+        if ( ! $employee_id ) {
+            return;
+        }
+
+        $title   = __( 'Leave Request Rejected', 'erp' );
+        $message = __( 'Your leave request has been rejected.', 'erp' );
+
+        $this->notification->send(
+            [ $employee_id ],
+            $title,
+            $message,
+            [
+                'type'             => 'leave_request_rejected',
+                'leave_request_id' => absint( $request_id ),
+            ]
+        );
+    }
+
+    /**
+     * Send a push notification to employees when an announcement is published.
+     *
+     * @since 1.0.0
+     *
+     * @param array $employees Array of employee user IDs.
+     * @param int   $post_id   Announcement post ID.
+     *
+     * @return void
+     */
+    public function on_announcement( $employees, $post_id ) {
+        $push_enabled = get_post_meta( $post_id, '_announcement_send_push', true );
+
+        if ( 'on' !== $push_enabled ) {
+            return;
+        }
+
+        $post = get_post( $post_id );
+
+        if ( empty( $post ) ) {
+            return;
+        }
+
+        $title   = get_the_title( $post );
+        $message = wp_trim_words( wp_strip_all_tags( $post->post_content ), 30, '...' );
+
+        if ( empty( $employees ) ) {
+            return;
+        }
+
+        $user_ids = array_map( 'absint', (array) $employees );
+
+        $this->notification->send(
+            $user_ids,
+            $title,
+            $message,
+            [
+                'type'            => 'announcement',
+                'post_id'         => absint( $post_id ),
+                'announcement_id' => absint( $post_id ),
+            ]
+        );
+    }
+
+    /**
+     * Send push reminders for holidays starting in exactly $days_before days.
+     *
+     * Called daily by cron via Module::on_holiday_reminder_check().
+     * Mirrors the email pattern in erp_hr_holiday_reminder_to_employees().
+     *
+     * @since 1.0.0
+     *
+     * @param int $days_before Number of days before the holiday start to send the reminder.
+     *
+     * @return void
+     */
+    public function on_holiday_reminder( $days_before ) {
+        $days_before = max( 1, absint( $days_before ) );
+
+        $target_day = erp_current_datetime()->modify( "+{$days_before} days" )->format( 'Y-m-d' );
+
+        $holidays = ( new \WeDevs\ERP\HRM\Models\LeaveHoliday() )
+            ->whereDate( 'start', $target_day )
+            ->get()
+            ->toArray();
+
+        if ( empty( $holidays ) ) {
+            return;
+        }
+
+        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
+
+        if ( empty( $employees ) ) {
+            return;
+        }
+
+        $user_ids = array_values( array_filter( array_map( function( $emp ) {
+            return isset( $emp->user_id ) ? absint( $emp->user_id ) : 0;
+        }, $employees ) ) );
+
+        if ( empty( $user_ids ) ) {
+            return;
+        }
+
+        foreach ( $holidays as $holiday ) {
+            $title = ! empty( $holiday['title'] )
+                ? sanitize_text_field( $holiday['title'] )
+                : __( 'Upcoming Holiday', 'erp' );
+
+            $holiday_start = erp_current_datetime()->modify( $holiday['start'] );
+            $holiday_end   = erp_current_datetime()->modify( $holiday['end'] );
+            $day_diff      = $holiday_start->diff( $holiday_end )->days;
+
+            if ( 0 === $day_diff ) {
+                $date_str = $holiday_start->format( 'l, F j, Y' );
+            } else {
+                $date_str = $holiday_start->format( 'l, F j, Y' ) . ' – ' . $holiday_end->format( 'l, F j, Y' );
+            }
+
+            $message = 1 === $days_before
+                ? sprintf( __( 'Reminder: %s is tomorrow (%s).', 'erp' ), $title, $date_str )
+                : sprintf( __( 'Reminder: %s is in %d days (%s).', 'erp' ), $title, $days_before, $date_str );
+
+            $this->notification->send(
+                $user_ids,
+                $title,
+                $message,
+                [
+                    'type'       => 'holiday_reminder',
+                    'holiday_id' => absint( $holiday['id'] ),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Send a birthday push notification to the employee.
+     *
+     * Mirrors erp_hr_send_birthday_wish_email() which is fired on the same hook.
+     *
+     * @since 1.0.0
+     *
+     * @param int $user_id WordPress user ID of the birthday employee.
+     *
+     * @return void
+     */
+    public function on_birthday( $user_id ) {
+        $user_id = absint( $user_id );
+
+        if ( ! $user_id ) {
+            return;
+        }
+
+        $name = $this->get_employee_name( $user_id );
+
+        $this->notification->send(
+            [ $user_id ],
+            __( 'Happy Birthday!', 'erp' ),
+            ! empty( $name )
+                ? sprintf( __( 'Wishing you a very happy birthday, %s!', 'erp' ), $name )
+                : __( 'Wishing you a very happy birthday!', 'erp' ),
+            [
+                'type'    => 'birthday',
+                'user_id' => $user_id,
+            ]
+        );
+    }
+
+    /**
+     * Notify all other employees about their colleague's birthday.
+     *
+     * @since 1.0.0
+     *
+     * @param int $user_id WordPress user ID of the birthday employee.
+     *
+     * @return void
+     */
+    public function on_birthday_notify_colleagues( $user_id ) {
+        $user_id = absint( $user_id );
+
+        if ( ! $user_id ) {
+            return;
+        }
+
+        $name = $this->get_employee_name( $user_id );
+
+        if ( empty( $name ) ) {
+            return;
+        }
+
+        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
+
+        if ( empty( $employees ) ) {
+            return;
+        }
+
+        $other_ids = array_values( array_filter( array_map( function( $emp ) use ( $user_id ) {
+            $id = isset( $emp->user_id ) ? absint( $emp->user_id ) : 0;
+            return ( $id && $id !== $user_id ) ? $id : 0;
+        }, $employees ) ) );
+
+        if ( empty( $other_ids ) ) {
+            return;
+        }
+
+        $this->notification->send(
+            $other_ids,
+            __( 'Birthday Today!', 'erp' ),
+            sprintf( __( "Today is %s's birthday. Wish them well!", 'erp' ), $name ),
+            [
+                'type'    => 'birthday_colleague',
+                'user_id' => $user_id,
+            ]
+        );
+    }
+
+    /**
+     * Notify HR managers when a new job application is submitted.
+     *
+     * @since 1.0.0
+     *
+     * @param array $data Application data: job_id, applicant_id, stage, exam_detail.
+     *
+     * @return void
+     */
+    public function on_job_apply( $data ) {
+        if ( empty( $data['job_id'] ) || empty( $data['applicant_id'] ) ) {
+            return;
+        }
+
+        $job_id      = absint( $data['job_id'] );
+        $applicant_id = absint( $data['applicant_id'] );
+
+        $job_title = get_the_title( $job_id );
+
+        global $wpdb;
+        $applicant = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = %d",
+                $applicant_id
+            )
+        );
+
+        $applicant_name = $applicant
+            ? trim( $applicant->first_name . ' ' . $applicant->last_name )
+            : __( 'A new applicant', 'erp' );
+
+        $title   = __( 'New Job Application', 'erp' );
+        $message = $job_title
+            ? sprintf( __( '%1$s has applied for %2$s.', 'erp' ), $applicant_name, $job_title )
+            : sprintf( __( '%s has submitted a new job application.', 'erp' ), $applicant_name );
+
+        $manager_ids = $this->get_hr_manager_ids();
+
+        if ( empty( $manager_ids ) ) {
+            return;
+        }
+
+        $this->notification->send(
+            $manager_ids,
+            $title,
+            $message,
+            [
+                'type'        => 'job_apply',
+                'job_id'      => $job_id,
+                'applicant_id' => $applicant_id,
+                'application_id' => isset( $data['application_id'] ) ? absint( $data['application_id'] ) : 0,
+            ]
+        );
+    }
+
+    /**
+     * Retrieve the display name for an employee.
+     *
+     * @since 1.0.0
+     *
+     * @param int $employee_id WordPress user ID.
+     *
+     * @return string
+     */
+    private function get_employee_name( $employee_id ) {
+        if ( ! $employee_id ) {
+            return '';
+        }
+
+        $user = get_userdata( $employee_id );
+
+        return $user ? $user->display_name : '';
+    }
+
+    /**
+     * Get the WordPress user IDs of all HR managers.
+     *
+     * @since 1.0.0
+     *
+     * @return array
+     */
+    private function get_hr_manager_ids() {
+        $managers = get_users( [ 'role__in' => [ 'erp_hr_manager' ] ] );
+        $ids      = [];
+
+        foreach ( $managers as $manager ) {
+            $ids[] = absint( $manager->ID );
+        }
+
+        return array_values( $ids );
+    }
+}

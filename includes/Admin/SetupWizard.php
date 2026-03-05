@@ -1271,6 +1271,22 @@ class SetupWizard {
                             window.location.href = '<?php echo esc_url( $this->get_next_step_link() ); ?>';
                         });
                     }
+                <?php
+                foreach ( $days as $key => $day ) {
+                    ?>
+                    <tr>
+                        <th scope="row"><label for="gen_financial_month"><?php echo esc_html( $day ); ?></label></th>
+                        <td>
+                            <?php echo wp_kses_post( erp_html_form_input( [
+                                'name'     => 'day[' . $key . ']',
+                                'value'    => $working_days[ $key ],
+                                'type'     => 'select',
+                                'options'  => $options,
+                            ] ).'' ); ?>
+                        </td>
+                    </tr>
+                <?php
+                } ?>
 
                     // Handle drag and drop
                     var $label = $('.erp-csv-upload-label');
