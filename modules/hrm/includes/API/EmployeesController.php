@@ -72,7 +72,11 @@ class EmployeesController extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    $user_id = (int) $request['user_id'];
+                    $current_user_id = get_current_user_id();
+
+                    // Allow users to view their own profile or if they have erp_list_employee capability
+                    return ( $user_id === $current_user_id ) || current_user_can( 'erp_list_employee' );
                 },
             ],
             [
@@ -390,14 +394,25 @@ class EmployeesController extends REST_Controller {
                 'methods'               => WP_REST_Server::CREATABLE,
                 'callback'              => [ $this, 'upload_photo' ],
                 'permission_callback'   => function ( $request ) {
-                    return current_user_can( 'erp_create_employee' );
+                    // Allow ERP employees or users with erp_create_employee capability
+                    if ( current_user_can( 'erp_create_employee' ) ) {
+                        return true;
+                    }
+
+                    $employee = new Employee( get_current_user_id() );
+
+                    return $employee->is_employee();
                 },
             ],
             [
                 'methods'               => WP_REST_Server::EDITABLE,
                 'callback'              => [ $this, 'update_photo' ],
-                'permission_callback'   => function () {
-                    return current_user_can( 'erp_create_employee' );
+                'permission_callback'   => function ( $request ) {
+                    $user_id = isset( $request['user_id'] ) ? (int) $request['user_id'] : 0;
+                    $current_user_id = get_current_user_id();
+
+                    // Allow users to update their own photo or if they have erp_create_employee capability
+                    return ( $user_id === $current_user_id ) || current_user_can( 'erp_create_employee' );
                 },
             ],
         ] );
@@ -601,7 +616,10 @@ class EmployeesController extends REST_Controller {
     public function delete_employee( WP_REST_Request $request ) {
         $id = (int) $request['user_id'];
 
-        erp_employee_delete( $id );
+        // Check if force delete is requested (for permanent deletion from trash)
+        $force = isset( $request['force'] ) && filter_var( $request['force'], FILTER_VALIDATE_BOOLEAN );
+
+        erp_employee_delete( $id, $force );
         $response = rest_ensure_response( true );
 
         return new WP_REST_Response( $response, 204 );
@@ -1694,14 +1712,24 @@ class EmployeesController extends REST_Controller {
                 $data['roles'] = $item->get_roles();
             }
 
-             if ( in_array( 'location', $include_params ) && ! empty( $item->get_location() ) ) {
+            // Include job histories if requested
+            if ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) {
+                $histories = $item->get_job_histories( 'all' );
+
+                // Format for frontend consumption
+                $data['employment_history'] = isset( $histories['employee'] ) ? $histories['employee'] : [];
+                $data['compensation_history'] = isset( $histories['compensation'] ) ? $histories['compensation'] : [];
+                $data['job_history'] = isset( $histories['job'] ) ? $histories['job'] : [];
+            }
+
+            if ( in_array( 'location', $include_params ) && ! empty( $item->get_location() ) ) {
                 $data['location'] = CompanyLocations::all([
                     'name', 'address_1', 'address_2', 'city', 'state', 'zip', 'country'
                 ]);
             }
 
-            if (in_array('enum_options', $include_params)) {
-                $data = $this->add_enum_options($data);
+            if ( in_array( 'enum_options', $include_params ) ) {
+                $data = $this->add_enum_options( $data );
             }
         }
 
