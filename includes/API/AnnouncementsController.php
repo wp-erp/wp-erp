@@ -83,6 +83,32 @@ class AnnouncementsController extends REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/my', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_my_announcements' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return is_user_logged_in();
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/my/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_my_announcement' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function ( $request ) {
+                    return is_user_logged_in();
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -136,6 +162,88 @@ class AnnouncementsController extends REST_Controller {
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
+        $response = rest_ensure_response( $item );
+
+        return $response;
+    }
+
+    /**
+     * Get announcements for the current logged-in user
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_my_announcements( $request ) {
+        $current_user_id = get_current_user_id();
+
+        if ( ! $current_user_id ) {
+            return new WP_Error( 'rest_not_authenticated', __( 'User is not authenticated.' ), [ 'status' => 401 ] );
+        }
+
+        $announcement_model = new \WeDevs\ERP\HRM\Models\Announcement();
+        $announcements = $announcement_model->where( 'user_id', $current_user_id )->get();
+
+        $post_ids = $announcements->pluck( 'post_id' )->toArray();
+
+        if ( empty( $post_ids ) ) {
+            return rest_ensure_response( [] );
+        }
+
+        $args = [
+            'post__in'       => $post_ids,
+            'posts_per_page' => $request['per_page'],
+            'offset'         => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'post_type'      => 'erp_hr_announcement',
+        ];
+
+        $items = get_posts( $args );
+        $formated_items = [];
+
+        foreach ( $items as $item ) {
+            $item->id         = $item->ID;
+            $data             = $this->prepare_item_for_response( $item, $request );
+            $formated_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formated_items );
+        $response = $this->format_collection_response( $response, $request, \count( $post_ids ) );
+
+        return $response;
+    }
+
+    /**
+     * Get a specific announcement for the current user
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_my_announcement( $request ) {
+        $current_user_id = get_current_user_id();
+        $announcement_id = (int) $request['id'];
+
+        if ( ! $current_user_id ) {
+            return new WP_Error( 'rest_not_authenticated', __( 'User is not authenticated.' ), [ 'status' => 401 ] );
+        }
+
+        $announcement_model = new \WeDevs\ERP\HRM\Models\Announcement();
+        $announcement = $announcement_model->where( 'user_id', $current_user_id )
+            ->where( 'post_id', $announcement_id )
+            ->first();
+
+        if ( ! $announcement ) {
+            return new WP_Error( 'rest_announcement_not_found', __( 'Announcement not found or you do not have permission to view it.' ), [ 'status' => 404 ] );
+        }
+
+        $item = get_post( $announcement_id );
+
+        if ( empty( $item ) || $item->post_type !== 'erp_hr_announcement' ) {
+            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid announcement id.' ), [ 'status' => 404 ] );
+        }
+
+        $item->id = $item->ID;
+        $item = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -345,10 +453,20 @@ class AnnouncementsController extends REST_Controller {
                     'description' => __( 'Recipient type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
+                    'recipient_type' => [ 'all_employee', 'selected_employee' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'employees'      => [
+                    'description' => __( 'Employees for the resource.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => false,
                 ],
             ],
         ];

@@ -94,7 +94,7 @@ class Scripts {
 
         // core js files
         wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
-        wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', [ 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker', 'erp-sweetalert' ], $this->version, true );
+        wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', [ 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker', 'erp-sweetalert', 'erp-tiptip' ], $this->version, true );
         wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', [ 'jquery', 'plupload-handlers' ], $this->version, true );
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );
         wp_register_script( 'erp-system-status', $js . '/system-status' . $this->suffix . '.js', [ 'jquery' ], $this->version, true );

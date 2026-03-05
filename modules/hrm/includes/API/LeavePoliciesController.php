@@ -127,7 +127,7 @@ class LeavePoliciesController extends REST_Controller {
     /**
      * Get a specific policy
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */

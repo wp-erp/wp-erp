@@ -61,6 +61,44 @@ function erp_get_peoples( $args = [] ) {
     if ( false === $items ) {
         extract( $args );
 
+        // Whitelist allowed orderby columns to prevent SQL injection
+        $allowed_orderby = [
+            'id',
+            'user_id',
+            'first_name',
+            'last_name',
+            'company',
+            'email',
+            'phone',
+            'mobile',
+            'other',
+            'website',
+            'fax',
+            'notes',
+            'street_1',
+            'street_2',
+            'city',
+            'state',
+            'postal_code',
+            'country',
+            'currency',
+            'life_stage',
+            'contact_owner',
+            'hash',
+            'created_by',
+            'created',
+        ];
+
+        if ( ! in_array( $orderby, $allowed_orderby, true ) ) {
+            $orderby = 'id';
+        }
+
+        // Whitelist allowed order directions to prevent SQL injection
+        $order = strtoupper( $order );
+        if ( ! in_array( $order, [ 'ASC', 'DESC' ], true ) ) {
+            $order = 'DESC';
+        }
+
         $sql         = [];
         $trashed_sql = $trashed ? '`deleted_at` is not null' : '`deleted_at` is null';
 
@@ -359,7 +397,7 @@ function erp_get_peoples_count( $type = 'contact' ) {
  *
  * @param int $id
  *
- * @return array
+ * @return object
  */
 function erp_get_people( $id = 0 ) {
     return erp_get_people_by( 'id', $id );
