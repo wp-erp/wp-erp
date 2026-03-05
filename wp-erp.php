@@ -257,6 +257,11 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
+
+        // Load CRM capabilities functions early to prevent fatal errors with ERP PRO
+        if ( file_exists( WPERP_MODULES . '/crm/includes/functions-capabilities.php' ) ) {
+            require_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
+        }
 //        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
 //        require_once WPERP_INCLUDES . '/class-i18n.php';
         require_once WPERP_INCLUDES . '/functions-cache-helper.php';
