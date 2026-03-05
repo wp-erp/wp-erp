@@ -394,8 +394,14 @@ class EmployeesController extends REST_Controller {
                 'methods'               => WP_REST_Server::CREATABLE,
                 'callback'              => [ $this, 'upload_photo' ],
                 'permission_callback'   => function ( $request ) {
-                    // Allow any authenticated user to upload photos (they can only update their own profile anyway)
-                    return is_user_logged_in();
+                    // Allow ERP employees or users with erp_create_employee capability
+                    if ( current_user_can( 'erp_create_employee' ) ) {
+                        return true;
+                    }
+
+                    $employee = new Employee( get_current_user_id() );
+
+                    return $employee->is_employee();
                 },
             ],
             [
