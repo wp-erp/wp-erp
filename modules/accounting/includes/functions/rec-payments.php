@@ -520,7 +520,7 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 
     $due = (float) erp_acct_get_invoice_due( $invoice_no );
 
-    if ( 0.00 === $due ) {
+    if ( $due <= 0.00 ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoices',
             [
