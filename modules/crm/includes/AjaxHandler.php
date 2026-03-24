@@ -1388,10 +1388,13 @@ class AjaxHandler {
 				$headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
 
 				$contact_owner_id = $contact->get_contact_owner();
+
+				$server_http_host = preg_replace('/[^a-zA-Z0-9:\.]/', '', isset($_SERVER['HTTP_HOST']) ? wp_unslash( $_SERVER['HTTP_HOST'] ) : '');
 				$server_host = apply_filters(
 					'erp_crm_activity_server_host',
-					isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
+					$server_http_host
 				);
+				
 				$message_id       = md5( uniqid( time() ) ) . ".{$user_id}.{$contact_owner_id}.r2@{$server_host}";
 
 				$custom_headers = array(

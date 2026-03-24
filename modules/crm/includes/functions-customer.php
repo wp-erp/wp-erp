@@ -2687,11 +2687,11 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $headers = '';
         $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
-        $server_host = apply_filters(
-            'erp_crm_activity_server_host',
-            isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
-        );
-        
+        $server_http_host = preg_replace('/[^a-zA-Z0-9:\.]/', '', isset($_SERVER['HTTP_HOST']) ? wp_unslash( $_SERVER['HTTP_HOST'] ) : '');
+		$server_host = apply_filters(
+			'erp_crm_activity_server_host',
+			$server_http_host
+		);
         $message_id  = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $server_host;
 
         $custom_headers = [
@@ -2779,10 +2779,11 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     $headers = '';
     $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
 
-    $server_host = apply_filters(
-        'erp_crm_activity_server_host',
-        isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
-    );
+    $server_http_host = preg_replace('/[^a-zA-Z0-9:\.]/', '', isset($_SERVER['HTTP_HOST']) ? wp_unslash( $_SERVER['HTTP_HOST'] ) : '');
+	$server_host = apply_filters(
+		'erp_crm_activity_server_host',
+		$server_http_host
+	);
     $message_id  = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $server_host;
 
     $custom_headers = [
@@ -3705,10 +3706,12 @@ function erp_crm_check_new_inbound_emails() {
 
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $server_host = apply_filters(
-            'erp_crm_activity_server_host',
-            isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
-        );
+        $server_http_host = preg_replace('/[^a-zA-Z0-9:\.]/', '', isset($_SERVER['HTTP_HOST']) ? wp_unslash( $_SERVER['HTTP_HOST'] ) : '');
+		$server_host = apply_filters(
+			'erp_crm_activity_server_host',
+			$server_http_host
+		);
+        
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $server_host;
 
         $filtered_emails = [];
