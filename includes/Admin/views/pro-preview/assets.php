@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <div class="wrap erp-hr-assets">
         <h2>
             <?php esc_html_e( 'Assets', 'erp' ); ?>
-            <a href="#" class="add-new-h2 erp-pro-preview-action"><?php esc_html_e( 'New Entry', 'erp' ); ?></a>
+            <a href="#" class="add-new-h2 erp-pro-preview-action" data-form="pro-form-new-asset" data-form-title="<?php esc_attr_e( 'Add New Asset', 'erp' ); ?>"><?php esc_html_e( 'New Entry', 'erp' ); ?></a>
         </h2>
 
         <table class="widefat striped">
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td>
                         <strong><a href="#" class="erp-pro-preview-action">MacBook Pro 16"</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-asset" data-form-title="<?php esc_attr_e( 'Edit Asset', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td>
                         <strong><a href="#" class="erp-pro-preview-action">Dell Monitor 27"</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-asset" data-form-title="<?php esc_attr_e( 'Edit Asset', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -67,7 +67,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td>
                         <strong><a href="#" class="erp-pro-preview-action">Herman Miller Chair</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-asset" data-form-title="<?php esc_attr_e( 'Edit Asset', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -83,7 +83,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td>
                         <strong><a href="#" class="erp-pro-preview-action">iPhone 15 Pro</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-asset" data-form-title="<?php esc_attr_e( 'Edit Asset', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -99,7 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td>
                         <strong><a href="#" class="erp-pro-preview-action">ThinkPad X1 Carbon</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-asset" data-form-title="<?php esc_attr_e( 'Edit Asset', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -118,5 +118,77 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="displaying-num">5 items</span>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Hidden form template for New/Edit Asset -->
+<div id="pro-form-new-asset" style="display:none;">
+    <table class="form-table">
+        <tr>
+            <th><label><?php esc_html_e( 'Asset Name', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. MacBook Pro 16"', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Category', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option value=""><?php esc_html_e( '— Select Category —', 'erp' ); ?></option>
+                    <option>Laptop</option>
+                    <option>Monitor</option>
+                    <option>Mobile</option>
+                    <option>Furniture</option>
+                    <option>Software</option>
+                    <option>Other</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Serial Number', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. MBP-2026-001', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Purchase Date', 'erp' ); ?></label></th>
+            <td><input type="date" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Purchase Price', 'erp' ); ?></label></th>
+            <td><input type="number" step="0.01" class="regular-text" placeholder="0.00" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Assign To', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option value=""><?php esc_html_e( '— Select Employee —', 'erp' ); ?></option>
+                    <option>John Smith</option>
+                    <option>Sarah Johnson</option>
+                    <option>Mike Davis</option>
+                    <option>Emily Chen</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Status', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option>Available</option>
+                    <option>In Use</option>
+                    <option>Under Maintenance</option>
+                    <option>Retired</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Notes', 'erp' ); ?></label></th>
+            <td><textarea rows="3" class="large-text" placeholder="<?php esc_attr_e( 'Optional notes...', 'erp' ); ?>"></textarea></td>
+        </tr>
+    </table>
+    <div class="erp-pro-form-footer">
+        <button type="button" class="button button-primary" disabled><?php esc_html_e( 'Save Asset', 'erp' ); ?></button>
+        <span class="erp-pro-save-notice">
+            <span class="dashicons dashicons-lock"></span>
+            <?php esc_html_e( 'Upgrade to Pro to save', 'erp' ); ?>
+            &mdash;
+            <a href="https://wperp.com/pricing/?utm_source=wp-admin&utm_medium=pro-form&utm_content=asset" target="_blank"><?php esc_html_e( 'Get Pro', 'erp' ); ?></a>
+        </span>
     </div>
 </div>

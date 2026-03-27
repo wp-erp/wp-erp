@@ -440,14 +440,26 @@ class AddProMenu {
             jQuery(function($) {
                 $('body').on('click', '.erp-pro-preview-action', function(e) {
                     e.preventDefault();
-                    $.erpPopup({
-                        title: '',
-                        button: '',
-                        id: 'erp-pro-popup-modal',
-                        content: wperp.template('erp-pro-popup-modal'),
-                        extraClass: 'larger',
-                        footer: false
-                    });
+                    var formId = $(this).data('form');
+                    if (formId && $('#' + formId).length) {
+                        $.erpPopup({
+                            title: $(this).data('form-title') || '',
+                            button: '',
+                            id: 'erp-pro-form-modal',
+                            content: $('#' + formId).html(),
+                            extraClass: 'larger',
+                            footer: false
+                        });
+                    } else {
+                        $.erpPopup({
+                            title: '',
+                            button: '',
+                            id: 'erp-pro-popup-modal',
+                            content: wperp.template('erp-pro-popup-modal'),
+                            extraClass: 'larger',
+                            footer: false
+                        });
+                    }
                 });
             });
         </script>

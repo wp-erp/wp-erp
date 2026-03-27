@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <div class="wrap">
         <h1 class="wp-heading-inline">
             <?php esc_html_e( 'Training Programs', 'erp' ); ?>
-            <a href="#" class="page-title-action erp-pro-preview-action"><?php esc_html_e( 'Add New Training', 'erp' ); ?></a>
+            <a href="#" class="page-title-action erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Add New Training', 'erp' ); ?>"><?php esc_html_e( 'Add New Training', 'erp' ); ?></a>
         </h1>
 
         <table class="widefat striped" style="margin-top: 15px;">
@@ -34,9 +34,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Leadership Development</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>">Leadership Development</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -51,9 +51,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">React Advanced Patterns</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>">React Advanced Patterns</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -68,9 +68,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Workplace Safety</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>">Workplace Safety</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -85,9 +85,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Sales Communication</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>">Sales Communication</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-training" data-form-title="<?php esc_attr_e( 'Edit Training', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -107,5 +107,80 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="displaying-num">4 items</span>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Hidden form template for New/Edit Training -->
+<div id="pro-form-new-training" style="display:none;">
+    <table class="form-table">
+        <tr>
+            <th><label><?php esc_html_e( 'Training Title', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. Leadership Development', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Training Subject', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option value=""><?php esc_html_e( '— Select Subject —', 'erp' ); ?></option>
+                    <option>Technical Skills</option>
+                    <option>Management Skills</option>
+                    <option>Soft Skills</option>
+                    <option>Compliance</option>
+                    <option>Other</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Trainer Type', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option>Internal</option>
+                    <option>External</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Trainer Name', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. ABC Consulting', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Employees', 'erp' ); ?></label></th>
+            <td>
+                <select multiple style="min-width: 200px; min-height: 80px;">
+                    <option>John Smith</option>
+                    <option>Sarah Johnson</option>
+                    <option>Mike Davis</option>
+                    <option>Emily Chen</option>
+                    <option>Alex Turner</option>
+                    <option>Rachel Kim</option>
+                </select>
+                <p class="description"><?php esc_html_e( 'Hold Ctrl/Cmd to select multiple employees.', 'erp' ); ?></p>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Start Date', 'erp' ); ?></label></th>
+            <td><input type="date" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'End Date', 'erp' ); ?></label></th>
+            <td><input type="date" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Cost', 'erp' ); ?></label></th>
+            <td><input type="number" step="0.01" class="regular-text" placeholder="0.00" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Description', 'erp' ); ?></label></th>
+            <td><textarea rows="3" class="large-text" placeholder="<?php esc_attr_e( 'Training description...', 'erp' ); ?>"></textarea></td>
+        </tr>
+    </table>
+    <div class="erp-pro-form-footer">
+        <button type="button" class="button button-primary" disabled><?php esc_html_e( 'Save Training', 'erp' ); ?></button>
+        <span class="erp-pro-save-notice">
+            <span class="dashicons dashicons-lock"></span>
+            <?php esc_html_e( 'Upgrade to Pro to save', 'erp' ); ?>
+            &mdash;
+            <a href="https://wperp.com/pricing/?utm_source=wp-admin&utm_medium=pro-form&utm_content=training" target="_blank"><?php esc_html_e( 'Get Pro', 'erp' ); ?></a>
+        </span>
     </div>
 </div>

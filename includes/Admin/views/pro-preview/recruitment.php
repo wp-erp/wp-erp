@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <div class="wrap">
         <h1 class="wp-heading-inline">
             <?php esc_html_e( 'Job Openings', 'erp' ); ?>
-            <a href="#" class="page-title-action erp-pro-preview-action"><?php esc_html_e( 'Create Opening', 'erp' ); ?></a>
+            <a href="#" class="page-title-action erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Create Job Opening', 'erp' ); ?>"><?php esc_html_e( 'Create Opening', 'erp' ); ?></a>
         </h1>
 
         <!-- Filters -->
@@ -42,9 +42,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Senior Frontend Developer</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>">Senior Frontend Developer</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="view"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'View Candidates', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
@@ -58,9 +58,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Product Designer</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>">Product Designer</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="view"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'View Candidates', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
@@ -74,9 +74,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Marketing Manager</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>">Marketing Manager</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="view"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'View Candidates', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
@@ -90,9 +90,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">DevOps Engineer</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>">DevOps Engineer</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     </td>
@@ -105,9 +105,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <tr>
                     <td><input type="checkbox" disabled /></td>
                     <td>
-                        <strong><a href="#" class="erp-pro-preview-action">Sales Representative</a></strong>
+                        <strong><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>">Sales Representative</a></strong>
                         <div class="row-actions">
-                            <span class="edit"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
+                            <span class="edit"><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-opening" data-form-title="<?php esc_attr_e( 'Edit Job Opening', 'erp' ); ?>"><?php esc_html_e( 'Edit', 'erp' ); ?></a> | </span>
                             <span class="view"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'View Candidates', 'erp' ); ?></a> | </span>
                             <span class="trash"><a href="#" class="erp-pro-preview-action"><?php esc_html_e( 'Delete', 'erp' ); ?></a></span>
                         </div>
@@ -126,5 +126,73 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="displaying-num">5 items</span>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Hidden form template for New/Edit Job Opening -->
+<div id="pro-form-new-opening" style="display:none;">
+    <table class="form-table">
+        <tr>
+            <th><label><?php esc_html_e( 'Job Title', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. Senior Frontend Developer', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Department', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option value=""><?php esc_html_e( '— Select Department —', 'erp' ); ?></option>
+                    <option>Engineering</option>
+                    <option>Design</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>HR</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'No. of Positions', 'erp' ); ?></label></th>
+            <td><input type="number" min="1" value="1" style="width: 80px;" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Employment Type', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option>Full Time</option>
+                    <option>Part Time</option>
+                    <option>Contract</option>
+                    <option>Internship</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Application Deadline', 'erp' ); ?></label></th>
+            <td><input type="date" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Experience Required', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. 3-5 years', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Job Description', 'erp' ); ?></label></th>
+            <td><textarea rows="4" class="large-text" placeholder="<?php esc_attr_e( 'Describe the role, responsibilities, and requirements...', 'erp' ); ?>"></textarea></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Status', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option>Draft</option>
+                    <option>Published</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div class="erp-pro-form-footer">
+        <button type="button" class="button button-primary" disabled><?php esc_html_e( 'Save Opening', 'erp' ); ?></button>
+        <span class="erp-pro-save-notice">
+            <span class="dashicons dashicons-lock"></span>
+            <?php esc_html_e( 'Upgrade to Pro to save', 'erp' ); ?>
+            &mdash;
+            <a href="https://wperp.com/pricing/?utm_source=wp-admin&utm_medium=pro-form&utm_content=recruitment" target="_blank"><?php esc_html_e( 'Get Pro', 'erp' ); ?></a>
+        </span>
     </div>
 </div>

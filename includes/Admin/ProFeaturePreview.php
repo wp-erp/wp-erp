@@ -89,9 +89,9 @@ class ProFeaturePreview {
      */
     public function filter_report_template( $template, $action ) {
         $pro_report_types = [
-            'asset-report'        => 'assets',
-            'attendance-report'   => 'attendance',
-            'att-report-employee' => 'attendance',
+            'asset-report'        => 'report-assets',
+            'attendance-report'   => 'report-attendance',
+            'att-report-employee' => 'report-attendance-employee',
         ];
 
         if ( isset( $pro_report_types[ $action ] ) ) {

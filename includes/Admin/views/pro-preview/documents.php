@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
             </select>
             <input type="search" disabled placeholder="<?php esc_attr_e( 'Search files...', 'erp' ); ?>" style="min-width: 200px;" />
             <span style="flex: 1;"></span>
-            <button class="button erp-pro-preview-action"><span class="dashicons dashicons-upload" style="margin-top: 3px;"></span> <?php esc_html_e( 'Upload', 'erp' ); ?></button>
-            <button class="button erp-pro-preview-action"><span class="dashicons dashicons-plus" style="margin-top: 3px;"></span> <?php esc_html_e( 'New Folder', 'erp' ); ?></button>
+            <button class="button erp-pro-preview-action" data-form="pro-form-upload-doc" data-form-title="<?php esc_attr_e( 'Upload Document', 'erp' ); ?>"><span class="dashicons dashicons-upload" style="margin-top: 3px;"></span> <?php esc_html_e( 'Upload', 'erp' ); ?></button>
+            <button class="button erp-pro-preview-action" data-form="pro-form-new-folder" data-form-title="<?php esc_attr_e( 'Create New Folder', 'erp' ); ?>"><span class="dashicons dashicons-plus" style="margin-top: 3px;"></span> <?php esc_html_e( 'New Folder', 'erp' ); ?></button>
         </div>
 
         <!-- Breadcrumb -->
@@ -120,5 +120,69 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="displaying-num">3 folders, 4 files</span>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Hidden form template for Upload Document -->
+<div id="pro-form-upload-doc" style="display:none;">
+    <table class="form-table">
+        <tr>
+            <th><label><?php esc_html_e( 'Select File', 'erp' ); ?></label></th>
+            <td><input type="file" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Upload To', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option>Company (Root)</option>
+                    <option>HR Policies</option>
+                    <option>Templates</option>
+                    <option>Onboarding</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Description', 'erp' ); ?></label></th>
+            <td><textarea rows="2" class="large-text" placeholder="<?php esc_attr_e( 'Optional file description...', 'erp' ); ?>"></textarea></td>
+        </tr>
+    </table>
+    <div class="erp-pro-form-footer">
+        <button type="button" class="button button-primary" disabled><?php esc_html_e( 'Upload', 'erp' ); ?></button>
+        <span class="erp-pro-save-notice">
+            <span class="dashicons dashicons-lock"></span>
+            <?php esc_html_e( 'Upgrade to Pro to save', 'erp' ); ?>
+            &mdash;
+            <a href="https://wperp.com/pricing/?utm_source=wp-admin&utm_medium=pro-form&utm_content=documents" target="_blank"><?php esc_html_e( 'Get Pro', 'erp' ); ?></a>
+        </span>
+    </div>
+</div>
+
+<!-- Hidden form template for New Folder -->
+<div id="pro-form-new-folder" style="display:none;">
+    <table class="form-table">
+        <tr>
+            <th><label><?php esc_html_e( 'Folder Name', 'erp' ); ?></label></th>
+            <td><input type="text" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. Project Files', 'erp' ); ?>" /></td>
+        </tr>
+        <tr>
+            <th><label><?php esc_html_e( 'Parent Folder', 'erp' ); ?></label></th>
+            <td>
+                <select style="min-width: 200px;">
+                    <option>Company (Root)</option>
+                    <option>HR Policies</option>
+                    <option>Templates</option>
+                    <option>Onboarding</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div class="erp-pro-form-footer">
+        <button type="button" class="button button-primary" disabled><?php esc_html_e( 'Create Folder', 'erp' ); ?></button>
+        <span class="erp-pro-save-notice">
+            <span class="dashicons dashicons-lock"></span>
+            <?php esc_html_e( 'Upgrade to Pro to save', 'erp' ); ?>
+            &mdash;
+            <a href="https://wperp.com/pricing/?utm_source=wp-admin&utm_medium=pro-form&utm_content=documents" target="_blank"><?php esc_html_e( 'Get Pro', 'erp' ); ?></a>
+        </span>
     </div>
 </div>

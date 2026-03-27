@@ -578,3 +578,39 @@ li.dropdown-nav:hover .erp-nav-dropdown .erp-pro-badge-nav {
     border-width: 1.2px;
     margin: 0 0 0 6px;
 }
+
+/* Pro form footer — disabled save button + upgrade notice */
+.erp-pro-form-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 0 5px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+}
+.erp-pro-form-footer .button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.erp-pro-save-notice {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #92400E;
+}
+.erp-pro-save-notice .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #D97706;
+}
+.erp-pro-save-notice a {
+    color: #FF9000;
+    font-weight: 600;
+    text-decoration: none;
+}
+.erp-pro-save-notice a:hover {
+    color: #e68200;
+    text-decoration: underline;
+}
