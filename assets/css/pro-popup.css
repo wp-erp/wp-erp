@@ -478,3 +478,103 @@ input#img-4:checked ~ .nav-dots label#img-dot-4
     text-decoration: none;
     text-align:center;
 }
+
+/* ============================================
+   Pro Feature Preview Pages
+   ============================================ */
+
+/* Preview banner at top of each preview page */
+.erp-pro-preview-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    margin: 15px 0 20px;
+    background: linear-gradient(135deg, #FFF7ED, #FEF3C7);
+    border: 1px solid #F59E0B;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #92400E;
+    font-weight: 500;
+}
+
+.erp-pro-preview-banner .dashicons {
+    color: #D97706;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.erp-pro-preview-banner .button-primary {
+    margin-left: auto;
+    background: #FF9000 !important;
+    border-color: #e68200 !important;
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.erp-pro-preview-banner .button-primary:hover {
+    background: #e68200 !important;
+    border-color: #cc7300 !important;
+}
+
+/* Wrapper that adds subtle overlay effect to preview content */
+.erp-pro-preview-wrapper {
+    position: relative;
+}
+
+/* Clickable preview elements — open upgrade popup on click */
+.erp-pro-preview-action {
+    cursor: pointer;
+}
+
+/* Pro badge for navigable (non-popup) menu items — hidden by default, shown on hover */
+.erp-pro-badge-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 0;
+    height: 18px;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 18px;
+    letter-spacing: 0.3px;
+    color: #B45309;
+    background: #FFF3E0;
+    border: 0 solid #F59E0B;
+    border-radius: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: width 0.2s ease, border-width 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+    vertical-align: middle;
+    margin: 0;
+}
+/* Show nav badge on hover — top nav menu items */
+div.erp-nav-container li:hover > a > .erp-pro-badge-nav,
+div.erp-nav-container li:hover > a .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 4px;
+}
+/* Show nav badge on hover — dropdown items */
+.erp-nav-dropdown li:hover > a > .erp-pro-badge-nav,
+.erp-nav-dropdown li:hover .erp-pro-badge-nav,
+li.dropdown-nav:hover .erp-nav-dropdown .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 4px;
+}
+/* Show nav badge on hover — report cards */
+.postbox:hover .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 6px;
+}
+/* Show nav badge on hover — people sub-nav */
+.erp-nav-list li:hover .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 6px;
+}
