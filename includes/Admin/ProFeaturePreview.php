@@ -17,12 +17,57 @@ class ProFeaturePreview {
     const PREVIEW_DIR = '/Admin/views/pro-preview/';
 
     /**
-     * Render the Payroll preview page
+     * Render the Payroll Dashboard preview page
      *
      * @return void
      */
     public function payroll_page() {
         include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll.php';
+    }
+
+    /**
+     * Render the Pay Calendar preview page
+     *
+     * @return void
+     */
+    public function payroll_calendar_page() {
+        include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll-calendar.php';
+    }
+
+    /**
+     * Render the Pay Run List preview page
+     *
+     * @return void
+     */
+    public function payroll_payrun_page() {
+        include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll-payrun.php';
+    }
+
+    /**
+     * Render the Bulk Pay Item Edit preview page
+     *
+     * @return void
+     */
+    public function payroll_bulk_edit_page() {
+        include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll-bulk-edit.php';
+    }
+
+    /**
+     * Render the Payroll Reports preview page
+     *
+     * @return void
+     */
+    public function payroll_reports_page() {
+        include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll-reports.php';
+    }
+
+    /**
+     * Render the Payroll Settings preview page
+     *
+     * @return void
+     */
+    public function payroll_settings_page() {
+        include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll-settings.php';
     }
 
     /**

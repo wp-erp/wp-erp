@@ -222,7 +222,7 @@ class AddProMenu {
             'title'      => __( 'Pay Calendar', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'calendar',
-            'callback'   => [ $this->preview, 'payroll_page' ],
+            'callback'   => [ $this->preview, 'payroll_calendar_page' ],
             'position'   => 5,
         ] );
 
@@ -230,7 +230,7 @@ class AddProMenu {
             'title'      => __( 'Pay Run List', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'payrun',
-            'callback'   => [ $this->preview, 'payroll_page' ],
+            'callback'   => [ $this->preview, 'payroll_payrun_page' ],
             'position'   => 10,
         ] );
 
@@ -238,7 +238,7 @@ class AddProMenu {
             'title'      => __( 'Bulk pay item edit', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'bulk-pay-item-edit',
-            'callback'   => [ $this->preview, 'payroll_page' ],
+            'callback'   => [ $this->preview, 'payroll_bulk_edit_page' ],
             'position'   => 11,
         ] );
 
@@ -246,7 +246,7 @@ class AddProMenu {
             'title'      => __( 'Reports', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'reports',
-            'callback'   => [ $this->preview, 'payroll_page' ],
+            'callback'   => [ $this->preview, 'payroll_reports_page' ],
             'position'   => 15,
         ] );
 
@@ -254,7 +254,7 @@ class AddProMenu {
             'title'      => __( 'Settings', 'erp' ),
             'capability' => 'erp_hr_manager',
             'slug'       => 'settings',
-            'callback'   => [ $this->preview, 'payroll_page' ],
+            'callback'   => [ $this->preview, 'payroll_settings_page' ],
             'position'   => 20,
         ] );
 

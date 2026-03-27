@@ -11,126 +11,178 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="erp-pro-preview-wrapper">
     <div class="wrap erp hrm-dashboard hrm-payroll-dashboard">
-        <h2>
-            <?php esc_html_e( 'Payroll Overview', 'erp' ); ?>
-            <a href="#" class="page-title-action erp-pro-preview-action" data-form="pro-form-new-payrun" data-form-title="<?php esc_attr_e( 'Start New Pay Run', 'erp' ); ?>"><?php esc_html_e( 'New Pay Run', 'erp' ); ?></a>
-        </h2>
+        <h2><?php esc_html_e( 'Payroll Overview', 'erp' ); ?></h2>
 
-        <div class="erp-grid-container" style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+        <!-- Top Row: Checklist + 3 Badge Cards -->
+        <div style="display: flex; gap: 12px; margin-top: 10px; align-items: stretch;">
             <!-- Checklist -->
-            <div class="postbox" style="flex: 1; min-width: 280px;">
-                <h2 class="hndle"><span><?php esc_html_e( 'Checklist', 'erp' ); ?></span></h2>
-                <div class="inside">
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                            <span class="dashicons dashicons-yes-alt" style="color: #139F84;"></span>
+            <div class="postbox" style="margin: 0; min-width: 260px; flex-shrink: 0;">
+                <h3 class="hndle" style="cursor: default;"><span><?php esc_html_e( 'Checklist', 'erp' ); ?></span></h3>
+                <div class="inside" style="padding: 10px 12px;">
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 2;">
+                        <li>
+                            <span class="dashicons dashicons-yes-alt" style="color: #006505; margin-right: 2px;"></span>
                             <?php esc_html_e( 'Setup Wizard', 'erp' ); ?>
                         </li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                            <span class="dashicons dashicons-yes-alt" style="color: #139F84;"></span>
-                            <?php esc_html_e( 'Pay Calendar', 'erp' ); ?>
+                        <li>
+                            <span class="dashicons dashicons-yes-alt" style="color: #006505; margin-right: 2px;"></span>
+                            <a href="#" class="erp-pro-preview-action" style="text-decoration: none;"><?php esc_html_e( 'Pay Calendar', 'erp' ); ?></a>
                         </li>
-                        <li style="padding: 8px 0;">
-                            <span class="dashicons dashicons-marker" style="color: #ddd;"></span>
-                            <?php esc_html_e( 'Pay Run', 'erp' ); ?>
+                        <li>
+                            <span class="dashicons dashicons-marker" style="color: #ddd; margin-right: 2px;"></span>
+                            <a href="#" class="erp-pro-preview-action" style="text-decoration: none;"><?php esc_html_e( 'Pay Run', 'erp' ); ?></a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Badge Cards -->
-            <div style="flex: 3; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;">
-                <div class="postbox" style="margin: 0;">
-                    <div class="inside" style="text-align: center; padding: 20px;">
-                        <h3 style="margin: 0; color: #1e1e1e; font-size: 28px;">$12,450.00</h3>
-                        <p style="color: #656668; margin: 5px 0 0;"><?php esc_html_e( 'Total Expenses', 'erp' ); ?></p>
-                    </div>
+            <!-- Total Pay Calendar Created -->
+            <div class="postbox" style="flex: 1; margin: 0; display: flex; flex-direction: column;">
+                <div class="inside" style="flex: 1; padding: 15px 20px;">
+                    <h3 style="margin: 0; font-size: 27px; color: #1e1e1e; font-weight: bold;">3</h3>
+                    <p style="color: #656668; margin: 8px 0 0; font-size: 13px;"><?php esc_html_e( 'Total Pay Calendar Created', 'erp' ); ?></p>
                 </div>
-                <div class="postbox" style="margin: 0;">
-                    <div class="inside" style="text-align: center; padding: 20px;">
-                        <h3 style="margin: 0; color: #1e1e1e; font-size: 28px;">3</h3>
-                        <p style="color: #656668; margin: 5px 0 0;"><?php esc_html_e( 'Pay Calendars Created', 'erp' ); ?></p>
-                    </div>
+                <div class="wp-ui-highlight" style="text-align: center; padding: 8px 0;">
+                    <a href="#" class="erp-pro-preview-action" style="color: #fff; text-decoration: none; font-size: 13px;">
+                        <?php esc_html_e( 'View Pay Calendar', 'erp' ); ?>
+                        <span class="erp-pro-badge-nav" style="margin-left: 4px;">Pro</span>
+                    </a>
                 </div>
-                <div class="postbox" style="margin: 0;">
-                    <div class="inside" style="text-align: center; padding: 20px;">
-                        <h3 style="margin: 0; color: #1e1e1e; font-size: 28px;">2</h3>
-                        <p style="color: #656668; margin: 5px 0 0;"><?php esc_html_e( 'Pay Calendars Approved', 'erp' ); ?></p>
-                    </div>
+            </div>
+
+            <!-- Pay Calendar Approved -->
+            <div class="postbox" style="flex: 1; margin: 0; display: flex; flex-direction: column;">
+                <div class="inside" style="flex: 1; padding: 15px 20px;">
+                    <h3 style="margin: 0; font-size: 27px; color: #1e1e1e; font-weight: bold;">2</h3>
+                    <p style="color: #656668; margin: 8px 0 0; font-size: 13px;"><?php esc_html_e( 'Pay Calendar Approved', 'erp' ); ?></p>
                 </div>
-                <div class="postbox" style="margin: 0;">
-                    <div class="inside" style="text-align: center; padding: 20px;">
-                        <h3 style="margin: 0; color: #1e1e1e; font-size: 28px;">$4,150.00</h3>
-                        <p style="color: #656668; margin: 5px 0 0;"><?php esc_html_e( 'Spent Previous Month', 'erp' ); ?></p>
-                    </div>
+                <div class="wp-ui-highlight" style="text-align: center; padding: 8px 0;">
+                    <a href="#" class="erp-pro-preview-action" style="color: #fff; text-decoration: none; font-size: 13px;">
+                        <?php esc_html_e( 'View Pay Run List', 'erp' ); ?>
+                        <span class="erp-pro-badge-nav" style="margin-left: 4px;">Pro</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Spent on Previous Month -->
+            <div class="postbox" style="flex: 1; margin: 0; display: flex; flex-direction: column;">
+                <div class="inside" style="flex: 1; padding: 15px 20px;">
+                    <h3 style="margin: 0; font-size: 27px; color: #1e1e1e; font-weight: bold;">$4,150.00</h3>
+                    <p style="color: #656668; margin: 8px 0 0; font-size: 13px;"><?php esc_html_e( 'Spent on Previous Month', 'erp' ); ?></p>
+                </div>
+                <div class="wp-ui-highlight" style="text-align: center; padding: 8px 0;">
+                    <a href="#" class="erp-pro-preview-action" style="color: #fff; text-decoration: none; font-size: 13px;">
+                        <?php esc_html_e( 'View Detail', 'erp' ); ?>
+                        <span class="erp-pro-badge-nav" style="margin-left: 4px;">Pro</span>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Latest Pay Runs -->
+        <!-- Latest 5 Pay Run Records -->
         <div class="postbox" style="margin-top: 20px;">
-            <h2 class="hndle"><span><?php esc_html_e( 'Latest 5 Pay Run Records', 'erp' ); ?></span></h2>
+            <h3 class="hndle" style="cursor: default;">
+                <span>
+                    <span class="dashicons dashicons-media-text" style="font-size: 16px; width: 16px; height: 16px; margin-right: 4px;"></span>
+                    <?php esc_html_e( 'Latest 5 Pay Run Records', 'erp' ); ?>
+                </span>
+            </h3>
             <div class="inside" style="padding: 0;">
-                <table class="widefat striped">
-                    <thead>
-                        <tr>
-                            <th><?php esc_html_e( 'Pay Period', 'erp' ); ?></th>
-                            <th><?php esc_html_e( 'Pay Run', 'erp' ); ?></th>
-                            <th><?php esc_html_e( 'Payment Date', 'erp' ); ?></th>
-                            <th><?php esc_html_e( 'Employees', 'erp' ); ?></th>
-                            <th><?php esc_html_e( 'Net Pay', 'erp' ); ?></th>
-                            <th><?php esc_html_e( 'Status', 'erp' ); ?></th>
-                            <th><?php esc_html_e( 'Action', 'erp' ); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Mar 01 - Mar 31, 2026</td>
-                            <td>Monthly Payroll</td>
-                            <td>Mar 31, 2026</td>
-                            <td>12</td>
-                            <td>$4,150.00</td>
-                            <td><span class="erp-badge" style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 3px; font-size: 12px;">Approved</span></td>
-                            <td><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-payrun" data-form-title="<?php esc_attr_e( 'View Pay Run', 'erp' ); ?>">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Feb 01 - Feb 28, 2026</td>
-                            <td>Monthly Payroll</td>
-                            <td>Feb 28, 2026</td>
-                            <td>12</td>
-                            <td>$4,150.00</td>
-                            <td><span class="erp-badge" style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 3px; font-size: 12px;">Approved</span></td>
-                            <td><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-payrun" data-form-title="<?php esc_attr_e( 'View Pay Run', 'erp' ); ?>">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Jan 01 - Jan 31, 2026</td>
-                            <td>Monthly Payroll</td>
-                            <td>Jan 31, 2026</td>
-                            <td>11</td>
-                            <td>$3,890.00</td>
-                            <td><span class="erp-badge" style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 3px; font-size: 12px;">Approved</span></td>
-                            <td><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-payrun" data-form-title="<?php esc_attr_e( 'View Pay Run', 'erp' ); ?>">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Dec 01 - Dec 31, 2025</td>
-                            <td>Monthly Payroll</td>
-                            <td>Dec 31, 2025</td>
-                            <td>11</td>
-                            <td>$3,890.00</td>
-                            <td><span class="erp-badge" style="background: #fff7ed; color: #9a3412; padding: 2px 8px; border-radius: 3px; font-size: 12px;">Pending</span></td>
-                            <td><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-payrun" data-form-title="<?php esc_attr_e( 'View Pay Run', 'erp' ); ?>">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Nov 01 - Nov 30, 2025</td>
-                            <td>Monthly Payroll</td>
-                            <td>Nov 30, 2025</td>
-                            <td>10</td>
-                            <td>$3,520.00</td>
-                            <td><span class="erp-badge" style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 3px; font-size: 12px;">Approved</span></td>
-                            <td><a href="#" class="erp-pro-preview-action" data-form="pro-form-new-payrun" data-form-title="<?php esc_attr_e( 'View Pay Run', 'erp' ); ?>">View</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <?php
+                $records = [
+                    [ 'period' => 'Mar 01 – Mar 31, 2026', 'run' => 'Monthly Payroll',    'date' => 'Mar 31, 2026', 'emps' => 12, 'net' => '$4,150.00', 'status' => 'Approved' ],
+                    [ 'period' => 'Mar 01 – Mar 14, 2026', 'run' => 'Bi-Weekly Payroll',  'date' => 'Mar 14, 2026', 'emps' => 3,  'net' => '$1,820.00', 'status' => 'Approved' ],
+                    [ 'period' => 'Feb 01 – Feb 28, 2026', 'run' => 'Monthly Payroll',    'date' => 'Feb 28, 2026', 'emps' => 12, 'net' => '$4,150.00', 'status' => 'Approved' ],
+                    [ 'period' => 'Jan 01 – Jan 31, 2026', 'run' => 'Monthly Payroll',    'date' => 'Jan 31, 2026', 'emps' => 11, 'net' => '$3,890.00', 'status' => 'Approved' ],
+                    [ 'period' => 'Dec 01 – Dec 31, 2025', 'run' => 'Monthly Payroll',    'date' => 'Dec 31, 2025', 'emps' => 11, 'net' => '$3,890.00', 'status' => 'Pending' ],
+                ];
+                ?>
+                <ul style="list-style: none; margin: 0; padding: 0;">
+                    <li style="display: flex; background: #f5f5f5; border-bottom: 1px solid #eee; padding: 8px 12px; font-weight: 600; font-size: 13px;">
+                        <span style="width: 20%;"><?php esc_html_e( 'Pay Period', 'erp' ); ?></span>
+                        <span style="width: 15%;"><?php esc_html_e( 'Pay Run', 'erp' ); ?></span>
+                        <span style="width: 15%;"><?php esc_html_e( 'Payment Date', 'erp' ); ?></span>
+                        <span style="width: 10%;"><?php esc_html_e( 'Employees', 'erp' ); ?></span>
+                        <span style="width: 15%;"><?php esc_html_e( 'Net Pay + Tax', 'erp' ); ?></span>
+                        <span style="width: 15%;"><?php esc_html_e( 'Status', 'erp' ); ?></span>
+                        <span style="width: 10%;"><?php esc_html_e( 'Action', 'erp' ); ?></span>
+                    </li>
+                    <?php foreach ( $records as $rec ) : ?>
+                    <li style="display: flex; border-bottom: 1px solid #eee; border-left: 1px solid #eee; border-right: 1px solid #eee; padding: 8px 12px; font-size: 13px; align-items: center;">
+                        <span style="width: 20%;"><?php echo esc_html( $rec['period'] ); ?></span>
+                        <span style="width: 15%;"><?php echo esc_html( $rec['run'] ); ?></span>
+                        <span style="width: 15%;"><?php echo esc_html( $rec['date'] ); ?></span>
+                        <span style="width: 10%;"><?php echo esc_html( $rec['emps'] ); ?></span>
+                        <span style="width: 15%;"><?php echo esc_html( $rec['net'] ); ?></span>
+                        <span style="width: 15%;"><?php echo esc_html( $rec['status'] ); ?></span>
+                        <span style="width: 10%;"><a href="#" class="erp-pro-preview-action"><span class="dashicons dashicons-visibility" style="font-size: 16px; width: 16px; height: 16px; color: #0073aa;"></span></a></span>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Payroll History of Current Month -->
+        <div class="postbox" style="margin-top: 20px;">
+            <h3 class="hndle" style="cursor: default;">
+                <span>
+                    <span class="dashicons dashicons-media-text" style="font-size: 16px; width: 16px; height: 16px; margin-right: 4px;"></span>
+                    <?php esc_html_e( 'Payroll History of Current Month', 'erp' ); ?>
+                </span>
+            </h3>
+            <div class="inside" style="padding: 15px;">
+                <?php
+                // Dummy daily payroll amounts for current month
+                $daily_data = [
+                    1 => 450, 2 => 0, 3 => 380, 4 => 520, 5 => 0,
+                    6 => 0, 7 => 410, 8 => 390, 9 => 480, 10 => 350,
+                    11 => 0, 12 => 0, 13 => 420, 14 => 1820, 15 => 370,
+                    16 => 400, 17 => 460, 18 => 0, 19 => 0, 20 => 380,
+                    21 => 410, 22 => 450, 23 => 390, 24 => 500, 25 => 0,
+                    26 => 0, 27 => 430, 28 => 4150, 29 => 0, 30 => 0, 31 => 380,
+                ];
+                $max_val = max( $daily_data );
+                ?>
+                <!-- Bar chart matching Pro's Flot.js style -->
+                <div style="position: relative; height: 200px; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; margin-left: 45px; margin-bottom: 5px;">
+                    <!-- Y-axis labels -->
+                    <span style="position: absolute; left: -45px; top: -5px; font-size: 11px; color: #555;">$<?php echo esc_html( number_format( $max_val ) ); ?></span>
+                    <span style="position: absolute; left: -45px; top: 48%; font-size: 11px; color: #555;">$<?php echo esc_html( number_format( (int) ( $max_val / 2 ) ) ); ?></span>
+                    <span style="position: absolute; left: -20px; bottom: -5px; font-size: 11px; color: #555;">0</span>
+                    <!-- Grid lines -->
+                    <div style="position: absolute; top: 50%; left: 0; right: 0; border-top: 1px solid #eee;"></div>
+
+                    <!-- Bars area -->
+                    <div style="display: flex; align-items: flex-end; height: 100%; padding: 0 5px; gap: 2px;">
+                        <?php
+                        $days = (int) gmdate( 't' );
+                        for ( $d = 1; $d <= $days; $d++ ) :
+                            $val     = isset( $daily_data[ $d ] ) ? $daily_data[ $d ] : 0;
+                            $pct     = $max_val > 0 ? round( ( $val / $max_val ) * 100 ) : 0;
+                            $bar_h   = max( $pct, ( $val > 0 ? 3 : 0 ) );
+                        ?>
+                        <div style="flex: 1; background: <?php echo $val > 0 ? 'rgba(35, 191, 170, 0.7)' : 'transparent'; ?>; height: <?php echo esc_attr( $bar_h ); ?>%; min-width: 0; border-top: <?php echo $val > 0 ? '1px solid #23bfaa' : 'none'; ?>;"></div>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Dashed baseline -->
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 2px dashed #5bc0de; pointer-events: none;"></div>
+                </div>
+
+                <!-- X-axis date labels -->
+                <div style="display: flex; padding: 0 5px; gap: 2px; margin-top: 4px; margin-left: 45px;">
+                    <?php
+                    $year  = gmdate( 'Y' );
+                    $month = gmdate( 'm' );
+                    for ( $d = 1; $d <= $days; $d++ ) :
+                    ?>
+                    <div style="flex: 1; text-align: center; min-width: 0;">
+                        <span style="font-size: 9px; color: #555; writing-mode: vertical-lr; transform: rotate(180deg); display: inline-block; white-space: nowrap;">
+                            <?php echo esc_html( $year . '-' . $month . '-' . str_pad( $d, 2, '0', STR_PAD_LEFT ) ); ?>
+                        </span>
+                    </div>
+                    <?php endfor; ?>
+                </div>
             </div>
         </div>
     </div>
