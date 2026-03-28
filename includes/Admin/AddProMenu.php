@@ -21,6 +21,9 @@ class AddProMenu {
         add_action( 'admin_footer', [ $this, 'pro_popup_js_templates' ] );
         add_filter( 'erp_hr_reports', [ $this, 'add_reports' ] );
         add_filter( 'erp_hr_reporting_pages', [ $this->preview, 'filter_report_template' ], 10, 2 );
+        add_filter( 'erp_settings_hr_sections', [ $this, 'add_payroll_settings_section' ] );
+        add_filter( 'erp_settings_hr_section_fields', [ $this, 'add_payroll_settings_fields' ], 10, 2 );
+        add_action( 'erp_settings_loaded', [ $this, 'add_payroll_settings_route' ] );
         wp_enqueue_style( 'add-pro-popup' );
     }
 
@@ -88,6 +91,281 @@ class AddProMenu {
         return $reports;
     }
 
+    /**
+     * Inject Vue routes and Pro badge for the Payroll settings section.
+     *
+     * The settings SPA has hardcoded routes; dynamically added sections
+     * via PHP filters need a matching Vue route to render.
+     *
+     * @return void
+     */
+    public function add_payroll_settings_route() {
+        $js = <<<'JS'
+(function() {
+    var BaseLayout = window.settings_get_lib('BaseLayout');
+
+    /**
+     * Shared payroll layout: renders BaseLayout with sub-sub-menu tabs.
+     * Mirrors the Pro's HrPayroll.vue component structure.
+     */
+    var PayrollLayout = {
+        components: { 'base-layout': BaseLayout },
+        props: { activeTab: String },
+        data: function() {
+            return { subSections: {}, sectionTitle: '' };
+        },
+        created: function() {
+            var menus = erp_settings_var.erp_settings_menus;
+            var parentMenu = menus.find(function(m) { return m.id === 'erp-hr'; });
+            if (parentMenu) {
+                this.sectionTitle = parentMenu.sections['payroll'] || 'Payroll';
+                var payrollData = parentMenu.fields['payroll'] || {};
+                this.subSections = payrollData.sub_sections || {};
+            }
+        },
+        render: function(h) {
+            var self = this;
+            var tabs = [];
+            Object.keys(this.subSections).forEach(function(key) {
+                tabs.push(h('li', { key: key }, [
+                    h('router-link', {
+                        props: { to: '/erp-hr/payroll/' + key },
+                        class: { 'router-link-active': self.activeTab === key }
+                    }, [h('span', { class: 'menu-name' }, self.subSections[key])])
+                ]));
+            });
+
+            return h('base-layout', {
+                props: { section_id: 'erp-hr', sub_section_id: 'payroll', enable_content: false }
+            }, [
+                h('h3', { class: 'sub-section-title' }, this.sectionTitle),
+                h('div', [
+                    h('ul', { class: 'sub-sub-menu' }, tabs),
+                    this.$slots.default
+                ])
+            ]);
+        }
+    };
+
+    /**
+     * Payment Settings tab — disabled preview.
+     */
+    var PaymentPreview = {
+        components: { 'payroll-layout': PayrollLayout },
+        render: function(h) {
+            return h('payroll-layout', { props: { activeTab: 'payment' } }, [
+                h('form', { class: 'wperp-form', on: { submit: function(e) { e.preventDefault(); } } }, [
+                    h('h3', { class: 'sub-sub-title' }, 'Payment Method Selection'),
+                    h('div', { class: 'wperp-form-group' }, [
+                        h('label', 'Select a method'),
+                        h('select', { class: 'wperp-form-field', attrs: { disabled: true } }, [
+                            h('option', { attrs: { value: 'cash' } }, 'Cash'),
+                            h('option', { attrs: { value: 'cheque' } }, 'Cheque'),
+                            h('option', { attrs: { value: 'bank' } }, 'Bank')
+                        ])
+                    ]),
+                    h('div', { class: 'wperp-form-group' }, [
+                        h('label', 'Select a bank'),
+                        h('select', { class: 'wperp-form-field', attrs: { disabled: true } }, [
+                            h('option', '— Select Bank —')
+                        ])
+                    ]),
+                    h('div', { class: 'wperp-form-group' }, [
+                        h('button', {
+                            class: 'wperp-btn wperp-btn-primary',
+                            attrs: { type: 'submit', disabled: true }
+                        }, 'Save Changes'),
+                        h('div', { class: 'clearfix' })
+                    ])
+                ])
+            ]);
+        }
+    };
+
+    /**
+     * Pay Item Settings tab — disabled preview with sample data table.
+     */
+    var PayItemPreview = {
+        components: { 'payroll-layout': PayrollLayout },
+        render: function(h) {
+            var sampleItems = [
+                { type: 'Allowance', item: 'Travel Allowance', amount: 'Addition' },
+                { type: 'Allowance', item: 'Accommodation Allowance', amount: 'Addition' },
+                { type: 'Allowance', item: 'City Compensatory Allowance', amount: 'Addition' }
+            ];
+
+            var rows = sampleItems.map(function(row, i) {
+                return h('tr', { key: i, attrs: { valign: 'top' } }, [
+                    h('td', row.type),
+                    h('td', row.item),
+                    h('td', row.amount),
+                    h('td', [
+                        h('span', { class: 'action', style: { cursor: 'not-allowed', opacity: '0.5', marginRight: '8px' } }, [
+                            h('span', { class: 'dashicons dashicons-edit' })
+                        ]),
+                        h('span', { class: 'action', style: { cursor: 'not-allowed', opacity: '0.5' } }, [
+                            h('span', { class: 'dashicons dashicons-trash' })
+                        ])
+                    ])
+                ]);
+            });
+
+            return h('payroll-layout', { props: { activeTab: 'payitem' } }, [
+                h('form', { class: 'wperp-form', on: { submit: function(e) { e.preventDefault(); } } }, [
+                    h('h3', { class: 'sub-sub-title' }, 'Pay Item Settings'),
+                    h('div', { class: 'wperp-form-group' }, [
+                        h('label', 'Pay Type'),
+                        h('select', { class: 'wperp-form-field', attrs: { disabled: true } }, [
+                            h('option', { attrs: { value: 'earning' } }, 'Earning'),
+                            h('option', { attrs: { value: 'deduction' } }, 'Deduction')
+                        ])
+                    ]),
+                    h('div', { class: 'wperp-form-group' }, [
+                        h('label', 'Pay Item'),
+                        h('input', { class: 'wperp-form-field', attrs: { type: 'text', disabled: true } })
+                    ]),
+                    h('div', { class: 'wperp-form-group' }, [
+                        h('button', {
+                            class: 'wperp-btn wperp-btn-primary',
+                            attrs: { type: 'submit', disabled: true }
+                        }, 'Add Pay Item'),
+                        h('div', { class: 'clearfix' })
+                    ])
+                ]),
+                h('table', { class: 'erp-settings-table widefat' }, [
+                    h('thead', [h('tr', [
+                        h('th', 'Pay Type'), h('th', 'Pay Item'),
+                        h('th', 'Amount Type'), h('th', 'Action')
+                    ])]),
+                    h('tbody', rows)
+                ])
+            ]);
+        }
+    };
+
+    /* Register routes */
+    window.settings.hooks.addFilter('erp_settings_admin_routes', 'erpProPreview', function(routes) {
+        var hrRoute = routes.find(function(r) { return r.path === '/erp-hr'; });
+
+        if (hrRoute && hrRoute.children) {
+            hrRoute.children.push({
+                path: 'payroll',
+                component: { render: function(c) { return c('router-view'); } },
+                children: [
+                    { path: 'payment', name: 'HrPayment', component: PaymentPreview, alias: '/' },
+                    { path: 'payitem', name: 'HrPayItem', component: PayItemPreview }
+                ]
+            });
+        }
+
+        return routes;
+    });
+
+    /* Inject PRO badge next to the "Payroll" sub-menu tab.
+     * Observes document.body because #erp-settings may not be in
+     * the DOM yet when this inline script executes. The observer
+     * stays active so the badge survives Vue re-renders. */
+    function injectPayrollBadge() {
+        var items = document.querySelectorAll('.settings-sub-menu .menu-name');
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].textContent.trim() === 'Payroll' && !items[i].parentNode.querySelector('.pro-label')) {
+                var badge = document.createElement('span');
+                badge.className = 'pro-label';
+                badge.style.marginLeft = '10px';
+                badge.textContent = 'PRO';
+                items[i].parentNode.insertBefore(badge, items[i].nextSibling);
+            }
+        }
+    }
+
+    var observer = new MutationObserver(injectPayrollBadge);
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+JS;
+
+        wp_add_inline_script( 'erp-settings-bootstrap', $js, 'after' );
+    }
+
+    /**
+     * Add "Payroll" section to the HR settings tab.
+     *
+     * @param array $sections
+     *
+     * @return array
+     */
+    public function add_payroll_settings_section( $sections ) {
+        $sections['payroll'] = __( 'Payroll', 'erp' );
+
+        return $sections;
+    }
+
+    /**
+     * Provide payroll settings field data (sub-sections structure) for the HR settings tab.
+     * Mirrors the Pro payroll Settings class structure so the SPA renders sub-tabs.
+     *
+     * @param array $fields
+     * @param array $sections
+     *
+     * @return array
+     */
+    public function add_payroll_settings_fields( $fields, $sections ) {
+        $fields['payroll'] = [
+            'sub_sections' => [
+                'payment' => __( 'Payment Settings', 'erp' ),
+                'payitem' => __( 'Pay Item Settings', 'erp' ),
+            ],
+            'payment' => [
+                [
+                    'title' => __( 'Payment Method Selection', 'erp' ),
+                    'type'  => 'title',
+                ],
+                [
+                    'title'   => __( 'Select a method', 'erp' ),
+                    'id'      => 'erp_payroll_payment_method_settings',
+                    'type'    => 'select',
+                    'options' => [
+                        'cash'   => __( 'Cash', 'erp' ),
+                        'cheque' => __( 'Cheque', 'erp' ),
+                        'bank'   => __( 'Bank', 'erp' ),
+                    ],
+                ],
+                [
+                    'title'   => __( 'Select a bank', 'erp' ),
+                    'id'      => 'erp_payroll_payment_bank_settings',
+                    'type'    => 'select',
+                    'options' => [
+                        '' => __( '— Select Bank —', 'erp' ),
+                    ],
+                ],
+                [
+                    'type' => 'sectionend',
+                    'id'   => 'script_styling_options',
+                ],
+            ],
+            'payitem' => [
+                [
+                    'title' => __( 'Pay Item Settings', 'erp' ),
+                    'type'  => 'title',
+                ],
+                [
+                    'title'   => __( 'Pay Type', 'erp' ),
+                    'id'      => 'paytype',
+                    'type'    => 'select',
+                    'options' => [
+                        'earning'   => __( 'Earning', 'erp' ),
+                        'deduction' => __( 'Deduction', 'erp' ),
+                    ],
+                ],
+                [
+                    'title' => __( 'Pay Item', 'erp' ),
+                    'id'    => 'payitem',
+                    'type'  => 'text',
+                ],
+            ],
+        ];
+
+        return $fields;
+    }
 
     /**
      * Add pro menu items with preview pages in core plugin.
@@ -251,11 +529,11 @@ class AddProMenu {
         ] );
 
         erp_add_submenu( 'hr', 'payroll', [
-            'title'      => __( 'Settings', 'erp' ),
-            'capability' => 'erp_hr_manager',
-            'slug'       => 'settings',
-            'callback'   => [ $this->preview, 'payroll_settings_page' ],
-            'position'   => 20,
+            'title'       => __( 'Settings', 'erp' ),
+            'capability'  => 'erp_hr_manager',
+            'slug'        => 'settings',
+            'position'    => 20,
+            'direct_link' => admin_url( 'admin.php?page=erp-settings#/erp-hr/payroll' ),
         ] );
 
         // Recruitment module

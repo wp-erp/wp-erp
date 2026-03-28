@@ -103,6 +103,9 @@ li.dropdown-nav:hover .erp-nav-dropdown .pro-popup {
     display: flex !important;
     align-items: center;
 }
+.settings-sub-menu .pro-label {
+    margin-left: 6px !important;
+}
 
 .erp-pro-tooltip:hover {
 
@@ -991,4 +994,50 @@ li.dropdown-nav:hover .erp-nav-dropdown .erp-pro-badge-nav {
 }
 .erp-payroll-steps .nv-holder-top input {
     float: left;
+}
+
+/* ============================================
+   Bulk Pay Item Edit — from Pro stylesheet
+   ============================================ */
+.payroll-report-container h1 {
+    margin-bottom: 15px;
+}
+.payroll-report-container .information-container {
+    float: left;
+    margin-left: 1%;
+    margin-top: 10px;
+    padding-bottom: 15px;
+    position: relative;
+    width: 99%;
+}
+.payroll-report-container .postbox .inside {
+    margin-bottom: 0;
+    margin-top: 0;
+    overflow-y: hidden;
+    padding-bottom: 0;
+    padding-left: 0;
+    min-height: 500px;
+}
+.payroll-report-container .information-container .wp-list-table th,
+.payroll-report-container .information-container .wp-list-table td {
+    font-size: 11px;
+}
+.payroll-report-container .wp-list-table {
+    margin-top: 10px;
+}
+.payroll-report-container .nv-holder {
+    float: left;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.payroll-report-container #candidate-overview-zone .erp-select-field {
+    margin-right: 5px;
+}
+.payroll-report-container #candidate-overview-zone input[type="search"] {
+    margin-right: 5px;
+}
+.payroll-report-container .pay_item_value {
+    width: 80px;
+    text-align: right;
 }

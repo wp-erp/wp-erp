@@ -62,15 +62,6 @@ class ProFeaturePreview {
     }
 
     /**
-     * Render the Payroll Settings preview page
-     *
-     * @return void
-     */
-    public function payroll_settings_page() {
-        include WPERP_INCLUDES . self::PREVIEW_DIR . 'payroll-settings.php';
-    }
-
-    /**
      * Render the Attendance preview page
      *
      * @return void
