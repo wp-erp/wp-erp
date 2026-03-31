@@ -3009,11 +3009,9 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 			admin_url( 'admin.php' )
 		);
 
-		$class     = $active === $item['slug'] ? 'active ' : '';
 		$pro_popup = '';
 		if ( ! empty( $item['pro_popup'] ) ) {
 			$pro_popup = '<span class="pro-popup">Pro</span>';
-			$class    .= ' pro-popup-main ';
 		}
 
 		if ( $dropdown ) {
@@ -3025,7 +3023,13 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 				),
 				admin_url( 'admin.php' )
 			);
-			$class .= ( ! empty( $_GET['sub-section'] ) && $_GET['sub-section'] === $item['slug'] ) ? 'active ' : '';
+			$class = ( ! empty( $_GET['sub-section'] ) && $_GET['sub-section'] === $item['slug'] ) ? 'active ' : '';
+		} else {
+			$class = $active === $item['slug'] ? 'active ' : '';
+		}
+
+		if ( ! empty( $item['pro_popup'] ) ) {
+			$class .= ' pro-popup-main ';
 		}
 
 		if ( ! empty( $item['direct_link'] ) ) {
