@@ -58,6 +58,7 @@ use WeDevs\ERP\API\ApiRegistrar;
 use WeDevs\ERP\Framework\Modules;
 use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
+use WeDevs\ERP\Weather\OpenMeteo;
 
 require_once __DIR__ . '/vendor/autoload.php';
 define( 'WPERP_VERSION', '1.17.2' );
@@ -313,6 +314,9 @@ final class WeDevs_ERP {
         Tracker::get_instance()->init();
 
         $this->container['emailer']     = Emailer::init();
+
+        $this->container['weather']     = OpenMeteo::init();
+
         $this->container['integration'] = Integration::init();
         $this->container['google_auth'] = GoogleAuth::init();
         $this->container['google_sync'] = GmailSync::init();
