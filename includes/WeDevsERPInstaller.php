@@ -2155,22 +2155,6 @@ Account Manager
                 'callback'    => '\WeDevs\ERP\HRM\HRM',
                 'modules'     => apply_filters( 'erp_hr_modules', [] ),
             ],
-
-            'crm' => [
-                'title'       => __( 'CR Management', 'erp' ),
-                'slug'        => 'erp-crm',
-                'description' => __( 'Customer Relationship Management', 'erp' ),
-                'callback'    => '\WeDevs\ERP\CRM\CRM',
-                'modules'     => apply_filters( 'erp_crm_modules', [] ),
-            ],
-
-            'accounting' => [
-                'title'       => __( 'Accounting Management', 'erp' ),
-                'slug'        => 'erp-accounting',
-                'description' => __( 'Accounting Management', 'erp' ),
-                'callback'    => '\WeDevs\ERP\Accounting\Accounting',
-                'modules'     => apply_filters( 'erp_accounting_modules', [] ),
-            ],
         ];
 
         update_option( 'erp_modules', $default );
