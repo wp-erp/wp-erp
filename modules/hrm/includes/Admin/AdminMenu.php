@@ -59,7 +59,7 @@ class AdminMenu {
             'capability'    => 'erp_hr_manager',
             'slug'          => 'report',
             'callback'      => [ $this, 'reporting_page' ],
-            'position'      => 99,
+            'position'      => class_exists( 'WP_ERP_Pro' ) ? 99 : 7,
         ] );
 
         erp_add_submenu( 'hr', 'report', [
@@ -129,7 +129,7 @@ class AdminMenu {
             'capability'    => $request_capabilities,
             'slug'          => 'leave',
             'callback'      => [ $this, 'leave_requests' ],
-            'position'      => 30,
+            'position'      => 6,
         ] );
 
         erp_add_submenu( 'hr', 'leave', [

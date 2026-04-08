@@ -259,7 +259,7 @@ window.wperp = window.wperp || {};
          * @return {void}
          */
         initialize: function() {
-            $( 'body').on( 'mouseover', '.pro-popup', this.proPopupTooltip );
+            // Tooltip on hover removed for less intrusive UX
             $( 'body').on( 'click', '.pro-popup-main', this.proPopup );
             $( 'body').on( 'click', '.reports-popup', this.proPopup );
             $( '.org-chart').on( 'click', '.pro-popup', this.proPopup );

@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 6.9.1
 Requires PHP: 7.4
-Stable tag: 1.16.11
+Stable tag: 1.17.2
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -326,6 +326,25 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+= v1.17.2 → Mar 13, 2026
+--------------------------
+* [Enhancement] Enable only HR module by default for new installations
+
+= v1.17.1 → Mar 12, 2026
+--------------------------
+* [Enhancement] Redesign Pro badges for less intrusive UX
+
+= v1.17.0 → Mar 10, 2026
+--------------------------
+* [Added] OneSignal push notification module for HRM (leave, announcements, holidays, birthdays, job applications) [#1551](https://github.com/wp-erp/wp-erp/pull/1551).
+* [Added] REST endpoints for logged-in users to fetch their own announcements [#1551](https://github.com/wp-erp/wp-erp/pull/1551).
+* [Added] Introduce extensibility hooks in CRM and HRM [#1535](https://github.com/wp-erp/wp-erp/pull/1535).
+* [Enhancement] Employee API permissions updated to allow self profile view, update and photo upload [#1527](https://github.com/wp-erp/wp-erp/pull/1527).
+* [Enhancement] Employee API now returns job, employment and compensation histories [#1527](https://github.com/wp-erp/wp-erp/pull/1527).
+* [Enhancement] Employee deletion API supports force delete [#1527](https://github.com/wp-erp/wp-erp/pull/1527).
+* [Fixed] Load CRM capabilities functions early to prevent fatal errors with ERP PRO [#1519](https://github.com/wp-erp/wp-erp/pull/1519).
+* [Fixed] Function issues in ERP Overview and Headcount report files [#1518](https://github.com/wp-erp/wp-erp/pull/1518).
+* [Fixed] Status report display [#1516](https://github.com/wp-erp/wp-erp/pull/1516).
 
 = v1.16.11 → February 9, 2026
 --------------------------

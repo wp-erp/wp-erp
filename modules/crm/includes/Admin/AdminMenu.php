@@ -56,7 +56,7 @@ class AdminMenu {
             'capability' => 'erp_crm_manage_schedules',
             'slug'       => 'task',
             'callback'   => [ $this, 'tasks_page' ],
-            'position'   => 20,
+            'position'   => 6,
         ] );
 
         erp_add_menu( 'crm', [
@@ -64,7 +64,7 @@ class AdminMenu {
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'reports',
             'callback'   => [ $this, 'page_reports' ],
-            'position'   => 99,
+            'position'   => class_exists( 'WP_ERP_Pro' ) ? 99 : 7,
         ] );
 
         erp_add_submenu( 'crm', 'reports', [
