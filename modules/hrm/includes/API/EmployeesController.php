@@ -1700,7 +1700,8 @@ class EmployeesController extends REST_Controller {
                 $reporting_to = new Employee( $item->get_reporting_to() );
 
                 if ( $reporting_to->is_employee() ) {
-                    $data['reporting_to'] = $this->prepare_item_for_response( $reporting_to );
+                    $reporting_to_response = $this->prepare_item_for_response( $reporting_to );
+                    $data['reporting_to'] = $reporting_to_response->get_data();
                 }
             }
 

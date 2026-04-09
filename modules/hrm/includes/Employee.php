@@ -209,6 +209,8 @@ class Employee {
                 }
                 $this->data['personal']['full_name'] = $this->get_full_name();
                 $this->data['personal']['photo_id'] = $this->get_photo_id();
+                $this->data['personal']['user_url'] = $this->get_user_url();
+                $this->data['personal']['description'] = $this->get_description();
             }
         }
     }
@@ -334,8 +336,6 @@ class Employee {
         }
 
         if ( ! empty( $data['work']['designation'] ) && ! array_key_exists( $data['work']['designation'], erp_hr_get_designations_fresh() ) ) {
-            error_log(print_r( [erp_hr_get_departments_fresh()], true ));
-
             return new WP_Error( 'invalid-designation', __( 'Please select a valid employee designation', 'erp' ) );
         }
 
@@ -588,9 +588,11 @@ class Employee {
             }
         }
 
-        //check if something removed
+        // Check if something removed (field explicitly sent as empty).
+        // Important: do not treat omitted fields as removals, otherwise partial updates
+        // (e.g. updating Basic Info) would wipe unrelated Personal Details.
         foreach ( $this->data['personal'] as $p_key => $p_val ) {
-            if ( empty( $posted[ $p_key ] ) ) {
+            if ( array_key_exists( $p_key, $posted ) && ( '' === $posted[ $p_key ] || null === $posted[ $p_key ] ) ) {
                 $this->changes['personal'][ $p_key ] = '';
             }
         }
@@ -803,8 +805,28 @@ class Employee {
      *
      * @return string
      */
+    /**
+     * Get the user website URL from wp_users table
+     *
+     * @return string
+     */
     public function get_user_url() {
-        return $this->get_details_url();
+        if ( $this->user_id ) {
+            $user = get_user_by( 'id', $this->user_id );
+            if ( $user && isset( $user->user_url ) ) {
+                return $user->user_url;
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Get the employees description/biography from user_meta
+     *
+     * @return string
+     */
+    public function get_description() {
+        return get_user_meta( $this->user_id, 'description', true );
     }
 
     /**
