@@ -1717,6 +1717,45 @@ class EmployeesController extends REST_Controller {
             if ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) {
                 $histories = $item->get_job_histories( 'all' );
 
+                // Convert IDs to names and add reporting_to_full_name for job histories
+                if ( isset( $histories['job'] ) ) {
+                    for ( $i = 0; $i < count( $histories['job'] ); $i ++ ) {
+                        // Convert designation ID to name
+                        if ( ! empty( $histories['job'][ $i ]['designation'] ) ) {
+                            $designation = Designation::find( $histories['job'][ $i ]['designation'] );
+                            if ( $designation ) {
+                                $histories['job'][ $i ]['designation'] = $designation->title;
+                            }
+                        }
+
+                        // Convert department ID to name
+                        if ( ! empty( $histories['job'][ $i ]['department'] ) ) {
+                            $department = Department::find( $histories['job'][ $i ]['department'] );
+                            if ( $department ) {
+                                $histories['job'][ $i ]['department'] = $department->title;
+                            }
+                        }
+
+                        // Convert location ID to name
+                        if ( ! empty( $histories['job'][ $i ]['location'] ) && $histories['job'][ $i ]['location'] !== '-1' ) {
+                            $location = CompanyLocations::find( $histories['job'][ $i ]['location'] );
+                            if ( $location ) {
+                                $histories['job'][ $i ]['location'] = $location->name;
+                            }
+                        } elseif ( $histories['job'][ $i ]['location'] === '-1' ) {
+                            $histories['job'][ $i ]['location'] = 'Main Location';
+                        }
+
+                        // Convert reporting_to ID to name
+                        $reports_to = new Employee( $histories['job'][ $i ]['reporting_to'] );
+                        if ( $reports_to->is_employee() ) {
+                            $histories['job'][ $i ]['reporting_to_full_name'] = $reports_to->display_name;
+                        } else {
+                            $histories['job'][ $i ]['reporting_to_full_name'] = '';
+                        }
+                    }
+                }
+
                 // Format for frontend consumption
                 $data['employment_history'] = isset( $histories['employee'] ) ? $histories['employee'] : [];
                 $data['compensation_history'] = isset( $histories['compensation'] ) ? $histories['compensation'] : [];
