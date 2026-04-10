@@ -84,6 +84,18 @@ class CompanyController extends REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay-change-reasons', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_pay_change_reasons' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_view_list' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -167,6 +179,23 @@ class CompanyController extends REST_Controller {
         $sources  = erp_hr_get_employee_sources();
         $response = rest_ensure_response( $sources );
         $response = $this->format_collection_response( $response, $request, count( $sources ) );
+
+        return $response;
+    }
+
+    /**
+     * Get pay change reasons
+     *
+     * @since 1.3.2
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_REST_Response
+     */
+    public function get_pay_change_reasons( $request ) {
+        $reasons  = erp_hr_get_pay_change_reasons();
+        $response = rest_ensure_response( $reasons );
+        $response = $this->format_collection_response( $response, $request, count( $reasons ) );
 
         return $response;
     }

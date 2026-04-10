@@ -1005,9 +1005,60 @@ class EmployeesController extends REST_Controller {
         if ( is_wp_error( $history ) ) {
             return $history;
         }
-        $response = rest_ensure_response( $history );
+
+        // Transform response to match the format returned by get_job_histories()
+        $formatted_history = $this->format_history_response( $history, $module );
+
+        $response = rest_ensure_response( $formatted_history );
 
         return $response;
+    }
+
+    /**
+     * Format history response to match get_job_histories() output
+     * 
+     * @param array $history Raw history from update method
+     * @param string $module Module type (employment, compensation, job)
+     * @return array Formatted history data
+     */
+    private function format_history_response( $history, $module ) {
+        if ( $module === 'employment' ) {
+            // Employment updates return both type and category
+            $formatted = [
+                'id'       => $history['id'],
+                'type'     => $history['type'],
+                'status'   => $history['category'],
+                'comments' => $history['comments'],
+                'date'     => $history['date'],
+                'module'   => $history['module'],
+            ];
+        } elseif ( $module === 'compensation' ) {
+            // Compensation uses the standard format
+            $formatted = [
+                'id'       => $history['id'],
+                'comment'  => $history['comment'],
+                'pay_type' => $history['pay_type'],
+                'reason'   => $history['reason'],
+                'pay_rate' => $history['pay_rate'],
+                'date'     => $history['date'],
+                'module'   => $history['module'],
+            ];
+        } elseif ( $module === 'job' ) {
+            // Job updates
+            $formatted = [
+                'id'           => $history['id'],
+                'date'         => $history['date'],
+                'designation'  => $history['designation'],
+                'department'   => $history['department'],
+                'reporting_to' => $history['reporting_to'],
+                'location'     => $history['location'],
+                'module'       => $history['module'],
+            ];
+        } else {
+            $formatted = $history;
+        }
+
+        return $formatted;
     }
 
     /**
@@ -1758,6 +1809,7 @@ class EmployeesController extends REST_Controller {
 
                 // Format for frontend consumption
                 $data['employment_history'] = isset( $histories['employee'] ) ? $histories['employee'] : [];
+                $data['employment_type_history'] = isset( $histories['employment'] ) ? $histories['employment'] : [];
                 $data['compensation_history'] = isset( $histories['compensation'] ) ? $histories['compensation'] : [];
                 $data['job_history'] = isset( $histories['job'] ) ? $histories['job'] : [];
             }
