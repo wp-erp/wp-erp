@@ -1795,13 +1795,25 @@ class Employee {
             }
         }
 
-        $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
-            'module'   => $args['module'],
-            'category' => $args['category'],
-            'type'     => $args['type'],
-            'comment'  => $args['comments'],
-            'date'     => $args['date'],
-        ] );
+        // Build history update data - only include fields that are being updated
+        // to avoid overwriting existing values with empty defaults
+        $history_update_data = [
+            'module'  => $args['module'],
+            'comment' => $args['comments'],
+            'date'    => $args['date'],
+        ];
+
+        // Only include category if it's provided (status update)
+        if ( ! empty( $args['category'] ) ) {
+            $history_update_data['category'] = $args['category'];
+        }
+
+        // Only include type if it's provided (type update)
+        if ( ! empty( $args['type'] ) ) {
+            $history_update_data['type'] = $args['type'];
+        }
+
+        $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], $history_update_data );
 
         if (
             ! empty( $args['type'] ) &&
