@@ -984,13 +984,13 @@ class EmployeesController extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.', 'erp' ), [ 'status' => 404 ] );
         }
 
-        if ( empty( $module ) || ( ! in_array( $module, [ 'employment', 'compensation', 'job' ] ) ) ) {
+        if ( empty( $module ) || ( ! in_array( $module, [ 'employee', 'employment', 'compensation', 'job' ] ) ) ) {
             return new WP_Error( 'rest_no_module_type', __( 'Invalid/No module type', 'erp' ), [ 'status' => 404 ] );
         }
 
         $history = new WP_Error();
 
-        if ( $request['module'] == 'employment' ) {
+        if ( $request['module'] == 'employee' || $request['module'] == 'employment' ) {
             $history = $employee->update_employment_status( $request->get_params() );
         }
 
@@ -1016,18 +1016,26 @@ class EmployeesController extends REST_Controller {
 
     /**
      * Format history response to match get_job_histories() output
-     * 
+     *
      * @param array $history Raw history from update method
-     * @param string $module Module type (employment, compensation, job)
+     * @param string $module Module type (employee, employment, compensation, job)
      * @return array Formatted history data
      */
     private function format_history_response( $history, $module ) {
-        if ( $module === 'employment' ) {
-            // Employment updates return both type and category
+        if ( $module === 'employee' ) {
+            // Employee status updates
+            $formatted = [
+                'id'       => $history['id'],
+                'status'   => $history['category'],
+                'comments' => $history['comments'],
+                'date'     => $history['date'],
+                'module'   => $history['module'],
+            ];
+        } elseif ( $module === 'employment' ) {
+            // Employment type updates
             $formatted = [
                 'id'       => $history['id'],
                 'type'     => $history['type'],
-                'status'   => $history['category'],
                 'comments' => $history['comments'],
                 'date'     => $history['date'],
                 'module'   => $history['module'],
