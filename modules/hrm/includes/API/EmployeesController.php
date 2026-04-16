@@ -1703,6 +1703,9 @@ class EmployeesController extends REST_Controller {
             'country'         => '',
             'state'           => '',
             'postal_code'     => '',
+            'father_name'     => '',
+            'mother_name'     => '',
+            'spouse_name'     => '',
         ];
 
         $data = $item->get_data([], true);
@@ -2001,6 +2004,18 @@ class EmployeesController extends REST_Controller {
 
         if ( isset( $request['photo_id'] ) ) {
             $prepared_item['personal']['photo_id'] = $request['photo_id'];
+        }
+
+        if ( isset( $request['father_name'] ) ) {
+            $prepared_item['personal']['father_name'] = $request['father_name'];
+        }
+
+        if ( isset( $request['mother_name'] ) ) {
+            $prepared_item['personal']['mother_name'] = $request['mother_name'];
+        }
+
+        if ( isset( $request['spouse_name'] ) ) {
+            $prepared_item['personal']['spouse_name'] = $request['spouse_name'];
         }
 
         return $prepared_item;

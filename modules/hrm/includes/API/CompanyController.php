@@ -96,6 +96,42 @@ class CompanyController extends REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/termination-types', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_termination_types' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_view_list' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/termination-reasons', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_termination_reasons' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_view_list' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/rehire-options', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_rehire_options' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_view_list' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -196,6 +232,57 @@ class CompanyController extends REST_Controller {
         $reasons  = erp_hr_get_pay_change_reasons();
         $response = rest_ensure_response( $reasons );
         $response = $this->format_collection_response( $response, $request, count( $reasons ) );
+
+        return $response;
+    }
+
+    /**
+     * Get termination types
+     *
+     * @since 1.3.2
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_REST_Response
+     */
+    public function get_termination_types( $request ) {
+        $types    = erp_hr_get_terminate_type();
+        $response = rest_ensure_response( $types );
+        $response = $this->format_collection_response( $response, $request, count( $types ) );
+
+        return $response;
+    }
+
+    /**
+     * Get termination reasons
+     *
+     * @since 1.3.2
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_REST_Response
+     */
+    public function get_termination_reasons( $request ) {
+        $reasons  = erp_hr_get_terminate_reason();
+        $response = rest_ensure_response( $reasons );
+        $response = $this->format_collection_response( $response, $request, count( $reasons ) );
+
+        return $response;
+    }
+
+    /**
+     * Get rehire options
+     *
+     * @since 1.3.2
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_REST_Response
+     */
+    public function get_rehire_options( $request ) {
+        $options  = erp_hr_get_terminate_rehire_options();
+        $response = rest_ensure_response( $options );
+        $response = $this->format_collection_response( $response, $request, count( $options ) );
 
         return $response;
     }

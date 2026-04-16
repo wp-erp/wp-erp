@@ -1356,11 +1356,23 @@ class Employee {
      * @return array the qualifications
      */
     public function get_educations( $limit = 30, $offset = 0 ) {
-        return $this->erp_user
+        $educations = $this->erp_user
             ->educations()
             ->skip( $offset )
             ->take( $limit )
             ->get();
+
+        // Fetch expiration_date from user meta for each education
+        if ( $educations && is_countable( $educations ) && count( $educations ) > 0 ) {
+            $educations_array = $educations->toArray();
+            foreach ( $educations_array as &$edu ) {
+                $meta_key = 'education_' . $this->user_id . '_' . $edu['id'];
+                $edu['expiration_date'] = get_user_meta( $this->user_id, $meta_key, true );
+            }
+            return $educations_array;
+        }
+
+        return $educations;
     }
 
     /**
@@ -1385,6 +1397,7 @@ class Employee {
             'result'      => '',
             'notes'       => '',
             'interest'    => '',
+            'expiration_date' => '',
         ];
 
         $args = wp_parse_args( $data, $default );
@@ -1416,7 +1429,12 @@ class Employee {
         if ( ! $education ) {
             return $this->send_error( 'error-creating-education', __( 'Could not create education.', 'erp' ) );
         } else {
-            update_user_meta( $education['employee_id'], 'education_' . $education['employee_id'] . '_' . $education['id'], $data['expiration_date'] );
+            // Save expiration_date to user meta if provided
+            if ( ! empty( $args['expiration_date'] ) ) {
+                update_user_meta( $education['employee_id'], 'education_' . $education['employee_id'] . '_' . $education['id'], $args['expiration_date'] );
+            }
+            // Add expiration_date to returned education array
+            $education['expiration_date'] = ! empty( $args['expiration_date'] ) ? $args['expiration_date'] : '';
         }
 
         return $education;
@@ -1428,6 +1446,11 @@ class Employee {
      * @since 1.3.0
      */
     public function delete_education( $id ) {
+        // Delete the expiration_date user meta
+        $meta_key = 'education_' . $this->user_id . '_' . $id;
+        delete_user_meta( $this->user_id, $meta_key );
+        
+        // Delete the education record
         return $this->erp_user->educations()->find( $id )->delete();
     }
 
