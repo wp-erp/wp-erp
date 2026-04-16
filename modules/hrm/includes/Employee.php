@@ -1363,13 +1363,11 @@ class Employee {
             ->get();
 
         // Fetch expiration_date from user meta for each education
-        if ( $educations && is_countable( $educations ) && count( $educations ) > 0 ) {
-            $educations_array = $educations->toArray();
-            foreach ( $educations_array as &$edu ) {
-                $meta_key = 'education_' . $this->user_id . '_' . $edu['id'];
-                $edu['expiration_date'] = get_user_meta( $this->user_id, $meta_key, true );
+        if ( $educations && ! $educations->isEmpty() ) {
+            foreach ( $educations as $edu ) {
+                $meta_key = 'education_' . $this->user_id . '_' . $edu->id;
+                $edu->expiration_date = get_user_meta( $this->user_id, $meta_key, true );
             }
-            return $educations_array;
         }
 
         return $educations;
