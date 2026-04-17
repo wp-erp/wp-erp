@@ -984,13 +984,13 @@ class EmployeesController extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.', 'erp' ), [ 'status' => 404 ] );
         }
 
-        if ( empty( $module ) || ( ! in_array( $module, [ 'employment', 'compensation', 'job' ] ) ) ) {
+        if ( empty( $module ) || ( ! in_array( $module, [ 'employee', 'employment', 'compensation', 'job' ] ) ) ) {
             return new WP_Error( 'rest_no_module_type', __( 'Invalid/No module type', 'erp' ), [ 'status' => 404 ] );
         }
 
         $history = new WP_Error();
 
-        if ( $request['module'] == 'employment' ) {
+        if ( $request['module'] == 'employee' || $request['module'] == 'employment' ) {
             $history = $employee->update_employment_status( $request->get_params() );
         }
 
@@ -1005,9 +1005,68 @@ class EmployeesController extends REST_Controller {
         if ( is_wp_error( $history ) ) {
             return $history;
         }
-        $response = rest_ensure_response( $history );
+
+        // Transform response to match the format returned by get_job_histories()
+        $formatted_history = $this->format_history_response( $history, $module );
+
+        $response = rest_ensure_response( $formatted_history );
 
         return $response;
+    }
+
+    /**
+     * Format history response to match get_job_histories() output
+     *
+     * @param array $history Raw history from update method
+     * @param string $module Module type (employee, employment, compensation, job)
+     * @return array Formatted history data
+     */
+    private function format_history_response( $history, $module ) {
+        if ( $module === 'employee' ) {
+            // Employee status updates
+            $formatted = [
+                'id'       => $history['id'],
+                'status'   => $history['category'],
+                'comments' => $history['comments'],
+                'date'     => $history['date'],
+                'module'   => $history['module'],
+            ];
+        } elseif ( $module === 'employment' ) {
+            // Employment type updates
+            $formatted = [
+                'id'       => $history['id'],
+                'type'     => $history['type'],
+                'comments' => $history['comments'],
+                'date'     => $history['date'],
+                'module'   => $history['module'],
+            ];
+        } elseif ( $module === 'compensation' ) {
+            // Compensation uses the standard format
+            $formatted = [
+                'id'       => $history['id'],
+                'comment'  => $history['comment'],
+                'pay_type' => $history['pay_type'],
+                'reason'   => $history['reason'],
+                'pay_rate' => $history['pay_rate'],
+                'date'     => $history['date'],
+                'module'   => $history['module'],
+            ];
+        } elseif ( $module === 'job' ) {
+            // Job updates
+            $formatted = [
+                'id'           => $history['id'],
+                'date'         => $history['date'],
+                'designation'  => $history['designation'],
+                'department'   => $history['department'],
+                'reporting_to' => $history['reporting_to'],
+                'location'     => $history['location'],
+                'module'       => $history['module'],
+            ];
+        } else {
+            $formatted = $history;
+        }
+
+        return $formatted;
     }
 
     /**
@@ -1644,6 +1703,9 @@ class EmployeesController extends REST_Controller {
             'country'         => '',
             'state'           => '',
             'postal_code'     => '',
+            'father_name'     => '',
+            'mother_name'     => '',
+            'spouse_name'     => '',
         ];
 
         $data = $item->get_data([], true);
@@ -1700,7 +1762,8 @@ class EmployeesController extends REST_Controller {
                 $reporting_to = new Employee( $item->get_reporting_to() );
 
                 if ( $reporting_to->is_employee() ) {
-                    $data['reporting_to'] = $this->prepare_item_for_response( $reporting_to );
+                    $reporting_to_response = $this->prepare_item_for_response( $reporting_to );
+                    $data['reporting_to'] = $reporting_to_response->get_data();
                 }
             }
 
@@ -1716,8 +1779,48 @@ class EmployeesController extends REST_Controller {
             if ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) {
                 $histories = $item->get_job_histories( 'all' );
 
+                // Convert IDs to names and add reporting_to_full_name for job histories
+                if ( isset( $histories['job'] ) ) {
+                    for ( $i = 0; $i < count( $histories['job'] ); $i ++ ) {
+                        // Convert designation ID to name
+                        if ( ! empty( $histories['job'][ $i ]['designation'] ) ) {
+                            $designation = Designation::find( $histories['job'][ $i ]['designation'] );
+                            if ( $designation ) {
+                                $histories['job'][ $i ]['designation'] = $designation->title;
+                            }
+                        }
+
+                        // Convert department ID to name
+                        if ( ! empty( $histories['job'][ $i ]['department'] ) ) {
+                            $department = Department::find( $histories['job'][ $i ]['department'] );
+                            if ( $department ) {
+                                $histories['job'][ $i ]['department'] = $department->title;
+                            }
+                        }
+
+                        // Convert location ID to name
+                        if ( ! empty( $histories['job'][ $i ]['location'] ) && $histories['job'][ $i ]['location'] !== '-1' ) {
+                            $location = CompanyLocations::find( $histories['job'][ $i ]['location'] );
+                            if ( $location ) {
+                                $histories['job'][ $i ]['location'] = $location->name;
+                            }
+                        } elseif ( $histories['job'][ $i ]['location'] === '-1' ) {
+                            $histories['job'][ $i ]['location'] = 'Main Location';
+                        }
+
+                        // Convert reporting_to ID to name
+                        $reports_to = new Employee( $histories['job'][ $i ]['reporting_to'] );
+                        if ( $reports_to->is_employee() ) {
+                            $histories['job'][ $i ]['reporting_to_full_name'] = $reports_to->display_name;
+                        } else {
+                            $histories['job'][ $i ]['reporting_to_full_name'] = '';
+                        }
+                    }
+                }
+
                 // Format for frontend consumption
                 $data['employment_history'] = isset( $histories['employee'] ) ? $histories['employee'] : [];
+                $data['employment_type_history'] = isset( $histories['employment'] ) ? $histories['employment'] : [];
                 $data['compensation_history'] = isset( $histories['compensation'] ) ? $histories['compensation'] : [];
                 $data['job_history'] = isset( $histories['job'] ) ? $histories['job'] : [];
             }
@@ -1901,6 +2004,18 @@ class EmployeesController extends REST_Controller {
 
         if ( isset( $request['photo_id'] ) ) {
             $prepared_item['personal']['photo_id'] = $request['photo_id'];
+        }
+
+        if ( isset( $request['father_name'] ) ) {
+            $prepared_item['personal']['father_name'] = $request['father_name'];
+        }
+
+        if ( isset( $request['mother_name'] ) ) {
+            $prepared_item['personal']['mother_name'] = $request['mother_name'];
+        }
+
+        if ( isset( $request['spouse_name'] ) ) {
+            $prepared_item['personal']['spouse_name'] = $request['spouse_name'];
         }
 
         return $prepared_item;
