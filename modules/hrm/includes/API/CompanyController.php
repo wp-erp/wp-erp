@@ -132,6 +132,38 @@ class CompanyController extends REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/genders', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_genders' ],
+                'permission_callback' => '__return_true',
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/marital-statuses', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_marital_statuses' ],
+                'permission_callback' => '__return_true',
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/education-result-types', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_education_result_types' ],
+                'permission_callback' => '__return_true',
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/performance-ratings', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_performance_ratings' ],
+                'permission_callback' => '__return_true',
+            ],
+        ] );
     }
 
     /**
@@ -285,5 +317,21 @@ class CompanyController extends REST_Controller {
         $response = $this->format_collection_response( $response, $request, count( $options ) );
 
         return $response;
+    }
+
+    public function get_genders() {
+        return rest_ensure_response( erp_hr_get_genders() );
+    }
+
+    public function get_marital_statuses() {
+        return rest_ensure_response( erp_hr_get_marital_statuses() );
+    }
+
+    public function get_education_result_types() {
+        return rest_ensure_response( erp_hr_get_education_result_type_options() );
+    }
+
+    public function get_performance_ratings() {
+        return rest_ensure_response( erp_performance_rating() );
     }
 }
