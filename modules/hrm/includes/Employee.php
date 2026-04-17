@@ -588,12 +588,15 @@ class Employee {
             }
         }
 
-        // Persist user_url on wp_users so it round-trips with get_user_url().
+        // user_url lives on the wp_users table (WordPress native column).
+        // Persist it there and unset it from the posted array so the
+        // personal-meta loop below does not also write it to user_meta.
         if ( \array_key_exists( 'user_url', $posted ) ) {
             wp_update_user( [
                 'ID'       => $this->user_id,
                 'user_url' => (string) $posted['user_url'],
             ] );
+            unset( $posted['user_url'] );
         }
 
         // Check if something removed (field explicitly sent as empty).
@@ -633,6 +636,14 @@ class Employee {
             foreach ( $this->changes['personal'] as $key => $value ) {
                 update_user_meta( $this->id, $key, $value );
             }
+        }
+
+        // Invalidate any cached employee data so subsequent reads reflect
+        // the updated wp_users / user_meta values (fixes stale reads for
+        // fields like user_url after edits).
+        clean_user_cache( $this->user_id );
+        if ( function_exists( 'erp_hrm_purge_cache' ) ) {
+            erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $this->id ] );
         }
 
         //reset changes
