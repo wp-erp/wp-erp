@@ -588,6 +588,14 @@ class Employee {
             }
         }
 
+        // Persist user_url on wp_users so it round-trips with get_user_url().
+        if ( \array_key_exists( 'user_url', $posted ) ) {
+            wp_update_user( [
+                'ID'       => $this->user_id,
+                'user_url' => (string) $posted['user_url'],
+            ] );
+        }
+
         // Check if something removed (field explicitly sent as empty).
         // Important: do not treat omitted fields as removals, otherwise partial updates
         // (e.g. updating Basic Info) would wipe unrelated Personal Details.
