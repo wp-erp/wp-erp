@@ -1906,6 +1906,10 @@ class EmployeesController extends REST_Controller {
             $prepared_item['work']['hiring_date'] = $request['hiring_date'];
         }
 
+        if ( isset( $request['end_date'] ) ) {
+            $prepared_item['work']['end_date'] = $request['end_date'];
+        }
+
         if ( isset( $request['date_of_birth'] ) ) {
             $prepared_item['work']['date_of_birth'] = $request['date_of_birth'];
         }
