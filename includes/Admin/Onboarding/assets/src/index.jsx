@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
+import './congratulation.png'; // ensure file-loader copies image to dist
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', () => {

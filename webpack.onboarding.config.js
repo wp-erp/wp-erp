@@ -1,8 +1,28 @@
 const webpack = require('webpack');
 const path = require('path');
+const postcss = require('postcss');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+// Scope all CSS selectors under #wperp-onboarding-root to prevent
+// styles from leaking into WordPress admin or any other page.
+const SCOPE = '#wperp-onboarding-root';
+const scopeOnboardingCss = postcss.plugin('scope-onboarding-css', function() {
+    return function(root) {
+        root.walkRules(function(rule) {
+            if (rule.parent && rule.parent.type === 'atrule' && rule.parent.name === 'keyframes') {
+                return;
+            }
+            rule.selectors = rule.selectors.map(function(selector) {
+                const s = selector.trim();
+                if (s.startsWith(SCOPE) || s === ':root') return s;
+                if (s === 'html' || s === 'body') return SCOPE;
+                return SCOPE + ' ' + s;
+            });
+        });
+    };
+});
 
 const isProduction = process.env.WEBPACK_ENV === 'production';
 
@@ -71,8 +91,12 @@ const config = {
                         {
                             loader: 'postcss-loader',
                             options: {
-                                config: {
-                                    path: path.resolve(__dirname, './postcss.config.js')
+                                plugins: function() {
+                                    return [
+                                        require('tailwindcss'),
+                                        require('autoprefixer'),
+                                        scopeOnboardingCss,
+                                    ];
                                 }
                             }
                         }
@@ -127,6 +151,10 @@ if (isProduction) {
         new OptimizeCSSPlugin({
             cssProcessorOptions: {
                 safe: true,
+                // Disable rule-merging so the scope plugin's output isn't collapsed
+                // back into unscoped selectors by cssnano.
+                mergeRules: false,
+                mergeLonghand: false,
             }
         })
     );

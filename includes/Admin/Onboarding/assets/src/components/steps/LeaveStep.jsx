@@ -335,7 +335,7 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
                                 Predefined Leave
                             </h3>
                             <p className="text-sm text-gray-500 m-0 mt-1 text-center">
-                                Enter you company name and start date.
+                                Select the leave types to enable for your organization.
                             </p>
                             <div className="border-t border-gray-200 mt-4"></div>
                         </div>

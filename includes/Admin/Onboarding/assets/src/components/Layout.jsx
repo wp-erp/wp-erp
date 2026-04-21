@@ -31,9 +31,9 @@ const Layout = ({ children, onSkip, onBack }) => {
                         <path
                             d="M10.6667 1.16699L16.5 7.00033M16.5 7.00033L10.6667 12.8337M16.5 7.00033L1.5 7.00032"
                             stroke="#334155"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                         />
                     </svg>
                 </button>

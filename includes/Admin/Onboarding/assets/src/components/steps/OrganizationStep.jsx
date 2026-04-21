@@ -139,7 +139,7 @@ const SelectField = ({
                         className="input pr-10"
                         placeholder={placeholder}
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                    <span className="absolute right-3 pointer-events-none flex items-center" style={{ top: 0, bottom: 0, height: 'auto' }}>
                         <svg
                             className={`transition-transform duration-200 ${
                                 showSuggestions ? "rotate-180" : ""
@@ -239,46 +239,54 @@ const SelectField = ({
     );
 };
 
+// Seeder defaults — matches DataProvider::departments() and DataProvider::designations()
+const SEEDER_DEPARTMENTS = [
+    "Engineering",
+    "Human Resources",
+    "Finance & Accounting",
+    "Marketing",
+    "Sales",
+    "Operations",
+    "Product Management",
+    "Customer Support",
+];
+
+const SEEDER_DESIGNATIONS = [
+    "Chief Executive Officer",
+    "Chief Technology Officer",
+    "VP of Engineering",
+    "Engineering Manager",
+    "Senior Software Engineer",
+    "Software Engineer",
+    "Junior Developer",
+    "HR Manager",
+    "HR Executive",
+    "Finance Manager",
+    "Accountant",
+    "Marketing Manager",
+    "Sales Executive",
+    "Operations Lead",
+    "Product Manager",
+];
+
 const OrganizationStep = ({ onNext, initialData = {} }) => {
-    const [selectedItems, setSelectedItems] = useState({
-        departments: initialData.departments || [],
-        designations: initialData.designations || []
-    });
+    const dbDepartments = initialData.departments || [];
+    const dbDesignations = initialData.designations || [];
 
+    // Merge seeder list with any DB items not already in it, preserving seeder order
     const departmentSuggestions = [
-        "General Management",
-        "Operations Department",
-        "Finance Department",
-        "Sales Department",
-        "Human Resource Department",
-        "Purchase Department",
-        "Engineering Department",
-        "Production Department",
-        "Procurement Department"
+        ...SEEDER_DEPARTMENTS,
+        ...dbDepartments.filter(d => !SEEDER_DEPARTMENTS.some(s => s.toLowerCase() === d.toLowerCase())),
+    ];
+    const designationSuggestions = [
+        ...SEEDER_DESIGNATIONS,
+        ...dbDesignations.filter(d => !SEEDER_DESIGNATIONS.some(s => s.toLowerCase() === d.toLowerCase())),
     ];
 
-    const designationSuggestions = [
-        "President",
-        "Vice President",
-        "CEO",
-        "Managing Director",
-        "Product Manager",
-        "Project Manager",
-        "Program Manager",
-        "Operations Manager",
-        "Marketing Manager",
-        "Business Manager",
-        "Technology Manager",
-        "Finance/Accounts Manager",
-        "Human Resource Manager",
-        "Hiring Manager",
-        "Senior Engineer",
-        "Engineer",
-        "Junior Engineer",
-        "Business Executive",
-        "Marketing Executive",
-        "Customer Support Executive"
-    ];
+    const [selectedItems, setSelectedItems] = useState({
+        departments: dbDepartments,
+        designations: dbDesignations,
+    });
 
     const handleToggle = (type, value) => {
         const current = selectedItems[type] || [];
@@ -313,7 +321,7 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
         <div>
             <div className="max-w-640px mx-auto overflow-visible">
                 <h1 className="text-black text-30px font-normal leading-9 text-center m-0 mb-3">
-                    Make Your Department and Designation
+                    Set Up Departments and Designations
                 </h1>
                 <p className="text-center text-slate-500 text-base m-0 mb-16 leading-6">
                     Set up your departments and job designations
