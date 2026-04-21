@@ -38,4 +38,8 @@ export const completeOnboarding = (data) => {
   return apiClient.post('/onboarding/complete', data);
 };
 
+export const getLeaveTypes = () => {
+  return apiClient.get('/onboarding/leave-types');
+};
+
 export default apiClient;

@@ -3,17 +3,19 @@ import Layout from './components/Layout';
 import Progress from './components/Progress';
 import BasicStep from './components/steps/BasicStep';
 import OrganizationStep from './components/steps/OrganizationStep';
+import LeaveStep from './components/steps/LeaveStep';
+import WorkdayStep from './components/steps/WorkdayStep';
 import ImportStep from './components/steps/ImportStep';
-import ModuleStep from './components/steps/ModuleStep';
 import CompleteStep from './components/steps/CompleteStep';
 import { completeOnboarding, getOnboardingStatus, saveStepData } from './utils/api';
 
 const STEPS = [
-  { id: 'basic', name: 'Company Profile', component: BasicStep },
-  { id: 'organization', name: 'Teams & Roles', component: OrganizationStep },
-  { id: 'import', name: 'Add Employees', component: ImportStep },
-  { id: 'module', name: 'Work Schedule', component: ModuleStep },
-  { id: 'complete', name: 'Ready!', component: CompleteStep },
+  { id: 'basic', name: '1. Basic Settings', component: BasicStep },
+  { id: 'organization', name: '2. Department and Designation', component: OrganizationStep },
+  { id: 'leave', name: '3. Leave Setup', component: LeaveStep },
+  { id: 'workday', name: '4. Workday Setup', component: WorkdayStep },
+  { id: 'employee', name: '5. Import Employee', component: ImportStep },
+  { id: 'complete', name: '6. Complete', component: CompleteStep },
 ];
 
 function App() {
@@ -43,12 +45,15 @@ function App() {
                 start_date: fy.start_date,
                 end_date: fy.end_date
               }))
-            : [{
-                id: Date.now(),
-                fy_name: '',
-                start_date: '',
-                end_date: ''
-              }],
+            : (() => {
+                const year = new Date().getFullYear();
+                return [{
+                  id: Date.now(),
+                  fy_name: String(year),
+                  start_date: `${year}-01-01`,
+                  end_date: `${year}-12-31`
+                }];
+              })(),
           enableLeaveManagement: data.enableLeaveManagement ?? true,
           workingDays: data.workingDays || {
             mon: '8',

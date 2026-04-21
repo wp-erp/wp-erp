@@ -6,6 +6,7 @@ const ImportStep = ({ onNext, initialData = {} }) => {
   const [dragActive, setDragActive] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [importedCount, setImportedCount] = useState(null);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -56,10 +57,9 @@ const ImportStep = ({ onNext, initialData = {} }) => {
     setShowModal(false);
   };
 
-  const handleImportSuccess = () => {
+  const handleImportSuccess = (count) => {
     setShowModal(false);
-    // Proceed to next step after successful import
-    onNext({ skipImport: false });
+    setImportedCount(count);
   };
 
   const downloadSample = () => {
@@ -69,6 +69,41 @@ const ImportStep = ({ onNext, initialData = {} }) => {
       window.location.href = sampleUrl;
     }
   };
+
+  if (importedCount !== null) {
+    const congratulationImageUrl = window.wpErpOnboarding?.congratulationImageUrl || '';
+    return (
+      <div>
+        <div className="max-w-640px mx-auto overflow-visible">
+          <h1 className="text-black text-30px font-normal leading-9 text-center m-0 mb-3">
+            Import Employee
+          </h1>
+          <p className="text-center text-slate-500 text-base m-0 mb-10 leading-6">
+            Enter you company name and start date.
+          </p>
+          <div className="bg-white rounded-2xl p-24 text-center my-8 max-w-640px max-h-340px border border-gray-300">
+            <div className="mb-6 flex justify-center" style={{ animation: 'celebrate 0.5s ease' }}>
+              {congratulationImageUrl ? (
+                <img src={congratulationImageUrl} alt="Success" className="w-16 h-16" />
+              ) : (
+                <span style={{ fontSize: '64px' }}>🎉</span>
+              )}
+            </div>
+            <h2 className="text-xl font-medium text-black m-0 mb-1">Successfully Imported</h2>
+            <p className="text-slate-500 text-sm leading-5 m-0 font-normal">{importedCount} employees has been imported</p>
+          </div>
+          <div className="mt-btn text-center">
+            <button
+              onClick={() => onNext({ skipImport: false })}
+              className="btn-primary btn-success no-underline"
+            >
+              Complete the Setup
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -129,6 +164,11 @@ const ImportStep = ({ onNext, initialData = {} }) => {
                     <p className="m-0 text-slate-500 text-sm leading-5 font-normal">
                       {file.name}
                     </p>
+                    {!showModal && (
+                      <p className="m-0 mt-2 text-amber-600 text-xs font-medium">
+                        Not imported yet — click below to map and import
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div className="text-center">
@@ -168,9 +208,18 @@ const ImportStep = ({ onNext, initialData = {} }) => {
             </p>
           </div>
 
-          {/* Button Container - matches erp-button-container with exact margin */}
-          <div className="mt-[138.8px] text-center mt-8">
-            <button type="submit" className="btn-primary no-underline">
+          {/* Button Container */}
+          <div className="mt-btn text-center flex items-center justify-center gap-4">
+            {file && !showModal && (
+              <button
+                type="button"
+                onClick={() => setShowModal(true)}
+                className="btn-primary no-underline"
+              >
+                Map &amp; Import
+              </button>
+            )}
+            <button type="submit" className="btn-secondary no-underline">
               Skip for Now
             </button>
           </div>

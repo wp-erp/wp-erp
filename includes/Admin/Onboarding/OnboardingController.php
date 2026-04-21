@@ -56,6 +56,15 @@ class OnboardingController extends REST_Controller {
                 'permission_callback' => [ $this, 'check_permission' ],
             ],
         ] );
+
+        // Get predefined leave types list
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/leave-types', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_leave_types' ],
+                'permission_callback' => [ $this, 'check_permission' ],
+            ],
+        ] );
     }
 
     /**
@@ -83,16 +92,15 @@ class OnboardingController extends REST_Controller {
             $data = [];
         }
 
-        // Create default leave policies if leave management is enabled
-        $enable_leave = get_option( 'erp_enable_leave_management', false );
+        // Create leave policies for all selected types (if any selected and no policies exist yet)
+        $selected_types = get_option( 'erp_onboarding_selected_leave_types', [] );
 
-        if ( $enable_leave && ! empty( $data['leaveYears'] ) ) {
-            // Check if policies already exist to avoid duplicates
+        if ( ! empty( $selected_types ) && ! empty( $data['leaveYears'] ) ) {
             global $wpdb;
             $policies_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_leave_policies" );
 
             if ( (int) $policies_count === 0 ) {
-                $this->create_default_leave_policies( $data['leaveYears'] );
+                $this->create_default_leave_policies( $data['leaveYears'], $selected_types );
             }
         }
 
@@ -222,6 +230,10 @@ class OnboardingController extends REST_Controller {
             update_option( 'erp_enable_leave_management', (bool) $data['enableLeaveManagement'] );
         }
 
+        if ( isset( $data['selectedLeaveTypes'] ) && is_array( $data['selectedLeaveTypes'] ) ) {
+            update_option( 'erp_onboarding_selected_leave_types', array_map( 'sanitize_text_field', $data['selectedLeaveTypes'] ) );
+        }
+
         if ( ! empty( $data['workingDays'] ) && is_array( $data['workingDays'] ) ) {
             foreach ( $data['workingDays'] as $day => $hours ) {
                 update_option( sanitize_text_field( $day ), sanitize_text_field( $hours ) );
@@ -240,6 +252,79 @@ class OnboardingController extends REST_Controller {
             'success' => true,
             'message' => __( 'Step data saved successfully!', 'erp' ),
         ] );
+    }
+
+    /**
+     * Get predefined leave types available for selection
+     *
+     * @return WP_REST_Response
+     */
+    public function get_leave_types( $request ) {
+        $predefined = $this->get_predefined_leave_types();
+
+        global $wpdb;
+        $existing_leaves = $wpdb->get_results(
+            "SELECT id, name FROM {$wpdb->prefix}erp_hr_leaves ORDER BY name ASC"
+        );
+
+        // Build a name→db_id map from existing DB leaves
+        $db_name_to_id = [];
+        foreach ( $existing_leaves as $leave ) {
+            $db_name_to_id[ strtolower( trim( $leave->name ) ) ] = (int) $leave->id;
+        }
+
+        // Enrich predefined types with db_id if they already exist in DB
+        $predefined_lower_names = [];
+        foreach ( $predefined as &$type ) {
+            $lower = strtolower( $type['name'] );
+            $predefined_lower_names[] = $lower;
+            if ( isset( $db_name_to_id[ $lower ] ) ) {
+                $type['db_id'] = $db_name_to_id[ $lower ];
+            }
+        }
+        unset( $type );
+
+        // Append custom DB leaves not in predefined list
+        foreach ( $existing_leaves as $leave ) {
+            if ( ! in_array( strtolower( $leave->name ), $predefined_lower_names, true ) ) {
+                $predefined[] = [
+                    'id'          => 'custom_' . $leave->id,
+                    'name'        => $leave->name,
+                    'days'        => 0,
+                    'color'       => '#6B7280',
+                    'description' => '',
+                    'db_id'       => (int) $leave->id,
+                ];
+            }
+        }
+
+        return rest_ensure_response( $predefined );
+    }
+
+    /**
+     * Returns the list of predefined leave types
+     *
+     * @return array
+     */
+    private function get_predefined_leave_types() {
+        return [
+            [ 'id' => 'sick_leave',         'name' => 'Sick Leave',           'days' => 14,  'color' => '#EF4444', 'description' => 'Leave for medical reasons and health issues' ],
+            [ 'id' => 'casual_leave',        'name' => 'Casual Leave',         'days' => 10,  'color' => '#3B82F6', 'description' => 'Short-term leave for personal matters' ],
+            [ 'id' => 'annual_leave',        'name' => 'Annual Leave',         'days' => 15,  'color' => '#10B981', 'description' => 'Paid vacation leave for rest and recreation' ],
+            [ 'id' => 'maternity_leave',     'name' => 'Maternity Leave',      'days' => 90,  'color' => '#F59E0B', 'description' => 'Leave for childbirth and postnatal care' ],
+            [ 'id' => 'paternity_leave',     'name' => 'Paternity Leave',      'days' => 7,   'color' => '#8B5CF6', 'description' => 'Leave for fathers after childbirth' ],
+            [ 'id' => 'public_holiday',      'name' => 'Public Holiday Leave', 'days' => 10,  'color' => '#06B6D4', 'description' => 'Leave for public and national holidays' ],
+            [ 'id' => 'unpaid_leave',        'name' => 'Unpaid Leave',         'days' => 30,  'color' => '#6B7280', 'description' => 'Leave without pay for personal reasons' ],
+            [ 'id' => 'vacation_leave',      'name' => 'Vacation Leave',       'days' => 15,  'color' => '#F97316', 'description' => 'Planned vacation and recreational leave' ],
+            [ 'id' => 'bereavement_leave',   'name' => 'Bereavement Leave',    'days' => 5,   'color' => '#64748B', 'description' => 'Leave due to death of a family member' ],
+            [ 'id' => 'jury_duty_leave',     'name' => 'Jury Duty Leave',      'days' => 10,  'color' => '#84CC16', 'description' => 'Leave for jury duty service' ],
+            [ 'id' => 'sabbatical_leave',    'name' => 'Sabbatical Leave',     'days' => 30,  'color' => '#EC4899', 'description' => 'Extended leave for personal development' ],
+            [ 'id' => 'military_leave',      'name' => 'Military Leave',       'days' => 30,  'color' => '#78716C', 'description' => 'Leave for military service or training' ],
+            [ 'id' => 'study_leave',         'name' => 'Study Leave',          'days' => 10,  'color' => '#A855F7', 'description' => 'Leave for education and examinations' ],
+            [ 'id' => 'emergency_leave',     'name' => 'Emergency Leave',      'days' => 5,   'color' => '#EF4444', 'description' => 'Leave for unforeseen emergencies' ],
+            [ 'id' => 'personal_leave',      'name' => 'Personal Leave',       'days' => 5,   'color' => '#14B8A6', 'description' => 'Leave for personal matters' ],
+            [ 'id' => 'leave_of_absence',    'name' => 'Leave of Absence',     'days' => 60,  'color' => '#F59E0B', 'description' => 'Extended leave of absence' ],
+        ];
     }
 
     /**
@@ -318,6 +403,44 @@ class OnboardingController extends REST_Controller {
         $policies_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_leave_policies" );
         $has_leave_policies = (int) $policies_count > 0;
 
+        // Resolve selected leave types:
+        // Priority 1: saved onboarding selection (user explicitly chose these)
+        // Priority 2: if policies exist but no saved selection, derive from existing DB leave names
+        // Priority 3: fresh user with no policies — empty (frontend defaults to all selected)
+        $selected_leave_types = get_option( 'erp_onboarding_selected_leave_types', null );
+
+        if ( $selected_leave_types === null ) {
+            if ( $has_leave_policies ) {
+                // Returning user who completed onboarding before this feature existed.
+                // Match existing leave policy names/ids against predefined list + custom leaves.
+                $predefined = $this->get_predefined_leave_types();
+                $predefined_name_map = [];
+                foreach ( $predefined as $type ) {
+                    $predefined_name_map[ strtolower( $type['name'] ) ] = $type['id'];
+                }
+
+                $existing_leaves_with_policies = $wpdb->get_results(
+                    "SELECT DISTINCT l.id, l.name FROM {$wpdb->prefix}erp_hr_leave_policies p
+                     JOIN {$wpdb->prefix}erp_hr_leaves l ON p.leave_id = l.id"
+                );
+
+                $selected_leave_types = [];
+                foreach ( $existing_leaves_with_policies as $leave ) {
+                    $key = strtolower( trim( $leave->name ) );
+                    if ( isset( $predefined_name_map[ $key ] ) ) {
+                        // Predefined leave — use slug ID
+                        $selected_leave_types[] = $predefined_name_map[ $key ];
+                    } else {
+                        // Custom DB leave — use custom_{db_id} format
+                        $selected_leave_types[] = 'custom_' . $leave->id;
+                    }
+                }
+            } else {
+                // Fresh user — empty array signals frontend to default-select all
+                $selected_leave_types = [];
+            }
+        }
+
         $data = [
             // Step 1 - Basic
             'companyName'          => $company->name ?? '',
@@ -326,11 +449,12 @@ class OnboardingController extends REST_Controller {
             // Step 2 - Organization
             'departments'          => $department_names,
             'designations'         => $designation_names,
-            // Step 3 - Import (handled separately)
-            // Step 4 - Module & Workday
+            // Step 3 - Leave Setup
             'leaveYears'           => $leave_years,
             'enableLeaveManagement' => $has_leave_policies ? false : (bool) get_option( 'erp_enable_leave_management', true ),
             'hasLeavePolicies'     => $has_leave_policies,
+            'selectedLeaveTypes'   => $selected_leave_types,
+            // Step 4 - Workday
             'workingDays'          => $workingDays,
             'workingHours'         => $working_hours,
         ];
@@ -344,18 +468,16 @@ class OnboardingController extends REST_Controller {
      * @param array $leave_years Financial years array
      * @return void
      */
-    private function create_default_leave_policies( $leave_years ) {
-        // Only create for the first financial year
+    private function create_default_leave_policies( $leave_years, $selected_type_ids = [] ) {
         $first_fy = $leave_years[0] ?? null;
-        
+
         if ( empty( $first_fy['fy_name'] ) || empty( $first_fy['start_date'] ) || empty( $first_fy['end_date'] ) ) {
             return;
         }
 
-        // Get the first financial year ID from database
         $financial_years = erp_get_hr_financial_years();
         $first_year_id = null;
-        
+
         foreach ( $financial_years as $fy ) {
             if ( $fy['fy_name'] === $first_fy['fy_name'] ) {
                 $first_year_id = $fy['id'];
@@ -367,50 +489,42 @@ class OnboardingController extends REST_Controller {
             return;
         }
 
-        // Define default leave types with their configurations
-        $default_leave_types = [
-            [
-                'name'        => 'Sick Leave',
-                'description' => 'Leave for medical reasons and health issues',
-                'days'        => 14,
-                'color'       => '#EF4444',
-            ],
-            [
-                'name'        => 'Casual Leave',
-                'description' => 'Short-term leave for personal matters',
-                'days'        => 10,
-                'color'       => '#3B82F6',
-            ],
-            [
-                'name'        => 'Annual Leave',
-                'description' => 'Paid vacation leave for rest and recreation',
-                'days'        => 15,
-                'color'       => '#10B981',
-            ],
-            [
-                'name'        => 'Maternity Leave',
-                'description' => 'Leave for childbirth and postnatal care',
-                'days'        => 90,
-                'color'       => '#F59E0B',
-            ],
-            [
-                'name'        => 'Paternity Leave',
-                'description' => 'Leave for fathers after childbirth',
-                'days'        => 7,
-                'color'       => '#8B5CF6',
-            ],
-        ];
+        global $wpdb;
+        $all_predefined = $this->get_predefined_leave_types();
+
+        // Separate selected IDs into predefined slugs and custom DB IDs
+        $selected_predefined_ids = [];
+        $selected_custom_db_ids  = [];
+        foreach ( $selected_type_ids as $sid ) {
+            if ( strpos( $sid, 'custom_' ) === 0 ) {
+                $selected_custom_db_ids[] = (int) substr( $sid, 7 );
+            } else {
+                $selected_predefined_ids[] = $sid;
+            }
+        }
+
+        // Determine which predefined types to create
+        if ( ! empty( $selected_type_ids ) ) {
+            $default_leave_types = array_filter( $all_predefined, function( $type ) use ( $selected_predefined_ids ) {
+                return in_array( $type['id'], $selected_predefined_ids, true );
+            } );
+        } else {
+            $default_leave_types = $all_predefined;
+        }
+
+        // Fetch existing policy leave_ids so we don't duplicate
+        $existing_policy_leave_ids = $wpdb->get_col(
+            "SELECT DISTINCT leave_id FROM {$wpdb->prefix}erp_hr_leave_policies WHERE f_year = {$first_year_id}"
+        );
+        $existing_policy_leave_ids = array_map( 'intval', $existing_policy_leave_ids );
 
         foreach ( $default_leave_types as $leave_type_data ) {
-            // Create leave type (name)
             $leave_type_id = erp_hr_insert_leave_policy_name( [
                 'name'        => $leave_type_data['name'],
                 'description' => $leave_type_data['description'],
             ] );
 
-            // Skip if leave type creation failed or already exists
             if ( is_wp_error( $leave_type_id ) ) {
-                // Try to find existing leave type by name
                 $existing_leave = \WeDevs\ERP\HRM\Models\Leave::where( 'name', $leave_type_data['name'] )->first();
                 if ( $existing_leave ) {
                     $leave_type_id = $existing_leave->id;
@@ -419,27 +533,61 @@ class OnboardingController extends REST_Controller {
                 }
             }
 
-            // Create leave policy for this leave type
+            // Skip if policy already exists for this leave type + year
+            if ( in_array( (int) $leave_type_id, $existing_policy_leave_ids, true ) ) {
+                continue;
+            }
+
             $policy_data = [
                 'leave_id'            => $leave_type_id,
-                'employee_type'       => -1,  // All employees
-                'department_id'       => 0,   // All departments
-                'designation_id'      => 0,   // All designations
-                'location_id'         => 0,   // All locations
-                'gender'              => '',  // All genders
-                'marital'             => '',  // All marital statuses
+                'employee_type'       => -1,
+                'department_id'       => 0,
+                'designation_id'      => 0,
+                'location_id'         => 0,
+                'gender'              => '',
+                'marital'             => '',
                 'f_year'              => $first_year_id,
                 'description'         => $leave_type_data['description'],
                 'days'                => $leave_type_data['days'],
                 'color'               => $leave_type_data['color'],
-                'applicable_from'     => 0,   // Immediately applicable
-                'apply_for_new_users' => 1,   // Apply for new users
+                'applicable_from'     => 0,
+                'apply_for_new_users' => 1,
             ];
 
             $policy_id = erp_hr_leave_insert_policy( $policy_data );
 
             if ( is_wp_error( $policy_id ) ) {
                 error_log( 'ERP Onboarding: Failed to create leave policy for ' . $leave_type_data['name'] . ' - ' . $policy_id->get_error_message() );
+            }
+        }
+
+        // Also create policies for custom DB leaves that were selected and don't have a policy yet
+        foreach ( $selected_custom_db_ids as $custom_db_id ) {
+            if ( in_array( $custom_db_id, $existing_policy_leave_ids, true ) ) {
+                continue;
+            }
+            $custom_leave = \WeDevs\ERP\HRM\Models\Leave::find( $custom_db_id );
+            if ( ! $custom_leave ) {
+                continue;
+            }
+            $policy_data = [
+                'leave_id'            => $custom_db_id,
+                'employee_type'       => -1,
+                'department_id'       => 0,
+                'designation_id'      => 0,
+                'location_id'         => 0,
+                'gender'              => '',
+                'marital'             => '',
+                'f_year'              => $first_year_id,
+                'description'         => '',
+                'days'                => 0,
+                'color'               => '#6B7280',
+                'applicable_from'     => 0,
+                'apply_for_new_users' => 1,
+            ];
+            $policy_id = erp_hr_leave_insert_policy( $policy_data );
+            if ( is_wp_error( $policy_id ) ) {
+                error_log( 'ERP Onboarding: Failed to create leave policy for custom leave ID ' . $custom_db_id . ' - ' . $policy_id->get_error_message() );
             }
         }
     }
