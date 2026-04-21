@@ -9,6 +9,7 @@ const BasicStep = ({ onNext, initialData = {} }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,11 +32,12 @@ const BasicStep = ({ onNext, initialData = {} }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      onNext(formData);
-    }
+    if (!validate()) return;
+    setIsSubmitting(true);
+    await onNext(formData);
+    setIsSubmitting(false);
   };
 
   const months = [
@@ -120,10 +122,10 @@ const BasicStep = ({ onNext, initialData = {} }) => {
             </div>
           </div>
 
-          {/* Button Container - matches erp-button-container with exact margin */}
           <div className="mt-btn text-center">
-            <button type="submit" className="btn-primary no-underline">
-              Next
+            <button type="submit" className="btn-primary no-underline" disabled={isSubmitting}>
+              {isSubmitting && <span className="btn-spinner"></span>}
+              {isSubmitting ? 'Saving...' : 'Next'}
             </button>
           </div>
         </form>

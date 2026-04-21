@@ -138,13 +138,12 @@ function App() {
   const isLastStep = currentStep === STEPS.length - 1;
   const isFirstStep = currentStep === 0;
 
-  // Show loading spinner while fetching initial data
   if (loading && Object.keys(formData).length === 0) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
-        <div className="bg-white rounded-lg p-6">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="text-gray-700 mt-4 text-center">Loading...</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-3 border-blue-100 border-t-blue-500 rounded-full animate-spin" style={{ borderWidth: '3px' }}></div>
+          <p className="text-gray-500 text-sm font-medium">Loading...</p>
         </div>
       </div>
     );
@@ -171,10 +170,10 @@ function App() {
       </div>
 
       {loading && Object.keys(formData).length > 0 && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-            <p className="text-gray-700 mt-4 text-center">Saving...</p>
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backdropFilter: 'blur(2px)', backgroundColor: 'rgba(0,0,0,0.15)' }}>
+          <div className="bg-white rounded-xl px-8 py-6 shadow-xl flex flex-col items-center gap-3" style={{ minWidth: '160px' }}>
+            <div className="w-9 h-9 rounded-full animate-spin" style={{ borderWidth: '3px', borderStyle: 'solid', borderColor: '#dbeafe', borderTopColor: '#3b82f6' }}></div>
+            <p className="text-gray-600 text-sm font-medium m-0">Saving...</p>
           </div>
         </div>
       )}

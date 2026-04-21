@@ -31,14 +31,24 @@
         font-size: 18px;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
         background: #2563eb !important;
         transform: translateY(-1px);
     }
 
-    .btn-primary:active {
+    .btn-primary:active:not(:disabled) {
         background: #1d4ed8 !important;
         transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .btn-primary:disabled::after {
+        content: none;
     }
 
     /* Secondary Button - matches erp-btn-cancel */
@@ -385,6 +395,11 @@
 
     .erp-loading-spinner {
         @apply inline-block w-4 h-4 border-2 border-white rounded-full animate-spin;
+        border-top-color: transparent;
+    }
+
+    .btn-spinner {
+        @apply inline-block w-4 h-4 border-2 border-white rounded-full animate-spin flex-shrink-0;
         border-top-color: transparent;
     }
 
