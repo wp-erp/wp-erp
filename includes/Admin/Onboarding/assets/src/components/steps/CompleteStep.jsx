@@ -3,8 +3,8 @@ const CompleteStep = ({ onComplete }) => {
     onComplete();
   };
 
-  // Get the congratulation image URL from WordPress localized script
-  const congratulationImageUrl = window.wpErpOnboarding?.congratulationImageUrl || '';
+  const distUrl = window.wpErpOnboarding?.distUrl || '';
+  const congratulationImageUrl = distUrl ? distUrl + '/images/congratulation.png' : '';
 
   return (
     <div>

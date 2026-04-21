@@ -54,7 +54,7 @@ const WorkdayStep = ({ onNext, initialData = {} }) => {
                     Workday Setup
                 </h1>
                 <p className="text-center text-slate-500 text-base m-0 mb-20 leading-6">
-                    Enter you company name and start date.
+                    Configure your weekly work schedule and office hours.
                 </p>
 
                 <form onSubmit={handleSubmit} className="mb-0">

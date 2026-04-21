@@ -288,42 +288,37 @@ class OnboardingController extends REST_Controller {
         foreach ( $existing_leaves as $leave ) {
             if ( ! in_array( strtolower( $leave->name ), $predefined_lower_names, true ) ) {
                 $predefined[] = [
-                    'id'          => 'custom_' . $leave->id,
-                    'name'        => $leave->name,
-                    'days'        => 0,
-                    'color'       => '#6B7280',
-                    'description' => '',
-                    'db_id'       => (int) $leave->id,
+                    'id'    => 'custom_' . $leave->id,
+                    'name'  => $leave->name,
+                    'db_id' => (int) $leave->id,
                 ];
             }
         }
 
-        return rest_ensure_response( $predefined );
+        // Strip color/days/description from API response — not needed by the frontend
+        $response = array_map( function( $type ) {
+            return [
+                'id'    => $type['id'],
+                'name'  => $type['name'],
+                'db_id' => $type['db_id'] ?? null,
+            ];
+        }, $predefined );
+
+        return rest_ensure_response( $response );
     }
 
     /**
-     * Returns the list of predefined leave types
+     * Returns the list of predefined leave types — matches the plugin's CLI seeder (DataProvider::leave_types).
      *
      * @return array
      */
     private function get_predefined_leave_types() {
         return [
-            [ 'id' => 'sick_leave',         'name' => 'Sick Leave',           'days' => 14,  'color' => '#EF4444', 'description' => 'Leave for medical reasons and health issues' ],
-            [ 'id' => 'casual_leave',        'name' => 'Casual Leave',         'days' => 10,  'color' => '#3B82F6', 'description' => 'Short-term leave for personal matters' ],
-            [ 'id' => 'annual_leave',        'name' => 'Annual Leave',         'days' => 15,  'color' => '#10B981', 'description' => 'Paid vacation leave for rest and recreation' ],
-            [ 'id' => 'maternity_leave',     'name' => 'Maternity Leave',      'days' => 90,  'color' => '#F59E0B', 'description' => 'Leave for childbirth and postnatal care' ],
-            [ 'id' => 'paternity_leave',     'name' => 'Paternity Leave',      'days' => 7,   'color' => '#8B5CF6', 'description' => 'Leave for fathers after childbirth' ],
-            [ 'id' => 'public_holiday',      'name' => 'Public Holiday Leave', 'days' => 10,  'color' => '#06B6D4', 'description' => 'Leave for public and national holidays' ],
-            [ 'id' => 'unpaid_leave',        'name' => 'Unpaid Leave',         'days' => 30,  'color' => '#6B7280', 'description' => 'Leave without pay for personal reasons' ],
-            [ 'id' => 'vacation_leave',      'name' => 'Vacation Leave',       'days' => 15,  'color' => '#F97316', 'description' => 'Planned vacation and recreational leave' ],
-            [ 'id' => 'bereavement_leave',   'name' => 'Bereavement Leave',    'days' => 5,   'color' => '#64748B', 'description' => 'Leave due to death of a family member' ],
-            [ 'id' => 'jury_duty_leave',     'name' => 'Jury Duty Leave',      'days' => 10,  'color' => '#84CC16', 'description' => 'Leave for jury duty service' ],
-            [ 'id' => 'sabbatical_leave',    'name' => 'Sabbatical Leave',     'days' => 30,  'color' => '#EC4899', 'description' => 'Extended leave for personal development' ],
-            [ 'id' => 'military_leave',      'name' => 'Military Leave',       'days' => 30,  'color' => '#78716C', 'description' => 'Leave for military service or training' ],
-            [ 'id' => 'study_leave',         'name' => 'Study Leave',          'days' => 10,  'color' => '#A855F7', 'description' => 'Leave for education and examinations' ],
-            [ 'id' => 'emergency_leave',     'name' => 'Emergency Leave',      'days' => 5,   'color' => '#EF4444', 'description' => 'Leave for unforeseen emergencies' ],
-            [ 'id' => 'personal_leave',      'name' => 'Personal Leave',       'days' => 5,   'color' => '#14B8A6', 'description' => 'Leave for personal matters' ],
-            [ 'id' => 'leave_of_absence',    'name' => 'Leave of Absence',     'days' => 60,  'color' => '#F59E0B', 'description' => 'Extended leave of absence' ],
+            [ 'id' => 'annual_leave',    'name' => 'Annual Leave',    'days' => 20, 'color' => '#4CAF50', 'description' => 'Paid vacation days for personal time off' ],
+            [ 'id' => 'sick_leave',      'name' => 'Sick Leave',      'days' => 14, 'color' => '#F44336', 'description' => 'Leave for illness or medical appointments' ],
+            [ 'id' => 'casual_leave',    'name' => 'Casual Leave',    'days' => 10, 'color' => '#2196F3', 'description' => 'Short-notice leave for personal matters' ],
+            [ 'id' => 'maternity_leave', 'name' => 'Maternity Leave', 'days' => 90, 'color' => '#E91E63', 'description' => 'Leave for expecting mothers' ],
+            [ 'id' => 'paternity_leave', 'name' => 'Paternity Leave', 'days' => 10, 'color' => '#9C27B0', 'description' => 'Leave for new fathers' ],
         ];
     }
 

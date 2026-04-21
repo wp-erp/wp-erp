@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const CSVMappingModal = ({ file, onClose, onSuccess }) => {
+  const distUrl = window.wpErpOnboarding?.distUrl || '';
+  const congratulationImageUrl = distUrl ? distUrl + '/images/congratulation.png' : '';
   const [csvColumns, setCsvColumns] = useState([]);
   const [fieldMappings, setFieldMappings] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -157,9 +159,6 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
-
-  // Get the congratulation image URL from WordPress localized script (same as CompleteStep)
-  const congratulationImageUrl = window.wpErpOnboarding?.congratulationImageUrl || '';
 
   if (showSuccess) {
     return (
