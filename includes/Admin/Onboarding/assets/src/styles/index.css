@@ -7,7 +7,7 @@
     /* Container */
     .onboarding-container {
         @apply min-h-screen;
-        background-color: #f9f9f9;
+        background-color: #ffffff;
     }
 
     /* Card - matches erp-card from setup.css */
@@ -170,22 +170,55 @@
         @apply left-4;
     }
 
-    /* Tags - matches erp-tag from setup.css */
+    /* Tags */
     .tag {
-        @apply inline-flex items-center px-3 py-2.5 bg-blue-50 rounded-md text-sm text-blue-700 relative;
-        gap: 6px;
+        @apply inline-flex items-center px-3 py-1.5 rounded-full relative;
+        color: #374151;
+        background-color: #F1F5F9;
+        border: 1px solid #E2E8F0;
+        gap: 0;
     }
 
     .tag-text {
-        @apply font-medium;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        line-height: 1.25rem;
     }
 
     .tag-remove {
-        @apply hidden w-4 h-4 p-0 bg-transparent border-0 text-blue-700 cursor-pointer items-center justify-center transition-colors hover:text-blue-800;
+        @apply flex h-3.5 p-0 bg-transparent border-0 cursor-pointer items-center justify-center hover:text-gray-700;
+        color: #6B7280;
+        max-width: 0;
+        width: 0.875rem;
+        overflow: hidden;
+        opacity: 0;
+        margin-left: 0;
+        transition: max-width 180ms ease, opacity 180ms ease, color 150ms ease, margin-left 180ms ease;
     }
 
     .tag:hover .tag-remove {
-        @apply flex;
+        max-width: 1rem;
+        opacity: 1;
+        margin-left: 5px;
+    }
+
+    /* Dropdown scrollbar */
+    .dropdown-scroll::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .dropdown-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .dropdown-scroll::-webkit-scrollbar-thumb {
+        background-color: #BFDBFE;
+        border-radius: 9999px;
+    }
+
+    .dropdown-scroll::-webkit-scrollbar-thumb:hover {
+        background-color: #93C5FD;
     }
 
     /* Multiselect Container */
@@ -246,17 +279,39 @@
     }
 
     .erp-modal-header {
-        @apply flex items-center justify-between px-6 py-4 border-b border-gray-200;
+        @apply flex items-center justify-center relative px-6 py-6 border-b border-gray-200;
     }
 
     .erp-modal-close {
-        @apply text-gray-400 hover:text-gray-600 text-3xl font-light cursor-pointer bg-transparent border-0 transition-colors;
+        @apply text-gray-400 hover:text-gray-600 text-3xl font-light cursor-pointer bg-transparent border-0 transition-colors absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
         line-height: 1;
     }
 
     .erp-modal-body {
         @apply flex-1 overflow-y-auto;
         padding: 0;
+        scrollbar-width: thin;
+        scrollbar-color: #BFDBFE transparent;
+    }
+
+    .erp-modal-body::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .erp-modal-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .erp-modal-body::-webkit-scrollbar-thumb {
+        background-color: #BFDBFE;
+        border-radius: 9999px;
+    }
+
+    .erp-modal-body::-webkit-scrollbar-thumb:hover {
+        background-color: #93C5FD;
     }
 
     .erp-modal-tabs {
@@ -350,17 +405,18 @@
     }
 
     .erp-modal-footer {
-        @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200;
+        @apply flex items-center justify-end gap-3 px-6 py-4;
         background-color: #ffffff;
+        border-top: 1px solid #e5e7eb !important;
     }
 
     .erp-btn-cancel {
-        padding: 10px 20px;
+        padding: 8px 18px;
         font-size: 14px;
         font-weight: 500;
         color: #374151;
         background-color: #ffffff;
-        border: 1px solid #d1d5db;
+        border: 1px solid #d1d5db !important;
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.2s;
@@ -372,8 +428,8 @@
     }
 
     .erp-btn-import {
-        @apply inline-flex items-center gap-2 px-8 py-3 font-semibold text-white rounded-md transition-all duration-200 cursor-pointer;
-        font-size: 15px;
+        @apply inline-flex items-center gap-2 px-5 py-2 font-semibold text-white rounded-md transition-all duration-200 cursor-pointer;
+        font-size: 14px;
         background: #3B82F6 !important;
         border: none !important;
         box-shadow: 0px 1px 2px 0px #0000000D;
@@ -536,6 +592,19 @@
     .erp-form-row {
         @apply grid gap-5;
         grid-template-columns: 1fr 1fr;
+    }
+
+    /* Button top spacing */
+    .mt-btn {
+        margin-top: 100px;
+    }
+
+    .btn-success {
+        background: #10B981 !important;
+    }
+
+    .btn-success:hover {
+        background: #059669 !important;
     }
 
     /* Screen Reader Only - Hide elements visually but keep accessible */

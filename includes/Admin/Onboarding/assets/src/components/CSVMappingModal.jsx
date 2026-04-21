@@ -6,6 +6,7 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [importedCount, setImportedCount] = useState(0);
+  const [importError, setImportError] = useState('');
 
   // Profile fields and required fields from WordPress (based on existing sample CSV)
   const profileFields = [
@@ -102,10 +103,11 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
 
   const handleImport = async () => {
     if (!validateMappings()) {
-      alert('Please map all required fields (marked with *)');
+      setImportError('Please map all required fields (marked with *)');
       return;
     }
 
+    setImportError('');
     setIsLoading(true);
 
     // Prepare form data
@@ -131,25 +133,22 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
       const result = await response.json();
 
       if (result.success) {
-        // Extract count from message (e.g., "5 items have been imported successfully")
         const match = result.data?.match(/(\d+)/);
         const count = match ? match[1] : '0';
-
-        setImportedCount(count);
-        setShowSuccess(true);
+        onSuccess(count);
       } else {
-        alert(result.data || 'Import failed. Please try again.');
+        setImportError(result.data || 'Import failed. Please try again.');
       }
     } catch (error) {
       console.error('Import error:', error);
-      alert('Import failed. Please try again.');
+      setImportError('Import failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleContinue = () => {
-    onSuccess();
+    onSuccess(importedCount);
   };
 
   const formatFieldName = (field) => {
@@ -218,15 +217,17 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
 
         <div className="erp-modal-body">
           <div className="erp-modal-tabs">
-            <div className="erp-tab active">
-              Columns <span className="erp-column-count">({csvColumns.length})</span>
-            </div>
             <div className="erp-tab">
-              Profile Field
+              Columns <span className="erp-column-count">({csvColumns.length})</span>
             </div>
           </div>
 
           <div className="erp-tab-content">
+            {importError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700"
+                dangerouslySetInnerHTML={{ __html: importError }}
+              />
+            )}
             <div className="erp-columns-tab">
               <table className="erp-mapping-table">
                 <tbody>

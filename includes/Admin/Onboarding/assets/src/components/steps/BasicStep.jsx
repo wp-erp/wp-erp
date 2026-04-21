@@ -121,7 +121,7 @@ const BasicStep = ({ onNext, initialData = {} }) => {
           </div>
 
           {/* Button Container - matches erp-button-container with exact margin */}
-          <div className="mt-138.8px text-center">
+          <div className="mt-btn text-center">
             <button type="submit" className="btn-primary no-underline">
               Next
             </button>
