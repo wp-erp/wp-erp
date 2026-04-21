@@ -10,6 +10,7 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
     const [errors, setErrors] = useState([]);
     const [leaveTypes, setLeaveTypes] = useState([]);
     const [loadingTypes, setLoadingTypes] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         enableLeaveManagement: initialData.enableLeaveManagement ?? true,
         selectedLeaveTypes: initialData.selectedLeaveTypes || [],
@@ -42,25 +43,6 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
             .catch(() => {})
             .finally(() => setLoadingTypes(false));
     }, []);
-
-    useEffect(() => {
-        if (initialData.leaveYears && initialData.leaveYears.length > 0) {
-            setFormData(prev => ({
-                ...prev,
-                leaveYears: initialData.leaveYears.map(fy => ({
-                    id: fy.id || Date.now() + Math.random(),
-                    fy_name: fy.fy_name || "",
-                    start_date: fy.start_date || "",
-                    end_date: fy.end_date || ""
-                }))
-            }));
-        } else if (initialData.leaveYears !== undefined) {
-            setFormData(prev => ({
-                ...prev,
-                leaveYears: [makeDefaultLeaveYear()]
-            }));
-        }
-    }, [initialData.leaveYears]);
 
     const toggleLeaveType = id => {
         setFormData(prev => ({
@@ -149,7 +131,7 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
         return errs;
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
         const validationErrors = validate();
         if (validationErrors.length > 0) {
@@ -158,7 +140,9 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
             return;
         }
         setErrors([]);
-        onNext(formData);
+        setIsSubmitting(true);
+        await onNext(formData);
+        setIsSubmitting(false);
     };
 
     const allSelected =
@@ -343,8 +327,13 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
                         {/* Leave Type Grid */}
                         <div className="p-6">
                             {loadingTypes ? (
-                                <div className="text-center py-6 text-gray-400 text-sm">
-                                    Loading leave types...
+                                <div className="grid grid-cols-3 gap-y-6 gap-x-2">
+                                    {Array.from({ length: 9 }).map((_, i) => (
+                                        <div key={i} className="flex items-center gap-2">
+                                            <div className="w-5 h-5 rounded-full bg-gray-200 animate-pulse flex-shrink-0"></div>
+                                            <div className="h-3.5 bg-gray-200 animate-pulse rounded" style={{ width: `${60 + (i % 3) * 20}px` }}></div>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-3 gap-y-6 gap-x-2">
@@ -404,8 +393,10 @@ const LeaveStep = ({ onNext, initialData = {} }) => {
                         <button
                             type="submit"
                             className="btn-primary no-underline"
+                            disabled={isSubmitting}
                         >
-                            Next
+                            {isSubmitting && <span className="btn-spinner"></span>}
+                            {isSubmitting ? 'Saving...' : 'Next'}
                         </button>
                     </div>
                 </form>

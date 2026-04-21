@@ -223,9 +223,9 @@ const CSVMappingModal = ({ file, onClose, onSuccess }) => {
 
           <div className="erp-tab-content">
             {importError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700"
-                dangerouslySetInnerHTML={{ __html: importError }}
-              />
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700">
+                {importError}
+              </div>
             )}
             <div className="erp-columns-tab">
               <table className="erp-mapping-table">

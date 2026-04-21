@@ -7,6 +7,7 @@ const WorkdayStep = ({ onNext, initialData = {} }) => {
         },
         workingHours: initialData.workingHours || { start: "09:00", end: "17:00" }
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const days = [
         { key: "mon", label: "Monday" },
@@ -25,9 +26,11 @@ const WorkdayStep = ({ onNext, initialData = {} }) => {
         }));
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        onNext(formData);
+        setIsSubmitting(true);
+        await onNext(formData);
+        setIsSubmitting(false);
     };
 
     const DayOption = ({ dayKey, value, label }) => {
@@ -74,7 +77,10 @@ const WorkdayStep = ({ onNext, initialData = {} }) => {
                     </div>
 
                     <div className="text-center mt-btn">
-                        <button type="submit" className="btn-primary no-underline">Next</button>
+                        <button type="submit" className="btn-primary no-underline" disabled={isSubmitting}>
+                            {isSubmitting && <span className="btn-spinner"></span>}
+                            {isSubmitting ? 'Saving...' : 'Next'}
+                        </button>
                     </div>
                 </form>
             </div>

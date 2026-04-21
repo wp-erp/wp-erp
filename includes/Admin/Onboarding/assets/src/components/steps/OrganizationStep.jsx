@@ -287,6 +287,7 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
         departments: dbDepartments,
         designations: dbDesignations,
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleToggle = (type, value) => {
         const current = selectedItems[type] || [];
@@ -312,9 +313,11 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
         });
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        onNext(selectedItems);
+        setIsSubmitting(true);
+        await onNext(selectedItems);
+        setIsSubmitting(false);
     };
 
     return (
@@ -354,8 +357,10 @@ const OrganizationStep = ({ onNext, initialData = {} }) => {
                         <button
                             type="submit"
                             className="btn-primary no-underline"
+                            disabled={isSubmitting}
                         >
-                            Next
+                            {isSubmitting && <span className="btn-spinner"></span>}
+                            {isSubmitting ? 'Saving...' : 'Next'}
                         </button>
                     </div>
                 </form>
