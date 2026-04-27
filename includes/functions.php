@@ -4153,3 +4153,35 @@ function erp_serialize_string_to_array( $serialized_string ) {
 
 	return unserialize( $data );
 }
+
+/**
+ * Load the Headway changelog badge widget (mirrors WPUF pattern)
+ */
+function erp_load_headway_badge() {
+    wp_enqueue_script( 'erp-headway' );
+    ?>
+    <span class="erp-headway-wrap">
+        <span id="erp-headway-btn" class="erp-cta-hover-btn erp-headway-trigger" title="<?php esc_attr_e( "What's New", 'erp' ); ?>">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="currentColor"/></svg>
+            <span class="erp-cta-hover-label"><?php esc_html_e( "What's New", 'erp' ); ?></span>
+        </span>
+        <span id="erp-headway-icon" class="erp-headway-dummy"></span>
+    </span>
+    <script>
+    var HW_config = {
+        selector: '#erp-headway-icon',
+        account: '7vbOM7'
+    };
+    document.addEventListener( 'DOMContentLoaded', function() {
+        var btn = document.getElementById( 'erp-headway-btn' );
+        if ( btn ) {
+            btn.addEventListener( 'click', function() {
+                if ( window.Headway ) {
+                    window.Headway.toggle();
+                }
+            } );
+        }
+    } );
+    </script>
+    <?php
+}
