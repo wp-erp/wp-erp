@@ -186,6 +186,7 @@ class Ajax {
 				false !== strpos( get_class( $email ), 'HRM' ) ||
 				false !== strpos( get_class( $email ), 'ERP_Document' ) ||
 				false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
+				false !== strpos( get_class( $email ), 'Recruitment\\Emails' ) ||
 				false !== strpos( get_class( $email ), 'Training' )
 			) {
 				$emails['hrm'][] = $email_data;
