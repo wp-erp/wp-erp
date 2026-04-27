@@ -273,13 +273,8 @@ class GmailSync {
     public function process_emails( $emails ) {
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $server_http_host = preg_replace('/[^a-zA-Z0-9:\.]/', '', isset($_SERVER['HTTP_HOST']) ? wp_unslash( $_SERVER['HTTP_HOST'] ) : '');
-		$http_host = apply_filters(
-			'erp_crm_activity_server_host',
-			$server_http_host
-		);
-
-        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $http_host;
+        $http_host    = apply_filters( 'erp_crm_activity_server_host', \erp_crm_get_server_host() );
+        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . preg_quote( $http_host, '/' );
 
         foreach ( $emails as $email ) {
             if ( !isset( $email['headers']['References'] ) ) {
