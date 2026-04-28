@@ -36,6 +36,14 @@ class Scripts {
         $this->version = WPERP_VERSION;
 
         $this->action( 'admin_enqueue_scripts', 'scripts_handler' );
+        add_filter( 'script_loader_tag', [ $this, 'add_async_to_headway' ], 10, 3 );
+    }
+
+    public function add_async_to_headway( $tag, $handle, $src ) {
+        if ( 'erp-headway' === $handle ) {
+            return str_replace( ' src', ' async src', $tag );
+        }
+        return $tag;
     }
 
     /**
@@ -111,6 +119,9 @@ class Scripts {
 
         // date range picker
         wp_register_script( 'erp-daterangepicker', $vendor . '/daterangepicker/daterangepicker.min.js', [ 'jquery' ], $this->version, true );
+
+        // headway changelog widget
+        wp_register_script( 'erp-headway', WPERP_ASSETS . '/vendor/headway.js', [ 'jquery' ], $this->version, true );
     }
 
     /**
