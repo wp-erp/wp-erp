@@ -150,24 +150,40 @@ a.erp-cta-book-a-call:active {
   display: inline-flex;
   align-items: center;
 }
-/* dummy element Headway attaches to — visually hidden, zero size */
-.erp-headway-dummy {
+/* button is the click target; ensure button-resets so it matches the anchors */
+button.erp-headway-trigger {
+  position: relative;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* anchor element Headway attaches its badgeCont to — pinned top-right of button */
+.erp-headway-anchor {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: 0;
+  right: 0;
   width: 0;
   height: 0;
-  overflow: visible;
   pointer-events: none;
 }
-/* badge floats top-right of the button */
-.erp-headway-dummy .HW_badge_cont {
+/* Headway badgeCont floats from the anchor so the red dot sits on the corner */
+.erp-headway-anchor .HW_badge_cont {
   position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
+  top: -10px !important;
+  right: -10px !important;
   left: auto !important;
+  bottom: auto !important;
+  width: 20px !important;
+  height: 20px !important;
   pointer-events: auto !important;
   z-index: 10;
+}
+.erp-headway-anchor .HW_badge {
+  top: 2px !important;
+  left: 2px !important;
 }
 
 /* ── Hover-reveal icon buttons (Feedback / Support) ─────────── */
@@ -200,6 +216,9 @@ a.erp-cta-book-a-call:active {
   transition: max-width 0.25s ease, opacity 0.2s ease, margin-left 0.2s ease;
   margin-left: 0;
   white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
 }
 .erp-cta-hover-btn:hover {
   padding: 7px 14px;
