@@ -2,39 +2,75 @@
     cursor: pointer;
 }
 .pro-popup, .pro-popup-nav, .pro-popup-sub-nav{
-    font-weight: 400;
-    font-size: 11px;
-    line-height: 13px;
-    margin: 12px 10px 0 -5px;
+    margin: 12px 0 0 0;
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
-    padding: 1px 5px 2px;
-    gap: 10px;
-    width: 28px;
-    height: 16px;
-    background: #FF9000;
-    border-radius: 3px;
-    color: #FFFFFF;
-    box-sizing: unset;
+    justify-content: center;
+    padding: 0;
+    width: 0;
+    height: 18px;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 18px;
+    letter-spacing: 0.3px;
+    color: #B45309;
+    background: #FFF3E0;
+    border: 0 solid #F59E0B;
+    border-radius: 9px;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: width 0.2s ease, border-width 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+    white-space: nowrap;
+}
+/* Show badge on hover of parent li */
+li:hover > a > .pro-popup,
+li:hover > a > .pro-popup-sub-nav,
+li:hover > .pro-popup,
+li:hover > a .pro-popup-sub-nav,
+.pro-popup-main:hover > .pro-popup,
+.pro-popup-main:hover .pro-popup,
+span:hover > .pro-popup-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 12px 10px 0 -5px;
+}
+/* Dropdown items - show pro badges when dropdown is open */
+.erp-nav-dropdown li:hover > a > .pro-popup,
+.erp-nav-dropdown li:hover .pro-popup,
+li.dropdown-nav:hover .erp-nav-dropdown .pro-popup {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 7px 10px 0 -5px;
 }
 .pro-popup-nav{
     margin: 0;
 }
 .pro-popup-sub-nav{
     display: inline-flex !important;
+    width: 32px;
+    border-width: 1.2px;
     margin: 12px 10px 0 10px;
 }
 
 .erp-nav-dropdown .pro-popup{
     margin-top: 7px;
-
+    flex-shrink: 0;
+}
+/* Ensure dropdown has room for badges */
+.erp-nav-dropdown {
+    padding-right: 5px !important;
 }
 
 .pro-popup-main{
     display: flex !important;
     justify-content: space-between;
+}
+.pro-popup-main > a{
+    color: #2D2D2D !important;
+}
+.pro-popup-main:hover > a{
+    color: #2D2D2D !important;
 }
 
 
@@ -43,18 +79,37 @@
 }
 
 .pro-popup-reports-main > .pro-popup-nav{
-    margin-left: 10px;
+    margin-left: 6px;
+}
+/* Show badge on hover for report boxes */
+.pro-popup-reports-main:hover > .pro-popup-nav,
+.postbox:hover .pro-popup-nav {
+    opacity: 1;
 }
 
+
+/* Override Settings page WooCommerce .pro-label to match current badge style */
+.pro-label {
+    color: #B45309 !important;
+    background-color: #FFF3E0 !important;
+    border: 1.2px solid #F59E0B !important;
+    border-radius: 9px !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    padding: 1px 6px !important;
+    margin-left: auto !important;
+}
+#erp-settings .settings-area .settings-navbar .settings-menu li a {
+    display: flex !important;
+    align-items: center;
+}
 
 .erp-pro-tooltip:hover {
 
 }
 
 .erp-pro-tooltip-wrapper {
-    position: absolute;
-    /*opacity: 0;*/
-    /*visibility: hidden;*/
+    display: none !important;
 }
 
 .erp-pro-tooltip:hover, div.erp-custom-menu-container:not(.--jsfied) {

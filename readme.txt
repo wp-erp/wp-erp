@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.9
+Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 1.16.10
+Stable tag: 1.17.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -326,6 +326,41 @@ It may take longer to respond to more advanced or technical queries. We promise 
 
 
 == Changelog ==
+= v1.17.3 → Apr 28, 2026
+--------------------------
+* [Added] Headway widget and dashboard CTAs
+* [Added] Include Recruitment\Emails in HRM grouping
+* [Enhancement] Persist user_url and handle end_date and personal update in API.
+
+= v1.17.2 → Mar 13, 2026
+--------------------------
+* [Enhancement] Enable only HR module by default for new installations
+
+= v1.17.1 → Mar 12, 2026
+--------------------------
+* [Enhancement] Redesign Pro badges for less intrusive UX
+
+= v1.17.0 → Mar 10, 2026
+--------------------------
+* [Added] OneSignal push notification module for HRM (leave, announcements, holidays, birthdays, job applications) [#1551](https://github.com/wp-erp/wp-erp/pull/1551).
+* [Added] REST endpoints for logged-in users to fetch their own announcements [#1551](https://github.com/wp-erp/wp-erp/pull/1551).
+* [Added] Introduce extensibility hooks in CRM and HRM [#1535](https://github.com/wp-erp/wp-erp/pull/1535).
+* [Enhancement] Employee API permissions updated to allow self profile view, update and photo upload [#1527](https://github.com/wp-erp/wp-erp/pull/1527).
+* [Enhancement] Employee API now returns job, employment and compensation histories [#1527](https://github.com/wp-erp/wp-erp/pull/1527).
+* [Enhancement] Employee deletion API supports force delete [#1527](https://github.com/wp-erp/wp-erp/pull/1527).
+* [Fixed] Load CRM capabilities functions early to prevent fatal errors with ERP PRO [#1519](https://github.com/wp-erp/wp-erp/pull/1519).
+* [Fixed] Function issues in ERP Overview and Headcount report files [#1518](https://github.com/wp-erp/wp-erp/pull/1518).
+* [Fixed] Status report display [#1516](https://github.com/wp-erp/wp-erp/pull/1516).
+
+= v1.16.11 → February 9, 2026
+--------------------------
+* [Fixed] Announcement API formating [#1542](https://github.com/wp-erp/wp-erp/pull/1542).
+* [Fixed] Announcement API validation [#1544](https://github.com/wp-erp/wp-erp/pull/1544).
+* [Fixed] Employee API photo id not showing [#1546](https://github.com/wp-erp/wp-erp/pull/1545).
+* [Enhancement] Employee API meta data status [#1546](https://github.com/wp-erp/wp-erp/pull/1546).
+* [Added] CRM CLI seeders for contacts, companies, activities, deals [#1548](https://github.com/wp-erp/wp-erp/pull/1548).
+* [Added] HRM CLI seeders for demo data generation [#1549](https://github.com/wp-erp/wp-erp/pull/1549).
+* [Fixed] Fix SQL injection in CRM contacts orderby parameter (#1550)(https://github.com/wp-erp/wp-erp/pull/1550).
 
 = v1.16.10 → January 14, 2026
 --------------------------

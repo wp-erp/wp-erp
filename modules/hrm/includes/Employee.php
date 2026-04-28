@@ -208,6 +208,9 @@ class Employee {
                     $this->data['personal'][ $key ] = $this->$key;
                 }
                 $this->data['personal']['full_name'] = $this->get_full_name();
+                $this->data['personal']['photo_id'] = $this->get_photo_id();
+                $this->data['personal']['user_url'] = $this->get_user_url();
+                $this->data['personal']['description'] = $this->get_description();
             }
         }
     }
@@ -333,8 +336,6 @@ class Employee {
         }
 
         if ( ! empty( $data['work']['designation'] ) && ! array_key_exists( $data['work']['designation'], erp_hr_get_designations_fresh() ) ) {
-            error_log(print_r( [erp_hr_get_departments_fresh()], true ));
-
             return new WP_Error( 'invalid-designation', __( 'Please select a valid employee designation', 'erp' ) );
         }
 
@@ -587,9 +588,22 @@ class Employee {
             }
         }
 
-        //check if something removed
+        // user_url lives on the wp_users table (WordPress native column).
+        // Persist it there and unset it from the posted array so the
+        // personal-meta loop below does not also write it to user_meta.
+        if ( \array_key_exists( 'user_url', $posted ) ) {
+            wp_update_user( [
+                'ID'       => $this->user_id,
+                'user_url' => (string) $posted['user_url'],
+            ] );
+            unset( $posted['user_url'] );
+        }
+
+        // Check if something removed (field explicitly sent as empty).
+        // Important: do not treat omitted fields as removals, otherwise partial updates
+        // (e.g. updating Basic Info) would wipe unrelated Personal Details.
         foreach ( $this->data['personal'] as $p_key => $p_val ) {
-            if ( empty( $posted[ $p_key ] ) ) {
+            if ( array_key_exists( $p_key, $posted ) && ( '' === $posted[ $p_key ] || null === $posted[ $p_key ] ) ) {
                 $this->changes['personal'][ $p_key ] = '';
             }
         }
@@ -622,6 +636,14 @@ class Employee {
             foreach ( $this->changes['personal'] as $key => $value ) {
                 update_user_meta( $this->id, $key, $value );
             }
+        }
+
+        // Invalidate any cached employee data so subsequent reads reflect
+        // the updated wp_users / user_meta values (fixes stale reads for
+        // fields like user_url after edits).
+        clean_user_cache( $this->user_id );
+        if ( function_exists( 'erp_hrm_purge_cache' ) ) {
+            erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $this->id ] );
         }
 
         //reset changes
@@ -802,8 +824,28 @@ class Employee {
      *
      * @return string
      */
+    /**
+     * Get the user website URL from wp_users table
+     *
+     * @return string
+     */
     public function get_user_url() {
-        return $this->get_details_url();
+        if ( $this->user_id ) {
+            $user = get_user_by( 'id', $this->user_id );
+            if ( $user && isset( $user->user_url ) ) {
+                return $user->user_url;
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Get the employees description/biography from user_meta
+     *
+     * @return string
+     */
+    public function get_description() {
+        return get_user_meta( $this->user_id, 'description', true );
     }
 
     /**
@@ -1333,11 +1375,21 @@ class Employee {
      * @return array the qualifications
      */
     public function get_educations( $limit = 30, $offset = 0 ) {
-        return $this->erp_user
+        $educations = $this->erp_user
             ->educations()
             ->skip( $offset )
             ->take( $limit )
             ->get();
+
+        // Fetch expiration_date from user meta for each education
+        if ( $educations && ! $educations->isEmpty() ) {
+            foreach ( $educations as $edu ) {
+                $meta_key = 'education_' . $this->user_id . '_' . $edu->id;
+                $edu->expiration_date = get_user_meta( $this->user_id, $meta_key, true );
+            }
+        }
+
+        return $educations;
     }
 
     /**
@@ -1362,6 +1414,7 @@ class Employee {
             'result'      => '',
             'notes'       => '',
             'interest'    => '',
+            'expiration_date' => '',
         ];
 
         $args = wp_parse_args( $data, $default );
@@ -1393,7 +1446,12 @@ class Employee {
         if ( ! $education ) {
             return $this->send_error( 'error-creating-education', __( 'Could not create education.', 'erp' ) );
         } else {
-            update_user_meta( $education['employee_id'], 'education_' . $education['employee_id'] . '_' . $education['id'], $data['expiration_date'] );
+            // Save expiration_date to user meta if provided
+            if ( ! empty( $args['expiration_date'] ) ) {
+                update_user_meta( $education['employee_id'], 'education_' . $education['employee_id'] . '_' . $education['id'], $args['expiration_date'] );
+            }
+            // Add expiration_date to returned education array
+            $education['expiration_date'] = ! empty( $args['expiration_date'] ) ? $args['expiration_date'] : '';
         }
 
         return $education;
@@ -1405,6 +1463,11 @@ class Employee {
      * @since 1.3.0
      */
     public function delete_education( $id ) {
+        // Delete the expiration_date user meta
+        $meta_key = 'education_' . $this->user_id . '_' . $id;
+        delete_user_meta( $this->user_id, $meta_key );
+        
+        // Delete the education record
         return $this->erp_user->educations()->find( $id )->delete();
     }
 
@@ -1772,13 +1835,25 @@ class Employee {
             }
         }
 
-        $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
-            'module'   => $args['module'],
-            'category' => $args['category'],
-            'type'     => $args['type'],
-            'comment'  => $args['comments'],
-            'date'     => $args['date'],
-        ] );
+        // Build history update data - only include fields that are being updated
+        // to avoid overwriting existing values with empty defaults
+        $history_update_data = [
+            'module'  => $args['module'],
+            'comment' => $args['comments'],
+            'date'    => $args['date'],
+        ];
+
+        // Only include category if it's provided (status update)
+        if ( ! empty( $args['category'] ) ) {
+            $history_update_data['category'] = $args['category'];
+        }
+
+        // Only include type if it's provided (type update)
+        if ( ! empty( $args['type'] ) ) {
+            $history_update_data['type'] = $args['type'];
+        }
+
+        $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], $history_update_data );
 
         if (
             ! empty( $args['type'] ) &&

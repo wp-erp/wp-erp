@@ -76,6 +76,32 @@ class AnnouncementsController extends REST_Controller {
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/my', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_my_announcements' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return is_user_logged_in();
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/my/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_my_announcement' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function ( $request ) {
+                    return is_user_logged_in();
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
     }
 
     /**
@@ -135,6 +161,88 @@ class AnnouncementsController extends REST_Controller {
     }
 
     /**
+     * Get announcements for the current logged-in user
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_my_announcements( $request ) {
+        $current_user_id = get_current_user_id();
+
+        if ( ! $current_user_id ) {
+            return new WP_Error( 'rest_not_authenticated', __( 'User is not authenticated.', 'erp' ), [ 'status' => 401 ] );
+        }
+
+        $announcement_model = new \WeDevs\ERP\HRM\Models\Announcement();
+        $announcements = $announcement_model->where( 'user_id', $current_user_id )->get();
+
+        $post_ids = $announcements->pluck( 'post_id' )->toArray();
+
+        if ( empty( $post_ids ) ) {
+            return rest_ensure_response( [] );
+        }
+
+        $args = [
+            'post__in'       => $post_ids,
+            'posts_per_page' => $request['per_page'],
+            'offset'         => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'post_type'      => 'erp_hr_announcement',
+        ];
+
+        $items = get_posts( $args );
+        $formated_items = [];
+
+        foreach ( $items as $item ) {
+            $item->id         = $item->ID;
+            $data             = $this->prepare_item_for_response( $item, $request );
+            $formated_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formated_items );
+        $response = $this->format_collection_response( $response, $request, \count( $post_ids ) );
+
+        return $response;
+    }
+
+    /**
+     * Get a specific announcement for the current user
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_my_announcement( $request ) {
+        $current_user_id = get_current_user_id();
+        $announcement_id = (int) $request['id'];
+
+        if ( ! $current_user_id ) {
+            return new WP_Error( 'rest_not_authenticated', __( 'User is not authenticated.', 'erp' ), [ 'status' => 401 ] );
+        }
+
+        $announcement_model = new \WeDevs\ERP\HRM\Models\Announcement();
+        $announcement = $announcement_model->where( 'user_id', $current_user_id )
+            ->where( 'post_id', $announcement_id )
+            ->first();
+
+        if ( ! $announcement ) {
+            return new WP_Error( 'rest_announcement_not_found', __( 'Announcement not found or you do not have permission to view it.', 'erp' ), [ 'status' => 404 ] );
+        }
+
+        $item = get_post( $announcement_id );
+
+        if ( empty( $item ) || $item->post_type !== 'erp_hr_announcement' ) {
+            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid announcement id.', 'erp' ), [ 'status' => 404 ] );
+        }
+
+        $item->id = $item->ID;
+        $item = $this->prepare_item_for_response( $item, $request );
+        $response = rest_ensure_response( $item );
+
+        return $response;
+    }
+
+    /**
      * Create an announcement
      *
      * @param WP_REST_Request $request
@@ -142,9 +250,56 @@ class AnnouncementsController extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_announcement( $request ) {
+
+
+        // Validate recipient_type
+        $valid_recipient_types = ['all_employee', 'selected_employee'];
+        if (! in_array($request['recipient_type'], $valid_recipient_types)) {
+            return new WP_Error(
+                'rest_invalid_recipient_type',
+                __('Invalid recipient type. Must be either "all_employee" or "selected_employee".', 'erp'),
+                ['status' => 400]
+            );
+        }
+
+        // Validate employees field when recipient_type is selected_employee
+        if ($request['recipient_type'] === 'selected_employee') {
+            if (empty($request['employees'])) {
+                return new WP_Error(
+                    'rest_missing_employees',
+                    __('Employees field is required when recipient type is "selected_employee".', 'erp'),
+                    ['status' => 400]
+                );
+            }
+
+            // Validate employee IDs
+            $employees = explode(',', str_replace(' ', '', $request['employees']));
+            $employees = array_filter(array_map('absint', $employees));
+
+            if (empty($employees)) {
+                return new WP_Error(
+                    'rest_invalid_employees',
+                    __('Invalid employee IDs provided.', 'erp'),
+                    ['status' => 400]
+                );
+            }
+        }
+
         $item = $this->prepare_item_for_database( $request );
 
-        $id   = wp_insert_post( $item );
+        $id = wp_insert_post($item);
+
+        if (is_wp_error($id)) {
+            return $id;
+        }
+
+        if (! $id) {
+            return new WP_Error(
+                'rest_announcement_create_failed',
+                __('Failed to create announcement.', 'erp'),
+                ['status' => 500]
+            );
+        }
 
         $type = ( $request['recipient_type'] == 'all_employee' ) ? 'all_employee' : 'selected_employee';
 
@@ -184,9 +339,57 @@ class AnnouncementsController extends REST_Controller {
             return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
+        // Validate recipient_type
+        if (isset($request['recipient_type'])) {
+            $valid_recipient_types = ['all_employee', 'selected_employee'];
+            if (! in_array($request['recipient_type'], $valid_recipient_types)) {
+                return new WP_Error(
+                    'rest_invalid_recipient_type',
+                    __('Invalid recipient type. Must be either "all_employee" or "selected_employee".', 'erp'),
+                    ['status' => 400]
+                );
+            }
+
+            // Validate employees field when recipient_type is selected_employee
+            if ($request['recipient_type'] === 'selected_employee') {
+                if (empty($request['employees'])) {
+                    return new WP_Error(
+                        'rest_missing_employees',
+                        __('Employees field is required when recipient type is "selected_employee".', 'erp'),
+                        ['status' => 400]
+                    );
+                }
+
+                // Validate employee IDs
+                $employees = explode(',', str_replace(' ', '', $request['employees']));
+                $employees = array_filter(array_map('absint', $employees));
+
+                if (empty($employees)) {
+                    return new WP_Error(
+                        'rest_invalid_employees',
+                        __('Invalid employee IDs provided.', 'erp'),
+                        ['status' => 400]
+                    );
+                }
+            }
+        }
+
         $item = $this->prepare_item_for_database( $request );
 
-        $id           = wp_insert_post( $item );
+        $id = wp_insert_post($item);
+
+        if (is_wp_error($id)) {
+            return $id;
+        }
+
+        if (! $id) {
+            return new WP_Error(
+                'rest_announcement_update_failed',
+                __('Failed to update announcement.', 'erp'),
+                ['status' => 500]
+            );
+        }
+
         $announcement = get_post( $id );
 
         $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
@@ -322,7 +525,7 @@ class AnnouncementsController extends REST_Controller {
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                        'sanitize_callback' => 'wp_kses_post',
                     ],
                     'required'    => true,
                 ],
@@ -330,6 +533,7 @@ class AnnouncementsController extends REST_Controller {
                     'description' => __( 'Status for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
+                    'enum'        => [ 'draft', 'publish', 'pending'],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
@@ -338,10 +542,19 @@ class AnnouncementsController extends REST_Controller {
                     'description' => __( 'Recipient type for the resource.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
+                    'enum'        => ['all_employee', 'selected_employee'],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'employees'       => [
+                    'description' => __('Comma-separated employee IDs (required when recipient_type is selected_employee).', 'erp'),
+                    'type'        => 'string',
+                    'context'     => ['edit'],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
             ],
         ];
