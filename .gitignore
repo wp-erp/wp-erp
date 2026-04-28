@@ -11,6 +11,6 @@ nbproject
 debug.log
 .netbeans.xml
 plugin-deploy.sh
-.env
 phpcs-report.txt
 .nvmrc
+config.bat
