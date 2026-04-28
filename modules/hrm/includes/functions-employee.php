@@ -161,6 +161,8 @@ function erp_hr_get_employees( $args = [] ) {
 
         $results = erp_array_to_object( $results );
 
+        do_action( 'erp_hr_get_employees_result', $results );
+
         foreach ( $results as $key => $row ) {
             if ( true === $args['no_object'] ) {
                 $users[] = $row;
@@ -1137,9 +1139,18 @@ function erp_hr_get_contractual_employee() {
  * @return object collection of fields;
  */
 function get_employee_additional_fields( $fields, $id, $user ) {
-    $user_id                        = $fields['user_id'];
-    $fields['work']['end_date']     = get_user_meta( $user_id, 'end_date' );
-    $fields['personal']['user_url'] = get_user_meta( $user_id, 'user_url' ) ? get_user_meta( $user_id, 'user_url' ) : '';
+    $user_id                    = $fields['user_id'];
+    $fields['work']['end_date'] = get_user_meta( $user_id, 'end_date', true );
+
+    // user_url is a WordPress native column on wp_users.
+    $user_url = '';
+    if ( $user_id ) {
+        $wp_user = get_user_by( 'id', $user_id );
+        if ( $wp_user && ! empty( $wp_user->user_url ) ) {
+            $user_url = $wp_user->user_url;
+        }
+    }
+    $fields['personal']['user_url'] = $user_url;
 
     return $fields;
 }

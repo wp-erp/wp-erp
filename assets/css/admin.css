@@ -27,8 +27,223 @@
 .erp-overview .erp-grid-container .col-3:last-child {
   padding-right: 0;
 }
+/* ── ERP Dashboard Title Bar ─────────────────────────────────── */
 .erp-overview .erp-page-title {
   margin-bottom: 10px !important;
+}
+
+.erp-page-title--with-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.erp-title-text {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.erp-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Book a Call CTA ────────────────────────────────────────── */
+.erp-cta-book-a-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: #1a1a1a;
+  border-radius: 50px;
+  padding: 5px 14px 5px 5px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.erp-cta-book-a-call:hover {
+  background: #009DDA;
+  color: #fff;
+}
+a.erp-cta-book-a-call:focus,
+a.erp-cta-book-a-call:focus-visible,
+a.erp-cta-book-a-call:active {
+  color: #fff !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 2px #009DDA !important;
+}
+
+.erp-cta-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.erp-cta-avatar--host {
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border: 1.5px solid #444;
+  margin-right: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.erp-cta-book-a-call:hover .erp-cta-avatar--host {
+  border-color: #007aad;
+}
+
+/* "+" separator — hidden by default */
+.erp-cta-plus {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin: 0;
+  transition: width 0.2s ease, opacity 0.15s ease, margin 0.2s ease;
+  line-height: 1;
+}
+.erp-cta-book-a-call:hover .erp-cta-plus {
+  width: 10px;
+  opacity: 1;
+  margin: 0 3px;
+}
+
+/* "You" avatar — hidden by default, slides in on hover */
+.erp-cta-avatar--you {
+  width: 0;
+  height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0;
+  margin-right: 0;
+  transition: width 0.25s ease, opacity 0.2s ease, margin-right 0.2s ease;
+  font-size: 11px;
+  font-weight: 700;
+  color: #555;
+  line-height: 30px;
+  text-align: center;
+}
+.erp-cta-book-a-call:hover .erp-cta-avatar--you {
+  width: 30px;
+  opacity: 1;
+  margin-right: 8px;
+}
+
+.erp-cta-label {
+  line-height: 1;
+}
+
+/* ── Headway wrapper ─────────────────────────────────────────── */
+.erp-headway-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+/* button is the click target; ensure button-resets so it matches the anchors */
+button.erp-headway-trigger {
+  position: relative;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* anchor element Headway attaches its badgeCont to — pinned top-right of button */
+.erp-headway-anchor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+/* Headway badgeCont floats from the anchor so the red dot sits on the corner */
+.erp-headway-anchor .HW_badge_cont {
+  position: absolute !important;
+  top: -10px !important;
+  right: -10px !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 20px !important;
+  height: 20px !important;
+  pointer-events: auto !important;
+  z-index: 10;
+}
+.erp-headway-anchor .HW_badge {
+  top: 2px !important;
+  left: 2px !important;
+}
+
+/* ── Hover-reveal icon buttons (Feedback / Support) ─────────── */
+.erp-cta-hover-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 7px 10px;
+  border-radius: 20px;
+  border: 1px solid #d0d5db;
+  background: #fff;
+  color: #3c434a;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s, padding 0.2s;
+}
+.erp-cta-hover-btn svg {
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.erp-cta-hover-label {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-width 0.25s ease, opacity 0.2s ease, margin-left 0.2s ease;
+  margin-left: 0;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+}
+.erp-cta-hover-btn:hover {
+  padding: 7px 14px;
+  border-color: #009DDA;
+  color: #009DDA;
+}
+.erp-cta-hover-btn:hover .erp-cta-hover-label {
+  max-width: 120px;
+  opacity: 1;
+  margin-left: 5px;
+}
+
+/* ── Footer review link ─────────────────────────────────────── */
+a.erp-review-link {
+  color: #009DDA;
+  text-decoration: none;
+  font-weight: 500;
+}
+a.erp-review-link:hover {
+  text-decoration: underline;
+}
+
+/* ── HW_frame position fix ──────────────────────────────────── */
+.erp-page-title--with-actions #HW_frame_cont {
+  top: 78px !important;
 }
 .erp-overview h2 {
   margin-top: 13px;
