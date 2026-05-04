@@ -1762,7 +1762,8 @@ Account Manager
         }
 
         // Add Standard Preset Data for Department in erp_hr_depts
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_depts` LIMIT 0, 1" ) ) {
+        // Skip if reset is in progress to prevent recreating default data
+        if ( ! get_option( 'erp_reset_in_progress', false ) && ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_depts` LIMIT 0, 1" ) ) {
             $wpdb->query(
                 "INSERT INTO `{$wpdb->prefix}erp_hr_depts` (`id`, `title`, `created_at`, `updated_at`)
                 VALUES (1, 'General Management', '{$current_date}', '{$current_date}'),
@@ -1778,7 +1779,8 @@ Account Manager
         }
 
         // Add Standard Preset Data for Designation in erp_hr_designations
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_designations` LIMIT 0, 1" ) ) {
+        // Skip if reset is in progress to prevent recreating default data
+        if ( ! get_option( 'erp_reset_in_progress', false ) && ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_hr_designations` LIMIT 0, 1" ) ) {
             $wpdb->query(
                 "INSERT INTO `{$wpdb->prefix}erp_hr_designations` (`id`, `title`, `created_at`, `updated_at`)
                 VALUES (1, 'President', '{$current_date}', '{$current_date}'),

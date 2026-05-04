@@ -1,0 +1,6 @@
+# Build output
+dist/
+
+# Don't ignore the dist directory itself in version control
+# Uncomment the line below if you want to commit built files
+# !dist/.gitkeep
