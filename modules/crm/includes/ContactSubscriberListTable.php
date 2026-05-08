@@ -204,7 +204,7 @@ class ContactSubscriberListTable extends \WP_List_Table {
         $full_name = $contact->get_full_name();
         $full_name = ! empty( $full_name ) ? $full_name : '(' . esc_html__( 'No name', 'erp' ) . ')';
 
-        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $full_name, $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ), $contact->get_avatar() );
+        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $full_name, $this->row_actions( $actions ), $contact->get_details_url() ?? admin_url( 'admin.php' ), $contact->get_avatar() );
     }
 
     /**
