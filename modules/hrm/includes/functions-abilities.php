@@ -208,9 +208,10 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'category'     => 'wp-erp-hrm',
                 'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
-                    'type'       => 'object',
-                    'required'   => [ 'user_id' ],
-                    'properties' => [
+                    'type'              => 'object',
+                    'required'          => [ 'user_id' ],
+                    'dependentRequired' => [ 'pay_rate' => [ 'pay_type' ] ],
+                    'properties'        => [
                         'user_id'      => [ 'type' => 'integer', 'description' => __( 'WordPress user ID of the employee.', 'erp' ) ],
                         'first_name'   => [ 'type' => 'string', 'description' => __( 'First name.', 'erp' ) ],
                         'last_name'    => [ 'type' => 'string', 'description' => __( 'Last name.', 'erp' ) ],
@@ -218,6 +219,8 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                         'department'   => [ 'type' => 'integer', 'description' => __( 'Department ID.', 'erp' ) ],
                         'status'       => [ 'type' => 'string', 'description' => __( 'Employee status.', 'erp' ) ],
                         'type'         => [ 'type' => 'string', 'description' => __( 'Employee type.', 'erp' ) ],
+                        'pay_rate'     => [ 'type' => 'number', 'description' => __( 'Pay rate / salary. Requires pay_type.', 'erp' ) ],
+                        'pay_type'     => [ 'type' => 'string', 'enum' => [ 'hourly', 'daily', 'weekly', 'biweekly', 'semimonthly', 'monthly', 'quarterly', 'annually' ], 'description' => __( 'Pay type (monthly, weekly, etc). Required when pay_rate set.', 'erp' ) ],
                     ],
                 ],
                 'output_schema' => [
@@ -233,6 +236,46 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
 
                     if ( ! $employee->is_employee() ) {
                         return new \WP_Error( 'not_found', __( 'Employee not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
+                    if ( ! empty( $input['first_name'] ) && ! erp_is_valid_name( $input['first_name'] ) ) {
+                        return new \WP_Error( 'invalid-first-name', __( 'Please provide a valid first name.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['last_name'] ) && ! erp_is_valid_name( $input['last_name'] ) ) {
+                        return new \WP_Error( 'invalid-last-name', __( 'Please provide a valid last name.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['department'] ) && ! array_key_exists( (int) $input['department'], erp_hr_get_departments_fresh() ) ) {
+                        return new \WP_Error( 'invalid-department', __( 'Please select a valid department.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['designation'] ) && ! array_key_exists( (int) $input['designation'], erp_hr_get_designations_fresh() ) ) {
+                        return new \WP_Error( 'invalid-designation', __( 'Please select a valid designation.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['status'] ) && ! array_key_exists( $input['status'], erp_hr_get_employee_statuses() ) ) {
+                        return new \WP_Error( 'invalid-status', __( 'Please select a valid employee status.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['type'] ) && ! array_key_exists( $input['type'], erp_hr_get_employee_types() ) ) {
+                        return new \WP_Error( 'invalid-type', __( 'Please select a valid employee type.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( isset( $input['pay_rate'] ) && ! erp_is_valid_currency_amount( $input['pay_rate'] ) ) {
+                        return new \WP_Error( 'invalid-pay-rate', __( 'Please provide a valid pay rate.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['pay_type'] ) && ! array_key_exists( $input['pay_type'], erp_hr_get_pay_type() ) ) {
+                        return new \WP_Error( 'invalid-pay-type', __( 'Please select a valid pay type.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( isset( $input['pay_rate'] ) && empty( $input['pay_type'] ) ) {
+                        $current        = $employee->to_array();
+                        $existing_ptype = isset( $current['work']['pay_type'] ) ? $current['work']['pay_type'] : '';
+                        if ( empty( $existing_ptype ) ) {
+                            return new \WP_Error( 'pay_type_required', __( 'pay_type is required when pay_rate is provided.', 'erp' ), [ 'status' => 400 ] );
+                        }
                     }
 
                     unset( $input['user_id'] );
@@ -287,13 +330,13 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
-                    'required'   => [ 'user_id', 'terminated_date' ],
+                    'required'   => [ 'user_id', 'terminate_date', 'termination_type', 'termination_reason', 'eligible_for_rehire' ],
                     'properties' => [
-                        'user_id'         => [ 'type' => 'integer', 'description' => __( 'WordPress user ID.', 'erp' ) ],
-                        'terminated_date' => [ 'type' => 'string', 'format' => 'date', 'description' => __( 'Date of termination (YYYY-MM-DD).', 'erp' ) ],
-                        'reason'          => [ 'type' => 'string', 'description' => __( 'Reason for termination.', 'erp' ) ],
-                        'type'            => [ 'type' => 'string', 'description' => __( 'Type of termination.', 'erp' ) ],
-                        'rehire'          => [ 'type' => 'string', 'description' => __( 'Rehire eligibility.', 'erp' ) ],
+                        'user_id'             => [ 'type' => 'integer', 'description' => __( 'WordPress user ID.', 'erp' ) ],
+                        'terminate_date'      => [ 'type' => 'string', 'format' => 'date', 'description' => __( 'Date of termination (YYYY-MM-DD).', 'erp' ) ],
+                        'termination_type'    => [ 'type' => 'string', 'description' => __( 'Type of termination.', 'erp' ) ],
+                        'termination_reason'  => [ 'type' => 'string', 'description' => __( 'Reason for termination.', 'erp' ) ],
+                        'eligible_for_rehire' => [ 'type' => 'string', 'description' => __( 'Rehire eligibility.', 'erp' ) ],
                     ],
                 ],
                 'output_schema' => [
