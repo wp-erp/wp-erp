@@ -40,6 +40,12 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress. View [
 -   PHP 5.6
 -   WordPress 4.4+
 
+## AI / MCP Integration
+
+WP ERP exposes its operations as first-class **WordPress Abilities API** entries (WordPress 6.9+), making them callable by AI assistants via the [WordPress MCP Adapter](https://wordpress.org/plugins/wp-mcp/).
+
+See **[docs/mcp-abilities.md](docs/mcp-abilities.md)** for the full setup guide, ability reference, and examples.
+
 ## Installation
 
 -   Clone the repository inside `/wp-content/plugins/`
