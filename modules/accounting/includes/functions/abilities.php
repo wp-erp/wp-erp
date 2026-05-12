@@ -504,7 +504,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
 
                     $number  = isset( $input['number'] ) ? (int) $input['number'] : 20;
                     $offset  = isset( $input['offset'] ) ? (int) $input['offset'] : 0;
-                    $table   = $wpdb->prefix . 'erp_acct_ledger';
+                    $table   = esc_sql( $wpdb->prefix . 'erp_acct_ledger' );
                     $where   = '';
 
                     if ( ! empty( $input['type_id'] ) ) {
@@ -607,7 +607,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
 
                     $number = isset( $input['number'] ) ? (int) $input['number'] : 20;
                     $offset = isset( $input['offset'] ) ? (int) $input['offset'] : 0;
-                    $table  = $wpdb->prefix . 'erp_acct_journals';
+                    $table  = esc_sql( $wpdb->prefix . 'erp_acct_journals' );
 
                     $where_clauses = [];
                     $params        = [];
@@ -680,7 +680,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
 
                     $number = isset( $input['number'] ) ? (int) $input['number'] : 20;
                     $offset = isset( $input['offset'] ) ? (int) $input['offset'] : 0;
-                    $table  = $wpdb->prefix . 'erp_acct_bank_accounts';
+                    $table  = esc_sql( $wpdb->prefix . 'erp_acct_bank_accounts' );
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                     $accounts = $wpdb->get_results(
@@ -725,7 +725,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
 
                     $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : wp_date( 'Y-01-01' );
                     $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : wp_date( 'Y-m-d' );
-                    $table      = $wpdb->prefix . 'erp_acct_invoices';
+                    $table      = esc_sql( $wpdb->prefix . 'erp_acct_invoices' );
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                     $summary = $wpdb->get_row(
@@ -769,7 +769,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
 
                     $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : wp_date( 'Y-01-01' );
                     $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : wp_date( 'Y-m-d' );
-                    $table      = $wpdb->prefix . 'erp_acct_expense_checks';
+                    $table      = esc_sql( $wpdb->prefix . 'erp_acct_expense_checks' );
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                     $summary = $wpdb->get_row(
