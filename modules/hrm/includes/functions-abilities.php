@@ -55,6 +55,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'List Employees', 'erp' ),
                 'description'  => __( 'Retrieve a paginated list of employees.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -107,6 +108,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Get Employee', 'erp' ),
                 'description'  => __( 'Retrieve details of a single employee by user ID.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'user_id' ],
@@ -139,6 +141,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Create Employee', 'erp' ),
                 'description'  => __( 'Create a new employee record.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'first_name', 'last_name', 'email' ],
@@ -163,10 +166,31 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_create_employee' );
                 },
                 'execute_callback' => function ( $input ) {
-                    $result = erp_hr_employee_create( $input );
+                    $args = [
+                        'user_email' => isset( $input['email'] ) ? $input['email'] : '',
+                        'personal'   => [
+                            'first_name'    => isset( $input['first_name'] ) ? $input['first_name'] : '',
+                            'last_name'     => isset( $input['last_name'] ) ? $input['last_name'] : '',
+                            'date_of_birth' => isset( $input['date_of_birth'] ) ? $input['date_of_birth'] : '',
+                        ],
+                        'work'       => [
+                            'designation' => isset( $input['designation'] ) ? (int) $input['designation'] : 0,
+                            'department'  => isset( $input['department'] ) ? (int) $input['department'] : 0,
+                            'location'    => isset( $input['location'] ) ? (int) $input['location'] : 0,
+                            'hiring_date' => isset( $input['hiring_date'] ) ? $input['hiring_date'] : '',
+                            'status'      => isset( $input['status'] ) ? $input['status'] : 'active',
+                            'type'        => isset( $input['type'] ) ? $input['type'] : '',
+                        ],
+                    ];
+
+                    $result = erp_hr_employee_create( $args );
 
                     if ( is_wp_error( $result ) ) {
                         return $result;
+                    }
+
+                    if ( is_string( $result ) ) {
+                        return new \WP_Error( 'create_failed', $result );
                     }
 
                     $employee = new \WeDevs\ERP\HRM\Employee( (int) $result );
@@ -182,6 +206,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Update Employee', 'erp' ),
                 'description'  => __( 'Update an existing employee record.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'user_id' ],
@@ -224,6 +249,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Delete Employee', 'erp' ),
                 'description'  => __( 'Delete an employee record.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'user_id' ],
@@ -258,6 +284,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Terminate Employee', 'erp' ),
                 'description'  => __( 'Terminate an active employee.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'user_id', 'terminated_date' ],
@@ -298,6 +325,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'List Departments', 'erp' ),
                 'description'  => __( 'Retrieve all departments.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -324,6 +352,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Manage Department', 'erp' ),
                 'description'  => __( 'Create or update a department.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'title' ],
@@ -364,6 +393,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'List Designations', 'erp' ),
                 'description'  => __( 'Retrieve all job designations.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -390,6 +420,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Manage Designation', 'erp' ),
                 'description'  => __( 'Create or update a job designation.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'title' ],
@@ -428,6 +459,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Create Leave Request', 'erp' ),
                 'description'  => __( 'Submit a new leave request.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'user_id', 'leave_id', 'start_date', 'end_date' ],
@@ -466,6 +498,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Manage Leave Request', 'erp' ),
                 'description'  => __( 'Approve or reject a leave request.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'request_id', 'status' ],
@@ -485,7 +518,17 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_leave_manage' );
                 },
                 'execute_callback' => function ( $input ) {
-                    $result = erp_hr_leave_request_approve_reject( $input );
+                    $request_id = (int) $input['request_id'];
+
+                    if ( ! \WeDevs\ERP\HRM\Models\LeaveRequest::find( $request_id ) ) {
+                        return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
+                    }
+
+                    $result = erp_hr_leave_request_update_status(
+                        $request_id,
+                        (int) $input['status'],
+                        ! empty( $input['reason'] ) ? $input['reason'] : ''
+                    );
 
                     if ( is_wp_error( $result ) ) {
                         return $result;
@@ -504,6 +547,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'List Announcements', 'erp' ),
                 'description'  => __( 'Retrieve HR announcements.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -530,6 +574,7 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 'label'        => __( 'Create Announcement', 'erp' ),
                 'description'  => __( 'Publish a new HR announcement.', 'erp' ),
                 'category'     => 'wp-erp-hrm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'title', 'message' ],
@@ -556,13 +601,37 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_crate_announcement' );
                 },
                 'execute_callback' => function ( $input ) {
-                    $result = erp_hr_announcement_create( $input );
+                    $post_id = wp_insert_post(
+                        [
+                            'post_title'   => sanitize_text_field( $input['title'] ),
+                            'post_content' => wp_kses_post( $input['message'] ),
+                            'post_status'  => 'publish',
+                            'post_type'    => 'erp_hr_announcement',
+                            'post_author'  => get_current_user_id(),
+                        ],
+                        true
+                    );
 
-                    if ( is_wp_error( $result ) ) {
-                        return $result;
+                    if ( is_wp_error( $post_id ) ) {
+                        return $post_id;
                     }
 
-                    return [ 'id' => (int) $result ];
+                    if ( ! empty( $input['send_to_all'] ) ) {
+                        $type     = 'all_employee';
+                        $selected = [];
+                    } elseif ( ! empty( $input['departments'] ) ) {
+                        $type     = 'by_department';
+                        $selected = array_map( 'intval', (array) $input['departments'] );
+                    } else {
+                        $type     = 'all_employee';
+                        $selected = [];
+                    }
+
+                    if ( function_exists( 'erp_hr_assign_announcements_to_employees' ) ) {
+                        erp_hr_assign_announcements_to_employees( $post_id, $type, $selected );
+                    }
+
+                    return [ 'id' => (int) $post_id ];
                 },
             ]
         );

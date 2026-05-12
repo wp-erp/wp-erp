@@ -55,6 +55,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'List CRM Contacts', 'erp' ),
                 'description'  => __( 'Retrieve a paginated list of CRM contacts.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -107,6 +108,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'Get CRM Contact', 'erp' ),
                 'description'  => __( 'Retrieve a single CRM contact by ID.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -139,6 +141,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'Create CRM Contact', 'erp' ),
                 'description'  => __( 'Create a new CRM contact or company.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'first_name', 'email' ],
@@ -182,6 +185,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'Update CRM Contact', 'erp' ),
                 'description'  => __( 'Update an existing CRM contact.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -229,11 +233,17 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'Delete CRM Contact', 'erp' ),
                 'description'  => __( 'Delete a CRM contact.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
                     'properties' => [
                         'id'   => [ 'type' => 'integer', 'description' => __( 'Contact ID.', 'erp' ) ],
+                        'type' => [
+                            'type'        => 'string',
+                            'enum'        => [ 'contact', 'company' ],
+                            'description' => __( 'People type. Defaults to contact.', 'erp' ),
+                        ],
                         'hard' => [ 'type' => 'boolean', 'description' => __( 'Hard-delete permanently.', 'erp' ) ],
                     ],
                 ],
@@ -250,6 +260,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                     $result = erp_delete_people(
                         [
                             'id'   => (int) $input['id'],
+                            'type' => ! empty( $input['type'] ) ? $input['type'] : 'contact',
                             'hard' => ! empty( $input['hard'] ) ? 1 : 0,
                         ]
                     );
@@ -271,6 +282,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'List CRM Contact Groups', 'erp' ),
                 'description'  => __( 'Retrieve all CRM contact groups.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -297,6 +309,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'Create CRM Contact Group', 'erp' ),
                 'description'  => __( 'Create a new CRM contact group.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'name' ],
@@ -332,6 +345,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'Delete CRM Contact Group', 'erp' ),
                 'description'  => __( 'Delete a CRM contact group.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -368,6 +382,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'List CRM Activities', 'erp' ),
                 'description'  => __( 'Retrieve activity feed for a CRM contact.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'contact_id' ],
@@ -401,6 +416,7 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 'label'        => __( 'List CRM Schedules', 'erp' ),
                 'description'  => __( 'Retrieve scheduled activities for a CRM contact.', 'erp' ),
                 'category'     => 'wp-erp-crm',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
