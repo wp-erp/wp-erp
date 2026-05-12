@@ -213,6 +213,11 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                 },
                 'execute_callback' => function ( $input ) {
                     $id = (int) $input['id'];
+
+                    if ( ! erp_get_people( $id ) ) {
+                        return new \WP_Error( 'not_found', __( 'Contact not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     unset( $input['id'] );
                     $input['id'] = $id;
 
@@ -257,9 +262,15 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                     return current_user_can( 'erp_crm_delete_contact' );
                 },
                 'execute_callback' => function ( $input ) {
+                    $id = (int) $input['id'];
+
+                    if ( ! erp_get_people( $id ) ) {
+                        return new \WP_Error( 'not_found', __( 'Contact not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     $result = erp_delete_people(
                         [
-                            'id'   => (int) $input['id'],
+                            'id'   => $id,
                             'type' => ! empty( $input['type'] ) ? $input['type'] : 'contact',
                             'hard' => ! empty( $input['hard'] ) ? 1 : 0,
                         ]
@@ -363,7 +374,13 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                     return current_user_can( 'erp_crm_delete_groups' );
                 },
                 'execute_callback' => function ( $input ) {
-                    $result = erp_crm_contact_group_delete( (int) $input['id'] );
+                    $id = (int) $input['id'];
+
+                    if ( ! \WeDevs\ERP\CRM\Models\ContactGroup::find( $id ) ) {
+                        return new \WP_Error( 'not_found', __( 'Contact group not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
+                    $result = erp_crm_contact_group_delete( $id );
 
                     if ( is_wp_error( $result ) ) {
                         return $result;
