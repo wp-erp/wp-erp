@@ -166,6 +166,30 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_create_employee' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! empty( $input['first_name'] ) && ! erp_is_valid_name( $input['first_name'] ) ) {
+                        return new \WP_Error( 'invalid-first-name', __( 'Please provide a valid first name.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['last_name'] ) && ! erp_is_valid_name( $input['last_name'] ) ) {
+                        return new \WP_Error( 'invalid-last-name', __( 'Please provide a valid last name.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['department'] ) && ! array_key_exists( (int) $input['department'], erp_hr_get_departments_fresh() ) ) {
+                        return new \WP_Error( 'invalid-department', __( 'Please select a valid department.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['designation'] ) && ! array_key_exists( (int) $input['designation'], erp_hr_get_designations_fresh() ) ) {
+                        return new \WP_Error( 'invalid-designation', __( 'Please select a valid designation.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['status'] ) && ! array_key_exists( $input['status'], erp_hr_get_employee_statuses() ) ) {
+                        return new \WP_Error( 'invalid-status', __( 'Please select a valid employee status.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['type'] ) && ! array_key_exists( $input['type'], erp_hr_get_employee_types() ) ) {
+                        return new \WP_Error( 'invalid-type', __( 'Please select a valid employee type.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
                     $args = [
                         'user_email' => isset( $input['email'] ) ? $input['email'] : '',
                         'personal'   => [
@@ -232,11 +256,12 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                 },
                 'execute_callback' => function ( $input ) {
                     $user_id  = (int) $input['user_id'];
-                    $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
 
-                    if ( ! $employee->is_employee() ) {
+                    if ( ! \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->first() ) {
                         return new \WP_Error( 'not_found', __( 'Employee not found.', 'erp' ), [ 'status' => 404 ] );
                     }
+
+                    $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
 
                     if ( ! empty( $input['first_name'] ) && ! erp_is_valid_name( $input['first_name'] ) ) {
                         return new \WP_Error( 'invalid-first-name', __( 'Please provide a valid first name.', 'erp' ), [ 'status' => 400 ] );
@@ -314,6 +339,11 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     $user_id = (int) $input['user_id'];
                     $hard    = ! empty( $input['hard'] ) ? 1 : 0;
 
+                    $erp_user = \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->first();
+                    if ( ! $erp_user ) {
+                        return new \WP_Error( 'not_found', __( 'Employee not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     erp_hr_employee_on_delete( $user_id, $hard );
 
                     return [ 'deleted' => true ];
@@ -349,6 +379,26 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_can_terminate' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', (int) $input['user_id'] )->first() ) {
+                        return new \WP_Error( 'not_found', __( 'Employee not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
+                    if ( ! erp_is_valid_date( $input['terminate_date'] ) ) {
+                        return new \WP_Error( 'invalid-terminate-date', __( 'Please provide a valid termination date.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! array_key_exists( $input['termination_type'], erp_hr_get_terminate_type() ) ) {
+                        return new \WP_Error( 'invalid-termination-type', __( 'Please provide a valid termination type.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! array_key_exists( $input['termination_reason'], erp_hr_get_terminate_reason() ) ) {
+                        return new \WP_Error( 'invalid-termination-reason', __( 'Please provide a valid termination reason.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! array_key_exists( $input['eligible_for_rehire'], erp_hr_get_terminate_rehire_options() ) ) {
+                        return new \WP_Error( 'invalid-eligible-for-rehire', __( 'Please provide a valid rehire eligibility.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
                     $result = erp_hr_employee_terminate( $input );
 
                     if ( is_wp_error( $result ) ) {
@@ -417,6 +467,18 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_manage_department' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! empty( $input['id'] ) && ! array_key_exists( (int) $input['id'], erp_hr_get_departments_fresh() ) ) {
+                        return new \WP_Error( 'invalid-department-id', __( 'Department not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
+                    if ( ! empty( $input['lead'] ) && ! get_user_by( 'ID', (int) $input['lead'] ) ) {
+                        return new \WP_Error( 'invalid-lead', __( 'Lead user not found.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! empty( $input['parent'] ) && ! array_key_exists( (int) $input['parent'], erp_hr_get_departments_fresh() ) ) {
+                        return new \WP_Error( 'invalid-parent', __( 'Parent department not found.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
                     $result = erp_hr_create_department( $input );
 
                     if ( is_wp_error( $result ) ) {
@@ -483,6 +545,10 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_manage_designation' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! empty( $input['id'] ) && ! array_key_exists( (int) $input['id'], erp_hr_get_designations_fresh() ) ) {
+                        return new \WP_Error( 'invalid-designation-id', __( 'Designation not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     $result = erp_hr_create_designation( $input );
 
                     if ( is_wp_error( $result ) ) {
@@ -524,7 +590,35 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     return current_user_can( 'erp_leave_create_request' );
                 },
                 'execute_callback' => function ( $input ) {
-                    $result = erp_hr_leave_insert_request( $input );
+                    if ( ! \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', (int) $input['user_id'] )->first() ) {
+                        return new \WP_Error( 'not_found', __( 'Employee not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
+                    if ( ! \WeDevs\ERP\HRM\Models\LeaveEntitlement::find( (int) $input['leave_id'] ) ) {
+                        return new \WP_Error( 'invalid-leave-id', __( 'Leave entitlement not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
+                    if ( ! erp_is_valid_date( $input['start_date'] ) ) {
+                        return new \WP_Error( 'invalid-start-date', __( 'Please provide a valid start date.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( ! erp_is_valid_date( $input['end_date'] ) ) {
+                        return new \WP_Error( 'invalid-end-date', __( 'Please provide a valid end date.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    if ( strtotime( $input['start_date'] ) > strtotime( $input['end_date'] ) ) {
+                        return new \WP_Error( 'invalid-date-range', __( 'Start date must be before end date.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
+                    $args = [
+                        'user_id'      => (int) $input['user_id'],
+                        'leave_policy' => (int) $input['leave_id'],
+                        'start_date'   => $input['start_date'],
+                        'end_date'     => $input['end_date'],
+                        'reason'       => isset( $input['reason'] ) ? $input['reason'] : '',
+                    ];
+
+                    $result = erp_hr_leave_insert_request( $args );
 
                     if ( is_wp_error( $result ) ) {
                         return $result;
@@ -565,6 +659,10 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
 
                     if ( ! \WeDevs\ERP\HRM\Models\LeaveRequest::find( $request_id ) ) {
                         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
+                    }
+
+                    if ( ! in_array( (int) $input['status'], [ 1, 2, 3 ], true ) ) {
+                        return new \WP_Error( 'invalid-status', __( 'Status must be 1 (Pending), 2 (Approved), or 3 (Rejected).', 'erp' ), [ 'status' => 400 ] );
                     }
 
                     $result = erp_hr_leave_request_update_status(

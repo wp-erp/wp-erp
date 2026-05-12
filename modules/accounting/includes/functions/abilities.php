@@ -230,6 +230,10 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     return current_user_can( 'erp_ac_edit_customer' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! erp_get_people( (int) $input['id'] ) ) {
+                        return new \WP_Error( 'not_found', __( 'Customer not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     $input['type'] = 'customer';
                     $result        = erp_insert_people( $input );
 
@@ -267,6 +271,10 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     return current_user_can( 'erp_ac_delete_customer' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! erp_get_people( (int) $input['id'] ) ) {
+                        return new \WP_Error( 'not_found', __( 'Customer not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     $result = erp_delete_people(
                         [
                             'id'   => (int) $input['id'],
@@ -448,6 +456,10 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     return current_user_can( 'erp_ac_edit_vendor' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! erp_get_people( (int) $input['id'] ) ) {
+                        return new \WP_Error( 'not_found', __( 'Vendor not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     $input['type'] = 'vendor';
                     $result        = erp_insert_people( $input );
 
@@ -485,6 +497,10 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     return current_user_can( 'erp_ac_delete_vendor' );
                 },
                 'execute_callback' => function ( $input ) {
+                    if ( ! erp_get_people( (int) $input['id'] ) ) {
+                        return new \WP_Error( 'not_found', __( 'Vendor not found.', 'erp' ), [ 'status' => 404 ] );
+                    }
+
                     $result = erp_delete_people(
                         [
                             'id'   => (int) $input['id'],
@@ -588,9 +604,18 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'execute_callback' => function ( $input ) {
                     global $wpdb;
 
+                    $type_id     = (int) $input['type_id'];
+                    $chart_table = $wpdb->prefix . 'erp_acct_chart_of_accounts';
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                    $exists = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$chart_table} WHERE id = %d", $type_id ) );
+
+                    if ( ! $exists ) {
+                        return new \WP_Error( 'invalid-type-id', __( 'Account type not found.', 'erp' ), [ 'status' => 400 ] );
+                    }
+
                     $data = [
                         'name'        => sanitize_text_field( $input['name'] ),
-                        'type_id'     => (int) $input['type_id'],
+                        'type_id'     => $type_id,
                         'code'        => isset( $input['code'] ) ? sanitize_text_field( $input['code'] ) : '',
                         'description' => isset( $input['description'] ) ? sanitize_textarea_field( $input['description'] ) : '',
                         'currency'    => isset( $input['currency'] ) ? sanitize_text_field( $input['currency'] ) : '',
