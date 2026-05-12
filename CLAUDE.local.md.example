@@ -1,0 +1,29 @@
+# CLAUDE.local.md (template)
+
+Copy to `CLAUDE.local.md` and customize. This file is gitignored — your overrides will not be committed.
+
+Use this for personal preferences and machine-specific notes Claude should respect during your sessions.
+
+## My local WP install
+
+- WP root: `/Users/me/Local Sites/wperp/app/public`
+- Site URL: `http://wperp.local`
+- DB: `wordpress`, prefix `wp_`
+- Admin: `admin` / (in 1Password)
+
+## My preferred workflow
+
+- I run `npm run dev` in a separate terminal — do NOT start it for me.
+- Use `composer phpcbf` before showing me a PHP diff.
+- Skip running the acceptance suite — Selenium is not set up locally. Mention what tests I should run manually.
+- Prefer Eloquent models over raw `$wpdb` in new code unless the surrounding file is raw.
+
+## My branches / PR style
+
+- Default base branch: `develop`
+- I prefer short, imperative commit subjects (≤72 chars). Body explains *why*, not *what*.
+- Open PRs in draft; I'll mark ready manually.
+
+## Things I'm working on
+
+- (Add current task context here so Claude has it across sessions.)
