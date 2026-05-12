@@ -13,4 +13,3 @@ debug.log
 plugin-deploy.sh
 phpcs-report.txt
 .nvmrc
-config.bat
