@@ -36,6 +36,23 @@ if ( ! function_exists( 'erp_ac_register_ability_category' ) ) {
     }
 }
 
+if ( ! function_exists( 'erp_ac_validate_iso_date' ) ) {
+    /**
+     * Validate a YYYY-MM-DD date string. Returns sanitized value or null if invalid.
+     */
+    function erp_ac_validate_iso_date( $value ) {
+        $value = is_string( $value ) ? trim( $value ) : '';
+        if ( '' === $value ) {
+            return null;
+        }
+        $dt = DateTime::createFromFormat( 'Y-m-d', $value );
+        if ( ! $dt || $dt->format( 'Y-m-d' ) !== $value ) {
+            return null;
+        }
+        return $value;
+    }
+}
+
 /**
  * Register all Accounting abilities.
  */
@@ -55,6 +72,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'List Customers', 'erp' ),
                 'description'  => __( 'Retrieve a paginated list of accounting customers.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -105,6 +123,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Get Customer', 'erp' ),
                 'description'  => __( 'Retrieve a single accounting customer by ID.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -137,6 +156,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Create Customer', 'erp' ),
                 'description'  => __( 'Create a new accounting customer.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'first_name', 'email' ],
@@ -182,6 +202,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Update Customer', 'erp' ),
                 'description'  => __( 'Update an existing accounting customer.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -227,6 +248,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Delete Customer', 'erp' ),
                 'description'  => __( 'Delete an accounting customer.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -248,6 +270,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     $result = erp_delete_people(
                         [
                             'id'   => (int) $input['id'],
+                            'type' => 'customer',
                             'hard' => ! empty( $input['hard'] ) ? 1 : 0,
                         ]
                     );
@@ -269,6 +292,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'List Vendors', 'erp' ),
                 'description'  => __( 'Retrieve a paginated list of accounting vendors.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -319,6 +343,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Get Vendor', 'erp' ),
                 'description'  => __( 'Retrieve a single accounting vendor by ID.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -351,6 +376,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Create Vendor', 'erp' ),
                 'description'  => __( 'Create a new accounting vendor.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'first_name', 'email' ],
@@ -394,6 +420,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Update Vendor', 'erp' ),
                 'description'  => __( 'Update an existing accounting vendor.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -439,6 +466,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Delete Vendor', 'erp' ),
                 'description'  => __( 'Delete an accounting vendor.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'id' ],
@@ -460,6 +488,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     $result = erp_delete_people(
                         [
                             'id'   => (int) $input['id'],
+                            'type' => 'vendor',
                             'hard' => ! empty( $input['hard'] ) ? 1 : 0,
                         ]
                     );
@@ -481,6 +510,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'List Ledger Accounts', 'erp' ),
                 'description'  => __( 'Retrieve chart of accounts (ledger accounts).', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -534,6 +564,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'Create Ledger Account', 'erp' ),
                 'description'  => __( 'Create a new chart-of-accounts entry.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'required'   => [ 'name', 'type_id' ],
@@ -583,6 +614,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'List Journal Entries', 'erp' ),
                 'description'  => __( 'Retrieve accounting journal entries.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -613,13 +645,21 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                     $params        = [];
 
                     if ( ! empty( $input['start_date'] ) ) {
+                        $start_date = erp_ac_validate_iso_date( $input['start_date'] );
+                        if ( null === $start_date ) {
+                            return new WP_Error( 'invalid-date', __( 'start_date must be YYYY-MM-DD.', 'erp' ) );
+                        }
                         $where_clauses[] = 'trn_date >= %s';
-                        $params[]        = sanitize_text_field( $input['start_date'] );
+                        $params[]        = $start_date;
                     }
 
                     if ( ! empty( $input['end_date'] ) ) {
+                        $end_date = erp_ac_validate_iso_date( $input['end_date'] );
+                        if ( null === $end_date ) {
+                            return new WP_Error( 'invalid-date', __( 'end_date must be YYYY-MM-DD.', 'erp' ) );
+                        }
                         $where_clauses[] = 'trn_date <= %s';
-                        $params[]        = sanitize_text_field( $input['end_date'] );
+                        $params[]        = $end_date;
                     }
 
                     $where = ! empty( $where_clauses ) ? ' WHERE ' . implode( ' AND ', $where_clauses ) : '';
@@ -658,6 +698,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'List Bank Accounts', 'erp' ),
                 'description'  => __( 'Retrieve accounting bank accounts.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -706,6 +747,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'View Sales Summary', 'erp' ),
                 'description'  => __( 'Retrieve a summary of accounting sales transactions.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -723,9 +765,25 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'execute_callback' => function ( $input ) {
                     global $wpdb;
 
-                    $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : wp_date( 'Y-01-01' );
-                    $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : wp_date( 'Y-m-d' );
-                    $table      = esc_sql( $wpdb->prefix . 'erp_acct_invoices' );
+                    if ( ! empty( $input['start_date'] ) ) {
+                        $start_date = erp_ac_validate_iso_date( $input['start_date'] );
+                        if ( null === $start_date ) {
+                            return new WP_Error( 'invalid-date', __( 'start_date must be YYYY-MM-DD.', 'erp' ) );
+                        }
+                    } else {
+                        $start_date = wp_date( 'Y-01-01' );
+                    }
+
+                    if ( ! empty( $input['end_date'] ) ) {
+                        $end_date = erp_ac_validate_iso_date( $input['end_date'] );
+                        if ( null === $end_date ) {
+                            return new WP_Error( 'invalid-date', __( 'end_date must be YYYY-MM-DD.', 'erp' ) );
+                        }
+                    } else {
+                        $end_date = wp_date( 'Y-m-d' );
+                    }
+
+                    $table = esc_sql( $wpdb->prefix . 'erp_acct_invoices' );
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                     $summary = $wpdb->get_row(
@@ -750,6 +808,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'View Expenses Summary', 'erp' ),
                 'description'  => __( 'Retrieve a summary of accounting expenses.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [
@@ -767,9 +826,25 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'execute_callback' => function ( $input ) {
                     global $wpdb;
 
-                    $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : wp_date( 'Y-01-01' );
-                    $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : wp_date( 'Y-m-d' );
-                    $table      = esc_sql( $wpdb->prefix . 'erp_acct_expense_checks' );
+                    if ( ! empty( $input['start_date'] ) ) {
+                        $start_date = erp_ac_validate_iso_date( $input['start_date'] );
+                        if ( null === $start_date ) {
+                            return new WP_Error( 'invalid-date', __( 'start_date must be YYYY-MM-DD.', 'erp' ) );
+                        }
+                    } else {
+                        $start_date = wp_date( 'Y-01-01' );
+                    }
+
+                    if ( ! empty( $input['end_date'] ) ) {
+                        $end_date = erp_ac_validate_iso_date( $input['end_date'] );
+                        if ( null === $end_date ) {
+                            return new WP_Error( 'invalid-date', __( 'end_date must be YYYY-MM-DD.', 'erp' ) );
+                        }
+                    } else {
+                        $end_date = wp_date( 'Y-m-d' );
+                    }
+
+                    $table = esc_sql( $wpdb->prefix . 'erp_acct_expense_checks' );
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                     $summary = $wpdb->get_row(
@@ -794,6 +869,7 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'label'        => __( 'View Accounting Reports', 'erp' ),
                 'description'  => __( 'Retrieve available accounting report types and their meta information.', 'erp' ),
                 'category'     => 'wp-erp-accounting',
+                'meta'         => [ 'mcp' => [ 'public' => true, 'type' => 'tool' ] ],
                 'input_schema' => [
                     'type'       => 'object',
                     'properties' => [],
