@@ -723,8 +723,8 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'execute_callback' => function ( $input ) {
                     global $wpdb;
 
-                    $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : date( 'Y-01-01' );
-                    $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : date( 'Y-m-d' );
+                    $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : wp_date( 'Y-01-01' );
+                    $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : wp_date( 'Y-m-d' );
                     $table      = $wpdb->prefix . 'erp_acct_invoices';
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -767,8 +767,8 @@ if ( ! function_exists( 'erp_ac_register_abilities' ) ) {
                 'execute_callback' => function ( $input ) {
                     global $wpdb;
 
-                    $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : date( 'Y-01-01' );
-                    $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : date( 'Y-m-d' );
+                    $start_date = ! empty( $input['start_date'] ) ? sanitize_text_field( $input['start_date'] ) : wp_date( 'Y-01-01' );
+                    $end_date   = ! empty( $input['end_date'] ) ? sanitize_text_field( $input['end_date'] ) : wp_date( 'Y-m-d' );
                     $table      = $wpdb->prefix . 'erp_acct_expense_checks';
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery

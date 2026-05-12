@@ -383,6 +383,8 @@ if ( ! function_exists( 'erp_crm_register_abilities' ) ) {
                     'description' => __( 'Array of activity objects.', 'erp' ),
                 ],
                 'permission_callback' => function () {
+                    // Note: 'erp_crm_manage_activites' is the canonical capability name as defined
+                    // in functions-capabilities.php; the typo is preserved intentionally.
                     return current_user_can( 'erp_crm_manage_activites' );
                 },
                 'execute_callback' => function ( $input ) {

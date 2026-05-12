@@ -551,6 +551,8 @@ if ( ! function_exists( 'erp_hrm_register_abilities' ) ) {
                     ],
                 ],
                 'permission_callback' => function () {
+                    // Note: 'erp_crate_announcement' is the canonical capability name as defined
+                    // in functions-capabilities.php; the typo is preserved intentionally.
                     return current_user_can( 'erp_crate_announcement' );
                 },
                 'execute_callback' => function ( $input ) {
