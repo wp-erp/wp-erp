@@ -118,6 +118,7 @@ class CRM {
         require_once WPERP_CRM_PATH . '/includes/functions-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_CRM_PATH . '/includes/functions-capabilities.php';
+        require_once WPERP_CRM_PATH . '/includes/functions-abilities.php';
 		//        require_once WPERP_CRM_PATH . '/includes/ContactForms/class-contact-forms-integration.php';
         new ContactFormsIntegration();
         // cli command

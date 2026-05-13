@@ -13,3 +13,7 @@ debug.log
 plugin-deploy.sh
 phpcs-report.txt
 .nvmrc
+
+# Claude Code — personal overrides
+CLAUDE.local.md
+.claude/settings.local.json
