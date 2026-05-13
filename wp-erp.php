@@ -60,7 +60,7 @@ use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
 require_once __DIR__ . '/vendor/autoload.php';
-define( 'WPERP_VERSION', '1.17.3' );
+define( 'WPERP_VERSION', '1.17.4' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
 define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
