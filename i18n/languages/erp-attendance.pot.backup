@@ -1,0 +1,1761 @@
+# Copyright (C) 2020 weDevs
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP ERP - Attendance 2.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/erp-attendance\n"
+"POT-Creation-Date: 2020-08-21 06:27:42+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: wp-vue-i18n 1.1.4\n"
+
+# automatic translation
+#: assets/js/admin.js:266 assets/js/admin.js:274 assets/js/admin.js:8299
+#: assets/src/admin/components/ShiftModal.vue:115
+#: assets/src/admin/components/ShiftModal.vue:130
+#: assets/src/admin/components/Shifts.vue:105
+#: build/languages/erp-attendance.php:3 build/views/manage-shifts.php:118
+#: views/manage-shifts.php:118
+msgid "Sunday"
+msgstr "Domingo"
+
+# automatic translation
+#: assets/js/admin.js:267 assets/js/admin.js:274 assets/js/admin.js:8300
+#: assets/src/admin/components/ShiftModal.vue:116
+#: assets/src/admin/components/ShiftModal.vue:124
+#: assets/src/admin/components/Shifts.vue:106
+#: build/languages/erp-attendance.php:4 build/views/manage-shifts.php:88
+#: views/manage-shifts.php:88
+msgid "Monday"
+msgstr "Lunes"
+
+# automatic translation
+#: assets/js/admin.js:268 assets/js/admin.js:274 assets/js/admin.js:8301
+#: assets/src/admin/components/ShiftModal.vue:117
+#: assets/src/admin/components/ShiftModal.vue:125
+#: assets/src/admin/components/Shifts.vue:107
+#: build/languages/erp-attendance.php:5 build/views/manage-shifts.php:93
+#: views/manage-shifts.php:93
+msgid "Tuesday"
+msgstr "martes"
+
+# automatic translation
+#: assets/js/admin.js:269 assets/js/admin.js:274 assets/js/admin.js:8302
+#: assets/src/admin/components/ShiftModal.vue:118
+#: assets/src/admin/components/ShiftModal.vue:126
+#: assets/src/admin/components/Shifts.vue:108
+#: build/languages/erp-attendance.php:6 build/views/manage-shifts.php:98
+#: views/manage-shifts.php:98
+msgid "Wednesday"
+msgstr "miércoles"
+
+# automatic translation
+#: assets/js/admin.js:270 assets/js/admin.js:274 assets/js/admin.js:8303
+#: assets/src/admin/components/ShiftModal.vue:119
+#: assets/src/admin/components/ShiftModal.vue:127
+#: assets/src/admin/components/Shifts.vue:109
+#: build/languages/erp-attendance.php:7 build/views/manage-shifts.php:103
+#: views/manage-shifts.php:103
+msgid "Thursday"
+msgstr "jueves"
+
+# automatic translation
+#: assets/js/admin.js:271 assets/js/admin.js:274 assets/js/admin.js:8304
+#: assets/src/admin/components/ShiftModal.vue:120
+#: assets/src/admin/components/ShiftModal.vue:128
+#: assets/src/admin/components/Shifts.vue:110
+#: build/languages/erp-attendance.php:8 build/views/manage-shifts.php:108
+#: views/manage-shifts.php:108
+msgid "Friday"
+msgstr "Viernes"
+
+# automatic translation
+#: assets/js/admin.js:272 assets/js/admin.js:274 assets/js/admin.js:8305
+#: assets/src/admin/components/ShiftModal.vue:121
+#: assets/src/admin/components/ShiftModal.vue:129
+#: assets/src/admin/components/Shifts.vue:111
+#: build/languages/erp-attendance.php:9 build/views/manage-shifts.php:113
+#: views/manage-shifts.php:113
+msgid "Saturday"
+msgstr "sábado"
+
+# automatic translation
+#: assets/js/admin.js:335 assets/js/admin.js:1082 assets/js/admin.js:2401
+#: assets/src/admin/components/AssignShift.vue:440
+#: assets/src/admin/components/ShiftModal.vue:192
+#: build/languages/erp-attendance.php:10
+msgid "Success"
+msgstr "Éxito"
+
+# automatic translation
+#: assets/js/admin.js:336 assets/src/admin/components/ShiftModal.vue:193
+#: build/languages/erp-attendance.php:11
+msgid "Shift create successful"
+msgstr "Cambio crear con éxito"
+
+# automatic translation
+#: assets/js/admin.js:370 assets/src/admin/components/ShiftModal.vue:229
+#: build/languages/erp-attendance.php:12
+msgid "Shift name is required."
+msgstr "El nombre del turno es obligatorio."
+
+# automatic translation
+#: assets/js/admin.js:374 assets/src/admin/components/ShiftModal.vue:233
+#: build/languages/erp-attendance.php:13
+msgid "Start time is required."
+msgstr "Se requiere hora de inicio."
+
+# automatic translation
+#: assets/js/admin.js:378 assets/src/admin/components/ShiftModal.vue:237
+#: build/languages/erp-attendance.php:14
+msgid "End time is required."
+msgstr "La hora de finalización es obligatoria."
+
+# automatic translation
+#: assets/js/admin.js:628 assets/src/admin/components/SubmitButton.vue:12
+#: build/languages/erp-attendance.php:15
+msgid "Submit"
+msgstr "Enviar"
+
+# automatic translation
+#: assets/js/admin.js:810 assets/js/admin.js:814
+#: assets/src/admin/components/AssignShift.vue:161
+#: assets/src/admin/components/AssignShift.vue:166
+#: build/languages/erp-attendance.php:16
+msgid "All Employees of this shift"
+msgstr "Todos los empleados de este turno"
+
+# automatic translation
+#: assets/js/admin.js:817 assets/src/admin/components/AssignShift.vue:170
+#: build/languages/erp-attendance.php:17
+msgid "Selected Employees of this shift"
+msgstr "Empleados seleccionados de este turno"
+
+# automatic translation
+#: assets/js/admin.js:834 assets/js/admin.js:8283
+#: assets/src/admin/components/AssignShift.vue:188
+#: assets/src/admin/components/Shifts.vue:88
+#: build/includes/class-att-shift-employee.php:102
+#: build/languages/erp-attendance.php:18
+#: includes/class-att-shift-employee.php:102
+msgid "Move to Trash"
+msgstr "Mover a la papelera"
+
+# automatic translation
+#: assets/js/admin.js:839 assets/src/admin/components/AssignShift.vue:193
+#: build/includes/class-att-report-employee.php:51
+#: build/includes/class-att-shift-employee.php:48
+#: build/languages/erp-attendance.php:19
+#: includes/class-att-report-employee.php:51
+#: includes/class-att-shift-employee.php:48
+msgid "Name"
+msgstr "Nombre"
+
+# automatic translation
+#: assets/js/admin.js:840 assets/src/admin/components/AssignShift.vue:194
+#: build/includes/class-att-shift-employee.php:49
+#: build/languages/erp-attendance.php:20
+#: includes/class-att-shift-employee.php:49
+msgid "Designation"
+msgstr "Designacion"
+
+# automatic translation
+#: assets/js/admin.js:841 assets/src/admin/components/AssignShift.vue:195
+#: build/includes/class-att-shift-employee.php:50
+#: build/includes/class-attendance-single.php:92
+#: build/languages/erp-attendance.php:21
+#: includes/class-att-shift-employee.php:50
+#: includes/class-attendance-single.php:92
+msgid "Department"
+msgstr "Departamento"
+
+# automatic translation
+#: assets/js/admin.js:842 assets/src/admin/components/AssignShift.vue:196
+#: build/languages/erp-attendance.php:22
+msgid "Shift Start"
+msgstr "Inicio de turno"
+
+# automatic translation
+#: assets/js/admin.js:843 assets/src/admin/components/AssignShift.vue:197
+#: build/languages/erp-attendance.php:23
+msgid "Shift End"
+msgstr "Fin de turno"
+
+# automatic translation
+#: assets/js/admin.js:890 assets/src/admin/components/AssignShift.vue:245
+#: build/languages/erp-attendance.php:24
+msgid "Employees"
+msgstr "Empleados"
+
+# automatic translation
+#: assets/js/admin.js:1028 assets/js/admin.js:1039
+#: assets/src/admin/components/AssignShift.vue:384
+#: assets/src/admin/components/AssignShift.vue:395
+#: build/languages/erp-attendance.php:25
+msgid "Warning"
+msgstr "Advertencia"
+
+# automatic translation
+#: assets/js/admin.js:1029 assets/src/admin/components/AssignShift.vue:385
+#: build/languages/erp-attendance.php:26
+msgid "Start date should be "
+msgstr "La fecha de inicio debe ser"
+
+# automatic translation
+#: assets/js/admin.js:1029 assets/src/admin/components/AssignShift.vue:385
+#: build/languages/erp-attendance.php:27
+msgid " OR after any date"
+msgstr " O después de cualquier fecha"
+
+# automatic translation
+#: assets/js/admin.js:1040 assets/src/admin/components/AssignShift.vue:396
+#: build/languages/erp-attendance.php:28
+msgid "End date should be greater OR equal than start date"
+msgstr "La fecha de finalización debe ser mayor O igual que la fecha de inicio"
+
+# automatic translation
+#: assets/js/admin.js:1049 assets/src/admin/components/AssignShift.vue:407
+#: build/languages/erp-attendance.php:29
+msgid "Are you sure to overwrite employees?"
+msgstr "¿Está seguro de sobrescribir a los empleados?"
+
+# automatic translation
+#: assets/js/admin.js:1054 assets/js/admin.js:2388
+#: assets/src/admin/components/AssignShift.vue:412
+#: build/languages/erp-attendance.php:30
+msgid "Confirm"
+msgstr "Confirmar"
+
+# automatic translation
+#: assets/js/admin.js:1083 assets/src/admin/components/AssignShift.vue:441
+#: build/languages/erp-attendance.php:31
+msgid "Shift generate successful"
+msgstr "Cambio generar con éxito"
+
+# automatic translation
+#: assets/js/admin.js:1189 assets/js/admin.js:1780 assets/js/admin.js:1790
+#: assets/js/admin.js:7461 assets/js/admin.js:8363 assets/js/admin.js:8376
+#: assets/src/admin/components/AssignShift.vue:548
+#: assets/src/admin/components/AttendanceRecord.vue:162
+#: assets/src/admin/components/AttendanceRecord.vue:172
+#: assets/src/admin/components/Attendances.vue:128
+#: assets/src/admin/components/Shifts.vue:169
+#: assets/src/admin/components/Shifts.vue:182
+#: build/languages/erp-attendance.php:32
+msgid "Are you sure to delete?"
+msgstr "¿Está seguro de eliminar?"
+
+# automatic translation
+#: assets/js/admin.js:1371 build/languages/erp-attendance.php:33
+#: build/views/edit-attendance.php:21
+#: build/views/js-templates/attendance-new.php:17
+#: build/views/new-attendance.php:21 views/edit-attendance.php:21
+#: views/js-templates/attendance-new.php:17 views/new-attendance.php:21
+msgid "Employee ID"
+msgstr "ID de empleado"
+
+# automatic translation
+#: assets/js/admin.js:1372 assets/js/admin.js:1716
+#: assets/src/admin/components/AttendanceRecord.vue:98
+#: build/includes/class-attendance-single.php:91
+#: build/languages/erp-attendance.php:34 build/views/edit-attendance.php:22
+#: build/views/js-templates/attendance-new.php:18
+#: build/views/manage-shifts.php:85 build/views/new-attendance.php:22
+#: includes/class-attendance-single.php:91 views/edit-attendance.php:22
+#: views/js-templates/attendance-new.php:18 views/manage-shifts.php:85
+#: views/new-attendance.php:22
+msgid "Employee Name"
+msgstr "Nombre de empleado"
+
+# automatic translation
+#: assets/js/admin.js:1373 assets/js/admin.js:1718
+#: assets/src/admin/components/AttendanceRecord.vue:100
+#: build/includes/class-attendance-single.php:93
+#: build/includes/class-form-handler.php:312
+#: build/languages/erp-attendance.php:35 build/views/edit-attendance.php:24
+#: build/views/new-attendance.php:24
+#: build/views/widget-employee-self-service.php:13
+#: includes/class-attendance-single.php:93 includes/class-form-handler.php:312
+#: views/edit-attendance.php:24 views/new-attendance.php:24
+#: views/widget-employee-self-service.php:13
+msgid "Shift"
+msgstr "Cambio"
+
+# automatic translation
+#: assets/js/admin.js:1374 assets/js/admin.js:1719
+#: assets/src/admin/components/AttendanceRecord.vue:101
+#: build/includes/class-attendance-single.php:94
+#: build/languages/erp-attendance.php:36 build/views/edit-attendance.php:26
+#: build/views/js-templates/attendance-new.php:19
+#: build/views/new-attendance.php:26
+#: build/views/tab-employee-single-status.php:180
+#: includes/class-attendance-single.php:94 views/edit-attendance.php:26
+#: views/js-templates/attendance-new.php:19 views/new-attendance.php:26
+#: views/tab-employee-single-status.php:180
+msgid "Status"
+msgstr "Estado"
+
+# automatic translation
+#: assets/js/admin.js:1375 assets/src/admin/components/AttendanceRecord.vue:7
+#: build/includes/class-attendance.php:147
+#: build/languages/erp-attendance.php:37 build/views/attendance-single.php:10
+#: includes/class-attendance.php:147 views/attendance-single.php:10
+msgid "Edit"
+msgstr "Editar"
+
+# automatic translation
+#: assets/js/admin.js:1376 assets/js/admin.js:1720
+#: assets/src/admin/components/AttendanceRecord.vue:102
+#: build/includes/class-attendance-single.php:95
+#: build/includes/class-widgets.php:118 build/languages/erp-attendance.php:38
+#: build/views/edit-attendance.php:27 build/views/new-attendance.php:27
+#: build/views/tab-employee-single-status.php:181
+#: includes/class-attendance-single.php:95 includes/class-widgets.php:118
+#: views/edit-attendance.php:27 views/new-attendance.php:27
+#: views/tab-employee-single-status.php:181
+msgid "Checkin"
+msgstr "Registrarse"
+
+# automatic translation
+#: assets/js/admin.js:1377 assets/js/admin.js:1721
+#: assets/src/admin/components/AttendanceRecord.vue:103
+#: build/includes/class-attendance-single.php:96
+#: build/includes/class-widgets.php:119 build/languages/erp-attendance.php:39
+#: build/views/edit-attendance.php:28 build/views/new-attendance.php:28
+#: build/views/tab-employee-single-status.php:182
+#: includes/class-attendance-single.php:96 includes/class-widgets.php:119
+#: views/edit-attendance.php:28 views/new-attendance.php:28
+#: views/tab-employee-single-status.php:182
+msgid "Checkout"
+msgstr "Verificar"
+
+# automatic translation
+#: assets/js/admin.js:1378 build/languages/erp-attendance.php:40
+msgid "Modify Details"
+msgstr "Modificar detalles"
+
+# automatic translation
+#: assets/js/admin.js:1715 assets/src/admin/components/AttendanceRecord.vue:97
+#: build/includes/class-attendance-single.php:90
+#: build/languages/erp-attendance.php:41
+#: includes/class-attendance-single.php:90
+msgid "Emp. ID"
+msgstr "emp. IDENTIFICACIÓN"
+
+# automatic translation
+#: assets/js/admin.js:1722 assets/src/admin/components/AttendanceRecord.vue:104
+#: build/includes/class-attendance-single.php:97
+#: build/languages/erp-attendance.php:42
+#: build/views/tab-employee-single-status.php:330
+#: includes/class-attendance-single.php:97
+#: views/tab-employee-single-status.php:330
+msgid "Worktime"
+msgstr "Tiempo de trabajo"
+
+# automatic translation
+#: assets/js/admin.js:1910 assets/src/admin/components/ExportImport.vue:96
+#: build/languages/erp-attendance.php:43
+msgid "Select a shift"
+msgstr "Seleccione un turno"
+
+# automatic translation
+#: assets/js/admin.js:2030 assets/src/admin/components/ExportImport.vue:223
+#: build/includes/api/class-attendance-controller.php:1238
+#: build/languages/erp-attendance.php:44
+#: includes/api/class-attendance-controller.php:1238
+msgid "Data import faild. Please provide a csv file with correct format"
+msgstr ""
+"La importación de datos falló. Proporcione un archivo csv con el formato "
+"correcto"
+
+# automatic translation
+#: assets/js/admin.js:2365 assets/js/admin.js:2375
+#: build/languages/erp-attendance.php:45
+msgid "Oops..."
+msgstr "Ups..."
+
+# automatic translation
+#: assets/js/admin.js:2366 build/languages/erp-attendance.php:46
+msgid "Please select a valid shift"
+msgstr "Seleccione un turno válido"
+
+# automatic translation
+#: assets/js/admin.js:2376 build/languages/erp-attendance.php:47
+msgid "Please select at least one valid employee"
+msgstr "Seleccione al menos un empleado válido"
+
+# automatic translation
+#: assets/js/admin.js:2383 build/languages/erp-attendance.php:48
+msgid "Are you sure?"
+msgstr "¿Está seguro?"
+
+# automatic translation
+#: assets/js/admin.js:2384 build/languages/erp-attendance.php:49
+msgid "You wont be able to revert this!"
+msgstr "¡No podrás revertir esto!"
+
+# automatic translation
+#: assets/js/admin.js:2402 build/languages/erp-attendance.php:50
+msgid "Shift assign successful"
+msgstr "Asignación de turno exitosa"
+
+# automatic translation
+#: assets/js/admin.js:2618 assets/js/admin.js:3027 assets/js/admin.js:3094
+#: assets/js/admin.js:3773 assets/js/admin.js:3798 assets/js/admin.js:4048
+#: assets/js/admin.js:4467 assets/js/admin.js:4697 assets/js/admin.js:5161
+#: assets/js/admin.js:5616 assets/js/admin.js:5845 assets/js/admin.js:6243
+#: assets/js/frontend.js:109 assets/js/frontend.js:254
+#: assets/js/frontend.js:344 assets/js/vendor.js:22635
+msgid "div"
+msgstr "división"
+
+# automatic translation
+#: assets/js/admin.js:2923
+msgid "tr"
+msgstr "tr"
+
+# automatic translation
+#: assets/js/admin.js:4149
+msgid "multiselect"
+msgstr "selección múltiple"
+
+# automatic translation
+#: assets/js/admin.js:4229
+msgid "button"
+msgstr "botón"
+
+# automatic translation
+#: assets/js/admin.js:4260
+msgid "modal"
+msgstr "modal"
+
+# automatic translation
+#: assets/js/admin.js:7407 assets/src/admin/components/Attendances.vue:74
+#: build/includes/class-attendance.php:126
+#: build/languages/erp-attendance.php:51
+#: build/views/attendance-reporting.php:104
+#: build/views/js-templates/attendance-new.php:2
+#: build/views/js-templates/attendance-new.php:4
+#: build/views/tab-employee-single-status.php:179
+#: includes/class-attendance.php:126 views/attendance-reporting.php:104
+#: views/js-templates/attendance-new.php:2
+#: views/js-templates/attendance-new.php:4
+#: views/tab-employee-single-status.php:179
+msgid "Date"
+msgstr "Fecha"
+
+# automatic translation
+#: assets/js/admin.js:7408 assets/src/admin/components/Attendances.vue:75
+#: build/includes/class-attendance.php:127
+#: build/languages/erp-attendance.php:52 includes/class-attendance.php:127
+msgid "Attended"
+msgstr "asistió"
+
+# automatic translation
+#: assets/js/admin.js:7409 assets/src/admin/components/Attendances.vue:76
+#: assets/src/admin/components/NewAttendance.vue:52
+#: build/includes/class-ajax.php:101
+#: build/includes/class-att-report-employee.php:54
+#: build/includes/class-attendance.php:128
+#: build/languages/erp-attendance.php:53
+#: build/views/attendance-reporting.php:108
+#: build/views/js-templates/attendance-new.php:42
+#: build/views/js-templates/attendance-new.php:71
+#: build/views/tab-employee-single-status.php:111
+#: build/views/tab-employee-single-status.php:345 includes/class-ajax.php:101
+#: includes/class-att-report-employee.php:54 includes/class-attendance.php:128
+#: views/attendance-reporting.php:108 views/js-templates/attendance-new.php:42
+#: views/js-templates/attendance-new.php:71
+#: views/tab-employee-single-status.php:111
+#: views/tab-employee-single-status.php:345
+msgid "Absent"
+msgstr "Ausente"
+
+# automatic translation
+#: assets/js/admin.js:7410 assets/src/admin/components/Attendances.vue:77
+#: build/includes/class-attendance.php:129
+#: build/languages/erp-attendance.php:54 includes/class-attendance.php:129
+msgid "Presence"
+msgstr "Presencia"
+
+# automatic translation
+#: assets/js/admin.js:7411 assets/js/admin.js:8293
+#: assets/src/admin/components/Attendances.vue:78
+#: assets/src/admin/components/Shifts.vue:99
+#: build/languages/erp-attendance.php:55
+msgid "Actions"
+msgstr "Comportamiento"
+
+# automatic translation
+#: assets/js/admin.js:8288 assets/src/admin/components/ShiftModal.vue:13
+#: assets/src/admin/components/Shifts.vue:94
+#: build/includes/class-manage-shifts.php:47
+#: build/languages/erp-attendance.php:56 includes/class-manage-shifts.php:47
+msgid "Shift Name"
+msgstr "Nombre de turno"
+
+# automatic translation
+#: assets/js/admin.js:8289 assets/src/admin/components/ShiftModal.vue:28
+#: assets/src/admin/components/Shifts.vue:95
+#: build/includes/class-manage-shifts.php:48
+#: build/languages/erp-attendance.php:57 includes/class-manage-shifts.php:48
+msgid "Start Time"
+msgstr "Hora de inicio"
+
+# automatic translation
+#: assets/js/admin.js:8290 assets/src/admin/components/ShiftModal.vue:41
+#: assets/src/admin/components/Shifts.vue:96
+#: build/includes/class-manage-shifts.php:49
+#: build/languages/erp-attendance.php:58 includes/class-manage-shifts.php:49
+msgid "End Time"
+msgstr "Hora de finalización"
+
+# automatic translation
+#: assets/js/admin.js:8291 assets/src/admin/components/Shifts.vue:97
+#: build/includes/class-manage-shifts.php:50
+#: build/languages/erp-attendance.php:59 includes/class-manage-shifts.php:50
+msgid "Duration"
+msgstr "Duración"
+
+# automatic translation
+#: assets/js/admin.js:8292 assets/src/admin/components/ShiftModal.vue:56
+#: assets/src/admin/components/Shifts.vue:98
+#: build/includes/class-manage-shifts.php:51
+#: build/languages/erp-attendance.php:60
+#: build/views/tab-employee-single-status.php:96
+#: includes/class-manage-shifts.php:51 views/tab-employee-single-status.php:96
+msgid "Holidays"
+msgstr "Días festivos"
+
+# automatic translation
+#: assets/js/vendor.js:22671
+msgid " + (data ? ("
+msgstr " + (datos? ("
+
+# automatic translation
+#: assets/js/vendor.js:23094 build/languages/erp-attendance.php:62
+msgid " + (JSON.stringify(comment.text)) + "
+msgstr " + (JSON.stringify(comentario.texto)) +"
+
+# automatic translation
+#: assets/js/vendor.js:23129
+msgid " + componentName + "
+msgstr " + nombre del componente +"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:4
+#: build/languages/erp-attendance.php:63
+msgid "Generate Shift"
+msgstr "Generar Turno"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:5
+#: build/languages/erp-attendance.php:64
+msgid "Generated Users of this Shift"
+msgstr "Usuarios generados de este turno"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:7
+#: assets/src/admin/components/AttendanceRecord.vue:9
+#: assets/src/admin/components/NewAttendance.vue:8
+#: build/languages/erp-attendance.php:65
+msgid "Back"
+msgstr "atrás"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:25
+#: build/languages/erp-attendance.php:66
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:38
+#: build/languages/erp-attendance.php:67
+msgid "End Date"
+msgstr "Fecha final"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:55
+#: build/languages/erp-attendance.php:68
+msgid "Generate this Shift for"
+msgstr "Generar este Turno para"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:67
+#: build/languages/erp-attendance.php:69
+msgid "Select"
+msgstr "Seleccione"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:83
+#: build/languages/erp-attendance.php:70
+msgid "Overwrite Employees"
+msgstr "Sobrescribir empleados"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:86
+#: build/languages/erp-attendance.php:71
+msgid "Overwrite previously assigned employees to this or any other shifts."
+msgstr ""
+"Sobrescriba los empleados previamente asignados a este o cualquier otro "
+"turno."
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:98
+#: build/languages/erp-attendance.php:72
+msgid "Shift name:"
+msgstr "Nombre del turno:"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:99
+#: build/languages/erp-attendance.php:73
+msgid "Holidays:"
+msgstr "Días festivos:"
+
+# automatic translation
+#: assets/src/admin/components/AssignShift.vue:100
+#: build/languages/erp-attendance.php:74
+msgid "Time:"
+msgstr "Tiempo:"
+
+# automatic translation
+#: assets/src/admin/components/AttendanceRecord.vue:4
+#: build/languages/erp-attendance.php:75 build/views/attendance-single.php:10
+#: views/attendance-single.php:10
+msgid "Attendance Record"
+msgstr "Registro de asistencia"
+
+# automatic translation
+#: assets/src/admin/components/Attendances.vue:4 build/erp-attendance.php:184
+#: build/erp-attendance.php:560 build/erp-attendance.php:582
+#: build/erp-attendance.php:700 build/includes/class-admin.php:25
+#: build/includes/class-admin.php:28 build/includes/class-admin.php:36
+#: build/includes/class-admin.php:44 build/languages/erp-attendance.php:76
+#: build/views/attendance.php:3 erp-attendance.php:184 erp-attendance.php:560
+#: erp-attendance.php:582 erp-attendance.php:700 includes/class-admin.php:25
+#: includes/class-admin.php:28 includes/class-admin.php:36
+#: includes/class-admin.php:44 views/attendance.php:3
+msgid "Attendance"
+msgstr "Asistencia"
+
+# automatic translation
+#: assets/src/admin/components/Attendances.vue:6
+#: build/languages/erp-attendance.php:77 build/views/attendance.php:3
+#: views/attendance.php:3
+msgid "Add New"
+msgstr "Agregar nuevo"
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:10
+#: build/languages/erp-attendance.php:78
+msgid "Save grace time"
+msgstr "Ahorre tiempo de gracia"
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:14
+#: build/languages/erp-attendance.php:79
+msgid "Data migration from previous version"
+msgstr "Migración de datos de la versión anterior"
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:23
+#: build/languages/erp-attendance.php:80
+msgid "Migration"
+msgstr "Migración"
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:25
+#: build/languages/erp-attendance.php:81
+msgid "Note : Please do not close the browser OR tab during data migration."
+msgstr "Nota: no cierre el navegador O la pestaña durante la migración de datos."
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:32
+#: build/languages/erp-attendance.php:82 build/views/export.php:2
+#: views/export.php:2
+msgid "Export Attendance"
+msgstr "Exportar Asistencia"
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:33
+#: build/languages/erp-attendance.php:83
+msgid "You can export data from employee based report."
+msgstr "Puede exportar datos del informe basado en empleados."
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:37 build/erp-attendance.php:263
+#: build/languages/erp-attendance.php:84 build/views/import.php:2
+#: erp-attendance.php:263 views/import.php:2
+msgid "Import Attendance"
+msgstr "Importar asistencia"
+
+# automatic translation
+#: assets/src/admin/components/ExportImport.vue:42
+#: build/languages/erp-attendance.php:85
+msgid "Download sample file"
+msgstr "Descargar archivo de muestra"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:4 build/erp-attendance.php:261
+#: build/languages/erp-attendance.php:86 build/views/edit-attendance.php:2
+#: erp-attendance.php:261 views/edit-attendance.php:2
+msgid "Edit Attendance"
+msgstr "Editar asistencia"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:5 build/erp-attendance.php:259
+#: build/languages/erp-attendance.php:87 build/views/new-attendance.php:2
+#: erp-attendance.php:259 views/new-attendance.php:2
+msgid "New Attendance"
+msgstr "Nueva Asistencia"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:14
+#: build/languages/erp-attendance.php:88
+msgid "Date:"
+msgstr "Fecha:"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:24
+#: build/languages/erp-attendance.php:89 build/views/edit-attendance.php:10
+#: build/views/new-attendance.php:10 views/edit-attendance.php:10
+#: views/new-attendance.php:10
+msgid "Set all present"
+msgstr "Establecer todos los presentes"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:28
+#: build/languages/erp-attendance.php:90 build/views/edit-attendance.php:11
+#: build/views/new-attendance.php:11 views/edit-attendance.php:11
+#: views/new-attendance.php:11
+msgid "Set all absent"
+msgstr "Establecer todo ausente"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:33
+#: build/languages/erp-attendance.php:91 build/views/edit-attendance.php:14
+#: build/views/manage-shifts.php:76 build/views/new-attendance.php:14
+#: views/edit-attendance.php:14 views/manage-shifts.php:76
+#: views/new-attendance.php:14
+msgid "Search"
+msgstr "Búsqueda"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:51
+#: build/includes/class-att-report-employee.php:52
+#: build/languages/erp-attendance.php:92
+#: build/views/attendance-reporting.php:106
+#: build/views/js-templates/attendance-new.php:41
+#: build/views/js-templates/attendance-new.php:70
+#: build/views/tab-employee-single-status.php:101
+#: includes/class-att-report-employee.php:52 views/attendance-reporting.php:106
+#: views/js-templates/attendance-new.php:41
+#: views/js-templates/attendance-new.php:70
+#: views/tab-employee-single-status.php:101
+msgid "Present"
+msgstr "Presente"
+
+# automatic translation
+#: assets/src/admin/components/NewAttendance.vue:71
+#: build/languages/erp-attendance.php:93
+msgid "More Details"
+msgstr "Más detalles"
+
+# automatic translation
+#: assets/src/admin/components/ShiftModal.vue:67
+#: build/languages/erp-attendance.php:94 build/views/new-attendance.php:60
+#: views/new-attendance.php:60
+msgid "Save"
+msgstr "Ahorrar"
+
+# automatic translation
+#: assets/src/admin/components/ShiftModal.vue:68
+#: build/languages/erp-attendance.php:95
+msgid "Update"
+msgstr "Actualizar"
+
+# automatic translation
+#: assets/src/admin/components/Shifts.vue:4 build/includes/class-admin.php:29
+#: build/includes/class-admin.php:53 build/languages/erp-attendance.php:96
+#: includes/class-admin.php:29 includes/class-admin.php:53
+msgid "Shifts"
+msgstr "Turnos"
+
+# automatic translation
+#: assets/src/admin/components/Shifts.vue:6
+#: build/languages/erp-attendance.php:97
+msgid "Add New Shift"
+msgstr "Agregar nuevo turno"
+
+# automatic translation
+#: assets/src/admin/components/Shifts.vue:49
+#: build/languages/erp-attendance.php:98
+msgid "No Holiday"
+msgstr "Sin vacaciones"
+
+# automatic translation
+#: build/erp-attendance.php:257 erp-attendance.php:257
+msgid ""
+"This shift and related attendance record will be deleted permanently and "
+"can't be undone. Are you sure?"
+msgstr ""
+"Este turno y el registro de asistencia relacionado se eliminarán de forma "
+"permanente y no se pueden deshacer. ¿Está seguro?"
+
+# automatic translation
+#: build/erp-attendance.php:260 erp-attendance.php:260
+msgid "Submit Attendance"
+msgstr "Enviar Asistencia"
+
+# automatic translation
+#: build/erp-attendance.php:262 build/views/edit-attendance.php:54
+#: build/views/manage-shifts.php:26 erp-attendance.php:262
+#: views/edit-attendance.php:54 views/manage-shifts.php:26
+msgid "Save Changes"
+msgstr "Guardar cambios"
+
+# automatic translation
+#: build/erp-attendance.php:264 build/views/import.php:30
+#: erp-attendance.php:264 views/import.php:30
+msgid "Import"
+msgstr "Importar"
+
+# automatic translation
+#: build/erp-attendance.php:267 erp-attendance.php:267
+msgid "Something went wrong"
+msgstr "Algo salió mal"
+
+# automatic translation
+#: build/erp-attendance.php:270 erp-attendance.php:270
+msgid "Do you want to checkout?"
+msgstr "¿Quieres pagar?"
+
+# automatic translation
+#: build/erp-attendance.php:408 erp-attendance.php:408
+msgid "Manage Attendance"
+msgstr "Administrar Asistencia"
+
+# automatic translation
+#: build/erp-attendance.php:411 build/includes/class-admin.php:80
+#: erp-attendance.php:411 includes/class-admin.php:80
+msgid "Settings"
+msgstr "Ajustes"
+
+# automatic translation
+#: build/erp-attendance.php:662 build/includes/class-admin.php:89
+#: erp-attendance.php:662 includes/class-admin.php:89
+msgid "Attendance (Date Based)"
+msgstr "Asistencia (basada en la fecha)"
+
+# automatic translation
+#: build/erp-attendance.php:663 build/erp-attendance.php:668
+#: erp-attendance.php:663 erp-attendance.php:668
+msgid "Reporting on employee attendance"
+msgstr "Informar sobre la asistencia de los empleados"
+
+# automatic translation
+#: build/erp-attendance.php:667 build/includes/class-admin.php:97
+#: erp-attendance.php:667 includes/class-admin.php:97
+msgid "Attendance (Employee Based)"
+msgstr "Asistencia (basada en empleados)"
+
+# automatic translation
+#: build/erp-attendance.php:718 erp-attendance.php:718
+msgid "Grace Time"
+msgstr "Tiempo de gracia"
+
+# automatic translation
+#: build/erp-attendance.php:723 erp-attendance.php:723
+msgid "Grace Before Checkin"
+msgstr "Gracia antes de registrarse"
+
+# automatic translation
+#: build/erp-attendance.php:726 build/erp-attendance.php:754
+#: erp-attendance.php:726 erp-attendance.php:754
+msgid "(in minute) this time will not counted as overtime"
+msgstr "(en minutos) este tiempo no contará como tiempo extra"
+
+# automatic translation
+#: build/erp-attendance.php:730 erp-attendance.php:730
+msgid "Grace After Checkin"
+msgstr "Gracia después del registro"
+
+# automatic translation
+#: build/erp-attendance.php:733 erp-attendance.php:733
+msgid "(in minute) this time will not counted as late"
+msgstr "(en minutos) este tiempo no contará como tarde"
+
+# automatic translation
+#: build/erp-attendance.php:737 erp-attendance.php:737
+msgid "Threshhold between checkout & checkin"
+msgstr "Umbral entre pago y registro"
+
+# automatic translation
+#: build/erp-attendance.php:740 erp-attendance.php:740
+msgid "(in second) this time will prevent quick checkin after making a checkout"
+msgstr "(en segundo) esta vez evitará el registro rápido después de realizar un pago"
+
+# automatic translation
+#: build/erp-attendance.php:744 erp-attendance.php:744
+msgid "Grace Before Checkout"
+msgstr "Gracia antes de pagar"
+
+# automatic translation
+#: build/erp-attendance.php:747 erp-attendance.php:747
+msgid "(in minute) this time will not counted as early left"
+msgstr "(en minutos) este tiempo no contará como salida anticipada"
+
+# automatic translation
+#: build/erp-attendance.php:751 erp-attendance.php:751
+msgid "Grace After Checkout"
+msgstr "Gracia después del pago"
+
+# automatic translation
+#: build/erp-attendance.php:758 erp-attendance.php:758
+msgid "Self Attendance"
+msgstr "Autoasistencia"
+
+# automatic translation
+#: build/erp-attendance.php:761 erp-attendance.php:761
+msgid "Enable self attendance service for employees?"
+msgstr "¿Habilitar el servicio de autoasistencia para los empleados?"
+
+# automatic translation
+#: build/erp-attendance.php:764 erp-attendance.php:764
+msgid "IP Restriction"
+msgstr "Restricción de IP"
+
+# automatic translation
+#: build/erp-attendance.php:767 erp-attendance.php:767
+msgid "Enable IP restriction for checkin/checkout"
+msgstr "Habilitar la restricción de IP para el check-in/check-out"
+
+# automatic translation
+#: build/erp-attendance.php:770 erp-attendance.php:770
+msgid "Whitelisted IP's"
+msgstr "IP en la lista blanca"
+
+# automatic translation
+#: build/erp-attendance.php:773 erp-attendance.php:773
+msgid ""
+"Employees from this IP addresss will be able to self check-in. Put one IP "
+"in each line"
+msgstr ""
+"Los empleados de estas direcciones IP podrán realizar el auto check-in. Pon "
+"una IP en cada línea"
+
+# automatic translation
+#: build/erp-attendance.php:780
+#: build/includes/emails/class-email-att-reminder.php:18 erp-attendance.php:780
+#: includes/emails/class-email-att-reminder.php:18
+msgid "Attendance Reminder"
+msgstr "Recordatorio de asistencia"
+
+# automatic translation
+#: build/erp-attendance.php:783 erp-attendance.php:783
+msgid "Send email notification to remind Checking-in"
+msgstr "Enviar notificación por correo electrónico para recordar Check-in"
+
+# automatic translation
+#: build/includes/api/class-attendance-controller.php:597
+#: build/includes/api/class-attendance-controller.php:1167
+#: build/includes/api/prev-class-attendance-controller.php:109
+#: build/includes/class-ajax.php:53
+#: includes/api/class-attendance-controller.php:597
+#: includes/api/class-attendance-controller.php:1167
+#: includes/api/prev-class-attendance-controller.php:109
+#: includes/class-ajax.php:53
+msgid "You are not allowed to %s from this IP"
+msgstr "No tienes permitido %s desde esta IP"
+
+# automatic translation
+#: build/includes/api/class-attendance-controller.php:1172
+#: build/includes/class-ajax.php:58
+#: includes/api/class-attendance-controller.php:1172 includes/class-ajax.php:58
+msgid "You have take leave in this shift"
+msgstr "Te has despedido en este turno"
+
+# automatic translation
+#: build/includes/api/prev-class-attendance-controller.php:63
+#: build/includes/api/prev-class-attendance-controller.php:102
+#: includes/api/prev-class-attendance-controller.php:63
+#: includes/api/prev-class-attendance-controller.php:102
+msgid "Invalid Employee user ID received"
+msgstr "ID de usuario de empleado no válido recibido"
+
+# automatic translation
+#: build/includes/class-admin.php:30 includes/class-admin.php:30
+msgid "Import/Export"
+msgstr "Importación y exportación"
+
+# automatic translation
+#: build/includes/class-admin.php:62 includes/class-admin.php:62
+msgid "Tools"
+msgstr "Instrumentos"
+
+# automatic translation
+#: build/includes/class-admin.php:71 includes/class-admin.php:71
+msgid "Assign Bulk Shift"
+msgstr "Asignar turno masivo"
+
+# automatic translation
+#: build/includes/class-ajax.php:91 includes/class-ajax.php:91
+msgid "On-time"
+msgstr "A tiempo"
+
+# automatic translation
+#: build/includes/class-ajax.php:96 includes/class-ajax.php:96
+msgid "Late"
+msgstr "Tarde"
+
+# automatic translation
+#: build/includes/class-ajax.php:594 includes/class-ajax.php:594
+msgid "Checkin time can not be blanked "
+msgstr "La hora de entrada no se puede borrar"
+
+# automatic translation
+#: build/includes/class-ajax.php:617 includes/class-ajax.php:617
+msgid "Updated Successfully"
+msgstr "Actualizado con éxito"
+
+# automatic translation
+#: build/includes/class-att-report-employee.php:40
+#: build/includes/class-att-shift-employee.php:36
+#: build/includes/class-attendance-single.php:39
+#: build/includes/class-attendance.php:79
+#: build/includes/class-manage-shifts.php:36
+#: includes/class-att-report-employee.php:40
+#: includes/class-att-shift-employee.php:36
+#: includes/class-attendance-single.php:39 includes/class-attendance.php:79
+#: includes/class-manage-shifts.php:36
+msgid "No Record Found"
+msgstr "ningún record fue encontrado"
+
+# automatic translation
+#: build/includes/class-att-report-employee.php:53
+#: build/views/attendance-reporting.php:107
+#: includes/class-att-report-employee.php:53 views/attendance-reporting.php:107
+msgid "Leave"
+msgstr "Abandonar"
+
+# automatic translation
+#: build/includes/class-att-report-employee.php:55
+#: includes/class-att-report-employee.php:55
+msgid "Avg Work"
+msgstr "trabajo promedio"
+
+# automatic translation
+#: build/includes/class-att-report-employee.php:56
+#: includes/class-att-report-employee.php:56
+msgid "Avg Checkin"
+msgstr "Registro promedio"
+
+# automatic translation
+#: build/includes/class-att-report-employee.php:57
+#: includes/class-att-report-employee.php:57
+msgid "Avg Checkout"
+msgstr "Pago promedio"
+
+# automatic translation
+#: build/includes/class-att-shift-employee.php:108
+#: includes/class-att-shift-employee.php:108
+msgid "Permanent Delete"
+msgstr "Eliminación permanente"
+
+# automatic translation
+#: build/includes/class-att-shift-employee.php:109
+#: includes/class-att-shift-employee.php:109
+msgid "Restore"
+msgstr "Restaurar"
+
+# automatic translation
+#: build/includes/class-attendance-single.php:178
+#: includes/class-attendance-single.php:178
+msgid "Delete"
+msgstr "Borrar"
+
+# automatic translation
+#: build/includes/class-attendance.php:50 includes/class-attendance.php:50
+msgid "Filter by Duration"
+msgstr "Filtrar por Duración"
+
+# automatic translation
+#: build/includes/class-attendance.php:52 includes/class-attendance.php:52
+msgid "- Select Duration -"
+msgstr "- Seleccione Duración -"
+
+# automatic translation
+#: build/includes/class-attendance.php:63
+#: build/views/attendance-reporting.php:94 build/views/filter-toolbar.php:60
+#: build/views/tab-employee-single-status.php:60
+#: includes/class-attendance.php:63 views/attendance-reporting.php:94
+#: views/filter-toolbar.php:60 views/tab-employee-single-status.php:60
+msgid "Filter"
+msgstr "Filtrar"
+
+# automatic translation
+#: build/includes/class-attendance.php:147 includes/class-attendance.php:147
+msgid "Edit this item"
+msgstr "Editar este elemento"
+
+# automatic translation
+#: build/includes/class-attendance.php:194 includes/class-attendance.php:194
+msgid "Delete Permanently"
+msgstr "borrar permanentemente"
+
+# automatic translation
+#: build/includes/class-form-handler.php:208
+#: includes/class-form-handler.php:208
+msgid "session expired try again"
+msgstr "sesión caducada inténtalo de nuevo"
+
+# automatic translation
+#: build/includes/class-form-handler.php:304
+#: includes/class-form-handler.php:304
+msgid "- Select -"
+msgstr "- Seleccionar -"
+
+# automatic translation
+#: build/includes/class-install.php:37 includes/class-install.php:37
+msgid "You need to install %s in order to use %s"
+msgstr "Necesitas instalar %s para usar %s"
+
+# automatic translation
+#: build/includes/class-updates.php:73 includes/class-updates.php:73
+msgid ""
+"<strong>WP ERP Attendance data update is required</strong> &#8211; We need "
+"to update your install to the latest version"
+msgstr ""
+"<strong>Se requiere la actualización de los datos de asistencia de WP "
+"ERP</strong> : necesitamos actualizar su instalación a la última versión"
+
+# automatic translation
+#: build/includes/class-updates.php:74 includes/class-updates.php:74
+msgid "Run the updater"
+msgstr "Ejecute el actualizador"
+
+# automatic translation
+#: build/includes/class-updates.php:79 includes/class-updates.php:79
+msgid ""
+"It is strongly recommended that you backup your database before proceeding. "
+"Are you sure you wish to run the updater now?"
+msgstr ""
+"Se recomienda encarecidamente que haga una copia de seguridad de su base de "
+"datos antes de continuar. ¿Está seguro de que desea ejecutar el "
+"actualizador ahora?"
+
+# automatic translation
+#: build/includes/class-widgets.php:37 includes/class-widgets.php:37
+msgid "<i class=\"fa fa-pie-chart\"></i> Attendance Status"
+msgstr "<i class=\"fa fa-pie-chart\"></i>Estado de asistencia"
+
+# automatic translation
+#: build/includes/class-widgets.php:48 includes/class-widgets.php:48
+msgid "<i class=\"fa fa-clock-o\"></i> Attendance Self Service"
+msgstr "<i class=\"fa fa-clock-o\"></i>Autoservicio de asistencia"
+
+# automatic translation
+#: build/includes/class-widgets.php:108 includes/class-widgets.php:108
+msgid "Filter By"
+msgstr "Filtrado por"
+
+# automatic translation
+#: build/includes/class-widgets.php:109
+#: build/includes/functions-attendance.php:74 includes/class-widgets.php:109
+#: includes/functions-attendance.php:74
+msgid "Today"
+msgstr "Este Dia"
+
+# automatic translation
+#: build/includes/class-widgets.php:110
+#: build/includes/functions-attendance.php:75 includes/class-widgets.php:110
+#: includes/functions-attendance.php:75
+msgid "Yesterday"
+msgstr "El dia de ayer"
+
+# automatic translation
+#: build/includes/class-widgets.php:111
+#: build/includes/functions-attendance.php:76
+#: build/includes/functions-attendance.php:367 includes/class-widgets.php:111
+#: includes/functions-attendance.php:76 includes/functions-attendance.php:367
+msgid "This Month"
+msgstr "Este mes"
+
+# automatic translation
+#: build/includes/class-widgets.php:112
+#: build/includes/functions-attendance.php:77
+#: build/includes/functions-attendance.php:368 includes/class-widgets.php:112
+#: includes/functions-attendance.php:77 includes/functions-attendance.php:368
+msgid "Last Month"
+msgstr "El mes pasado"
+
+# automatic translation
+#: build/includes/class-widgets.php:113
+#: build/includes/functions-attendance.php:78
+#: build/includes/functions-attendance.php:369 includes/class-widgets.php:113
+#: includes/functions-attendance.php:78 includes/functions-attendance.php:369
+msgid "This Quarter"
+msgstr "Este cuarto"
+
+# automatic translation
+#: build/includes/class-widgets.php:114
+#: build/includes/functions-attendance.php:80
+#: build/includes/functions-attendance.php:371 includes/class-widgets.php:114
+#: includes/functions-attendance.php:80 includes/functions-attendance.php:371
+msgid "This Year"
+msgstr "Este año"
+
+# automatic translation
+#: build/includes/class-widgets.php:115 includes/class-widgets.php:115
+msgid "Not enough data"
+msgstr "No hay suficientes datos"
+
+# automatic translation
+#: build/includes/class-widgets.php:116 build/views/new-attendance.php:34
+#: includes/class-widgets.php:116 views/new-attendance.php:34
+msgid "Loading data"
+msgstr "Cargando datos"
+
+# automatic translation
+#: build/includes/class-widgets.php:117 includes/class-widgets.php:117
+msgid "No shift is assigned for current time"
+msgstr "No hay turno asignado para la hora actual"
+
+# automatic translation
+#: build/includes/class-widgets.php:120 includes/class-widgets.php:120
+msgid "Your checkin entry is saved. Thank you for checkin."
+msgstr "Su entrada de registro está guardada. Gracias por registrarte."
+
+# automatic translation
+#: build/includes/class-widgets.php:121 includes/class-widgets.php:121
+msgid "Your checkout entry is saved. Thank you."
+msgstr "Su entrada de pago está guardada. Gracias."
+
+# automatic translation
+#: build/includes/class-widgets.php:122 includes/class-widgets.php:122
+msgid "You must select a shift first!"
+msgstr "¡Debes seleccionar un turno primero!"
+
+# automatic translation
+#: build/includes/emails/class-email-att-reminder.php:19
+#: includes/emails/class-email-att-reminder.php:19
+msgid "Sends email to remind for checking-in"
+msgstr "Envía un correo electrónico para recordar el check-in"
+
+# automatic translation
+#: build/includes/emails/class-email-att-reminder.php:21
+#: build/includes/emails/class-email-att-reminder.php:22
+#: includes/emails/class-email-att-reminder.php:21
+#: includes/emails/class-email-att-reminder.php:22
+msgid "Attendance Reminder for {date}"
+msgstr "Recordatorio de asistencia para {fecha}"
+
+# automatic translation
+#: build/includes/emails/class-email-att-reminder.php:71
+#: includes/emails/class-email-att-reminder.php:71
+msgid "Template Tags"
+msgstr "Etiquetas de plantilla"
+
+# automatic translation
+#: build/includes/emails/class-email-att-reminder.php:73
+#: includes/emails/class-email-att-reminder.php:73
+msgid ""
+"You may use these template tags inside subject, heading, body and those "
+"will be replaced by original values"
+msgstr ""
+"Puede usar estas etiquetas de plantilla dentro del asunto, encabezado, "
+"cuerpo y esos serán reemplazados por valores originales"
+
+# automatic translation
+#: build/includes/functions-attendance.php:79
+#: build/includes/functions-attendance.php:370
+#: includes/functions-attendance.php:79 includes/functions-attendance.php:370
+msgid "Last Quarter"
+msgstr "Último cuarto"
+
+# automatic translation
+#: build/includes/functions-attendance.php:81
+#: build/includes/functions-attendance.php:372
+#: includes/functions-attendance.php:81 includes/functions-attendance.php:372
+msgid "Last Year"
+msgstr "El año pasado"
+
+# automatic translation
+#: build/includes/functions-attendance.php:82
+#: build/includes/functions-attendance.php:373
+#: includes/functions-attendance.php:82 includes/functions-attendance.php:373
+msgid "Custom"
+msgstr "Disfraz"
+
+# automatic translation
+#: build/includes/functions-attendance.php:695
+#: includes/functions-attendance.php:695
+msgid "Invalid date supplied"
+msgstr "Fecha suministrada no es válida"
+
+# automatic translation
+#: build/includes/functions-attendance.php:897
+#: build/includes/functions-attendance.php:973
+#: includes/functions-attendance.php:897 includes/functions-attendance.php:973
+msgid ""
+"Time range for the shift is invalid. Please choose shift length less than "
+"24hrs"
+msgstr ""
+"El intervalo de tiempo para el turno no es válido. Elija la duración del "
+"turno de menos de 24 horas"
+
+# automatic translation
+#: build/includes/functions-attendance.php:907
+#: build/includes/functions-attendance.php:987
+#: includes/functions-attendance.php:907 includes/functions-attendance.php:987
+msgid ""
+"A shift with the same name/time range is already exists. Duplicate shift is "
+"not allowed."
+msgstr ""
+"Ya existe un turno con el mismo nombre/intervalo de tiempo. No se permite "
+"duplicar turno."
+
+# automatic translation
+#: build/includes/functions-attendance.php:934
+#: includes/functions-attendance.php:934
+msgid "Could not create shift."
+msgstr "No se pudo crear el turno."
+
+# automatic translation
+#: build/includes/functions-attendance.php:1008
+#: includes/functions-attendance.php:1008
+msgid "Could not update shift."
+msgstr "No se pudo actualizar el turno."
+
+# automatic translation
+#: build/includes/functions-attendance.php:1243
+#: includes/functions-attendance.php:1243
+msgid "User already assigned to a shift. Do you want to overwrite?"
+msgstr "Usuario ya asignado a un turno. ¿Quieres sobrescribir?"
+
+# automatic translation
+#: build/includes/functions-attendance.php:1249
+#: includes/functions-attendance.php:1249
+msgid "User already assigned to the shift before."
+msgstr "Usuario ya asignado al turno anterior."
+
+# automatic translation
+#: build/includes/functions-shift.php:106 includes/functions-shift.php:106
+msgid "You are "
+msgstr "Usted está"
+
+# automatic translation
+#: build/includes/functions-shift.php:106 includes/functions-shift.php:106
+msgid "The user is "
+msgstr "el usuario es"
+
+# automatic translation
+#: build/includes/functions-shift.php:108 includes/functions-shift.php:108
+msgid "Logging not permitted because %s not assigned to any shift."
+msgstr "Registro no permitido porque %s no está asignado a ningún turno."
+
+# automatic translation
+#: build/includes/functions-shift.php:122 includes/functions-shift.php:122
+msgid "Sorry !!! No shift found."
+msgstr "Lo siento !!! No se encontró ningún turno."
+
+# automatic translation
+#: build/includes/functions-shift.php:157 includes/functions-shift.php:157
+msgid "You are not allowed for this feature. Please contact admin."
+msgstr ""
+"No tiene permiso para esta función. Póngase en contacto con el "
+"administrador."
+
+# automatic translation
+#: build/includes/functions-shift.php:166 includes/functions-shift.php:166
+msgid "Future time is not allowed."
+msgstr "El tiempo futuro no está permitido."
+
+# automatic translation
+#: build/includes/functions-shift.php:172 includes/functions-shift.php:172
+msgid "Date shift is not found."
+msgstr "No se encuentra el cambio de fecha."
+
+# automatic translation
+#: build/includes/functions-shift.php:194 includes/functions-shift.php:194
+msgid "Too early checkin after last checkout."
+msgstr "Check-in demasiado temprano después de la última salida."
+
+# automatic translation
+#: build/includes/functions-shift.php:238 includes/functions-shift.php:238
+msgid "Checkout must be prior to checkin"
+msgstr "El check-out debe ser antes del check-in"
+
+# automatic translation
+#: build/includes/updates/update-1.1.0.php:48
+#: includes/updates/update-1.1.0.php:48
+msgid "Office Shift"
+msgstr "Turno de oficina"
+
+# automatic translation
+#: build/includes/wp-background-process.php:425
+#: includes/wp-background-process.php:425
+msgid "Every %d Minutes"
+msgstr "Cada %d minutos"
+
+# automatic translation
+#: build/views/att-report-employee.php:3 views/att-report-employee.php:3
+msgid "Attendance Report"
+msgstr "Reporte de asistencia"
+
+# automatic translation
+#: build/views/att-report-employee.php:19
+#: build/views/attendance-reporting.php:96 views/att-report-employee.php:19
+#: views/attendance-reporting.php:96
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+# automatic translation
+#: build/views/attendance-reporting.php:47 views/attendance-reporting.php:47
+msgid "Attendance Reports"
+msgstr "Informes de asistencia"
+
+# automatic translation
+#: build/views/attendance-reporting.php:105 views/attendance-reporting.php:105
+msgid "Total"
+msgstr "Total"
+
+# automatic translation
+#: build/views/attendance-reporting.php:109
+#: build/views/tab-employee-single-status.php:184
+#: views/attendance-reporting.php:109 views/tab-employee-single-status.php:184
+msgid "Comment"
+msgstr "Comentario"
+
+# automatic translation
+#: build/views/edit-attendance.php:7 build/views/new-attendance.php:7
+#: views/edit-attendance.php:7 views/new-attendance.php:7
+msgid "Date: "
+msgstr "Fecha:"
+
+# automatic translation
+#: build/views/export.php:6 views/export.php:6
+msgid "Export"
+msgstr "Exportar"
+
+# automatic translation
+#: build/views/import.php:10 views/import.php:10
+msgid "Type"
+msgstr "Escribe"
+
+# automatic translation
+#: build/views/import.php:20 views/import.php:20
+msgid "Select File"
+msgstr "Seleccione Archivo"
+
+# automatic translation
+#: build/views/import.php:56 views/import.php:56
+msgid "File type not supported"
+msgstr "Tipo de archivo no compatible"
+
+# automatic translation
+#: build/views/js-templates/attendance-new.php:7
+#: views/js-templates/attendance-new.php:7
+msgid "Check All as Present &nbsp;"
+msgstr "Marcar todo como presente &nbsp;"
+
+# automatic translation
+#: build/views/js-templates/attendance-new.php:8
+#: views/js-templates/attendance-new.php:8
+msgid "Check All as Absent &nbsp;"
+msgstr "Marcar todo como ausente &nbsp;"
+
+# automatic translation
+#: build/views/js-templates/attendance-new.php:20
+#: views/js-templates/attendance-new.php:20
+msgid "Check In"
+msgstr "Registrarse"
+
+# automatic translation
+#: build/views/js-templates/attendance-new.php:21
+#: views/js-templates/attendance-new.php:21
+msgid "Check Out"
+msgstr "Verificar"
+
+# automatic translation
+#: build/views/js-templates/attendance-new.php:22
+#: views/js-templates/attendance-new.php:22
+msgid "Working Time"
+msgstr "Tiempo de trabajo"
+
+# automatic translation
+#: build/views/manage-shifts.php:2 views/manage-shifts.php:2
+msgid "Manage Shifts"
+msgstr "Administrar turnos"
+
+# automatic translation
+#: build/views/manage-shifts.php:6 views/manage-shifts.php:6
+msgid "<p>Shift support is currently disabled.</p>"
+msgstr "<p>El soporte de turnos está actualmente deshabilitado.</p>"
+
+# automatic translation
+#: build/views/manage-shifts.php:8 views/manage-shifts.php:8
+msgid "To enable please go to <a href=\"%s\">Shift Settings</a>"
+msgstr "Para habilitar, vaya a <a href=\"%s\">Configuración de turnos</a>"
+
+# automatic translation
+#: build/views/manage-shifts.php:14 views/manage-shifts.php:14
+msgid "Saved Changes"
+msgstr "Cambios guardados"
+
+# automatic translation
+#: build/views/manage-shifts.php:20 views/manage-shifts.php:20
+msgid "Shifts copied to next week successfully"
+msgstr "Los turnos se copiaron correctamente a la próxima semana"
+
+# automatic translation
+#: build/views/manage-shifts.php:30 views/manage-shifts.php:30
+msgid "Shift List"
+msgstr "Lista de turnos"
+
+# automatic translation
+#: build/views/manage-shifts.php:36 views/manage-shifts.php:36
+msgid "Shift Title"
+msgstr "Título del turno"
+
+# automatic translation
+#: build/views/manage-shifts.php:36 views/manage-shifts.php:36
+msgid "Done"
+msgstr "Hecho"
+
+# automatic translation
+#: build/views/manage-shifts.php:40 views/manage-shifts.php:40
+msgid "Start"
+msgstr "comienzo"
+
+# automatic translation
+#: build/views/manage-shifts.php:41 views/manage-shifts.php:41
+msgid "End"
+msgstr "Final"
+
+# automatic translation
+#: build/views/manage-shifts.php:43 views/manage-shifts.php:43
+msgid "Cancel"
+msgstr "Cancelar"
+
+# automatic translation
+#: build/views/manage-shifts.php:58 views/manage-shifts.php:58
+msgid "New Shift"
+msgstr "nuevo turno"
+
+# automatic translation
+#: build/views/manage-shifts.php:66 views/manage-shifts.php:66
+msgid "Assign Shifts"
+msgstr "Asignar turnos"
+
+# automatic translation
+#: build/views/manage-shifts.php:70 views/manage-shifts.php:70
+msgid "Bulk Action"
+msgstr "Acción masiva"
+
+# automatic translation
+#: build/views/manage-shifts.php:71 views/manage-shifts.php:71
+msgid "Delete Shifts"
+msgstr "Eliminar turnos"
+
+# automatic translation
+#: build/views/manage-shifts.php:73 views/manage-shifts.php:73
+msgid "Apply"
+msgstr "Aplicar"
+
+# automatic translation
+#: build/views/manage-shifts.php:77 views/manage-shifts.php:77
+msgid "Prev"
+msgstr "Anterior"
+
+# automatic translation
+#: build/views/manage-shifts.php:77 views/manage-shifts.php:77
+msgid "Next"
+msgstr "próximo"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:71
+#: views/tab-employee-single-status.php:71
+msgid "Print Summary"
+msgstr "Imprimir resumen"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:76
+#: build/views/tab-employee-single-status.php:77
+#: views/tab-employee-single-status.php:76
+#: views/tab-employee-single-status.php:77
+msgid "Summary"
+msgstr "Resumen"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:84
+#: views/tab-employee-single-status.php:84
+msgid "Total Working Days"
+msgstr "Días laborables totales"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:91
+#: views/tab-employee-single-status.php:91
+msgid "Days Worked"
+msgstr "Días trabajados"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:106
+#: views/tab-employee-single-status.php:106
+msgid "Time Off"
+msgstr "tiempo libre"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:116
+#: build/views/tab-employee-single-status.php:325
+#: views/tab-employee-single-status.php:116
+#: views/tab-employee-single-status.php:325
+msgid "Late Check-In"
+msgstr "Tarde para registarse"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:121
+#: views/tab-employee-single-status.php:121
+msgid "Early Check-Out"
+msgstr "Salida anticipada"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:130
+#: build/views/tab-employee-single-status.php:183
+#: views/tab-employee-single-status.php:130
+#: views/tab-employee-single-status.php:183
+msgid "Time Worked"
+msgstr "Tiempo trabajado"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:135
+#: build/views/tab-employee-single-status.php:340
+#: views/tab-employee-single-status.php:135
+#: views/tab-employee-single-status.php:340
+msgid "Overtime"
+msgstr "Con el tiempo"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:140
+#: views/tab-employee-single-status.php:140
+msgid "Present Percentage"
+msgstr "Porcentaje actual"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:145
+#: views/tab-employee-single-status.php:145
+msgid "Missing Checkout"
+msgstr "Pago faltante"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:151
+#: views/tab-employee-single-status.php:151
+msgid "Avg Time Worked"
+msgstr "Tiempo promedio trabajado"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:156
+#: views/tab-employee-single-status.php:156
+msgid "Avg Check-In Time"
+msgstr "Tiempo promedio de check-in"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:161
+#: views/tab-employee-single-status.php:161
+msgid "Avg Check-Out Time"
+msgstr "Tiempo promedio de salida"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:169
+#: views/tab-employee-single-status.php:169
+msgid "Insufficient data to generate report."
+msgstr "Datos insuficientes para generar el informe."
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:185
+#: views/tab-employee-single-status.php:185
+msgid "Log"
+msgstr "Tronco"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:231
+#: views/tab-employee-single-status.php:231
+msgid "View Log"
+msgstr "Ver registro"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:320
+#: views/tab-employee-single-status.php:320
+msgid "Early Check-In"
+msgstr "Registro temprano"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:335
+#: views/tab-employee-single-status.php:335
+msgid "Early  Check-Out"
+msgstr "Salida anticipada"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:350
+#: views/tab-employee-single-status.php:350
+msgid "Holiday"
+msgstr "Fiesta"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:355
+#: views/tab-employee-single-status.php:355
+msgid "Time off"
+msgstr "tiempo libre"
+
+# automatic translation
+#: build/views/tab-employee-single-status.php:461
+#: views/tab-employee-single-status.php:461
+msgid " Date :"
+msgstr " Fecha :"
+
+# automatic translation
+#: build/views/widget-employee-self-service.php:21
+#: views/widget-employee-self-service.php:21
+msgid "Shift Time"
+msgstr "Tiempo de turno"
+
+# automatic translation
+#: build/views/widget-employee-self-service.php:29
+#: views/widget-employee-self-service.php:29
+msgid "Shift Duration Start"
+msgstr "Turno Duración Comienzo"
+
+# automatic translation
+#: build/views/widget-employee-self-service.php:37
+#: views/widget-employee-self-service.php:37
+msgid "Shift Duration End"
+msgstr "Finalización de la duración del turno"
+
+# automatic translation
+#. Plugin Name of the plugin/theme
+msgid "WP ERP - Attendance"
+msgstr "WP ERP - Asistencia"
+
+# automatic translation
+#. Plugin URI of the plugin/theme
+msgid "http://wperp.com/downloads/attendance"
+msgstr "http://wperp.com/downloads/attendance"
+
+# automatic translation
+#. Description of the plugin/theme
+msgid "Employee Attendance Add-On for WP ERP"
+msgstr "Complemento de asistencia de empleados para WP ERP"
+
+# automatic translation
+#. Author of the plugin/theme
+msgid "weDevs"
+msgstr "weDevs"
+
+# automatic translation
+#. Author URI of the plugin/theme
+msgid "http://wedevs.com"
+msgstr "http://wedevs.com"
