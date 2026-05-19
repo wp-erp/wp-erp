@@ -194,15 +194,27 @@ class Client {
      * @return array Normalized weather data.
      */
     public static function format_response( $raw ) {
+        $hourly_units     = isset( $raw['hourly_units'] ) ? $raw['hourly_units'] : [];
+        $temperature_unit = '';
+
+        // The unit may live under any temperature-bearing field, depending on
+        // which hourly variables were requested.
+        foreach ( [ 'temperature_2m', 'apparent_temperature', 'dew_point_2m' ] as $temp_field ) {
+            if ( ! empty( $hourly_units[ $temp_field ] ) ) {
+                $temperature_unit = $hourly_units[ $temp_field ];
+                break;
+            }
+        }
+
         return [
             'latitude'         => isset( $raw['latitude'] ) ? (float) $raw['latitude'] : null,
             'longitude'        => isset( $raw['longitude'] ) ? (float) $raw['longitude'] : null,
             'elevation'        => isset( $raw['elevation'] ) ? (float) $raw['elevation'] : null,
             'timezone'         => isset( $raw['timezone'] ) ? $raw['timezone'] : '',
-            'temperature_unit' => isset( $raw['hourly_units']['temperature_2m'] ) ? $raw['hourly_units']['temperature_2m'] : '',
+            'temperature_unit' => $temperature_unit,
             'fetched_at'       => gmdate( 'c' ),
             'hourly'           => isset( $raw['hourly'] ) ? $raw['hourly'] : [],
-            'hourly_units'     => isset( $raw['hourly_units'] ) ? $raw['hourly_units'] : [],
+            'hourly_units'     => $hourly_units,
         ];
     }
 }
