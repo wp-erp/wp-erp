@@ -144,47 +144,6 @@ a.erp-cta-book-a-call:active {
   line-height: 1;
 }
 
-/* ── Headway wrapper ─────────────────────────────────────────── */
-.erp-headway-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-/* button is the click target; ensure button-resets so it matches the anchors */
-button.erp-headway-trigger {
-  position: relative;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  appearance: none;
-  -webkit-appearance: none;
-}
-/* anchor element Headway attaches its badgeCont to — pinned top-right of button */
-.erp-headway-anchor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-/* Headway badgeCont floats from the anchor so the red dot sits on the corner */
-.erp-headway-anchor .HW_badge_cont {
-  position: absolute !important;
-  top: -10px !important;
-  right: -10px !important;
-  left: auto !important;
-  bottom: auto !important;
-  width: 20px !important;
-  height: 20px !important;
-  pointer-events: auto !important;
-  z-index: 10;
-}
-.erp-headway-anchor .HW_badge {
-  top: 2px !important;
-  left: 2px !important;
-}
 
 /* ── Hover-reveal icon buttons (Feedback / Support) ─────────── */
 .erp-cta-hover-btn {
@@ -241,10 +200,7 @@ a.erp-review-link:hover {
   text-decoration: underline;
 }
 
-/* ── HW_frame position fix ──────────────────────────────────── */
-.erp-page-title--with-actions #HW_frame_cont {
-  top: 78px !important;
-}
+
 .erp-overview h2 {
   margin-top: 13px;
   font-weight: bold !important;
