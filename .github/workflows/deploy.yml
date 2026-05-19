@@ -52,8 +52,6 @@ jobs:
           ASSETS_DIR: .wordpress-org
 
       - name: Attach ZIP to GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ steps.deploy.outputs.zip-path }}
+        run: gh release upload "${{ github.ref_name }}" "${{ steps.deploy.outputs.zip-path }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
