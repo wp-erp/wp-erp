@@ -1,15 +1,26 @@
-config.codekit
-.idea
-.codekit-cache
-# Composer
-/vendor/
+# Dependencies
+/node_modules
+/vendor
 /vendor copy/
-node_modules
+
+# Build artifacts
 build
+
+# OS / IDE
 .DS_Store
-nbproject
-debug.log
+.idea
 .netbeans.xml
-plugin-deploy.sh
+nbproject
+config.codekit
+.codekit-cache
+
+# Env / secrets
+.env
+.env.example
+
+# Logs / temp
+debug.log
 phpcs-report.txt
-.nvmrc
+
+# Local dev scripts
+plugin-deploy.sh
