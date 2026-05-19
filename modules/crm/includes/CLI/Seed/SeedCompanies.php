@@ -34,17 +34,23 @@ class SeedCompanies extends AbstractCrmSeeder {
         $cities    = CrmDataProvider::cities();
         $streets   = CrmDataProvider::streets();
 
-        $progress    = $this->progress( 'Creating companies', min( $count, count( $companies ) ) );
+        $progress    = $this->progress( 'Creating companies', $count );
         $created_ids = [];
         $fail_count  = 0;
 
-        for ( $i = 0; $i < $count && $i < count( $companies ); $i++ ) {
-            $company_data = $companies[ $i ];
+        for ( $i = 0; $i < $count; $i++ ) {
+            $template     = $companies[ $i % count( $companies ) ];
+            $cycle        = (int) floor( $i / count( $companies ) );
+            $company_data = [
+                'name'    => $cycle > 0 ? $template['name'] . ' ' . ( $cycle + 1 ) : $template['name'],
+                'website' => $template['website'],
+            ];
             $city_data    = $this->random_element( $cities );
 
             // Generate a unique email for the company.
             $email_domain = str_replace( [ 'https://', 'http://', 'www.' ], '', $company_data['website'] );
-            $email        = 'info@' . str_replace( '.example.com', '.test', $email_domain );
+            $email_base   = str_replace( '.example.com', '.test', $email_domain );
+            $email        = $cycle > 0 ? 'info' . ( $cycle + 1 ) . '@' . $email_base : 'info@' . $email_base;
 
             $data = [
                 'type'       => 'company',
