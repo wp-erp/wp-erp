@@ -29,7 +29,7 @@ class ApiRegistrar {
             '\WeDevs\ERP\API\UtilityController',
         ];
 
-        if ( erp_is_module_active( 'CRM' ) ) {
+        if ( erp_is_module_active( 'crm' ) ) {
             $controllers = array_merge( $controllers, [
                 '\WeDevs\ERP\API\Contacts_Controller',
                 '\WeDevs\ERP\API\Contacts_Groups_Controller',
