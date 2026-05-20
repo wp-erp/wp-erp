@@ -183,3 +183,4 @@ var i18nJSConfig = {
 };
 
 module.exports = [mainConfig, i18nJSConfig];
+
