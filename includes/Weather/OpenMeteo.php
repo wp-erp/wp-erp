@@ -125,8 +125,16 @@ class OpenMeteo {
      * @return array|\WP_Error
      */
     public function validate_settings( $options ) {
-        $tier = isset( $options['erp_weather_api_tier'] ) ? $options['erp_weather_api_tier'] : 'free';
-        $key  = isset( $options['erp_weather_api_key'] ) ? trim( $options['erp_weather_api_key'] ) : '';
+        $enabled = isset( $options['erp_weather_enable'] ) ? $options['erp_weather_enable'] : '';
+        $tier    = isset( $options['erp_weather_api_tier'] ) ? $options['erp_weather_api_tier'] : '';
+        $key     = isset( $options['erp_weather_api_key'] ) ? trim( $options['erp_weather_api_key'] ) : '';
+
+        if ( 'yes' === $enabled && ! in_array( $tier, [ 'free', 'paid' ], true ) ) {
+            return new \WP_Error(
+                'erp_weather_api_tier_required',
+                __( 'Please select an API Tier (Free or Paid) when the Open-Meteo integration is enabled.', 'erp' )
+            );
+        }
 
         if ( 'paid' === $tier && '' === $key ) {
             return new \WP_Error(
@@ -168,6 +176,15 @@ class OpenMeteo {
         (function() {
             var pollTimer = null;
 
+            // Weather dropdowns whose Vue v-model needs to be set directly to
+            // sidestep a track-by mismatch in the shared MultiSelect wrapper
+            // (which would otherwise blank the field on any change).
+            var weatherDropdownIds = [
+                'erp-erp_weather_api_tier',
+                'erp-erp_weather_default_temp_unit',
+                'erp-erp_weather_fetch_interval'
+            ];
+
             function toggleApiKeyField() {
                 var tierEl = document.getElementById('erp-erp_weather_api_tier');
                 if ( ! tierEl ) {
@@ -192,6 +209,69 @@ class OpenMeteo {
                     formGroup.style.display = isPaid ? '' : 'none';
                 }
             }
+
+            function findVueInstance( el, name ) {
+                var cur = el && el.__vue__;
+                for ( var i = 0; cur && i < 8; i++ ) {
+                    if ( cur.$options && cur.$options.name === name ) {
+                        return cur;
+                    }
+                    cur = cur.$parent;
+                }
+                cur = el && el.__vue__;
+                for ( var j = 0; cur && j < 8; j++ ) {
+                    if ( cur.$options && cur.$options.name === name ) {
+                        return cur;
+                    }
+                    cur = ( cur.$children && cur.$children[ 0 ] ) || null;
+                }
+                return null;
+            }
+
+            function onCaptureClick( e ) {
+                var optionEl = e.target && e.target.closest ? e.target.closest( '.multiselect__option' ) : null;
+                if ( ! optionEl ) {
+                    return;
+                }
+
+                var multiselectEl = optionEl.closest( '.multiselect' );
+                if ( ! multiselectEl || weatherDropdownIds.indexOf( multiselectEl.id ) === -1 ) {
+                    return;
+                }
+
+                var inner = findVueInstance( multiselectEl, 'Multiselect' );
+                if ( ! inner || ! Array.isArray( inner.filteredOptions ) ) {
+                    return;
+                }
+
+                var option = inner.filteredOptions[ inner.pointer ];
+                if ( ! option || option.$isLabel || option.$isDisabled || option.isTag ) {
+                    return;
+                }
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                var wrapper = findVueInstance( multiselectEl, 'MultiSelect' ) || inner.$parent;
+                if ( ! wrapper || typeof wrapper.$emit !== 'function' ) {
+                    return;
+                }
+
+                var current     = wrapper.value;
+                var sameClicked = current && typeof current === 'object' && current.id === option.id;
+
+                if ( sameClicked ) {
+                    wrapper.$emit( 'input', null );
+                } else {
+                    wrapper.$emit( 'input', { id: option.id, name: option.name } );
+                }
+
+                if ( typeof inner.deactivate === 'function' ) {
+                    inner.deactivate();
+                }
+            }
+
+            document.addEventListener( 'click', onCaptureClick, true );
 
             var observer = new MutationObserver(function() {
                 var tierEl = document.getElementById('erp-erp_weather_api_tier');
