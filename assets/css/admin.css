@@ -5732,36 +5732,36 @@ div.erp-nav-container.--show-secondary .-secondary {
   .erp-dashboard-banner {
     padding: 20px;
   }
-  
+
   .dashboard-header {
     flex-direction: column;
     gap: 15px;
     align-items: flex-start;
   }
-  
+
   .summary-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .promo-banner {
     flex-direction: column;
     text-align: center;
     gap: 20px;
   }
-  
+
   .promo-buttons {
     justify-content: center;
   }
-  
+
   .time-info {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .digital-clock {
     font-size: 28px;
   }
@@ -5771,20 +5771,20 @@ div.erp-nav-container.--show-secondary .-secondary {
   .summary-card {
     padding: 15px;
   }
-  
+
   .dashboard-card {
     padding: 15px;
   }
-  
+
   .promo-banner {
     padding: 20px;
   }
-  
+
   .promo-sticker {
     width: 100px;
     height: 100px;
   }
-  
+
   .discount-text {
     font-size: 16px;
   }
