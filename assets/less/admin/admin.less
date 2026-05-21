@@ -572,9 +572,9 @@ table.erp-settings-table {
         .col-1{ width: 33.33%;    }
         .col-2{ width: 50%;        }
         .col-3{ width: 83.33%;    }
-        .col-4{ width: 100%;    }
-        .col-5{ width: 100%;    }
-        .col-6{ width: 100%;      }
+        .col-4{ width: 100%; float: none; }
+        .col-5{ width: 100%; float: none; }
+        .col-6{ width: 100%; float: none; }
 
         .row .col-2:last-of-type{
             width: 100%;
@@ -588,11 +588,11 @@ table.erp-settings-table {
     // small devices
     @media all and (max-width:650px){
         .col-1{ width: 50%;        }
-        .col-2{ width: 100%;    }
-        .col-3{ width: 100%;    }
-        .col-4{ width: 100%;    }
-        .col-5{ width: 100%;    }
-        .col-6{ width: 100%;      }
+        .col-2{ width: 100%; float: none; }
+        .col-3{ width: 100%; float: none; }
+        .col-4{ width: 100%; float: none; }
+        .col-5{ width: 100%; float: none; }
+        .col-6{ width: 100%; float: none; }
     }
 }
 
@@ -1087,6 +1087,15 @@ table.audit-log-table {
             left: 5%;
             right: 5%;
         }
+    }
+
+    @media @tablet-down {
+        position: absolute;
+        top: 60px;
+        bottom: auto;
+        left: 2%;
+        right: 2%;
+        min-height: 80vh;
     }
 
 
