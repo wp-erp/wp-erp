@@ -1901,7 +1901,14 @@ table.widefat.cfi-table {
             align-items: center;
             gap: 6px;
 
-            select#erp-crm-feed-log-type {
+            // Override the desktop `input { margin-left: 15px }` rule that
+            // breaks the flex width math and pushes fields out of the modal.
+            input {
+                margin-left: 0;
+            }
+
+            select#erp-crm-feed-log-type,
+            select.erp-left {
                 float: none;
                 width: 100%;
                 max-width: 100%;
@@ -1911,7 +1918,28 @@ table.widefat.cfi-table {
             input.erp-time-field {
                 float: none;
                 width: calc(50% - 3px);
+                max-width: calc(50% - 3px);
+                box-sizing: border-box;
             }
+
+            // Assign-contact + invite-contact select2 dropdowns.
+            .select2-container {
+                width: 100% !important;
+            }
+        }
+
+        // Multi-select chips wrap instead of overflowing on narrow screens.
+        .select2-container--default.select2-container--focus .select2-selection--multiple,
+        .select2-container--default.select2-container--focus .select2-selection--single,
+        span.select2-selection--multiple,
+        span.select2-selection--single {
+            height: auto;
+            min-height: 32px;
+        }
+
+        // Trix editor toolbar wraps instead of clipping.
+        trix-toolbar .trix-button-row {
+            flex-wrap: wrap;
         }
     }
 }
