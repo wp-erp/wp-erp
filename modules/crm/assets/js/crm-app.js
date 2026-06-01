@@ -248,6 +248,12 @@ Vue.component( 'log-activity', {
 
     compiled: function() {
         this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
+
+        var $select = jQuery( this.$el ).find( 'select#erp-crm-feed-log-type' );
+        if ( $select.length && jQuery.fn.select2 ) {
+            var $parent = $select.closest( '.content-container, .erp-modal' );
+            $select.select2({ dropdownParent: $parent.length ? $parent : jQuery('body') });
+        }
     },
 
     events: {

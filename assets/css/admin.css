@@ -27,223 +27,8 @@
 .erp-overview .erp-grid-container .col-3:last-child {
   padding-right: 0;
 }
-/* ── ERP Dashboard Title Bar ─────────────────────────────────── */
 .erp-overview .erp-page-title {
   margin-bottom: 10px !important;
-}
-
-.erp-page-title--with-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.erp-title-text {
-  font-size: 1.3em;
-  font-weight: 600;
-}
-
-.erp-title-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ── Book a Call CTA ────────────────────────────────────────── */
-.erp-cta-book-a-call {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  background: #1a1a1a;
-  border-radius: 50px;
-  padding: 5px 14px 5px 5px;
-  text-decoration: none;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.2s;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.erp-cta-book-a-call:hover {
-  background: #009DDA;
-  color: #fff;
-}
-a.erp-cta-book-a-call:focus,
-a.erp-cta-book-a-call:focus-visible,
-a.erp-cta-book-a-call:active {
-  color: #fff !important;
-  outline: 0 !important;
-  box-shadow: 0 0 0 2px #009DDA !important;
-}
-
-.erp-cta-avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.erp-cta-avatar--host {
-  width: 30px;
-  height: 30px;
-  background: #fff;
-  border: 1.5px solid #444;
-  margin-right: 8px;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-.erp-cta-book-a-call:hover .erp-cta-avatar--host {
-  border-color: #007aad;
-}
-
-/* "+" separator — hidden by default */
-.erp-cta-plus {
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.6);
-  width: 0;
-  overflow: hidden;
-  opacity: 0;
-  margin: 0;
-  transition: width 0.2s ease, opacity 0.15s ease, margin 0.2s ease;
-  line-height: 1;
-}
-.erp-cta-book-a-call:hover .erp-cta-plus {
-  width: 10px;
-  opacity: 1;
-  margin: 0 3px;
-}
-
-/* "You" avatar — hidden by default, slides in on hover */
-.erp-cta-avatar--you {
-  width: 0;
-  height: 30px;
-  background: #fff;
-  border-radius: 50%;
-  overflow: hidden;
-  opacity: 0;
-  margin-right: 0;
-  transition: width 0.25s ease, opacity 0.2s ease, margin-right 0.2s ease;
-  font-size: 11px;
-  font-weight: 700;
-  color: #555;
-  line-height: 30px;
-  text-align: center;
-}
-.erp-cta-book-a-call:hover .erp-cta-avatar--you {
-  width: 30px;
-  opacity: 1;
-  margin-right: 8px;
-}
-
-.erp-cta-label {
-  line-height: 1;
-}
-
-/* ── Headway wrapper ─────────────────────────────────────────── */
-.erp-headway-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-/* button is the click target; ensure button-resets so it matches the anchors */
-button.erp-headway-trigger {
-  position: relative;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  appearance: none;
-  -webkit-appearance: none;
-}
-/* anchor element Headway attaches its badgeCont to — pinned top-right of button */
-.erp-headway-anchor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-/* Headway badgeCont floats from the anchor so the red dot sits on the corner */
-.erp-headway-anchor .HW_badge_cont {
-  position: absolute !important;
-  top: -10px !important;
-  right: -10px !important;
-  left: auto !important;
-  bottom: auto !important;
-  width: 20px !important;
-  height: 20px !important;
-  pointer-events: auto !important;
-  z-index: 10;
-}
-.erp-headway-anchor .HW_badge {
-  top: 2px !important;
-  left: 2px !important;
-}
-
-/* ── Hover-reveal icon buttons (Feedback / Support) ─────────── */
-.erp-cta-hover-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  padding: 7px 10px;
-  border-radius: 20px;
-  border: 1px solid #d0d5db;
-  background: #fff;
-  color: #3c434a;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  overflow: hidden;
-  white-space: nowrap;
-  transition: border-color 0.2s, color 0.2s, padding 0.2s;
-}
-.erp-cta-hover-btn svg {
-  flex-shrink: 0;
-  transition: color 0.2s;
-}
-.erp-cta-hover-label {
-  display: inline-block;
-  max-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-width 0.25s ease, opacity 0.2s ease, margin-left 0.2s ease;
-  margin-left: 0;
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-}
-.erp-cta-hover-btn:hover {
-  padding: 7px 14px;
-  border-color: #009DDA;
-  color: #009DDA;
-}
-.erp-cta-hover-btn:hover .erp-cta-hover-label {
-  max-width: 120px;
-  opacity: 1;
-  margin-left: 5px;
-}
-
-/* ── Footer review link ─────────────────────────────────────── */
-a.erp-review-link {
-  color: #009DDA;
-  text-decoration: none;
-  font-weight: 500;
-}
-a.erp-review-link:hover {
-  text-decoration: underline;
-}
-
-/* ── HW_frame position fix ──────────────────────────────────── */
-.erp-page-title--with-actions #HW_frame_cont {
-  top: 78px !important;
 }
 .erp-overview h2 {
   margin-top: 13px;
@@ -2027,6 +1812,105 @@ table.widefat.cfi-table {
 .trix-button-group--file-tools {
   display: none !important;
 }
+/* Issue #553: CRM Mobile Responsiveness Fixes */
+@media screen and (max-width: 782px) {
+  .erp-employee-form .right-column .erp-employee-modal-right,
+  .erp-customer-form .right-column .erp-employee-modal-right,
+  .erp-employee-form .right-column .erp-crm-modal-right,
+  .erp-customer-form .right-column .erp-crm-modal-right {
+    display: inline-grid;
+  }
+  .erp-employee-form .left-column,
+  .erp-customer-form .left-column {
+    float: none;
+    width: 100%;
+    min-width: unset;
+  }
+  .erp-employee-form .right-column,
+  .erp-customer-form .right-column {
+    float: none;
+    width: 100%;
+    min-width: unset;
+  }
+  .erp-crm-task-single {
+    width: 70%;
+    left: 15%;
+    right: 15%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime {
+    display: grid;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p {
+    width: 100%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--multiple,
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--single {
+    height: auto;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification {
+    display: inline-grid;
+    width: 100%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type,
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-allow,
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-via {
+    width: 100%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type {
+    border-right: none;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before {
+    padding-left: 5px;
+    width: 100%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type select,
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-via select,
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before select {
+    width: 100%;
+    max-width: 100%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-all-day {
+    width: 100%;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    display: contents;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity p input {
+    margin-left: 0;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity p select#erp-crm-feed-log-type,
+  .erp-crm-new-schedule-wrapper .feed-log-activity p select.erp-left {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity p input.erp-date-field,
+  .erp-crm-new-schedule-wrapper .feed-log-activity p input.erp-time-field {
+    float: none;
+    width: calc(50% - 3px);
+    max-width: calc(50% - 3px);
+    box-sizing: border-box;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity p .select2-container {
+    width: 100% !important;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity .select2-container--default.select2-container--focus .select2-selection--multiple,
+  .erp-crm-new-schedule-wrapper .feed-log-activity .select2-container--default.select2-container--focus .select2-selection--single,
+  .erp-crm-new-schedule-wrapper .feed-log-activity span.select2-selection--multiple,
+  .erp-crm-new-schedule-wrapper .feed-log-activity span.select2-selection--single {
+    height: auto;
+    min-height: 32px;
+  }
+  .erp-crm-new-schedule-wrapper .feed-log-activity trix-toolbar .trix-button-row {
+    flex-wrap: wrap;
+  }
+}
 span.red {
   color: #CF0202;
 }
@@ -3103,12 +2987,15 @@ table.erp-settings-table tr:nth-child(odd) td {
   }
   .erp-grid-container .col-4 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .col-5 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .col-6 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .row .col-2:last-of-type {
     width: 100%;
@@ -3123,18 +3010,23 @@ table.erp-settings-table tr:nth-child(odd) td {
   }
   .erp-grid-container .col-2 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .col-3 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .col-4 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .col-5 {
     width: 100%;
+    float: none;
   }
   .erp-grid-container .col-6 {
     width: 100%;
+    float: none;
   }
 }
 .erp .erp-single-container {
@@ -3578,6 +3470,16 @@ table.audit-log-table th.col-date {
     top: 10%;
     left: 5%;
     right: 5%;
+  }
+}
+@media (max-width: 767px) {
+  .erp-modal {
+    position: absolute;
+    top: 60px;
+    bottom: auto;
+    left: 2%;
+    right: 2%;
+    min-height: 80vh;
   }
 }
 .erp-modal.medium {
@@ -5215,621 +5117,5 @@ div.erp-nav-container.--show-secondary .-secondary {
   div.wperp-table-responsive div.table-container > table,
   div.wperp-invoice-table > table {
     width: 782px !important;
-  }
-}
-
-/* ERP Dashboard Banner Styles */
-.erp-dashboard-banner {
-  background: linear-gradient(135deg, #4646F0 0%, #6B73FF 100%);
-  border-radius: 8px;
-  padding: 30px;
-  margin-bottom: 30px;
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.erp-dashboard-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-/* Dashboard Header */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  position: relative;
-  z-index: 2;
-}
-
-.dashboard-title {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0;
-  color: white;
-}
-
-.add-new-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 6px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.add-new-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  color: white;
-  text-decoration: none;
-}
-
-.plus-icon {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-/* Summary Cards */
-.summary-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-  position: relative;
-  z-index: 2;
-}
-
-.summary-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.summary-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-.card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.people-icon {
-  background: rgba(70, 70, 240, 0.1);
-}
-
-.organization-icon {
-  background: rgba(135, 88, 231, 0.1);
-}
-
-.billing-icon {
-  background: rgba(15, 83, 255, 0.1);
-}
-
-.leaving-icon {
-  background: rgba(254, 64, 142, 0.1);
-}
-
-.card-content h3 {
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.card-number {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 700;
-  color: #333;
-}
-
-/* Dashboard Grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-  position: relative;
-  z-index: 2;
-}
-
-.dashboard-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dashboard-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-.card-title {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 10px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.shift-status {
-  background: #f0f0f0;
-  color: #666;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Announcements */
-.announcements-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.announcement-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.announcement-item:hover {
-  background: #e9ecef;
-}
-
-.announcement-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.announcement-content {
-  flex: 1;
-}
-
-.announcement-content h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
-.announcement-date {
-  font-size: 12px;
-  color: #666;
-}
-
-.admin-badge {
-  background: rgba(15, 83, 255, 0.1);
-  color: #0F53FF;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-/* Attendance */
-.attendance-content {
-  text-align: center;
-}
-
-.digital-clock {
-  font-size: 36px;
-  font-weight: 700;
-  color: #4646F0;
-  margin-bottom: 20px;
-  font-family: 'Courier New', monospace;
-}
-
-.time-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.time-item {
-  text-align: center;
-}
-
-.time-label {
-  display: block;
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 4px;
-}
-
-.time-value {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
-.working-status {
-  margin-bottom: 20px;
-}
-
-.status-bar {
-  width: 100%;
-  height: 8px;
-  background: #e9ecef;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.status-progress {
-  height: 100%;
-  background: linear-gradient(90deg, #00B73E, #28a745);
-  border-radius: 4px;
-  transition: width 0.3s ease;
-}
-
-.status-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.working-time {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-}
-
-.status-text.working {
-  color: #00B73E;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.checkout-btn {
-  background: #00B73E;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  width: 100%;
-}
-
-.checkout-btn:hover {
-  background: #28a745;
-}
-
-/* Celebrations */
-.celebrations-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.celebration-section {
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 15px;
-}
-
-.celebration-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.section-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #666;
-  margin: 0 0 10px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.celebration-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.celebration-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.person-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #4646F0;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.person-info {
-  flex: 1;
-}
-
-.person-name {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 2px;
-}
-
-.celebration-date {
-  font-size: 11px;
-  color: #666;
-}
-
-/* Who's on post */
-.people-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.person-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px;
-  background: #f8f9fa;
-  border-radius: 6px;
-  transition: background 0.3s ease;
-}
-
-.person-item:hover {
-  background: #e9ecef;
-}
-
-/* People Status */
-.status-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.status-indicator.present {
-  background: #00B73E;
-}
-
-.status-indicator.absent {
-  background: #dc3545;
-}
-
-.status-indicator.late {
-  background: #ffc107;
-}
-
-.status-label {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
-.status-count {
-  font-size: 16px;
-  font-weight: 700;
-  color: #333;
-}
-
-/* Promotional Banner */
-.promo-banner {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 2;
-  margin-top: 20px;
-}
-
-.promo-content h2 {
-  margin: 0 0 10px 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-}
-
-.promo-content p {
-  margin: 0 0 20px 0;
-  color: #666;
-  font-size: 16px;
-}
-
-.promo-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.promo-btn {
-  padding: 12px 24px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.promo-btn.primary {
-  background: #4646F0;
-  color: white;
-}
-
-.promo-btn.primary:hover {
-  background: #3a3ae0;
-  color: white;
-  text-decoration: none;
-}
-
-.promo-btn.secondary {
-  background: transparent;
-  color: #4646F0;
-  border-color: #4646F0;
-}
-
-.promo-btn.secondary:hover {
-  background: #4646F0;
-  color: white;
-  text-decoration: none;
-}
-
-.promo-sticker {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  background: linear-gradient(135deg, #FE7A43, #FE408E);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-15deg);
-  box-shadow: 0 8px 30px rgba(254, 122, 67, 0.3);
-}
-
-.discount-text {
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.2;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .erp-dashboard-banner {
-    padding: 20px;
-  }
-  
-  .dashboard-header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-  
-  .summary-cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .promo-banner {
-    flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-  
-  .promo-buttons {
-    justify-content: center;
-  }
-  
-  .time-info {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .digital-clock {
-    font-size: 28px;
-  }
-}
-
-@media (max-width: 480px) {
-  .summary-card {
-    padding: 15px;
-  }
-  
-  .dashboard-card {
-    padding: 15px;
-  }
-  
-  .promo-banner {
-    padding: 20px;
-  }
-  
-  .promo-sticker {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .discount-text {
-    font-size: 16px;
   }
 }

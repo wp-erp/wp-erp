@@ -121,9 +121,11 @@ window.wpErpVue = window.wpErpVue || {};
                 vm.$set(key, select.val());
            });
 
+            var $parent = select.closest( '.content-container, .erp-modal' );
             select.select2({
                 placeholder: jQuery(this.el).attr('data-placeholder'),
-                allowClear: true
+                allowClear: true,
+                dropdownParent: $parent.length ? $parent : jQuery('body')
             });
         },
 
@@ -506,18 +508,26 @@ window.wpErpVue = window.wpErpVue || {};
             },
 
             invitedSingleUser: function() {
-                if ( this.feed.extra.invited_user[0].id == wpCRMvue.current_user_id ) {
+                var users = this.feed.extra.invited_user;
+                if ( ! Array.isArray( users ) || ! users.length ) {
+                    return '';
+                }
+                if ( users[0].id == wpCRMvue.current_user_id ) {
                     return this.i18n.yourself;
                 } else {
-                    return this.feed.extra.invited_user[0].name;
+                    return users[0].name;
                 }
             },
 
             invitedUser: function() {
                 var self = this;
-                return this.feed.extra.invited_user.map( function( elm ) {
+                var users = this.feed.extra.invited_user;
+                if ( ! Array.isArray( users ) ) {
+                    return '';
+                }
+                return users.map( function( elm ) {
                     if ( elm.id == wpCRMvue.current_user_id ) {
-                            return self.i18n.yourself;
+                        return self.i18n.yourself;
                     } else {
                         return elm.name;
                     }
