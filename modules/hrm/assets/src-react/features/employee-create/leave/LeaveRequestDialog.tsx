@@ -1,0 +1,161 @@
+/**
+ * "Request Leave" dialog for the single-employee Leave tab.
+ *
+ * Mirrors the legacy new-leave-request form: pick a financial year → the
+ * entitlements the employee can apply against load (with available balance) →
+ * pick policy, dates, reason → submit. POSTs to the v2 route that mirrors the
+ * `leave_request` AJAX handler.
+ */
+
+import {
+	Alert,
+	AlertDescription,
+	Button,
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@wedevs/plugin-ui';
+import { useEffect, useState } from 'react';
+import type { FormEvent, JSX } from 'react';
+
+import { __, sprintf } from '@/shared/i18n';
+import type { ApiError } from '@/shared/utils/apiFetch';
+
+import { SelectField, TextField, TextareaField } from '../fields';
+import type { Option } from '../options';
+import { fetchAssignablePolicies, submitLeaveRequest } from './useEmployeeLeave';
+import type { AssignablePolicy, LeaveOption } from './useEmployeeLeave';
+
+interface LeaveRequestDialogProps {
+	readonly open:           boolean;
+	readonly userId:         number;
+	readonly financialYears: readonly LeaveOption[];
+	readonly currentYear:    number;
+	readonly onClose:        () => void;
+	readonly onSubmitted:    () => void;
+}
+
+export function LeaveRequestDialog( {
+	open,
+	userId,
+	financialYears,
+	currentYear,
+	onClose,
+	onSubmitted,
+}: LeaveRequestDialogProps ): JSX.Element {
+	const [ year, setYear ]         = useState( String( currentYear || '' ) );
+	const [ policies, setPolicies ] = useState< readonly AssignablePolicy[] >( [] );
+	const [ policy, setPolicy ]     = useState( '' );
+	const [ from, setFrom ]         = useState( '' );
+	const [ to, setTo ]             = useState( '' );
+	const [ reason, setReason ]     = useState( '' );
+	const [ busy, setBusy ]         = useState( false );
+	const [ error, setError ]       = useState< string | null >( null );
+
+	// Reset when (re)opened.
+	useEffect( () => {
+		if ( open ) {
+			setYear( String( currentYear || '' ) );
+			setPolicy( '' );
+			setFrom( '' );
+			setTo( '' );
+			setReason( '' );
+			setError( null );
+		}
+	}, [ open, currentYear ] );
+
+	// Load the assignable policies whenever the chosen year changes.
+	useEffect( () => {
+		if ( ! open || ! year ) {
+			setPolicies( [] );
+			return;
+		}
+		let cancelled = false;
+		void fetchAssignablePolicies( userId, Number( year ) )
+			.then( ( list ) => ! cancelled && setPolicies( list ) )
+			.catch( () => ! cancelled && setPolicies( [] ) );
+		return () => {
+			cancelled = true;
+		};
+	}, [ open, userId, year ] );
+
+	const yearOptions: Option[] = financialYears.map( ( fy ) => ( { value: String( fy.id ), label: fy.name } ) );
+
+	const policyOptions: Option[] = policies.map( ( p ) => ( {
+		value: String( p.id ),
+		// translators: %1$s policy name, %2$s available day count.
+		label: sprintf( __( '%1$s (%2$s available)', 'erp' ), p.name, String( p.available ) ),
+	} ) );
+
+	async function handleSubmit( e: FormEvent ): Promise< void > {
+		e.preventDefault();
+		setBusy( true );
+		setError( null );
+		try {
+			await submitLeaveRequest( userId, {
+				leave_policy: Number( policy ),
+				leave_from:   from,
+				leave_to:     to,
+				leave_reason: reason,
+			} );
+			onSubmitted();
+		} catch ( raw ) {
+			setError( ( raw as ApiError )?.message ?? __( 'Could not submit the leave request.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	return (
+		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
+			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+				<DialogHeader>
+					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
+						{ __( 'Request Leave', 'erp' ) }
+					</DialogTitle>
+				</DialogHeader>
+				<div className="h-px w-full bg-border" />
+
+				<form onSubmit={ ( e ) => void handleSubmit( e ) } className="flex min-w-0 flex-col gap-4">
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
+					) : null }
+
+					<SelectField
+						id="leave_year"
+						label={ __( 'Financial Year', 'erp' ) }
+						required
+						options={ yearOptions }
+						value={ year }
+						onChange={ ( v ) => { setYear( v ); setPolicy( '' ); } }
+					/>
+					<SelectField
+						id="leave_policy"
+						label={ __( 'Leave Policy', 'erp' ) }
+						required
+						options={ policyOptions }
+						value={ policy }
+						onChange={ setPolicy }
+						placeholder={ __( '- Select -', 'erp' ) }
+					/>
+					<TextField id="leave_from" label={ __( 'From', 'erp' ) } type="date" required value={ from } onChange={ setFrom } />
+					<TextField id="leave_to" label={ __( 'To', 'erp' ) } type="date" required value={ to } onChange={ setTo } />
+					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } value={ reason } onChange={ setReason } />
+
+					<DialogFooter className="gap-5 sm:gap-5">
+						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>
+							{ __( 'Cancel', 'erp' ) }
+						</Button>
+						<Button type="submit" className="h-10 px-6" disabled={ busy }>
+							{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit Request', 'erp' ) }
+						</Button>
+					</DialogFooter>
+				</form>
+			</DialogContent>
+		</Dialog>
+	);
+}

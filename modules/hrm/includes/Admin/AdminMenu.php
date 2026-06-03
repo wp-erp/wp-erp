@@ -184,6 +184,21 @@ class AdminMenu {
      * @return void
      */
     public function router() {
+        // Redesign — React engine path. Emits the SPA mount node and returns
+        // before any legacy menu chrome / Vue view renders. The boot payload
+        // and asset enqueue happens earlier on `admin_enqueue_scripts`
+        // (see HRM::admin_scripts()).
+        if ( UiEngineResolver::ENGINE_REACT === UiEngineResolver::instance()->resolve_engine( 'erp-hr' ) ) {
+            $asset_path = WPERP_HRM_PATH . '/assets/dist-react/employees.asset.php';
+            if ( file_exists( $asset_path ) ) {
+                echo '<div id="erp-hr-app" class="erp-hr-react-root"></div>';
+                return;
+            }
+            // Build artifact missing — fall through to legacy chrome so the
+            // user still sees something. Enqueue::for_page() printed the
+            // admin notice when WP_DEBUG is on.
+        }
+
         $component = 'hr';
         $menu      = erp_menu();
         $menu      = $menu[ $component ];
@@ -202,9 +217,84 @@ class AdminMenu {
             $callback = $menu[ $section ]['submenu'][ $sub ]['callback'];
         }
 
+        $this->print_react_switch_banner();
+
         erp_render_menu( $component );
 
         call_user_func( $callback );
+    }
+
+    /**
+     * Render a "View newer version" banner above the legacy Vue HR chrome.
+     *
+     * Mirrors the React-side LegacyLink ("View previous version") so users can
+     * jump back to the redesigned admin from the legacy view. Hidden when the
+     * React build artifact is missing — there is nothing to switch to.
+     *
+     * @return void
+     */
+    private function print_react_switch_banner() {
+        $asset_path = WPERP_HRM_PATH . '/assets/dist-react/employees.asset.php';
+        if ( ! file_exists( $asset_path ) ) {
+            return;
+        }
+
+        $switch_url = UiEngineResolver::instance()->switch_url( 'erp-hr', UiEngineResolver::ENGINE_REACT );
+
+        ?>
+        <style>
+            .erp-hr-newer-version-banner {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin: 12px 20px 0 2px;
+                padding: 10px 16px;
+                background: #f0f6fc;
+                border: 1px solid #c3d4e6;
+                border-radius: 6px;
+                color: #1d2327;
+                font-size: 13px;
+                line-height: 1.4;
+            }
+            .erp-hr-newer-version-banner__text strong {
+                font-weight: 600;
+            }
+            .erp-hr-newer-version-banner__cta {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                background: #2271b1;
+                color: #fff;
+                border-radius: 4px;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 12px;
+                transition: background 0.15s ease;
+            }
+            .erp-hr-newer-version-banner__cta:hover,
+            .erp-hr-newer-version-banner__cta:focus {
+                background: #135e96;
+                color: #fff;
+                box-shadow: 0 0 0 1px #135e96;
+            }
+            .erp-hr-newer-version-banner__cta svg {
+                width: 14px;
+                height: 14px;
+            }
+        </style>
+        <div class="erp-hr-newer-version-banner" role="region" aria-label="<?php esc_attr_e( 'New HR experience', 'erp' ); ?>">
+            <div class="erp-hr-newer-version-banner__text">
+                <strong><?php esc_html_e( "We've redesigned the HR experience.", 'erp' ); ?></strong>
+                <span><?php esc_html_e( 'Faster, cleaner, and built for your workflow.', 'erp' ); ?></span>
+            </div>
+            <a class="erp-hr-newer-version-banner__cta" href="<?php echo esc_url( $switch_url ); ?>">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <?php esc_html_e( 'View newer version', 'erp' ); ?>
+            </a>
+        </div>
+        <?php
     }
 
     /**

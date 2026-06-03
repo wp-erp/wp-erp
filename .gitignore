@@ -1,10 +1,15 @@
 # Dependencies
 /node_modules
+node_modules/
 /vendor
 /vendor copy/
 
 # Build artifacts
 build
+
+# React build output / TS cache (generated)
+modules/hrm/assets/dist-react/
+*.tsbuildinfo
 
 # OS / IDE
 .DS_Store
@@ -24,3 +29,6 @@ phpcs-report.txt
 
 # Local dev scripts
 plugin-deploy.sh
+
+# Internal planning docs — not shipped, not tracked
+/openspec/

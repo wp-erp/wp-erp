@@ -1,0 +1,313 @@
+/**
+ * WP-ERP HR React shell — Tailwind v4 entry.
+ *
+ * Mirrors Dokan's `src/base-tailwind.css` pattern. Plugin-ui's ThemeProvider
+ * writes the `--primary`, `--background`, etc. CSS variables onto the
+ * `.pui-root` scope at runtime. The `@theme inline` block below maps those
+ * variables into Tailwind utilities (`bg-primary`, `text-foreground`, etc.).
+ *
+ * Source of truth: openspec/changes/redesign-hr-free/design-tokens.md +
+ * Dokan reference at ~/Desktop/dokan-ref/src/base-tailwind.css.
+ */
+
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+
+@source "../**/*.{ts,tsx}";
+@source "../../../node_modules/@wedevs/plugin-ui/dist";
+
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+/* ─── Plugin-UI / shadcn token → Tailwind variable mapping ───
+ * @theme inline tells Tailwind to use these var() references when generating
+ * utilities. The actual values (`--primary`, `--border`, etc.) come from the
+ * Plugin-UI ThemeProvider inline styles on `.pui-root`.
+ */
+@theme inline {
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-background: var(--background, #ffffff);
+	--color-foreground: var(--foreground, #000000);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-info: var(--info);
+	--color-info-foreground: var(--info-foreground);
+	--color-border: var(--border, #e5e7eb);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	/* Status — light pill variants */
+	--color-success-light: var(--success-light);
+	--color-success-on-light: var(--success-on-light);
+	--color-destructive-light: var(--destructive-light);
+	--color-destructive-on-light: var(--destructive-on-light);
+	--color-warning-light: var(--warning-light);
+	--color-warning-on-light: var(--warning-on-light);
+	--color-info-light: var(--info-light);
+	--color-info-on-light: var(--info-on-light);
+	--color-neutral-light: var(--neutral-light);
+	--color-neutral-on-light: var(--neutral-on-light);
+
+	--font-sans: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+@layer base {
+	:root {
+		--color-border: #e5e7eb;
+	}
+
+	/* Headless UI portal visibility fix (carried over from Dokan). */
+	#headlessui-portal-root {
+		display: none;
+	}
+
+	/* Z-index for popover / modal layers. */
+	div[data-radix-popper-content-wrapper],
+	div[data-headlessui-state='open'][role='dialog'] {
+		z-index: 999 !important;
+	}
+}
+
+/* ─── Scoped Layout — Preflight + Utilities + Components inside the shell ─── */
+/* `.pui-root` (no attribute filter) is required so plugin-ui's portaled
+ * content — DropdownMenu, Tooltip, Popover — picks up our tokens + utilities.
+ * Plugin-ui renders portals at <body> with only the `pui-root` class, not the
+ * `data-pui-plugin` attribute. Mirrors Dokan's base-tailwind.css scope. */
+.pui-root,
+#erp-hr-app {
+	@import "tailwindcss/preflight.css" layer(base);
+	@import "tailwindcss/utilities.css" important;
+
+	line-height: 1.5;
+	-webkit-text-size-adjust: 100%;
+	tab-size: 4;
+	font-family: var(--font-sans);
+	font-feature-settings: normal;
+	font-variation-settings: normal;
+	-webkit-tap-highlight-color: transparent;
+	/* Use the raw token var (set by ThemeProvider per scheme), NOT `--color-border`.
+	 * Tailwind v4's `@theme inline` inlines `--color-*` into utilities and does
+	 * not emit them as real custom properties, so `var(--color-border)` would
+	 * fall back to the light default and never go dark. */
+	border-color: var(--border, #e5e7eb) !important;
+}
+
+body:has(#erp-hr-app) {
+	--wp-components-color-accent: var(--primary);
+}
+
+/* ─── WP admin form-reset inside our scope ───
+ * WordPress admin loads `wp-admin/css/forms.min.css` which globally styles
+ * `input[type='text|search|email|number|password']`, `select`, `textarea`,
+ * and `.button`. Those rules use tag/attribute selectors, so they can leak
+ * into our plugin-ui inputs and override Tailwind utilities silently when
+ * a third-party plugin (or older WP version) layers `!important` on them.
+ *
+ * Reset them inside `#erp-hr-app` only — outside, WP admin keeps its native
+ * styling for the rest of the dashboard.
+ */
+#erp-hr-app input[type='text'],
+#erp-hr-app input[type='search'],
+#erp-hr-app input[type='email'],
+#erp-hr-app input[type='url'],
+#erp-hr-app input[type='tel'],
+#erp-hr-app input[type='number'],
+#erp-hr-app input[type='password'],
+#erp-hr-app input[type='date'],
+#erp-hr-app input[type='datetime-local'],
+#erp-hr-app input[type='month'],
+#erp-hr-app input[type='time'],
+#erp-hr-app input[type='week'],
+#erp-hr-app input[type='file'],
+#erp-hr-app select,
+#erp-hr-app textarea {
+	box-shadow: none;
+	min-height: 0;
+	max-width: none;
+	background-image: none;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
+/* ─── Field background = app theme, not OS ───
+ * Root cause: plugin-ui's bundle compiles its `dark:` variants as
+ * `@media (prefers-color-scheme: dark)` (not the `.dark` class). So controls
+ * carrying `dark:bg-input/30` (Textarea, Select trigger, SmartSelect, Combobox,
+ * InputGroup) repaint their background to `var(--input)` — a light-gray token —
+ * whenever the *OS* is in dark mode, even though the ERP app is in light theme.
+ * That gray (`var(--input)`) is what leaks; `bg-transparent` never gets a chance.
+ *
+ * Pin the field background to `var(--background)`, which the ThemeProvider sets
+ * per *app* mode (white in light, dark surface in dark) — so it stays correct in
+ * both themes and ignores the OS. Higher specificity + `!important` beats the
+ * plugin's `.dark\:bg-input\/30 { ...!important }`. Applies in the app shell and
+ * in body-level portals (`.pui-root`) where dialogs mount. */
+#erp-hr-app :is( [data-slot='select-trigger'], [data-slot='textarea'], [data-slot='smart-select-trigger'], [data-slot='combobox-value'], [data-slot='input-group'] ),
+.pui-root :is( [data-slot='select-trigger'], [data-slot='textarea'], [data-slot='smart-select-trigger'], [data-slot='combobox-value'], [data-slot='input-group'] ),
+[data-slot='dialog-content'] :is( [data-slot='select-trigger'], [data-slot='textarea'], [data-slot='smart-select-trigger'], [data-slot='combobox-value'], [data-slot='input-group'] ),
+[data-slot='dialog-content'] :is( select, textarea ) {
+	background-color: var( --background, #fff ) !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+
+
+/* ─── Native <select> reset inside portaled dialogs ───
+ * `SelectField` renders a native `<select>` (plugin-ui's own Select is a button,
+ * so this only matches our field). Inside a body-level portal (`.pui-root`) —
+ * where every Dialog mounts — the `#erp-hr-app` reset above doesn't reach it, so
+ * WordPress's global `select { max-width: 25rem }` from `forms.css` caps it and
+ * it renders narrower than the sibling text inputs. Neutralize it so the
+ * field's own `w-full` wins and all controls share one width. */
+.pui-root select,
+.pui-root textarea {
+	box-shadow: none;
+	min-height: 0;
+	max-width: none;
+	background-image: none;
+	background-color: var( --background, #fff );
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
+/* ─── Text input color inside portaled dialogs ───
+ * Same blind spot as the select/textarea reset above: a `<input>` (text, date,
+ * number, email…) rendered in a body-level portal (`.pui-root` / dialog content)
+ * is NOT reached by the `#erp-hr-app input[...]` reset, so WordPress's global
+ * `input { color: #2c3338 }` paints the value (and the native date picker text)
+ * near-black — invisible on a dark dialog. Inherit the dialog's foreground so the
+ * value follows the app scheme. `.pui-root input` (0,1,1) outranks WP's tag rule
+ * (0,0,1); no `!important` needed. The SmartSelect search input keeps its own
+ * `[data-slot='command-input']` rule (higher specificity), so it's unaffected. */
+.pui-root input,
+[data-slot='dialog-content'] input {
+	color: inherit;
+}
+
+/* ─── Switch off-track = app theme, not OS ───
+ * The plugin Switch paints its unchecked track with `data-unchecked:bg-input`
+ * plus a `dark:data-unchecked:bg-input/80` variant. That `dark:` variant is
+ * compiled as `@media (prefers-color-scheme: dark)` (see the field note above),
+ * so on a dark *OS* it darkens the track to near-black even when the ERP app is
+ * in light mode — the off state then reads as solid black instead of gray.
+ *
+ * Pin the off-track to `var(--input)`, the per-*app*-mode token the ThemeProvider
+ * sets (light gray in light, mid gray in dark). Higher specificity + `!important`
+ * beats the plugin's media variant, so the toggle stays gray-when-off in both
+ * themes regardless of the OS scheme. */
+#erp-hr-app [role='switch'][data-unchecked],
+.pui-root [role='switch'][data-unchecked] {
+	background-color: var( --input ) !important;
+}
+
+/* ─── Heading / paragraph margin reset ───
+ * Bare `<h1>`–`<h4>` and `<p>` inside the app (and inside body-level `.pui-root`
+ * portals where every Dialog mounts) inherit browser UA + WP-admin block margins
+ * — Tailwind's preflight doesn't reach them. That adds stray top/bottom space
+ * above card and dialog titles. Zero out the block margins with `:where()` (zero
+ * specificity) so any explicit Tailwind `m*` utility still wins. */
+#erp-hr-app :where( h1, h2, h3, h4, h5, h6, p ),
+.pui-root :where( h1, h2, h3, h4, h5, h6, p ) {
+	margin-block: 0;
+}
+
+/* ─── SmartSelect / Combobox search input reset ───
+ * The searchable dropdown (plugin-ui SmartSelect) renders its popover — and the
+ * search `<input>` inside it — in a body-level portal (`.pui-root`), OUTSIDE
+ * `#erp-hr-app`. So the WP-admin form-reset above never reaches it, and
+ * WordPress's global `input:focus` rule paints a stray blue border + box-shadow
+ * inside the otherwise-clean popover. Neutralize it so the input stays flush
+ * with the plugin-ui styling, and give the row a little breathing room so the
+ * focus state never sits flush against the popover's rounded edge. */
+[data-slot='command-input'],
+[data-slot='command-input']:focus,
+[data-slot='command-input']:focus-visible {
+	box-shadow: none !important;
+	border: 0 !important;
+	outline: none !important;
+	background: transparent !important;
+	min-height: 0;
+}
+
+/* Inset the search row from the popover's rounded top edge so the input never
+ * sits flush against the corner. Top-only padding keeps the separator under
+ * the search box spanning the full popover width. */
+[data-slot='smart-select-content'] {
+	padding-top: 0.25rem;
+}
+
+/* ─── Page panel surface — follows the app scheme ───
+ * The content panel behind cards is `#F1F1F4` in light mode (no token alias for
+ * that exact gray). Hardcoding it meant the panel stayed light in dark mode while
+ * the cards went dark — a bright slab behind the page title. Drive it off the
+ * resolved scheme (`data-color-scheme`, set by Providers) so it darkens too:
+ * light → the panel gray; dark → `--background` (the darkest surface, so cards on
+ * `--card` still read one step lighter). */
+#erp-hr-app .erp-hr-panel {
+	background-color: #f1f1f4;
+}
+
+#erp-hr-app[data-color-scheme='dark'] .erp-hr-panel {
+	background-color: var( --background );
+}
+
+/* ─── Top bar — sits below WP admin bar (32 px) inside #erp-hr-app ─── */
+#erp-hr-app .erp-hr-topbar {
+	position: sticky;
+	top: 32px;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	height: 64px;
+	padding: 0 1.5rem;
+	/* Raw token vars (per-scheme via ThemeProvider) — see note above on why
+	 * `--color-*` must not be used in hand-written rules. */
+	background: var(--background, #ffffff);
+	border-bottom: 1px solid var(--border, #e5e7eb);
+	color: var(--foreground, #1e1e1e);
+}
+
+/* Horizontal scroll surface for the nav links on narrow viewports.
+ * Hide the scrollbar visually — users discover the overflow by drag /
+ * touch / shift+wheel. Mirror the Tailwind `.no-scrollbar` utility from
+ * Dokan's base-tailwind.css. */
+#erp-hr-app .erp-hr-topbar-nav-scroll {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+#erp-hr-app .erp-hr-topbar-nav-scroll::-webkit-scrollbar {
+	display: none;
+}
+
+@media screen and ( max-width: 782px ) {
+	#erp-hr-app .erp-hr-topbar {
+		top: 46px;
+		padding: 0 1rem;
+		height: 56px;
+	}
+}
