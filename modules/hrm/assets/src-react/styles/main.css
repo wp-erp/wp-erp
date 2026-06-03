@@ -273,6 +273,60 @@ body:has(#erp-hr-app) {
 	background-color: var( --background );
 }
 
+/* ─── Horizontal-overflow guard ───
+ * Some inner surfaces are intentionally wider than a phone viewport (data
+ * tables `min-w-[40rem]`, the line-tab strips) and own a local
+ * `overflow-x-auto` scroller. Without a clamp on the shell, that width leaks
+ * up and gives the whole document a horizontal scroll on mobile — dragging
+ * right exposes the bare (light) page behind the app. Clamp the shell to its
+ * column and clip the leak. `clip` (not `hidden`/`auto`) is required so it does
+ * NOT establish a scroll container, which would break the sticky top bar.
+ * Inner `overflow-x-auto` scrollers keep their own scrolling regardless. */
+#erp-hr-app,
+#erp-hr-app .erp-hr-shell {
+	max-width: 100%;
+	overflow-x: clip;
+}
+
+/* ─── Portaled popups must never exceed the viewport ───
+ * plugin-ui anchors Select / Combobox / SmartSelect popups with a min-width of
+ * `anchor-width + 28px` and grows them to fit the widest option label. On a
+ * phone a long Department / Job-title / employee name pushes the popup past the
+ * right edge, giving the whole document a horizontal scroll (the bare page
+ * shows behind the app). Popups portal to `<body>` as `.pui-root`, so the
+ * `#erp-hr-app` clip above can't contain them — clamp them here instead and
+ * clip any option that still overruns. Triggers carry a `min-w-[200/260px]`
+ * that can outgrow a narrow modal column, so let them collapse too. */
+.pui-root [data-slot='select-content'],
+.pui-root [data-slot='combobox-content'],
+.pui-root [data-slot='smart-select-content'],
+.pui-root [data-slot='smart-multi-select-content'],
+.pui-root [data-slot='popover-content'],
+.pui-root [data-slot='dropdown-menu-content'],
+.pui-root [data-slot='dropdown-menu-sub-content'] {
+	/* `min-width` must be cleared too: plugin-ui sets `min-w-[anchor-width+28px]`
+	 * on combobox/smart-select popups, and a min-width always beats max-width —
+	 * without this the popup keeps its oversized floor and overruns the screen. */
+	min-width: 0 !important;
+	max-width: calc( 100vw - 1rem ) !important;
+	overflow-x: clip;
+}
+
+@media screen and ( max-width: 782px ) {
+	.pui-root [data-slot='select-trigger'],
+	.pui-root [data-slot='combobox-trigger'],
+	.pui-root [data-slot='smart-select-trigger'],
+	.pui-root [data-slot='smart-multi-select-trigger'] {
+		min-width: 0 !important;
+	}
+
+	/* Wrap long option labels instead of forcing the popup wider. */
+	.pui-root [data-slot='select-item'],
+	.pui-root [data-slot='combobox-item'] {
+		white-space: normal;
+	}
+}
+
 /* ─── Top bar — sits below WP admin bar (32 px) inside #erp-hr-app ─── */
 #erp-hr-app .erp-hr-topbar {
 	position: sticky;

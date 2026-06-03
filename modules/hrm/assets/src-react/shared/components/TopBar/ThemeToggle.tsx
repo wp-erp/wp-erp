@@ -7,7 +7,7 @@
  */
 
 import { Toggle } from '@wedevs/plugin-ui';
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -21,7 +21,6 @@ const SEGMENTS: ReadonlyArray< {
 } > = [
 	{ value: 'light', label: 'Light', Icon: Sun },
 	{ value: 'dark',  label: 'Dark',  Icon: Moon },
-	{ value: 'auto',  label: 'Auto',  Icon: Monitor },
 ];
 
 export function ThemeToggle(): JSX.Element {

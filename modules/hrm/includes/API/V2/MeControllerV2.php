@@ -44,6 +44,56 @@ class MeControllerV2 extends RestControllerV2 {
 				'schema' => [ $this, 'get_capabilities_schema' ],
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/preferences',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'update_preferences' ],
+					'permission_callback' => [ $this, 'permission_logged_in' ],
+					'args'                => [
+						'erp_hr_color_scheme' => [
+							'type' => 'string',
+							'enum' => [ 'light', 'dark', 'auto' ],
+						],
+					],
+				],
+			]
+		);
+	}
+
+	/**
+	 * POST /erp/v2/me/preferences
+	 *
+	 * Persists the current user's React-shell preferences (currently only the
+	 * theme color scheme) as user meta. Symmetric with the `preferences` block
+	 * returned by `get_capabilities()`.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function update_preferences( WP_REST_Request $request ): WP_REST_Response {
+		$user_id = get_current_user_id();
+
+		if ( $request->offsetExists( 'erp_hr_color_scheme' ) ) {
+			$scheme = $this->cast_enum(
+				(string) $request->get_param( 'erp_hr_color_scheme' ),
+				[ 'light', 'dark', 'auto' ]
+			);
+
+			if ( null !== $scheme ) {
+				update_user_meta( $user_id, 'erp_hr_color_scheme', $scheme );
+			}
+		}
+
+		return rest_ensure_response(
+			[
+				'erp_hr_color_scheme' => $this->resolve_color_scheme_preference( $user_id ),
+			]
+		);
 	}
 
 	/**

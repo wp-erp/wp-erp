@@ -13,6 +13,7 @@ import {
 	Button,
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
@@ -54,11 +55,13 @@ export function UserMenu(): JSX.Element {
 				}
 			/>
 			<DropdownMenuContent align="end" className="min-w-56">
-				<DropdownMenuLabel className="text-muted-foreground">
-					{ boot.email || boot.displayName }
-				</DropdownMenuLabel>
+				<DropdownMenuGroup>
+					<DropdownMenuLabel className="text-muted-foreground">
+						{ boot.email || boot.displayName }
+					</DropdownMenuLabel>
+				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile', { viewTransition: true } ) }>
+				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile' ) }>
 					<UserCircle2 size={ 16 } aria-hidden="true" />
 					{ __( 'My profile', 'erp' ) }
 				</DropdownMenuItem>
