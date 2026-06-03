@@ -79,6 +79,8 @@ class Manager {
 			HolidaysControllerV2::class,
 			LeaveTypesControllerV2::class,
 			LeavePoliciesControllerV2::class,
+			LeaveEntitlementsControllerV2::class,
+			LeaveRequestsControllerV2::class,
 		];
 
 		/**

@@ -17,7 +17,7 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Filter, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -39,6 +39,7 @@ function LeavePoliciesInner(): JSX.Element {
 	const [ fYear, setFYear ]               = useState( 0 );
 	const [ departmentId, setDepartmentId ] = useState( 0 );
 	const [ employeeType, setEmployeeType ] = useState( '' );
+	const [ showFilters, setShowFilters ]   = useState( false );
 	const [ page, setPage ]                 = useState( 1 );
 	const [ perPage, setPerPage ]           = useState( 20 );
 
@@ -143,6 +144,9 @@ function LeavePoliciesInner(): JSX.Element {
 		...( options?.employeeTypes ?? [] ).map( ( o ) => ( { value: o.value, label: o.label } ) ),
 	];
 
+	const activeFilterCount  = ( fYear ? 1 : 0 ) + ( departmentId ? 1 : 0 ) + ( employeeType ? 1 : 0 );
+	const filterButtonActive = showFilters || activeFilterCount > 0;
+
 	return (
 		<section className="mx-auto w-full max-w-7xl">
 			<header className="mb-6 flex items-center justify-between gap-4">
@@ -170,33 +174,66 @@ function LeavePoliciesInner(): JSX.Element {
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>
-					<div className="flex flex-wrap items-center gap-2">
-						<SmartSelect
-							options={ fYearFilterOpts }
-							value={ String( fYear || '' ) }
-							onValueChange={ ( v ) => setFYear( Number( v || 0 ) ) }
-							placeholder={ __( 'All Years', 'erp' ) }
-							className="h-9 w-40"
-							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
-						/>
-						<SmartSelect
-							options={ deptFilterOpts }
-							value={ String( departmentId || '' ) }
-							onValueChange={ ( v ) => setDepartmentId( Number( v || 0 ) ) }
-							placeholder={ __( 'All Departments', 'erp' ) }
-							className="h-9 w-48"
-							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
-						/>
-						<SmartSelect
-							options={ empTypeFilterOpts }
-							value={ employeeType }
-							onValueChange={ ( v ) => setEmployeeType( v ?? '' ) }
-							placeholder={ __( 'All Types', 'erp' ) }
-							className="h-9 w-40"
-							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
-						/>
-					</div>
+					<button
+						type="button"
+						aria-label={ __( 'Toggle filters', 'erp' ) }
+						aria-pressed={ filterButtonActive }
+						onClick={ () => setShowFilters( ( prev ) => ! prev ) }
+						className={ [
+							'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
+							filterButtonActive ? 'border-primary text-primary' : 'border-border text-muted-foreground hover:text-foreground',
+						].join( ' ' ) }
+					>
+						<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
+						<span>{ __( 'Filter', 'erp' ) }</span>
+						{ activeFilterCount > 0 ? (
+							<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
+								{ activeFilterCount }
+							</span>
+						) : null }
+					</button>
 				</div>
+
+				{ filterButtonActive ? (
+					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Year', 'erp' ) }
+							<SmartSelect
+								options={ fYearFilterOpts }
+								value={ String( fYear || '' ) }
+								onValueChange={ ( v ) => setFYear( Number( v || 0 ) ) }
+								placeholder={ __( 'All Years', 'erp' ) }
+								showClear
+								className="h-9 w-40"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Department', 'erp' ) }
+							<SmartSelect
+								options={ deptFilterOpts }
+								value={ String( departmentId || '' ) }
+								onValueChange={ ( v ) => setDepartmentId( Number( v || 0 ) ) }
+								placeholder={ __( 'All Departments', 'erp' ) }
+								showClear
+								className="h-9 w-48"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Employee Type', 'erp' ) }
+							<SmartSelect
+								options={ empTypeFilterOpts }
+								value={ employeeType }
+								onValueChange={ ( v ) => setEmployeeType( v ?? '' ) }
+								placeholder={ __( 'All Types', 'erp' ) }
+								showClear
+								className="h-9 w-40"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+					</div>
+				) : null }
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>

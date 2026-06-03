@@ -55,6 +55,14 @@ const LeavePoliciesPage = lazy( () =>
 	import( '@/features/leave-policies' ).then( ( m ) => ( { default: m.LeavePoliciesPage } ) )
 );
 
+const LeaveEntitlementsPage = lazy( () =>
+	import( '@/features/leave-entitlements' ).then( ( m ) => ( { default: m.LeaveEntitlementsPage } ) )
+);
+
+const LeaveRequestsPage = lazy( () =>
+	import( '@/features/leave-requests' ).then( ( m ) => ( { default: m.LeaveRequestsPage } ) )
+);
+
 export interface AppRoute {
 	readonly id:            string;
 	readonly path:          string;
@@ -161,6 +169,18 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
+		id:           'leave-requests',
+		path:         '/leave/requests',
+		element:      LeaveRequestsPage,
+		capabilities: [ 'erp_leave_manage' ],
+		handle: {
+			id:        'leave-requests',
+			title:     __( 'Leave Requests', 'erp' ),
+			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
 		id:           'leave-types',
 		path:         '/leave/types',
 		element:      LeaveTypesPage,
@@ -180,6 +200,18 @@ const baseRoutes: AppRoute[] = [
 		handle: {
 			id:        'leave-policies',
 			title:     __( 'Leave Policies', 'erp' ),
+			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'leave-entitlements',
+		path:         '/leave/entitlements',
+		element:      LeaveEntitlementsPage,
+		capabilities: [ 'erp_leave_manage' ],
+		handle: {
+			id:        'leave-entitlements',
+			title:     __( 'Leave Entitlements', 'erp' ),
 			group:     'leave',
 			showInNav: false,
 		},

@@ -16,9 +16,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 	Input,
+	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { CalendarDays, MoreVertical, Pencil, Plus, Search, Trash2, Upload } from 'lucide-react';
+import { Filter, MoreVertical, Pencil, Plus, Search, Trash2, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -53,6 +54,7 @@ function HolidaysInner(): JSX.Element {
 
 	const [ year, setYear ]       = useState( thisYear );
 	const [ search, setSearch ]   = useState( '' );
+	const [ showFilters, setShowFilters ] = useState( false );
 	const [ page, setPage ]       = useState( 1 );
 	const [ perPage, setPerPage ] = useState( 20 );
 
@@ -78,12 +80,15 @@ function HolidaysInner(): JSX.Element {
 	}, [ year, search ] );
 
 	const yearOptions = useMemo( () => {
-		const years: number[] = [];
+		const years: Array< { value: string; label: string } > = [ { value: '0', label: __( 'All Years', 'erp' ) } ];
 		for ( let y = thisYear + 1; y >= thisYear - 5; y-- ) {
-			years.push( y );
+			years.push( { value: String( y ), label: String( y ) } );
 		}
 		return years;
 	}, [ thisYear ] );
+
+	const activeFilterCount  = year ? 1 : 0;
+	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	function openCreate(): void {
 		setEditing( null );
@@ -167,21 +172,6 @@ function HolidaysInner(): JSX.Element {
 						</span>
 					</div>
 					<div className="flex items-center gap-3">
-						<label className="flex items-center gap-2 text-sm text-muted-foreground">
-							<CalendarDays size={ 16 } aria-hidden="true" />
-							<select
-								value={ year }
-								onChange={ ( e ) => setYear( parseInt( e.target.value, 10 ) ) }
-								aria-label={ __( 'Filter by year', 'erp' ) }
-								className="h-9 cursor-pointer rounded-md border border-border bg-card pl-2 pr-7 text-sm font-medium text-foreground focus:border-primary focus:outline-none"
-							>
-								{ yearOptions.map( ( y ) => (
-									<option key={ y } value={ y }>
-										{ y }
-									</option>
-								) ) }
-							</select>
-						</label>
 						<div className="relative">
 							<Search
 								size={ 16 }
@@ -197,8 +187,43 @@ function HolidaysInner(): JSX.Element {
 								aria-label={ __( 'Search holidays', 'erp' ) }
 							/>
 						</div>
+						<button
+							type="button"
+							aria-label={ __( 'Toggle filters', 'erp' ) }
+							aria-pressed={ filterButtonActive }
+							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
+							className={ [
+								'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
+								filterButtonActive ? 'border-primary text-primary' : 'border-border text-muted-foreground hover:text-foreground',
+							].join( ' ' ) }
+						>
+							<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
+							<span>{ __( 'Filter', 'erp' ) }</span>
+							{ activeFilterCount > 0 ? (
+								<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
+									{ activeFilterCount }
+								</span>
+							) : null }
+						</button>
 					</div>
 				</div>
+
+				{ filterButtonActive ? (
+					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Year', 'erp' ) }
+							<SmartSelect
+								options={ yearOptions }
+								value={ String( year || '0' ) }
+								onValueChange={ ( v ) => setYear( Number( v || 0 ) ) }
+								placeholder={ __( 'All Years', 'erp' ) }
+								showClear
+								className="h-9 w-36"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+					</div>
+				) : null }
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>

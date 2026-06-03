@@ -125,7 +125,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 	{
 		id:            'leave',
 		label:         __( 'Leave', 'erp' ),
-		path:          '/leave/holidays',
+		path:          '/leave/requests',
 		icon:          'calendar-days',
 		hasDropdown:   true,
 		// Free leave caps are `erp_leave_manage` (manager) + `erp_leave_create_request`.
@@ -134,6 +134,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_leave_manage' ],
 		activeMatches: [ '/leave' ],
 		children: [
+			{
+				id:           'leave-requests',
+				label:        __( 'Requests', 'erp' ),
+				to:           '/leave/requests',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Approve, reject and manage leave requests', 'erp' ),
+			},
 			{
 				id:           'leave-types',
 				label:        __( 'Leave Types', 'erp' ),
@@ -147,6 +154,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/leave/policies',
 				capabilities: [ 'erp_leave_manage' ],
 				description:  __( 'Grant leave days by year, scoped to teams or types', 'erp' ),
+			},
+			{
+				id:           'leave-entitlements',
+				label:        __( 'Leave Entitlements', 'erp' ),
+				to:           '/leave/entitlements',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Assign policies to employees', 'erp' ),
 			},
 			{
 				id:           'leave-holidays',
