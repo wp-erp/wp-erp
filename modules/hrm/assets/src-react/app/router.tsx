@@ -23,18 +23,6 @@ const EmployeesPage = lazy( () =>
 	import( '@/features/employees' ).then( ( m ) => ( { default: m.EmployeesPage } ) )
 );
 
-const PeopleReviewPage = lazy( () =>
-	import( '@/features/people-review' ).then( ( m ) => ( { default: m.PeopleReviewPage } ) )
-);
-
-const PeopleSaasPage = lazy( () =>
-	import( '@/features/people-saas' ).then( ( m ) => ( { default: m.PeopleSaasPage } ) )
-);
-
-const PeopleProPage = lazy( () =>
-	import( '@/features/people-pro' ).then( ( m ) => ( { default: m.PeopleProPage } ) )
-);
-
 const EmployeeCreatePage = lazy( () =>
 	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeCreatePage } ) )
 );
@@ -53,6 +41,18 @@ const DepartmentsPage = lazy( () =>
 
 const DesignationsPage = lazy( () =>
 	import( '@/features/designations' ).then( ( m ) => ( { default: m.DesignationsPage } ) )
+);
+
+const HolidaysPage = lazy( () =>
+	import( '@/features/holidays' ).then( ( m ) => ( { default: m.HolidaysPage } ) )
+);
+
+const LeaveTypesPage = lazy( () =>
+	import( '@/features/leave-types' ).then( ( m ) => ( { default: m.LeaveTypesPage } ) )
+);
+
+const LeavePoliciesPage = lazy( () =>
+	import( '@/features/leave-policies' ).then( ( m ) => ( { default: m.LeavePoliciesPage } ) )
 );
 
 export interface AppRoute {
@@ -161,42 +161,39 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
-		id:           'people-review',
-		path:         '/people-review',
-		element:      PeopleReviewPage,
-		capabilities: [ 'erp_list_employee' ],
+		id:           'leave-types',
+		path:         '/leave/types',
+		element:      LeaveTypesPage,
+		capabilities: [ 'erp_leave_manage' ],
 		handle: {
-			id:        'people-review',
-			title:     __( 'People Review', 'erp' ),
-			navLabel:  __( 'People Review', 'erp' ),
-			group:     'people',
-			showInNav: true,
+			id:        'leave-types',
+			title:     __( 'Leave Types', 'erp' ),
+			group:     'leave',
+			showInNav: false,
 		},
 	},
 	{
-		id:           'people-saas',
-		path:         '/people-saas',
-		element:      PeopleSaasPage,
-		capabilities: [ 'erp_list_employee' ],
+		id:           'leave-policies',
+		path:         '/leave/policies',
+		element:      LeavePoliciesPage,
+		capabilities: [ 'erp_leave_manage' ],
 		handle: {
-			id:        'people-saas',
-			title:     __( 'People SaaS', 'erp' ),
-			navLabel:  __( 'People SaaS', 'erp' ),
-			group:     'people',
-			showInNav: true,
+			id:        'leave-policies',
+			title:     __( 'Leave Policies', 'erp' ),
+			group:     'leave',
+			showInNav: false,
 		},
 	},
 	{
-		id:           'people-pro',
-		path:         '/people-pro',
-		element:      PeopleProPage,
-		capabilities: [ 'erp_list_employee' ],
+		id:           'holidays',
+		path:         '/leave/holidays',
+		element:      HolidaysPage,
+		capabilities: [ 'erp_leave_manage' ],
 		handle: {
-			id:        'people-pro',
-			title:     __( 'People Pro', 'erp' ),
-			navLabel:  __( 'People Pro', 'erp' ),
-			group:     'people',
-			showInNav: true,
+			id:        'holidays',
+			title:     __( 'Holidays', 'erp' ),
+			group:     'leave',
+			showInNav: false,
 		},
 	},
 ];

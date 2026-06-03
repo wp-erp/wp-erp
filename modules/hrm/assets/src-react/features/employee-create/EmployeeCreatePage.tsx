@@ -5,8 +5,8 @@
  * `POST /erp/v2/employees` endpoint (which delegates to the unchanged
  * `Employee::create_employee()` model, so every server hook fires).
  *
- * Visual language follows `features/people-pro/*`: token-only styling, a sticky
- * header with a close (✕) action, and a sticky action bar.
+ * Visual language: token-only styling, a sticky header with a close (✕)
+ * action, and a sticky action bar.
  */
 
 import { toast } from '@wedevs/plugin-ui';
@@ -39,7 +39,7 @@ function EmployeeCreateInner(): JSX.Element {
 		if ( window.history.length > 1 ) {
 			navigate( -1 );
 		} else {
-			navigate( '/people-pro' );
+			navigate( '/employees' );
 		}
 	}
 

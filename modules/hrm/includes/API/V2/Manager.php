@@ -76,6 +76,9 @@ class Manager {
 			EmployeePermissionControllerV2::class,
 			DepartmentsControllerV2::class,
 			DesignationsControllerV2::class,
+			HolidaysControllerV2::class,
+			LeaveTypesControllerV2::class,
+			LeavePoliciesControllerV2::class,
 		];
 
 		/**

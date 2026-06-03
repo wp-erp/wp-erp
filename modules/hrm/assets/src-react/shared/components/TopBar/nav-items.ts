@@ -114,33 +114,6 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		],
 	},
 	{
-		id:            'people-review',
-		label:         __( 'People Review', 'erp' ),
-		path:          '/people-review',
-		icon:          'sparkles',
-		hasDropdown:   false,
-		capabilities:  [ 'erp_list_employee' ],
-		activeMatches: [ '/people-review' ],
-	},
-	{
-		id:            'people-saas',
-		label:         __( 'People SaaS', 'erp' ),
-		path:          '/people-saas',
-		icon:          'layout-list',
-		hasDropdown:   false,
-		capabilities:  [ 'erp_list_employee' ],
-		activeMatches: [ '/people-saas' ],
-	},
-	{
-		id:            'people-pro',
-		label:         __( 'People Pro', 'erp' ),
-		path:          '/people-pro',
-		icon:          'badge-check',
-		hasDropdown:   false,
-		capabilities:  [ 'erp_list_employee' ],
-		activeMatches: [ '/people-pro' ],
-	},
-	{
 		id:            'payroll',
 		label:         __( 'Payroll', 'erp' ),
 		path:          '/payroll',
@@ -152,11 +125,38 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 	{
 		id:            'leave',
 		label:         __( 'Leave', 'erp' ),
-		path:          '/leave',
+		path:          '/leave/holidays',
 		icon:          'calendar-days',
 		hasDropdown:   true,
-		capabilities:  [ 'erp_leave_list_request' ],
+		// Free leave caps are `erp_leave_manage` (manager) + `erp_leave_create_request`.
+		// There is NO `erp_leave_list_request` cap, so the old gate never passed and
+		// the Leave menu never rendered. Gate on the real manage cap.
+		capabilities:  [ 'erp_leave_manage' ],
 		activeMatches: [ '/leave' ],
+		children: [
+			{
+				id:           'leave-types',
+				label:        __( 'Leave Types', 'erp' ),
+				to:           '/leave/types',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Categories employees request leave against', 'erp' ),
+			},
+			{
+				id:           'leave-policies',
+				label:        __( 'Leave Policies', 'erp' ),
+				to:           '/leave/policies',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Grant leave days by year, scoped to teams or types', 'erp' ),
+			},
+			{
+				id:           'leave-holidays',
+				label:        __( 'Holidays', 'erp' ),
+				to:           '/leave/holidays',
+				// Legacy AdminMenu gates the Holidays page on `erp_leave_manage`.
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Manage company holidays and the leave calendar', 'erp' ),
+			},
+		],
 	},
 	{
 		id:            'attendance',

@@ -16,10 +16,9 @@ import { AppFooter } from './AppFooter';
 
 /**
  * Routes that own their own full-bleed background (no shell padding, no gray
- * canvas). Each route prefix listed here renders edge-to-edge under the top
- * bar — useful for the glass / hero compositions on People Review.
+ * canvas). Each route prefix listed here renders edge-to-edge under the top bar.
  */
-const CHROMELESS_PREFIXES: readonly string[] = [ '/people-review', '/people-saas', '/people-pro' ];
+const CHROMELESS_PREFIXES: readonly string[] = [];
 
 // Employee create / edit / view share the standard gray-canvas chrome (the
 // `<main>` inset below), so they are intentionally NOT listed here.

@@ -175,7 +175,7 @@ function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
 		if ( window.history.length > 1 ) {
 			navigate( -1 );
 		} else {
-			navigate( '/people-pro' );
+			navigate( '/employees' );
 		}
 	}
 
