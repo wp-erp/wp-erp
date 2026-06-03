@@ -117,6 +117,7 @@ function NavItemLink( { item, currentPath }: NavItemLinkProps ): JSX.Element {
 	return (
 		<NavLink
 			to={ item.path }
+			viewTransition
 			aria-current={ active ? 'page' : undefined }
 			className={ [
 				'group relative inline-flex shrink-0 items-center gap-2 px-5 text-sm transition-colors',

@@ -33,6 +33,7 @@ export function ReportsTabs(): JSX.Element {
 				<NavLink
 					key={ tab.to }
 					to={ tab.to }
+					viewTransition
 					className={ ( { isActive } ) =>
 						[
 							'group relative shrink-0 flex-none rounded-none px-3 pb-2.5 pt-1 text-sm font-medium transition-colors',

@@ -311,3 +311,24 @@ body:has(#erp-hr-app) {
 		height: 56px;
 	}
 }
+
+/* ── View Transitions ─────────────────────────────────────────────────
+ * Smooth cross-fade between in-app route changes (React Router
+ * `viewTransition`). Progressive enhancement: browsers without the
+ * View Transitions API ignore these rules and navigate instantly.
+ * Disabled under reduced-motion. */
+@media ( prefers-reduced-motion: no-preference ) {
+	::view-transition-old( root ),
+	::view-transition-new( root ) {
+		animation-duration: 220ms;
+		animation-timing-function: cubic-bezier( 0.4, 0, 0.2, 1 );
+	}
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	::view-transition-group( * ),
+	::view-transition-old( * ),
+	::view-transition-new( * ) {
+		animation: none !important;
+	}
+}

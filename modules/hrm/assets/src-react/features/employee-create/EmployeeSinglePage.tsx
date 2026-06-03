@@ -257,7 +257,7 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 							variant="default"
 							size="sm"
 							className="h-9 gap-1.5 px-4"
-							onClick={ () => { window.location.hash = `#/employees/${ userId }/edit`; } }
+							onClick={ () => navigate( `/employees/${ userId }/edit`, { viewTransition: true } ) }
 						>
 							<Pencil size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
 							{ __( 'Edit', 'erp' ) }

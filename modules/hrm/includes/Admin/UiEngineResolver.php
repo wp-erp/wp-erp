@@ -47,6 +47,21 @@ final class UiEngineResolver {
 	 */
 	public function register_hooks(): void {
 		add_action( 'admin_init', [ $this, 'handle_switch' ] );
+		add_action( 'admin_init', [ $this, 'prevent_engine_page_cache' ] );
+	}
+
+	/**
+	 * Send no-cache headers on HR admin pages so the browser never serves a
+	 * stale document for the *other* engine after a switch. Runs on admin_init
+	 * (before headers are sent). Without this the post-switch redirect can land
+	 * on a cached page and the new engine only appears after a manual refresh.
+	 */
+	public function prevent_engine_page_cache(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( $this->is_hr_page( $page ) && ! headers_sent() ) {
+			nocache_headers();
+		}
 	}
 
 	/**
@@ -127,8 +142,16 @@ final class UiEngineResolver {
 
 		update_user_meta( $user_id, self::USERMETA_KEY, $prefs );
 
+		// Land on a URL that differs from the bare `admin.php?page=erp-hr` the
+		// browser may have cached for the *other* engine — otherwise it can serve
+		// the stale (previous-engine) document and the switch only appears after a
+		// manual refresh. `erp_ui` (the now-active engine) makes it cache-distinct
+		// and is ignored by the page itself (the resolver reads user-meta).
 		$redirect = add_query_arg(
-			[ 'page' => $page ],
+			[
+				'page'   => $page,
+				'erp_ui' => ( 'legacy' === $target ) ? self::ENGINE_LEGACY : self::ENGINE_REACT,
+			],
 			admin_url( 'admin.php' )
 		);
 
@@ -148,17 +171,22 @@ final class UiEngineResolver {
 	public function switch_url( string $page_slug, string $target ): string {
 		$target = in_array( $target, [ self::ENGINE_REACT, 'legacy' ], true ) ? $target : 'legacy';
 
-		return wp_nonce_url(
-			add_query_arg(
-				[
-					'page'       => $page_slug,
-					'erp_action' => self::SWITCH_ACTION,
-					'erp_ui'     => $target,
-				],
-				admin_url( 'admin.php' )
-			),
-			self::NONCE_NAME
+		// Build a RAW url (literal `&`). `wp_nonce_url()` HTML-encodes the result
+		// (`&` → `&#038;`), which is correct for HTML output but breaks when the
+		// URL is JSON-encoded into the boot payload and assigned as a React `href`
+		// DOM property (the entities are NOT decoded there, so `$_GET` params get
+		// mangled and the switch never fires). Consumers escape at output:
+		// AdminMenu wraps this in `esc_url()`; the React side uses it raw.
+		$url = add_query_arg(
+			[
+				'page'       => $page_slug,
+				'erp_action' => self::SWITCH_ACTION,
+				'erp_ui'     => $target,
+			],
+			admin_url( 'admin.php' )
 		);
+
+		return add_query_arg( '_wpnonce', wp_create_nonce( self::NONCE_NAME ), $url );
 	}
 
 	/**

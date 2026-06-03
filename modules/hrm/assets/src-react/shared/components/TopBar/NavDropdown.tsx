@@ -154,6 +154,7 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 							key={ sub.id }
 							to={ sub.to }
 							end
+							viewTransition
 							role="menuitem"
 							onClick={ () => setOpen( false ) }
 							className={ ( { isActive } ) =>

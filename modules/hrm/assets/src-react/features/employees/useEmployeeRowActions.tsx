@@ -14,6 +14,7 @@
 import { useSelect } from '@wordpress/data';
 import { applyFilters, didFilter } from '@wordpress/hooks';
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { __ } from '@/shared/i18n';
 import {
@@ -40,6 +41,7 @@ export function useEmployeeRowActions(
 ): readonly EmployeeRowAction[] {
 	const { ctx, can } = useColumnContext();
 	const actions      = useEmployeeActions();
+	const navigate     = useNavigate();
 	const filterVersion = didFilter( EMPLOYEES_HOOKS.ROW_ACTIONS );
 
 	const statusFilter = useSelect(
@@ -80,7 +82,7 @@ export function useEmployeeRowActions(
 				priority: 10,
 				icon:     'Eye',
 				onSelect: ( emp: EmployeeListItem ) => {
-					window.location.hash = `#/employees/${ emp.user_id }`;
+					navigate( `/employees/${ emp.user_id }`, { viewTransition: true } );
 				},
 				capability: 'erp_view_employee',
 			},
@@ -90,7 +92,7 @@ export function useEmployeeRowActions(
 				priority: 20,
 				icon:     'Pencil',
 				onSelect: ( emp: EmployeeListItem ) => {
-					window.location.hash = `#/employees/${ emp.user_id }/edit`;
+					navigate( `/employees/${ emp.user_id }/edit`, { viewTransition: true } );
 				},
 				capability: 'erp_edit_employee',
 			},
@@ -123,7 +125,7 @@ export function useEmployeeRowActions(
 				capability: 'erp_delete_employee',
 			},
 		];
-	}, [ actions, statusFilter ] );
+	}, [ actions, statusFilter, navigate ] );
 
 	return useMemo( () => {
 		if ( ! employee ) {

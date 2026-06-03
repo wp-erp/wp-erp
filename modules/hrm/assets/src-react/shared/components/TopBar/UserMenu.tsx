@@ -58,7 +58,7 @@ export function UserMenu(): JSX.Element {
 					{ boot.email || boot.displayName }
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile' ) }>
+				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile', { viewTransition: true } ) }>
 					<UserCircle2 size={ 16 } aria-hidden="true" />
 					{ __( 'My profile', 'erp' ) }
 				</DropdownMenuItem>

@@ -129,7 +129,7 @@ function StatCard( { icon: Icon, label, value, tint, to }: StatCardProps ): JSX.
 		</div>
 	);
 	return to ? (
-		<Link to={ to } className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
+		<Link to={ to } viewTransition className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
 			{ body }
 		</Link>
 	) : (
@@ -155,6 +155,7 @@ function WidgetCard( { icon: Icon, title, action, children }: WidgetCardProps ):
 				{ action ? (
 					<Link
 						to={ action.to }
+						viewTransition
 						className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
 					>
 						{ action.label }
@@ -283,6 +284,7 @@ function DashboardInner(): JSX.Element {
 					{ canManageLeave ? (
 						<Link
 							to="/leave/requests"
+							viewTransition
 							className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground hover:bg-muted"
 						>
 							<CalendarClock size={ 16 } aria-hidden="true" />
@@ -292,6 +294,7 @@ function DashboardInner(): JSX.Element {
 					{ canCreateEmployee ? (
 						<Link
 							to="/employees/new"
+							viewTransition
 							className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
 						>
 							<UserPlus size={ 16 } aria-hidden="true" />
