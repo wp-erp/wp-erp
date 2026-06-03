@@ -32,7 +32,7 @@ import {
 	UserPlus,
 	Users,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -43,6 +43,7 @@ import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
 import { ChartsSection } from './DashboardCharts';
+import { WeatherWidget } from './WeatherWidget';
 import type { BirthdayPerson, OnLeavePerson } from './types';
 import {
 	fetchAnnouncement,
@@ -53,6 +54,24 @@ import {
 import type { AnnouncementContent } from './useDashboard';
 
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
+
+/** Live wall-clock that re-renders every second. */
+function LiveTime(): JSX.Element {
+	const [ now, setNow ] = useState( () => new Date() );
+	useEffect( () => {
+		const id = window.setInterval( () => setNow( new Date() ), 1000 );
+		return () => window.clearInterval( id );
+	}, [] );
+	return (
+		<span className="font-medium tabular-nums text-foreground">
+			{ now.toLocaleTimeString( undefined, {
+				hour:   '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+			} ) }
+		</span>
+	);
+}
 
 function greeting(): string {
 	const h = new Date().getHours();
@@ -265,22 +284,9 @@ function DashboardInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-7xl">
-			{ /* Greeting + quick actions */ }
-			<header className="mb-6 flex flex-wrap items-end justify-between gap-4">
-				<div>
-					<h1 className="text-2xl font-bold leading-8 text-foreground">
-						{ name ? sprintf( __( '%1$s, %2$s', 'erp' ), greeting(), name ) : greeting() }
-					</h1>
-					<p className="mt-1 text-sm text-muted-foreground">
-						{ new Date().toLocaleDateString( undefined, {
-							weekday: 'long',
-							year:    'numeric',
-							month:   'long',
-							day:     'numeric',
-						} ) }
-					</p>
-				</div>
-				<div className="flex items-center gap-2">
+			{ /* Quick actions — sit above the greeting card, outside it */ }
+			{ canManageLeave || canCreateEmployee ? (
+				<div className="mb-4 flex flex-wrap items-center justify-end gap-2">
 					{ canManageLeave ? (
 						<Link
 							to="/leave/requests"
@@ -302,6 +308,26 @@ function DashboardInner(): JSX.Element {
 						</Link>
 					) : null }
 				</div>
+			) : null }
+
+			{ /* Greeting + weather card */ }
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 rounded-xl border border-border bg-card p-5 shadow-sm">
+				<div>
+					<h1 className="text-2xl font-bold leading-8 text-foreground">
+						{ name ? sprintf( __( '%1$s, %2$s', 'erp' ), greeting(), name ) : greeting() }
+					</h1>
+					<p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground">
+						{ new Date().toLocaleDateString( undefined, {
+							weekday: 'long',
+							year:    'numeric',
+							month:   'long',
+							day:     'numeric',
+						} ) }
+						<span aria-hidden="true">·</span>
+						<LiveTime />
+					</p>
+				</div>
+				<WeatherWidget embedded />
 			</header>
 
 			{ loading && ! data ? (
