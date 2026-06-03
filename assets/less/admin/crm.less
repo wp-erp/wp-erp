@@ -1806,3 +1806,140 @@ table.widefat.cfi-table {
 .trix-button-group--file-tools {
     display: none !important;
 }
+
+/* Issue #553: CRM Mobile Responsiveness Fixes */
+@media screen and (max-width: 782px) {
+
+    // Issue 1: Contact/Company Edit Modal Overflow
+    .erp-employee-form .right-column .erp-employee-modal-right,
+    .erp-customer-form .right-column .erp-employee-modal-right,
+    .erp-employee-form .right-column .erp-crm-modal-right,
+    .erp-customer-form .right-column .erp-crm-modal-right {
+        display: inline-grid;
+    }
+
+    .erp-employee-form .left-column,
+    .erp-customer-form .left-column {
+        float: none;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .erp-employee-form .right-column,
+    .erp-customer-form .right-column {
+        float: none;
+        width: 100%;
+        min-width: unset;
+    }
+
+    // Issue 3: CRM Task Popup Not Responsive
+    .erp-crm-task-single {
+        width: 70%;
+        left: 15%;
+        right: 15%;
+    }
+
+    // Issue 5: Schedule Form Mobile Responsiveness
+    .erp-crm-new-schedule-wrapper .feed-schedule-wrapper {
+
+        .schedule-datetime {
+            display: grid;
+
+            p {
+                width: 100%;
+            }
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple,
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            height: auto;
+        }
+
+        .schedule-notification {
+            display: inline-grid;
+            width: 100%;
+
+            p {
+                &.schedule-type,
+                &.schedule-notification-allow,
+                &.schedule-notification-via {
+                    width: 100%;
+                }
+
+                &.schedule-type {
+                    border-right: none;
+                }
+
+                &.schedule-notification-before {
+                    padding-left: 5px;
+                    width: 100%;
+                }
+
+                &.schedule-type select,
+                &.schedule-notification-via select,
+                &.schedule-notification-before select {
+                    width: 100%;
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+
+    .erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-all-day {
+        width: 100%;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        display: contents;
+    }
+
+    // Feed log activity (Add new Log) form mobile fix
+    .erp-crm-new-schedule-wrapper .feed-log-activity {
+        p {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+
+            // Override the desktop `input { margin-left: 15px }` rule that
+            // breaks the flex width math and pushes fields out of the modal.
+            input {
+                margin-left: 0;
+            }
+
+            select#erp-crm-feed-log-type,
+            select.erp-left {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            input.erp-date-field,
+            input.erp-time-field {
+                float: none;
+                width: calc(50% - 3px);
+                max-width: calc(50% - 3px);
+                box-sizing: border-box;
+            }
+
+            // Assign-contact + invite-contact select2 dropdowns.
+            .select2-container {
+                width: 100% !important;
+            }
+        }
+
+        // Multi-select chips wrap instead of overflowing on narrow screens.
+        .select2-container--default.select2-container--focus .select2-selection--multiple,
+        .select2-container--default.select2-container--focus .select2-selection--single,
+        span.select2-selection--multiple,
+        span.select2-selection--single {
+            height: auto;
+            min-height: 32px;
+        }
+
+        // Trix editor toolbar wraps instead of clipping.
+        trix-toolbar .trix-button-row {
+            flex-wrap: wrap;
+        }
+    }
+}

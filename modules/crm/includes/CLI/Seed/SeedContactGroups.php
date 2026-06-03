@@ -33,11 +33,16 @@ class SeedContactGroups extends AbstractCrmSeeder {
         $count  = (int) ( $assoc_args['count'] ?? 8 );
         $groups = CrmDataProvider::contact_groups();
 
-        $progress    = $this->progress( 'Creating contact groups', min( $count, count( $groups ) ) );
+        $progress    = $this->progress( 'Creating contact groups', $count );
         $created_ids = [];
 
-        for ( $i = 0; $i < $count && $i < count( $groups ); $i++ ) {
-            $group = $groups[ $i ];
+        for ( $i = 0; $i < $count; $i++ ) {
+            $template = $groups[ $i % count( $groups ) ];
+            $cycle    = (int) floor( $i / count( $groups ) );
+            $group    = [
+                'name'        => $cycle > 0 ? $template['name'] . ' ' . ( $cycle + 1 ) : $template['name'],
+                'description' => $template['description'],
+            ];
 
             // Check if group already exists.
             $existing = $wpdb->get_var(
