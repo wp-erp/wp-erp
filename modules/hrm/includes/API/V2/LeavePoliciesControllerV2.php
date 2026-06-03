@@ -412,8 +412,15 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 	}
 
 	/**
-	 * Normalise a scope value: empty / missing collapses to the `-1` "All"
-	 * sentinel; otherwise the sanitized value is kept.
+	 * Normalise a scope value to the `-1` "All" sentinel.
+	 *
+	 * Empty/missing AND `0` both collapse to `-1`. This matters downstream:
+	 * `erp_hr_leave_insert_entitlement()` only treats a scope as "any" when it
+	 * equals exactly `-1` (`$policy->department_id != '-1'` …). A scope persisted
+	 * as `0`/`''` is compared literally against the employee's real department,
+	 * type, etc., so an "all employees" policy would reject every assignment with
+	 * "Policy does not match with employee profile." Real scope IDs are positive,
+	 * so mapping `0` → `-1` is safe.
 	 *
 	 * @param mixed $value Raw value.
 	 *
@@ -421,7 +428,7 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 	 */
 	private function sentinel( $value ): string {
 		$value = sanitize_text_field( (string) $value );
-		return '' === $value ? '-1' : $value;
+		return ( '' === $value || '0' === $value ) ? '-1' : $value;
 	}
 
 	/**

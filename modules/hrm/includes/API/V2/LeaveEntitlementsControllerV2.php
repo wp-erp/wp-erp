@@ -200,13 +200,17 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 		$employees = [];
 
 		if ( ! $is_single ) {
+			// Scope args mirror the legacy form-assign (FormHandler::leave_entitlement)
+			// exactly — note it intentionally omits `type`; per-employee validation
+			// in erp_hr_leave_insert_entitlement() enforces employee_type. Values are
+			// normalised so an "all" policy persisted as 0/'' still resolves everyone.
 			$employees = erp_hr_get_employees(
 				[
-					'department'     => $policy->department_id,
-					'location'       => $policy->location_id,
-					'designation'    => $policy->designation_id,
-					'gender'         => $policy->gender,
-					'marital_status' => $policy->marital,
+					'department'     => $this->scope_or_any( $policy->department_id ),
+					'location'       => $this->scope_or_any( $policy->location_id ),
+					'designation'    => $this->scope_or_any( $policy->designation_id ),
+					'gender'         => $this->scope_or_any( $policy->gender ),
+					'marital_status' => $this->scope_or_any( $policy->marital ),
 					'number'         => '-1',
 					'no_object'      => true,
 				]
@@ -307,15 +311,30 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 	 * @return WP_REST_Response
 	 */
 	public function get_policy_options( $request ): WP_REST_Response {
+		// NOTE: `erp_hr_leave_get_policies()` treats a scope value as a *literal*
+		// WHERE clause — it does NOT interpret '-1' as "any". The legacy AJAX
+		// form sent '-1' because its Vue UI carried scope selectors; the React
+		// assign dialog has none, so defaulting to '-1' would match only policies
+		// scoped to exactly '-1' and return an empty dropdown. Default each scope
+		// to '' (the fn skips falsy values) so an unscoped request lists every
+		// policy, while a real scope passed by the caller still filters.
 		$data = [
-			'employee_type'  => sanitize_text_field( (string) ( $request['employee_type'] ?? '-1' ) ),
-			'department_id'  => sanitize_text_field( (string) ( $request['department_id'] ?? '-1' ) ),
-			'location_id'    => sanitize_text_field( (string) ( $request['location_id'] ?? '-1' ) ),
-			'designation_id' => sanitize_text_field( (string) ( $request['designation_id'] ?? '-1' ) ),
-			'gender'         => sanitize_text_field( (string) ( $request['gender'] ?? '-1' ) ),
-			'marital'        => sanitize_text_field( (string) ( $request['marital'] ?? '-1' ) ),
+			'employee_type'  => sanitize_text_field( (string) ( $request['employee_type'] ?? '' ) ),
+			'department_id'  => sanitize_text_field( (string) ( $request['department_id'] ?? '' ) ),
+			'location_id'    => sanitize_text_field( (string) ( $request['location_id'] ?? '' ) ),
+			'designation_id' => sanitize_text_field( (string) ( $request['designation_id'] ?? '' ) ),
+			'gender'         => sanitize_text_field( (string) ( $request['gender'] ?? '' ) ),
+			'marital'        => sanitize_text_field( (string) ( $request['marital'] ?? '' ) ),
 			'f_year'         => sanitize_text_field( (string) ( $request['f_year'] ?? '' ) ),
 		];
+
+		// A caller may still send '-1' to mean "any" (legacy convention) — treat
+		// it as unset so the fn skips the filter instead of matching it literally.
+		foreach ( $data as $key => $value ) {
+			if ( '-1' === $value ) {
+				$data[ $key ] = '';
+			}
+		}
 
 		$raw = (array) erp_hr_leave_get_policies_dropdown_raw( $data );
 
@@ -352,12 +371,12 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 			[
 				'number'         => '-1',
 				'no_object'      => true,
-				'department'     => $policy->department_id,
-				'location'       => $policy->location_id,
-				'designation'    => $policy->designation_id,
-				'gender'         => $policy->gender,
-				'marital_status' => $policy->marital,
-				'type'           => $policy->employee_type,
+				'department'     => $this->scope_or_any( $policy->department_id ),
+				'location'       => $this->scope_or_any( $policy->location_id ),
+				'designation'    => $this->scope_or_any( $policy->designation_id ),
+				'gender'         => $this->scope_or_any( $policy->gender ),
+				'marital_status' => $this->scope_or_any( $policy->marital ),
+				'type'           => $this->scope_or_any( $policy->employee_type ),
 			]
 		);
 
@@ -370,6 +389,25 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 		}
 
 		return rest_ensure_response( $options );
+	}
+
+	/**
+	 * Normalise a policy scope value to the `-1` "any" sentinel that
+	 * `erp_hr_get_employees()` expects.
+	 *
+	 * That fn only skips a scope filter when the value is exactly `-1`; `0`, `''`
+	 * and `null` are matched literally and resolve to zero employees. Leave
+	 * policies may persist those falsy values for an "all" scope, so collapse
+	 * them to `-1` here. Real scope IDs are positive, so this is loss-free.
+	 *
+	 * @param mixed $value Raw scope value off the policy.
+	 *
+	 * @return mixed `-1` for an "any" scope, otherwise the original value.
+	 */
+	private function scope_or_any( $value ) {
+		return ( null === $value || '' === $value || '0' === (string) $value || '-1' === (string) $value )
+			? '-1'
+			: $value;
 	}
 
 	/**
