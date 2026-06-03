@@ -86,6 +86,25 @@ export async function fetchAssignablePolicies(
 	return body.policies ?? [];
 }
 
+export interface LeaveDateValidation {
+	readonly total:    number;
+	readonly sandwich: boolean;
+	readonly days:     ReadonlyArray< { date: string; status: string | null } >;
+}
+
+/**
+ * Pre-validate a leave date range (mirrors the legacy `leave_request_dates`):
+ * resolves the working-day count, or throws an ApiError with the server's
+ * message (FY bounds / overlap / insufficient balance).
+ */
+export async function validateLeaveDates(
+	userId: number,
+	payload: { leave_policy: number; leave_from: string; leave_to: string }
+): Promise< LeaveDateValidation > {
+	const path = restPath( 'v2', `/employees/${ userId }/leave/validate-dates` );
+	return request< LeaveDateValidation >( path, { method: 'POST', data: payload } );
+}
+
 /** Submit a leave request for the employee (mirrors the legacy leave_request). */
 export async function submitLeaveRequest(
 	userId: number,

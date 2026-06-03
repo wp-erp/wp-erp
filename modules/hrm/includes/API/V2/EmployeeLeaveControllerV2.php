@@ -18,6 +18,7 @@ namespace WeDevs\ERP\HRM\API\V2;
 
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\LeaveEntitlement;
 use WP_REST_Request;
 use WP_REST_Server;
 
@@ -91,6 +92,21 @@ class EmployeeLeaveControllerV2 extends RestControllerV2 {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'create_request' ],
+					'permission_callback' => [ $this, 'permission_create_request' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<user_id>[\d]+)/leave/validate-dates',
+			[
+				'args' => [
+					'user_id' => $this->user_id_arg(),
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'validate_dates' ],
 					'permission_callback' => [ $this, 'permission_create_request' ],
 				],
 			]
@@ -224,6 +240,98 @@ class EmployeeLeaveControllerV2 extends RestControllerV2 {
 		$response->set_status( 201 );
 
 		return $response;
+	}
+
+	/**
+	 * POST /erp/v2/employees/{user_id}/leave/validate-dates
+	 *
+	 * Pre-validates a leave date range before submission — mirrors
+	 * `AjaxHandler::leave_request_dates()`: checks the range order, that both
+	 * dates fall in the entitlement's financial year, that no existing leave
+	 * overlaps, and (unless extra leave is enabled) that the policy still has
+	 * balance. Returns the working-day breakdown + total + sandwich flag so the
+	 * request form can show the day count live.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function validate_dates( $request ) {
+		$user_id  = (int) $request['user_id'];
+		$employee = new Employee( $user_id );
+
+		if ( ! $employee->is_employee() ) {
+			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		$policy_id = (int) ( $request['leave_policy'] ?? 0 );
+		if ( ! $policy_id ) {
+			return new \WP_Error( 'rest_leave_policy_required', __( 'Please select a policy', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$start_date = sanitize_text_field( (string) ( $request['leave_from'] ?? '' ) );
+		$end_date   = sanitize_text_field( (string) ( $request['leave_to'] ?? '' ) );
+		$start_date = $start_date !== '' ? $start_date : date_i18n( 'Y-m-d' );
+		$end_date   = $end_date !== '' ? $end_date : date_i18n( 'Y-m-d' );
+
+		if ( $start_date > $end_date ) {
+			return new \WP_Error( 'rest_invalid_range', __( 'Invalid date range', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$entitlement = LeaveEntitlement::find( $policy_id );
+		if ( ! $entitlement ) {
+			return new \WP_Error( 'rest_invalid_policy', __( 'Invalid leave policy.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
+		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
+
+		if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end ) ) {
+			return new \WP_Error(
+				'rest_invalid_duration',
+				sprintf(
+					/* translators: %1$s start, %2$s end of financial year */
+					__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ),
+					erp_format_date( $f_year_start ),
+					erp_format_date( $f_year_end )
+				),
+				[ 'status' => 400 ]
+			);
+		}
+
+		if ( erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id, $entitlement->f_year ) ) {
+			return new \WP_Error( 'rest_leave_overlap', __( 'Existing Leave Record found within selected range!', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		if ( get_option( 'enable_extra_leave', 'no' ) !== 'yes' ) {
+			if ( ! erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $user_id ) ) {
+				return new \WP_Error( 'rest_insufficient_balance', __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ), [ 'status' => 400 ] );
+			}
+		}
+
+		$days = erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id );
+
+		if ( is_wp_error( $days ) ) {
+			return new \WP_Error( 'rest_invalid_dates', $days->get_error_message(), [ 'status' => 400 ] );
+		}
+
+		$breakdown = [];
+		foreach ( (array) ( $days['days'] ?? [] ) as $date ) {
+			$breakdown[] = [
+				'date'   => erp_format_date( $date['date'] ?? '', 'D, M d' ),
+				'status' => $this->cast_string_or_null( $date['status'] ?? '' ),
+			];
+		}
+
+		$total = (int) ( $days['total'] ?? 0 );
+
+		return rest_ensure_response(
+			[
+				'total'    => $total,
+				'sandwich' => $this->cast_bool( $days['sandwich'] ?? false ),
+				'days'     => $breakdown,
+			]
+		);
 	}
 
 	/**

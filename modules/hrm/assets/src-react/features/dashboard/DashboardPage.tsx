@@ -8,7 +8,17 @@
  */
 
 import { useSelect } from '@wordpress/data';
-import { Avatar, AvatarFallback, AvatarImage } from '@wedevs/plugin-ui';
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+	Button,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	toast,
+} from '@wedevs/plugin-ui';
 import {
 	ArrowRight,
 	Briefcase,
@@ -16,11 +26,13 @@ import {
 	CalendarClock,
 	Cake,
 	Clock4,
+	Gift,
 	Megaphone,
 	PalmtreeIcon,
 	UserPlus,
 	Users,
 } from 'lucide-react';
+import { useState } from 'react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -32,7 +44,13 @@ import type { MeUser } from '@/stores/me/types';
 
 import { ChartsSection } from './DashboardCharts';
 import type { BirthdayPerson, OnLeavePerson } from './types';
-import { useDashboard } from './useDashboard';
+import {
+	fetchAnnouncement,
+	markAnnouncementRead,
+	sendBirthdayWish,
+	useDashboard,
+} from './useDashboard';
+import type { AnnouncementContent } from './useDashboard';
 
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 
@@ -167,7 +185,19 @@ function OnLeaveItem( { person }: { person: OnLeavePerson } ): JSX.Element {
 	);
 }
 
-function BirthdayItem( { person, today }: { person: BirthdayPerson; today: boolean } ): JSX.Element {
+function BirthdayItem( {
+	person,
+	today,
+	canWish,
+	wished,
+	onWish,
+}: {
+	person: BirthdayPerson;
+	today: boolean;
+	canWish: boolean;
+	wished: boolean;
+	onWish: ( id: number ) => void;
+} ): JSX.Element {
 	return (
 		<li className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
 			<PersonAvatar name={ person.name } src={ person.avatar_url } />
@@ -177,6 +207,18 @@ function BirthdayItem( { person, today }: { person: BirthdayPerson; today: boole
 					{ today ? __( 'Today 🎉', 'erp' ) : fmtDayMonth( person.date_of_birth ) }
 				</p>
 			</div>
+			{ canWish ? (
+				<Button
+					variant="ghost"
+					size="sm"
+					className="h-8 gap-1.5 text-primary hover:text-primary"
+					disabled={ wished }
+					onClick={ () => onWish( person.user_id ) }
+				>
+					<Gift size={ 14 } aria-hidden="true" />
+					{ wished ? __( 'Sent', 'erp' ) : __( 'Wish', 'erp' ) }
+				</Button>
+			) : null }
 		</li>
 	);
 }
@@ -187,7 +229,31 @@ function DashboardInner(): JSX.Element {
 	const canCreateEmployee = useCan( 'erp_create_employee' );
 	const canManageLeave    = useCan( 'erp_leave_manage' );
 
+	const currentUserId = user?.id ?? 0;
 	const name = user?.displayName ? user.displayName.split( ' ' )[ 0 ] : '';
+
+	const [ viewing, setViewing ] = useState< AnnouncementContent | null >( null );
+	const [ viewLoading, setViewLoading ] = useState( false );
+	const [ wished, setWished ] = useState< ReadonlySet< number > >( new Set() );
+
+	function openAnnouncement( id: number ): void {
+		setViewLoading( true );
+		setViewing( null );
+		void markAnnouncementRead( id ).catch( () => undefined );
+		void fetchAnnouncement( id )
+			.then( ( content ) => setViewing( content ) )
+			.catch( () => toast.error( __( 'Could not open the announcement.', 'erp' ) ) )
+			.finally( () => setViewLoading( false ) );
+	}
+
+	function handleWish( employeeUserId: number ): void {
+		void sendBirthdayWish( employeeUserId )
+			.then( () => {
+				setWished( ( prev ) => new Set( prev ).add( employeeUserId ) );
+				toast.success( __( 'Birthday wish sent!', 'erp' ) );
+			} )
+			.catch( () => toast.error( __( 'Could not send the birthday wish.', 'erp' ) ) );
+	}
 
 	if ( error ) {
 		return <p className="mx-auto my-12 max-w-md text-center text-sm text-destructive">{ error }</p>;
@@ -306,8 +372,26 @@ function DashboardInner(): JSX.Element {
 								<EmptyRow text={ __( 'No birthdays in the next 7 days.', 'erp' ) } />
 							) : (
 								<ul>
-									{ data?.birthdays_today.map( ( p ) => <BirthdayItem key={ `t-${ p.user_id }` } person={ p } today /> ) }
-									{ data?.birthdays_upcoming.map( ( p ) => <BirthdayItem key={ `u-${ p.user_id }` } person={ p } today={ false } /> ) }
+									{ data?.birthdays_today.map( ( p ) => (
+										<BirthdayItem
+											key={ `t-${ p.user_id }` }
+											person={ p }
+											today
+											canWish={ p.user_id !== currentUserId }
+											wished={ wished.has( p.user_id ) }
+											onWish={ handleWish }
+										/>
+									) ) }
+									{ data?.birthdays_upcoming.map( ( p ) => (
+										<BirthdayItem
+											key={ `u-${ p.user_id }` }
+											person={ p }
+											today={ false }
+											canWish={ false }
+											wished={ wished.has( p.user_id ) }
+											onWish={ handleWish }
+										/>
+									) ) }
 								</ul>
 							) }
 						</WidgetCard>
@@ -345,9 +429,15 @@ function DashboardInner(): JSX.Element {
 							) : (
 								<ul>
 									{ data?.announcements.map( ( a ) => (
-										<li key={ a.id } className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
-											<span className="min-w-0 truncate text-sm font-medium text-foreground">{ a.title }</span>
-											<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( a.date ) }</span>
+										<li key={ a.id }>
+											<button
+												type="button"
+												onClick={ () => openAnnouncement( a.id ) }
+												className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/50"
+											>
+												<span className="min-w-0 truncate text-sm font-medium text-foreground">{ a.title }</span>
+												<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( a.date ) }</span>
+											</button>
 										</li>
 									) ) }
 								</ul>
@@ -356,6 +446,32 @@ function DashboardInner(): JSX.Element {
 					</div>
 				</>
 			) }
+
+			{ /* Announcement view modal (marks read on open). */ }
+			<Dialog open={ viewing !== null || viewLoading } onOpenChange={ ( next ) => ( next ? undefined : setViewing( null ) ) }>
+				<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+					<DialogHeader>
+						<DialogTitle className="m-0 text-xl font-bold leading-tight tracking-tight text-foreground">
+							{ viewing?.title ?? __( 'Announcement', 'erp' ) }
+						</DialogTitle>
+					</DialogHeader>
+					<div className="h-px w-full bg-border" />
+					{ viewLoading && ! viewing ? (
+						<p className="text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+					) : viewing ? (
+						<>
+							{ viewing.date ? (
+								<p className="text-xs text-muted-foreground">{ fmtDate( viewing.date ) }</p>
+							) : null }
+							{ /* eslint-disable-next-line react/no-danger -- admin-authored, manage-gated content */ }
+							<div
+								className="prose prose-sm max-w-none text-sm text-foreground [&_a]:text-primary"
+								dangerouslySetInnerHTML={ { __html: viewing.content } }
+							/>
+						</>
+					) : null }
+				</DialogContent>
+			</Dialog>
 		</section>
 	);
 }

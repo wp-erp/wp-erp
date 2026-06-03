@@ -105,6 +105,19 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/mark-read',
+			[
+				'args' => [ 'id' => $this->id_arg() ],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'mark_read' ],
+					'permission_callback' => [ $this, 'permission_view' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			[
 				'args' => [ 'id' => $this->id_arg() ],
@@ -346,6 +359,28 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 	}
 
 	/**
+	 * POST /erp/v2/announcements/{id}/mark-read
+	 *
+	 * Marks the announcement read for the current user — mirrors
+	 * `AjaxHandler::mark_read_announcement()` (updates the `erp_hr_announcement`
+	 * recipient row for this user to `read`).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function mark_read( $request ): WP_REST_Response {
+		$post_id = (int) $request['id'];
+		$user_id = get_current_user_id();
+
+		Announcement::where( 'post_id', $post_id )
+			->where( 'user_id', $user_id )
+			->update( [ 'status' => 'read' ] );
+
+		return rest_ensure_response( [ 'read' => true, 'id' => $post_id ] );
+	}
+
+	/**
 	 * GET /erp/v2/announcements/status-counts
 	 *
 	 * @return WP_REST_Response
@@ -446,9 +481,10 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 			return [ 'id' => $post_id ];
 		}
 
-		$row            = $this->prepare_item_for_response( $post, null );
-		$row['content'] = (string) $post->post_content;
-		$row['type']    = (string) get_post_meta( $post_id, '_announcement_type', true );
+		$row                 = $this->prepare_item_for_response( $post, null );
+		$row['content']      = (string) $post->post_content; // raw — the editor binds to this.
+		$row['html_content'] = (string) wpautop( (string) $post->post_content ); // display-ready (view modal).
+		$row['type']         = (string) get_post_meta( $post_id, '_announcement_type', true );
 
 		return $row;
 	}

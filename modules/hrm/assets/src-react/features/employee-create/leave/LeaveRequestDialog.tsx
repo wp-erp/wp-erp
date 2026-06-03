@@ -25,8 +25,8 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { SelectField, TextField, TextareaField } from '../fields';
 import type { Option } from '../options';
-import { fetchAssignablePolicies, submitLeaveRequest } from './useEmployeeLeave';
-import type { AssignablePolicy, LeaveOption } from './useEmployeeLeave';
+import { fetchAssignablePolicies, submitLeaveRequest, validateLeaveDates } from './useEmployeeLeave';
+import type { AssignablePolicy, LeaveDateValidation, LeaveOption } from './useEmployeeLeave';
 
 interface LeaveRequestDialogProps {
 	readonly open:           boolean;
@@ -53,6 +53,9 @@ export function LeaveRequestDialog( {
 	const [ reason, setReason ]     = useState( '' );
 	const [ busy, setBusy ]         = useState( false );
 	const [ error, setError ]       = useState< string | null >( null );
+	const [ validating, setValidating ] = useState( false );
+	const [ validation, setValidation ] = useState< LeaveDateValidation | null >( null );
+	const [ dateError, setDateError ]   = useState< string | null >( null );
 
 	// Reset when (re)opened.
 	useEffect( () => {
@@ -63,8 +66,46 @@ export function LeaveRequestDialog( {
 			setTo( '' );
 			setReason( '' );
 			setError( null );
+			setValidation( null );
+			setDateError( null );
 		}
 	}, [ open, currentYear ] );
+
+	// Live pre-validation of the date range (mirrors legacy leave_request_dates):
+	// working-day count on success, server message (overlap / balance / FY) on error.
+	useEffect( () => {
+		if ( ! open || ! policy || ! from || ! to ) {
+			setValidation( null );
+			setDateError( null );
+			return;
+		}
+		let cancelled = false;
+		setValidating( true );
+		setDateError( null );
+		const timer = window.setTimeout( () => {
+			void validateLeaveDates( userId, { leave_policy: Number( policy ), leave_from: from, leave_to: to } )
+				.then( ( result ) => {
+					if ( ! cancelled ) {
+						setValidation( result );
+					}
+				} )
+				.catch( ( raw ) => {
+					if ( ! cancelled ) {
+						setValidation( null );
+						setDateError( ( raw as ApiError )?.message ?? __( 'Invalid leave dates.', 'erp' ) );
+					}
+				} )
+				.finally( () => {
+					if ( ! cancelled ) {
+						setValidating( false );
+					}
+				} );
+		}, 350 );
+		return () => {
+			cancelled = true;
+			window.clearTimeout( timer );
+		};
+	}, [ open, userId, policy, from, to ] );
 
 	// Load the assignable policies whenever the chosen year changes.
 	useEffect( () => {
@@ -144,13 +185,29 @@ export function LeaveRequestDialog( {
 					/>
 					<TextField id="leave_from" label={ __( 'From', 'erp' ) } type="date" required value={ from } onChange={ setFrom } />
 					<TextField id="leave_to" label={ __( 'To', 'erp' ) } type="date" required value={ to } onChange={ setTo } />
+					{ validating ? (
+						<p className="text-sm text-muted-foreground">{ __( 'Checking dates…', 'erp' ) }</p>
+					) : dateError ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ dateError }</AlertDescription>
+						</Alert>
+					) : validation ? (
+						<div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
+							{ sprintf(
+								validation.total === 1 ? __( '%d working day', 'erp' ) : __( '%d working days', 'erp' ),
+								validation.total
+							) }
+							{ validation.sandwich ? ` ${ __( '(Sandwich rule applied)', 'erp' ) }` : '' }
+						</div>
+					) : null }
+
 					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } value={ reason } onChange={ setReason } />
 
 					<DialogFooter className="gap-5 sm:gap-5">
 						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>
 							{ __( 'Cancel', 'erp' ) }
 						</Button>
-						<Button type="submit" className="h-10 px-6" disabled={ busy }>
+						<Button type="submit" className="h-10 px-6" disabled={ busy || validating || dateError !== null }>
 							{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit Request', 'erp' ) }
 						</Button>
 					</DialogFooter>

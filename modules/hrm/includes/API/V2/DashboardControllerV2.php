@@ -44,6 +44,51 @@ class DashboardControllerV2 extends RestControllerV2 {
 				],
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/birthday-wish',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'birthday_wish' ],
+					'permission_callback' => [ $this, 'permission_logged_in' ],
+					'args'                => [
+						'employee_user_id' => [
+							'type'              => 'integer',
+							'required'          => true,
+							'sanitize_callback' => 'absint',
+						],
+					],
+				],
+			]
+		);
+	}
+
+	/**
+	 * POST /erp/v2/dashboard/birthday-wish
+	 *
+	 * Sends a birthday wish e-mail to a coworker — mirrors
+	 * `AjaxHandler::birthday_wish()` (triggers the `BirthdayWish` emailer).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function birthday_wish( WP_REST_Request $request ) {
+		$employee_user_id = (int) $request['employee_user_id'];
+
+		if ( ! $employee_user_id ) {
+			return new \WP_Error( 'rest_invalid_employee', __( 'Invalid employee.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$emailer = wperp()->emailer->get_email( 'BirthdayWish' );
+
+		if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+			$emailer->trigger( $employee_user_id );
+		}
+
+		return rest_ensure_response( [ 'sent' => true, 'employee_user_id' => $employee_user_id ] );
 	}
 
 	/**
