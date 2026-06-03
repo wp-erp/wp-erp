@@ -10,7 +10,7 @@
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
-import { Plus, Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
@@ -156,7 +156,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 	const actionButton = ( target: JobAction, label: string ): ReactNode =>
 		canManage ? (
 			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => openAction( target ) }>
-				<Plus size={ 14 } aria-hidden="true" />
+				<Pencil size={ 14 } aria-hidden="true" />
 				{ label }
 			</Button>
 		) : null;
