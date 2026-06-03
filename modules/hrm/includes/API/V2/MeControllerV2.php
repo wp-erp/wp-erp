@@ -110,6 +110,12 @@ class MeControllerV2 extends RestControllerV2 {
 
 		$all = array_keys( array_merge( $manager_caps, $employee_caps ) );
 
+		// The HR-manager role doubles as the gate for the Reports menu
+		// (AdminMenu.php uses `'capability' => 'erp_hr_manager'`). It is a role,
+		// not one of the per-role cap keys, so add it explicitly — otherwise the
+		// React Reports nav can never resolve its gate.
+		$all[] = erp_hr_get_manager_role();
+
 		/**
 		 * Filter the capability keys returned to the React shell.
 		 *

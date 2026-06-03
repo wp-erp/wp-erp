@@ -322,6 +322,14 @@ final class Enqueue {
 			? (array) erp_hr_get_caps_for_role( erp_hr_get_employee_role() )
 			: [];
 		$keys = array_keys( array_merge( $manager, $employee ) );
+
+		// The HR-manager role doubles as the gate for the Reports menu
+		// (AdminMenu.php uses `'capability' => 'erp_hr_manager'`). It is a role,
+		// not one of the per-role cap keys, so add it explicitly — otherwise the
+		// React Reports nav can never resolve its gate from the boot payload.
+		// Mirrors MeControllerV2::hr_capability_keys().
+		$keys[] = erp_hr_get_manager_role();
+
 		return array_values( array_unique( array_map( 'strval', $keys ) ) );
 	}
 

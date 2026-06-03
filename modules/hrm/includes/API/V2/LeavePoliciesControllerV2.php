@@ -296,6 +296,13 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 			$designations[] = [ 'id' => (int) $desig_id, 'title' => (string) $title ];
 		}
 
+		// Current financial year ID — the list filter + create form default to it.
+		$current_f_year = 0;
+		if ( function_exists( 'erp_hr_get_financial_year_from_date' ) ) {
+			$fy             = erp_hr_get_financial_year_from_date();
+			$current_f_year = $fy ? (int) $fy->id : 0;
+		}
+
 		return rest_ensure_response(
 			[
 				'leave_types'      => array_map(
@@ -306,6 +313,7 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 					$leave_types
 				),
 				'financial_years'  => $financial_years,
+				'current_f_year'   => $current_f_year,
 				'departments'      => $departments,
 				'designations'     => $designations,
 				'employee_types'   => $this->enum_to_options( erp_hr_get_employee_types() ),

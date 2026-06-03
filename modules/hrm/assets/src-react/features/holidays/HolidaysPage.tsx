@@ -236,7 +236,8 @@ function HolidaysInner(): JSX.Element {
 							: __( 'No holidays for this year yet.', 'erp' ) }
 					</p>
 				) : (
-					<table className="w-full text-left">
+					<div className="overflow-x-auto">
+						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
@@ -252,7 +253,7 @@ function HolidaysInner(): JSX.Element {
 							{ rows.map( ( holiday ) => (
 								<tr key={ holiday.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
 									<td className="px-4 align-middle font-medium text-foreground">{ holiday.title }</td>
-									<td className="px-4 align-middle text-sm text-foreground">
+									<td className="whitespace-nowrap px-4 align-middle text-sm text-foreground">
 										{ holiday.range
 											? `${ fmt( holiday.start ) } – ${ fmt( holiday.end ) }`
 											: fmt( holiday.start ) }
@@ -304,6 +305,7 @@ function HolidaysInner(): JSX.Element {
 							) ) }
 						</tbody>
 					</table>
+					</div>
 				) }
 
 				{ ! error && ! loading && total > 0 ? (

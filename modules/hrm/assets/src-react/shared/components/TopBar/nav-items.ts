@@ -81,7 +81,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		icon:          'users-round',
 		hasDropdown:   true,
 		capabilities:  [ 'erp_list_employee' ],
-		activeMatches: [ '/employees', '/departments', '/designations', '/org-chart' ],
+		activeMatches: [ '/employees', '/departments', '/designations', '/org-chart', '/announcements' ],
 		children: [
 			{
 				id:           'people-all',
@@ -110,6 +110,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/designations',
 				capabilities: [ 'erp_view_list' ],
 				description:  __( 'Manage job titles', 'erp' ),
+			},
+			{
+				id:           'people-announcements',
+				label:        __( 'Announcements', 'erp' ),
+				to:           '/announcements',
+				capabilities: [ 'erp_view_announcement' ],
+				description:  __( 'Post company-wide notices', 'erp' ),
 			},
 		],
 	},
@@ -168,7 +175,14 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/leave/holidays',
 				// Legacy AdminMenu gates the Holidays page on `erp_leave_manage`.
 				capabilities: [ 'erp_leave_manage' ],
-				description:  __( 'Manage company holidays and the leave calendar', 'erp' ),
+				description:  __( 'Manage company holidays', 'erp' ),
+			},
+			{
+				id:           'leave-calendar',
+				label:        __( 'Calendar', 'erp' ),
+				to:           '/leave/calendar',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Month view of leave and holidays', 'erp' ),
 			},
 		],
 	},
@@ -220,11 +234,58 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 	{
 		id:            'reports',
 		label:         __( 'Reports', 'erp' ),
-		path:          '/reports',
+		path:          '/reports/age-profile',
 		icon:          'bar-chart-3',
 		hasDropdown:   true,
-		capabilities:  [ 'erp_hr_reports' ],
+		// Legacy AdminMenu gates the Reports page (and every submenu) on the
+		// HR-manager role `erp_hr_manager` — not a per-role cap key. The v2
+		// `/me/capabilities` map now exposes it (MeControllerV2::hr_capability_keys).
+		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/reports' ],
+		children: [
+			{
+				id:           'reports-age-profile',
+				label:        __( 'Age Profile', 'erp' ),
+				to:           '/reports/age-profile',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Age breakdown across departments', 'erp' ),
+			},
+			{
+				id:           'reports-gender-profile',
+				label:        __( 'Gender Profile', 'erp' ),
+				to:           '/reports/gender-profile',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Workforce differentiation by gender', 'erp' ),
+			},
+			{
+				id:           'reports-headcount',
+				label:        __( 'Head Count', 'erp' ),
+				to:           '/reports/headcount',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Headcount by month and department', 'erp' ),
+			},
+			{
+				id:           'reports-salary-history',
+				label:        __( 'Salary History', 'erp' ),
+				to:           '/reports/salary-history',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Compensation history of employees', 'erp' ),
+			},
+			{
+				id:           'reports-years-of-service',
+				label:        __( 'Years of Service', 'erp' ),
+				to:           '/reports/years-of-service',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Longevity and experience report', 'erp' ),
+			},
+			{
+				id:           'reports-leaves',
+				label:        __( 'Leaves', 'erp' ),
+				to:           '/reports/leaves',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Employee-based leave summary', 'erp' ),
+			},
+		],
 	},
 	{
 		id:            'help',

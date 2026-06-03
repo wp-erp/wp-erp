@@ -234,7 +234,8 @@ function LeaveTypesInner(): JSX.Element {
 							: __( 'No leave types yet.', 'erp' ) }
 					</p>
 				) : (
-					<table className="w-full text-left">
+					<div className="overflow-x-auto">
+						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								{ canManage ? (
@@ -306,6 +307,7 @@ function LeaveTypesInner(): JSX.Element {
 							) ) }
 						</tbody>
 					</table>
+					</div>
 				) }
 
 				{ ! error && ! loading && filtered.length > 0 ? (

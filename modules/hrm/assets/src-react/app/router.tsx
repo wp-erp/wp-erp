@@ -8,7 +8,7 @@
 
 import { applyFilters } from '@wordpress/hooks';
 import { Suspense, lazy } from 'react';
-import { Navigate, createHashRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 import type { RouteObject } from 'react-router-dom';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -61,6 +61,42 @@ const LeaveEntitlementsPage = lazy( () =>
 
 const LeaveRequestsPage = lazy( () =>
 	import( '@/features/leave-requests' ).then( ( m ) => ( { default: m.LeaveRequestsPage } ) )
+);
+
+const LeaveCalendarPage = lazy( () =>
+	import( '@/features/leave-calendar' ).then( ( m ) => ( { default: m.LeaveCalendarPage } ) )
+);
+
+const AnnouncementsPage = lazy( () =>
+	import( '@/features/announcements' ).then( ( m ) => ( { default: m.AnnouncementsPage } ) )
+);
+
+const DashboardPage = lazy( () =>
+	import( '@/features/dashboard' ).then( ( m ) => ( { default: m.DashboardPage } ) )
+);
+
+const AgeProfilePage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.AgeProfilePage } ) )
+);
+
+const GenderProfilePage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.GenderProfilePage } ) )
+);
+
+const HeadcountReportPage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.HeadcountPage } ) )
+);
+
+const SalaryHistoryPage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.SalaryHistoryPage } ) )
+);
+
+const YearsOfServicePage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.YearsOfServicePage } ) )
+);
+
+const LeavesReportPage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.LeavesReportPage } ) )
 );
 
 export interface AppRoute {
@@ -169,6 +205,18 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
+		id:           'announcements',
+		path:         '/announcements',
+		element:      AnnouncementsPage,
+		capabilities: [ 'erp_view_announcement' ],
+		handle: {
+			id:        'announcements',
+			title:     __( 'Announcements', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
 		id:           'leave-requests',
 		path:         '/leave/requests',
 		element:      LeaveRequestsPage,
@@ -217,6 +265,18 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
+		id:           'leave-calendar',
+		path:         '/leave/calendar',
+		element:      LeaveCalendarPage,
+		capabilities: [ 'erp_leave_manage' ],
+		handle: {
+			id:        'leave-calendar',
+			title:     __( 'Leave Calendar', 'erp' ),
+			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
 		id:           'holidays',
 		path:         '/leave/holidays',
 		element:      HolidaysPage,
@@ -225,6 +285,78 @@ const baseRoutes: AppRoute[] = [
 			id:        'holidays',
 			title:     __( 'Holidays', 'erp' ),
 			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'reports-age-profile',
+		path:         '/reports/age-profile',
+		element:      AgeProfilePage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports-age-profile',
+			title:     __( 'Age Profile', 'erp' ),
+			group:     'reports',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'reports-gender-profile',
+		path:         '/reports/gender-profile',
+		element:      GenderProfilePage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports-gender-profile',
+			title:     __( 'Gender Profile', 'erp' ),
+			group:     'reports',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'reports-headcount',
+		path:         '/reports/headcount',
+		element:      HeadcountReportPage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports-headcount',
+			title:     __( 'Head Count', 'erp' ),
+			group:     'reports',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'reports-salary-history',
+		path:         '/reports/salary-history',
+		element:      SalaryHistoryPage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports-salary-history',
+			title:     __( 'Salary History', 'erp' ),
+			group:     'reports',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'reports-years-of-service',
+		path:         '/reports/years-of-service',
+		element:      YearsOfServicePage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports-years-of-service',
+			title:     __( 'Years of Service', 'erp' ),
+			group:     'reports',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'reports-leaves',
+		path:         '/reports/leaves',
+		element:      LeavesReportPage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports-leaves',
+			title:     __( 'Leaves', 'erp' ),
+			group:     'reports',
 			showInNav: false,
 		},
 	},
@@ -261,7 +393,19 @@ export const hashRouter = createHashRouter( [
 	{
 		element: <AppShell />,
 		children: [
-			{ index: true, element: <Navigate to="/employees" replace /> },
+			{
+				index: true,
+				handle: { id: 'overview', title: __( 'Overview', 'erp' ), group: 'people', showInNav: false },
+				element: (
+					<CapabilityGate caps={ [ 'read' ] }>
+						<ErrorBoundary>
+							<Suspense fallback={ <RouteSkeleton /> }>
+								<DashboardPage />
+							</Suspense>
+						</ErrorBoundary>
+					</CapabilityGate>
+				),
+			},
 			...wrappedRoutes,
 			{ path: '*', element: <NotFound /> },
 		],

@@ -18,7 +18,7 @@ import {
 	toast,
 } from '@wedevs/plugin-ui';
 import { Filter, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -64,6 +64,11 @@ function LeavePoliciesInner(): JSX.Element {
 		setPage( 1 );
 	}, [ fYear, departmentId, employeeType ] );
 
+	// Default the year filter to the current financial year (like Holidays
+	// defaults to the current calendar year). One-shot, so clearing back to
+	// "All Years" sticks.
+	const didDefaultYear = useRef( false );
+
 	// Load the form-options once (lazily, on first need) and cache them.
 	const ensureOptions = useCallback( async (): Promise< PolicyFormOptions > => {
 		if ( options ) {
@@ -71,6 +76,10 @@ function LeavePoliciesInner(): JSX.Element {
 		}
 		const opts = await loadOptions();
 		setOptions( opts );
+		if ( ! didDefaultYear.current && opts.currentFYear ) {
+			didDefaultYear.current = true;
+			setFYear( opts.currentFYear );
+		}
 		return opts;
 	}, [ options, loadOptions ] );
 
@@ -244,7 +253,8 @@ function LeavePoliciesInner(): JSX.Element {
 						{ __( 'No leave policies match these filters.', 'erp' ) }
 					</p>
 				) : (
-					<table className="w-full text-left">
+					<div className="overflow-x-auto">
+						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
@@ -309,6 +319,7 @@ function LeavePoliciesInner(): JSX.Element {
 							) ) }
 						</tbody>
 					</table>
+					</div>
 				) }
 
 				{ ! error && ! loading && total > 0 ? (

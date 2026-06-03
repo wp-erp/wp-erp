@@ -20,6 +20,8 @@ import { __ } from '@/shared/i18n';
 import { restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
+import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
+
 interface AvatarResponse {
 	readonly photo_id:   number | null;
 	readonly avatar_url: string | null;
@@ -36,6 +38,7 @@ interface AvatarUploadProps {
 export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange }: AvatarUploadProps ): JSX.Element {
 	const inputRef = useRef< HTMLInputElement >( null );
 	const [ busy, setBusy ] = useState( false );
+	const [ confirmOpen, setConfirmOpen ] = useState( false );
 
 	async function handleFile( file: File ): Promise< void > {
 		setBusy( true );
@@ -68,8 +71,10 @@ export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange 
 			} );
 			onChange( body.avatar_url ?? '' );
 			toast.success( __( 'Photo removed.', 'erp' ) );
+			setConfirmOpen( false );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not remove the photo.', 'erp' ) );
+			setConfirmOpen( false );
 		} finally {
 			setBusy( false );
 		}
@@ -114,7 +119,7 @@ export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange 
 							<button
 								type="button"
 								className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-full bg-white/90 text-destructive hover:bg-white"
-								onClick={ () => void handleRemove() }
+								onClick={ () => setConfirmOpen( true ) }
 								aria-label={ __( 'Remove photo', 'erp' ) }
 								title={ __( 'Remove photo', 'erp' ) }
 							>
@@ -124,6 +129,15 @@ export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange 
 					</>
 				) }
 			</div>
+
+			<OrgDeleteDialog
+				open={ confirmOpen }
+				title={ __( 'Remove profile photo?', 'erp' ) }
+				description={ __( 'The current profile photo will be removed. This cannot be undone.', 'erp' ) }
+				busy={ busy }
+				onConfirm={ () => void handleRemove() }
+				onCancel={ () => setConfirmOpen( false ) }
+			/>
 		</div>
 	);
 }

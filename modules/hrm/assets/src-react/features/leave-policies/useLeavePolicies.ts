@@ -31,6 +31,7 @@ interface RawLookup { id: number; name?: string; title?: string; fy_name?: strin
 interface RawFormOptions {
 	leave_types?:      RawLookup[];
 	financial_years?:  RawLookup[];
+	current_f_year?:   number;
 	departments?:      RawLookup[];
 	designations?:     RawLookup[];
 	employee_types?:   PolicyOption[];
@@ -130,6 +131,7 @@ export function useLeavePolicies( {
 		return {
 			leaveTypes:      toLookups( raw.leave_types, 'name' ),
 			financialYears:  toLookups( raw.financial_years, 'fy_name' ),
+			currentFYear:    Number( raw.current_f_year ?? 0 ),
 			departments:     toLookups( raw.departments, 'title' ),
 			designations:    toLookups( raw.designations, 'title' ),
 			employeeTypes:   raw.employee_types ?? [],

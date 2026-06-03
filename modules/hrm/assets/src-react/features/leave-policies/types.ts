@@ -18,6 +18,7 @@ export interface PolicyLookup {
 export interface PolicyFormOptions {
 	readonly leaveTypes:      readonly PolicyLookup[];
 	readonly financialYears:  readonly PolicyLookup[];
+	readonly currentFYear:    number;
 	readonly departments:     readonly PolicyLookup[];
 	readonly designations:    readonly PolicyLookup[];
 	readonly employeeTypes:   readonly PolicyOption[];
