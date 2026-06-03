@@ -20,12 +20,14 @@ import {
 } from '@wedevs/plugin-ui';
 import { LogOut, UserCircle2 } from 'lucide-react';
 import type { JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { __ } from '@/shared/i18n';
 import { useBoot } from '@/shared/hooks/useBoot';
 
 export function UserMenu(): JSX.Element {
 	const boot = useBoot();
+	const navigate = useNavigate();
 
 	const initials =
 		boot.displayName
@@ -56,7 +58,7 @@ export function UserMenu(): JSX.Element {
 					{ boot.email || boot.displayName }
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem disabled className="gap-2">
+				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile' ) }>
 					<UserCircle2 size={ 16 } aria-hidden="true" />
 					{ __( 'My profile', 'erp' ) }
 				</DropdownMenuItem>

@@ -75,6 +75,14 @@ const DashboardPage = lazy( () =>
 	import( '@/features/dashboard' ).then( ( m ) => ( { default: m.DashboardPage } ) )
 );
 
+const MyProfilePage = lazy( () =>
+	import( '@/features/my-profile' ).then( ( m ) => ( { default: m.MyProfilePage } ) )
+);
+
+const HelpPage = lazy( () =>
+	import( '@/features/help' ).then( ( m ) => ( { default: m.HelpPage } ) )
+);
+
 const AgeProfilePage = lazy( () =>
 	import( '@/features/reports' ).then( ( m ) => ( { default: m.AgeProfilePage } ) )
 );
@@ -357,6 +365,30 @@ const baseRoutes: AppRoute[] = [
 			id:        'reports-leaves',
 			title:     __( 'Leaves', 'erp' ),
 			group:     'reports',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'my-profile',
+		path:         '/my-profile',
+		element:      MyProfilePage,
+		capabilities: [ 'read' ],
+		handle: {
+			id:        'my-profile',
+			title:     __( 'My Profile', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'help',
+		path:         '/help',
+		element:      HelpPage,
+		capabilities: [],
+		handle: {
+			id:        'help',
+			title:     __( 'Help', 'erp' ),
+			group:     'help',
 			showInNav: false,
 		},
 	},

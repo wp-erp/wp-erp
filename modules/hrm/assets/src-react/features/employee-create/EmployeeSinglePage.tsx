@@ -135,7 +135,7 @@ function Item( { label, value }: { readonly label: string; readonly value: strin
 	);
 }
 
-function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
+export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
 	const navigate = useNavigate();
 	const canEdit      = useCan( 'erp_edit_employee' );
 	const canViewNotes = useCan( 'erp_manage_review' );
