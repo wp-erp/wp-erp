@@ -159,17 +159,14 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 							onClick={ () => setOpen( false ) }
 							className={ ( { isActive } ) =>
 								[
-									'flex flex-col gap-0.5 rounded-md px-3 py-2 transition-colors',
+									'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
 									isActive
 										? 'bg-accent text-accent-foreground'
 										: 'text-popover-foreground hover:bg-muted',
 								].join( ' ' )
 							}
 						>
-							<span className="text-sm font-medium">{ sub.label }</span>
-							{ sub.description ? (
-								<span className="text-xs text-muted-foreground">{ sub.description }</span>
-							) : null }
+							{ sub.label }
 						</NavLink>
 					) ) }
 				</div>

@@ -85,6 +85,7 @@ class Manager {
 			AnnouncementsControllerV2::class,
 			ReportsControllerV2::class,
 			DashboardControllerV2::class,
+			SearchControllerV2::class,
 		];
 
 		/**
