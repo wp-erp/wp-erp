@@ -15,6 +15,9 @@ export const HOOKS = {
 	ROUTES:             'erp_hr.routes',
 	NAV_GROUPS:         'erp_hr.nav.groups',
 
+	// Employee create/edit form — pro injects extra (custom) field definitions.
+	EMPLOYEE_EXTRA_FIELDS:   'erp_hr.employee.extra_fields',
+
 	// Employees feature filters
 	EMPLOYEES_COLUMNS:       'erp_hr.employees.columns',
 	EMPLOYEES_FILTERS:       'erp_hr.employees.filters',

@@ -494,6 +494,16 @@ class EmployeesControllerV2 extends RestControllerV2 {
 
 		$new_employee = new Employee( $created->user_id );
 
+		/**
+		 * Fires after a React-created employee is saved. Pro consumers (e.g. the
+		 * Custom Field Builder) persist their `additional` meta from the request.
+		 *
+		 * @param int             $user_id    New employee user id.
+		 * @param array           $additional Custom field values keyed by meta key.
+		 * @param WP_REST_Request $request    The create request.
+		 */
+		do_action( 'erp_hr_rest_employee_saved', $new_employee->get_user_id(), (array) $request->get_param( 'additional' ), $request );
+
 		// Optional welcome email — mirrors the v1 create flow.
 		if ( ! empty( $request['user_notification'] ) ) {
 			$emailer    = wperp()->emailer->get_email( 'NewEmployeeWelcome' );
@@ -649,6 +659,9 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		if ( is_wp_error( $updated ) ) {
 			return $updated;
 		}
+
+		/** @see create_item() — same hook, fires for React-driven edits. */
+		do_action( 'erp_hr_rest_employee_saved', $user_id, (array) $request->get_param( 'additional' ), $request );
 
 		$response = rest_ensure_response( $this->get_edit_data( new Employee( $user_id ) ) );
 		$response->set_status( 200 );

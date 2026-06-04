@@ -335,12 +335,8 @@ function DashboardInner(): JSX.Element {
 				</div>
 			) : null }
 
-			{ /* Greeting hero — gradient banner with a soft decorative glow */ }
-			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-card to-card p-6 shadow-sm ring-1 ring-border/50">
-				<div
-					aria-hidden="true"
-					className="pointer-events-none absolute -right-12 -top-20 size-56 rounded-full bg-primary/10 blur-3xl"
-				/>
+			{ /* Greeting hero */ }
+			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/50">
 				<div className="relative">
 					<h1 className="text-3xl font-bold leading-9 tracking-tight text-foreground">
 						{ name ? sprintf( __( '%1$s, %2$s', 'erp' ), greeting(), name ) : greeting() }

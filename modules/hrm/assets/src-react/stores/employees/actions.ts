@@ -107,7 +107,7 @@ interface ThunkContext {
  * controller's `get_create_params()`. Only `first_name`, `last_name` and
  * `email` are required; everything else is optional and omitted when blank.
  */
-export type EmployeeCreateInput = Record< string, string | number | boolean >;
+export type EmployeeCreateInput = Record< string, string | number | boolean | Record< string, string > >;
 
 /**
  * Fetch a page of employees from `/erp/v2/employees`. Thunk action — modern

@@ -35,6 +35,38 @@ const EmployeeSinglePage = lazy( () =>
 	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeSinglePage } ) )
 );
 
+// [NEW-PROFILE] Modern profile page. Self-contained — to remove it, delete the
+// `features/employee-profile/` folder and every block tagged `[NEW-PROFILE]`
+// (this lazy import, the route entry below, and the "New design" button in
+// EmployeeSinglePage.tsx). Nothing else depends on it.
+const EmployeeProfilePage = lazy( () =>
+	import( '@/features/employee-profile' ).then( ( m ) => ( { default: m.EmployeeProfilePage } ) )
+);
+
+// [NEW-PROFILE-V2] Profile-card + dark-pill-tabs layout. Self-contained — to
+// remove it, delete the `features/employee-profile-v2/` folder and every block
+// tagged `[NEW-PROFILE-V2]` (this lazy import, the route entry below, and the
+// "New design v2" button in EmployeeSinglePage.tsx). Nothing else depends on it.
+const EmployeeProfileV2Page = lazy( () =>
+	import( '@/features/employee-profile-v2' ).then( ( m ) => ( { default: m.EmployeeProfileV2Page } ) )
+);
+
+// [NEW-PROFILE-V3] Big-square-portrait + dashboard-card layout. Self-contained —
+// to remove it, delete the `features/employee-profile-v3/` folder and every
+// block tagged `[NEW-PROFILE-V3]` (this lazy import, the route entry below, and
+// the "New design v3" button in EmployeeSinglePage.tsx). Nothing depends on it.
+const EmployeeProfileV3Page = lazy( () =>
+	import( '@/features/employee-profile-v3' ).then( ( m ) => ( { default: m.EmployeeProfileV3Page } ) )
+);
+
+// [NEW-PROFILE-V4] Header-card + left-nav-card layout. Self-contained — to
+// remove it, delete the `features/employee-profile-v4/` folder and every block
+// tagged `[NEW-PROFILE-V4]` (this lazy import, the route entry below, and the
+// "New design v4" button in EmployeeSinglePage.tsx). Nothing depends on it.
+const EmployeeProfileV4Page = lazy( () =>
+	import( '@/features/employee-profile-v4' ).then( ( m ) => ( { default: m.EmployeeProfileV4Page } ) )
+);
+
 const DepartmentsPage = lazy( () =>
 	import( '@/features/departments' ).then( ( m ) => ( { default: m.DepartmentsPage } ) )
 );
@@ -171,6 +203,59 @@ const baseRoutes: AppRoute[] = [
 		capabilities: [ 'erp_list_employee' ],
 		handle: {
 			id:        'employee-single',
+			title:     __( 'Employee', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		// [NEW-PROFILE] Route for the modern profile page (see note at the lazy import).
+		id:           'employee-profile',
+		path:         '/employees/:id/profile',
+		// Same gate as the classic single page — view access is the People-list cap.
+		capabilities: [ 'erp_list_employee' ],
+		element:      EmployeeProfilePage,
+		handle: {
+			id:        'employee-profile',
+			title:     __( 'Employee', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		// [NEW-PROFILE-V2] Route for the profile-card layout (see note at the lazy import).
+		id:           'employee-profile-v2',
+		path:         '/employees/:id/profile-v2',
+		capabilities: [ 'erp_list_employee' ],
+		element:      EmployeeProfileV2Page,
+		handle: {
+			id:        'employee-profile-v2',
+			title:     __( 'Employee', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		// [NEW-PROFILE-V3] Route for the big-square-portrait layout (see note at the lazy import).
+		id:           'employee-profile-v3',
+		path:         '/employees/:id/profile-v3',
+		capabilities: [ 'erp_list_employee' ],
+		element:      EmployeeProfileV3Page,
+		handle: {
+			id:        'employee-profile-v3',
+			title:     __( 'Employee', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		// [NEW-PROFILE-V4] Route for the header-card + left-nav layout (see note at the lazy import).
+		id:           'employee-profile-v4',
+		path:         '/employees/:id/profile-v4',
+		capabilities: [ 'erp_list_employee' ],
+		element:      EmployeeProfileV4Page,
+		handle: {
+			id:        'employee-profile-v4',
 			title:     __( 'Employee', 'erp' ),
 			group:     'people',
 			showInNav: false,

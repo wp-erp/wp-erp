@@ -141,6 +141,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 				<EmployeeForm
 					mode="edit"
 					initialValues={ initial }
+					employeeId={ userId }
 					submitLabel={ __( 'Save Changes', 'erp' ) }
 					busyLabel={ __( 'Saving…', 'erp' ) }
 					submitting={ submitting }

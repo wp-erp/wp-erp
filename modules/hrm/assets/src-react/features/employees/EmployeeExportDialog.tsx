@@ -92,7 +92,7 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 					</p>
 				</DialogHeader>
 
-				<div className="space-y-4 rounded-xl border border-border bg-card p-4">
+				<div className="space-y-5 rounded-xl border border-border bg-card px-6 pb-6 pt-5">
 					<div className="space-y-1.5">
 						<p className="m-0 text-xs font-medium uppercase tracking-wide text-muted-foreground">
 							{ __( 'Export as', 'erp' ) }
@@ -116,12 +116,12 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 						{ __( 'Select All Fields', 'erp' ) }
 					</label>
 
-					<div className="flex items-center gap-2 rounded-md bg-primary/5 px-3 py-2 text-xs text-primary">
-						<Info size={ 14 } aria-hidden="true" />
+					<div className="flex items-center gap-2.5 rounded-md bg-primary/5 p-4 text-sm text-primary">
+						<Info size={ 16 } aria-hidden="true" />
 						{ __( 'Only selected fields will be on the CSV file.', 'erp' ) }
 					</div>
 
-					<div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
+					<div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
 						{ EXPORT_FIELDS.map( ( field ) => (
 							<label
 								key={ field.key }

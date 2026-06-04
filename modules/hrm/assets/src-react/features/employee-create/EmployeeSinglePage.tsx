@@ -1,29 +1,30 @@
 /**
- * Full-page read-only employee detail view (`#/employees/{id}`).
+ * Employee profile — main view (`#/employees/{id}`), layout variant v4.
  *
- * Loads the record from `GET /erp/v2/employees/{id}` (the same flat payload the
- * edit form uses, plus resolved *_name display fields) and renders it grouped
- * into cards — Employment, Contact, Personal, Address, Biography — mirroring the
- * legacy single-page "General" tab. Header card carries the avatar, name,
- * designation, status badge and an Edit action.
+ * "Candidate card" pattern from the reference design:
+ *   - a full-width HEADER card: round avatar, name + edit, designation, email,
+ *     a status chip, a row of quick-action buttons, and a primary action on the
+ *     right; a meta strip underneath (job, department, status).
+ *   - a LEFT nav card with an icon menu (active row highlighted in the brand
+ *     blue) and a RIGHT content card that renders the selected section.
  *
- * Deeper tabs (Leave, Notes, Performance, History) are separate deliverables.
+ * Fully self-contained: keeps a private copy of every tab body under this folder
+ * and imports nothing from `employee-create`. Delete the folder + the blocks
+ * tagged `[NEW-PROFILE-V4]` to remove it cleanly.
  */
 
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-	Badge,
-	Button,
-	Skeleton,
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
-} from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Skeleton } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { ArrowLeft, Briefcase, CalendarClock, Pencil, Shield, StickyNote, TrendingUp, User } from 'lucide-react';
+import {
+	Briefcase,
+	CalendarClock,
+	CalendarPlus,
+	Pencil,
+	Shield,
+	StickyNote,
+	TrendingUp,
+	User,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { ComponentType, JSX, ReactNode, SVGProps } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -35,15 +36,12 @@ import { storeName as employeesStoreName } from '@/stores/employees';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
-import { AvatarUpload } from './AvatarUpload';
-import { EmployeeGeneralSections } from './general/EmployeeGeneralSections';
-import { OverviewStats } from './general/OverviewStats';
-import { EmployeeJobTab } from './job/EmployeeJobTab';
-import { EmployeeLeaveTab } from './leave/EmployeeLeaveTab';
-import { EmployeeNotesTab } from './notes/EmployeeNotesTab';
-import { EmployeePerformanceTab } from './performance/EmployeePerformanceTab';
-import { EmployeePermissionTab } from './permission/EmployeePermissionTab';
-import type { Option } from './options';
+import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
+import { EmployeeGeneralSections } from '../employee-profile-v4/general/EmployeeGeneralSections';
+import { EmployeeJobTab } from '../employee-profile-v4/job/EmployeeJobTab';
+import { EmployeeLeaveTab } from '../employee-profile-v4/leave/EmployeeLeaveTab';
+import { EmployeeNotesTab } from '../employee-profile-v4/notes/EmployeeNotesTab';
+import type { Option } from '../employee-profile-v4/options';
 import {
 	BLOOD_GROUP_OPTIONS,
 	GENDER_OPTIONS,
@@ -52,52 +50,15 @@ import {
 	SOURCE_OPTIONS,
 	STATUS_OPTIONS,
 	TYPE_OPTIONS,
-} from './options';
+} from '../employee-profile-v4/options';
+import { EmployeePerformanceTab } from '../employee-profile-v4/performance/EmployeePerformanceTab';
+import { EmployeePermissionTab } from '../employee-profile-v4/permission/EmployeePermissionTab';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
 }
 
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
-
-// Segmented-pill tab matching the Reports tabs. The active chip (white card +
-// primary text + ring) is driven off our own `current` state rather than a
-// plugin-ui/base-ui data attribute, so the blue active style is reliable.
-function ProfileTab( {
-	value,
-	current,
-	icon: Icon,
-	children,
-}: {
-	readonly value:    string;
-	readonly current:  string;
-	readonly icon:     LucideIcon;
-	readonly children: ReactNode;
-} ): JSX.Element {
-	const isActive = current === value;
-	return (
-		<TabsTrigger
-			value={ value }
-			className={ [
-				'!flex-none shrink-0 grow-0 rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
-				isActive ? '!bg-card !shadow-sm !ring-primary/40' : '!bg-transparent !shadow-none',
-			].join( ' ' ) }
-		>
-			{ /* Colour lives on this inner span so it beats plugin-ui's trigger
-			    colour rule; the icon inherits via currentColor. */ }
-			<span
-				className={ [
-					'inline-flex items-center gap-2',
-					isActive ? '!text-primary' : '!text-muted-foreground',
-				].join( ' ' ) }
-			>
-				<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
-				{ children }
-			</span>
-		</TabsTrigger>
-	);
-}
-
 type Record_ = Record< string, unknown >;
 
 function str( record: Record_, key: string ): string {
@@ -119,7 +80,6 @@ function initials( name: string ): string {
 	return ( first + last ).toUpperCase();
 }
 
-/** Status → Badge tone. */
 function statusVariant( status: string ): 'success' | 'secondary' | 'destructive' {
 	switch ( status ) {
 		case 'active':
@@ -132,34 +92,74 @@ function statusVariant( status: string ): 'success' | 'secondary' | 'destructive
 	}
 }
 
+interface NavItem {
+	readonly value: string;
+	readonly label: string;
+	readonly icon:  LucideIcon;
+}
+
+/** Left-card vertical nav. Active row is filled with the brand blue. */
+function NavMenu( {
+	items,
+	current,
+	onSelect,
+}: {
+	readonly items:    readonly NavItem[];
+	readonly current:  string;
+	readonly onSelect: ( v: string ) => void;
+} ): JSX.Element {
+	return (
+		<nav aria-label={ __( 'Profile sections', 'erp' ) } className="flex flex-col gap-1">
+			{ items.map( ( item ) => {
+				const isActive = current === item.value;
+				const Icon = item.icon;
+				return (
+					<button
+						key={ item.value }
+						type="button"
+						aria-current={ isActive ? 'page' : undefined }
+						onClick={ () => onSelect( item.value ) }
+						className={ [
+							'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors',
+							isActive
+								? 'bg-primary text-primary-foreground'
+								: 'text-foreground hover:bg-muted',
+						].join( ' ' ) }
+					>
+						<Icon size={ 18 } strokeWidth={ 2 } aria-hidden="true" />
+						{ item.label }
+					</button>
+				);
+			} ) }
+		</nav>
+	);
+}
+
 interface DetailCardProps {
 	readonly title:    string;
 	readonly children: ReactNode;
 }
 
-function DetailCard( { title, children }: DetailCardProps ): JSX.Element {
+function FieldGrid( { title, children }: DetailCardProps ): JSX.Element {
 	return (
-		<section className="rounded-[10px] bg-card p-6 shadow-sm">
-			<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
-			<div className="mb-4 mt-4 h-px w-full bg-border" />
-			<dl className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-				{ children }
-			</dl>
+		<section>
+			<h3 className="m-0 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{ title }</h3>
+			<dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">{ children }</dl>
 		</section>
 	);
 }
 
-function Item( { label, value }: { readonly label: string; readonly value: string } ): JSX.Element {
+function Field( { label, value }: { readonly label: string; readonly value: string } ): JSX.Element {
 	return (
 		<div className="flex flex-col gap-0.5">
-			<dt className="text-xs font-medium text-muted-foreground">{ label }</dt>
-			<dd className="text-sm text-foreground">{ value.trim() === '' ? '—' : value }</dd>
+			<dt className="text-xs text-muted-foreground">{ label }</dt>
+			<dd className="text-sm font-medium text-foreground">{ value.trim() === '' ? '—' : value }</dd>
 		</div>
 	);
 }
 
 export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
-	const navigate = useNavigate();
+	const navigate     = useNavigate();
 	const canEdit      = useCan( 'erp_edit_employee' );
 	const canViewNotes = useCan( 'erp_manage_review' );
 	const canViewPerf  = useCan( 'erp_create_review' );
@@ -168,14 +168,12 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
 		[]
 	);
-	// Permission tab: same gate as legacy — needs review cap and is hidden when
-	// viewing your own profile (can't change your own role here).
 	const canViewPermission = canViewPerf && currentUserId !== userId;
 	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
-	const [ tab, setTab ] = useState( 'overview' );
+	const [ tab, setTab ] = useState( 'personal' );
 
 	useEffect( () => {
 		let cancelled = false;
@@ -194,215 +192,203 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 		};
 	}, [ userId, fetchEmployeeForEdit ] );
 
-	function back(): void {
-		if ( window.history.length > 1 ) {
-			navigate( -1 );
-		} else {
-			navigate( '/employees' );
-		}
-	}
+	const goEdit = (): void => {
+		navigate( `/employees/${ userId }/edit`, { viewTransition: true } );
+	};
 
 	if ( loadError ) {
-		return (
-			<div className="mx-auto w-full max-w-7xl text-center text-sm text-destructive">
-				{ loadError }
-			</div>
-		);
+		return <div className="mx-auto w-full max-w-7xl text-center text-sm text-destructive">{ loadError }</div>;
 	}
 
 	if ( ! record ) {
 		return (
 			<div className="mx-auto w-full max-w-7xl space-y-6">
-				<Skeleton className="h-28 w-full rounded-lg" />
-				{ [ 0, 1, 2 ].map( ( i ) => (
-					<Skeleton key={ i } className="h-44 w-full rounded-lg" />
-				) ) }
+				<Skeleton className="h-52 w-full rounded-2xl" />
+				<div className="flex flex-col gap-6 lg:flex-row">
+					<Skeleton className="h-96 w-full rounded-2xl lg:w-64" />
+					<Skeleton className="h-96 flex-1 rounded-2xl" />
+				</div>
 			</div>
 		);
 	}
 
-	const fullName   = str( record, 'full_name' );
-	const avatarUrl  = str( record, 'avatar_url' );
-	const status     = str( record, 'status' );
+	const fullName    = str( record, 'full_name' );
+	const avatarUrl   = str( record, 'avatar_url' );
+	const status      = str( record, 'status' );
+	const designation = str( record, 'designation_name' );
+	const department  = str( record, 'department_name' );
+	const email       = str( record, 'email' );
+
+	const navItems: NavItem[] = [
+		{ value: 'personal', label: __( 'Personal Information', 'erp' ), icon: User },
+		...( canEdit ? [ { value: 'job', label: __( 'Job Information', 'erp' ), icon: Briefcase } ] : [] ),
+		...( canEdit ? [ { value: 'leave', label: __( 'Leave', 'erp' ), icon: CalendarClock } ] : [] ),
+		...( canViewNotes ? [ { value: 'notes', label: __( 'Notes', 'erp' ), icon: StickyNote } ] : [] ),
+		...( canViewPerf ? [ { value: 'performance', label: __( 'Performance', 'erp' ), icon: TrendingUp } ] : [] ),
+		...( canViewPermission ? [ { value: 'permission', label: __( 'Permission', 'erp' ), icon: Shield } ] : [] ),
+	];
+
+	const activeLabel = navItems.find( ( i ) => i.value === tab )?.label ?? '';
 
 	return (
 		<div className="mx-auto w-full max-w-7xl space-y-6">
-				<button
-					type="button"
-					onClick={ back }
-					className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-				>
-					<ArrowLeft size={ 16 } aria-hidden="true" />
-					{ __( 'Back to People', 'erp' ) }
-				</button>
+			{ /* HEADER card. */ }
+			<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
+				<div className="flex flex-wrap items-start gap-5">
+					<Avatar className="size-20 shrink-0">
+						{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
+						<AvatarFallback className="text-lg">{ initials( fullName ) }</AvatarFallback>
+					</Avatar>
 
-				{ /* Header card — spacing per Figma 1533:26766 (avatar 90, padding 24, name 24px). */ }
-				<section className="flex flex-wrap items-start gap-5 rounded-[10px] bg-card p-6 shadow-sm">
-					{ canEdit ? (
-						<AvatarUpload
-							userId={ userId }
-							avatarUrl={ avatarUrl }
-							fullName={ fullName }
-							initials={ initials( fullName ) }
-							onChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
-						/>
-					) : (
-						<Avatar className="size-[90px] shrink-0">
-							{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
-							<AvatarFallback className="text-xl">{ initials( fullName ) }</AvatarFallback>
-						</Avatar>
-					) }
 					<div className="flex min-w-0 flex-1 flex-col gap-2">
-						<div className="flex flex-wrap items-center gap-3">
-							<h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground">
+						<div className="flex items-center gap-2">
+							<h1 className="m-0 text-2xl font-bold tracking-tight text-foreground">
 								{ fullName || __( 'Employee', 'erp' ) }
 							</h1>
-							{ status ? (
-								<Badge variant={ statusVariant( status ) }>
-									{ labelOf( STATUS_OPTIONS, status ) }
-								</Badge>
+							{ canEdit ? (
+								<button
+									type="button"
+									onClick={ goEdit }
+									className="inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+									aria-label={ __( 'Edit employee', 'erp' ) }
+									title={ __( 'Edit employee', 'erp' ) }
+								>
+									<Pencil size={ 15 } aria-hidden="true" />
+								</button>
 							) : null }
 						</div>
-						<div className="flex flex-col gap-1">
-							{ ( () => {
-								const role = [ str( record, 'designation_name' ), str( record, 'department_name' ) ]
-									.filter( ( s ) => s.trim() !== '' )
-									.join( ' · ' );
-								return role ? (
-									<p className="truncate text-sm font-semibold text-foreground">{ role }</p>
-								) : null;
-							} )() }
-							<p className="truncate text-sm text-muted-foreground">{ str( record, 'email' ) }</p>
+						{ designation ? <p className="m-0 text-sm font-semibold text-foreground">{ designation }</p> : null }
+						{ email ? <p className="m-0 text-sm text-muted-foreground">{ email }</p> : null }
+						{ status ? (
+							<div className="mt-1">
+								<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>
+							</div>
+						) : null }
+
+						{ /* Quick actions — jump to the relevant section. */ }
+						<div className="mt-3 flex flex-wrap gap-2">
+							{ canEdit ? (
+								<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setTab( 'leave' ) }>
+									<CalendarPlus size={ 15 } aria-hidden="true" />
+									{ __( 'Leave', 'erp' ) }
+								</Button>
+							) : null }
+							{ canViewNotes ? (
+								<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setTab( 'notes' ) }>
+									<StickyNote size={ 15 } aria-hidden="true" />
+									{ __( 'Notes', 'erp' ) }
+								</Button>
+							) : null }
 						</div>
 					</div>
+
 					{ canEdit ? (
-						<Button
-							variant="default"
-							size="sm"
-							className="h-9 gap-1.5 px-4"
-							onClick={ () => navigate( `/employees/${ userId }/edit`, { viewTransition: true } ) }
-						>
-							<Pencil size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+						<Button variant="default" size="sm" className="h-9 gap-1.5 px-4" onClick={ goEdit }>
+							<Pencil size={ 14 } aria-hidden="true" />
 							{ __( 'Edit', 'erp' ) }
 						</Button>
 					) : null }
-				</section>
+				</div>
 
-				<Tabs value={ tab } onValueChange={ ( value ) => setTab( String( value ) ) }>
-					<TabsList className="!inline-flex !w-fit max-w-full justify-start overflow-x-auto scrollbar-none">
-						<ProfileTab value="overview" current={ tab } icon={ User }>{ __( 'Overview', 'erp' ) }</ProfileTab>
-						{ canEdit ? (
-							<ProfileTab value="job" current={ tab } icon={ Briefcase }>{ __( 'Job', 'erp' ) }</ProfileTab>
-						) : null }
-						{ canEdit ? (
-							<ProfileTab value="leave" current={ tab } icon={ CalendarClock }>{ __( 'Leave', 'erp' ) }</ProfileTab>
-						) : null }
-						{ canViewNotes ? (
-							<ProfileTab value="notes" current={ tab } icon={ StickyNote }>{ __( 'Notes', 'erp' ) }</ProfileTab>
-						) : null }
-						{ canViewPerf ? (
-							<ProfileTab value="performance" current={ tab } icon={ TrendingUp }>{ __( 'Performance', 'erp' ) }</ProfileTab>
-						) : null }
-						{ canViewPermission ? (
-							<ProfileTab value="permission" current={ tab } icon={ Shield }>{ __( 'Permission', 'erp' ) }</ProfileTab>
-						) : null }
-					</TabsList>
+				{ /* Meta strip — complements the header; no repeat of designation/status. */ }
+				<div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-border pt-5 text-sm">
+					<span className="inline-flex items-center gap-2">
+						<span className="text-muted-foreground">{ __( 'Employee ID:', 'erp' ) }</span>
+						<span className="font-medium text-foreground">{ str( record, 'employee_id' ) || '—' }</span>
+					</span>
+					<span className="inline-flex items-center gap-2">
+						<span className="text-muted-foreground">{ __( 'Department:', 'erp' ) }</span>
+						<span className="font-medium text-foreground">{ department || '—' }</span>
+					</span>
+					<span className="inline-flex items-center gap-2">
+						<span className="text-muted-foreground">{ __( 'Date of Hire:', 'erp' ) }</span>
+						<span className="font-medium text-foreground">{ str( record, 'hiring_date' ) || '—' }</span>
+					</span>
+					<span className="inline-flex items-center gap-2">
+						<span className="text-muted-foreground">{ __( 'Type:', 'erp' ) }</span>
+						<span className="font-medium text-foreground">{ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) || '—' }</span>
+					</span>
+				</div>
+			</section>
 
-					<TabsContent value="overview" className="mt-6 space-y-6">
-				<OverviewStats
-					userId={ userId }
-					hiringDate={ str( record, 'hiring_date' ) }
-					dateOfBirth={ str( record, 'date_of_birth' ) }
-				/>
-				<DetailCard title={ __( 'Employment', 'erp' ) }>
-					<Item label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
-					<Item label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
-					<Item label={ __( 'Employee Status', 'erp' ) } value={ labelOf( STATUS_OPTIONS, status ) } />
-					<Item label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
-					<Item label={ __( 'Employee End Date', 'erp' ) } value={ str( record, 'end_date' ) } />
-					<Item label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
-					<Item label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
-					<Item label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
-					<Item label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
-					<Item label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
-					<Item label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
-					<Item label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
-				</DetailCard>
+			{ /* BODY — left nav card + right content card. */ }
+			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+				<aside className="shrink-0 lg:sticky lg:top-6 lg:w-64">
+					<div className="rounded-2xl bg-card p-3 shadow-sm ring-1 ring-border/60">
+						<NavMenu items={ navItems } current={ tab } onSelect={ setTab } />
+					</div>
+				</aside>
 
-				<DetailCard title={ __( 'Contact', 'erp' ) }>
-					<Item label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
-					<Item label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
-					<Item label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
-					<Item label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
-					<Item label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
-					<Item label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
-				</DetailCard>
+				<div className="min-w-0 flex-1">
+					{ tab === 'personal' ? (
+						<div className="space-y-6">
+							<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
 
-				<DetailCard title={ __( 'Personal Details', 'erp' ) }>
-					<Item label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
-					<Item label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
-					<Item label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
-					<Item label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
-					<Item label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
-					<Item label={ __( 'Driving License', 'erp' ) } value={ str( record, 'driving_license' ) } />
-					<Item label={ __( 'Hobbies', 'erp' ) } value={ str( record, 'hobbies' ) } />
-					<Item label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
-					<Item label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
-					<Item label={ __( "Spouse's name", 'erp' ) } value={ str( record, 'spouse_name' ) } />
-				</DetailCard>
+							<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
+							<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
+								{ activeLabel }
+							</h2>
+							<div className="mb-4 mt-4 h-px w-full bg-border" />
 
-				<DetailCard title={ __( 'Address', 'erp' ) }>
-					<Item label={ __( 'Address 1', 'erp' ) } value={ str( record, 'street_1' ) } />
-					<Item label={ __( 'Address 2', 'erp' ) } value={ str( record, 'street_2' ) } />
-					<Item label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
-					<Item label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
-					<Item label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
-					<Item label={ __( 'Post Code / Zip Code', 'erp' ) } value={ str( record, 'postal_code' ) } />
-				</DetailCard>
+							<div className="space-y-8">
+								<FieldGrid title={ __( 'Employment', 'erp' ) }>
+									<Field label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
+									<Field label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
+									<Field label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
+									<Field label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
+									<Field label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
+									<Field label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
+									<Field label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
+									<Field label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
+									<Field label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
+								</FieldGrid>
 
-				{ str( record, 'description' ).trim() !== '' ? (
-					<section className="rounded-[10px] bg-card p-6 shadow-sm">
-						<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Biography', 'erp' ) }</h2>
-						<div className="mb-4 mt-4 h-px w-full bg-border" />
-						<p className="whitespace-pre-line text-sm text-foreground">
-							{ str( record, 'description' ) }
-						</p>
-					</section>
-				) : null }
+								<FieldGrid title={ __( 'Contact', 'erp' ) }>
+									<Field label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
+									<Field label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
+									<Field label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
+									<Field label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
+									<Field label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
+									<Field label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
+								</FieldGrid>
 
-				{ canEdit ? <EmployeeGeneralSections userId={ userId } /> : null }
-					</TabsContent>
+								<FieldGrid title={ __( 'Personal Details', 'erp' ) }>
+									<Field label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
+									<Field label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
+									<Field label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
+									<Field label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
+									<Field label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
+									<Field label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
+									<Field label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
+								</FieldGrid>
 
-					{ canEdit ? (
-						<TabsContent value="job" className="mt-6">
-							<EmployeeJobTab userId={ userId } />
-						</TabsContent>
-					) : null }
+								<FieldGrid title={ __( 'Home Address', 'erp' ) }>
+									<Field label={ __( 'Address', 'erp' ) } value={ str( record, 'street_1' ) } />
+									<Field label={ __( 'Address (cont.)', 'erp' ) } value={ str( record, 'street_2' ) } />
+									<Field label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
+									<Field label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
+									<Field label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
+									<Field label={ __( 'Postal code', 'erp' ) } value={ str( record, 'postal_code' ) } />
+								</FieldGrid>
 
-					{ canEdit ? (
-						<TabsContent value="leave" className="mt-6">
-							<EmployeeLeaveTab userId={ userId } />
-						</TabsContent>
-					) : null }
+							</div>
+							</section>
 
-					{ canViewNotes ? (
-						<TabsContent value="notes" className="mt-6">
-							<EmployeeNotesTab userId={ userId } />
-						</TabsContent>
-					) : null }
+							<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'basic', 'work', 'personal', 'bottom' ] } />
 
-					{ canViewPerf ? (
-						<TabsContent value="performance" className="mt-6">
-							<EmployeePerformanceTab userId={ userId } />
-						</TabsContent>
-					) : null }
-
-					{ canViewPermission ? (
-						<TabsContent value="permission" className="mt-6">
-							<EmployeePermissionTab userId={ userId } />
-						</TabsContent>
-					) : null }
-				</Tabs>
+							{ canEdit ? <EmployeeGeneralSections userId={ userId } /> : null }
+						</div>
+					) : (
+						<>
+							{ canEdit && tab === 'job' ? <EmployeeJobTab userId={ userId } /> : null }
+							{ canEdit && tab === 'leave' ? <EmployeeLeaveTab userId={ userId } /> : null }
+							{ canViewNotes && tab === 'notes' ? <EmployeeNotesTab userId={ userId } /> : null }
+							{ canViewPerf && tab === 'performance' ? <EmployeePerformanceTab userId={ userId } /> : null }
+							{ canViewPermission && tab === 'permission' ? <EmployeePermissionTab userId={ userId } /> : null }
+						</>
+					) }
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -411,8 +397,6 @@ export function EmployeeSinglePage(): JSX.Element {
 	const { id } = useParams< { id: string } >();
 	const userId = Number( id );
 
-	// Route-level access is enforced by the router's CapabilityGate
-	// (`erp_list_employee`); sensitive sections self-gate per tab below.
 	return (
 		<ErrorBoundary>
 			{ Number.isFinite( userId ) && userId > 0 ? (

@@ -14,16 +14,20 @@
  */
 
 import { Alert, AlertDescription, AlertTitle, Button, Checkbox, toast } from '@wedevs/plugin-ui';
+import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DependencyHint } from '@/shared/components/DependencyHint';
+import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 import type { EmployeeCreateInput } from '@/stores/employees';
 
 import { loadLookup, loadManagers } from '../employees/filters/lookups';
 import type { LookupOption } from '../employees/filters/lookups';
+import { ExtraFields } from './ExtraFields';
+import type { ExtraField } from './ExtraFields';
 import { FormSection, SelectField, SmartSelectField, TextField, TextareaField } from './fields';
 import { checkUser, convertUser } from './useUserCheck';
 import type { UserCheckResult } from './useUserCheck';
@@ -90,6 +94,8 @@ interface EmployeeFormProps {
 	readonly submitError:   string | null;
 	readonly onSubmit:      ( payload: EmployeeCreateInput ) => void;
 	readonly onCancel:      () => void;
+	/** Employee id in edit mode — passed to the extra-fields filter for prefill. */
+	readonly employeeId?:   number;
 }
 
 export function EmployeeForm( {
@@ -101,6 +107,7 @@ export function EmployeeForm( {
 	submitError,
 	onSubmit,
 	onCancel,
+	employeeId,
 }: EmployeeFormProps ): JSX.Element {
 	const isEdit = mode === 'edit';
 	const navigate = useNavigate();
@@ -118,6 +125,9 @@ export function EmployeeForm( {
 	const [ managers, setManagers ] = useState< Option[] >( [] );
 	const [ lookupsLoaded, setLookupsLoaded ] = useState( false );
 
+	// Pro-injected custom fields (Custom Field Builder). Empty when pro is absent.
+	const [ extraFields, setExtraFields ] = useState< ExtraField[] >( [] );
+
 	useEffect( () => {
 		let cancelled = false;
 		void Promise.all( [
@@ -132,6 +142,36 @@ export function EmployeeForm( {
 			cancelled = true;
 		};
 	}, [ isEdit ] );
+
+	// Load pro-injected custom field definitions (and saved values in edit mode)
+	// via the wp.hooks filter. Pro returns an array (or a Promise of one); when
+	// no pro consumer is registered the default `[]` keeps this a no-op.
+	useEffect( () => {
+		let cancelled = false;
+		const result = applyFilters( HOOKS.EMPLOYEE_EXTRA_FIELDS, [], { mode, employeeId } ) as
+			| ExtraField[]
+			| Promise< ExtraField[] >;
+		void Promise.resolve( result ).then( ( fields ) => {
+			if ( cancelled || ! Array.isArray( fields ) || fields.length === 0 ) {
+				return;
+			}
+			setExtraFields( fields );
+			// Seed saved values into the form state (edit-mode prefill) without
+			// clobbering anything the user may have already typed.
+			setForm( ( prev ) => {
+				const next = { ...prev };
+				for ( const f of fields ) {
+					if ( next[ f.key ] === undefined ) {
+						next[ f.key ] = f.value ?? '';
+					}
+				}
+				return next;
+			} );
+		} );
+		return () => {
+			cancelled = true;
+		};
+	}, [ mode, employeeId ] );
 
 	// Department + Designation are required to create an employee. If the org has
 	// none yet, point the user to set them up first instead of leaving the
@@ -182,6 +222,11 @@ export function EmployeeForm( {
 			setConverting( false );
 		}
 	}
+
+	// Custom fields for one legacy section key (top/basic/work/personal/bottom),
+	// so each group renders at its legacy position in the form.
+	const extraBySection = ( sectionKey: string ): ExtraField[] =>
+		extraFields.filter( ( f ) => ( f.sectionKey ?? '' ) === sectionKey );
 
 	const set = ( key: string ) => ( value: string ) => {
 		setForm( ( prev ) => ( { ...prev, [ key ]: value } ) );
@@ -256,9 +301,18 @@ export function EmployeeForm( {
 
 	function buildPayload(): EmployeeCreateInput {
 		const payload: EmployeeCreateInput = {};
+		const extraKeys = new Set( extraFields.map( ( f ) => f.key ) );
+		const additional: Record< string, string > = {};
+
 		for ( const [ key, raw ] of Object.entries( form ) ) {
 			// Never submit the create-only fields from the edit form.
 			if ( isEdit && CREATE_ONLY_FIELDS.has( key ) ) {
+				continue;
+			}
+			// Custom (pro) fields go in the `additional` bucket — always sent (even
+			// when blank) so clearing a value persists on edit.
+			if ( extraKeys.has( key ) ) {
+				additional[ key ] = raw;
 				continue;
 			}
 			const value = raw.trim();
@@ -266,6 +320,9 @@ export function EmployeeForm( {
 				continue;
 			}
 			payload[ key ] = NUMERIC_FIELDS.has( key ) ? parseInt( value, 10 ) : value;
+		}
+		if ( Object.keys( additional ).length > 0 ) {
+			payload.additional = additional;
 		}
 		if ( ! isEdit && notify ) {
 			payload.user_notification = true;
@@ -343,6 +400,8 @@ export function EmployeeForm( {
 			) : null }
 
 			<div className="space-y-6">
+				<ExtraFields fields={ extraBySection( 'top' ) } values={ form } onChange={ set } />
+
 				<FormSection
 					title={ __( 'Basic Information', 'erp' ) }
 					description={ __( 'Fields marked with * are required.', 'erp' ) }
@@ -364,6 +423,8 @@ export function EmployeeForm( {
 					<SmartSelectField id="designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation ?? '' } onChange={ set( 'designation' ) } error={ errors.designation } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } />
 				</FormSection>
 
+				<ExtraFields fields={ extraBySection( 'basic' ) } values={ form } onChange={ set } />
+
 				{ ! isEdit ? (
 					<FormSection title={ __( 'Work', 'erp' ) }>
 						<SmartSelectField id="location" label={ __( 'Location', 'erp' ) } options={ locations } value={ form.location ?? '' } onChange={ set( 'location' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search locations…', 'erp' ) } />
@@ -379,6 +440,8 @@ export function EmployeeForm( {
 						<TextField id="work_phone" label={ __( 'Work Phone', 'erp' ) } type="tel" value={ form.work_phone ?? '' } onChange={ set( 'work_phone' ) } />
 					</FormSection>
 				) }
+
+				<ExtraFields fields={ extraBySection( 'work' ) } values={ form } onChange={ set } />
 
 				<FormSection title={ __( 'Personal Details', 'erp' ) }>
 					<SelectField id="blood_group" label={ __( 'Blood Group', 'erp' ) } options={ BLOOD_GROUP_OPTIONS } value={ form.blood_group ?? '' } onChange={ set( 'blood_group' ) } placeholder={ __( '- Select -', 'erp' ) } />
@@ -403,6 +466,10 @@ export function EmployeeForm( {
 					<TextField id="postal_code" label={ __( 'Post Code / Zip Code', 'erp' ) } value={ form.postal_code ?? '' } onChange={ set( 'postal_code' ) } />
 					<TextareaField id="description" label={ __( 'Biography', 'erp' ) } value={ form.description ?? '' } onChange={ set( 'description' ) } className="sm:col-span-2 lg:col-span-3" />
 				</FormSection>
+
+				<ExtraFields fields={ extraBySection( 'personal' ) } values={ form } onChange={ set } />
+
+				<ExtraFields fields={ extraBySection( 'bottom' ) } values={ form } onChange={ set } />
 
 				{ ! isEdit ? (
 					<FormSection title={ __( 'Notification', 'erp' ) }>

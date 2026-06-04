@@ -23,6 +23,18 @@
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
+/* ─── Class-based dark variant (root fix) ───
+ * Tailwind v4's default `dark:` variant is `@media (prefers-color-scheme: dark)`.
+ * plugin-ui ships components with `dark:bg-input/30` etc., and our own code
+ * authors `dark:text-…` utilities — and this build GENERATES them all (the
+ * `@source` lines scan both). With the media default they fire on the OS scheme,
+ * so a dark OS repaints fields/dropdowns even though the ERP app is forced light.
+ * ThemeProvider signals dark with a `.dark` class (`className="pui-root dark"`),
+ * NOT the OS, so redefine `dark:` to key off that class. Now every `dark:` utility
+ * applies only in genuine app-dark mode. Supersedes the per-slot `!important`
+ * field/switch pins below, which are now redundant for the OS-dark case. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ─── Plugin-UI / shadcn token → Tailwind variable mapping ───
  * @theme inline tells Tailwind to use these var() references when generating
  * utilities. The actual values (`--primary`, `--border`, etc.) come from the

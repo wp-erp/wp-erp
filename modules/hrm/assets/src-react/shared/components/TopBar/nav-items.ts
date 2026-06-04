@@ -67,7 +67,7 @@ export interface NavItem {
 export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 	{
 		id:            'overview',
-		label:         __( 'Overview', 'erp' ),
+		label:         __( 'Dashboard', 'erp' ),
 		path:          '/',
 		icon:          'house',
 		hasDropdown:   false,

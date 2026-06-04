@@ -224,7 +224,7 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 					onDragLeave={ () => setDragging( false ) }
 					onDrop={ onDrop }
 					className={ cn(
-						'flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-10 text-center transition-colors',
+						'flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed px-6 py-12 text-center transition-colors',
 						dragging ? 'border-primary bg-primary/5' : 'border-border bg-muted/30'
 					) }
 				>
