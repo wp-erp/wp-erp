@@ -1,3 +1,5 @@
+import type { AvatarPerson } from '@/shared/components/EmployeeAvatarStack';
+
 /**
  * Department row shape returned by `GET /erp/v2/departments`.
  */
@@ -10,6 +12,7 @@ export interface Department {
 	readonly parent:          number | null;
 	readonly parent_title:    string;
 	readonly total_employees: number;
+	readonly employees:       readonly AvatarPerson[];
 }
 
 /** Flat create/update payload for `POST|PUT /erp/v2/departments`. */

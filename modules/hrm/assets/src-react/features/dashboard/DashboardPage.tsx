@@ -137,18 +137,25 @@ interface StatCardProps {
 
 function StatCard( { icon: Icon, label, value, tint, to }: StatCardProps ): JSX.Element {
 	const body = (
-		<div className="flex items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
-			<span className={ `inline-flex size-12 shrink-0 items-center justify-center rounded-lg ${ tint }` }>
-				<Icon size={ 22 } strokeWidth={ 1.75 } aria-hidden="true" />
+		<div className="group relative flex items-center gap-4 overflow-hidden rounded-[10px] bg-card p-5 shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
+			<span className={ `inline-flex size-12 shrink-0 items-center justify-center rounded-xl shadow-sm transition-transform duration-200 group-hover:scale-105 ${ tint }` }>
+				<Icon size={ 22 } strokeWidth={ 1.9 } aria-hidden="true" />
 			</span>
 			<div className="min-w-0">
-				<p className="text-2xl font-bold leading-7 text-foreground tabular-nums">{ value }</p>
+				<p className="text-3xl font-bold leading-8 text-foreground tabular-nums">{ value }</p>
 				<p className="truncate text-sm text-muted-foreground">{ label }</p>
 			</div>
+			{ to ? (
+				<ArrowRight
+					size={ 16 }
+					className="ml-auto shrink-0 text-muted-foreground/40 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-primary"
+					aria-hidden="true"
+				/>
+			) : null }
 		</div>
 	);
 	return to ? (
-		<Link to={ to } viewTransition className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
+		<Link to={ to } viewTransition className="group block rounded-[10px] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
 			{ body }
 		</Link>
 	) : (
@@ -159,17 +166,25 @@ function StatCard( { icon: Icon, label, value, tint, to }: StatCardProps ): JSX.
 interface WidgetCardProps {
 	readonly icon:     LucideIcon;
 	readonly title:    string;
+	readonly count?:   number | undefined;
 	readonly action?:  { label: string; to: string } | undefined;
 	readonly children: React.ReactNode;
 }
 
-function WidgetCard( { icon: Icon, title, action, children }: WidgetCardProps ): JSX.Element {
+function WidgetCard( { icon: Icon, title, count, action, children }: WidgetCardProps ): JSX.Element {
 	return (
-		<section className="flex flex-col rounded-lg border border-border bg-card shadow-sm">
-			<header className="flex items-center justify-between gap-3 border-b border-border px-5 py-3.5">
-				<h2 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-					<Icon size={ 17 } strokeWidth={ 1.9 } className="text-muted-foreground" aria-hidden="true" />
+		<section className="flex flex-col rounded-[10px] bg-card shadow-sm">
+			<header className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+				<h2 className="flex items-center gap-2 text-base font-bold leading-tight tracking-tight text-foreground">
+					<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+						<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+					</span>
 					{ title }
+					{ count && count > 0 ? (
+						<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium text-muted-foreground">
+							{ count }
+						</span>
+					) : null }
 				</h2>
 				{ action ? (
 					<Link
@@ -182,13 +197,23 @@ function WidgetCard( { icon: Icon, title, action, children }: WidgetCardProps ):
 					</Link>
 				) : null }
 			</header>
-			<div className="flex-1 p-2">{ children }</div>
+			{ /* Scroll long lists inside the card instead of stretching the page. */ }
+			<div className="max-h-80 flex-1 overflow-y-auto p-2">{ children }</div>
 		</section>
 	);
 }
 
 function EmptyRow( { text }: { text: string } ): JSX.Element {
 	return <p className="px-3 py-6 text-center text-sm text-muted-foreground">{ text }</p>;
+}
+
+/** Small uppercase divider label that groups the dashboard sections. */
+function SectionLabel( { children, className }: { children: React.ReactNode; className?: string } ): JSX.Element {
+	return (
+		<h2 className={ `mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground ${ className ?? '' }` }>
+			{ children }
+		</h2>
+	);
 }
 
 function OnLeaveItem( { person }: { person: OnLeavePerson } ): JSX.Element {
@@ -301,7 +326,7 @@ function DashboardInner(): JSX.Element {
 						<Link
 							to="/employees/new"
 							viewTransition
-							className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+							className="inline-flex h-9 items-center gap-2 rounded-md bg-gradient-to-r from-primary to-primary/85 px-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:shadow-md hover:brightness-105"
 						>
 							<UserPlus size={ 16 } aria-hidden="true" />
 							{ __( 'Add Employee', 'erp' ) }
@@ -310,13 +335,18 @@ function DashboardInner(): JSX.Element {
 				</div>
 			) : null }
 
-			{ /* Greeting + weather card */ }
-			<header className="mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 rounded-xl border border-border bg-card p-5 shadow-sm">
-				<div>
-					<h1 className="text-2xl font-bold leading-8 text-foreground">
+			{ /* Greeting hero — gradient banner with a soft decorative glow */ }
+			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-card to-card p-6 shadow-sm ring-1 ring-border/50">
+				<div
+					aria-hidden="true"
+					className="pointer-events-none absolute -right-12 -top-20 size-56 rounded-full bg-primary/10 blur-3xl"
+				/>
+				<div className="relative">
+					<h1 className="text-3xl font-bold leading-9 tracking-tight text-foreground">
 						{ name ? sprintf( __( '%1$s, %2$s', 'erp' ), greeting(), name ) : greeting() }
+						<span className="ml-1.5 inline-block" aria-hidden="true">👋</span>
 					</h1>
-					<p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground">
+					<p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground">
 						{ new Date().toLocaleDateString( undefined, {
 							weekday: 'long',
 							year:    'numeric',
@@ -327,18 +357,21 @@ function DashboardInner(): JSX.Element {
 						<LiveTime />
 					</p>
 				</div>
-				<WeatherWidget embedded />
+				<div className="relative">
+					<WeatherWidget embedded />
+				</div>
 			</header>
 
 			{ loading && ! data ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 					{ [ 0, 1, 2, 3 ].map( ( i ) => (
-						<div key={ i } className="h-24 animate-pulse rounded-lg border border-border bg-muted/40" />
+						<div key={ i } className="h-24 animate-pulse rounded-[10px] bg-card shadow-sm" />
 					) ) }
 				</div>
 			) : (
 				<>
 					{ /* Summary stat cards */ }
+					<SectionLabel>{ __( 'Overview', 'erp' ) }</SectionLabel>
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 						<StatCard
 							icon={ Users }
@@ -380,12 +413,23 @@ function DashboardInner(): JSX.Element {
 					</div>
 
 					{ /* Analytics charts */ }
-					{ data ? <ChartsSection charts={ data.charts } isManager={ isManager } /> : null }
+					{ data ? (
+						<div className="mt-8">
+							<SectionLabel>{ __( 'Analytics', 'erp' ) }</SectionLabel>
+							<ChartsSection charts={ data.charts } isManager={ isManager } />
+						</div>
+					) : null }
 
 					{ /* Widget grid */ }
-					<div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+					<SectionLabel className="mt-8">{ __( 'Activity', 'erp' ) }</SectionLabel>
+					<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 						{ /* Who's out */ }
-						<WidgetCard icon={ CalendarClock } title={ __( 'Who’s Out', 'erp' ) }>
+						<WidgetCard
+							icon={ CalendarClock }
+							title={ __( 'Who’s Out', 'erp' ) }
+							count={ data?.on_leave.length }
+							action={ canManageLeave ? { label: __( 'Calendar', 'erp' ), to: '/leave/calendar' } : undefined }
+						>
 							{ ( data?.on_leave.length ?? 0 ) === 0 ? (
 								<EmptyRow text={ __( 'Nobody is on leave this month.', 'erp' ) } />
 							) : (
@@ -396,7 +440,11 @@ function DashboardInner(): JSX.Element {
 						</WidgetCard>
 
 						{ /* Birthdays */ }
-						<WidgetCard icon={ Cake } title={ __( 'Birthdays', 'erp' ) }>
+						<WidgetCard
+							icon={ Cake }
+							title={ __( 'Birthdays', 'erp' ) }
+							count={ ( data?.birthdays_today.length ?? 0 ) + ( data?.birthdays_upcoming.length ?? 0 ) }
+						>
 							{ ( data?.birthdays_today.length ?? 0 ) === 0 && ( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
 								<EmptyRow text={ __( 'No birthdays in the next 7 days.', 'erp' ) } />
 							) : (

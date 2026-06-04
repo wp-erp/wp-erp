@@ -10,6 +10,7 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
+import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
 import type { SalaryHistoryResponse } from './types';
 import { useReport } from './useReports';
@@ -52,7 +53,7 @@ export function SalaryHistoryPage(): JSX.Element {
 						{ rows.map( ( row, idx ) => (
 							<tr key={ `${ row.user_id }-${ idx }` } className="h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
 								<td className="px-4 align-middle font-medium text-foreground">
-									{ row.name || <span aria-hidden="true">&nbsp;</span> }
+									{ row.name ? <ReportNameCell name={ row.name } avatar={ row.avatar } /> : <span aria-hidden="true">&nbsp;</span> }
 								</td>
 								<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ fmtDate( row.date ) }</td>
 								<td className="px-4 align-middle text-sm text-foreground">{ row.pay_rate ?? '—' }</td>

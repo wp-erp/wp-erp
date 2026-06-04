@@ -14,6 +14,7 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
+import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
 import { useHeadcount } from './useReports';
 
@@ -164,7 +165,7 @@ export function HeadcountPage(): JSX.Element {
 						<tbody>
 							{ ( data?.employees ?? [] ).map( ( emp ) => (
 								<tr key={ emp.user_id } className="h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="px-4 align-middle font-medium text-foreground">{ emp.name }</td>
+									<td className="px-4 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
 									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
 									<td className="px-4 align-middle text-sm text-foreground">{ emp.designation ?? '—' }</td>
 									<td className="px-4 align-middle text-sm text-foreground">{ emp.department ?? '—' }</td>

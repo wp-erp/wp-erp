@@ -25,6 +25,7 @@ import {
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { DependencyHint } from '@/shared/components/DependencyHint';
 import { __ } from '@/shared/i18n';
 
 import { SmartSelectField, TextareaField } from '../employee-create/fields';
@@ -134,6 +135,23 @@ export function EntitlementAssignDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
+				{ policies.length === 0 ? (
+					<div className="flex flex-col gap-4">
+						<DependencyHint
+							message={ __( 'No leave policy exists yet. A policy is required before you can assign an entitlement.', 'erp' ) }
+							steps={ [
+								{ label: __( '1. Create a leave type', 'erp' ), path: '/leave/types' },
+								{ label: __( '2. Create a leave policy', 'erp' ), path: '/leave/policies' },
+							] }
+							onBeforeNavigate={ onClose }
+						/>
+						<DialogFooter>
+							<Button type="button" variant="outline" className="h-10 px-6" onClick={ onClose }>
+								{ __( 'Close', 'erp' ) }
+							</Button>
+						</DialogFooter>
+					</div>
+				) : (
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
 					<SmartSelectField
 						id="entitlement_policy"
@@ -217,6 +235,7 @@ export function EntitlementAssignDialog( {
 						</Button>
 					</DialogFooter>
 				</form>
+				) }
 			</DialogContent>
 		</Dialog>
 	);

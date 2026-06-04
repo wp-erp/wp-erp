@@ -2,15 +2,18 @@
  * Announcement shapes for the `erp/v2/announcements` endpoints.
  */
 
+import type { AvatarPerson } from '@/shared/components/EmployeeAvatarStack';
+
 /** A list row (`GET /announcements`). */
 export interface Announcement {
-	readonly id:              number;
-	readonly title:           string;
-	readonly excerpt:         string;
-	readonly status:          string;
-	readonly date:            string | null;
-	readonly author:          string;
-	readonly recipient_count: number;
+	readonly id:                 number;
+	readonly title:              string;
+	readonly excerpt:            string;
+	readonly status:             string;
+	readonly date:               string | null;
+	readonly author:             string;
+	readonly recipient_count:    number;
+	readonly recipients_preview: readonly AvatarPerson[];
 }
 
 /** Single announcement (`GET /announcements/{id}`) — adds body + recipients. */

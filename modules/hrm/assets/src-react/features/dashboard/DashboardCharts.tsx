@@ -51,11 +51,13 @@ interface ChartCardProps {
 
 function ChartCard( { icon: Icon, title, subtitle, className, children }: ChartCardProps ): JSX.Element {
 	return (
-		<section className={ `flex flex-col rounded-lg border border-border bg-card p-5 shadow-sm ${ className ?? '' }` }>
-			<header className="mb-4 flex items-center gap-2">
-				<Icon size={ 17 } strokeWidth={ 1.9 } className="text-muted-foreground" aria-hidden="true" />
+		<section className={ `flex flex-col rounded-[10px] bg-card p-6 shadow-sm ${ className ?? '' }` }>
+			<header className="mb-4 flex items-center gap-2.5">
+				<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+					<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+				</span>
 				<div>
-					<h2 className="text-sm font-semibold text-foreground">{ title }</h2>
+					<h2 className="text-base font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 					{ subtitle ? <p className="text-xs text-muted-foreground">{ subtitle }</p> : null }
 				</div>
 			</header>
@@ -109,7 +111,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 	const deptData = charts.departments.map( ( d ) => ( { name: d.name, count: d.count } ) );
 
 	return (
-		<div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+		<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
 			{ /* Headcount trend — spans 2 cols */ }
 			<ChartCard
 				icon={ TrendingUp }

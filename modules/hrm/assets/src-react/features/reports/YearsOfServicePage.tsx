@@ -10,6 +10,7 @@ import type { JSX } from 'react';
 
 import { __, sprintf } from '@/shared/i18n';
 
+import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
 import type { YearsOfServiceResponse } from './types';
 import { useReport } from './useReports';
@@ -40,20 +41,20 @@ export function YearsOfServicePage(): JSX.Element {
 												{ ordinal( day.day ) }
 											</th>
 											<td className="py-2 text-sm text-foreground">
-												{ day.people.map( ( p, i ) => (
-													<span key={ p.user_id }>
-														{ p.name }
-														<span className="text-muted-foreground">
-															{ ' ' }
-															({ sprintf(
-																/* translators: %d: number of years */
-																p.years === 1 ? __( '%d Year', 'erp' ) : __( '%d Years', 'erp' ),
-																p.years
-															) })
-														</span>
-														{ i < day.people.length - 1 ? ', ' : '' }
-													</span>
-												) ) }
+												<div className="flex flex-col gap-2">
+													{ day.people.map( ( p ) => (
+														<div key={ p.user_id } className="flex items-center gap-2">
+															<ReportNameCell name={ p.name } avatar={ p.avatar } />
+															<span className="text-muted-foreground">
+																({ sprintf(
+																	/* translators: %d: number of years */
+																	p.years === 1 ? __( '%d Year', 'erp' ) : __( '%d Years', 'erp' ),
+																	p.years
+																) })
+															</span>
+														</div>
+													) ) }
+												</div>
 											</td>
 										</tr>
 									) ) }

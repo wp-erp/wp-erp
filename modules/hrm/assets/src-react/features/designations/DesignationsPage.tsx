@@ -16,11 +16,12 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { ArrowDown, ArrowUp, ArrowUpDown, Filter, MoreVertical, Pencil, Plus, Search, Trash2, Users } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Filter, MoreVertical, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -278,10 +279,7 @@ function DesignationsInner(): JSX.Element {
 										) : null }
 									</td>
 									<td className="px-4 align-middle text-sm text-foreground">
-										<span className="inline-flex items-center gap-1 text-muted-foreground">
-											<Users size={ 14 } aria-hidden="true" />
-											{ desig.total_employees }
-										</span>
+										<EmployeeAvatarStack people={ desig.employees } total={ desig.total_employees } />
 									</td>
 									<td className="px-4 align-middle">
 										{ canManage ? (

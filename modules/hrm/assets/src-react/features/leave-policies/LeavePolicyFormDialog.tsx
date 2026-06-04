@@ -27,6 +27,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { DependencyHint } from '@/shared/components/DependencyHint';
 import { __ } from '@/shared/i18n';
 
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
@@ -193,6 +194,14 @@ export function LeavePolicyFormDialog( {
 					</DialogDescription>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
+
+				{ ! editing && leaveTypeOpts.length === 0 ? (
+					<DependencyHint
+						message={ __( 'No leave type exists yet. Create one before adding a leave policy.', 'erp' ) }
+						steps={ [ { label: __( 'Create a leave type', 'erp' ), path: '/leave/types' } ] }
+						onBeforeNavigate={ onClose }
+					/>
+				) : null }
 
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
 					<div className="grid grid-cols-2 gap-4">

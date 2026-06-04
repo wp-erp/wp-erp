@@ -16,11 +16,12 @@ import {
 	Input,
 	toast,
 } from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, Plus, RotateCcw, Search, Trash2, Users } from 'lucide-react';
+import { MoreVertical, Pencil, Plus, RotateCcw, Search, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -249,10 +250,7 @@ function AnnouncementsInner(): JSX.Element {
 										) : null }
 									</td>
 									<td className="px-4 align-middle text-sm text-muted-foreground">
-										<span className="inline-flex items-center gap-1">
-											<Users size={ 14 } aria-hidden="true" />
-											{ row.recipient_count }
-										</span>
+										<EmployeeAvatarStack people={ row.recipients_preview } total={ row.recipient_count } />
 									</td>
 									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ row.author || '—' }</td>
 									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ fmt( row.date ) }</td>

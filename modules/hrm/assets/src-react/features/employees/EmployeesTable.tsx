@@ -18,10 +18,21 @@ import type {
 	EmployeesState,
 } from '@/stores/employees';
 
+import { COLUMN_IDS } from './constants';
 import { EmployeesRowActions } from './EmployeesRowActions';
 import { useColumnContext } from './useColumnContext';
 import { useEmployeeColumns } from './useEmployeeColumns';
 import { useEmployeesQuery } from './useEmployeesQuery';
+
+// Sticky-column helpers — Name pinned left (after the checkbox), Actions pinned
+// right, so they stay visible while the middle columns scroll horizontally
+// (same pattern as the Leave report). Header cells use a solid muted bg; body
+// cells inherit the row bg (card / hover / selected) to stay opaque over scroll.
+const STICKY_HEAD       = 'sticky z-20 bg-muted';
+const STICKY_BODY       = 'sticky z-10 bg-card group-hover:bg-muted/40 group-data-[selected=true]:bg-primary/5';
+const STICKY_LEFT_CHECK = 'left-0';
+const STICKY_LEFT_NAME  = 'left-10';
+const STICKY_RIGHT      = 'right-0';
 
 interface EmployeesStoreDispatch {
 	setSort:        ( sort: EmployeesState[ 'sort' ] ) => void;
@@ -85,11 +96,11 @@ export function EmployeesTable(): JSX.Element {
 	return (
 		<div className="bg-card">
 			<div className="overflow-x-auto">
-			<table className="w-full text-left" role="grid" aria-label={ __( 'Employees', 'erp' ) }>
+			<table className="w-full min-w-[72rem] text-left" role="grid" aria-label={ __( 'Employees', 'erp' ) }>
 				<caption className="sr-only">{ __( 'Employee list', 'erp' ) }</caption>
 				<thead className="border-b border-border bg-muted/40">
 					<tr className="h-10">
-						<th scope="col" className="w-10 px-4">
+						<th scope="col" className={ `w-10 px-4 ${ STICKY_HEAD } ${ STICKY_LEFT_CHECK }` }>
 							<span className="sr-only">{ __( 'Select all', 'erp' ) }</span>
 							<Checkbox
 								checked={ allSelected }
@@ -106,7 +117,7 @@ export function EmployeesTable(): JSX.Element {
 								key={ col.id }
 								scope="col"
 								aria-sort={ ariaSortFor( col, currentOrderBy, currentOrder ) }
-								className="px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground"
+								className={ `whitespace-nowrap px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_HEAD } ${ STICKY_LEFT_NAME }` : '' }` }
 							>
 								{ col.sortable ? (
 									<button
@@ -129,7 +140,7 @@ export function EmployeesTable(): JSX.Element {
 								) }
 							</th>
 						) ) }
-						<th scope="col" className="w-8 pr-4">
+						<th scope="col" className={ `w-8 pr-4 ${ STICKY_HEAD } ${ STICKY_RIGHT }` }>
 							<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 						</th>
 					</tr>
@@ -141,9 +152,9 @@ export function EmployeesTable(): JSX.Element {
 							<tr
 								key={ row.id }
 								data-selected={ isChecked ? 'true' : 'false' }
-								className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40 data-[selected=true]:bg-primary/5"
+								className="group h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40 data-[selected=true]:bg-primary/5"
 							>
-								<td className="w-10 px-4 align-middle">
+								<td className={ `w-10 px-4 align-middle ${ STICKY_BODY } ${ STICKY_LEFT_CHECK }` }>
 									<Checkbox
 										checked={ isChecked }
 										onCheckedChange={ ( next: boolean ) => toggleRow( row.id, next ) }
@@ -153,12 +164,12 @@ export function EmployeesTable(): JSX.Element {
 								{ columns.map( ( col ) => (
 									<td
 										key={ col.id }
-										className="px-2 align-middle text-sm text-foreground"
+										className={ `px-2 align-middle text-sm text-foreground ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_BODY } ${ STICKY_LEFT_NAME }` : '' }` }
 									>
 										{ col.render( row, ctx ) }
 									</td>
 								) ) }
-								<td className="pr-4 text-right align-middle">
+								<td className={ `pr-4 pl-2 text-right align-middle ${ STICKY_BODY } ${ STICKY_RIGHT }` }>
 									<EmployeesRowActions employee={ row } />
 								</td>
 							</tr>

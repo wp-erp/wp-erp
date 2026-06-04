@@ -16,6 +16,7 @@ import type { JSX } from 'react';
 import { __ } from '@/shared/i18n';
 
 import { OrgPagination } from '../org/OrgPagination';
+import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
 import type { LeaveReportFormOptions } from './types';
 import { useLeaveReport } from './useReports';
@@ -216,25 +217,29 @@ export function LeavesReportPage(): JSX.Element {
 				emptyText={ __( 'No record found.', 'erp' ) }
 			>
 				<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
+						<table className="w-full text-left">
 					<thead className="border-b border-border bg-muted/40">
-						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
+						<tr className="h-11 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-muted/40 px-4">{ __( 'Name', 'erp' ) }</th>
 							{ columns.map( ( col ) => (
-								<th key={ col.leave_id } scope="col" className="px-4 text-right">{ col.name }</th>
+								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-4 text-right">{ col.name }</th>
 							) ) }
 						</tr>
 					</thead>
 					<tbody>
 						{ rows.map( ( row ) => (
-							<tr key={ row.user_id } className="h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
-								<td className="px-4 align-middle font-medium text-foreground">
-									{ row.name || <span className="text-muted-foreground">—</span> }
+							<tr key={ row.user_id } className="group h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<td className="sticky left-0 z-10 whitespace-nowrap bg-card px-4 align-middle font-medium text-foreground group-hover:bg-muted/40">
+									{ row.name ? (
+										<ReportNameCell name={ row.name } avatar={ row.avatar } />
+									) : (
+										<span className="text-muted-foreground">—</span>
+									) }
 								</td>
 								{ columns.map( ( col ) => {
 									const cell = row.cells[ String( col.leave_id ) ];
 									return (
-										<td key={ col.leave_id } className="px-4 text-right align-middle text-sm tabular-nums text-foreground">
+										<td key={ col.leave_id } className="whitespace-nowrap px-4 text-right align-middle text-sm tabular-nums text-foreground">
 											{ cell ? fmtCell( cell.spent, cell.days ) : '—' }
 										</td>
 									);

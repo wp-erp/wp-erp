@@ -25,9 +25,12 @@ export const SEARCH_DEBOUNCE_MS = 250;
 /** Stable column ids — pro can target these to override visibility/priority. */
 export const COLUMN_IDS = {
 	NAME:        'name',
+	EMPLOYEE_ID: 'employee_id',
 	EMAIL:       'email',
 	DEPARTMENT:  'department',
 	DESIGNATION: 'designation',
+	LOCATION:    'location',
+	PHONE:       'phone',
 	STATUS:      'status',
 	HIRE_DATE:   'hire_date',
 } as const;

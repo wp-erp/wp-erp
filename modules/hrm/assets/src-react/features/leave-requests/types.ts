@@ -10,6 +10,7 @@ export interface LeaveRequest {
 	readonly id:           number;
 	readonly user_id:      number | null;
 	readonly name:         string;
+	readonly avatar:       string | null;
 	readonly leave_id:     number | null;
 	readonly policy_name:  string;
 	readonly start_date:   string | null;

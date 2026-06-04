@@ -502,14 +502,26 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 
 		$recipient_count = (int) Announcement::where( 'post_id', (int) $post->ID )->count();
 
+		// Small avatar-stack preview (up to 3 recipients) for the audience column.
+		$recipients_preview = [];
+		$preview            = Announcement::where( 'post_id', (int) $post->ID )->take( 3 )->get( [ 'user_id' ] );
+		foreach ( $preview as $row ) {
+			$employee             = new \WeDevs\ERP\HRM\Employee( (int) $row->user_id );
+			$recipients_preview[] = [
+				'name'   => (string) $employee->get_full_name(),
+				'avatar' => $employee->get_avatar_url( 40 ) ?: null,
+			];
+		}
+
 		return [
-			'id'              => (int) $post->ID,
-			'title'           => (string) get_the_title( $post ),
-			'excerpt'         => wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 30 ),
-			'status'          => (string) $post->post_status,
-			'date'            => $this->cast_date_iso( $post->post_date ),
-			'author'          => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
-			'recipient_count' => $recipient_count,
+			'id'                  => (int) $post->ID,
+			'title'               => (string) get_the_title( $post ),
+			'excerpt'             => wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 30 ),
+			'status'              => (string) $post->post_status,
+			'date'                => $this->cast_date_iso( $post->post_date ),
+			'author'              => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
+			'recipient_count'     => $recipient_count,
+			'recipients_preview'  => $recipients_preview,
 		];
 	}
 

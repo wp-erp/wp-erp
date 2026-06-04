@@ -90,6 +90,11 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 
 	return (
 		<div className="space-y-5">
+			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
+				<header className="border-b border-border px-6 py-4">
+					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Notes', 'erp' ) }</h2>
+				</header>
+				<div className="space-y-5 p-5">
 			{ canManage ? (
 				<form onSubmit={ ( e ) => void handleAdd( e ) } className="rounded-lg border border-border bg-card p-4 shadow-sm">
 					<Textarea
@@ -162,6 +167,8 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 					) ) }
 				</ul>
 			) }
+				</div>
+			</section>
 
 			<OrgDeleteDialog
 				open={ deleting !== null }

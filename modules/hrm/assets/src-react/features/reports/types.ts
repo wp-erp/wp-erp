@@ -50,6 +50,7 @@ export interface HeadcountEmployee {
 	readonly user_id:     number;
 	readonly employee_id: string | null;
 	readonly name:        string;
+	readonly avatar:      string | null;
 	readonly hire_date:   string | null;
 	readonly designation: string | null;
 	readonly department:  string | null;
@@ -74,6 +75,7 @@ export interface SalaryHistoryRow {
 	readonly user_id:     number;
 	readonly employee_id: string | null;
 	readonly name:        string;
+	readonly avatar:      string | null;
 	readonly date:        string | null;
 	readonly pay_rate:    string | null;
 	readonly pay_type:    string | null;
@@ -87,6 +89,7 @@ export interface SalaryHistoryResponse {
 export interface ServicePerson {
 	readonly user_id:     number;
 	readonly name:        string;
+	readonly avatar:      string | null;
 	readonly hiring_date: string | null;
 	readonly years:       number;
 }
@@ -121,6 +124,7 @@ export interface LeaveReportCell {
 export interface LeaveReportRow {
 	readonly user_id: number;
 	readonly name:    string;
+	readonly avatar:  string | null;
 	readonly cells:   Record< string, LeaveReportCell | null >;
 }
 

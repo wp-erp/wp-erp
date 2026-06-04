@@ -72,6 +72,7 @@ interface TextFieldProps {
 	readonly error?:      string | undefined;
 	readonly placeholder?: string | undefined;
 	readonly maxLength?:  number | undefined;
+	readonly disabled?:   boolean | undefined;
 	readonly className?:  string | undefined;
 }
 
@@ -85,6 +86,7 @@ export function TextField( {
 	error,
 	placeholder,
 	maxLength,
+	disabled,
 	className,
 }: TextFieldProps ): JSX.Element {
 	return (
@@ -94,6 +96,7 @@ export function TextField( {
 				type={ type }
 				value={ value }
 				required={ required }
+				disabled={ disabled }
 				placeholder={ placeholder }
 				maxLength={ maxLength }
 				onChange={ ( e ) => onChange( e.target.value ) }
@@ -113,6 +116,7 @@ interface SelectFieldProps {
 	readonly placeholder?: string | undefined;
 	readonly required?:   boolean | undefined;
 	readonly error?:      string | undefined;
+	readonly disabled?:   boolean | undefined;
 	readonly className?:  string | undefined;
 }
 
@@ -125,6 +129,7 @@ export function SelectField( {
 	placeholder,
 	required,
 	error,
+	disabled,
 	className,
 }: SelectFieldProps ): JSX.Element {
 	return (
@@ -134,6 +139,7 @@ export function SelectField( {
 				value={ value === '' ? undefined : value }
 				onValueChange={ ( v ) => onChange( v == null || v === EMPTY_VALUE ? '' : String( v ) ) }
 				required={ required }
+				disabled={ disabled }
 			>
 				<SelectTrigger id={ id } aria-invalid={ error ? true : undefined } className="h-10 w-full bg-background">
 					<SelectValue placeholder={ placeholder ?? '—' } />
@@ -214,6 +220,9 @@ interface TextareaFieldProps {
 	readonly value:     string;
 	readonly onChange:  ( value: string ) => void;
 	readonly rows?:     number | undefined;
+	readonly required?: boolean | undefined;
+	readonly error?:    string | undefined;
+	readonly disabled?: boolean | undefined;
 	readonly className?: string | undefined;
 }
 
@@ -223,16 +232,22 @@ export function TextareaField( {
 	value,
 	onChange,
 	rows = 4,
+	required,
+	error,
+	disabled,
 	className,
 }: TextareaFieldProps ): JSX.Element {
 	return (
-		<FieldShell id={ id } label={ label } className={ className }>
+		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
 			<Textarea
 				id={ id }
 				value={ value }
 				rows={ rows }
+				required={ required }
+				disabled={ disabled }
 				onChange={ ( e ) => onChange( e.target.value ) }
 				className="w-full border-border bg-background text-sm"
+				aria-invalid={ error ? true : undefined }
 			/>
 		</FieldShell>
 	);

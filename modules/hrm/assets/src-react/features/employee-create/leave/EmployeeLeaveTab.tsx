@@ -59,6 +59,9 @@ function num( value: number ): string {
 const SELECT_CLASS =
 	'h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none';
 
+// Accent palette for the leave-balance cards (cycled by index).
+const BALANCE_COLORS = [ '#3b82f6', '#ef4444', '#22c55e', '#ec4899', '#a78bfa', '#f59e0b' ];
+
 export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX.Element {
 	const [ filters, setFilters ] = useState< LeaveFilters >( {} );
 	const { data, loading, error, refetch } = useEmployeeLeave( userId, filters );
@@ -84,7 +87,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			{ /* Balance per policy */ }
 			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
 				<header className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
-					<h2 className="m-0 text-lg font-bold text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
+					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
 					{ canCreate ? (
 						<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setShowRequest( true ) }>
 							<Plus size={ 14 } aria-hidden="true" />
@@ -96,29 +99,48 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave policies assigned.', 'erp' ) }</p>
 				) : (
 					<div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
-						{ data.summary.map( ( row ) => (
-							<div key={ row.policy } className="rounded-lg border border-border p-4">
-								<div className="text-sm font-medium text-foreground">{ row.policy || __( 'Policy', 'erp' ) }</div>
-								<div className="mt-2 flex items-baseline gap-1">
-									<span className="text-2xl font-semibold text-foreground">{ num( row.available ) }</span>
-									<span className="text-xs text-muted-foreground">
-										{ sprintf(
-											/* translators: %s: total entitled days */
-											__( 'of %s available', 'erp' ),
-											num( row.total )
-										) }
-									</span>
+						{ data.summary.map( ( row, i ) => {
+							const color = BALANCE_COLORS[ i % BALANCE_COLORS.length ];
+							const total = Number( row.total ) || 0;
+							const spent = Number( row.spent ) || 0;
+							const pctUsed = total > 0 ? Math.min( 100, Math.round( ( spent / total ) * 100 ) ) : 0;
+							return (
+								<div
+									key={ row.policy }
+									className="group rounded-[10px] border border-border bg-card p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+								>
+									<div className="flex items-center justify-between gap-2">
+										<span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+											<span className="size-2.5 shrink-0 rounded-full" style={ { backgroundColor: color } } aria-hidden="true" />
+											{ row.policy || __( 'Policy', 'erp' ) }
+										</span>
+										<span className="shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
+											{ sprintf( __( '%s%% used', 'erp' ), String( pctUsed ) ) }
+										</span>
+									</div>
+									<div className="mt-3 flex items-end gap-1.5">
+										<span className="text-3xl font-bold leading-none tabular-nums text-foreground">{ num( row.available ) }</span>
+										<span className="pb-0.5 text-xs text-muted-foreground">
+											{ sprintf(
+												/* translators: %s: total entitled days */
+												__( 'of %s days left', 'erp' ),
+												num( row.total )
+											) }
+										</span>
+									</div>
+									<div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+										<div
+											className="h-full rounded-full transition-all"
+											style={ { width: `${ pctUsed }%`, backgroundColor: color } }
+										/>
+									</div>
+									<div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+										<span>{ sprintf( __( 'Entitled %s', 'erp' ), num( row.entitlement ) ) }</span>
+										<span>{ sprintf( __( 'Spent %s', 'erp' ), num( row.spent ) ) }</span>
+									</div>
 								</div>
-								<div className="mt-1 text-xs text-muted-foreground">
-									{ sprintf(
-										/* translators: 1: entitled days, 2: spent days */
-										__( 'Entitled %1$s · Spent %2$s', 'erp' ),
-										num( row.entitlement ),
-										num( row.spent )
-									) }
-								</div>
-							</div>
-						) ) }
+							);
+						} ) }
 					</div>
 				) }
 			</section>
@@ -126,7 +148,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			{ /* Request history */ }
 			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
 				<header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4">
-					<h2 className="m-0 text-lg font-bold text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
+					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
 					{ meta ? (
 						<div className="flex flex-wrap items-center gap-2">
 							<select

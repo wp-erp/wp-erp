@@ -305,10 +305,14 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 
 		$row = (object) $row;
 
+		$user_id = $this->cast_int_or_null( $row->user_id ?? null );
+		$avatar  = $user_id ? ( ( new \WeDevs\ERP\HRM\Employee( $user_id ) )->get_avatar_url( 40 ) ?: null ) : null;
+
 		return [
 			'id'           => (int) ( $row->id ?? 0 ),
-			'user_id'      => $this->cast_int_or_null( $row->user_id ?? null ),
+			'user_id'      => $user_id,
 			'name'         => (string) ( $row->name ?? $row->display_name ?? '' ),
+			'avatar'       => $avatar,
 			'leave_id'     => $this->cast_int_or_null( $row->leave_id ?? null ),
 			'policy_name'  => (string) ( $row->policy_name ?? '' ),
 			'start_date'   => $this->ts_to_iso( $row->start_date ?? null ),

@@ -79,6 +79,7 @@ export function AnnouncementFormDialog( {
 }: AnnouncementFormDialogProps ): JSX.Element {
 	const [ form, setForm ]       = useState< FormState >( EMPTY );
 	const [ titleErr, setTitleErr ] = useState( '' );
+	const [ recipientErr, setRecipientErr ] = useState( '' );
 
 	useEffect( () => {
 		if ( ! open ) {
@@ -124,6 +125,22 @@ export function AnnouncementFormDialog( {
 			setTitleErr( __( 'Title is required.', 'erp' ) );
 			return;
 		}
+
+		// A targeted audience must actually select at least one recipient
+		// (the legacy assign step silently no-ops on an empty target).
+		if ( form.assignType === 'by_department' && form.departments.length === 0 ) {
+			setRecipientErr( __( 'Select at least one department.', 'erp' ) );
+			return;
+		}
+		if ( form.assignType === 'by_designation' && form.designations.length === 0 ) {
+			setRecipientErr( __( 'Select at least one designation.', 'erp' ) );
+			return;
+		}
+		if ( form.assignType === 'selected_employee' && form.employees.length === 0 ) {
+			setRecipientErr( __( 'Select at least one employee.', 'erp' ) );
+			return;
+		}
+
 		onSubmit( {
 			title,
 			content:      form.content,
@@ -181,7 +198,7 @@ export function AnnouncementFormDialog( {
 							label={ __( 'Send To', 'erp' ) }
 							options={ assignTypeOpts }
 							value={ form.assignType }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, assignType: v as AnnouncementAssignType } ) ) }
+							onChange={ ( v ) => { setForm( ( p ) => ( { ...p, assignType: v as AnnouncementAssignType } ) ); setRecipientErr( '' ); } }
 						/>
 					</div>
 
@@ -191,9 +208,10 @@ export function AnnouncementFormDialog( {
 							<SmartMultiSelect
 								options={ deptMulti }
 								value={ form.departments }
-								onValueChange={ ( v ) => setForm( ( p ) => ( { ...p, departments: v } ) ) }
+								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, departments: v } ) ); setRecipientErr( '' ); } }
 								placeholder={ __( 'Select departments…', 'erp' ) }
 							/>
+							{ recipientErr ? <p className="text-xs text-destructive">{ recipientErr }</p> : null }
 						</div>
 					) : null }
 
@@ -203,9 +221,10 @@ export function AnnouncementFormDialog( {
 							<SmartMultiSelect
 								options={ desigMulti }
 								value={ form.designations }
-								onValueChange={ ( v ) => setForm( ( p ) => ( { ...p, designations: v } ) ) }
+								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, designations: v } ) ); setRecipientErr( '' ); } }
 								placeholder={ __( 'Select designations…', 'erp' ) }
 							/>
+							{ recipientErr ? <p className="text-xs text-destructive">{ recipientErr }</p> : null }
 						</div>
 					) : null }
 
@@ -215,9 +234,10 @@ export function AnnouncementFormDialog( {
 							<SmartMultiSelect
 								options={ empMulti }
 								value={ form.employees }
-								onValueChange={ ( v ) => setForm( ( p ) => ( { ...p, employees: v } ) ) }
+								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, employees: v } ) ); setRecipientErr( '' ); } }
 								placeholder={ __( 'Select employees…', 'erp' ) }
 							/>
+							{ recipientErr ? <p className="text-xs text-destructive">{ recipientErr }</p> : null }
 						</div>
 					) : null }
 

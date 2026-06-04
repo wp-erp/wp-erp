@@ -20,6 +20,8 @@ import {
 import { useEffect, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
+import { EntitlementEmptyHint } from '@/shared/components/EntitlementEmptyHint';
+import { InfoTooltip } from '@/shared/components/InfoTooltip';
 import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -56,6 +58,9 @@ export function LeaveRequestDialog( {
 	const [ validating, setValidating ] = useState( false );
 	const [ validation, setValidation ] = useState< LeaveDateValidation | null >( null );
 	const [ dateError, setDateError ]   = useState< string | null >( null );
+	const [ entitlementError, setEntitlementError ] = useState< string | null >( null );
+
+	const entitled = policies.length > 0;
 
 	// Reset when (re)opened.
 	useEffect( () => {
@@ -68,6 +73,7 @@ export function LeaveRequestDialog( {
 			setError( null );
 			setValidation( null );
 			setDateError( null );
+			setEntitlementError( null );
 		}
 	}, [ open, currentYear ] );
 
@@ -107,15 +113,28 @@ export function LeaveRequestDialog( {
 		};
 	}, [ open, userId, policy, from, to ] );
 
-	// Load the assignable policies whenever the chosen year changes.
+	// Load the assignable policies whenever the chosen year changes. No policy
+	// for the year ⇒ the employee is not entitled (legacy `get_assign_policy`).
 	useEffect( () => {
 		if ( ! open || ! year ) {
 			setPolicies( [] );
+			setEntitlementError( null );
 			return;
 		}
 		let cancelled = false;
+		setEntitlementError( null );
 		void fetchAssignablePolicies( userId, Number( year ) )
-			.then( ( list ) => ! cancelled && setPolicies( list ) )
+			.then( ( list ) => {
+				if ( cancelled ) {
+					return;
+				}
+				setPolicies( list );
+				setEntitlementError(
+					list.length === 0
+						? __( 'Employee is not entitled to any leave policy. Set leave entitlement to apply for leave.', 'erp' )
+						: null
+				);
+			} )
 			.catch( () => ! cancelled && setPolicies( [] ) );
 		return () => {
 			cancelled = true;
@@ -174,17 +193,19 @@ export function LeaveRequestDialog( {
 						value={ year }
 						onChange={ ( v ) => { setYear( v ); setPolicy( '' ); } }
 					/>
+					{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
 					<SelectField
 						id="leave_policy"
 						label={ __( 'Leave Policy', 'erp' ) }
 						required
+						disabled={ ! entitled }
 						options={ policyOptions }
 						value={ policy }
 						onChange={ setPolicy }
 						placeholder={ __( '- Select -', 'erp' ) }
 					/>
-					<TextField id="leave_from" label={ __( 'From', 'erp' ) } type="date" required value={ from } onChange={ setFrom } />
-					<TextField id="leave_to" label={ __( 'To', 'erp' ) } type="date" required value={ to } onChange={ setTo } />
+					<TextField id="leave_from" label={ __( 'From', 'erp' ) } type="date" required disabled={ ! entitled } value={ from } onChange={ setFrom } />
+					<TextField id="leave_to" label={ __( 'To', 'erp' ) } type="date" required disabled={ ! entitled } value={ to } onChange={ setTo } />
 					{ validating ? (
 						<p className="text-sm text-muted-foreground">{ __( 'Checking dates…', 'erp' ) }</p>
 					) : dateError ? (
@@ -201,13 +222,19 @@ export function LeaveRequestDialog( {
 						</div>
 					) : null }
 
-					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } value={ reason } onChange={ setReason } />
+					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } disabled={ ! entitled } value={ reason } onChange={ setReason } />
 
-					<DialogFooter className="gap-5 sm:gap-5">
+					<DialogFooter className="items-center gap-5 sm:gap-5">
+						{ year && ! entitled ? (
+							<span className="mr-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+								<InfoTooltip text={ __( 'This employee has no leave entitlement for the selected year. Use the links above to create a policy and assign it, then come back.', 'erp' ) } />
+								{ __( 'Why can’t I submit?', 'erp' ) }
+							</span>
+						) : null }
 						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>
 							{ __( 'Cancel', 'erp' ) }
 						</Button>
-						<Button type="submit" className="h-10 px-6" disabled={ busy || validating || dateError !== null }>
+						<Button type="submit" className="h-10 px-6" disabled={ busy || ! entitled || validating || dateError !== null }>
 							{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit Request', 'erp' ) }
 						</Button>
 					</DialogFooter>

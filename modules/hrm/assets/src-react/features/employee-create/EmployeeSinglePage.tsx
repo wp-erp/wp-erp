@@ -23,9 +23,9 @@ import {
 	TabsTrigger,
 } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { ArrowLeft, Pencil } from 'lucide-react';
+import { ArrowLeft, Briefcase, CalendarClock, Pencil, Shield, StickyNote, TrendingUp, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { JSX, ReactNode } from 'react';
+import type { ComponentType, JSX, ReactNode, SVGProps } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -37,6 +37,7 @@ import type { MeUser } from '@/stores/me/types';
 
 import { AvatarUpload } from './AvatarUpload';
 import { EmployeeGeneralSections } from './general/EmployeeGeneralSections';
+import { OverviewStats } from './general/OverviewStats';
 import { EmployeeJobTab } from './job/EmployeeJobTab';
 import { EmployeeLeaveTab } from './leave/EmployeeLeaveTab';
 import { EmployeeNotesTab } from './notes/EmployeeNotesTab';
@@ -57,20 +58,42 @@ interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
 }
 
-// Underline tab style — matches the blue active tab used on the People table
-// (StatusFilter). Plugin-ui's `line` border styles conflict/load after our CSS,
-// so the active underline is drawn with an absolute span toggled by the
-// trigger's `data-active` attribute (reliable, no border-color cascade fights).
-const TAB_TRIGGER_CLASS = 'group relative shrink-0 flex-none rounded-none px-3 pb-2.5';
+type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 
-function ProfileTab( { value, children }: { readonly value: string; readonly children: ReactNode } ): JSX.Element {
+// Segmented-pill tab matching the Reports tabs. The active chip (white card +
+// primary text + ring) is driven off our own `current` state rather than a
+// plugin-ui/base-ui data attribute, so the blue active style is reliable.
+function ProfileTab( {
+	value,
+	current,
+	icon: Icon,
+	children,
+}: {
+	readonly value:    string;
+	readonly current:  string;
+	readonly icon:     LucideIcon;
+	readonly children: ReactNode;
+} ): JSX.Element {
+	const isActive = current === value;
 	return (
-		<TabsTrigger value={ value } className={ TAB_TRIGGER_CLASS }>
-			{ children }
+		<TabsTrigger
+			value={ value }
+			className={ [
+				'!flex-none shrink-0 grow-0 rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
+				isActive ? '!bg-card !shadow-sm !ring-primary/40' : '!bg-transparent !shadow-none',
+			].join( ' ' ) }
+		>
+			{ /* Colour lives on this inner span so it beats plugin-ui's trigger
+			    colour rule; the icon inherits via currentColor. */ }
 			<span
-				aria-hidden="true"
-				className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-primary opacity-0 transition-opacity group-data-[active]:opacity-100"
-			/>
+				className={ [
+					'inline-flex items-center gap-2',
+					isActive ? '!text-primary' : '!text-muted-foreground',
+				].join( ' ' ) }
+			>
+				<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+				{ children }
+			</span>
 		</TabsTrigger>
 	);
 }
@@ -266,26 +289,31 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 				</section>
 
 				<Tabs value={ tab } onValueChange={ ( value ) => setTab( String( value ) ) }>
-					<TabsList variant="line" className="h-auto w-full justify-start gap-1 overflow-x-auto border-b border-border pb-0.5 scrollbar-none">
-						<ProfileTab value="overview">{ __( 'Overview', 'erp' ) }</ProfileTab>
+					<TabsList className="!inline-flex !w-fit max-w-full justify-start overflow-x-auto scrollbar-none">
+						<ProfileTab value="overview" current={ tab } icon={ User }>{ __( 'Overview', 'erp' ) }</ProfileTab>
 						{ canEdit ? (
-							<ProfileTab value="job">{ __( 'Job', 'erp' ) }</ProfileTab>
+							<ProfileTab value="job" current={ tab } icon={ Briefcase }>{ __( 'Job', 'erp' ) }</ProfileTab>
 						) : null }
 						{ canEdit ? (
-							<ProfileTab value="leave">{ __( 'Leave', 'erp' ) }</ProfileTab>
+							<ProfileTab value="leave" current={ tab } icon={ CalendarClock }>{ __( 'Leave', 'erp' ) }</ProfileTab>
 						) : null }
 						{ canViewNotes ? (
-							<ProfileTab value="notes">{ __( 'Notes', 'erp' ) }</ProfileTab>
+							<ProfileTab value="notes" current={ tab } icon={ StickyNote }>{ __( 'Notes', 'erp' ) }</ProfileTab>
 						) : null }
 						{ canViewPerf ? (
-							<ProfileTab value="performance">{ __( 'Performance', 'erp' ) }</ProfileTab>
+							<ProfileTab value="performance" current={ tab } icon={ TrendingUp }>{ __( 'Performance', 'erp' ) }</ProfileTab>
 						) : null }
 						{ canViewPermission ? (
-							<ProfileTab value="permission">{ __( 'Permission', 'erp' ) }</ProfileTab>
+							<ProfileTab value="permission" current={ tab } icon={ Shield }>{ __( 'Permission', 'erp' ) }</ProfileTab>
 						) : null }
 					</TabsList>
 
 					<TabsContent value="overview" className="mt-6 space-y-6">
+				<OverviewStats
+					userId={ userId }
+					hiringDate={ str( record, 'hiring_date' ) }
+					dateOfBirth={ str( record, 'date_of_birth' ) }
+				/>
 				<DetailCard title={ __( 'Employment', 'erp' ) }>
 					<Item label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
 					<Item label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />

@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { DependencyHint } from '@/shared/components/DependencyHint';
 import { __ } from '@/shared/i18n';
 import type { EmployeeCreateInput } from '@/stores/employees';
 
@@ -115,11 +116,14 @@ export function EmployeeForm( {
 	const [ designations, setDesignations ] = useState< Option[] >( [] );
 	const [ locations, setLocations ] = useState< Option[] >( [] );
 	const [ managers, setManagers ] = useState< Option[] >( [] );
+	const [ lookupsLoaded, setLookupsLoaded ] = useState( false );
 
 	useEffect( () => {
 		let cancelled = false;
-		void loadLookup( 'departments' ).then( ( l ) => ! cancelled && setDepartments( toOptions( l ) ) );
-		void loadLookup( 'designations' ).then( ( l ) => ! cancelled && setDesignations( toOptions( l ) ) );
+		void Promise.all( [
+			loadLookup( 'departments' ).then( ( l ) => ! cancelled && setDepartments( toOptions( l ) ) ),
+			loadLookup( 'designations' ).then( ( l ) => ! cancelled && setDesignations( toOptions( l ) ) ),
+		] ).finally( () => ! cancelled && setLookupsLoaded( true ) );
 		if ( ! isEdit ) {
 			void loadLookup( 'locations' ).then( ( l ) => ! cancelled && setLocations( toOptions( l ) ) );
 			void loadManagers().then( ( l ) => ! cancelled && setManagers( toOptions( l ) ) );
@@ -128,6 +132,19 @@ export function EmployeeForm( {
 			cancelled = true;
 		};
 	}, [ isEdit ] );
+
+	// Department + Designation are required to create an employee. If the org has
+	// none yet, point the user to set them up first instead of leaving the
+	// required selects empty with no way forward.
+	const missingOrgSteps: { label: string; path: string }[] = [];
+	if ( lookupsLoaded && ! isEdit ) {
+		if ( departments.length === 0 ) {
+			missingOrgSteps.push( { label: __( 'Add a department', 'erp' ), path: '/departments' } );
+		}
+		if ( designations.length === 0 ) {
+			missingOrgSteps.push( { label: __( 'Add a designation', 'erp' ), path: '/designations' } );
+		}
+	}
 
 	// Create flow only: debounce-check the email. Mirrors the legacy `check_user`
 	// — warns when the email already belongs to an employee, or offers to convert
@@ -274,6 +291,15 @@ export function EmployeeForm( {
 					<AlertTitle>{ __( 'Something went wrong', 'erp' ) }</AlertTitle>
 					<AlertDescription>{ submitError }</AlertDescription>
 				</Alert>
+			) : null }
+
+			{ missingOrgSteps.length > 0 ? (
+				<div className="mb-6">
+					<DependencyHint
+						message={ __( 'Set up your organisation before adding employees — Department and Designation are required.', 'erp' ) }
+						steps={ missingOrgSteps }
+					/>
+				</div>
 			) : null }
 
 			{ ! isEdit && userCheck && userCheck.type === 'employee' ? (

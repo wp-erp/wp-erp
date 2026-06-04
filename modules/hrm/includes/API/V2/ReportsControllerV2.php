@@ -319,6 +319,7 @@ class ReportsControllerV2 extends RestControllerV2 {
 				'user_id'          => (int) $employee->get_user_id(),
 				'employee_id'      => $this->cast_string_or_null( $employee->employee_id ),
 				'name'             => $this->cast_string_or_null( $employee->display_name ) ?? '',
+				'avatar'           => $employee->get_avatar_url( 60 ) ?: null,
 				'hire_date'        => $this->cast_date_iso( $employee->hiring_date ),
 				'designation'      => $this->cast_string_or_null( $employee->designation_title ),
 				'department'       => $this->cast_string_or_null( $employee->department_title ),
@@ -385,6 +386,7 @@ class ReportsControllerV2 extends RestControllerV2 {
 					'employee_id' => $this->cast_string_or_null( $employee->employee_id ),
 					// Name shown only on the first row per employee (legacy rowspan behaviour).
 					'name'        => 0 === $line ? ( $this->cast_string_or_null( $employee->display_name ) ?? '' ) : '',
+					'avatar'      => 0 === $line ? ( $employee->get_avatar_url( 60 ) ?: null ) : null,
 					'date'        => $this->cast_date_iso( $compensation['date'] ?? '' ),
 					'pay_rate'    => $this->cast_string_or_null( $compensation['pay_rate'] ?? '' ),
 					'pay_type'    => $this->cast_string_or_null( $compensation['pay_type'] ?? '' ),
@@ -433,6 +435,7 @@ class ReportsControllerV2 extends RestControllerV2 {
 			$hire_data[ $month ][ $day ][] = [
 				'user_id'     => (int) $employee->get_user_id(),
 				'name'        => $this->cast_string_or_null( $employee->display_name ) ?? '',
+				'avatar'      => $employee->get_avatar_url( 60 ) ?: null,
 				'hiring_date' => $this->cast_date_iso( $employee->hiring_date ),
 				'years'       => $years,
 			];
@@ -660,9 +663,11 @@ class ReportsControllerV2 extends RestControllerV2 {
 				}
 			}
 
+			$employee = new Employee( $user_id );
 			$rows[] = [
 				'user_id' => $user_id,
 				'name'    => $this->full_name( $user ),
+				'avatar'  => $employee->get_avatar_url( 60 ) ?: null,
 				'cells'   => $cells,
 			];
 		}

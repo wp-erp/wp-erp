@@ -74,6 +74,25 @@ class EmployeesControllerV2 extends RestControllerV2 {
 
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/import',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'import_items' ],
+					'permission_callback' => [ $this, 'permission_create_employee' ],
+					'args'                => [
+						'employees' => [
+							'description' => __( 'Array of employee rows to create.', 'erp' ),
+							'type'        => 'array',
+							'required'    => true,
+						],
+					],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/counts',
 			[
 				[
@@ -494,6 +513,83 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		);
 
 		return $response;
+	}
+
+	/**
+	 * POST /erp/v2/employees/import
+	 *
+	 * Bulk-create employees from parsed CSV rows. Mirrors the legacy bulk path
+	 * (`EmployeesController::create_employees` → `Employee::create_employee()`),
+	 * reusing this controller's `prepare_item_for_database()` so every row goes
+	 * through the same sanitisation + hooks as a single create.
+	 *
+	 * Unlike the v1 handler (which aborted on the first error), this processes
+	 * every row and returns a per-row summary so the import UI can report which
+	 * rows failed and why — a no-op on success counts, no partial rollback.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function import_items( $request ) {
+		$rows = $request->get_param( 'employees' );
+
+		if ( ! is_array( $rows ) || empty( $rows ) ) {
+			return new \WP_Error(
+				'rest_import_empty',
+				__( 'No employee rows were supplied.', 'erp' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		$created = 0;
+		$failed  = [];
+
+		foreach ( array_values( $rows ) as $index => $row ) {
+			$line = $index + 1;
+
+			if ( ! is_array( $row ) ) {
+				$failed[] = [
+					'row'     => $line,
+					'email'   => '',
+					'message' => __( 'Malformed row.', 'erp' ),
+				];
+				continue;
+			}
+
+			// Minimal required-field guard before hitting the model.
+			if ( empty( $row['first_name'] ) || empty( $row['last_name'] ) || empty( $row['email'] ) ) {
+				$failed[] = [
+					'row'     => $line,
+					'email'   => isset( $row['email'] ) ? sanitize_email( (string) $row['email'] ) : '',
+					'message' => __( 'first_name, last_name and email are required.', 'erp' ),
+				];
+				continue;
+			}
+
+			$data     = $this->prepare_item_for_database( $row );
+			$employee = new Employee( null );
+			$result   = $employee->create_employee( $data );
+
+			if ( is_wp_error( $result ) ) {
+				$failed[] = [
+					'row'     => $line,
+					'email'   => sanitize_email( (string) $row['email'] ),
+					'message' => $result->get_error_message(),
+				];
+				continue;
+			}
+
+			$created++;
+		}
+
+		return rest_ensure_response(
+			[
+				'total'   => count( $rows ),
+				'created' => $created,
+				'failed'  => $failed,
+			]
+		);
 	}
 
 	/**

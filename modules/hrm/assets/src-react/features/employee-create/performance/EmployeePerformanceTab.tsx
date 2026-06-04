@@ -50,7 +50,7 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 	return (
 		<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
-				<h2 className="m-0 text-lg font-bold text-foreground">{ title }</h2>
+				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
 			</header>
 			{ rowCount === 0 ? (

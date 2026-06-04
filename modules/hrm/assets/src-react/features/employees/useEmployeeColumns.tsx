@@ -11,6 +11,7 @@
 import { applyFilters, didFilter } from '@wordpress/hooks';
 import { useMemo } from 'react';
 
+import { CopyButton } from '@/shared/components/CopyButton';
 import { __ } from '@/shared/i18n';
 import type {
 	ColumnContext,
@@ -43,6 +44,25 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 				render:         ( row ) => <NameCell row={ row } />,
 			},
 			{
+				id:             COLUMN_IDS.EMPLOYEE_ID,
+				label:          __( 'Employee ID', 'erp' ),
+				priority:       15,
+				defaultVisible: true,
+				sortable:       false,
+				filterable:     false,
+				getValue:       ( row ) => row.employee_id ?? null,
+				render:         ( row ) => (
+					row.employee_id ? (
+						<span className="group/cell inline-flex items-center gap-1 whitespace-nowrap">
+							<span className="font-medium tabular-nums text-foreground">{ row.employee_id }</span>
+							<CopyButton value={ row.employee_id } label={ __( 'Copy employee ID', 'erp' ) } />
+						</span>
+					) : (
+						<span className="text-muted-foreground">—</span>
+					)
+				),
+			},
+			{
 				id:             COLUMN_IDS.EMAIL,
 				label:          __( 'Email', 'erp' ),
 				priority:       20,
@@ -66,11 +86,42 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 				id:             COLUMN_IDS.DESIGNATION,
 				label:          __( 'Designation', 'erp' ),
 				priority:       40,
-				defaultVisible: false,
+				defaultVisible: true,
 				sortable:       false,
 				filterable:     true,
 				getValue:       ( row ) => row.designation?.name ?? null,
 				render:         ( row ) => <DesignationCell row={ row } />,
+			},
+			{
+				id:             COLUMN_IDS.LOCATION,
+				label:          __( 'Location', 'erp' ),
+				priority:       45,
+				defaultVisible: true,
+				sortable:       false,
+				filterable:     false,
+				getValue:       ( row ) => row.location?.name ?? null,
+				render:         ( row ) => (
+					<span className="whitespace-nowrap text-sm text-foreground">{ row.location?.name || '—' }</span>
+				),
+			},
+			{
+				id:             COLUMN_IDS.PHONE,
+				label:          __( 'Phone', 'erp' ),
+				priority:       55,
+				defaultVisible: true,
+				sortable:       false,
+				filterable:     false,
+				getValue:       ( row ) => row.phone ?? null,
+				render:         ( row ) => (
+					row.phone ? (
+						<span className="group/cell inline-flex items-center gap-1 whitespace-nowrap">
+							<a href={ `tel:${ row.phone }` } className="text-sm tabular-nums text-foreground hover:text-primary hover:underline">{ row.phone }</a>
+							<CopyButton value={ row.phone } label={ __( 'Copy phone number', 'erp' ) } />
+						</span>
+					) : (
+						<span className="text-muted-foreground">—</span>
+					)
+				),
 			},
 			{
 				id:             COLUMN_IDS.STATUS,

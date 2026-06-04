@@ -289,6 +289,7 @@ class DesignationsControllerV2 extends RestControllerV2 {
 			'title'           => $this->cast_string_or_null( $designation->title ) ?? '',
 			'description'     => $this->cast_string_or_null( $designation->description ) ?? '',
 			'total_employees' => (int) $designation->num_of_employees(),
+			'employees'       => $this->employee_previews( 'designation', (int) $designation->id ),
 		];
 	}
 
@@ -373,6 +374,16 @@ class DesignationsControllerV2 extends RestControllerV2 {
 				'title'           => [ 'type' => 'string' ],
 				'description'     => [ 'type' => 'string' ],
 				'total_employees' => [ 'type' => 'integer' ],
+				'employees'       => [
+					'type'  => 'array',
+					'items' => [
+						'type'       => 'object',
+						'properties' => [
+							'name'   => [ 'type' => 'string' ],
+							'avatar' => [ 'type' => [ 'string', 'null' ] ],
+						],
+					],
+				],
 			],
 		];
 	}

@@ -245,4 +245,39 @@ abstract class RestControllerV2 extends WP_REST_Controller {
 			? current_user_can( $cap, $arg )
 			: current_user_can( $cap );
 	}
+
+	/**
+	 * Build a small avatar-stack preview for an org column (department /
+	 * designation). Returns up to `$limit` active employees as `{ name, avatar }`
+	 * so the list UI can render an overlapping avatar group + "+N" overflow.
+	 *
+	 * Efficient by design: queries only the first `$limit` user IDs for the
+	 * column (not the whole roster) and resolves one avatar URL each.
+	 *
+	 * @param string $column Employee column to match (`department`|`designation`).
+	 * @param int    $id     Department / designation ID.
+	 * @param int    $limit  Max previews to return.
+	 *
+	 * @return array<int, array{name: string, avatar: ?string}>
+	 */
+	protected function employee_previews( string $column, int $id, int $limit = 3 ): array {
+		if ( $id <= 0 ) {
+			return [];
+		}
+
+		$rows = \WeDevs\ERP\HRM\Models\Employee::where( [ 'status' => 'active', $column => $id ] )
+			->take( $limit )
+			->get( [ 'user_id' ] );
+
+		$previews = [];
+		foreach ( $rows as $row ) {
+			$employee   = new \WeDevs\ERP\HRM\Employee( (int) $row->user_id );
+			$previews[] = [
+				'name'   => (string) $employee->get_full_name(),
+				'avatar' => $employee->get_avatar_url( 40 ) ?: null,
+			];
+		}
+
+		return $previews;
+	}
 }

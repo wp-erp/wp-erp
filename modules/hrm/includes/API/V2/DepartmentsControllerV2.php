@@ -313,6 +313,7 @@ class DepartmentsControllerV2 extends RestControllerV2 {
 			'parent'          => $parent_id,
 			'parent_title'    => $parent_title,
 			'total_employees' => (int) $department->num_of_employees(),
+			'employees'       => $this->employee_previews( 'department', (int) $department->id ),
 		];
 	}
 
@@ -413,6 +414,16 @@ class DepartmentsControllerV2 extends RestControllerV2 {
 				'parent'          => [ 'type' => [ 'integer', 'null' ] ],
 				'parent_title'    => [ 'type' => 'string' ],
 				'total_employees' => [ 'type' => 'integer' ],
+				'employees'       => [
+					'type'  => 'array',
+					'items' => [
+						'type'       => 'object',
+						'properties' => [
+							'name'   => [ 'type' => 'string' ],
+							'avatar' => [ 'type' => [ 'string', 'null' ] ],
+						],
+					],
+				],
 			],
 		];
 	}

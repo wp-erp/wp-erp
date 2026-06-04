@@ -22,12 +22,13 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Check, Filter, MoreVertical, Search, Trash2, X } from 'lucide-react';
+import { Check, Filter, MoreVertical, Plus, Search, Trash2, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { PersonCell } from '@/shared/components/PersonCell';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -35,6 +36,7 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { LeaveRequestModerateDialog } from './LeaveRequestModerateDialog';
+import { NewLeaveRequestDialog } from './NewLeaveRequestDialog';
 import type { LeaveRequest } from './types';
 import type { LeaveTypeOption } from './useLeaveRequests';
 import { useLeaveRequests } from './useLeaveRequests';
@@ -86,7 +88,7 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ page, setPage ]           = useState( 1 );
 	const [ perPage, setPerPage ]     = useState( 20 );
 
-	const { rows, total, counts, loading, error, approve, reject, remove, loadLeaveTypes } = useLeaveRequests( {
+	const { rows, total, counts, loading, error, reload, approve, reject, remove, loadLeaveTypes } = useLeaveRequests( {
 		status,
 		leaveId,
 		year,
@@ -98,6 +100,7 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ leaveTypes, setLeaveTypes ] = useState< readonly LeaveTypeOption[] >( [] );
 	const [ moderate, setModerate ]   = useState< { action: 'approve' | 'reject'; request: LeaveRequest } | null >( null );
 	const [ deleting, setDeleting ]   = useState< LeaveRequest | null >( null );
+	const [ creating, setCreating ]   = useState( false );
 	const [ busy, setBusy ]           = useState( false );
 	const [ moderateError, setModerateError ] = useState< string | null >( null );
 
@@ -187,6 +190,12 @@ function LeaveRequestsInner(): JSX.Element {
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Leave Requests', 'erp' ) }
 				</h1>
+				{ canManage ? (
+					<Button className="h-10 gap-1.5 px-4" onClick={ () => setCreating( true ) }>
+						<Plus size={ 16 } aria-hidden="true" />
+						{ __( 'New Request', 'erp' ) }
+					</Button>
+				) : null }
 			</header>
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
@@ -314,7 +323,11 @@ function LeaveRequestsInner(): JSX.Element {
 							{ rows.map( ( req ) => (
 								<tr key={ req.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
 									<td className="px-4 align-middle font-medium text-foreground">
-										{ req.name || <span className="text-muted-foreground">—</span> }
+										{ req.name ? (
+											<PersonCell name={ req.name } avatar={ req.avatar } />
+										) : (
+											<span className="text-muted-foreground">—</span>
+										) }
 									</td>
 									<td className="px-4 align-middle text-sm text-foreground">
 										<span className="inline-flex items-center gap-2">
@@ -394,6 +407,16 @@ function LeaveRequestsInner(): JSX.Element {
 					/>
 				) : null }
 			</div>
+
+			<NewLeaveRequestDialog
+				open={ creating }
+				onClose={ () => setCreating( false ) }
+				onSubmitted={ () => {
+					setCreating( false );
+					toast.success( __( 'Leave request submitted.', 'erp' ) );
+					void reload();
+				} }
+			/>
 
 			<LeaveRequestModerateDialog
 				open={ moderate !== null }
