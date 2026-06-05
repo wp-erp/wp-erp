@@ -68,8 +68,22 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 15
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        # Prefer a repo-scoped deploy key (ERP_PRO_SSH_KEY) when present; otherwise
+        # fall back to a PAT (ERP_PRO_TOKEN). Either grants read access to erp-pro.
+        env:
+            HAS_SSH_KEY: ${{ secrets.ERP_PRO_SSH_KEY != '' }}
         steps:
-            - name: Checkout erp-pro (private)
+            - name: Checkout erp-pro (deploy key)
+              if: env.HAS_SSH_KEY == 'true'
+              uses: actions/checkout@v4
+              with:
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  path: erp-pro
+                  ssh-key: ${{ secrets.ERP_PRO_SSH_KEY }}
+
+            - name: Checkout erp-pro (PAT fallback)
+              if: env.HAS_SSH_KEY != 'true'
               uses: actions/checkout@v4
               with:
                   repository: wp-erp/erp-pro
