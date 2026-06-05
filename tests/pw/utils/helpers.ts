@@ -90,11 +90,33 @@ export async function login(
     password: string = process.env.ADMIN_PASSWORD ?? 'password',
     storageStatePath?: string,
 ): Promise<void> {
-    await page.goto(toPath('wp-login.php'));
-    await page.locator('#user_login').fill(username);
-    await page.locator('#user_pass').fill(password);
-    await page.locator('#wp-submit').click();
-    await expect(page.locator('#wpadminbar')).toBeVisible({ timeout: 30_000 });
+    await page.goto(toPath('wp-login.php'), { waitUntil: 'domcontentloaded' });
+
+    // An active session bounces wp-login.php straight to the dashboard (no form).
+    if ((await page.locator('#wpadminbar').count()) === 0) {
+        const userField = page.locator('#user_login');
+        await userField.waitFor({ state: 'visible', timeout: 30_000 });
+        await userField.fill(username);
+        await page.locator('#user_pass').fill(password);
+        // Wait for the login POST to navigate OFF wp-login.php before asserting the
+        // admin bar — under CI load the redirect can lag, which otherwise reads as a
+        // missing #wpadminbar even though the login succeeded.
+        await Promise.all([
+            page
+                .waitForURL((url) => !url.pathname.endsWith('/wp-login.php'), { timeout: 45_000 })
+                .catch(() => undefined),
+            page.locator('#wp-submit').click(),
+        ]);
+    }
+
+    // WP periodically interrupts login with the "administration email verification"
+    // screen, which has no admin bar; dismiss it so the session still lands in wp-admin.
+    const remindLater = page.getByRole('link', { name: /remind me later/i });
+    if ((await remindLater.count()) > 0) {
+        await remindLater.first().click().catch(() => undefined);
+    }
+
+    await expect(page.locator('#wpadminbar')).toBeVisible({ timeout: 45_000 });
     if (storageStatePath) {
         await page.context().storageState({ path: storageStatePath });
     }

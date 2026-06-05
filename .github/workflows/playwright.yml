@@ -431,26 +431,50 @@ jobs:
               working-directory: tests/pw
               run: npm ci --prefer-offline --no-audit --no-fund
 
-            - name: Download all blob reports
+            - name: Download e2e blob reports
               uses: actions/download-artifact@v4
               with:
-                  path: tests/pw/all-blobs
-                  pattern: blob-report-*
+                  path: tests/pw/all-blobs-e2e
+                  pattern: blob-report-e2e-*
                   merge-multiple: true
 
-            - name: Merge into HTML report
+            - name: Download api blob report
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-blobs-api
+                  pattern: blob-report-api
+                  merge-multiple: true
+
+            # e2e (playwright.config.ts, testDir tests/e2e) and api (api.config.ts,
+            # testDir tests/api) are SEPARATE configs. Playwright refuses to merge blob
+            # reports recorded under different testDirs, so we build TWO HTML reports —
+            # one per suite — rather than one combined report.
+            - name: Merge e2e blob reports into HTML
               working-directory: tests/pw
               run: |
-                  if [ -n "$(ls -A ./all-blobs 2>/dev/null)" ]; then
-                      npx playwright merge-reports --reporter html ./all-blobs
+                  if [ -n "$(ls -A ./all-blobs-e2e 2>/dev/null)" ]; then
+                      npx playwright merge-reports --reporter html ./all-blobs-e2e
+                      rm -rf playwright-report-e2e && mv playwright-report playwright-report-e2e
                   else
-                      echo "No blob reports to merge — upstream test jobs produced none."
+                      echo "No e2e blob reports to merge."
                   fi
 
-            - name: Upload HTML report
+            - name: Merge api blob report into HTML
+              working-directory: tests/pw
+              run: |
+                  if [ -n "$(ls -A ./all-blobs-api 2>/dev/null)" ]; then
+                      npx playwright merge-reports --reporter html ./all-blobs-api
+                      rm -rf playwright-report-api && mv playwright-report playwright-report-api
+                  else
+                      echo "No api blob report to merge."
+                  fi
+
+            - name: Upload HTML reports (e2e + api)
               uses: actions/upload-artifact@v4
               with:
                   name: playwright-html-report
-                  path: tests/pw/playwright-report
+                  path: |
+                      tests/pw/playwright-report-e2e
+                      tests/pw/playwright-report-api
                   if-no-files-found: ignore
                   retention-days: 14
