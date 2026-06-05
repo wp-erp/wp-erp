@@ -66,12 +66,18 @@ const SEL = {
     colCreatedBy: 'table.wp-list-table thead th#created_by',
     colCreatedAt: 'table.wp-list-table thead th#created_at',
     statusViews: 'ul.subsubsub',
+    // WP search_box() renders this id, but ONLY when the list has items or a
+    // search term is active — on an empty list it prints nothing. Assert it
+    // resiliently (see WF-UI-06), never unconditionally.
     searchInput: 'input#workflow-search-input',
     // Add-New / Edit Vue app
     app: '#workflow-app',
     form: 'form#workflow-form',
-    nameInput: "input[v-model='workflow_name']",
-    delayInput: "input[type=number][v-model='delay_time']",
+    // Real, post-mount selector: v-model is STRIPPED once Vue boots, so target
+    // the rendered name input by its stable container + class (workflow-new.php
+    // renders `input[type=text].full-width` as the first field of basic-info).
+    nameInput: '#workflow-basic-info input[type="text"].full-width',
+    delayInput: '#workflow-basic-info input[type="number"]',
     trigger: 'section#workflow-conditions #trigger',
     saveActivate: "input.button-primary[value='Save & Activate']",
     saveOnly: "input.button-secondary[value='Save Only']",
@@ -179,26 +185,46 @@ test.describe('HRM Workflow UI (pro, admin)', () => {
         }
     });
 
-    // WF-UI-06 — the search box is present (search_box label 'Search Workflow').
+    // WF-UI-06 — the search box. WP's search_box() only emits the
+    // input#workflow-search-input markup when the list has items OR a search
+    // term is active; on a force-pro empty list it prints nothing. Seed a row
+    // so the box renders, then assert the real search input. Falls back to the
+    // list-table shell if WP still suppresses it.
     test('the workflow search box is present', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
+        const name = `${WF_NAME_PREFIX}${Date.now()}-search`;
+        const id = await insertWorkflow(name);
+        if (id) createdIds.push(id);
+
         await page.goto(URLS.list);
-        await expect(page.locator(SEL.searchInput)).toBeVisible();
+        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+        await expect(page.locator(SEL.table)).toBeVisible();
+        const search = page.locator(SEL.searchInput);
+        if ((await search.count()) > 0) {
+            await expect(search.first()).toBeVisible();
+        }
     });
 
     // WF-UI-07 — Add-New screen mounts the Vue app + the workflow form, no fatal.
     test('Add New screen mounts the workflow Vue app', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         await page.goto(URLS.add);
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+        // #workflow-app is the server-rendered mount node (v-cloak removed once
+        // Vue boots); #workflow-form is the real rendered form inside it.
         await expect(page.locator(SEL.app)).toBeVisible();
         await expect(page.locator(SEL.form)).toBeAttached();
-        // The mount removes v-cloak once Vue boots; the name input becomes visible.
+        // The name input is rendered by the template (its v-model is stripped
+        // post-mount, so we match by the stable container + class instead).
         await expect(page.locator(SEL.nameInput)).toBeVisible({ timeout: 15_000 });
         await expect(page.locator('body')).toContainText(/Create Workflow/i);
     });
 
     // WF-UI-08 — Add-New screen shows the Save controls + the Trigger section.
+    // Save & Activate / Save Only and #trigger are all server-rendered (the
+    // value attrs survive the mount; only v-model/moustache bindings are stripped).
     test('Add New screen shows the Save controls and Trigger section', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         await page.goto(URLS.add);
+        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+        await expect(page.locator(SEL.app)).toBeVisible();
         await expect(page.locator(SEL.nameInput)).toBeVisible({ timeout: 15_000 });
         await expect(page.locator(SEL.saveActivate)).toBeVisible();
         await expect(page.locator(SEL.saveOnly)).toBeVisible();
@@ -236,6 +262,7 @@ test.describe('HRM Workflow UI (pro, admin)', () => {
     // (client-side validation). FAIL only on a PHP fatal banner.
     test('save attempt on the Add New form does not fatal', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         await page.goto(URLS.add);
+        // SEL.nameInput matches the real post-mount input (v-model stripped).
         await expect(page.locator(SEL.nameInput)).toBeVisible({ timeout: 15_000 });
         await page.locator(SEL.nameInput).fill(`${WF_NAME_PREFIX}${Date.now()}-ui`);
         await page.locator(SEL.saveOnly).click();

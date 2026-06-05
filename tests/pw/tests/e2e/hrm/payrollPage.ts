@@ -81,8 +81,9 @@ export class PayrollPage {
         // pay-calendar-creation-form.php:8
         root: '#pay-calendar-add-edit-wrapper',
         heading: '#pay-calendar-add-edit-wrapper > h1',
-        nameInput: "input[v-model='cal_name']",
-        typeSelect: "select[v-model='cal_type']",
+        // NOTE: the name/type inputs are Vue `v-model`-bound (cal_name / cal_type);
+        // Vue strips v-model from the DOM after it mounts, so those attributes are
+        // NOT selectable post-hydration. Assert on the stable, real controls below.
         addEmployeeBtn: 'button.open_modal',
         empDept: '#emp_dept',
         empDesig: '#emp_desig',

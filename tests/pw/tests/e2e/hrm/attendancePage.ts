@@ -39,12 +39,19 @@ export class AttendancePage {
     // ── Selectors (stable WP/admin + Vue mount ids) ──────────────────────────
     readonly selectors = {
         wrap: 'div.wrap',
-        // Admin.php mounts the SPA here; admin.js new Vue({ el: '#vue-admin-app' }).
-        vueApp: '#vue-admin-app',
+        // Admin.php server-renders <div id="vue-admin-app">; admin.js does
+        // new Vue({ el: '#vue-admin-app', render: h => ... }). With a render
+        // function, Vue REPLACES the mount node with the App root, whose
+        // template is <div id="vue-backend-attendance"><router-view/></div>.
+        // So '#vue-admin-app' only exists PRE-mount and is gone AFTER boot;
+        // asserting it post-mount times out. The resilient app signal is
+        // "either the server mount node OR the booted app root is attached".
+        vueApp: '#vue-admin-app, #vue-backend-attendance',
         content: '#wpbody-content',
         // In-app controls that surface once the Shifts route renders.
-        addControl: 'a:has-text("Add"), button:has-text("Add"), a:has-text("New Shift"), a:has-text("New")',
-        listTable: 'table, .erp-list-table, ul.erp-attendance-shifts',
+        // Shifts.vue: <a id="erp-shift-new"> "Add New Shift"; list-table.shift-list.
+        addControl: '#erp-shift-new, a:has-text("Add New Shift"), a:has-text("Add"), button:has-text("Add")',
+        listTable: '.shift-list, table, .erp-list-table',
     } as const;
 
     /** Navigate to a SPA route and wait for the WP content wrapper to render. */
@@ -61,13 +68,16 @@ export class AttendancePage {
 
     /**
      * Assert the page mounted without a fatal: no critical-error splash, the WP
-     * content wrapper is visible, and the real Vue mount node is attached.
+     * content wrapper + content shell render, and the Vue app is present in
+     * EITHER state — the server-rendered #vue-admin-app (pre-boot) or the booted
+     * App root #vue-backend-attendance (post-boot, after Vue's render fn replaces
+     * the mount node). A short wait keeps the smoke fast; the shell is the
+     * load-bearing signal; the comma-OR vueApp selector handles the boot race.
      */
     async expectMountedNoFatal(): Promise<void> {
         await expect(this.page.locator('body')).not.toContainText(AttendancePage.CRITICAL_ERROR);
         await expect(this.page.locator(this.selectors.content)).toBeVisible({ timeout: 30_000 });
-        // The Vue mount node is echoed server-side, so it must always be present
-        // even before the bundle finishes booting.
-        await expect(this.page.locator(this.selectors.vueApp)).toBeAttached({ timeout: 30_000 });
+        await expect(this.page.locator(this.selectors.wrap).first()).toBeAttached({ timeout: 15_000 });
+        await expect(this.page.locator(this.selectors.vueApp).first()).toBeAttached({ timeout: 15_000 });
     }
 }

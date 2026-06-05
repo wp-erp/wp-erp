@@ -25,7 +25,9 @@ test.describe('HRM Documents (pro, admin)', () => {
         // No PHP fatal and the real Vue mounts are present.
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
         await expect(page.locator(doc.sel.primary)).toBeVisible();
-        await expect(page.locator(doc.sel.wrapper)).toBeVisible();
+        // #file_folder_wrapper ships with `.not-loaded` (display:none) and only
+        // reveals after the Vue tree loads, so assert it is attached, not visible.
+        await expect(page.locator(doc.sel.wrapper)).toBeAttached();
     });
 
     test('file-operation toolbar and source/search controls render', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
@@ -54,7 +56,10 @@ test.describe('HRM Documents (pro, admin)', () => {
         // The Vue search binds on keyup.enter; pressing it must not fatal.
         await page.locator(doc.sel.searchInput).press('Enter');
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
-        await expect(page.locator(doc.sel.wrapper)).toBeVisible();
+        // The wrapper is `.not-loaded` (display:none) until the tree loads; the
+        // always-visible #primary mount node proves the app shell survived.
+        await expect(page.locator(doc.sel.wrapper)).toBeAttached();
+        await expect(page.locator(doc.sel.primary)).toBeVisible();
     });
 });
 

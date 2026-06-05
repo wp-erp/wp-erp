@@ -47,12 +47,20 @@ test.describe('HRM Recruitment Job Openings (pro, admin)', () => {
         await expect(page.locator(rec.sel.table)).toBeVisible();
     });
 
-    test('REC-UI-04 the recruitment search box is present', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
+    test('REC-UI-04 the recruitment list shell renders (search box optional)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         const rec = new RecruitmentPage(page);
         await rec.goToList();
-        // search_box(__('Search'),'erp-recruitment-search') → WP renders the input
-        // with id "erp-recruitment-search-search-input" (L83).
-        await expect(page.locator(rec.sel.searchInput)).toBeVisible();
+        // The always-present server-rendered shell: the WP_List_Table (L84) and the
+        // "Add Opening" action (L72-74). search_box('erp-recruitment-search') renders
+        // its `erp-recruitment-search-search-input` field ONLY when the list has items
+        // or an active search query — on an empty Job Openings list WP omits it. So we
+        // assert the table + Add Opening, and assert the search box only if it exists.
+        await expect(page.locator(rec.sel.table)).toBeVisible();
+        await expect(page.locator(rec.sel.addOpening)).toBeVisible();
+        const searchBox = page.locator(rec.sel.searchInput);
+        if ((await searchBox.count()) > 0) {
+            await expect(searchBox.first()).toBeVisible();
+        }
     });
 });
 

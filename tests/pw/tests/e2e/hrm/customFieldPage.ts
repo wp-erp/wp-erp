@@ -40,7 +40,7 @@ export class CustomFieldPage {
     // ── Selectors (verbatim from views/view.php) ──────────────────────────────
     readonly sel = {
         wrap: 'div.wrap',
-        heading: 'div.wrap > h2', // text "Custom Field Builder"
+        heading: 'div.wrap > h2:not(.nav-tab-wrapper)', // title "Custom Field Builder" (force-pro renders a 2nd div.wrap>h2: the nav-tab-wrapper)
         tabBar: 'h2.nav-tab-wrapper',
         tab: 'a.nav-tab',
         activeTab: 'a.nav-tab-active',

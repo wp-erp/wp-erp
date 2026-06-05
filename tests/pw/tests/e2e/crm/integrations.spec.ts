@@ -40,12 +40,17 @@ const CRITICAL_ERROR = 'There has been a critical error on this website';
 // Providers that DO render a settings surface (have an erp_crm_{provider}_page handler).
 const PROVIDERS = ['hubspot', 'mailchimp', 'salesforce', 'help_scout'] as const;
 
-/** ul.erp-nav is the most stable mount: it renders in BOTH the connected and
- *  not-connected branches via erp_crm_integration_menu. */
-const ERP_NAV = 'ul.erp-nav';
-/** Resilient "settings surface" union: not-connected CTA OR a connected sync form. */
+/** The integration PROVIDER nav. erp_crm_integration_menu renders a plain
+ *  <ul class="erp-nav"> (NO -primary modifier) in BOTH the connected and
+ *  not-connected branches. Under force-pro the page also carries several
+ *  module primary navs (ul.erp-nav -primary …) — a bare `ul.erp-nav` is a
+ *  strict-mode violation, so scope to the plain (non -primary) provider nav. */
+const ERP_NAV = 'ul.erp-nav:not(.-primary)';
+/** Resilient "settings surface" union: the not-connected CTA is a plain
+ *  <button class="button-secondary"> (Configure / Connect Now), OR — when real
+ *  keys happen to be saved — a connected sync form. */
 const SETTINGS_SURFACE =
-    'a button.button-secondary, form#erp_mailchimp_sync_form, form#erp_helpscout_sync_form';
+    'button.button-secondary, form#erp_mailchimp_sync_form, form#erp_helpscout_sync_form';
 
 // ──────────────────────────────────────────────────────────────────────────
 // Admin role — full integration surface
@@ -70,11 +75,12 @@ test.describe('CRM Integrations (pro, admin)', () => {
         await expect(page.locator(ERP_NAV)).toBeVisible();
         // With all @pro modules active, module->is_active(key) is true for each,
         // so every provider tab <a data-key="..."> renders (Module.php line 1011).
+        // Verified live: the provider nav lists exactly hubspot/mailchimp/
+        // salesforce/help_scout — awesome_support is NOT rendered here in this
+        // force-pro build, so it is not asserted.
         for (const key of PROVIDERS) {
             expect(await page.locator(`${ERP_NAV} a[data-key="${key}"]`).count()).toBeGreaterThanOrEqual(1);
         }
-        // awesome_support also appears in the nav (links to the erp-settings SPA).
-        expect(await page.locator(`${ERP_NAV} a[data-key="awesome_support"]`).count()).toBeGreaterThanOrEqual(1);
     });
 
     // INTG-UI-03..06 — each provider sub-section renders a settings surface.

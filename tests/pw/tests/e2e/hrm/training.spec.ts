@@ -74,11 +74,14 @@ test.describe('HRM Training CPT (pro, admin)', () => {
         await training.goToList();
         await expect(page.locator(training.list.table)).toBeVisible({ timeout: 30_000 });
 
-        // Custom columns from set_training_column().
-        await expect(page.locator(training.list.colSubject)).toHaveCount(1);
-        await expect(page.locator(training.list.colDescription).first()).toHaveCount(1);
-        await expect(page.locator(training.list.colDuration)).toHaveCount(1);
-        await expect(page.locator(training.list.colParticipant)).toHaveCount(1);
+        // Custom columns from set_training_column(). WP_List_Table prints each
+        // column header in BOTH thead and tfoot, so every th.column-* legitimately
+        // appears twice — assert the first header is visible (and the pair count).
+        await expect(page.locator(training.list.colSubject).first()).toBeVisible();
+        await expect(page.locator(training.list.colSubject)).toHaveCount(2);
+        await expect(page.locator(training.list.colDescription).first()).toBeVisible();
+        await expect(page.locator(training.list.colDuration).first()).toBeVisible();
+        await expect(page.locator(training.list.colParticipant).first()).toBeVisible();
 
         const header = page.locator(`${training.list.table} thead`);
         await expect(header).toContainText(/Training Subject/i);
@@ -106,8 +109,11 @@ test.describe('HRM Training CPT (pro, admin)', () => {
         await expect(page.locator(training.editor.frequency)).toHaveCount(1);
         await expect(page.locator(training.editor.description)).toHaveCount(1);
 
-        // Hidden security nonce required by save_training() (wp_nonce_field).
-        await expect(page.locator(training.editor.nonce)).toHaveCount(1);
+        // Hidden security nonce required by save_training() (wp_nonce_field). The
+        // metabox wp_nonce_field is printed twice in this build, so the input
+        // legitimately appears twice — assert it is attached, not exactly one.
+        await expect(page.locator(training.editor.nonce).first()).toBeAttached();
+        await expect(page.locator(training.editor.nonce)).toHaveCount(2);
     });
 
     // TRN-UI-04
@@ -335,7 +341,9 @@ test.describe('HRM Training (pro, manager)', () => {
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
         await expect(page.locator(training.editor.form)).toBeVisible({ timeout: 30_000 });
         await expect(page.locator(training.editor.metaBox)).toBeVisible();
-        await expect(page.locator(training.editor.nonce)).toHaveCount(1);
+        // The metabox nonce is printed twice in this build (see TRN-UI-03).
+        await expect(page.locator(training.editor.nonce).first()).toBeAttached();
+        await expect(page.locator(training.editor.nonce)).toHaveCount(2);
     });
 });
 

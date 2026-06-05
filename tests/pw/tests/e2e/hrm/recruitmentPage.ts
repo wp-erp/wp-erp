@@ -15,6 +15,12 @@ import { toPath } from '@utils/helpers';
  * The route is `admin.php?page=erp-hr&section=recruitment` (HRM app, &section
  * routed). Selectors are taken verbatim from the rendered view; every consumer
  * test asserts no PHP fatal + a real mount (resilient-assertion philosophy).
+ *
+ * NOTE: WP's `search_box()` returns early (renders nothing) when the list has no
+ * items and there is no active search query — so on an empty Job Openings list
+ * the `erp-recruitment-search-search-input` field is absent from the DOM. The
+ * search box is therefore treated as OPTIONAL; the always-present shell is the
+ * list table + the "Add Opening" action.
  */
 
 export const CRITICAL_ERROR = 'There has been a critical error on this website';
