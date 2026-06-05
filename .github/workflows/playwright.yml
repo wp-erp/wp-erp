@@ -262,11 +262,14 @@ jobs:
                   retry_on: error
                   command: cd tests/pw && npm run start:env
 
+            # No --reporter override here: playwright.config.ts already resolves to
+            # [['list'], ['blob'], [summary]] on CI — 'list' prints per-test progress
+            # (✓/✗ with names, like Dokan) while 'blob' still feeds merge-reports.
             - name: 🧪 Run e2e tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
               if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
               timeout-minutes: 20
               working-directory: tests/pw
-              run: npm test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob
+              run: npm test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
             - name: Upload blob report
               if: always()
@@ -376,11 +379,13 @@ jobs:
                   retry_on: error
                   command: cd tests/pw && npm run start:env
 
+            # No --reporter override: api.config.ts resolves to [['list'], ['blob']] on
+            # CI — 'list' prints per-test progress, 'blob' feeds merge-reports.
             - name: 🧪 Run api tests
               if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')
               timeout-minutes: 15
               working-directory: tests/pw
-              run: npm run test:api -- --reporter=blob
+              run: npm run test:api
 
             - name: Upload blob report
               if: always()
