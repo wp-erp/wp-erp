@@ -1,0 +1,380 @@
+name: E2E_API Tests
+
+on:
+    # daily at 2:00 AM UTC (8:00 AM BDT), like Dokan
+    schedule:
+        - cron: 0 2 * * *
+    pull_request:
+        branches: [develop]
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - 'languages/**'
+            - '**/*.svg'
+    push:
+        branches: [develop]
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - 'languages/**'
+            - '**/*.svg'
+    workflow_dispatch:
+        inputs:
+            testsuite:
+                description: Choose which test suite to run
+                default: All
+                type: choice
+                options:
+                    - E2E
+                    - API
+                    - All
+
+# Cancel superseded runs on the same ref.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    cancel-in-progress: true
+
+# Non-secret config (wp-env defaults). ERP_PRO is decided per-run.
+env:
+    ADMIN: admin
+    ADMIN_PASSWORD: password
+    HR_MANAGER: hr_manager1
+    CRM_MANAGER: crm_manager1
+    ACC_MANAGER: acc_manager1
+    EMPLOYEE: employee1
+    USER_PASSWORD: 01erp01
+    BASE_URL: http://localhost:9999
+    SERVER_URL: http://localhost:9999/wp-json
+    CI: true
+    HEADLESS: true
+    NO_SETUP: false
+    FORCE_COLOR: 1
+    # License is OPTIONAL — the QA force-pro mu-plugin activates pro without it.
+    LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
+    ERP_PRO_EMAIL: ${{ secrets.ERP_PRO_EMAIL }}
+    ERP_PRO_SUBSCRIPTION: yearly
+
+jobs:
+    # ── Build wp-erp (+ erp-pro when secrets are available) once, share as an
+    #    artifact so the test shards don't each re-run composer. Mirrors Dokan's
+    #    build_lite / build_pro jobs (ERP has no webpack build — assets are committed).
+    build:
+        name: build plugins
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - name: Checkout wp-erp (free)
+              uses: actions/checkout@v4
+
+            # PRO (private) — only when secrets are available, i.e. NOT a fork PR.
+            - name: Checkout erp-pro (pro runs only)
+              id: erp-pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              uses: actions/checkout@v4
+              with:
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  path: erp-pro
+                  token: ${{ secrets.ERP_PRO_TOKEN }}
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            - name: Composer install (wp-erp)
+              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
+
+            - name: Composer install (erp-pro)
+              if: steps.erp-pro.outcome == 'success'
+              working-directory: erp-pro
+              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
+
+            # Tar the runtime tree (wp-erp + erp-pro sibling) minus node_modules / .git /
+            # test output. tar preserves perms & symlinks, unlike upload-artifact's zip.
+            - name: Tar build output
+              run: |
+                  tar --exclude=./.git \
+                      --exclude=./node_modules \
+                      --exclude=./erp-pro/.git \
+                      --exclude=./erp-pro/node_modules \
+                      --exclude=./tests/pw/node_modules \
+                      --exclude=./tests/pw/playwright \
+                      --exclude=./tests/pw/playwright-report \
+                      --exclude=./tests/pw/blob-report \
+                      --exclude=./tests/pw/wp-data \
+                      --exclude=./tests/pw/test-results \
+                      -czf /tmp/wp-erp-build.tar.gz .
+
+            - name: Upload build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: wp-erp-build
+                  path: /tmp/wp-erp-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    # ── Sharded E2E (Playwright-native sharding + blob reports merged below). ──
+    e2e_tests:
+        name: e2e tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        needs: [build]
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2, 3, 4]
+                shardTotal: [4]
+        defaults:
+            run:
+                working-directory: tests/pw
+        steps:
+            - name: Download build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: wp-erp-build
+                  path: /tmp/
+
+            - name: Extract build
+              working-directory: .
+              run: |
+                  tar -xzf /tmp/wp-erp-build.tar.gz
+                  rm /tmp/wp-erp-build.tar.gz
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache tests/pw node_modules
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund
+
+            - name: Cache Playwright browsers
+              id: pw-browsers
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install Playwright Chromium (+ OS deps)
+              if: steps.pw-browsers.outputs.cache-hit != 'true'
+              run: npx playwright install --with-deps chromium
+
+            - name: Prepare .env + wp-env config (lite vs pro)
+              run: |
+                  cp .env.example .env
+                  mkdir -p wp-data && touch wp-data/debug.log
+                  if [ -d "$GITHUB_WORKSPACE/erp-pro" ]; then
+                      echo "erp-pro present → pro run"
+                      echo "ERP_PRO=true" >> "$GITHUB_ENV"
+                      cp .wp-env.ci.json .wp-env.override.json
+                  else
+                      echo "erp-pro absent → lite run"
+                      echo "ERP_PRO=false" >> "$GITHUB_ENV"
+                      rm -f .wp-env.override.json
+                  fi
+
+            # Route Docker Hub pulls through Google's mirror to dodge anonymous
+            # pull-rate-limits that randomly fail `wp-env start` (Dokan's trick).
+            - name: Route Docker Hub through a mirror
+              working-directory: .
+              run: |
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            - name: Start wp-env
+              id: wp-env
+              uses: nick-fields/retry@v3
+              with:
+                  timeout_minutes: 8
+                  max_attempts: 3
+                  retry_on: error
+                  command: cd tests/pw && npm run start:env
+
+            - name: 🧪 Run e2e tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+              if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
+              timeout-minutes: 20
+              run: npm test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob
+
+            - name: Upload blob report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-report-e2e-${{ matrix.shardIndex }}
+                  path: tests/pw/blob-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
+    # ── REST/API suite (one job). ──
+    api_tests:
+        name: api tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+        needs: [build]
+        defaults:
+            run:
+                working-directory: tests/pw
+        steps:
+            - name: Download build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: wp-erp-build
+                  path: /tmp/
+
+            - name: Extract build
+              working-directory: .
+              run: |
+                  tar -xzf /tmp/wp-erp-build.tar.gz
+                  rm /tmp/wp-erp-build.tar.gz
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache tests/pw node_modules
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund
+
+            - name: Cache Playwright browsers
+              id: pw-browsers
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install Playwright Chromium (+ OS deps)
+              if: steps.pw-browsers.outputs.cache-hit != 'true'
+              run: npx playwright install --with-deps chromium
+
+            - name: Prepare .env + wp-env config (lite vs pro)
+              run: |
+                  cp .env.example .env
+                  mkdir -p wp-data && touch wp-data/debug.log
+                  if [ -d "$GITHUB_WORKSPACE/erp-pro" ]; then
+                      echo "ERP_PRO=true" >> "$GITHUB_ENV"
+                      cp .wp-env.ci.json .wp-env.override.json
+                  else
+                      echo "ERP_PRO=false" >> "$GITHUB_ENV"
+                      rm -f .wp-env.override.json
+                  fi
+
+            - name: Route Docker Hub through a mirror
+              working-directory: .
+              run: |
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            - name: Start wp-env
+              id: wp-env
+              uses: nick-fields/retry@v3
+              with:
+                  timeout_minutes: 8
+                  max_attempts: 3
+                  retry_on: error
+                  command: cd tests/pw && npm run start:env
+
+            - name: 🧪 Run api tests
+              if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')
+              timeout-minutes: 15
+              run: npm run test:api -- --reporter=blob
+
+            - name: Upload blob report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-report-api
+                  path: tests/pw/blob-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
+    # ── Merge all shard/api blob reports into a single HTML report. ──
+    merge-reports:
+        name: merge reports
+        if: ${{ !cancelled() }}
+        needs: [e2e_tests, api_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        defaults:
+            run:
+                working-directory: tests/pw
+        steps:
+            - name: Checkout wp-erp
+              uses: actions/checkout@v4
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache tests/pw node_modules
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund
+
+            - name: Download all blob reports
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-blobs
+                  pattern: blob-report-*
+                  merge-multiple: true
+
+            - name: Merge into HTML report
+              run: npx playwright merge-reports --reporter html ./all-blobs
+
+            - name: Upload HTML report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-html-report
+                  path: tests/pw/playwright-report
+                  if-no-files-found: ignore
+                  retention-days: 14
