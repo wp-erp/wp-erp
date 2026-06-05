@@ -89,6 +89,23 @@ export class HrFrontendPage {
     }
 
     /**
+     * Resolve the REAL WP user id of the employee-storage user (login from
+     * process.env.EMPLOYEE, default 'employee1'). NEVER hardcode it: a fresh CI
+     * install assigns ids by creation order, so 'employee1' is not necessarily 4
+     * (it is typically 5, with 4 being acc_manager1). Falls back to the static
+     * default only if wp-cli can't resolve it.
+     */
+    static resolveEmployeeUserId(): number {
+        const username = process.env.EMPLOYEE ?? 'employee1';
+        try {
+            const id = Number( exeCommandWpcli( `user get ${username} --field=ID` ).trim() );
+            return Number.isFinite( id ) && id > 0 ? id : HrFrontendPage.EMP_USER_ID;
+        } catch {
+            return HrFrontendPage.EMP_USER_ID;
+        }
+    }
+
+    /**
      * Insert the minimal ERP employee row that flips a plain WP user from
      * gated-out (302 → /wp-admin/) to dashboard-renders (200). Confirmed-live
      * payload from the recipe (verbatim columns/values).

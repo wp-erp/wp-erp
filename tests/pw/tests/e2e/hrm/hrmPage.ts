@@ -3,6 +3,7 @@ import { toPath } from '@utils/helpers';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 import type { IdMap, ResponseBody } from '@utils/interfaces';
 
 /**
@@ -257,7 +258,22 @@ export class HrmPage {
             const [ resp, body ] = await api.post( endPoints.employees, { data: payload } );
             if ( resp.ok() ) {
                 const id = idOf( body );
-                if ( id ) ids.EMPLOYEE_ID = id;
+                if ( id ) {
+                    ids.EMPLOYEE_ID = id;
+                    // The payroll lifecycle needs an ACTIVE MONTHLY employee available
+                    // on EVERY shard (each shard has its own DB). The REST payload has
+                    // no pay-type field, so mark this seeded employee monthly directly.
+                    // Nothing deletes this seeded employee, so it stays available to
+                    // get_available_employees('monthly') regardless of shard split.
+                    try {
+                        await dbUtils.dbQuery(
+                            `UPDATE wp_erp_hr_employees SET pay_type = 'monthly', status = 'active' WHERE user_id = ?`,
+                            [ Number( id ) ],
+                        );
+                    } catch {
+                        /* non-fatal: the payroll spec will surface a missing monthly employee */
+                    }
+                }
             }
         } catch {
             /* ignore */

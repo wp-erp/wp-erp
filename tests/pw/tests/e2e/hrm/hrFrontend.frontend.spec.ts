@@ -59,7 +59,9 @@ import type { ResponseBody } from '@utils/interfaces';
 // the slug-lifecycle tests depend on order → serial.
 test.describe.configure({ mode: 'serial' });
 
-const EMP_USER_ID = HrFrontendPage.EMP_USER_ID; // 4 (employeeStorageState user)
+// Resolved in beforeAll to the employee-storage user's REAL WP id (never hardcoded —
+// CI assigns ids by creation order, so 'employee1' is not necessarily 4).
+let EMP_USER_ID = HrFrontendPage.EMP_USER_ID;
 
 // Active slug discovered in beforeAll (default 'wp-erp'); all render asserts use it.
 let activeSlug = HrFrontendPage.DEFAULT_SLUG;
@@ -75,8 +77,10 @@ test.beforeAll( async () => {
     // Step 1 — discover the active dashboard slug (default 'wp-erp').
     activeSlug = await HrFrontendPage.getSlug();
 
-    // Step 6 setup — ensure the employee-storage user (id 4) is an ERP employee so
-    // the genuine "employee renders" path is reachable. Idempotent insert.
+    // Step 6 setup — ensure the employee-storage user is an ERP employee so the
+    // genuine "employee renders" path is reachable. Resolve the real id first
+    // (CI-safe), then idempotent insert.
+    EMP_USER_ID = HrFrontendPage.resolveEmployeeUserId();
     const had = await HrFrontendPage.employeeRowExists( EMP_USER_ID );
     if ( ! had ) {
         await HrFrontendPage.insertEmployeeRow( EMP_USER_ID );
