@@ -66,12 +66,16 @@ class LeaveCalendarControllerV2 extends RestControllerV2 {
 	}
 
 	/**
-	 * The leave calendar (admin Calendar submenu) gates on `erp_leave_manage`.
+	 * Any logged-in user may view the calendar — it backs both the admin Calendar
+	 * page (managers, any employee) and the dashboard "My Leave Calendar" widget
+	 * (every employee sees their own leaves + global holidays), mirroring the
+	 * legacy `erp-hr-get-leave-by-date` AJAX which only checked the nonce. Leave
+	 * scope is clamped to the current user for non-managers in `get_events()`.
 	 *
 	 * @return bool
 	 */
 	public function permission_view(): bool {
-		return $this->permission_cap( 'erp_leave_manage' );
+		return is_user_logged_in();
 	}
 
 	/**
@@ -93,6 +97,12 @@ class LeaveCalendarControllerV2 extends RestControllerV2 {
 			: erp_current_datetime()->modify( 'end of this month' )->setTime( 23, 59, 59 );
 
 		$user_id = absint( $request['user_id'] ?? 0 ) ?: get_current_user_id();
+
+		// Non-managers only ever see their own leaves (the dashboard "My Leave
+		// Calendar" widget); ignore any requested user_id to avoid leaking others'.
+		if ( ! current_user_can( 'erp_leave_manage' ) ) {
+			$user_id = get_current_user_id();
+		}
 
 		// --- Leave requests (current/selected user, all statuses) ---
 		$leave_requests = erp_hr_get_leave_requests(

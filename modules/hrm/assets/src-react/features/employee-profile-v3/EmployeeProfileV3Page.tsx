@@ -166,7 +166,7 @@ function Field( { label, value }: { readonly label: string; readonly value: stri
 
 export function EmployeeProfileV3Inner( { userId }: { userId: number } ): JSX.Element {
 	const navigate     = useNavigate();
-	const canEdit      = useCan( 'erp_edit_employee' );
+	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotes = useCan( 'erp_manage_review' );
 	const canViewPerf  = useCan( 'erp_create_review' );
 
@@ -174,6 +174,8 @@ export function EmployeeProfileV3Inner( { userId }: { userId: number } ): JSX.El
 		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
 		[]
 	);
+	// Own profile is self-service: viewable/editable even without the manager cap.
+	const canEdit = canEditCap || currentUserId === userId;
 	const canViewPermission = canViewPerf && currentUserId !== userId;
 	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 

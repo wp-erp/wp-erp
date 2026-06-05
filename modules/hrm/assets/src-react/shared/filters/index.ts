@@ -14,6 +14,9 @@ export const HOOKS = {
 	USER_MENU_ITEMS:    'erp_hr.user_menu.items',
 	ROUTES:             'erp_hr.routes',
 	NAV_GROUPS:         'erp_hr.nav.groups',
+	// Dashboard widgets — pro modules append a React component (e.g. the
+	// Attendance self-service widget). Applied lazily at render.
+	DASHBOARD_WIDGETS:  'erp_hr.dashboard.widgets',
 
 	// Employee create/edit form — pro injects extra (custom) field definitions.
 	EMPLOYEE_EXTRA_FIELDS:   'erp_hr.employee.extra_fields',

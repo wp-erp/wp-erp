@@ -32,17 +32,20 @@ import {
 	UserPlus,
 	Users,
 } from 'lucide-react';
+import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useState } from 'react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { HOOKS } from '@/shared/filters';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
 import { ChartsSection } from './DashboardCharts';
+import { LeaveCalendarWidget } from './LeaveCalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
 import type { BirthdayPerson, OnLeavePerson } from './types';
 import {
@@ -357,6 +360,28 @@ function DashboardInner(): JSX.Element {
 					<WeatherWidget embedded />
 				</div>
 			</header>
+
+			{ /* Self-service row: pro widgets (e.g. Attendance self-service, appended via
+			   the `erp_hr.dashboard.widgets` filter and applied lazily so pro bundles that
+			   load after the free app are included) on the left, the leave calendar filling
+			   the rest — mirroring the legacy dashboard's calendar beside the punch card. */ }
+			{ ( () => {
+				const widgets = applyFilters( HOOKS.DASHBOARD_WIDGETS, [] ) as ComponentType[];
+				return (
+					widgets.length > 0 ? (
+						<div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,22rem)_1fr]">
+							<div className="flex flex-col gap-4">
+								{ widgets.map( ( Widget, i ) => <Widget key={ i } /> ) }
+							</div>
+							<LeaveCalendarWidget />
+						</div>
+					) : (
+						<div className="mb-6">
+							<LeaveCalendarWidget className="w-full" />
+						</div>
+					)
+				);
+			} )() }
 
 			{ loading && ! data ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

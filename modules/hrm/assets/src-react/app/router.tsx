@@ -490,43 +490,65 @@ const baseRoutes: AppRoute[] = [
 //   /reports/:type?         → Reports
 //   /employees/:id/:tab?    → Employee single
 
-const filteredRoutes = applyFilters( HOOKS.ROUTES, baseRoutes ) as AppRoute[];
+function wrapRoutes(): RouteObject[] {
+	// Apply the `erp_hr.routes` filter HERE (at build time), not at module eval —
+	// pro bundles (attendance, documents, …) load AFTER the free app and register
+	// their routes via `addFilter`. Building the router lazily at mount (see
+	// `buildHashRouter`) means those late registrations are included. Mirrors
+	// Dokan's `getRoutes()` called inside the dashboard component at render.
+	const filteredRoutes = applyFilters( HOOKS.ROUTES, baseRoutes ) as AppRoute[];
 
-const wrappedRoutes: RouteObject[] = filteredRoutes.map( ( route ) => ( {
-	path:   route.path,
-	handle: route.handle,
-	element: (
-		<CapabilityGate caps={ route.capabilities ?? [] }>
-			<ErrorBoundary>
-				<Suspense fallback={ <RouteSkeleton /> }>
-					<route.element />
-				</Suspense>
-			</ErrorBoundary>
-		</CapabilityGate>
-	),
-} ) );
+	return filteredRoutes.map( ( route ) => ( {
+		path:   route.path,
+		handle: route.handle,
+		element: (
+			<CapabilityGate caps={ route.capabilities ?? [] }>
+				<ErrorBoundary>
+					<Suspense fallback={ <RouteSkeleton /> }>
+						<route.element />
+					</Suspense>
+				</ErrorBoundary>
+			</CapabilityGate>
+		),
+	} ) );
+}
 
-export const hashRouter = createHashRouter( [
-	{
-		element: <AppShell />,
-		children: [
-			{
-				index: true,
-				handle: { id: 'overview', title: __( 'Overview', 'erp' ), group: 'people', showInNav: false },
-				element: (
-					<CapabilityGate caps={ [ 'read' ] }>
-						<ErrorBoundary>
-							<Suspense fallback={ <RouteSkeleton /> }>
-								<DashboardPage />
-							</Suspense>
-						</ErrorBoundary>
-					</CapabilityGate>
-				),
-			},
-			...wrappedRoutes,
-			{ path: '*', element: <NotFound /> },
-		],
-	},
-] );
+let cachedRouter: ReturnType< typeof createHashRouter > | null = null;
+
+/**
+ * Build (once) the hash router, applying `erp_hr.routes` at call time. Call this
+ * from the mount path (on DOMContentLoaded) so every pro bundle's `addFilter`
+ * registration has already run.
+ */
+export function buildHashRouter(): ReturnType< typeof createHashRouter > {
+	if ( cachedRouter ) {
+		return cachedRouter;
+	}
+
+	cachedRouter = createHashRouter( [
+		{
+			element: <AppShell />,
+			children: [
+				{
+					index: true,
+					handle: { id: 'overview', title: __( 'Overview', 'erp' ), group: 'people', showInNav: false },
+					element: (
+						<CapabilityGate caps={ [ 'read' ] }>
+							<ErrorBoundary>
+								<Suspense fallback={ <RouteSkeleton /> }>
+									<DashboardPage />
+								</Suspense>
+							</ErrorBoundary>
+						</CapabilityGate>
+					),
+				},
+				...wrapRoutes(),
+				{ path: '*', element: <NotFound /> },
+			],
+		},
+	] );
+
+	return cachedRouter;
+}
 
 export { baseRoutes };

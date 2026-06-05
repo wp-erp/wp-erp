@@ -245,6 +245,9 @@ final class Enqueue {
 			],
 			'capabilities'  => $capabilities,
 			'hrmVersion'    => defined( 'WPERP_HRM_VERSION' ) ? (string) WPERP_HRM_VERSION : '',
+			// Active pro HR sub-modules — each self-registers via the
+			// `erp_hr_v2_boot_payload` filter. Drives module-gated nav items.
+			'modules'       => [],
 			'filters'       => [
 				'topbarRightItems' => 'erp_hr.topbar.right_items',
 				'userMenuItems'    => 'erp_hr.user_menu.items',

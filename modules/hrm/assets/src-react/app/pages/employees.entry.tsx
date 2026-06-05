@@ -20,7 +20,7 @@ import {
 	initApiFetch,
 	registerStores,
 } from '../boot';
-import { hashRouter } from '../router';
+import { buildHashRouter } from '../router';
 
 const MOUNT_ID = 'erp-hr-app';
 
@@ -42,6 +42,12 @@ function mount(): void {
 	initApiFetch();
 	registerStores();
 	applyLegacyUrlBridge();
+
+	// Build the router HERE (mount runs on DOMContentLoaded), so pro bundles that
+	// loaded after the free app have already registered their `erp_hr.routes`
+	// additions. Building it at module-eval would freeze the route table before
+	// pro runs (Attendance/Documents → "Page not found").
+	const hashRouter = buildHashRouter();
 
 	createRoot( root ).render(
 		<StrictMode>

@@ -161,7 +161,7 @@ function Field( { label, value }: { readonly label: string; readonly value: stri
 
 export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
 	const navigate     = useNavigate();
-	const canEdit      = useCan( 'erp_edit_employee' );
+	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotes = useCan( 'erp_manage_review' );
 	const canViewPerf  = useCan( 'erp_create_review' );
 
@@ -169,6 +169,9 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
 		[]
 	);
+	// Own profile is self-service: an employee can view/edit their OWN profile
+	// (Personal, Job, Leave, …) even without the manager `erp_edit_employee` cap.
+	const canEdit = canEditCap || currentUserId === userId;
 	const canViewPermission = canViewPerf && currentUserId !== userId;
 	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 

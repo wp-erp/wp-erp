@@ -62,6 +62,8 @@ export interface BootPayload {
 	readonly hrmVersion:    string;
 	readonly legacyTarget?: LegacySwitchTarget;
 	readonly filters:       BootPayloadFilters;
+	/** Active pro HR sub-modules (each self-registers via `erp_hr_v2_boot_payload`). */
+	readonly modules?:      readonly string[];
 }
 
 export interface RouteHandle {

@@ -31,6 +31,7 @@ import {
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import { useBoot } from '@/shared/hooks/useBoot';
 import { storeName as meStoreName } from '@/stores/me';
 import type { Capability } from '@/types/global';
 
@@ -67,8 +68,13 @@ export function NavLinks(): JSX.Element {
 		[]
 	);
 	const location = useLocation();
+	const activeModules = useBoot().modules ?? [];
 
 	const visible = TOPBAR_NAV_ITEMS.filter( ( item ) => {
+		// Hide pro-module items unless that module is active (legacy parity).
+		if ( item.module && ! activeModules.includes( item.module ) ) {
+			return false;
+		}
 		if ( item.capabilities.length === 0 ) {
 			return true;
 		}

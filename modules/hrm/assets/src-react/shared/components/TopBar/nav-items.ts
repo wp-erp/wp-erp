@@ -57,6 +57,12 @@ export interface NavItem {
 	/** Hash-path prefixes that count as "active" for the link's underline. */
 	readonly activeMatches: readonly string[];
 	/**
+	 * Pro sub-module key. When set, the item only shows if that module is active
+	 * (present in `boot.modules`) — so it disappears when the pro module is off,
+	 * exactly like the legacy admin menu.
+	 */
+	readonly module?: string;
+	/**
 	 * Submenu entries. Rendered as an inline dropdown when present. Only modules
 	 * already migrated to React carry children; the rest stay plain links until
 	 * their pages ship.
@@ -192,8 +198,36 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		path:          '/attendance',
 		icon:          'calendar-check',
 		hasDropdown:   true,
-		capabilities:  [ 'erp_attendance_list' ],
+		// Manager/admin only — legacy parity (an employee sees no Attendance nav;
+		// their self-attendance lives on the dashboard widget). `erp_hr_manager` is a
+		// real role cap already in the boot map (same gate the Reports nav uses).
+		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/attendance' ],
+		module:        'attendance',
+		// Sub-pages provided by the pro Attendance module (registered via `erp_hr.routes`).
+		children: [
+			{
+				id:           'attendance-logs',
+				label:        __( 'Logs', 'erp' ),
+				to:           '/attendance',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Daily attendance of every employee', 'erp' ),
+			},
+			{
+				id:           'attendance-shifts',
+				label:        __( 'Shifts', 'erp' ),
+				to:           '/attendance/shifts',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Create shifts and assign employees', 'erp' ),
+			},
+			{
+				id:           'attendance-reports',
+				label:        __( 'Reports', 'erp' ),
+				to:           '/attendance/reports',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Per-employee attendance report', 'erp' ),
+			},
+		],
 	},
 	{
 		id:            'assets',
@@ -210,8 +244,11 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		path:          '/documents',
 		icon:          'file-text',
 		hasDropdown:   false,
-		capabilities:  [ 'erp_view_doc' ],
+		// Company documents = manager/admin (legacy parity). Employees use the
+		// per-employee Documents tab in their profile, not this top-nav page.
+		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/documents' ],
+		module:        'document-manager',
 	},
 	{
 		id:            'training',

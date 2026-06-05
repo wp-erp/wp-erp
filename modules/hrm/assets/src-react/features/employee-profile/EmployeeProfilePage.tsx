@@ -183,7 +183,7 @@ function Item( { label, value }: { readonly label: string; readonly value: strin
 
 export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Element {
 	const navigate     = useNavigate();
-	const canEdit      = useCan( 'erp_edit_employee' );
+	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotes = useCan( 'erp_manage_review' );
 	const canViewPerf  = useCan( 'erp_create_review' );
 
@@ -191,6 +191,11 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
 		[]
 	);
+	// Own profile is self-service: an employee can view/edit their OWN profile
+	// (Personal, Job, Leave, …) even without the manager `erp_edit_employee` cap —
+	// mirrors the legacy "My Profile". `erp_edit_employee` is a meta-cap that the
+	// generic `useCan` check resolves to false for employees.
+	const canEdit = canEditCap || currentUserId === userId;
 	const canViewPermission = canViewPerf && currentUserId !== userId;
 	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
