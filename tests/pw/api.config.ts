@@ -29,7 +29,13 @@ export default defineConfig({
         ignoreHTTPSErrors: true,
     },
     projects: [
-        { name: 'site_setup', testDir: 'tests/e2e', testMatch: ['**/_site.setup.ts'] },
+        // local_site_setup MUST lead the chain: it sets pretty permalinks
+        // (rewrite structure /%postname%/) + timezone. Without it a fresh wp-env
+        // stays on PLAIN permalinks, so every SERVER_URL=/wp-json REST call 404s.
+        // (The e2e config already runs this; the api config previously skipped it,
+        // which only ever worked locally against an already-provisioned site.)
+        { name: 'local_site_setup', testDir: 'tests/e2e', testMatch: ['**/_localSite.setup.ts'] },
+        { name: 'site_setup', testDir: 'tests/e2e', testMatch: ['**/_site.setup.ts'], dependencies: dep(['local_site_setup']) },
         { name: 'auth_setup', testDir: 'tests/e2e', testMatch: ['**/_auth.setup.ts'], dependencies: dep(['site_setup']), retries: 1 },
         { name: 'api_tests', testMatch: /.*\.spec\.ts/, dependencies: dep(['auth_setup']) },
     ],
