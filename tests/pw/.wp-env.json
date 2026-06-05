@@ -1,0 +1,21 @@
+{
+  "core": "WordPress/WordPress",
+  "phpVersion": "8.2",
+  "plugins": [
+    "../../"
+  ],
+  "themes": [],
+  "port": 9999,
+  "testsPort": 9989,
+  "config": {
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": "/var/www/html/wp-data/debug.log",
+    "WP_DEBUG_DISPLAY": false,
+    "SCRIPT_DEBUG": false
+  },
+  "mappings": {
+    "wp-content/plugins/wp-erp": "../../",
+    "wp-data": "./wp-data",
+    "wp-content/mu-plugins": "./mu-plugins"
+  }
+}
