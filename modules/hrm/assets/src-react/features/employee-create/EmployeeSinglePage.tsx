@@ -53,6 +53,7 @@ import {
 } from '../employee-profile-v4/options';
 import { EmployeePerformanceTab } from '../employee-profile-v4/performance/EmployeePerformanceTab';
 import { EmployeePermissionTab } from '../employee-profile-v4/permission/EmployeePermissionTab';
+import { useProfileExtraTabs } from './profile-tabs';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
@@ -175,6 +176,10 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 	const [ loadError, setLoadError ] = useState< string | null >( null );
 	const [ tab, setTab ] = useState( 'personal' );
 
+	// Pro-injectable profile tabs (e.g. Document Manager's Documents tab). MUST be
+	// called before any early return below — Rules of Hooks.
+	const extraTabs = useProfileExtraTabs( { userId, canEdit } );
+
 	useEffect( () => {
 		let cancelled = false;
 		setLoadError( null );
@@ -226,6 +231,7 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 		...( canViewNotes ? [ { value: 'notes', label: __( 'Notes', 'erp' ), icon: StickyNote } ] : [] ),
 		...( canViewPerf ? [ { value: 'performance', label: __( 'Performance', 'erp' ), icon: TrendingUp } ] : [] ),
 		...( canViewPermission ? [ { value: 'permission', label: __( 'Permission', 'erp' ), icon: Shield } ] : [] ),
+		...extraTabs.map( ( t ) => ( { value: t.id, label: t.label, icon: t.icon } ) ),
 	];
 
 	const activeLabel = navItems.find( ( i ) => i.value === tab )?.label ?? '';
@@ -385,6 +391,7 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 							{ canViewNotes && tab === 'notes' ? <EmployeeNotesTab userId={ userId } /> : null }
 							{ canViewPerf && tab === 'performance' ? <EmployeePerformanceTab userId={ userId } /> : null }
 							{ canViewPermission && tab === 'permission' ? <EmployeePermissionTab userId={ userId } /> : null }
+							{ extraTabs.find( ( t ) => t.id === tab )?.render( { userId, canEdit } ) }
 						</>
 					) }
 				</div>

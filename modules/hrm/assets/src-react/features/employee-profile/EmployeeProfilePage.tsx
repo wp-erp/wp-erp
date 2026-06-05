@@ -48,6 +48,7 @@ import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
 import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
+import { useProfileExtraTabs } from '../employee-create/profile-tabs';
 import { AvatarUpload } from './AvatarUpload';
 import { EmployeeGeneralSections } from './general/EmployeeGeneralSections';
 import { OverviewStats } from './general/OverviewStats';
@@ -197,6 +198,9 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 	const [ loadError, setLoadError ] = useState< string | null >( null );
 	const [ tab, setTab ] = useState( 'overview' );
 
+	// Pro-injectable profile tabs (Documents). Before any early return — Rules of Hooks.
+	const extraTabs = useProfileExtraTabs( { userId, canEdit } );
+
 	useEffect( () => {
 		let cancelled = false;
 		setLoadError( null );
@@ -259,6 +263,7 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 		...( canViewNotes ? [ { value: 'notes', label: __( 'Notes', 'erp' ), icon: StickyNote } ] : [] ),
 		...( canViewPerf ? [ { value: 'performance', label: __( 'Performance', 'erp' ), icon: TrendingUp } ] : [] ),
 		...( canViewPermission ? [ { value: 'permission', label: __( 'Permission', 'erp' ), icon: Shield } ] : [] ),
+		...extraTabs.map( ( t ) => ( { value: t.id, label: t.label, icon: t.icon } ) ),
 	];
 
 	return (
@@ -430,6 +435,7 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 					{ canViewNotes && tab === 'notes' ? <EmployeeNotesTab userId={ userId } /> : null }
 					{ canViewPerf && tab === 'performance' ? <EmployeePerformanceTab userId={ userId } /> : null }
 					{ canViewPermission && tab === 'permission' ? <EmployeePermissionTab userId={ userId } /> : null }
+					{ extraTabs.find( ( t ) => t.id === tab )?.render( { userId, canEdit } ) }
 				</div>
 			</div>
 		</div>

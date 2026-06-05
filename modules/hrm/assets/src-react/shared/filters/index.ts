@@ -18,6 +18,12 @@ export const HOOKS = {
 	// Employee create/edit form — pro injects extra (custom) field definitions.
 	EMPLOYEE_EXTRA_FIELDS:   'erp_hr.employee.extra_fields',
 
+	// Employee profile — pro injects / replaces profile tabs (e.g. Documents).
+	// Applied lazily at render with `(tabs, ctx)` where ctx = { userId, canEdit }.
+	// Free seeds a `documents` preview tab; the Document Manager pro module swaps
+	// its `render` with the real file manager when active.
+	EMPLOYEE_PROFILE_TABS:   'erp_hr.employee.profile.tabs',
+
 	// Employees feature filters
 	EMPLOYEES_COLUMNS:       'erp_hr.employees.columns',
 	EMPLOYEES_FILTERS:       'erp_hr.employees.filters',

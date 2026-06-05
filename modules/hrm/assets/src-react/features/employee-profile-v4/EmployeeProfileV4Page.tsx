@@ -37,6 +37,7 @@ import type { MeUser } from '@/stores/me/types';
 
 import { AvatarUpload } from '../employee-create/AvatarUpload';
 import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
+import { useProfileExtraTabs } from '../employee-create/profile-tabs';
 import { EmployeeGeneralSections } from '../employee-create/general/EmployeeGeneralSections';
 import { OverviewStats } from '../employee-create/general/OverviewStats';
 import { EmployeeJobTab } from '../employee-create/job/EmployeeJobTab';
@@ -178,6 +179,9 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 	const [ loadError, setLoadError ] = useState< string | null >( null );
 	const [ tab, setTab ] = useState( 'overview' );
 
+	// Pro-injectable profile tabs (Documents). Before any early return — Rules of Hooks.
+	const extraTabs = useProfileExtraTabs( { userId, canEdit } );
+
 	useEffect( () => {
 		let cancelled = false;
 		setLoadError( null );
@@ -309,6 +313,9 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 						{ canViewPermission ? (
 							<ProfileTab value="permission" current={ tab } icon={ Shield }>{ __( 'Permission', 'erp' ) }</ProfileTab>
 						) : null }
+						{ extraTabs.map( ( t ) => (
+							<ProfileTab key={ t.id } value={ t.id } current={ tab } icon={ t.icon }>{ t.label }</ProfileTab>
+						) ) }
 					</TabsList>
 
 					<TabsContent value="overview" className="mt-6 space-y-6">
@@ -409,6 +416,11 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 							<EmployeePermissionTab userId={ userId } />
 						</TabsContent>
 					) : null }
+					{ extraTabs.map( ( t ) => (
+						<TabsContent key={ t.id } value={ t.id } className="mt-6">
+							{ t.render( { userId, canEdit } ) }
+						</TabsContent>
+					) ) }
 				</Tabs>
 		</div>
 	);
