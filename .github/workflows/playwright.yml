@@ -75,9 +75,12 @@ jobs:
               uses: actions/checkout@v4
 
             # PRO (private) — only when secrets are available, i.e. NOT a fork PR.
+            # If the token can't reach the private repo, don't fail the whole
+            # pipeline — degrade to a lite-only run (the step shows the error).
             - name: Checkout erp-pro (pro runs only)
               id: erp-pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              continue-on-error: true
               uses: actions/checkout@v4
               with:
                   repository: wp-erp/erp-pro
@@ -369,7 +372,12 @@ jobs:
                   merge-multiple: true
 
             - name: Merge into HTML report
-              run: npx playwright merge-reports --reporter html ./all-blobs
+              run: |
+                  if [ -n "$(ls -A ./all-blobs 2>/dev/null)" ]; then
+                      npx playwright merge-reports --reporter html ./all-blobs
+                  else
+                      echo "No blob reports to merge (test jobs were skipped or failed early)."
+                  fi
 
             - name: Upload HTML report
               uses: actions/upload-artifact@v4
