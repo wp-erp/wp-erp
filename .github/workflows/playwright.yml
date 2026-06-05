@@ -1,7 +1,6 @@
 name: E2E_API Tests
 
 on:
-    # daily at 2:00 AM UTC (8:00 AM BDT), like Dokan
     schedule:
         - cron: 0 2 * * *
     pull_request:
@@ -37,12 +36,10 @@ on:
                     - API
                     - All
 
-# Cancel superseded runs on the same ref.
 concurrency:
     group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
     cancel-in-progress: true
 
-# Non-secret config (wp-env defaults). ERP_PRO is decided per-run.
 env:
     ADMIN: admin
     ADMIN_PASSWORD: password
@@ -57,30 +54,22 @@ env:
     HEADLESS: true
     NO_SETUP: false
     FORCE_COLOR: 1
-    # License is OPTIONAL — the QA force-pro mu-plugin activates pro without it.
     LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
     ERP_PRO_EMAIL: ${{ secrets.ERP_PRO_EMAIL }}
     ERP_PRO_SUBSCRIPTION: yearly
 
 jobs:
-    # ── Build wp-erp (+ erp-pro when secrets are available) once, share as an
-    #    artifact so the test shards don't each re-run composer. Mirrors Dokan's
-    #    build_lite / build_pro jobs (ERP has no webpack build — assets are committed).
-    build:
-        name: build plugins
+    # ── Build the PRIVATE erp-pro plugin. ──────────────────────────────────────
+    # Gated so it SKIPS on fork PRs (no secret access — that is expected and fine).
+    # On the internal repo it RUNS, and if ERP_PRO_TOKEN can't reach erp-pro it
+    # FAILS LOUDLY (no masking). Downstream jobs treat skipped=lite, failed=red.
+    build_pro:
+        name: build erp-pro
         runs-on: ubuntu-latest
         timeout-minutes: 15
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         steps:
-            - name: Checkout wp-erp (free)
-              uses: actions/checkout@v4
-
-            # PRO (private) — only when secrets are available, i.e. NOT a fork PR.
-            # If the token can't reach the private repo, don't fail the whole
-            # pipeline — degrade to a lite-only run (the step shows the error).
-            - name: Checkout erp-pro (pro runs only)
-              id: erp-pro
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              continue-on-error: true
+            - name: Checkout erp-pro (private)
               uses: actions/checkout@v4
               with:
                   repository: wp-erp/erp-pro
@@ -93,44 +82,31 @@ jobs:
               with:
                   node-version: 20
 
-            - name: Composer install (wp-erp)
-              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
-
             - name: Composer install (erp-pro)
-              if: steps.erp-pro.outcome == 'success'
               working-directory: erp-pro
               run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
 
-            # Tar the runtime tree (wp-erp + erp-pro sibling) minus node_modules / .git /
-            # test output. tar preserves perms & symlinks, unlike upload-artifact's zip.
-            - name: Tar build output
-              run: |
-                  tar --exclude=./.git \
-                      --exclude=./node_modules \
-                      --exclude=./erp-pro/.git \
-                      --exclude=./erp-pro/node_modules \
-                      --exclude=./tests/pw/node_modules \
-                      --exclude=./tests/pw/playwright \
-                      --exclude=./tests/pw/playwright-report \
-                      --exclude=./tests/pw/blob-report \
-                      --exclude=./tests/pw/wp-data \
-                      --exclude=./tests/pw/test-results \
-                      -czf /tmp/wp-erp-build.tar.gz .
+            - name: Tar erp-pro
+              run: tar --exclude='erp-pro/.git' --exclude='erp-pro/node_modules' -czf /tmp/erp-pro.tar.gz erp-pro
 
-            - name: Upload build artifact
+            - name: Upload erp-pro artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: wp-erp-build
-                  path: /tmp/wp-erp-build.tar.gz
+                  name: erp-pro-build
+                  path: /tmp/erp-pro.tar.gz
                   retention-days: 1
                   compression-level: 0
 
-    # ── Sharded E2E (Playwright-native sharding + blob reports merged below). ──
+    # ── Sharded E2E. Runs lite always; adds pro only when build_pro SUCCEEDED. ──
     e2e_tests:
         name: e2e tests
         runs-on: ubuntu-latest
         timeout-minutes: 30
-        needs: [build]
+        needs: [build_pro]
+        # Run for both lite (build_pro skipped on forks) and pro (build_pro success).
+        # If build_pro FAILED (bad token on internal), this still runs lite — but the
+        # overall workflow stays RED because build_pro is red. Nothing is hidden.
+        if: always() && needs.build_pro.result != 'cancelled'
         strategy:
             fail-fast: false
             matrix:
@@ -140,17 +116,20 @@ jobs:
             run:
                 working-directory: tests/pw
         steps:
-            - name: Download build artifact
+            - name: Checkout wp-erp (free)
+              uses: actions/checkout@v4
+
+            - name: Download erp-pro artifact (pro runs)
+              if: needs.build_pro.result == 'success'
               uses: actions/download-artifact@v4
               with:
-                  name: wp-erp-build
+                  name: erp-pro-build
                   path: /tmp/
 
-            - name: Extract build
+            - name: Extract erp-pro
+              if: needs.build_pro.result == 'success'
               working-directory: .
-              run: |
-                  tar -xzf /tmp/wp-erp-build.tar.gz
-                  rm /tmp/wp-erp-build.tar.gz
+              run: tar -xzf /tmp/erp-pro.tar.gz
 
             - name: Use Node.js 20
               uses: actions/setup-node@v4
@@ -158,6 +137,10 @@ jobs:
                   node-version: 20
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Composer install (wp-erp)
+              working-directory: .
+              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
 
             - name: Cache tests/pw node_modules
               id: pw-nm
@@ -186,17 +169,15 @@ jobs:
                   cp .env.example .env
                   mkdir -p wp-data && touch wp-data/debug.log
                   if [ -d "$GITHUB_WORKSPACE/erp-pro" ]; then
-                      echo "erp-pro present → pro run"
+                      echo "erp-pro present → PRO run"
                       echo "ERP_PRO=true" >> "$GITHUB_ENV"
                       cp .wp-env.ci.json .wp-env.override.json
                   else
-                      echo "erp-pro absent → lite run"
+                      echo "erp-pro absent → LITE run"
                       echo "ERP_PRO=false" >> "$GITHUB_ENV"
                       rm -f .wp-env.override.json
                   fi
 
-            # Route Docker Hub pulls through Google's mirror to dodge anonymous
-            # pull-rate-limits that randomly fail `wp-env start` (Dokan's trick).
             - name: Route Docker Hub through a mirror
               working-directory: .
               run: |
@@ -233,27 +214,31 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 1
 
-    # ── REST/API suite (one job). ──
+    # ── REST/API suite. ────────────────────────────────────────────────────────
     api_tests:
         name: api tests
         runs-on: ubuntu-latest
         timeout-minutes: 25
-        needs: [build]
+        needs: [build_pro]
+        if: always() && needs.build_pro.result != 'cancelled'
         defaults:
             run:
                 working-directory: tests/pw
         steps:
-            - name: Download build artifact
+            - name: Checkout wp-erp (free)
+              uses: actions/checkout@v4
+
+            - name: Download erp-pro artifact (pro runs)
+              if: needs.build_pro.result == 'success'
               uses: actions/download-artifact@v4
               with:
-                  name: wp-erp-build
+                  name: erp-pro-build
                   path: /tmp/
 
-            - name: Extract build
+            - name: Extract erp-pro
+              if: needs.build_pro.result == 'success'
               working-directory: .
-              run: |
-                  tar -xzf /tmp/wp-erp-build.tar.gz
-                  rm /tmp/wp-erp-build.tar.gz
+              run: tar -xzf /tmp/erp-pro.tar.gz
 
             - name: Use Node.js 20
               uses: actions/setup-node@v4
@@ -261,6 +246,10 @@ jobs:
                   node-version: 20
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Composer install (wp-erp)
+              working-directory: .
+              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
 
             - name: Cache tests/pw node_modules
               id: pw-nm
@@ -332,7 +321,7 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 1
 
-    # ── Merge all shard/api blob reports into a single HTML report. ──
+    # ── Merge all shard/api blob reports into one HTML report. ─────────────────
     merge-reports:
         name: merge reports
         if: ${{ !cancelled() }}
@@ -376,7 +365,7 @@ jobs:
                   if [ -n "$(ls -A ./all-blobs 2>/dev/null)" ]; then
                       npx playwright merge-reports --reporter html ./all-blobs
                   else
-                      echo "No blob reports to merge (test jobs were skipped or failed early)."
+                      echo "No blob reports to merge."
                   fi
 
             - name: Upload HTML report
