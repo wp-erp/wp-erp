@@ -42,14 +42,13 @@ test.describe('HRM Attendance UI (pro, admin)', () => {
         const att = new AttendancePage(page);
         await att.goto('shifts');
         await att.expectMountedNoFatal();
-        // The Shifts component renders an "Add"/"New Shift" control + a list. Scope to
-        // the SPA content area so WP admin chrome (the "Add Post" +New link in the admin
-        // menu/bar) is NOT matched, and take .first() of the COMBINED match — otherwise,
-        // when both the add control and the list are present, `.or()` resolves to 2
-        // elements and toBeVisible() fails on a strict-mode violation.
-        const content = page.locator(att.selectors.content);
-        const affordance = content.locator(att.selectors.addControl).or(content.locator(att.selectors.listTable));
-        await expect(affordance.first()).toBeVisible({ timeout: 30_000 });
+        // The Shifts list renders its column headers ("Shift Name" / "Start Time") and an
+        // item count even when empty. Assert that list UI by TEXT, not by element
+        // selectors: force-pro keeps every module active, so #wpbody-content also holds
+        // HIDDEN cross-module nav links (e.g. "Add Opening" from recruitment) that match
+        // a:has-text("Add") and made a .first()/toBeVisible() resolve to a hidden link.
+        await expect(page.locator(att.selectors.content))
+            .toContainText(/Shift Name|Start Time|Add New Shift/i, { timeout: 30_000 });
     });
 
     test('ATT-UI-04 assign-shift-bulk route mounts, no fatal', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
