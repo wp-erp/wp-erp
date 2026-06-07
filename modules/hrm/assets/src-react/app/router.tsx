@@ -75,6 +75,10 @@ const DesignationsPage = lazy( () =>
 	import( '@/features/designations' ).then( ( m ) => ( { default: m.DesignationsPage } ) )
 );
 
+const OrgChartPage = lazy( () =>
+	import( '@/features/org-chart' ).then( ( m ) => ( { default: m.OrgChartPage } ) )
+);
+
 const HolidaysPage = lazy( () =>
 	import( '@/features/holidays' ).then( ( m ) => ( { default: m.HolidaysPage } ) )
 );
@@ -293,6 +297,18 @@ const baseRoutes: AppRoute[] = [
 		handle: {
 			id:        'designations',
 			title:     __( 'Designations', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'org-chart',
+		path:         '/org-chart',
+		element:      OrgChartPage,
+		capabilities: [ 'erp_view_list' ],
+		handle: {
+			id:        'org-chart',
+			title:     __( 'Org Chart', 'erp' ),
 			group:     'people',
 			showInNav: false,
 		},

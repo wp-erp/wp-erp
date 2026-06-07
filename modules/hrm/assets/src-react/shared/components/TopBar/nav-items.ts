@@ -112,6 +112,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				description:  __( 'Create a new team member', 'erp' ),
 			},
 			{
+				id:           'people-requests',
+				label:        __( 'Requests', 'erp' ),
+				to:           '/leave/requests',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Employee requests', 'erp' ),
+			},
+			{
 				id:           'people-departments',
 				label:        __( 'Departments', 'erp' ),
 				to:           '/departments',
@@ -124,6 +131,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/designations',
 				capabilities: [ 'erp_view_list' ],
 				description:  __( 'Manage job titles', 'erp' ),
+			},
+			{
+				id:           'people-org-chart',
+				label:        __( 'Org Chart', 'erp' ),
+				to:           '/org-chart',
+				capabilities: [ 'erp_view_list' ],
+				description:  __( 'Reporting hierarchy', 'erp' ),
 			},
 			{
 				id:           'people-announcements',
