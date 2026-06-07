@@ -21,6 +21,7 @@ export interface PolicyFormOptions {
 	readonly currentFYear:    number;
 	readonly departments:     readonly PolicyLookup[];
 	readonly designations:    readonly PolicyLookup[];
+	readonly locations:       readonly PolicyLookup[];
 	readonly employeeTypes:   readonly PolicyOption[];
 	readonly genders:         readonly PolicyOption[];
 	readonly maritalStatuses: readonly PolicyOption[];
@@ -73,6 +74,7 @@ export interface LeavePolicyInput {
 	readonly f_year:               number;
 	readonly employee_type?:       string;
 	readonly department_id?:       string;
+	readonly location_id?:         string;
 	readonly designation_id?:      string;
 	readonly gender?:              string;
 	readonly marital?:             string;

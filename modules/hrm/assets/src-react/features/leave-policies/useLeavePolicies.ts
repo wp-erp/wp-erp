@@ -34,6 +34,7 @@ interface RawFormOptions {
 	current_f_year?:   number;
 	departments?:      RawLookup[];
 	designations?:     RawLookup[];
+	locations?:        RawLookup[];
 	employee_types?:   PolicyOption[];
 	genders?:          PolicyOption[];
 	marital_statuses?: PolicyOption[];
@@ -134,6 +135,7 @@ export function useLeavePolicies( {
 			currentFYear:    Number( raw.current_f_year ?? 0 ),
 			departments:     toLookups( raw.departments, 'title' ),
 			designations:    toLookups( raw.designations, 'title' ),
+			locations:       toLookups( raw.locations, 'title' ),
 			employeeTypes:   raw.employee_types ?? [],
 			genders:         raw.genders ?? [],
 			maritalStatuses: raw.marital_statuses ?? [],

@@ -58,9 +58,11 @@ interface FormState {
 	color:               string;
 	description:         string;
 	f_year:              string;
+	applicable_from:     string;
 	employee_type:       string;
 	department_id:       string;
 	designation_id:      string;
+	location_id:         string;
 	gender:              string;
 	marital:             string;
 	apply_for_new_users: boolean;
@@ -75,9 +77,11 @@ const EMPTY: FormState = {
 	color:               '#3b82f6',
 	description:         '',
 	f_year:              '',
+	applicable_from:     '0',
 	employee_type:       ALL,
 	department_id:       ALL,
 	designation_id:      ALL,
+	location_id:         ALL,
 	gender:              ALL,
 	marital:             ALL,
 	apply_for_new_users: false,
@@ -136,9 +140,11 @@ export function LeavePolicyFormDialog( {
 						color:               editing.color || '#3b82f6',
 						description:         editing.description,
 						f_year:              editing.f_year ? String( editing.f_year ) : '',
+						applicable_from:     String( editing.applicable_from ?? 0 ),
 						employee_type:       editing.employee_type || ALL,
 						department_id:       editing.department_id || ALL,
 						designation_id:      editing.designation_id || ALL,
+						location_id:         editing.location_id || ALL,
 						gender:              editing.gender || ALL,
 						marital:             editing.marital || ALL,
 						apply_for_new_users: editing.apply_for_new_users,
@@ -162,6 +168,10 @@ export function LeavePolicyFormDialog( {
 	);
 	const desigOpts = useMemo< Option[] >(
 		() => withAll( ( options?.designations ?? [] ).map( ( d ) => ( { value: String( d.id ), label: d.label } ) ) ),
+		[ options ]
+	);
+	const locationOpts = useMemo< Option[] >(
+		() => withAll( ( options?.locations ?? [] ).map( ( d ) => ( { value: String( d.id ), label: d.label } ) ) ),
 		[ options ]
 	);
 	const empTypeOpts = useMemo< Option[] >(
@@ -202,9 +212,11 @@ export function LeavePolicyFormDialog( {
 			color:               form.color,
 			description:         form.description.trim(),
 			f_year:              Number( form.f_year || ( editing?.f_year ?? 0 ) ),
+			applicable_from:     Number( form.applicable_from || 0 ),
 			employee_type:       form.employee_type,
 			department_id:       form.department_id,
 			designation_id:      form.designation_id,
+			location_id:         form.location_id,
 			gender:              form.gender,
 			marital:             form.marital,
 			apply_for_new_users: form.apply_for_new_users,
@@ -353,6 +365,26 @@ export function LeavePolicyFormDialog( {
 							options={ maritalOpts }
 							value={ form.marital }
 							onChange={ ( v ) => setForm( ( p ) => ( { ...p, marital: v } ) ) }
+						/>
+					</div>
+
+					<div className="grid grid-cols-2 gap-4">
+						<SmartSelectField
+							id="policy_location"
+							label={ __( 'Location', 'erp' ) }
+							options={ locationOpts }
+							value={ form.location_id }
+							onChange={ ( v ) => setForm( ( p ) => ( { ...p, location_id: v || ALL } ) ) }
+							placeholder={ __( 'All', 'erp' ) }
+							searchPlaceholder={ __( 'Search locations…', 'erp' ) }
+							emptyMessage={ __( 'No locations found.', 'erp' ) }
+						/>
+						<TextField
+							id="policy_applicable_from"
+							label={ __( 'Applicable After (days)', 'erp' ) }
+							type="number"
+							value={ form.applicable_from }
+							onChange={ ( v ) => setForm( ( p ) => ( { ...p, applicable_from: v } ) ) }
 						/>
 					</div>
 
