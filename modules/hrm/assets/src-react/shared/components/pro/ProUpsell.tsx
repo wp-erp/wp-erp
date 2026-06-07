@@ -3,34 +3,34 @@
  *
  * When the ERP Pro plugin is NOT installed (`boot.isPro === false`), pro-only
  * nav items still render — but as a "Pro" badge that opens an upgrade dialog
- * instead of navigating, mirroring the legacy admin's `pro_popup` menu badge
- * (`functions.php` → `<span class="pro-popup">Pro</span>` + upgrade modal).
+ * instead of navigating, mirroring the legacy admin's `pro_popup` menu badge.
  *
- * Pattern adapted from Dokan's React locked-feature upsell (a localized
- * `is_pro_exists` flag → a "Pro" pill → a click-triggered upgrade modal), reskinned
- * to the WP-ERP design system and pricing URL.
+ * The dialog is a faithful React port of the legacy pro-popup
+ * (`includes/Admin/views/erp-pro-popup-modal.php`): the two-column promo with
+ * the diamond mark, orange "Upgrade to" heading, the same four feature bullets,
+ * the illustration slider, the orange "Upgrade to PRO" button and the trust row.
  */
 
 import {
-	Button,
 	Dialog,
 	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
 } from '@wedevs/plugin-ui';
 import { Check, Crown } from 'lucide-react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
-import { __, sprintf } from '@/shared/i18n';
+import { useBoot } from '@/shared/hooks/useBoot';
+import { __ } from '@/shared/i18n';
 
 /** WP-ERP pricing page (same target as the legacy pro-popup "Upgrade to PRO" button). */
 const UPGRADE_URL = 'https://wperp.com/pricing/?utm_source=wpdashboard&utm_medium=hr-react-nav&utm_campaign=pro-upsell';
 
+/** Illustration slides shown on the right (same asset set as the legacy popup). */
+const SLIDES = [ 'erp-pro.svg', 'crm.svg', 'accounting.svg', 'woo.svg' ];
+
 interface ProUpsellContextValue {
-	/** Open the upgrade dialog, naming the feature the user tried to reach. */
+	/** Open the upgrade dialog (the optional feature name is accepted but the
+	 *  legacy promo copy is feature-agnostic, so it is not shown). */
 	readonly openUpsell: ( feature?: string ) => void;
 }
 
@@ -57,25 +57,95 @@ export function ProBadge( { className }: { className?: string } ): JSX.Element {
 	);
 }
 
-// Verbatim marketing copy from the legacy pro-popup
-// (`includes/Admin/views/erp-pro-popup-modal.php`), flattened from its inline
-// markup so the React upsell shows the same content as the Vue/PHP one.
-const FEATURES: readonly string[] = [
-	__( 'Unlock 12+ premium HR extensions and manage your employee’s recruitment, payroll, attendance, and more', 'erp' ),
-	__( 'Nurture B2B & regular clients with 8+ CRM Integrations like HubSpot, Mailchimp, Salesforce, Help Scout, etc.', 'erp' ),
-	__( 'From creating invoice to calculating taxes; take full control of your company’s finances with the Accounting module', 'erp' ),
-	__( 'Boost your WooCommerce store with powerful CRM and Accounting premium integrations', 'erp' ),
+/** Feature bullets — verbatim copy + bold emphasis from the legacy pro-popup. */
+const FEATURES: readonly ReactNode[] = [
+	<>
+		<strong>{ __( 'Unlock 12+ premium HR extensions', 'erp' ) }</strong>{ ' ' }
+		{ __( 'and manage your employee’s', 'erp' ) }{ ' ' }
+		<strong>{ __( 'recruitment, payroll, attendance,', 'erp' ) }</strong>{ ' ' }
+		{ __( 'and more', 'erp' ) }
+	</>,
+	<>
+		{ __( 'Nurture B2B & regular clients with', 'erp' ) }{ ' ' }
+		<strong>{ __( '8+ CRM Integrations', 'erp' ) }</strong>{ ' ' }
+		{ __( 'like -', 'erp' ) }{ ' ' }
+		<strong>{ __( 'HubSpot, Mailchimp, Salesforce, Help Scout,', 'erp' ) }</strong>{ ' ' }
+		{ __( 'etc.', 'erp' ) }
+	</>,
+	<>
+		{ __( 'From', 'erp' ) }{ ' ' }
+		<strong>{ __( 'creating invoice to calculating taxes', 'erp' ) }</strong>;{ ' ' }
+		{ __( 'take full control of your company’s finances with the', 'erp' ) }{ ' ' }
+		<strong>{ __( 'Accounting module', 'erp' ) }</strong>
+	</>,
+	<>
+		<strong>{ __( 'Boost your WooCommerce store', 'erp' ) }</strong>{ ' ' }
+		{ __( 'with powerful', 'erp' ) }{ ' ' }
+		<strong>{ __( 'CRM and Accounting', 'erp' ) }</strong>{ ' ' }
+		{ __( 'premium integrations', 'erp' ) }
+	</>,
 ];
+
+const TRUST: readonly string[] = [
+	__( '10,000+ successful businesses', 'erp' ),
+	__( '14 days no questions asked refund policy', 'erp' ),
+	__( 'Industry leading 24x7 support', 'erp' ),
+];
+
+/** Right-column illustration slider (auto-advancing, click-to-jump dots). */
+function ProSlides( { base }: { base: string } ): JSX.Element {
+	const [ index, setIndex ] = useState( 0 );
+
+	useEffect( () => {
+		const timer = window.setInterval( () => {
+			setIndex( ( prev ) => ( prev + 1 ) % SLIDES.length );
+		}, 3500 );
+		return () => window.clearInterval( timer );
+	}, [] );
+
+	return (
+		<div className="flex h-full flex-col items-center justify-center gap-6 rounded-xl bg-[#eaf3ff] p-6">
+			<div className="relative flex aspect-square w-full max-w-90 items-center justify-center">
+				{ SLIDES.map( ( slide, i ) => (
+					<img
+						key={ slide }
+						src={ `${ base }/${ slide }` }
+						alt=""
+						aria-hidden="true"
+						className={ [
+							'absolute inset-0 m-auto max-h-full max-w-full object-contain transition-opacity duration-500',
+							i === index ? 'opacity-100' : 'opacity-0',
+						].join( ' ' ) }
+					/>
+				) ) }
+			</div>
+			<div className="flex items-center gap-2">
+				{ SLIDES.map( ( slide, i ) => (
+					<button
+						key={ slide }
+						type="button"
+						aria-label={ `${ __( 'Slide', 'erp' ) } ${ i + 1 }` }
+						onClick={ () => setIndex( i ) }
+						className={ [
+							'size-2 rounded-full transition-colors',
+							i === index ? 'bg-primary' : 'bg-border',
+						].join( ' ' ) }
+					/>
+				) ) }
+			</div>
+		</div>
+	);
+}
 
 /**
  * Wrap the HR app so any nav item can open the shared upgrade dialog.
  */
 export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.Element {
-	const [ feature, setFeature ] = useState< string | null >( null );
-	const [ open, setOpen ]       = useState( false );
+	const [ open, setOpen ] = useState( false );
+	const boot = useBoot();
+	const base = boot.assets.proPopupUrl ?? '';
 
-	const openUpsell = useCallback( ( name?: string ): void => {
-		setFeature( name ?? null );
+	const openUpsell = useCallback( (): void => {
 		setOpen( true );
 	}, [] );
 
@@ -85,50 +155,62 @@ export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.
 		<ProUpsellContext.Provider value={ value }>
 			{ children }
 			<Dialog open={ open } onOpenChange={ setOpen }>
-				<DialogContent className="gap-0 rounded-[10px] p-0 sm:max-w-lg">
-					<div className="flex flex-col items-center gap-3 rounded-t-[10px] bg-linear-to-br from-primary/10 to-amber-100/40 px-6 pb-5 pt-8 text-center">
-						<span className="flex size-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-							<Crown size={ 24 } strokeWidth={ 2 } aria-hidden="true" />
-						</span>
-						<DialogHeader className="gap-1">
-							<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
-								{ __( 'Upgrade to WP ERP Pro', 'erp' ) }
-							</DialogTitle>
-							<DialogDescription className="text-sm text-muted-foreground">
-								{ feature
-									? sprintf(
-										/* translators: %s: pro feature name. */
-										__( '%s is a Pro feature. Upgrade to unlock it and more.', 'erp' ),
-										feature
-									)
-									: __( 'to experience even more powerful features 🎉', 'erp' ) }
-							</DialogDescription>
-						</DialogHeader>
+				<DialogContent className="max-h-[92vh] gap-0 overflow-y-auto rounded-[10px] p-0 sm:max-w-4xl">
+					<div className="grid grid-cols-1 gap-8 p-8 md:grid-cols-[1.1fr_1fr]">
+						{ /* Left — promo copy */ }
+						<div className="flex flex-col">
+							{ base ? (
+								<img src={ `${ base }/pro-diamond.svg` } alt="" aria-hidden="true" className="mb-4 size-12" />
+							) : (
+								<span className="mb-4 flex size-12 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+									<Crown size={ 24 } strokeWidth={ 2 } aria-hidden="true" />
+								</span>
+							) }
+
+							<h2 className="m-0 text-3xl font-bold leading-tight tracking-tight text-foreground">
+								<span className="text-[#f7941d]">{ __( 'Upgrade to', 'erp' ) }</span>{ ' ' }
+								{ __( 'WP ERP', 'erp' ) } <strong>{ __( 'Pro', 'erp' ) }</strong>
+							</h2>
+							<p className="mb-6 mt-2 text-base text-muted-foreground">
+								{ __( 'to experience even more powerful features 🎉', 'erp' ) }
+							</p>
+
+							<ul className="m-0 flex flex-col gap-4">
+								{ FEATURES.map( ( item, i ) => (
+									<li key={ i } className="flex items-start gap-3 text-sm leading-relaxed text-foreground">
+										<span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+											<Check size={ 12 } strokeWidth={ 3 } aria-hidden="true" />
+										</span>
+										<span>{ item }</span>
+									</li>
+								) ) }
+							</ul>
+
+							<a
+								href={ UPGRADE_URL }
+								target="_blank"
+								rel="noreferrer noopener"
+								className="mt-8 inline-flex h-12 w-fit items-center gap-2 rounded-md bg-[#f7941d] px-7 text-sm font-bold text-white transition-colors hover:bg-[#e0820f]"
+							>
+								{ __( 'Upgrade to PRO', 'erp' ) }
+								<Crown size={ 16 } strokeWidth={ 2.25 } aria-hidden="true" />
+							</a>
+						</div>
+
+						{ /* Right — illustration slider */ }
+						<div className="hidden md:block">
+							<ProSlides base={ base } />
+						</div>
 					</div>
 
-					<ul className="m-0 flex flex-col gap-3 px-6 py-5">
-						{ FEATURES.map( ( item ) => (
-							<li key={ item } className="flex items-start gap-2.5 text-sm text-foreground">
-								<span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
-									<Check size={ 11 } strokeWidth={ 3 } aria-hidden="true" />
-								</span>
+					<div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-8 py-4">
+						{ TRUST.map( ( item ) => (
+							<span key={ item } className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+								<Check size={ 14 } strokeWidth={ 2.5 } className="text-emerald-500" aria-hidden="true" />
 								{ item }
-							</li>
+							</span>
 						) ) }
-					</ul>
-
-					<DialogFooter className="gap-3 border-t border-border px-6 py-4 sm:gap-3">
-						<Button type="button" variant="outline" className="h-10 px-6" onClick={ () => setOpen( false ) }>
-							{ __( 'Maybe later', 'erp' ) }
-						</Button>
-						<Button
-							type="button"
-							className="h-10 px-6"
-							onClick={ () => window.open( UPGRADE_URL, '_blank', 'noopener,noreferrer' ) }
-						>
-							{ __( 'Upgrade to Pro', 'erp' ) }
-						</Button>
-					</DialogFooter>
+					</div>
 				</DialogContent>
 			</Dialog>
 		</ProUpsellContext.Provider>

@@ -23,6 +23,8 @@ export interface BootPayloadApi {
 
 export interface BootPayloadAssets {
 	readonly logoUrl: string;
+	/** Base URL of the shared pro-popup illustration set (no trailing slash). */
+	readonly proPopupUrl?: string;
 }
 
 export interface BootPayloadFilters {

@@ -241,7 +241,10 @@ final class Enqueue {
 			'switchUrl'     => UiEngineResolver::instance()->switch_url( $page_slug, 'legacy' ),
 			'pageSlug'      => $page_slug,
 			'assets'        => [
-				'logoUrl' => WPERP_HRM_ASSETS . '/images/logo.svg',
+				'logoUrl'      => WPERP_HRM_ASSETS . '/images/logo.svg',
+				// Base URL for the shared pro-popup illustration set, reused by the
+				// React "Upgrade to Pro" upsell modal (parity with the legacy popup).
+				'proPopupUrl'  => defined( 'WPERP_ASSETS' ) ? WPERP_ASSETS . '/images/pro-popup' : '',
 			],
 			'capabilities'  => $capabilities,
 			'hrmVersion'    => defined( 'WPERP_HRM_VERSION' ) ? (string) WPERP_HRM_VERSION : '',
