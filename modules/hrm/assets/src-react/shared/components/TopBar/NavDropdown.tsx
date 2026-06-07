@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import { useBoot } from '@/shared/hooks/useBoot';
 import type { Capability } from '@/types/global';
 
 import type { NavItem } from './nav-items';
@@ -40,9 +41,11 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 	const triggerRef = useRef< HTMLButtonElement >( null );
 	const closeTimer = useRef< number | undefined >( undefined );
 	const location   = useLocation();
+	const activeModules = useBoot().modules ?? [];
 
 	const children = ( item.children ?? [] ).filter(
-		( sub ) => sub.capabilities.length === 0 || hasCap( sub.capabilities )
+		( sub ) => ( sub.capabilities.length === 0 || hasCap( sub.capabilities ) )
+			&& ( ! sub.module || activeModules.includes( sub.module ) )
 	);
 
 	const place = useCallback( () => {

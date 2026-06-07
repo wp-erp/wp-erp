@@ -33,7 +33,9 @@ export type NavIconId =
 	| 'graduation-cap'
 	| 'briefcase'
 	| 'bar-chart-3'
-	| 'help-circle';
+	| 'help-circle'
+	| 'wallet'
+	| 'banknote';
 
 /** A single entry inside a nav item's dropdown submenu. */
 export interface NavSubItem {
@@ -44,6 +46,12 @@ export interface NavSubItem {
 	readonly capabilities: readonly Capability[];
 	/** Optional one-line description shown under the label. */
 	readonly description?: string;
+	/**
+	 * Optional pro sub-module key — the child only shows when that module is
+	 * active (present in `boot.modules`). Used for cross-module report links whose
+	 * pages are provided by a pro module's routes.
+	 */
+	readonly module?: string;
 }
 
 export interface NavItem {
@@ -265,8 +273,73 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		path:          '/recruitment',
 		icon:          'briefcase',
 		hasDropdown:   true,
-		capabilities:  [ 'erp_view_jobs' ],
+		// Manager/admin (legacy parity). Shows only when the pro Recruitment module
+		// is active. Routes provided by the pro module via `erp_hr.routes`.
+		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/recruitment' ],
+		module:        'recruitment',
+		children: [
+			{ id: 'recruitment-jobs', label: __( 'Job Openings', 'erp' ), to: '/recruitment', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-add-job', label: __( 'Add Opening', 'erp' ), to: '/recruitment/new', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-candidates', label: __( 'Candidates', 'erp' ), to: '/recruitment/candidates', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-add-candidate', label: __( 'Add candidate', 'erp' ), to: '/recruitment/candidates/new', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-question-sets', label: __( 'Question Sets', 'erp' ), to: '/recruitment/question-sets', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-stages', label: __( 'Stages', 'erp' ), to: '/recruitment/stages', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-calendar', label: __( 'Calendar', 'erp' ), to: '/recruitment/calendar', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-reports', label: __( 'Reports', 'erp' ), to: '/recruitment/reports', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-ai-settings', label: __( 'AI Settings', 'erp' ), to: '/recruitment/ai-settings', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-ai-talent-pool', label: __( 'AI Talent Pool', 'erp' ), to: '/recruitment/ai-talent-pool', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-ai-job-settings', label: __( 'AI Job Settings', 'erp' ), to: '/recruitment/ai-job-settings', capabilities: [ 'erp_hr_manager' ] },
+		],
+	},
+	{
+		id:            'asset',
+		label:         __( 'Assets', 'erp' ),
+		path:          '/assets',
+		icon:          'briefcase',
+		hasDropdown:   true,
+		// Manager/admin (legacy parity). Shows only when the pro Asset Management
+		// module is active. Routes provided by the pro module via `erp_hr.routes`.
+		capabilities:  [ 'erp_hr_manager' ],
+		activeMatches: [ '/assets' ],
+		module:        'asset',
+		children: [
+			{ id: 'asset-list', label: __( 'Assets', 'erp' ), to: '/assets', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'asset-allotments', label: __( 'Allotments', 'erp' ), to: '/assets/allotments', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'asset-requests', label: __( 'Requests', 'erp' ), to: '/assets/requests', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'asset-reports', label: __( 'Reports', 'erp' ), to: '/assets/reports', capabilities: [ 'erp_hr_manager' ] },
+		],
+	},
+	{
+		id:            'reimbursement',
+		label:         __( 'Reimbursement', 'erp' ),
+		path:          '/reimbursement',
+		icon:          'wallet',
+		hasDropdown:   false,
+		// Shows only when the pro Reimbursement module is active. Route provided by
+		// the pro module via `erp_hr.routes`.
+		capabilities:  [ 'erp_hr_manager' ],
+		activeMatches: [ '/reimbursement' ],
+		module:        'reimbursement',
+	},
+	{
+		id:            'payroll',
+		label:         __( 'Payroll', 'erp' ),
+		path:          '/payroll',
+		icon:          'banknote',
+		hasDropdown:   true,
+		// Shows only when the pro Payroll module is active. Routes + submenu provided
+		// by the pro module via `erp_hr.routes`. Mirrors the legacy payroll submenu
+		// (Dashboard / Pay Run List / Settings).
+		capabilities:  [ 'erp_hr_manager' ],
+		activeMatches: [ '/payroll' ],
+		module:        'payroll',
+		children: [
+			{ id: 'payroll-dashboard', label: __( 'Dashboard', 'erp' ), to: '/payroll', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'payroll-payruns', label: __( 'Payruns', 'erp' ), to: '/payroll/payruns', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'payroll-components', label: __( 'Pay Components', 'erp' ), to: '/payroll/components', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'payroll-settings', label: __( 'Settings', 'erp' ), to: '/payroll/settings', capabilities: [ 'erp_hr_manager' ] },
+		],
 	},
 	{
 		id:            'reports',
@@ -321,6 +394,30 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/reports/leaves',
 				capabilities: [ 'erp_hr_manager' ],
 				description:  __( 'Employee-based leave summary', 'erp' ),
+			},
+			{
+				id:           'reports-assets',
+				label:        __( 'Assets', 'erp' ),
+				to:           '/assets/reports',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Asset allocation report', 'erp' ),
+				module:       'asset',
+			},
+			{
+				id:           'reports-attendance-date',
+				label:        __( 'Attendance (Date Based)', 'erp' ),
+				to:           '/attendance',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Daily attendance logs', 'erp' ),
+				module:       'attendance',
+			},
+			{
+				id:           'reports-attendance-employee',
+				label:        __( 'Attendance (Employee Based)', 'erp' ),
+				to:           '/attendance/reports',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Per-employee attendance report', 'erp' ),
+				module:       'attendance',
 			},
 		],
 	},

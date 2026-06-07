@@ -14,6 +14,7 @@
 import { useSelect } from '@wordpress/data';
 import {
 	BadgeCheck,
+	Banknote,
 	BarChart3,
 	Briefcase,
 	CalendarCheck,
@@ -27,6 +28,7 @@ import {
 	Package,
 	Sparkles,
 	UsersRound,
+	Wallet,
 } from 'lucide-react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -56,6 +58,8 @@ const ICON_MAP: Readonly< Record< NavIconId, LucideIcon > > = {
 	'briefcase':       Briefcase,
 	'bar-chart-3':     BarChart3,
 	'help-circle':     HelpCircle,
+	'wallet':          Wallet,
+	'banknote':        Banknote,
 };
 
 interface MeStoreSelectors {
