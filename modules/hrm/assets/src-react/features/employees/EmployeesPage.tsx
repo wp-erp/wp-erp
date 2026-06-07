@@ -15,6 +15,7 @@
  * without the page reflowing.
  */
 
+import { useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -24,16 +25,20 @@ import { EmployeesBulkBar } from './EmployeesBulkBar';
 import { EmployeesEmpty } from './EmployeesEmpty';
 import { EmployeesError } from './EmployeesError';
 import { EmployeesFilters } from './EmployeesFilters';
+import { EmployeesGrid } from './EmployeesGrid';
 import { EmployeesLiveRegion } from './EmployeesLiveRegion';
 import { EmployeesSkeleton } from './EmployeesSkeleton';
 import { EmployeesTable } from './EmployeesTable';
 import { EmployeesToolbar } from './EmployeesToolbar';
+import { EmployeesViewToggle } from './EmployeesViewToggle';
+import type { EmployeesView } from './EmployeesViewToggle';
 import { useEmployeesQuery } from './useEmployeesQuery';
 import { useEmployeesUrlSync } from './useEmployeesUrlSync';
 
 function EmployeesPageInner(): JSX.Element {
 	useEmployeesUrlSync();
 	const { rows, total, isLoading, error, query } = useEmployeesQuery();
+	const [ view, setView ] = useState< EmployeesView >( 'list' );
 
 	const hasFiltersApplied = Boolean(
 		query.search ||
@@ -46,6 +51,10 @@ function EmployeesPageInner(): JSX.Element {
 	return (
 		<section className="mx-auto w-full max-w-7xl">
 			<EmployeesToolbar />
+
+			<div className="mb-3 flex items-center justify-end">
+				<EmployeesViewToggle value={ view } onChange={ setView } />
+			</div>
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<EmployeesFilters />
@@ -60,6 +69,8 @@ function EmployeesPageInner(): JSX.Element {
 					<EmployeesSkeleton />
 				) : rows.length === 0 ? (
 					<EmployeesEmpty hasFiltersApplied={ hasFiltersApplied } />
+				) : view === 'grid' ? (
+					<EmployeesGrid />
 				) : (
 					<EmployeesTable />
 				) }
