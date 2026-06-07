@@ -50,7 +50,6 @@ interface LeaveRequestDialogProps {
 export function LeaveRequestDialog( {
 	open,
 	userId,
-	financialYears,
 	currentYear,
 	onClose,
 	onSubmitted,
@@ -159,7 +158,6 @@ export function LeaveRequestDialog( {
 		};
 	}, [ open, userId, year ] );
 
-	const yearOptions: Option[] = financialYears.map( ( fy ) => ( { value: String( fy.id ), label: fy.name } ) );
 
 	const policyOptions: Option[] = policies.map( ( p ) => ( {
 		value: String( p.id ),
@@ -204,14 +202,8 @@ export function LeaveRequestDialog( {
 						</Alert>
 					) : null }
 
-					<SelectField
-						id="leave_year"
-						label={ __( 'Financial Year', 'erp' ) }
-						required
-						options={ yearOptions }
-						value={ year }
-						onChange={ ( v ) => { setYear( v ); setPolicy( '' ); } }
-					/>
+					{ /* Financial year is taken from the current FY automatically (legacy
+					     parity — the employee never picked it). */ }
 					{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
 					<SelectField
 						id="leave_policy"
