@@ -89,7 +89,7 @@ export function EmployeesGrid(): JSX.Element {
 									{ row.avatar_url ? <AvatarImage src={ row.avatar_url } alt="" /> : null }
 									<AvatarFallback className="text-lg">{ makeInitials( row.full_name || row.email ) }</AvatarFallback>
 								</Avatar>
-								<div className="min-w-0">
+								<div className="w-full min-w-0">
 									<div className="truncate text-base font-semibold text-foreground">{ row.full_name || row.email }</div>
 									<div className="truncate text-sm text-muted-foreground">{ row.designation?.name ?? row.department?.name ?? '—' }</div>
 								</div>
