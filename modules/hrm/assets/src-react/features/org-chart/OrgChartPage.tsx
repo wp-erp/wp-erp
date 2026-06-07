@@ -1,18 +1,17 @@
 /**
- * `/org-chart` route — read-only reporting hierarchy.
+ * `/org-chart` route — company organogram.
  *
- * Reuses the existing `GET /erp/v2/employees` endpoint (no new REST surface):
- * fetches every active employee (paging in blocks of 100), then builds the
- * manager → reports tree client-side from each row's `reporting_to.id` chain.
- *
- * Roots = employees with no `reporting_to`, or whose manager is not in the
- * fetched set (defensive: a dangling manager id never hides a subtree). Children
- * are grouped under their manager's `user_id`. The tree renders top-down with
- * pure-CSS connector lines — no charting dependency.
+ * Full parity with the legacy pro Org Chart: a department filter (All Teams /
+ * each team / No Team), the department-lead-rooted hierarchy (multi-tree for
+ * "All Teams"), employee node cards (avatar · name · designation · mail action)
+ * and zoom / pan controls. The hierarchy comes from `GET /erp/v2/org-chart`
+ * (which ports the legacy `Helpers::get_employee_hierarchy`); the tree itself is
+ * rendered with pure-CSS connectors — no charting dependency.
  */
 
-import { Avatar, AvatarFallback, AvatarImage } from '@wedevs/plugin-ui';
-import { useEffect, useMemo, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage, SmartSelect } from '@wedevs/plugin-ui';
+import { Mail, Minus, Plus } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -22,134 +21,63 @@ import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
-const PER_PAGE = 100;
-
-/** Minimal employee shape consumed by the chart (subset of the v2 response). */
-interface OrgNode {
-	readonly id:          number;
-	readonly userId:      number;
-	readonly fullName:    string;
-	readonly avatarUrl:   string | null;
-	readonly designation: string | null;
-	readonly department:  string | null;
-	readonly managerId:   number | null;
+/** A node in the server hierarchy (`erp/v2/org-chart`). */
+interface ServerNode {
+	readonly id:        number;
+	readonly name:      string;
+	readonly title:     string;
+	readonly avatar:    string;
+	readonly email:     string;
+	readonly dept_id:   number;
+	readonly is_array?: boolean;
+	readonly children?: readonly ServerNode[];
 }
 
-/** Raw row fields we read off the loose v2 employees payload. */
-interface RawRow {
-	readonly id?:           unknown;
-	readonly user_id?:      unknown;
-	readonly full_name?:    unknown;
-	readonly avatar_url?:   unknown;
-	readonly designation?:  { name?: unknown } | null;
-	readonly department?:   { name?: unknown } | null;
-	readonly reporting_to?: { id?: unknown } | null;
+interface ChartResponse {
+	readonly tree:        ServerNode;
+	readonly departments: readonly { value: string; label: string }[];
 }
 
-function toNum( value: unknown ): number {
-	const n = typeof value === 'number' ? value : parseInt( String( value ?? '' ), 10 );
-	return Number.isFinite( n ) ? n : 0;
-}
+const ZOOM_MIN  = 0.5;
+const ZOOM_MAX  = 1.5;
+const ZOOM_STEP = 0.1;
 
-function toStrOrNull( value: unknown ): string | null {
-	if ( typeof value === 'string' && value.trim() !== '' ) {
-		return value;
+/** Top-level trees to render: unwrap the synthetic "all teams" / "no lead" roots
+ *  (empty nodes) so only real employee cards become roots. */
+function topTrees( tree: ServerNode | null ): ServerNode[] {
+	if ( ! tree ) {
+		return [];
 	}
-	return null;
-}
+	const unwrap = ( node: ServerNode ): ServerNode[] =>
+		node.id > 0 ? [ node ] : [ ...( node.children ?? [] ) ].flatMap( unwrap );
 
-function normalizeRow( row: RawRow ): OrgNode {
-	const managerId = toNum( row.reporting_to?.id );
-	return {
-		id:          toNum( row.id ),
-		userId:      toNum( row.user_id ),
-		fullName:    toStrOrNull( row.full_name ) ?? __( 'Unnamed', 'erp' ),
-		avatarUrl:   toStrOrNull( row.avatar_url ),
-		designation: toStrOrNull( row.designation?.name ),
-		department:  toStrOrNull( row.department?.name ),
-		managerId:   managerId > 0 ? managerId : null,
-	};
-}
-
-/** Fetch every active employee, paging until a short page is returned. */
-async function fetchAllEmployees( signal: AbortSignal ): Promise< OrgNode[] > {
-	const all: OrgNode[] = [];
-	for ( let page = 1; ; page += 1 ) {
-		const body = await request< RawRow[] >(
-			restPath( 'v2', '/employees', { per_page: PER_PAGE, status: 'active', page } ),
-			{ signal }
-		);
-		const rows = Array.isArray( body ) ? body : [];
-		rows.forEach( ( row ) => all.push( normalizeRow( row ) ) );
-		if ( rows.length < PER_PAGE ) {
-			break;
-		}
+	if ( tree.is_array ) {
+		return [ ...( tree.children ?? [] ) ].flatMap( unwrap );
 	}
-	return all;
+	return unwrap( tree );
 }
 
-interface TreeNode extends OrgNode {
-	readonly children: TreeNode[];
-}
-
-/**
- * Build the forest of reporting trees. Roots are employees with no manager, or
- * whose manager id is absent from the fetched set. Children sort by name for a
- * stable layout. Already-visited ids are skipped to defend against cycles.
- */
-function buildForest( nodes: readonly OrgNode[] ): TreeNode[] {
-	const byUserId = new Map< number, OrgNode >();
-	nodes.forEach( ( n ) => {
-		if ( n.userId > 0 ) {
-			byUserId.set( n.userId, n );
-		}
-	} );
-
-	const childrenOf = new Map< number, OrgNode[] >();
-	const roots: OrgNode[] = [];
-
-	nodes.forEach( ( n ) => {
-		const hasManager = n.managerId !== null && byUserId.has( n.managerId );
-		if ( hasManager ) {
-			const bucket = childrenOf.get( n.managerId as number ) ?? [];
-			bucket.push( n );
-			childrenOf.set( n.managerId as number, bucket );
-		} else {
-			roots.push( n );
-		}
-	} );
-
-	const visited = new Set< number >();
-	const byName  = ( a: OrgNode, b: OrgNode ): number => a.fullName.localeCompare( b.fullName );
-
-	function attach( node: OrgNode ): TreeNode {
-		visited.add( node.userId );
-		const kids = ( childrenOf.get( node.userId ) ?? [] )
-			.filter( ( c ) => ! visited.has( c.userId ) )
-			.sort( byName )
-			.map( attach );
-		return { ...node, children: kids };
-	}
-
-	return roots.sort( byName ).map( attach );
-}
-
-/** Single employee card. */
-function OrgCard( { node }: { node: TreeNode } ): JSX.Element {
+/** Single employee card with a mail action (legacy node parity). */
+function OrgCard( { node }: { node: ServerNode } ): JSX.Element {
 	return (
-		<div className="inline-flex w-56 flex-col items-center gap-2 rounded-lg border border-border bg-card p-4 text-center shadow-sm">
+		<div className="group relative inline-flex w-56 flex-col items-center gap-2 rounded-lg border border-border bg-card p-4 text-center shadow-sm">
+			{ node.email ? (
+				<a
+					href={ `mailto:${ node.email }` }
+					aria-label={ __( 'Email', 'erp' ) }
+					title={ node.email }
+					className="absolute right-2 top-2 inline-flex size-7 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-foreground focus:opacity-100 group-hover:opacity-100"
+				>
+					<Mail size={ 14 } aria-hidden="true" />
+				</a>
+			) : null }
 			<Avatar className="size-12 shrink-0">
-				{ node.avatarUrl ? <AvatarImage src={ node.avatarUrl } alt="" /> : null }
-				<AvatarFallback>{ makeInitials( node.fullName ) }</AvatarFallback>
+				{ node.avatar ? <AvatarImage src={ node.avatar } alt="" /> : null }
+				<AvatarFallback>{ makeInitials( node.name ) }</AvatarFallback>
 			</Avatar>
 			<div className="min-w-0">
-				<div className="truncate font-semibold text-foreground">{ node.fullName }</div>
-				{ node.designation ? (
-					<div className="truncate text-sm text-muted-foreground">{ node.designation }</div>
-				) : null }
-				{ node.department ? (
-					<div className="truncate text-xs text-muted-foreground">{ node.department }</div>
-				) : null }
+				<div className="truncate font-semibold text-foreground">{ node.name }</div>
+				{ node.title ? <div className="truncate text-sm text-muted-foreground">{ node.title }</div> : null }
 			</div>
 		</div>
 	);
@@ -161,28 +89,24 @@ function OrgCard( { node }: { node: TreeNode } ): JSX.Element {
  *   - each child has a top stub, and a horizontal rule spans the siblings
  *     (trimmed at the first/last child so the ends don't overhang).
  */
-function OrgSubtree( { node }: { node: TreeNode } ): JSX.Element {
-	const hasChildren = node.children.length > 0;
+function OrgSubtree( { node }: { node: ServerNode } ): JSX.Element {
+	const children = ( node.children ?? [] ).filter( ( c ) => c.id > 0 );
+	const hasChildren = children.length > 0;
+
 	return (
 		<li className="flex flex-col items-center">
 			<OrgCard node={ node } />
 
 			{ hasChildren ? (
 				<>
-					{ /* vertical connector from the parent card down to the rule */ }
 					<span aria-hidden="true" className="h-6 w-px bg-border" />
-
 					<ul className="flex items-start justify-center">
-						{ node.children.map( ( child, index ) => {
+						{ children.map( ( child, index ) => {
 							const isFirst = index === 0;
-							const isLast  = index === node.children.length - 1;
-							const isOnly  = node.children.length === 1;
+							const isLast  = index === children.length - 1;
+							const isOnly  = children.length === 1;
 							return (
-								<li
-									key={ child.userId || child.id }
-									className="relative flex flex-col items-center px-4 pt-6"
-								>
-									{ /* horizontal rule across siblings (trimmed at the ends) */ }
+								<li key={ child.id } className="relative flex flex-col items-center px-4 pt-6">
 									{ ! isOnly ? (
 										<span
 											aria-hidden="true"
@@ -192,11 +116,7 @@ function OrgSubtree( { node }: { node: TreeNode } ): JSX.Element {
 											].join( ' ' ) }
 										/>
 									) : null }
-									{ /* vertical stub up to the rule */ }
-									<span
-										aria-hidden="true"
-										className="absolute top-0 left-1/2 h-6 w-px -translate-x-1/2 bg-border"
-									/>
+									<span aria-hidden="true" className="absolute top-0 left-1/2 h-6 w-px -translate-x-1/2 bg-border" />
 									<OrgSubtree node={ child } />
 								</li>
 							);
@@ -209,57 +129,103 @@ function OrgSubtree( { node }: { node: TreeNode } ): JSX.Element {
 }
 
 function OrgChartInner(): JSX.Element {
-	const [ nodes, setNodes ]     = useState< OrgNode[] | null >( null );
+	const [ deptId, setDeptId ]   = useState( '' );
+	const [ data, setData ]       = useState< ChartResponse | null >( null );
+	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ]     = useState< string | null >( null );
+	const [ zoom, setZoom ]       = useState( 1 );
 
 	useEffect( () => {
 		const controller = new AbortController();
-		setNodes( null );
+		setLoading( true );
 		setError( null );
 
-		fetchAllEmployees( controller.signal )
-			.then( ( rows ) => setNodes( rows ) )
+		void request< ChartResponse >(
+			restPath( 'v2', '/org-chart', deptId ? { dept_id: deptId } : {} ),
+			{ signal: controller.signal }
+		)
+			.then( ( res ) => setData( res ) )
 			.catch( ( raw ) => {
-				if ( controller.signal.aborted ) {
-					return;
+				if ( ! controller.signal.aborted ) {
+					setError( ( raw as ApiError )?.message ?? __( 'Could not load the org chart.', 'erp' ) );
 				}
-				setError( ( raw as ApiError )?.message ?? __( 'Could not load the org chart.', 'erp' ) );
+			} )
+			.finally( () => {
+				if ( ! controller.signal.aborted ) {
+					setLoading( false );
+				}
 			} );
 
 		return () => controller.abort();
-	}, [] );
+	}, [ deptId ] );
 
-	const forest = useMemo(
-		() => ( nodes ? buildForest( nodes ) : [] ),
-		[ nodes ]
-	);
+	const roots       = useMemo( () => topTrees( data?.tree ?? null ), [ data ] );
+	const departments = data?.departments ?? [];
+
+	const zoomBy = useCallback( ( delta: number ) => {
+		setZoom( ( z ) => Math.min( ZOOM_MAX, Math.max( ZOOM_MIN, Math.round( ( z + delta ) * 100 ) / 100 ) ) );
+	}, [] );
 
 	return (
 		<section className="mx-auto w-full max-w-7xl">
-			<header className="mb-6 flex items-center justify-between gap-4">
-				<h1 className="text-2xl font-bold leading-8 text-foreground">
-					{ __( 'Org Chart', 'erp' ) }
-				</h1>
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
+				<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Org Chart', 'erp' ) }</h1>
+				<div className="flex items-center gap-3">
+					{ departments.length > 0 ? (
+						<SmartSelect
+							options={ [ ...departments ] }
+							value={ deptId }
+							onValueChange={ ( v ) => setDeptId( v ?? '' ) }
+							placeholder={ __( 'All Teams', 'erp' ) }
+							className="h-9 w-48"
+							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+						/>
+					) : null }
+					<div className="inline-flex items-center gap-1 rounded-md border border-border bg-card p-1">
+						<button
+							type="button"
+							aria-label={ __( 'Zoom out', 'erp' ) }
+							disabled={ zoom <= ZOOM_MIN }
+							onClick={ () => zoomBy( -ZOOM_STEP ) }
+							className="inline-flex size-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40"
+						>
+							<Minus size={ 16 } aria-hidden="true" />
+						</button>
+						<span className="w-10 text-center text-xs tabular-nums text-muted-foreground">{ Math.round( zoom * 100 ) }%</span>
+						<button
+							type="button"
+							aria-label={ __( 'Zoom in', 'erp' ) }
+							disabled={ zoom >= ZOOM_MAX }
+							onClick={ () => zoomBy( ZOOM_STEP ) }
+							className="inline-flex size-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40"
+						>
+							<Plus size={ 16 } aria-hidden="true" />
+						</button>
+					</div>
+				</div>
 			</header>
 
 			<div className="rounded-lg border border-border bg-card p-6 shadow-sm">
 				{ error ? (
 					<p className="p-6 text-center text-sm text-destructive">{ error }</p>
-				) : nodes === null ? (
+				) : loading ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
-				) : nodes.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'No employees.', 'erp' ) }</p>
-				) : forest.length === 0 ? (
+				) : roots.length === 0 ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ __( 'No reporting structure defined.', 'erp' ) }
+						{ __( 'No reporting structure for this team.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-x-auto">
-						<ul className="flex items-start justify-center gap-10 p-2">
-							{ forest.map( ( root ) => (
-								<OrgSubtree key={ root.userId || root.id } node={ root } />
-							) ) }
-						</ul>
+					<div className="overflow-auto">
+						<div
+							className="origin-top transition-transform"
+							style={ { transform: `scale(${ zoom })`, width: `${ 100 / zoom }%` } }
+						>
+							<ul className="flex items-start justify-center gap-10 p-2">
+								{ roots.map( ( root ) => (
+									<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } />
+								) ) }
+							</ul>
+						</div>
 					</div>
 				) }
 			</div>
