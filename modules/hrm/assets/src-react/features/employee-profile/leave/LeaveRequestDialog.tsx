@@ -17,11 +17,19 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@wedevs/plugin-ui';
+import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
 import { EntitlementEmptyHint } from '@/shared/components/EntitlementEmptyHint';
 import { InfoTooltip } from '@/shared/components/InfoTooltip';
+import {
+	initLeaveFieldValues,
+	LeaveExtraFields,
+	setLeaveFieldValue,
+} from '@/shared/components/LeaveExtraFields';
+import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
+import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -60,6 +68,10 @@ export function LeaveRequestDialog( {
 	const [ dateError, setDateError ]   = useState< string | null >( null );
 	const [ entitlementError, setEntitlementError ] = useState< string | null >( null );
 
+	// Pro-injected request fields (Advanced Leave half-day).
+	const [ extraFields, setExtraFields ] = useState< LeaveExtraField[] >( [] );
+	const [ extra, setExtra ]             = useState< LeaveExtraValues >( {} );
+
 	const entitled = policies.length > 0;
 
 	// Reset when (re)opened.
@@ -74,8 +86,12 @@ export function LeaveRequestDialog( {
 			setValidation( null );
 			setDateError( null );
 			setEntitlementError( null );
+
+			const fields = applyFilters( HOOKS.LEAVE_REQUEST_FIELDS, [], { userId, leavePolicyId: 0 } ) as LeaveExtraField[];
+			setExtraFields( fields );
+			setExtra( initLeaveFieldValues( fields ) );
 		}
-	}, [ open, currentYear ] );
+	}, [ open, currentYear, userId ] );
 
 	// Live pre-validation of the date range (mirrors legacy leave_request_dates):
 	// working-day count on success, server message (overlap / balance / FY) on error.
@@ -159,6 +175,7 @@ export function LeaveRequestDialog( {
 				leave_from:   from,
 				leave_to:     to,
 				leave_reason: reason,
+				...( extraFields.length > 0 ? { extra } : {} ),
 			} );
 			onSubmitted();
 		} catch ( raw ) {
@@ -204,6 +221,13 @@ export function LeaveRequestDialog( {
 						onChange={ setPolicy }
 						placeholder={ __( '- Select -', 'erp' ) }
 					/>
+					{ entitled ? (
+						<LeaveExtraFields
+							fields={ extraFields }
+							values={ extra }
+							onChange={ ( field, value ) => setExtra( ( p ) => setLeaveFieldValue( p, field, value ) ) }
+						/>
+					) : null }
 					<TextField id="leave_from" label={ __( 'From', 'erp' ) } type="date" required disabled={ ! entitled } value={ from } onChange={ setFrom } />
 					<TextField id="leave_to" label={ __( 'To', 'erp' ) } type="date" required disabled={ ! entitled } value={ to } onChange={ setTo } />
 					{ validating ? (

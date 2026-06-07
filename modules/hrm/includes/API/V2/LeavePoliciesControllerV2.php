@@ -374,7 +374,15 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 			$_POST['segre'] = array_map( 'absint', $segre );
 		}
 
+		// Bridge any pro-injected `extra` fields (Advanced Leave half-day,
+		// accrual, carry-forward, segregation) onto `$_POST` so the legacy
+		// `erp_hr_leave_insert_policy_extra` filter — which reads them off
+		// `$_POST` — persists them. JSON REST bodies never populate `$_POST`.
+		$extra_post = $this->bridge_extra_to_post( $request );
+
 		$result = erp_hr_leave_insert_policy( $data );
+
+		$this->restore_post( $extra_post );
 
 		if ( $had_segre ) {
 			$_POST['segre'] = $previous_segre;
@@ -383,6 +391,72 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Copy the request's `extra` bucket onto `$_POST` (sanitized), returning the
+	 * snapshot needed to restore `$_POST` afterwards. Generic by design: the free
+	 * controller stays agnostic of which keys a pro module reads.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return array Restore snapshot for `restore_post()`.
+	 */
+	private function bridge_extra_to_post( $request ): array {
+		$extra = $request->get_param( 'extra' );
+
+		if ( ! \is_array( $extra ) ) {
+			return [ 'prev' => [], 'absent' => [] ];
+		}
+
+		$prev   = [];
+		$absent = [];
+
+		foreach ( $extra as $key => $value ) {
+			$key = (string) $key;
+			if ( \array_key_exists( $key, $_POST ) ) {
+				$prev[ $key ] = $_POST[ $key ];
+			} else {
+				$absent[] = $key;
+			}
+			$_POST[ $key ] = $this->sanitize_extra_value( $value );
+		}
+
+		return [ 'prev' => $prev, 'absent' => $absent ];
+	}
+
+	/**
+	 * Restore `$_POST` from a `bridge_extra_to_post()` snapshot.
+	 *
+	 * @param array $snapshot Snapshot.
+	 *
+	 * @return void
+	 */
+	private function restore_post( array $snapshot ): void {
+		foreach ( (array) ( $snapshot['prev'] ?? [] ) as $key => $value ) {
+			$_POST[ $key ] = $value;
+		}
+		foreach ( (array) ( $snapshot['absent'] ?? [] ) as $key ) {
+			unset( $_POST[ $key ] );
+		}
+	}
+
+	/**
+	 * Recursively sanitize an `extra` value (scalars via `sanitize_text_field`,
+	 * arrays element-wise) before it lands on `$_POST`.
+	 *
+	 * @param mixed $value Raw value.
+	 *
+	 * @return mixed
+	 */
+	private function sanitize_extra_value( $value ) {
+		if ( \is_array( $value ) ) {
+			return array_map( [ $this, 'sanitize_extra_value' ], $value );
+		}
+		if ( \is_bool( $value ) ) {
+			return $value ? 'on' : '';
+		}
+		return sanitize_text_field( (string) $value );
 	}
 
 	/**
@@ -446,7 +520,7 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 			return [];
 		}
 
-		return [
+		$data = [
 			'id'                  => (int) $policy->id,
 			'leave_id'            => $this->cast_int_or_null( $policy->leave_id ),
 			'name'                => $policy->leave ? (string) $policy->leave->name : '',
@@ -463,6 +537,16 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 			'applicable_from'     => (int) $policy->applicable_from_days,
 			'apply_for_new_users' => (int) $policy->apply_for_new_users === 1,
 		];
+
+		/**
+		 * Let pro modules append their saved columns to the single-policy
+		 * response so the React edit form can prefill injected fields (Advanced
+		 * Leave: half-day, accrual, carry-forward, segregation).
+		 *
+		 * @param array $data   The base response row.
+		 * @param mixed $policy The `Models\LeavePolicy` instance.
+		 */
+		return apply_filters( 'erp_hr_leave_policy_rest_item', $data, $policy );
 	}
 
 	/**
@@ -531,6 +615,12 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 			'applicable_from'     => [ 'description' => __( 'Applicable-from day offset.', 'erp' ), 'type' => 'integer', 'sanitize_callback' => 'absint' ],
 			'apply_for_new_users' => [ 'description' => __( 'Auto-apply to new employees.', 'erp' ), 'type' => 'boolean' ],
 			'segre'               => [ 'description' => __( 'Per-segment day segregation (optional).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],
+			'extra'               => [
+				'description'          => __( 'Pro-injected extra fields, e.g. Advanced Leave (optional).', 'erp' ),
+				'type'                 => 'object',
+				'properties'           => [],
+				'additionalProperties' => true,
+			],
 		];
 	}
 

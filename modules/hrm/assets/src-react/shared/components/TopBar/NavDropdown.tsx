@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
 import { useBoot } from '@/shared/hooks/useBoot';
 import type { Capability } from '@/types/global';
 
@@ -41,11 +42,16 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 	const triggerRef = useRef< HTMLButtonElement >( null );
 	const closeTimer = useRef< number | undefined >( undefined );
 	const location   = useLocation();
-	const activeModules = useBoot().modules ?? [];
+	const boot = useBoot();
+	const activeModules = boot.modules ?? [];
+	const isPro = boot.isPro;
+	const { openUpsell } = useProUpsell();
 
 	const children = ( item.children ?? [] ).filter(
 		( sub ) => ( sub.capabilities.length === 0 || hasCap( sub.capabilities ) )
-			&& ( ! sub.module || activeModules.includes( sub.module ) )
+			// Module active ⇒ show. Module inactive ⇒ show as a "Pro" badge only
+			// when the Pro plugin is absent (legacy upsell parity).
+			&& ( ! sub.module || activeModules.includes( sub.module ) || Boolean( sub.pro && ! isPro ) )
 	);
 
 	const place = useCallback( () => {
@@ -152,26 +158,50 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 					style={ { position: 'fixed', top: coords.top, left: coords.left } }
 					className="z-50 mt-1 min-w-64 overflow-hidden rounded-lg border border-border bg-popover p-1.5 text-popover-foreground shadow-lg"
 				>
-					{ children.map( ( sub ) => (
-						<NavLink
-							key={ sub.id }
-							to={ sub.to }
-							end
-							viewTransition
-							role="menuitem"
-							onClick={ () => setOpen( false ) }
-							className={ ( { isActive } ) =>
-								[
-									'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
-									isActive
-										? 'bg-accent text-accent-foreground'
-										: 'text-popover-foreground hover:bg-muted',
-								].join( ' ' )
-							}
-						>
-							{ sub.label }
-						</NavLink>
-					) ) }
+					{ children.map( ( sub ) => {
+						const proLocked = Boolean(
+							sub.pro && ! isPro && ( ! sub.module || ! activeModules.includes( sub.module ) )
+						);
+
+						if ( proLocked ) {
+							return (
+								<button
+									key={ sub.id }
+									type="button"
+									role="menuitem"
+									onClick={ () => {
+										setOpen( false );
+										openUpsell( sub.label );
+									} }
+									className="flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-popover-foreground transition-colors hover:bg-muted"
+								>
+									{ sub.label }
+									<ProBadge />
+								</button>
+							);
+						}
+
+						return (
+							<NavLink
+								key={ sub.id }
+								to={ sub.to }
+								end
+								viewTransition
+								role="menuitem"
+								onClick={ () => setOpen( false ) }
+								className={ ( { isActive } ) =>
+									[
+										'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
+										isActive
+											? 'bg-accent text-accent-foreground'
+											: 'text-popover-foreground hover:bg-muted',
+									].join( ' ' )
+								}
+							>
+								{ sub.label }
+							</NavLink>
+						);
+					} ) }
 				</div>
 			) : null }
 		</div>

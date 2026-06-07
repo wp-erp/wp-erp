@@ -212,6 +212,25 @@ class EmployeeLeaveControllerV2 extends RestControllerV2 {
 		$start_date = $start_date ? $start_date . ' 00:00:00' : date_i18n( 'Y-m-d 00:00:00' );
 		$end_date   = $end_date ? $end_date . ' 23:59:59' : date_i18n( 'Y-m-d 23:59:59' );
 
+		// Bridge any pro-injected `extra` request fields (Advanced Leave half-day:
+		// `halfday` + `leave-period`) onto `$_POST` so the legacy
+		// `erp_hr_leave_new_args` filter — which reads them off `$_POST` — applies
+		// them. JSON REST bodies never populate `$_POST`.
+		$extra      = $request->get_param( 'extra' );
+		$post_prev  = [];
+		$post_absent = [];
+		if ( \is_array( $extra ) ) {
+			foreach ( $extra as $key => $value ) {
+				$key = (string) $key;
+				if ( \array_key_exists( $key, $_POST ) ) {
+					$post_prev[ $key ] = $_POST[ $key ];
+				} else {
+					$post_absent[] = $key;
+				}
+				$_POST[ $key ] = \is_bool( $value ) ? ( $value ? 'on' : '' ) : sanitize_text_field( (string) $value );
+			}
+		}
+
 		$request_id = erp_hr_leave_insert_request(
 			[
 				'user_id'      => $user_id,
@@ -221,6 +240,13 @@ class EmployeeLeaveControllerV2 extends RestControllerV2 {
 				'reason'       => $reason,
 			]
 		);
+
+		foreach ( $post_prev as $key => $value ) {
+			$_POST[ $key ] = $value;
+		}
+		foreach ( $post_absent as $key ) {
+			unset( $_POST[ $key ] );
+		}
 
 		if ( is_wp_error( $request_id ) ) {
 			return new \WP_Error(

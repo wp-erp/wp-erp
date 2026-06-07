@@ -52,6 +52,12 @@ export interface NavSubItem {
 	 * pages are provided by a pro module's routes.
 	 */
 	readonly module?: string;
+	/**
+	 * Marks a pro-only child. When the ERP Pro plugin is absent (`!boot.isPro`),
+	 * the child still renders — as a "Pro" badge that opens the upgrade dialog
+	 * instead of navigating (legacy `pro_popup` parity).
+	 */
+	readonly pro?: boolean;
 }
 
 export interface NavItem {
@@ -70,6 +76,13 @@ export interface NavItem {
 	 * exactly like the legacy admin menu.
 	 */
 	readonly module?: string;
+	/**
+	 * Marks a pro-only top-level item. When the ERP Pro plugin is absent
+	 * (`!boot.isPro`), the item renders as a "Pro" badge that opens the upgrade
+	 * dialog instead of navigating — the React equivalent of the legacy
+	 * `AddProMenu` `pro_popup` upsell entries.
+	 */
+	readonly pro?: boolean;
 	/**
 	 * Submenu entries. Rendered as an inline dropdown when present. Only modules
 	 * already migrated to React carry children; the rest stay plain links until
@@ -149,15 +162,6 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		],
 	},
 	{
-		id:            'payroll',
-		label:         __( 'Payroll', 'erp' ),
-		path:          '/payroll',
-		icon:          'layout-grid',
-		hasDropdown:   true,
-		capabilities:  [ 'erp_view_payment' ],
-		activeMatches: [ '/payroll' ],
-	},
-	{
 		id:            'leave',
 		label:         __( 'Leave', 'erp' ),
 		path:          '/leave/requests',
@@ -212,6 +216,24 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				capabilities: [ 'erp_leave_manage' ],
 				description:  __( 'Month view of leave and holidays', 'erp' ),
 			},
+			{
+				id:           'leave-unpaid',
+				label:        __( 'Unpaid Leaves', 'erp' ),
+				to:           '/leave/unpaid',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Calculate and encash extra unpaid leaves', 'erp' ),
+				module:       'advanced_leave',
+				pro:          true,
+			},
+			{
+				id:           'leave-forward',
+				label:        __( 'Forward Leaves', 'erp' ),
+				to:           '/leave/forward',
+				capabilities: [ 'erp_leave_manage' ],
+				description:  __( 'Carry-forward and encashment requests', 'erp' ),
+				module:       'advanced_leave',
+				pro:          true,
+			},
 		],
 	},
 	{
@@ -226,6 +248,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/attendance' ],
 		module:        'attendance',
+		pro:           true,
 		// Sub-pages provided by the pro Attendance module (registered via `erp_hr.routes`).
 		children: [
 			{
@@ -252,15 +275,6 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		],
 	},
 	{
-		id:            'assets',
-		label:         __( 'Assets', 'erp' ),
-		path:          '/assets',
-		icon:          'package',
-		hasDropdown:   true,
-		capabilities:  [ 'erp_view_asset' ],
-		activeMatches: [ '/assets' ],
-	},
-	{
 		id:            'documents',
 		label:         __( 'Documents', 'erp' ),
 		path:          '/documents',
@@ -271,6 +285,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/documents' ],
 		module:        'document-manager',
+		pro:           true,
 	},
 	{
 		id:            'training',
@@ -280,6 +295,8 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		hasDropdown:   false,
 		capabilities:  [ 'erp_view_training' ],
 		activeMatches: [ '/training' ],
+		module:        'training',
+		pro:           true,
 	},
 	{
 		id:            'recruitment',
@@ -292,6 +309,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/recruitment' ],
 		module:        'recruitment',
+		pro:           true,
 		children: [
 			{ id: 'recruitment-jobs', label: __( 'Job Openings', 'erp' ), to: '/recruitment', capabilities: [ 'erp_hr_manager' ] },
 			{ id: 'recruitment-add-job', label: __( 'Add Opening', 'erp' ), to: '/recruitment/new', capabilities: [ 'erp_hr_manager' ] },
@@ -317,6 +335,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/assets' ],
 		module:        'asset',
+		pro:           true,
 		children: [
 			{ id: 'asset-list', label: __( 'Assets', 'erp' ), to: '/assets', capabilities: [ 'erp_hr_manager' ] },
 			{ id: 'asset-allotments', label: __( 'Allotments', 'erp' ), to: '/assets/allotments', capabilities: [ 'erp_hr_manager' ] },
@@ -335,6 +354,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/reimbursement' ],
 		module:        'reimbursement',
+		pro:           true,
 	},
 	{
 		id:            'payroll',
@@ -348,6 +368,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/payroll' ],
 		module:        'payroll',
+		pro:           true,
 		children: [
 			{ id: 'payroll-dashboard', label: __( 'Dashboard', 'erp' ), to: '/payroll', capabilities: [ 'erp_hr_manager' ] },
 			{ id: 'payroll-payruns', label: __( 'Payruns', 'erp' ), to: '/payroll/payruns', capabilities: [ 'erp_hr_manager' ] },

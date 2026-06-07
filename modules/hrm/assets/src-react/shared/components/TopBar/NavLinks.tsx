@@ -37,6 +37,8 @@ import { useBoot } from '@/shared/hooks/useBoot';
 import { storeName as meStoreName } from '@/stores/me';
 import type { Capability } from '@/types/global';
 
+import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
+
 import { NavDropdown } from './NavDropdown';
 import { TOPBAR_NAV_ITEMS } from './nav-items';
 import type { NavIconId, NavItem } from './nav-items';
@@ -72,17 +74,23 @@ export function NavLinks(): JSX.Element {
 		[]
 	);
 	const location = useLocation();
-	const activeModules = useBoot().modules ?? [];
+	const boot = useBoot();
+	const activeModules = boot.modules ?? [];
+	const isPro = boot.isPro;
+	const { openUpsell } = useProUpsell();
 
 	const visible = TOPBAR_NAV_ITEMS.filter( ( item ) => {
-		// Hide pro-module items unless that module is active (legacy parity).
-		if ( item.module && ! activeModules.includes( item.module ) ) {
+		// Capability gate first.
+		if ( item.capabilities.length > 0 && ! hasCap( item.capabilities ) ) {
 			return false;
 		}
-		if ( item.capabilities.length === 0 ) {
-			return true;
+		// Pro-module item whose module is inactive: show only as a "Pro" upsell
+		// badge when the Pro plugin is absent — otherwise hide (legacy parity:
+		// pro installed + module off ⇒ no menu item).
+		if ( item.module && ! activeModules.includes( item.module ) ) {
+			return Boolean( item.pro && ! isPro );
 		}
-		return hasCap( item.capabilities );
+		return true;
 	} );
 
 	return (
@@ -91,8 +99,26 @@ export function NavLinks(): JSX.Element {
 			className="ml-6 flex h-16 items-stretch flex-nowrap whitespace-nowrap"
 		>
 			{ visible.map( ( item ) => {
-				const active = isPathActive( item, location.pathname );
-				const Icon   = ICON_MAP[ item.icon ];
+				const Icon = ICON_MAP[ item.icon ];
+
+				// "Pro locked" = a pro item shown only because the Pro plugin is
+				// absent. It renders as a badge that opens the upgrade dialog
+				// instead of navigating to a page that does not exist.
+				const proLocked = Boolean(
+					item.pro && ! isPro && ( ! item.module || ! activeModules.includes( item.module ) )
+				);
+				if ( proLocked ) {
+					return (
+						<NavProItem
+							key={ item.id }
+							item={ item }
+							Icon={ Icon }
+							onClick={ () => openUpsell( item.label ) }
+						/>
+					);
+				}
+
+				const active  = isPathActive( item, location.pathname );
 				const hasMenu = ( item.children?.length ?? 0 ) > 0;
 
 				return hasMenu ? (
@@ -112,6 +138,27 @@ export function NavLinks(): JSX.Element {
 				);
 			} ) }
 		</nav>
+	);
+}
+
+interface NavProItemProps {
+	readonly item:    NavItem;
+	readonly Icon:    LucideIcon;
+	readonly onClick: () => void;
+}
+
+/** A pro-only top-level item rendered as a "Pro" badge (Pro plugin absent). */
+function NavProItem( { item, Icon, onClick }: NavProItemProps ): JSX.Element {
+	return (
+		<button
+			type="button"
+			onClick={ onClick }
+			className="group relative inline-flex shrink-0 items-center gap-2 px-5 text-sm font-normal text-foreground transition-colors hover:text-primary"
+		>
+			<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
+			<span>{ item.label }</span>
+			<ProBadge />
+		</button>
 	);
 }
 

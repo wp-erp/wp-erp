@@ -78,4 +78,11 @@ export interface LeavePolicyInput {
 	readonly marital?:             string;
 	readonly applicable_from?:     number;
 	readonly apply_for_new_users?: boolean;
+	/**
+	 * Pro-injected extra fields (Advanced Leave: half-day, accrual, carry-forward,
+	 * segregation). The v2 controller bridges these onto `$_POST` so the legacy
+	 * `erp_hr_leave_insert_policy_extra` filter persists them. Nested values
+	 * (e.g. `segre`) keep their sub-object shape.
+	 */
+	readonly extra?: Record< string, unknown >;
 }

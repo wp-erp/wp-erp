@@ -103,6 +103,17 @@ const LeaveCalendarPage = lazy( () =>
 	import( '@/features/leave-calendar' ).then( ( m ) => ( { default: m.LeaveCalendarPage } ) )
 );
 
+// Advanced Leave (pro) pages — mounted in the free router but only reachable via
+// the Leave dropdown when the `advanced_leave` module is active. They consume
+// the pro `erp/v2/hrm/advance-leave/*` endpoints.
+const LeaveUnpaidPage = lazy( () =>
+	import( '@/features/leave-unpaid' ).then( ( m ) => ( { default: m.LeaveUnpaidPage } ) )
+);
+
+const LeaveForwardPage = lazy( () =>
+	import( '@/features/leave-forward' ).then( ( m ) => ( { default: m.LeaveForwardPage } ) )
+);
+
 const AnnouncementsPage = lazy( () =>
 	import( '@/features/announcements' ).then( ( m ) => ( { default: m.AnnouncementsPage } ) )
 );
@@ -393,6 +404,30 @@ const baseRoutes: AppRoute[] = [
 		handle: {
 			id:        'holidays',
 			title:     __( 'Holidays', 'erp' ),
+			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'leave-unpaid',
+		path:         '/leave/unpaid',
+		element:      LeaveUnpaidPage,
+		capabilities: [ 'erp_leave_manage' ],
+		handle: {
+			id:        'leave-unpaid',
+			title:     __( 'Unpaid Leaves', 'erp' ),
+			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'leave-forward',
+		path:         '/leave/forward',
+		element:      LeaveForwardPage,
+		capabilities: [ 'erp_leave_manage' ],
+		handle: {
+			id:        'leave-forward',
+			title:     __( 'Forward Leaves', 'erp' ),
 			group:     'leave',
 			showInNav: false,
 		},

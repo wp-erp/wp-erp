@@ -21,6 +21,17 @@ export const HOOKS = {
 	// Employee create/edit form — pro injects extra (custom) field definitions.
 	EMPLOYEE_EXTRA_FIELDS:   'erp_hr.employee.extra_fields',
 
+	// Leave policy create/edit form — pro injects extra field definitions
+	// (Advanced Leave: half-day, accrual, carry-forward, segregation). Applied
+	// with `(fields, ctx)` where ctx = { mode, saved } (saved = the policy
+	// response incl. pro columns, for edit prefill). Returns LeaveExtraField[].
+	LEAVE_POLICY_FIELDS:     'erp_hr.leave.policy_fields',
+
+	// Leave request (apply-for-leave) form — pro injects extra field definitions
+	// (Advanced Leave: half-day request). Applied with `(fields, ctx)` where
+	// ctx = { userId, leavePolicyId }. Returns LeaveExtraField[].
+	LEAVE_REQUEST_FIELDS:    'erp_hr.leave.request_fields',
+
 	// Employee profile — pro injects / replaces profile tabs (e.g. Documents).
 	// Applied lazily at render with `(tabs, ctx)` where ctx = { userId, canEdit }.
 	// Free seeds a `documents` preview tab; the Document Manager pro module swaps

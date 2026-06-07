@@ -24,10 +24,18 @@ import {
 	Label,
 	Switch,
 } from '@wedevs/plugin-ui';
+import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { DependencyHint } from '@/shared/components/DependencyHint';
+import {
+	initLeaveFieldValues,
+	LeaveExtraFields,
+	setLeaveFieldValue,
+} from '@/shared/components/LeaveExtraFields';
+import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
+import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
@@ -94,6 +102,24 @@ export function LeavePolicyFormDialog( {
 		days?:     string | undefined;
 		f_year?:   string | undefined;
 	} >( {} );
+
+	// Pro-injected fields (Advanced Leave). Definitions arrive via wp.hooks; the
+	// pro filter prefills each `default` from the saved policy (`saved`) on edit.
+	const [ extraFields, setExtraFields ] = useState< LeaveExtraField[] >( [] );
+	const [ extra, setExtra ]             = useState< LeaveExtraValues >( {} );
+
+	useEffect( () => {
+		if ( ! open ) {
+			return;
+		}
+		const fields = applyFilters(
+			HOOKS.LEAVE_POLICY_FIELDS,
+			[],
+			{ mode: editing ? 'edit' : 'create', saved: editing ?? {} }
+		) as LeaveExtraField[];
+		setExtraFields( fields );
+		setExtra( initLeaveFieldValues( fields ) );
+	}, [ open, editing ] );
 
 	useEffect( () => {
 		if ( ! open ) {
@@ -179,6 +205,7 @@ export function LeavePolicyFormDialog( {
 			gender:              form.gender,
 			marital:             form.marital,
 			apply_for_new_users: form.apply_for_new_users,
+			...( extraFields.length > 0 ? { extra } : {} ),
 		} );
 	}
 
@@ -343,6 +370,12 @@ export function LeavePolicyFormDialog( {
 							onCheckedChange={ ( checked ) => setForm( ( p ) => ( { ...p, apply_for_new_users: checked } ) ) }
 						/>
 					</div>
+
+					<LeaveExtraFields
+						fields={ extraFields }
+						values={ extra }
+						onChange={ ( field, value ) => setExtra( ( p ) => setLeaveFieldValue( p, field, value ) ) }
+					/>
 
 					{ error ? (
 						<Alert variant="destructive">

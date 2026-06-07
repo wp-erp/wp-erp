@@ -108,7 +108,17 @@ export async function validateLeaveDates(
 /** Submit a leave request for the employee (mirrors the legacy leave_request). */
 export async function submitLeaveRequest(
 	userId: number,
-	payload: { leave_policy: number; leave_from: string; leave_to: string; leave_reason: string }
+	payload: {
+		leave_policy: number;
+		leave_from:   string;
+		leave_to:     string;
+		leave_reason: string;
+		/**
+		 * Pro-injected request fields (Advanced Leave half-day). The v2 controller
+		 * bridges these onto `$_POST` for the legacy `erp_hr_leave_new_args` filter.
+		 */
+		extra?:       Record< string, unknown >;
+	}
 ): Promise< void > {
 	const path = restPath( 'v2', `/employees/${ userId }/leave/requests` );
 	await request( path, { method: 'POST', data: payload } );
