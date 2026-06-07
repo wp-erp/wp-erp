@@ -61,6 +61,7 @@ export function LeaveRequestDialog( {
 	const [ from, setFrom ]         = useState( '' );
 	const [ to, setTo ]             = useState( '' );
 	const [ reason, setReason ]     = useState( '' );
+	const [ documents, setDocuments ] = useState< File[] >( [] );
 	const [ busy, setBusy ]         = useState( false );
 	const [ error, setError ]       = useState< string | null >( null );
 	const [ validating, setValidating ] = useState( false );
@@ -82,6 +83,7 @@ export function LeaveRequestDialog( {
 			setFrom( '' );
 			setTo( '' );
 			setReason( '' );
+			setDocuments( [] );
 			setError( null );
 			setValidation( null );
 			setDateError( null );
@@ -176,7 +178,7 @@ export function LeaveRequestDialog( {
 				leave_to:     to,
 				leave_reason: reason,
 				...( extraFields.length > 0 ? { extra } : {} ),
-			} );
+			}, documents );
 			onSubmitted();
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Could not submit the leave request.', 'erp' ) );
@@ -247,6 +249,18 @@ export function LeaveRequestDialog( {
 					) : null }
 
 					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } disabled={ ! entitled } value={ reason } onChange={ setReason } />
+
+					<div className="flex flex-col gap-1.5">
+						<label htmlFor="leave_document" className="text-sm font-medium text-foreground">{ __( 'Document', 'erp' ) }</label>
+						<input
+							id="leave_document"
+							type="file"
+							multiple
+							disabled={ ! entitled }
+							onChange={ ( e ) => setDocuments( e.target.files ? Array.from( e.target.files ) : [] ) }
+							className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border file:border-border file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70 disabled:opacity-50"
+						/>
+					</div>
 
 					<DialogFooter className="items-center gap-5 sm:gap-5">
 						{ year && ! entitled ? (

@@ -6,11 +6,24 @@
  * pattern as the other profile tabs.
  */
 
+import apiFetch from '@wordpress/api-fetch';
 import { useCallback, useEffect, useState } from 'react';
 
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
+
+/** Flatten the pro `extra` values onto FormData as `extra[key]` (+ one nested level). */
+function appendExtra( fd: FormData, extra: Record< string, unknown >, prefix = 'extra' ): void {
+	Object.entries( extra ).forEach( ( [ key, value ] ) => {
+		const field = `${ prefix }[${ key }]`;
+		if ( value !== null && typeof value === 'object' ) {
+			appendExtra( fd, value as Record< string, unknown >, field );
+		} else if ( value !== undefined && value !== null ) {
+			fd.append( field, String( value ) );
+		}
+	} );
+}
 
 export interface LeaveSummary {
 	readonly policy:      string;
@@ -108,9 +121,25 @@ export async function validateLeaveDates(
 /** Submit a leave request for the employee (mirrors the legacy leave_request). */
 export async function submitLeaveRequest(
 	userId: number,
-	payload: { leave_policy: number; leave_from: string; leave_to: string; leave_reason: string }
+	payload: { leave_policy: number; leave_from: string; leave_to: string; leave_reason: string; extra?: Record< string, unknown > },
+	files: readonly File[] = []
 ): Promise< void > {
 	const path = restPath( 'v2', `/employees/${ userId }/leave/requests` );
+
+	if ( files.length > 0 ) {
+		const fd = new FormData();
+		fd.append( 'leave_policy', String( payload.leave_policy ) );
+		fd.append( 'leave_from', payload.leave_from );
+		fd.append( 'leave_to', payload.leave_to );
+		fd.append( 'leave_reason', payload.leave_reason );
+		if ( payload.extra ) {
+			appendExtra( fd, payload.extra );
+		}
+		files.forEach( ( file ) => fd.append( 'leave_document[]', file ) );
+		await apiFetch( { path, method: 'POST', body: fd } );
+		return;
+	}
+
 	await request( path, { method: 'POST', data: payload } );
 }
 
