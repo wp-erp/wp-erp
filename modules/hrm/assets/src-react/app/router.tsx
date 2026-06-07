@@ -31,10 +31,6 @@ const EmployeeEditPage = lazy( () =>
 	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeEditPage } ) )
 );
 
-const EmployeeSinglePage = lazy( () =>
-	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeSinglePage } ) )
-);
-
 // [NEW-PROFILE] Modern profile page. Self-contained — to remove it, delete the
 // `features/employee-profile/` folder and every block tagged `[NEW-PROFILE]`
 // (this lazy import, the route entry below, and the "New design" button in
@@ -59,10 +55,8 @@ const EmployeeProfileV3Page = lazy( () =>
 	import( '@/features/employee-profile-v3' ).then( ( m ) => ( { default: m.EmployeeProfileV3Page } ) )
 );
 
-// [NEW-PROFILE-V4] Header-card + left-nav-card layout. Self-contained — to
-// remove it, delete the `features/employee-profile-v4/` folder and every block
-// tagged `[NEW-PROFILE-V4]` (this lazy import, the route entry below, and the
-// "New design v4" button in EmployeeSinglePage.tsx). Nothing depends on it.
+// The v4 design is the main employee profile page (`/employees/:id`); it is also
+// still reachable at `/employees/:id/profile-v4` while the older previews stay.
 const EmployeeProfileV4Page = lazy( () =>
 	import( '@/features/employee-profile-v4' ).then( ( m ) => ( { default: m.EmployeeProfileV4Page } ) )
 );
@@ -212,7 +206,8 @@ const baseRoutes: AppRoute[] = [
 	{
 		id:           'employee-single',
 		path:         '/employees/:id',
-		element:      EmployeeSinglePage,
+		// The v4 profile design IS the main employee page.
+		element:      EmployeeProfileV4Page,
 		// Legacy parity: viewing a profile needs only the People-list cap (the menu
 		// gate); `erp_view_employee` is a meta cap that would block non-managers.
 		capabilities: [ 'erp_list_employee' ],
@@ -264,7 +259,7 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
-		// [NEW-PROFILE-V4] Route for the header-card + left-nav layout (see note at the lazy import).
+		// [NEW-PROFILE-V4] Route for the header-card + left-nav layout (also the main page above).
 		id:           'employee-profile-v4',
 		path:         '/employees/:id/profile-v4',
 		capabilities: [ 'erp_list_employee' ],
