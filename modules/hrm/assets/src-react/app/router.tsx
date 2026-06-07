@@ -206,8 +206,8 @@ const baseRoutes: AppRoute[] = [
 	{
 		id:           'employee-single',
 		path:         '/employees/:id',
-		// The v4 profile design IS the main employee page.
-		element:      EmployeeProfileV4Page,
+		// The main employee page = `EmployeeProfilePage` (now holds the v4 design).
+		element:      EmployeeProfilePage,
 		// Legacy parity: viewing a profile needs only the People-list cap (the menu
 		// gate); `erp_view_employee` is a meta cap that would block non-managers.
 		capabilities: [ 'erp_list_employee' ],
