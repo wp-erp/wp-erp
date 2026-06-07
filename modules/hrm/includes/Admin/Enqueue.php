@@ -150,7 +150,9 @@ final class Enqueue {
 			}
 		}
 
-		// CSS — emitted as `<entry>.css` when the entry imports CSS.
+		// CSS — emitted as `<entry>.css` when the entry imports CSS. wp-scripts
+		// also emits `<entry>-rtl.css`; `wp_style_add_data( …, 'rtl', 'replace' )`
+		// makes WordPress swap to it automatically on RTL locales.
 		$css_relative = '/assets/dist-react/' . $entry . '.css';
 		if ( file_exists( WPERP_HRM_PATH . $css_relative ) ) {
 			wp_register_style(
@@ -159,6 +161,7 @@ final class Enqueue {
 				[],
 				$version
 			);
+			wp_style_add_data( $handle, 'rtl', 'replace' );
 			wp_enqueue_style( $handle );
 		}
 
