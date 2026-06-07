@@ -164,6 +164,16 @@ module.exports = function(grunt) {
                 args: ['run', 'build']
             },
 
+            buildReact: {
+                cmd: 'npm',
+                args: ['run', 'build:react']
+            },
+
+            buildAssets: {
+                cmd: 'npm',
+                args: ['run', 'build:assets']
+            },
+
             makepot: {
                 cmd: 'npm',
                 args: ['run', 'makepot']
@@ -204,7 +214,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('release', [
         'clean',
-        'run:reset',
+        'run:buildAssets',
         'run:makepot',
         'run:removeDev',
         'run:dumpautoload',
@@ -216,7 +226,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('zip', [
         'clean',
-        'run:reset',
+        'run:buildAssets',
         'run:makepot',
         'run:removeDev',
         'run:dumpautoload',

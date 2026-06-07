@@ -14,6 +14,8 @@
     "dev": "cross-env WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
     "dev-build": "cross-env WEBPACK_ENV=development webpack",
     "build": "cross-env WEBPACK_ENV=production webpack",
+    "build:react": "bash bin/build-react.sh",
+    "build:assets": "bash bin/build.sh",
     "makepot": "wpvuei18n makepot --exclude=\"node_modules/.*,modules/[^/]+/node_modules/.*,modules/hrm/assets/dist-react/.*,modules/hrm/assets/src-react/.*,build/.*,vendor/.*\"",
     "lint": "eslint --config eslintrc.js --ext .js,.vue .",
     "lint-fix": "npm run lint -- --fix"
