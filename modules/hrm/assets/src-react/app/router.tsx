@@ -280,7 +280,8 @@ const baseRoutes: AppRoute[] = [
 		id:           'employee-edit',
 		path:         '/employees/:id/edit',
 		element:      EmployeeEditPage,
-		capabilities: [ 'erp_edit_employee' ],
+		// No route-level cap: the page itself allows `erp_edit_employee` OR the
+		// employee editing their OWN profile (the route guard can't see the :id).
 		handle: {
 			id:        'employee-edit',
 			title:     __( 'Edit Employee', 'erp' ),

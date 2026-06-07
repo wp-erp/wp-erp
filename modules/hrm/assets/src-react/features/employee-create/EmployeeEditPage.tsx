@@ -8,17 +8,20 @@
  */
 
 import { Skeleton, toast } from '@wedevs/plugin-ui';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { Forbidden } from '@/shared/components/Forbidden';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeCreateInput } from '@/stores/employees';
+import { storeName as meStoreName } from '@/stores/me';
+import type { MeUser } from '@/stores/me/types';
 
 import { EmployeeForm } from './EmployeeForm';
 import type { FormState } from './EmployeeForm';
@@ -158,17 +161,29 @@ export function EmployeeEditPage(): JSX.Element {
 	const { id } = useParams< { id: string } >();
 	const userId = Number( id );
 
+	const canEditCap    = useCan( 'erp_edit_employee' );
+	const currentUserId = useSelect(
+		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
+		[]
+	);
+	// Own profile is self-service: an employee can edit their OWN profile even
+	// without the manager `erp_edit_employee` cap (mirrors the profile pages +
+	// the server's meta-mapped `erp_edit_employee` on the target user).
+	const canEdit = canEditCap || ( currentUserId > 0 && currentUserId === userId );
+
+	if ( ! canEdit ) {
+		return <Forbidden />;
+	}
+
 	return (
-		<CapabilityGate caps={ [ 'erp_edit_employee' ] }>
-			<ErrorBoundary>
-				{ Number.isFinite( userId ) && userId > 0 ? (
-					<EmployeeEditInner userId={ userId } />
-				) : (
-					<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
-						{ __( 'Invalid employee.', 'erp' ) }
-					</div>
-				) }
-			</ErrorBoundary>
-		</CapabilityGate>
+		<ErrorBoundary>
+			{ Number.isFinite( userId ) && userId > 0 ? (
+				<EmployeeEditInner userId={ userId } />
+			) : (
+				<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
+					{ __( 'Invalid employee.', 'erp' ) }
+				</div>
+			) }
+		</ErrorBoundary>
 	);
 }
