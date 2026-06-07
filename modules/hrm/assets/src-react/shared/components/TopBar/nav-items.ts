@@ -293,7 +293,10 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		path:          '/training',
 		icon:          'graduation-cap',
 		hasDropdown:   false,
-		capabilities:  [ 'erp_view_training' ],
+		// Manager/admin — matches the pro Training submenu (`erp_hr_manager`) and,
+		// unlike the pro-only `erp_view_training`, this cap is in the free boot map
+		// so the "Pro" upsell badge still resolves when the pro plugin is absent.
+		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/training' ],
 		module:        'training',
 		pro:           true,
@@ -437,6 +440,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				capabilities: [ 'erp_hr_manager' ],
 				description:  __( 'Asset allocation report', 'erp' ),
 				module:       'asset',
+				pro:          true,
 			},
 			{
 				id:           'reports-attendance-date',
@@ -445,6 +449,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				capabilities: [ 'erp_hr_manager' ],
 				description:  __( 'Daily attendance logs', 'erp' ),
 				module:       'attendance',
+				pro:          true,
 			},
 			{
 				id:           'reports-attendance-employee',
@@ -453,6 +458,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				capabilities: [ 'erp_hr_manager' ],
 				description:  __( 'Per-employee attendance report', 'erp' ),
 				module:       'attendance',
+				pro:          true,
 			},
 		],
 	},

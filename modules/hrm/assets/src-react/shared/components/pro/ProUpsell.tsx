@@ -57,11 +57,14 @@ export function ProBadge( { className }: { className?: string } ): JSX.Element {
 	);
 }
 
+// Verbatim marketing copy from the legacy pro-popup
+// (`includes/Admin/views/erp-pro-popup-modal.php`), flattened from its inline
+// markup so the React upsell shows the same content as the Vue/PHP one.
 const FEATURES: readonly string[] = [
-	__( 'Unlock 12+ premium HR extensions', 'erp' ),
-	__( 'Recruitment, Payroll & Attendance management', 'erp' ),
-	__( 'Advanced Leave — accrual, carry-forward, half-day & more', 'erp' ),
-	__( 'Asset management, Training, Reimbursement & Workflow automation', 'erp' ),
+	__( 'Unlock 12+ premium HR extensions and manage your employee’s recruitment, payroll, attendance, and more', 'erp' ),
+	__( 'Nurture B2B & regular clients with 8+ CRM Integrations like HubSpot, Mailchimp, Salesforce, Help Scout, etc.', 'erp' ),
+	__( 'From creating invoice to calculating taxes; take full control of your company’s finances with the Accounting module', 'erp' ),
+	__( 'Boost your WooCommerce store with powerful CRM and Accounting premium integrations', 'erp' ),
 ];
 
 /**
@@ -98,7 +101,7 @@ export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.
 										__( '%s is a Pro feature. Upgrade to unlock it and more.', 'erp' ),
 										feature
 									)
-									: __( 'Experience even more powerful HR features.', 'erp' ) }
+									: __( 'to experience even more powerful features 🎉', 'erp' ) }
 							</DialogDescription>
 						</DialogHeader>
 					</div>
