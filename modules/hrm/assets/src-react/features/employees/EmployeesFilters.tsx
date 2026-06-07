@@ -24,6 +24,7 @@ import type {
 import { SEARCH_DEBOUNCE_MS } from './constants';
 import { DepartmentFilter } from './filters/DepartmentFilter';
 import { DesignationFilter } from './filters/DesignationFilter';
+import { EmployeeTypeFilter } from './filters/EmployeeTypeFilter';
 import { LocationFilter } from './filters/LocationFilter';
 import { StatusFilter } from './filters/StatusFilter';
 import { useEmployeeFilters } from './useEmployeeFilters';
@@ -53,7 +54,8 @@ export function EmployeesFilters(): JSX.Element {
 	const activeFilterCount =
 		( filters.department_id  ? 1 : 0 ) +
 		( filters.designation_id ? 1 : 0 ) +
-		( filters.location_id    ? 1 : 0 );
+		( filters.location_id    ? 1 : 0 ) +
+		( filters.employee_type  ? 1 : 0 );
 	const hasActiveSecondaryFilters = activeFilterCount > 0;
 
 	useEffect( () => {
@@ -121,6 +123,7 @@ export function EmployeesFilters(): JSX.Element {
 					<DepartmentFilter />
 					<DesignationFilter />
 					<LocationFilter />
+					<EmployeeTypeFilter />
 					{ proFilters.map( ( f ) => (
 						<f.Component
 							key={ f.id }

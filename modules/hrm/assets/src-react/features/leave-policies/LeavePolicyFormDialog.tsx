@@ -64,6 +64,7 @@ interface FormState {
 	gender:              string;
 	marital:             string;
 	apply_for_new_users: boolean;
+	apply_for_existing:  boolean;
 }
 
 const ALL = '-1';
@@ -80,6 +81,7 @@ const EMPTY: FormState = {
 	gender:              ALL,
 	marital:             ALL,
 	apply_for_new_users: false,
+	apply_for_existing:  false,
 };
 
 /** Prepend the "All" sentinel option to a scope select. */
@@ -140,6 +142,7 @@ export function LeavePolicyFormDialog( {
 						gender:              editing.gender || ALL,
 						marital:             editing.marital || ALL,
 						apply_for_new_users: editing.apply_for_new_users,
+						apply_for_existing:  false,
 				  }
 				: EMPTY
 		);
@@ -205,6 +208,7 @@ export function LeavePolicyFormDialog( {
 			gender:              form.gender,
 			marital:             form.marital,
 			apply_for_new_users: form.apply_for_new_users,
+			...( editing ? {} : { apply_for_existing: form.apply_for_existing } ),
 			...( extraFields.length > 0 ? { extra } : {} ),
 		} );
 	}
@@ -370,6 +374,22 @@ export function LeavePolicyFormDialog( {
 							onCheckedChange={ ( checked ) => setForm( ( p ) => ( { ...p, apply_for_new_users: checked } ) ) }
 						/>
 					</div>
+
+					{ ! editing ? (
+						<div className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-4 py-3">
+							<Label htmlFor="policy_apply_existing" className="text-sm font-medium text-foreground">
+								{ __( 'Apply for existing employees', 'erp' ) }
+								<span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+									{ __( 'Entitle existing matching employees to this policy now.', 'erp' ) }
+								</span>
+							</Label>
+							<Switch
+								id="policy_apply_existing"
+								checked={ form.apply_for_existing }
+								onCheckedChange={ ( checked ) => setForm( ( p ) => ( { ...p, apply_for_existing: checked } ) ) }
+							/>
+						</div>
+					) : null }
 
 					<LeaveExtraFields
 						fields={ extraFields }

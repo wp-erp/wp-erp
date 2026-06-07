@@ -11,6 +11,7 @@
 
 import {
 	Button,
+	Checkbox,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -58,7 +59,7 @@ function HolidaysInner(): JSX.Element {
 	const [ page, setPage ]       = useState( 1 );
 	const [ perPage, setPerPage ] = useState( 20 );
 
-	const { rows, total, loading, error, save, remove, parseFile, importRows } = useHolidays( {
+	const { rows, total, loading, error, save, remove, removeMany, parseFile, importRows } = useHolidays( {
 		year,
 		search,
 		page,
@@ -69,6 +70,8 @@ function HolidaysInner(): JSX.Element {
 	const [ importOpen, setImportOpen ] = useState( false );
 	const [ editing, setEditing ]     = useState< Holiday | null >( null );
 	const [ deleting, setDeleting ]   = useState< Holiday | null >( null );
+	const [ selectedIds, setSelectedIds ] = useState< readonly number[] >( [] );
+	const [ bulkConfirm, setBulkConfirm ] = useState( false );
 	const [ busy, setBusy ]           = useState( false );
 	const [ formError, setFormError ] = useState< string | null >( null );
 
@@ -78,6 +81,45 @@ function HolidaysInner(): JSX.Element {
 	useEffect( () => {
 		setPage( 1 );
 	}, [ year, search ] );
+
+	// Drop selections that are no longer visible after a list refresh / page change.
+	useEffect( () => {
+		const visible = new Set( rows.map( ( h ) => h.id ) );
+		setSelectedIds( ( prev ) => prev.filter( ( id ) => visible.has( id ) ) );
+	}, [ rows ] );
+
+	const allSelected = rows.length > 0 && selectedIds.length === rows.length;
+
+	function toggleAll(): void {
+		setSelectedIds( allSelected ? [] : rows.map( ( h ) => h.id ) );
+	}
+
+	function toggleRow( id: number ): void {
+		setSelectedIds( ( prev ) =>
+			prev.includes( id ) ? prev.filter( ( x ) => x !== id ) : [ ...prev, id ]
+		);
+	}
+
+	async function handleBulkDelete(): Promise< void > {
+		setBusy( true );
+		try {
+			await removeMany( selectedIds );
+			toast.success(
+				sprintf(
+					/* translators: %d: number of holidays deleted */
+					selectedIds.length === 1 ? __( '%d holiday deleted.', 'erp' ) : __( '%d holidays deleted.', 'erp' ),
+					selectedIds.length
+				)
+			);
+			setSelectedIds( [] );
+			setBulkConfirm( false );
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the holidays.', 'erp' ) );
+			setBulkConfirm( false );
+		} finally {
+			setBusy( false );
+		}
+	}
 
 	const yearOptions = useMemo( () => {
 		const years: Array< { value: string; label: string } > = [ { value: '0', label: __( 'All Years', 'erp' ) } ];
@@ -225,6 +267,37 @@ function HolidaysInner(): JSX.Element {
 					</div>
 				) : null }
 
+				{ canManage && selectedIds.length > 0 ? (
+					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">
+							{ sprintf(
+								/* translators: %d: number of selected holidays */
+								selectedIds.length === 1 ? __( '%d selected', 'erp' ) : __( '%d selected', 'erp' ),
+								selectedIds.length
+							) }
+						</span>
+						<div className="flex items-center gap-2">
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 px-3 text-sm"
+								onClick={ () => setSelectedIds( [] ) }
+							>
+								{ __( 'Clear', 'erp' ) }
+							</Button>
+							<Button
+								variant="destructive"
+								size="sm"
+								className="h-8 gap-1.5 px-3 text-sm"
+								onClick={ () => setBulkConfirm( true ) }
+							>
+								<Trash2 size={ 14 } aria-hidden="true" />
+								{ __( 'Delete', 'erp' ) }
+							</Button>
+						</div>
+					</div>
+				) : null }
+
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
@@ -240,6 +313,15 @@ function HolidaysInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+								{ canManage ? (
+									<th scope="col" className="w-10 px-4">
+										<Checkbox
+											checked={ allSelected }
+											onCheckedChange={ toggleAll }
+											aria-label={ __( 'Select all holidays', 'erp' ) }
+										/>
+									</th>
+								) : null }
 								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
 								<th scope="col" className="px-4">{ __( 'Date', 'erp' ) }</th>
 								<th scope="col" className="px-4">{ __( 'Duration', 'erp' ) }</th>
@@ -252,6 +334,15 @@ function HolidaysInner(): JSX.Element {
 						<tbody>
 							{ rows.map( ( holiday ) => (
 								<tr key={ holiday.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
+									{ canManage ? (
+										<td className="w-10 px-4 align-middle">
+											<Checkbox
+												checked={ selectedIds.includes( holiday.id ) }
+												onCheckedChange={ () => toggleRow( holiday.id ) }
+												aria-label={ sprintf( __( 'Select %s', 'erp' ), holiday.title ) }
+											/>
+										</td>
+									) : null }
 									<td className="px-4 align-middle font-medium text-foreground">{ holiday.title }</td>
 									<td className="whitespace-nowrap px-4 align-middle text-sm text-foreground">
 										{ holiday.range
@@ -350,6 +441,21 @@ function HolidaysInner(): JSX.Element {
 				busy={ busy }
 				onConfirm={ () => void handleDelete() }
 				onCancel={ () => setDeleting( null ) }
+			/>
+
+			<OrgDeleteDialog
+				open={ bulkConfirm }
+				title={ __( 'Delete holidays?', 'erp' ) }
+				description={ sprintf(
+					/* translators: %d: number of holidays */
+					selectedIds.length === 1
+						? __( '%d holiday will be permanently deleted.', 'erp' )
+						: __( '%d holidays will be permanently deleted.', 'erp' ),
+					selectedIds.length
+				) }
+				busy={ busy }
+				onConfirm={ () => void handleBulkDelete() }
+				onCancel={ () => setBulkConfirm( false ) }
 			/>
 		</section>
 	);

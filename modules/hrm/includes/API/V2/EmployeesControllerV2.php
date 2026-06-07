@@ -334,7 +334,7 @@ class EmployeesControllerV2 extends RestControllerV2 {
 			'department'  => $this->cast_int_or_null( $request['department_id']  ?? null ) ?? -1,
 			'designation' => $this->cast_int_or_null( $request['designation_id'] ?? null ) ?? -1,
 			'location'    => $this->cast_int_or_null( $request['location_id']    ?? null ) ?? -1,
-			'type'        => -1,
+			'type'        => '' !== (string) ( $request['employee_type'] ?? '' ) ? sanitize_text_field( (string) $request['employee_type'] ) : -1,
 			's'           => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
 			'count'       => true,
 		];
@@ -404,6 +404,12 @@ class EmployeesControllerV2 extends RestControllerV2 {
 				'description'       => __( 'Filter counts by location ID.', 'erp' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'employee_type'  => [
+				'description'       => __( 'Filter by employment type slug.', 'erp' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];
@@ -1149,7 +1155,7 @@ class EmployeesControllerV2 extends RestControllerV2 {
 			'department'  => $this->cast_int_or_null( $request['department_id'] ?? null ) ?? -1,
 			'designation' => $this->cast_int_or_null( $request['designation_id'] ?? null ) ?? -1,
 			'location'    => $this->cast_int_or_null( $request['location_id'] ?? null ) ?? -1,
-			'type'        => -1,
+			'type'        => '' !== (string) ( $request['employee_type'] ?? '' ) ? sanitize_text_field( (string) $request['employee_type'] ) : -1,
 			's'           => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
 		];
 

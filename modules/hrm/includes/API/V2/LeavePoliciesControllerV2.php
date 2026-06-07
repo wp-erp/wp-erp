@@ -380,7 +380,23 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 		// `$_POST` — persists them. JSON REST bodies never populate `$_POST`.
 		$extra_post = $this->bridge_extra_to_post( $request );
 
+		// "Apply for existing employees" — the legacy
+		// `erp_hr_apply_policy_existing_employee()` (hooked on the insert action)
+		// reads `$_POST['apply-for-existing-users']` to back-entitle existing
+		// matching employees. Create-only.
+		$had_apply = \array_key_exists( 'apply-for-existing-users', $_POST );
+		$prev_apply = $had_apply ? $_POST['apply-for-existing-users'] : null;
+		if ( ! empty( $request['apply_for_existing'] ) ) {
+			$_POST['apply-for-existing-users'] = 1;
+		}
+
 		$result = erp_hr_leave_insert_policy( $data );
+
+		if ( $had_apply ) {
+			$_POST['apply-for-existing-users'] = $prev_apply;
+		} else {
+			unset( $_POST['apply-for-existing-users'] );
+		}
 
 		$this->restore_post( $extra_post );
 
@@ -614,6 +630,7 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 			'marital'             => [ 'description' => __( 'Marital status, or -1 for all.', 'erp' ), 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
 			'applicable_from'     => [ 'description' => __( 'Applicable-from day offset.', 'erp' ), 'type' => 'integer', 'sanitize_callback' => 'absint' ],
 			'apply_for_new_users' => [ 'description' => __( 'Auto-apply to new employees.', 'erp' ), 'type' => 'boolean' ],
+			'apply_for_existing'  => [ 'description' => __( 'Back-entitle existing matching employees on create.', 'erp' ), 'type' => 'boolean' ],
 			'segre'               => [ 'description' => __( 'Per-segment day segregation (optional).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],
 			'extra'               => [
 				'description'          => __( 'Pro-injected extra fields, e.g. Advanced Leave (optional).', 'erp' ),

@@ -2,15 +2,16 @@
  * `/reports/headcount` — headcount by month + active employee list.
  *
  * Mirrors views/reporting/headcount.php: a year + department filter, the active
- * total, a 12-month headcount series (rendered as a simple bar list instead of
- * the legacy flot chart), and the filtered active employee table. Data from
+ * total, a 12-month headcount bar chart (recharts, mirroring the legacy flot
+ * chart), and the filtered active employee table. Data from
  * `GET /reports/headcount?year=&department=`.
  */
 
-import { SmartSelect } from '@wedevs/plugin-ui';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, SmartSelect } from '@wedevs/plugin-ui';
 import { Filter, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { JSX } from 'react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { __ } from '@/shared/i18n';
 
@@ -37,6 +38,10 @@ function monthLabel( ym: string ): string {
 	return new Date( y, m - 1, 1 ).toLocaleDateString( undefined, { month: 'short', year: '2-digit' } );
 }
 
+const HEADCOUNT_CONFIG = {
+	count: { label: __( 'Headcount', 'erp' ), color: '#6366f1' },
+};
+
 export function HeadcountPage(): JSX.Element {
 	const now = new Date().getFullYear();
 	const [ year, setYear ]             = useState( String( now ) );
@@ -58,7 +63,10 @@ export function HeadcountPage(): JSX.Element {
 		[ data ]
 	);
 
-	const maxCount = useMemo( () => Math.max( 1, ...( data?.chart ?? [] ).map( ( p ) => p.count ) ), [ data ] );
+	const chartData = useMemo(
+		() => ( data?.chart ?? [] ).map( ( p ) => ( { month: p.month, count: p.count } ) ),
+		[ data ]
+	);
 
 	const activeFilterCount = ( department ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
@@ -126,23 +134,25 @@ export function HeadcountPage(): JSX.Element {
 	return (
 		<ReportShell title={ __( 'Head Count', 'erp' ) } toolbar={ toolbar }>
 			<ReportState loading={ loading } error={ error } empty={ false }>
-				{ /* Headcount by month — simple horizontal bar list. */ }
+				{ /* Headcount by month — recharts bar chart (legacy flot parity). */ }
 				<div className="mb-5 border-b border-border pb-5">
 					<h3 className="mb-3 text-sm font-semibold text-foreground">{ __( 'Headcount by Month', 'erp' ) }</h3>
-					<ul className="space-y-1.5">
-						{ ( data?.chart ?? [] ).map( ( point ) => (
-							<li key={ point.month } className="flex items-center gap-3 text-sm">
-								<span className="w-16 shrink-0 text-muted-foreground">{ monthLabel( point.month ) }</span>
-								<span className="relative h-4 flex-1 overflow-hidden rounded bg-muted">
-									<span
-										className="absolute inset-y-0 left-0 rounded bg-primary"
-										style={ { width: `${ ( point.count / maxCount ) * 100 }%` } }
-									/>
-								</span>
-								<span className="w-8 shrink-0 text-right tabular-nums text-foreground">{ point.count }</span>
-							</li>
-						) ) }
-					</ul>
+					<ChartContainer config={ HEADCOUNT_CONFIG } className="h-[260px] w-full">
+						<BarChart data={ chartData } margin={ { left: 4, right: 12, top: 8 } }>
+							<CartesianGrid vertical={ false } strokeDasharray="3 3" className="stroke-border" />
+							<XAxis
+								dataKey="month"
+								tickLine={ false }
+								axisLine={ false }
+								tickMargin={ 8 }
+								tickFormatter={ monthLabel }
+								className="text-xs"
+							/>
+							<YAxis tickLine={ false } axisLine={ false } width={ 28 } allowDecimals={ false } className="text-xs" />
+							<ChartTooltip content={ <ChartTooltipContent labelFormatter={ ( v ) => monthLabel( String( v ) ) } /> } />
+							<Bar dataKey="count" fill="var(--color-count)" radius={ [ 4, 4, 0, 0 ] } barSize={ 28 } />
+						</BarChart>
+					</ChartContainer>
 				</div>
 
 				{ ( data?.employees ?? [] ).length === 0 ? (

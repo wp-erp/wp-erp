@@ -40,6 +40,7 @@ export interface UseHolidaysResult {
 	readonly reload:  () => Promise< void >;
 	readonly save:    ( id: number | null, payload: HolidayInput ) => Promise< void >;
 	readonly remove:  ( id: number ) => Promise< void >;
+	readonly removeMany: ( ids: readonly number[] ) => Promise< void >;
 	readonly parseFile: ( file: File ) => Promise< readonly HolidayPreviewRow[] >;
 	readonly importRows: ( rows: readonly HolidayPreviewRow[] ) => Promise< HolidayImportResult >;
 }
@@ -98,6 +99,21 @@ export function useHolidays( { year, search, page, perPage }: UseHolidaysArgs ):
 		[ reload ]
 	);
 
+	// Bulk delete in one call — mirrors the legacy WP_List_Table "Delete" bulk action.
+	const removeMany = useCallback(
+		async ( ids: readonly number[] ): Promise< void > => {
+			if ( ids.length === 0 ) {
+				return;
+			}
+			await request( restPath( 'v2', '/holidays/batch-delete' ), {
+				method: 'POST',
+				data:   { ids: [ ...ids ] },
+			} );
+			await reload();
+		},
+		[ reload ]
+	);
+
 	// File upload needs a raw multipart body — apiFetch JSON-stringifies the
 	// `data` option, so the FormData goes through `body` directly (same pattern
 	// as AvatarUpload). The shared root-URL + nonce middlewares still apply.
@@ -124,5 +140,5 @@ export function useHolidays( { year, search, page, perPage }: UseHolidaysArgs ):
 		[ reload ]
 	);
 
-	return { rows, total, loading, error, reload, save, remove, parseFile, importRows };
+	return { rows, total, loading, error, reload, save, remove, removeMany, parseFile, importRows };
 }

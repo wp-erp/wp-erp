@@ -78,6 +78,8 @@ export interface LeavePolicyInput {
 	readonly marital?:             string;
 	readonly applicable_from?:     number;
 	readonly apply_for_new_users?: boolean;
+	/** Create-only: back-entitle existing matching employees now (legacy `apply-for-existing-users`). */
+	readonly apply_for_existing?:  boolean;
 	/**
 	 * Pro-injected extra fields (Advanced Leave: half-day, accrual, carry-forward,
 	 * segregation). The v2 controller bridges these onto `$_POST` so the legacy

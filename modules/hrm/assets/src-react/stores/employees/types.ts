@@ -56,6 +56,7 @@ export interface EmployeeListQuery {
 	readonly department_id?:  number;
 	readonly designation_id?: number;
 	readonly location_id?:    number;
+	readonly employee_type?:  string;
 	readonly orderby?:        'full_name' | 'email' | 'hire_date' | 'status';
 	readonly order?:          'asc' | 'desc';
 	readonly per_page?:       number;

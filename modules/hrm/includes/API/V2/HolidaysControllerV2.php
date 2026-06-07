@@ -92,6 +92,26 @@ class HolidaysControllerV2 extends RestControllerV2 {
 
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/batch-delete',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'batch_delete_items' ],
+					'permission_callback' => [ $this, 'permission_manage' ],
+					'args'                => [
+						'ids' => [
+							'description' => __( 'Holiday IDs to delete.', 'erp' ),
+							'type'        => 'array',
+							'required'    => true,
+							'items'       => [ 'type' => 'integer' ],
+						],
+					],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			[
 				'args' => [
@@ -281,6 +301,29 @@ class HolidaysControllerV2 extends RestControllerV2 {
 		erp_hr_delete_holidays( [ 'id' => $holiday_id ] );
 
 		return rest_ensure_response( [ 'deleted' => true, 'id' => $holiday_id ] );
+	}
+
+	/**
+	 * POST /erp/v2/holidays/batch-delete
+	 *
+	 * Bulk-delete the given holiday IDs in one call — mirrors the legacy
+	 * `WP_List_Table` "Delete" bulk action. Delegates to `erp_hr_delete_holidays()`
+	 * with the id list so the `erp_hr_leave_holiday_delete` hook fires per row.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function batch_delete_items( $request ) {
+		$ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $request['ids'] ) ) ) );
+
+		if ( empty( $ids ) ) {
+			return new \WP_Error( 'rest_holiday_no_ids', __( 'No holidays selected.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		erp_hr_delete_holidays( $ids );
+
+		return rest_ensure_response( [ 'deleted' => true, 'ids' => $ids ] );
 	}
 
 	/**
