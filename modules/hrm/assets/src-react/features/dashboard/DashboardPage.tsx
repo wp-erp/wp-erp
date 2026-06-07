@@ -369,11 +369,11 @@ function DashboardInner(): JSX.Element {
 				const widgets = applyFilters( HOOKS.DASHBOARD_WIDGETS, [] ) as ComponentType[];
 				return (
 					widgets.length > 0 ? (
-						<div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,22rem)_1fr]">
+						<div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_22rem]">
+							<LeaveCalendarWidget />
 							<div className="flex flex-col gap-4">
 								{ widgets.map( ( Widget, i ) => <Widget key={ i } /> ) }
 							</div>
-							<LeaveCalendarWidget />
 						</div>
 					) : (
 						<div className="mb-6">
