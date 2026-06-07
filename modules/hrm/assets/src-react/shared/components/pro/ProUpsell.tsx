@@ -86,7 +86,7 @@ export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.
 			{ children }
 			<Dialog open={ open } onOpenChange={ setOpen }>
 				<DialogContent className="gap-0 rounded-[10px] p-0 sm:max-w-lg">
-					<div className="flex flex-col items-center gap-3 rounded-t-[10px] bg-gradient-to-br from-primary/10 to-amber-100/40 px-6 pb-5 pt-8 text-center">
+					<div className="flex flex-col items-center gap-3 rounded-t-[10px] bg-linear-to-br from-primary/10 to-amber-100/40 px-6 pb-5 pt-8 text-center">
 						<span className="flex size-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
 							<Crown size={ 24 } strokeWidth={ 2 } aria-hidden="true" />
 						</span>
