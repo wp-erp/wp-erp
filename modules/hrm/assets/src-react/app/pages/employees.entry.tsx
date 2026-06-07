@@ -6,8 +6,17 @@
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import * as ReactRouterDOM from 'react-router-dom';
 import { RouterProvider } from 'react-router-dom';
 import { doAction } from '@wordpress/hooks';
+
+// Expose the free app's `react-router-dom` instance so pro sub-module bundles
+// (e.g. Recruitment) can externalize against it and share the SAME router
+// context. Without this each pro bundle ships its own copy, so `useNavigate()`
+// reads a NavigationContext with no provider and throws "useNavigate() may be
+// used only in the context of a <Router>". React itself is already shared the
+// same way (window.React via @wordpress/scripts).
+( window as unknown as { ReactRouterDOM?: typeof ReactRouterDOM } ).ReactRouterDOM = ReactRouterDOM;
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ACTIONS } from '@/shared/filters';
