@@ -215,7 +215,16 @@ class LeaveRequestsController extends REST_Controller {
                     ],
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_leave_create_request' ) || current_user_can( 'erp_leave_manage' );
+                    $employee_id = absint( $request['employee_id'] );
+
+                    if ( $employee_id <= 0 ) {
+                        $employee_id = get_current_user_id();
+                    }
+
+                    // erp_leave_create_request maps to a self-or-HR-manager meta cap
+                    // (see erp_hr_map_meta_caps): the employee passes for themselves,
+                    // an HR manager passes for anyone.
+                    return current_user_can( 'erp_leave_create_request', $employee_id );
                 },
             ],
         ]);
