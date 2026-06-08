@@ -23,10 +23,8 @@ import type { FormEvent, JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-import { loadManagers } from '../../employees/filters/lookups';
-import type { LookupOption } from '../../employees/filters/lookups';
+import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
-import type { Option } from '../options';
 import { RATING_OPTIONS } from '../options';
 
 export type PerformanceType = 'reviews' | 'comments' | 'goals';
@@ -94,27 +92,14 @@ export function PerformanceFormDialog( {
 	onSubmit,
 }: PerformanceFormDialogProps ): JSX.Element {
 	const [ form, setForm ]         = useState< FormState >( emptyForm );
-	const [ managers, setManagers ] = useState< Option[] >( [] );
+	const reporting  = useEmployeeSearch( type !== null, undefined, form.reporting_to );
+	const reviewer   = useEmployeeSearch( type !== null, undefined, form.reviewer );
+	const supervisor = useEmployeeSearch( type !== null, undefined, form.supervisor );
 
 	useEffect( () => {
 		if ( type ) {
 			setForm( emptyForm() );
 		}
-	}, [ type ] );
-
-	useEffect( () => {
-		if ( ! type ) {
-			return;
-		}
-		let cancelled = false;
-		void loadManagers().then( ( l: readonly LookupOption[] ) => {
-			if ( ! cancelled ) {
-				setManagers( l.map( ( m ) => ( { value: String( m.id ), label: m.title } ) ) );
-			}
-		} );
-		return () => {
-			cancelled = true;
-		};
 	}, [ type ] );
 
 	const set = ( key: keyof FormState ) => ( value: string ): void =>
@@ -179,7 +164,7 @@ export function PerformanceFormDialog( {
 
 					{ type === 'reviews' ? (
 						<>
-							<SmartSelectField id="perf_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ managers } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
+							<SmartSelectField id="perf_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ reporting.options } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } onSearch={ reporting.onSearch } loading={ reporting.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 							<SelectField id="perf_jk" label={ __( 'Job Knowledge', 'erp' ) } options={ RATING_OPTIONS } value={ form.job_knowledge } onChange={ set( 'job_knowledge' ) } placeholder={ __( '- Select -', 'erp' ) } />
 							<SelectField id="perf_wq" label={ __( 'Work Quality', 'erp' ) } options={ RATING_OPTIONS } value={ form.work_quality } onChange={ set( 'work_quality' ) } placeholder={ __( '- Select -', 'erp' ) } />
 							<SelectField id="perf_at" label={ __( 'Attendance', 'erp' ) } options={ RATING_OPTIONS } value={ form.attendance } onChange={ set( 'attendance' ) } placeholder={ __( '- Select -', 'erp' ) } />
@@ -190,7 +175,7 @@ export function PerformanceFormDialog( {
 
 					{ type === 'comments' ? (
 						<>
-							<SmartSelectField id="perf_reviewer" label={ __( 'Reviewer', 'erp' ) } required options={ managers } value={ form.reviewer } onChange={ set( 'reviewer' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
+							<SmartSelectField id="perf_reviewer" label={ __( 'Reviewer', 'erp' ) } required options={ reviewer.options } value={ form.reviewer } onChange={ set( 'reviewer' ) } onSearch={ reviewer.onSearch } loading={ reviewer.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 							<TextareaField id="perf_comment" label={ __( 'Comment', 'erp' ) } value={ form.comments } onChange={ set( 'comments' ) } />
 						</>
 					) : null }
@@ -200,7 +185,7 @@ export function PerformanceFormDialog( {
 							<TextField id="perf_completion" label={ __( 'Completion Date', 'erp' ) } type="date" required value={ form.completion_date } onChange={ set( 'completion_date' ) } />
 							<TextareaField id="perf_goal" label={ __( 'Goal Description', 'erp' ) } value={ form.goal_description } onChange={ set( 'goal_description' ) } />
 							<TextareaField id="perf_emp_assess" label={ __( 'Employee Assessment', 'erp' ) } value={ form.employee_assessment } onChange={ set( 'employee_assessment' ) } />
-							<SmartSelectField id="perf_supervisor" label={ __( 'Supervisor', 'erp' ) } required options={ managers } value={ form.supervisor } onChange={ set( 'supervisor' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
+							<SmartSelectField id="perf_supervisor" label={ __( 'Supervisor', 'erp' ) } required options={ supervisor.options } value={ form.supervisor } onChange={ set( 'supervisor' ) } onSearch={ supervisor.onSearch } loading={ supervisor.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 							<TextareaField id="perf_sup_assess" label={ __( 'Supervisor Assessment', 'erp' ) } value={ form.supervisor_assessment } onChange={ set( 'supervisor_assessment' ) } />
 						</>
 					) : null }

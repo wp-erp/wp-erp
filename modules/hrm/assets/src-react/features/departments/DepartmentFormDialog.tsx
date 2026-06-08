@@ -22,8 +22,8 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-import { loadManagers } from '../employees/filters/lookups';
-import type { LookupOption } from '../employees/filters/lookups';
+import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
+
 import { SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
 import type { Department, DepartmentInput } from './types';
@@ -58,7 +58,13 @@ export function DepartmentFormDialog( {
 }: DepartmentFormDialogProps ): JSX.Element {
 	const [ form, setForm ]       = useState< FormState >( EMPTY );
 	const [ titleErr, setTitleErr ] = useState< string >( '' );
-	const [ managers, setManagers ] = useState< readonly LookupOption[] >( [] );
+	// Server-side employee search for the Department Head picker; seed the
+	// already-selected lead so its name still renders when editing.
+	const lead = useEmployeeSearch(
+		open,
+		editing && editing.lead ? { value: String( editing.lead ), label: editing.lead_name } : null,
+		form.lead,
+	);
 
 	// Prime the form whenever the dialog opens for a fresh target.
 	useEffect( () => {
@@ -78,22 +84,6 @@ export function DepartmentFormDialog( {
 		);
 	}, [ open, editing ] );
 
-	useEffect( () => {
-		let active = true;
-		void loadManagers().then( ( list ) => {
-			if ( active ) {
-				setManagers( list );
-			}
-		} );
-		return () => {
-			active = false;
-		};
-	}, [] );
-
-	const managerOptions = useMemo< Option[] >(
-		() => managers.map( ( m ) => ( { value: String( m.id ), label: m.title } ) ),
-		[ managers ]
-	);
 
 	// Parent options exclude the department being edited (can't parent itself).
 	const parentOptions = useMemo< Option[] >(
@@ -149,9 +139,11 @@ export function DepartmentFormDialog( {
 					<SmartSelectField
 						id="dept_lead"
 						label={ __( 'Department Head', 'erp' ) }
-						options={ managerOptions }
+						options={ lead.options }
 						value={ form.lead }
 						onChange={ ( v ) => setForm( ( p ) => ( { ...p, lead: v } ) ) }
+						onSearch={ lead.onSearch }
+						loading={ lead.loading }
 						placeholder={ __( '- Select -', 'erp' ) }
 						searchPlaceholder={ __( 'Search employees…', 'erp' ) }
 						emptyMessage={ __( 'No employees found.', 'erp' ) }

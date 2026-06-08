@@ -37,6 +37,8 @@ import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
+import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
+
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
 import {
@@ -52,11 +54,6 @@ interface NewLeaveRequestDialogProps {
 	readonly onSubmitted: () => void;
 }
 
-interface EmployeeRow {
-	readonly user_id:   number;
-	readonly full_name: string;
-}
-
 interface RawFinancialYear {
 	readonly id:      number;
 	readonly fy_name: string;
@@ -65,11 +62,10 @@ interface RawFinancialYear {
 const DATE_VALIDATE_DEBOUNCE_MS = 350;
 
 export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveRequestDialogProps ): JSX.Element {
-	const [ employees, setEmployees ] = useState< readonly EmployeeRow[] >( [] );
 	const [ years, setYears ]         = useState< readonly RawFinancialYear[] >( [] );
-	const [ optionsLoading, setOptionsLoading ] = useState( false );
 
 	const [ employeeId, setEmployeeId ] = useState( '' );
+	const employee                      = useEmployeeSearch( open, undefined, employeeId );
 	const [ year, setYear ]             = useState( '' );
 	const [ policies, setPolicies ]     = useState< readonly AssignablePolicy[] >( [] );
 	const [ policiesLoading, setPoliciesLoading ] = useState( false );
@@ -114,16 +110,11 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 		setExtra( initLeaveFieldValues( fields ) );
 
 		let cancelled = false;
-		setOptionsLoading( true );
-		void Promise.all( [
-			request< EmployeeRow[] >( restPath( 'v2', '/employees', { status: 'active', per_page: 100, orderby: 'full_name', order: 'asc' } ) ),
-			request< { financial_years?: RawFinancialYear[]; current_f_year?: number } >( restPath( 'v2', '/leave-policies/form-options' ) ),
-		] )
-			.then( ( [ emps, opts ] ) => {
+		void request< { financial_years?: RawFinancialYear[]; current_f_year?: number } >( restPath( 'v2', '/leave-policies/form-options' ) )
+			.then( ( opts ) => {
 				if ( cancelled ) {
 					return;
 				}
-				setEmployees( Array.isArray( emps ) ? emps : [] );
 				const fys = Array.isArray( opts.financial_years ) ? opts.financial_years : [];
 				setYears( fys );
 				const current = Number( opts.current_f_year ?? 0 );
@@ -134,11 +125,6 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 			.catch( ( raw ) => {
 				if ( ! cancelled ) {
 					setError( ( raw as ApiError )?.message ?? __( 'Could not load the form.', 'erp' ) );
-				}
-			} )
-			.finally( () => {
-				if ( ! cancelled ) {
-					setOptionsLoading( false );
 				}
 			} );
 
@@ -210,7 +196,6 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 		};
 	}, [ open, userId, policy, from, to ] );
 
-	const employeeOptions: Option[] = employees.map( ( e ) => ( { value: String( e.user_id ), label: e.full_name } ) );
 	const yearOptions: Option[]     = years.map( ( fy ) => ( { value: String( fy.id ), label: fy.fy_name } ) );
 	const policyOptions: Option[]   = policies.map( ( p ) => ( {
 		value: String( p.id ),
@@ -279,10 +264,12 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 						id="leave_employee"
 						label={ __( 'Employee', 'erp' ) }
 						required
-						options={ employeeOptions }
+						options={ employee.options }
 						value={ employeeId }
 						onChange={ ( v ) => { setEmployeeId( v ); setPolicy( '' ); } }
-						placeholder={ optionsLoading ? __( 'Loading…', 'erp' ) : __( '- Select -', 'erp' ) }
+						onSearch={ employee.onSearch }
+						loading={ employee.loading }
+						placeholder={ __( '- Select -', 'erp' ) }
 						searchPlaceholder={ __( 'Search employees…', 'erp' ) }
 						emptyMessage={ __( 'No employees found.', 'erp' ) }
 					/>

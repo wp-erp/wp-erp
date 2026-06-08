@@ -24,7 +24,9 @@ import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 import type { EmployeeCreateInput } from '@/stores/employees';
 
-import { loadLookup, loadManagers } from '../employees/filters/lookups';
+import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
+
+import { loadLookup } from '../employees/filters/lookups';
 import type { LookupOption } from '../employees/filters/lookups';
 import { ExtraFields } from './ExtraFields';
 import type { ExtraField } from './ExtraFields';
@@ -122,7 +124,7 @@ export function EmployeeForm( {
 	const [ departments, setDepartments ] = useState< Option[] >( [] );
 	const [ designations, setDesignations ] = useState< Option[] >( [] );
 	const [ locations, setLocations ] = useState< Option[] >( [] );
-	const [ managers, setManagers ] = useState< Option[] >( [] );
+	const reporting = useEmployeeSearch( ! isEdit, undefined, form.reporting_to ?? '' );
 	const [ lookupsLoaded, setLookupsLoaded ] = useState( false );
 
 	// Pro-injected custom fields (Custom Field Builder). Empty when pro is absent.
@@ -136,7 +138,6 @@ export function EmployeeForm( {
 		] ).finally( () => ! cancelled && setLookupsLoaded( true ) );
 		if ( ! isEdit ) {
 			void loadLookup( 'locations' ).then( ( l ) => ! cancelled && setLocations( toOptions( l ) ) );
-			void loadManagers().then( ( l ) => ! cancelled && setManagers( toOptions( l ) ) );
 		}
 		return () => {
 			cancelled = true;
@@ -428,7 +429,7 @@ export function EmployeeForm( {
 				{ ! isEdit ? (
 					<FormSection title={ __( 'Work', 'erp' ) }>
 						<SmartSelectField id="location" label={ __( 'Location', 'erp' ) } options={ locations } value={ form.location ?? '' } onChange={ set( 'location' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search locations…', 'erp' ) } />
-						<SmartSelectField id="reporting_to" label={ __( 'Reporting To', 'erp' ) } options={ managers } value={ form.reporting_to ?? '' } onChange={ set( 'reporting_to' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
+						<SmartSelectField id="reporting_to" label={ __( 'Reporting To', 'erp' ) } options={ reporting.options } value={ form.reporting_to ?? '' } onChange={ set( 'reporting_to' ) } onSearch={ reporting.onSearch } loading={ reporting.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 						<SelectField id="hiring_source" label={ __( 'Source of Hire', 'erp' ) } options={ SOURCE_OPTIONS } value={ form.hiring_source ?? '' } onChange={ set( 'hiring_source' ) } placeholder={ __( '- Select -', 'erp' ) } />
 						<TextField id="pay_rate" label={ __( 'Pay Rate', 'erp' ) } value={ form.pay_rate ?? '' } onChange={ set( 'pay_rate' ) } />
 						<SelectField id="pay_type" label={ __( 'Pay Type', 'erp' ) } options={ PAY_TYPE_OPTIONS } value={ form.pay_type ?? '' } onChange={ set( 'pay_type' ) } placeholder={ __( '- Select -', 'erp' ) } />

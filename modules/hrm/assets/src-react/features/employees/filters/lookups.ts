@@ -75,47 +75,40 @@ export function readLookup( key: LookupKey ): LookupOption[] | null {
 	return cache[ key ] ?? null;
 }
 
-/**
- * Active employees, shaped as `{ id: user_id, title: full_name }` for the
- * "Reporting To" manager dropdown on the create form. Pulls from the v2 list
- * endpoint (same source as the People table) and caches at module scope.
- */
-let managersCache: LookupOption[] | null = null;
-let managersInflight: Promise< LookupOption[] > | null = null;
-
 interface RawEmployeeRow {
-	user_id?:  unknown;
-	id?:       unknown;
-	full_name?: unknown;
+	user_id?:     unknown;
+	id?:          unknown;
+	full_name?:   unknown;
+	employee_id?: unknown;
 }
 
-export async function loadManagers(): Promise< LookupOption[] > {
-	if ( managersCache ) {
-		return managersCache;
+/**
+ * Server-side employee search for the searchable employee/manager pickers.
+ * The `/erp/v2/employees` list endpoint caps `per_page` at 100, so a dropdown
+ * that loads once and filters client-side can never reach employees beyond the
+ * first page. Instead, query the server with the typed term (`search` → matches
+ * the display name) and cap each request at `perPage` rows (20 by default), so
+ * any employee is reachable by typing — without ever loading the whole list.
+ */
+export async function searchEmployees( query = '', perPage = 20 ): Promise< LookupOption[] > {
+	const q    = encodeURIComponent( query.trim() );
+	const base = `/erp/v2/employees?per_page=${ perPage }&status=active&orderby=full_name&order=asc`;
+	const url  = q ? `${ base }&search=${ q }` : base;
+	try {
+		const raw  = await request< unknown >( url );
+		const list = Array.isArray( raw ) ? raw : [];
+		return list
+			.map( ( item ) => {
+				const obj   = item as RawEmployeeRow;
+				const id    = toInt( obj.user_id ?? obj.id, 0 );
+				const name  = toStr( obj.full_name ?? '', '' );
+				const empId = toStr( obj.employee_id ?? '', '' );
+				// Label shows the HR Employee ID (not the DB user id) + name.
+				const title = empId ? `${ empId } - ${ name }` : name;
+				return { id, title };
+			} )
+			.filter( ( opt ) => opt.id > 0 && opt.title !== '' );
+	} catch {
+		return [];
 	}
-	if ( managersInflight ) {
-		return managersInflight;
-	}
-	managersInflight = ( async () => {
-		try {
-			const raw  = await request< unknown >( '/erp/v2/employees?per_page=100&status=active&orderby=full_name&order=asc' );
-			const list = Array.isArray( raw ) ? raw : [];
-			const options = list
-				.map( ( item ) => {
-					const obj   = item as RawEmployeeRow;
-					const id    = toInt( obj.user_id ?? obj.id, 0 );
-					const title = toStr( obj.full_name ?? '', '' );
-					return { id, title };
-				} )
-				.filter( ( opt ) => opt.id > 0 && opt.title !== '' );
-			managersCache = options;
-			return options;
-		} catch {
-			managersCache = [];
-			return [];
-		} finally {
-			managersInflight = null;
-		}
-	} )();
-	return managersInflight;
 }

@@ -227,7 +227,7 @@ final class Enqueue {
 			'displayName'   => (string) ( $user->display_name ?? '' ),
 			'email'         => (string) ( $user->user_email ?? '' ),
 			'avatarUrl'     => get_avatar_url( $user_id, [ 'size' => 80 ] ) ?: '',
-			'isPro'         => defined( 'WPERP_PRO_VERSION' ) || class_exists( 'WeDevs_ERP_PRO' ),
+			'isPro'         => class_exists( 'WP_ERP_Pro' ),
 			'isHrManager'   => function_exists( 'erp_hr_get_manager_role' )
 				? in_array( erp_hr_get_manager_role(), (array) $user->roles, true )
 				: false,

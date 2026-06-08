@@ -171,6 +171,8 @@ interface SmartSelectFieldProps {
 	readonly required?:         boolean | undefined;
 	readonly error?:            string | undefined;
 	readonly className?:        string | undefined;
+	readonly onSearch?:         ( ( query: string ) => void | Promise< void > ) | undefined;
+	readonly loading?:          boolean | undefined;
 }
 
 /**
@@ -190,6 +192,8 @@ export function SmartSelectField( {
 	required,
 	error,
 	className,
+	onSearch,
+	loading,
 }: SmartSelectFieldProps ): JSX.Element {
 	return (
 		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
@@ -201,6 +205,8 @@ export function SmartSelectField( {
 				searchPlaceholder={ searchPlaceholder ?? __( 'Search…', 'erp' ) }
 				emptyMessage={ emptyMessage ?? __( 'No matches found.', 'erp' ) }
 				invalid={ error ? true : false }
+				{ ...( onSearch ? { onSearch } : {} ) }
+				{ ...( loading !== undefined ? { loading } : {} ) }
 				showClear
 				className="h-10 w-full"
 				// plugin-ui's SmartSelect content reads `--anchor-width`, but its

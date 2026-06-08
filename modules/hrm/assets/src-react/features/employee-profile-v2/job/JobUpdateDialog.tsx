@@ -24,7 +24,8 @@ import type { FormEvent, JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-import { loadLookup, loadManagers } from '../../employees/filters/lookups';
+import { loadLookup } from '../../employees/filters/lookups';
+import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import type { LookupOption } from '../../employees/filters/lookups';
 import {
 	REHIRE_OPTIONS,
@@ -115,7 +116,7 @@ export function JobUpdateDialog( {
 	const [ departments, setDepartments ]   = useState< Option[] >( [] );
 	const [ designations, setDesignations ] = useState< Option[] >( [] );
 	const [ locations, setLocations ]       = useState< Option[] >( [] );
-	const [ managers, setManagers ]         = useState< Option[] >( [] );
+	const reporting = useEmployeeSearch( action === 'job', undefined, form.reporting_to );
 
 	// Reset the form each time a dialog opens.
 	useEffect( () => {
@@ -133,7 +134,6 @@ export function JobUpdateDialog( {
 		void loadLookup( 'departments' ).then( ( l ) => ! cancelled && setDepartments( toOptions( l ) ) );
 		void loadLookup( 'designations' ).then( ( l ) => ! cancelled && setDesignations( toOptions( l ) ) );
 		void loadLookup( 'locations' ).then( ( l ) => ! cancelled && setLocations( toOptions( l ) ) );
-		void loadManagers().then( ( l ) => ! cancelled && setManagers( toOptions( l ) ) );
 		return () => {
 			cancelled = true;
 		};
@@ -265,7 +265,7 @@ export function JobUpdateDialog( {
 							<SmartSelectField id="job_department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department } onChange={ set( 'department' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } />
 							<SmartSelectField id="job_designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation } onChange={ set( 'designation' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } />
 							<SmartSelectField id="job_location" label={ __( 'Location', 'erp' ) } options={ locations } value={ form.location } onChange={ set( 'location' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search locations…', 'erp' ) } />
-							<SmartSelectField id="job_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ managers } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
+							<SmartSelectField id="job_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ reporting.options } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } onSearch={ reporting.onSearch } loading={ reporting.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 						</>
 					) : null }
 

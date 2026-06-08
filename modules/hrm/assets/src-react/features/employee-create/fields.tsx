@@ -171,6 +171,13 @@ interface SmartSelectFieldProps {
 	readonly required?:         boolean | undefined;
 	readonly error?:            string | undefined;
 	readonly className?:        string | undefined;
+	/**
+	 * Optional server-side search. When provided, `SmartSelect` calls this
+	 * (debounced) on every keystroke instead of filtering `options` client-side
+	 * — so a picker backed by a paged endpoint can reach every row by typing.
+	 */
+	readonly onSearch?:         ( ( query: string ) => void | Promise< void > ) | undefined;
+	readonly loading?:          boolean | undefined;
 }
 
 /**
@@ -190,6 +197,8 @@ export function SmartSelectField( {
 	required,
 	error,
 	className,
+	onSearch,
+	loading,
 }: SmartSelectFieldProps ): JSX.Element {
 	return (
 		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
@@ -201,6 +210,8 @@ export function SmartSelectField( {
 				searchPlaceholder={ searchPlaceholder ?? __( 'Search…', 'erp' ) }
 				emptyMessage={ emptyMessage ?? __( 'No matches found.', 'erp' ) }
 				invalid={ error ? true : false }
+				{ ...( onSearch ? { onSearch } : {} ) }
+				{ ...( loading !== undefined ? { loading } : {} ) }
 				showClear
 				className="h-10 w-full"
 				// plugin-ui's SmartSelect content reads `--anchor-width`, but its

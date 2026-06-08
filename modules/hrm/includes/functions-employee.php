@@ -130,7 +130,12 @@ function erp_hr_get_employees( $args = [] ) {
 
         if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
             $arg_s     = $args['s'];
-            $employees = $employees->where( 'display_name', 'LIKE', "%$arg_s%" );
+            // Match the name or the HR Employee ID (grouped so it ANDs with the
+            // status / department / designation filters above).
+            $employees = $employees->where( function ( $query ) use ( $arg_s, $employee_tbl ) {
+                $query->where( 'display_name', 'LIKE', "%$arg_s%" )
+                      ->orWhere( $employee_tbl . '.employee_id', 'LIKE', "%$arg_s%" );
+            } );
         }
 
         if ( 'employee_name' === $args['orderby'] ) {
