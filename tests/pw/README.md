@@ -240,6 +240,13 @@ All of the above are git-ignored.
 
 - **`wp-env` won't boot / port in use** — make sure Docker is running and the web
   ports `9999` / `9989` are free; `npm run reset:env` recreates the site.
+- **Run the dev site on a different port** — the default is `9999` (`.wp-env.json`). To
+  change it *locally* without touching CI: add `"port": <port>` to `.wp-env.override.json`
+  (gitignored, so CI keeps `9999`), set `BASE_URL` + `SERVER_URL` in `.env` to match, then
+  `npm run restart:env`. **Re-run the setup chain afterwards** (`npm run docker:setup`, or
+  just `npm test`) — changing the port changes WordPress's `siteurl` (hence `COOKIEHASH`),
+  which invalidates the saved auth `storageState`, so it must be regenerated. No DB reset
+  is needed; the data volume persists across the restart.
 - **DB connection errors** — run `npm run db:port` to re-sync `DB_PORT` to the live
   wp-env MySQL port (it changes whenever containers are recreated).
 - **`@pro` specs fail / pro features missing** — ensure `../../../erp-pro` exists, you
