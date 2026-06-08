@@ -18,5 +18,10 @@
     "wp-content/plugins/wp-erp": "../../",
     "wp-data": "./wp-data",
     "wp-content/mu-plugins": "./mu-plugins"
+  },
+  "env": {
+    "tests": {
+      "mysqlPort": 9988
+    }
   }
 }
