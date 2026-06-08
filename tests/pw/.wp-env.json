@@ -5,7 +5,8 @@
     "../../"
   ],
   "themes": [],
-  "port": 9999,
+  "port": 1000,
+  "mysqlPort": 1001,
   "testsPort": 9989,
   "config": {
     "WP_DEBUG": true,

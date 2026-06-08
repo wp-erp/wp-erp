@@ -2,10 +2,11 @@
 /* eslint-disable */
 // Syncs DB_PORT in .env to the wp-env DEVELOPMENT MySQL container's host port.
 //
-// wp-env auto-assigns the MySQL host port on every (re)create and offers no way to
-// pin it deterministically (its `mysqlPort` option collides the dev + tests MySQL
-// on one port). This reads the live dev-MySQL port from Docker and writes it into
-// .env so dbUtils (mysql2) and the CRM/DB seeders connect to the right port.
+// The dev MySQL port is now PINNED to 1001 via "mysqlPort" in .wp-env.json (tests MySQL
+// is left random, so there is no dev/tests collision). This script reads the live
+// dev-MySQL host port from Docker and writes it into .env anyway, so DB_PORT stays
+// correct even if someone overrides the port locally (.wp-env.override.json) or runs an
+// older config — dbUtils (mysql2) and the CRM/DB seeders then connect to the right port.
 //
 // Runs automatically after `npm run start:env` (npm `poststart:env` lifecycle) and
 // can be run on demand with `npm run db:port`.

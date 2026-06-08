@@ -50,8 +50,8 @@ env:
     ACC_MANAGER: acc_manager1
     EMPLOYEE: employee1
     USER_PASSWORD: 01erp01
-    BASE_URL: http://localhost:9999
-    SERVER_URL: http://localhost:9999/wp-json
+    BASE_URL: http://localhost:1000
+    SERVER_URL: http://localhost:1000/wp-json
     CI: true
     HEADLESS: true
     NO_SETUP: false
