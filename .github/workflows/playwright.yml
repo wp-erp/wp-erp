@@ -292,6 +292,17 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 1
 
+            # Per-shard summaryReporter output (summary-report/results.json) — merged
+            # into the Dokan-style quality report by the merge-reports job.
+            - name: Upload e2e summary
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: summary-e2e-${{ matrix.shardIndex }}
+                  path: tests/pw/summary-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
     # ── REST/API suite (single runner). ────────────────────────────────────────
     api_tests:
         name: api tests
@@ -408,6 +419,15 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 1
 
+            - name: Upload api summary
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: summary-api
+                  path: tests/pw/summary-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
     # ── Merge every shard/api blob report into one HTML report. ────────────────
     merge-reports:
         name: merge reports
@@ -490,3 +510,56 @@ jobs:
                       tests/pw/playwright-report-api
                   if-no-files-found: ignore
                   retention-days: 14
+
+            # ── Dokan-style QA Quality Report → $GITHUB_STEP_SUMMARY ───────────────
+            # Per-shard e2e + api summaryReporter outputs are merged and rendered into a
+            # branded markdown report (shields.io badges, Mermaid pass/fail pie, suite
+            # tables) shown on the run page, plus a downloadable HTML variant.
+            - name: Download e2e summaries
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-summaries
+                  pattern: summary-e2e-*
+
+            - name: Download api summary
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-summaries
+                  pattern: summary-api
+
+            - name: Merge e2e shard summaries
+              if: always()
+              working-directory: tests/pw
+              run: |
+                  ARTIFACTS_DIR=./all-summaries REPORT_MATCH=summary-e2e \
+                  MERGED_OUTPUT=./all-summaries/merged-summary.json \
+                  node ./utils/mergeSummaryReport.js || true
+
+            - name: Generate quality report (HTML + markdown)
+              if: always()
+              working-directory: tests/pw
+              env:
+                  E2E_TEST_RESULT: ./all-summaries/merged-summary.json
+                  API_TEST_RESULT: ./all-summaries/summary-api/results.json
+                  ARTIFACTS_DIR: ./all-summaries
+                  OUTPUT_FILE: ./all-summaries/quality-report.html
+                  SUMMARY_FILE: ./all-summaries/quality-report.md
+              run: node ./utils/generateQualityReport.js || true
+
+            - name: Append quality report to job summary
+              if: always()
+              run: |
+                  if [ -f tests/pw/all-summaries/quality-report.md ]; then
+                      cat tests/pw/all-summaries/quality-report.md >> "$GITHUB_STEP_SUMMARY"
+                  fi
+
+            - name: Upload quality report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: quality-report
+                  path: |
+                      tests/pw/all-summaries/quality-report.html
+                      tests/pw/all-summaries/quality-report.md
+                  if-no-files-found: ignore
+                  retention-days: 30

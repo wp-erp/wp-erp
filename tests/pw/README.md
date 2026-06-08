@@ -260,6 +260,13 @@ test:e2e -- --shard=i/4`** (`NO_SETUP=true`). A separate job runs `npm run test:
 Lite vs pro is selected by copying `.wp-env.ci.json` → `.wp-env.override.json` and
 setting `ERP_PRO`.
 
+A final **`merge-reports`** job merges the shard/API blob reports into HTML and renders a
+**QA Quality Report** — shields.io badges, a Mermaid pass/fail pie, and per-suite tables,
+branded with the WP ERP + Playwright logos (`utils/assets/`) — into the run's
+`$GITHUB_STEP_SUMMARY` via `utils/generateQualityReport.js` (+ `quality-report-template.html`),
+plus a downloadable **`quality-report`** artifact. Per-shard `summary-report/results.json`
+files are merged by `utils/mergeSummaryReport.js`.
+
 ## Safety & license
 
 - **`.env` is git-ignored** — never commit real credentials or a real `LICENSE_KEY`.

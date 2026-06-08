@@ -22,7 +22,7 @@ export default defineConfig({
     globalSetup: './global-setup',
     grep: [/@lite/, /@liteOnly/, /@pro/],
     grepInvert: isPro ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
-    reporter: isCI ? [['list'], ['blob']] : [['list'], ['html', { open: 'never' }]],
+    reporter: isCI ? [['list'], ['blob'], ['./utils/summaryReporter.ts']] : [['list'], ['html', { open: 'never' }]],
     use: {
         ...devices['Desktop Chrome'],
         baseURL: BASE_URL ?? 'http://localhost:9999',
