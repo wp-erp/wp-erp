@@ -133,6 +133,18 @@ function erp_qa_force_pro_install() {
 
 	$ids = array_keys( erp_qa_force_pro_modules() );
 
+	// erp-pro's Module::activate_modules() SKIPS any is_crm / is_acc / is_hrm pro
+	// module whose parent FREE core module is inactive (includes/Module.php ~L856-897).
+	// HRM is on by default, but CRM + Accounting are not — and at this early hook
+	// `wperp()->modules->is_module_active()` does not yet reflect a DB-activated core
+	// module — so without this every CRM/Accounting pro module (deals, inventory, the
+	// CRM integrations, …) silently fails to activate and only the ~11 HRM modules
+	// stick. Activate the core parents HERE first (refreshes the in-request state) so
+	// the full available pro set can install.
+	if ( function_exists( 'wperp' ) && isset( wperp()->modules ) ) {
+		wperp()->modules->activate_modules( array( 'crm', 'accounting' ) );
+	}
+
 	// Force every module to be treated as newly activated so its install hook fires.
 	update_option( 'erp_pro_active_modules', array() );
 

@@ -10,14 +10,9 @@ setup.describe('local site provisioning', () => {
     setup.skip(!parseBoolean(process.env.WP_ENV, true), 'wp-env only — skipped for external sites');
 
     setup('activate plugins, permalinks & timezone', { tag: ['@lite'] }, async () => {
+        // Lite provisioning only. erp-pro is activated as an explicit, trackable
+        // @pro step in _site.setup.ts (Dokan-style), not silently here.
         exeCommandWpcli('plugin activate wp-erp');
-        if (parseBoolean(process.env.ERP_PRO)) {
-            try {
-                exeCommandWpcli('plugin activate erp-pro');
-            } catch {
-                /* erp-pro may not be mapped; ignore in lite-only runs */
-            }
-        }
         exeCommandWpcli('rewrite structure "/%postname%/" --hard');
         exeCommandWpcli('rewrite flush --hard');
         exeCommandWpcli('option update timezone_string "UTC"');

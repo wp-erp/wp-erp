@@ -48,6 +48,9 @@ export class AttendancePage {
         // "either the server mount node OR the booted app root is attached".
         vueApp: '#vue-admin-app, #vue-backend-attendance',
         content: '#wpbody-content',
+        // Shifts.vue mounts its whole UI under this root <div class="app-shifts">.
+        // It's the unambiguous "the /shifts route component booted" signal.
+        shiftsApp: '.app-shifts',
         // In-app controls that surface once the Shifts route renders.
         // Shifts.vue: <a id="erp-shift-new"> "Add New Shift"; list-table.shift-list.
         addControl: '#erp-shift-new, a:has-text("Add New Shift"), a:has-text("Add"), button:has-text("Add")',
@@ -79,5 +82,28 @@ export class AttendancePage {
         await expect(this.page.locator(this.selectors.content)).toBeVisible({ timeout: 30_000 });
         await expect(this.page.locator(this.selectors.wrap).first()).toBeAttached({ timeout: 15_000 });
         await expect(this.page.locator(this.selectors.vueApp).first()).toBeAttached({ timeout: 15_000 });
+    }
+
+    /**
+     * Assert the /shifts route ACTUALLY booted — not just that the page loaded.
+     * Shifts.vue mounts as <div class="app-shifts"> holding the "#erp-shift-new"
+     * add link and a list-table whose column headers ("Shift Name" / "Start Time")
+     * render even when the list is empty.
+     *
+     * Gating on this real component is robust where the old approach was not:
+     *  - expectMountedNoFatal() is satisfied immediately by the server-rendered
+     *    #vue-admin-app node, so it does NOT wait for the SPA to finish booting;
+     *  - scraping #wpbody-content text matched the license nag + HIDDEN cross-module
+     *    nav (force-pro keeps every module active), and was populated before the SPA
+     *    rendered — so a slow CI boot read as a failure.
+     * The list fetch (GET erp/v1/hrm/attendance/shifts) may 404 on an empty site;
+     * Shifts.vue catches it and still renders the headers, so we don't depend on it.
+     * Timeout is CI-generous; locally this resolves in a few seconds.
+     */
+    async expectShiftsListReady(): Promise<void> {
+        const shifts = this.page.locator(this.selectors.shiftsApp);
+        await expect(shifts).toBeVisible({ timeout: 45_000 });
+        await expect(shifts.locator('#erp-shift-new')).toBeVisible({ timeout: 15_000 });
+        await expect(shifts).toContainText(/Shift Name|Start Time/i, { timeout: 15_000 });
     }
 }

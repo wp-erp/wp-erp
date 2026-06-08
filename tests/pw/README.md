@@ -15,6 +15,10 @@ REST endpoints, and direct MySQL assertions — across the **HRM**, **CRM**,
   <img alt="License" src="https://img.shields.io/badge/license-GPL--2.0--or--later-blue">
 </p>
 
+> 📖 **[`setup.md`](./setup.md)** is the single source of truth for the env / setup / CI
+> architecture (mirrors the Dokan `tests/pw` suite). This README is the practical
+> quick-start and command reference.
+
 ## Features
 
 - **Dual-suite architecture** — UI E2E (`playwright.config.ts`, `tests/e2e`) and
@@ -78,14 +82,26 @@ ERP_PRO=true npm test         # runs @lite + @pro
 ERP_PRO=true npm run test:api
 ```
 
-When `ERP_PRO=true`, the `@pro` site-setup step turns on the full pro surface: it
-sets the `erp_qa_force_pro` option, and the test-only must-use plugin
-`mu-plugins/erp-qa-force-pro.php` then forces a valid license and runs erp-pro's
-real `activate_modules()` so every pro module installs its tables and capabilities.
-With `ERP_PRO` unset, the flag is cleared and the same site behaves as lite. The QA
-test site is intentionally oversized (far more users than any license cap), which is
-why the force-pro mu-plugin is needed; it is **test-only** and never ships with the
-plugin.
+When `ERP_PRO=true`, `site_setup` runs a **separate, trackable block of `@pro` steps** —
+each a discrete node in the report: `activate erp-pro plugin` → `set erp pro license` →
+`activate all erp pro modules` → `verify pro install completed`. These set the
+`erp_qa_force_pro` option; the test-only must-use plugin `mu-plugins/erp-qa-force-pro.php`
+then forces a valid license and runs erp-pro's real `activate_modules()` so every pro
+module installs its tables and capabilities. With `ERP_PRO` unset, the flag is cleared and
+the same site behaves as lite. The QA test site is intentionally oversized (far more users
+than any license cap) and **erp-pro's license is user-cap-gated** (unlike Dokan's), which
+is why the force-pro mu-plugin is needed; it is **test-only** and never ships with the plugin.
+
+`activate_modules()` skips a pro module whose **free parent** (HRM/CRM/Accounting) is
+inactive, so the mu-plugin activates the CRM + Accounting cores first — with that, **21 of
+23** pro modules activate on a clean site. The other 2 (`woocommerce`, `awesome_support`)
+need their external host plugin and stay inactive; `_site.setup.ts` records the active set
+to `ERP_PRO_ACTIVE_MODULES` and `@pro` specs call `helpers.proModuleActive('<id>')` to
+**skip** (not fail) when their module is inactive.
+
+> **First boot / re-seed:** `npm run docker:full` (= `start:env` + `create:admin` +
+> `setup`) seeds the site end-to-end. After a `reset:env` (which wipes the DB), run
+> `npm run docker:setup` to re-seed, then iterate fast with `NO_SETUP=true npm run test:e2e`.
 
 ### Alternative: an existing site (Valet, no Docker)
 
@@ -105,6 +121,8 @@ npm test
 | `npm test` | Full **e2e** suite (setup chain → `tests/e2e`) |
 | `npm run test:api` | **REST** suite (`api.config.ts` → `tests/api`) |
 | `npm run test:e2e` | `e2e_tests` only with `NO_SETUP=true` — re-run against an already-seeded site |
+| `npm run setup` / `docker:setup` | Run the **setup chain only** (seed-once); stops before tests |
+| `npm run docker:full` | `start:env` + `create:admin` + `setup` — first boot / after `reset:env` |
 | `npm run test:headed` | Run with a visible browser |
 | `npm run test:ui` | Playwright interactive UI mode |
 | `npm run test:debug` | Playwright Inspector / step debugger |
@@ -114,7 +132,8 @@ npm test
 | `npm test -- --grep @manager` | Filter to a role (`@admin`/`@manager`/`@employee`) |
 | `npm test -- tests/e2e/hrm/hrm.spec.ts` | Run a single spec file |
 | `SLOWMO=300 HEADLESS=false npm test` | Watch a flow (slow-mo, non-headless) |
-| `npm run stop:env` / `npm run reset:env` | Stop / destroy + recreate the wp-env site |
+| `npm run stop:env` / `npm run restart:env` / `npm run reset:env` | Stop / restart / destroy + recreate the wp-env site |
+| `npm run check:plugins` / `check:users` / `check:modules` | wp-cli introspection of the live site |
 
 > wp-env auto-assigns the MySQL host port on each (re)create. `start:env` and
 > `reset:env` automatically run `npm run db:port`, which writes the live port into
@@ -138,30 +157,38 @@ module or role.
 `local_site_setup → site_setup → auth_setup → e2e_setup → e2e_tests` (the REST suite
 uses a trimmed `site_setup → auth_setup → api_tests`).
 
-- **local_site_setup** — wp-env only: activate plugins, pretty permalinks, timezone.
-- **site_setup** — site-readiness + module activation; the `@pro` step force-activates pro.
+- **local_site_setup** — wp-env only: activate `wp-erp` (lite), pretty permalinks, timezone.
+- **site_setup** — site-readiness + lite module activation, then a **separate, trackable
+  block of `@pro` steps**: `activate erp-pro plugin` → `set erp pro license` → `activate
+  all erp pro modules` → `verify pro install completed`.
 - **auth_setup** — admin login → `storageState` + capture `X-WP-Nonce`; create the
   role users; log each role in once → `playwright/.auth/<role>StorageState.json`, and
   capture each manager's own REST nonce.
 - **e2e_setup** — per-module `seed()` creates fixtures and writes IDs
   (`EMPLOYEE_ID`, `CUSTOMER_ID`, …) back into `.env`.
 
-`NO_SETUP=true` skips the chain so you can re-run specs against an already-seeded site.
+`npm run docker:setup` runs just this chain (seed-once); `NO_SETUP=true` then skips it so
+you can re-run specs against the already-seeded site. See **[`setup.md`](./setup.md)** for
+the full architecture reference.
 
 ## Project structure
 
 ```
 tests/pw/
+├── setup.md                    # architecture source of truth (env / setup / CI)
 ├── playwright.config.ts        # e2e suite — project chain + tag grep
 ├── api.config.ts               # REST suite (testDir tests/api)
 ├── global-setup.ts             # truncate wp-data/debug.log before a run
 ├── global-teardown.ts          # write playwright/systemInfo.json
 ├── .wp-env.json                # wp-env (Docker) provider — FREE-ONLY base (wp-erp + mu-plugins)
 ├── .wp-env.override.json.example  # copy to .wp-env.override.json to add erp-pro (pro runs)
+├── .wp-env.ci.json             # CI override — adds erp-pro (copied to .override in CI)
 ├── .env.example                # copy to .env (wp-env defaults + existing-site block)
 ├── mu-plugins/
 │   └── erp-qa-force-pro.php     # TEST-ONLY: force-activate pro for @pro runs
-├── bin/createAdmin.js          # `npm run create:admin`
+├── bin/
+│   ├── createAdmin.js          # `npm run create:admin`
+│   └── syncDbPort.js           # `npm run db:port` — sync DB_PORT from wp-env
 ├── utils/                      # test.ts, helpers.ts, apiUtils.ts, apiEndPoints.ts,
 │                               # dbUtils.ts, dbData.ts, testData.ts, payloads.ts,
 │                               # schemas.ts, interfaces.ts, pwMatchers.ts, reporters
@@ -180,7 +207,7 @@ Copy `.env.example` → `.env` and adjust. Key groups:
 - **Database** — `DB_HOST_NAME`, `DB_USER_NAME`, `DB_USER_PASSWORD`, `DATABASE`,
   `DB_PORT` (auto-synced by `npm run db:port`), `DB_PREFIX`.
 - **Provider** — `WP_ENV` (`true` = wp-env, `false` = existing site), `WP_ROOT`.
-- **Auto-seeded IDs** — `EMPLOYEE_ID`, `CUSTOMER_ID`, … (leave blank; the setup chain fills them).
+- **Auto-seeded IDs** — `EMPLOYEE_ID`, `CUSTOMER_ID`, … and `ERP_PRO_ACTIVE_MODULES` (leave blank; the setup chain fills them).
 
 ## Test layers
 
@@ -224,10 +251,14 @@ All of the above are git-ignored.
 
 ## CI notes
 
-The configs auto-tune for CI (`CI=true`): `retries=2`, `workers=1`, the `blob`
-reporter, and `forbidOnly`. This suite is not yet wired into the plugin's GitHub
-Actions (assets/deploy/phpcs only) — add a workflow that runs
-`npm ci && npm run start:env && npm test` to gate PRs.
+The configs auto-tune for CI (`CI=true`): `retries=2`, `workers=1`, longer timeouts,
+the `blob` reporter, and `forbidOnly`. GitHub Actions
+(`.github/workflows/playwright.yml`) builds `wp-erp` and `erp-pro` as artifacts, then
+runs the e2e suite across **4 shards** — each shard: `start:env` → **`npm run
+docker:setup`** (explicit, logged seed incl. the separate `@pro` steps) → **`npm run
+test:e2e -- --shard=i/4`** (`NO_SETUP=true`). A separate job runs `npm run test:api`.
+Lite vs pro is selected by copying `.wp-env.ci.json` → `.wp-env.override.json` and
+setting `ERP_PRO`.
 
 ## Safety & license
 

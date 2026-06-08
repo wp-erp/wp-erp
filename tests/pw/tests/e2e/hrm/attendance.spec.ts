@@ -42,13 +42,13 @@ test.describe('HRM Attendance UI (pro, admin)', () => {
         const att = new AttendancePage(page);
         await att.goto('shifts');
         await att.expectMountedNoFatal();
-        // The Shifts list renders its column headers ("Shift Name" / "Start Time") and an
-        // item count even when empty. Assert that list UI by TEXT, not by element
-        // selectors: force-pro keeps every module active, so #wpbody-content also holds
-        // HIDDEN cross-module nav links (e.g. "Add Opening" from recruitment) that match
-        // a:has-text("Add") and made a .first()/toBeVisible() resolve to a hidden link.
-        await expect(page.locator(att.selectors.content))
-            .toContainText(/Shift Name|Start Time|Add New Shift/i, { timeout: 30_000 });
+        // Gate on the real Shifts.vue component actually booting (its <div class="app-shifts">
+        // root, the "#erp-shift-new" add link, and the empty-state column headers) — scoped
+        // to the SPA root with a CI-generous timeout. The previous assertion scraped
+        // #wpbody-content text, which (a) also matches the license nag + hidden cross-module
+        // nav under force-pro and (b) is present before the SPA finishes booting, so a slow
+        // CI boot read as a failure. See AttendancePage.expectShiftsListReady().
+        await att.expectShiftsListReady();
     });
 
     test('ATT-UI-04 assign-shift-bulk route mounts, no fatal', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {

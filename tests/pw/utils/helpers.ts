@@ -111,9 +111,22 @@ export async function login(
 
     // WP periodically interrupts login with the "administration email verification"
     // screen, which has no admin bar; dismiss it so the session still lands in wp-admin.
-    const remindLater = page.getByRole('link', { name: /remind me later/i });
-    if ((await remindLater.count()) > 0) {
-        await remindLater.first().click().catch(() => undefined);
+    // It can appear right after the POST OR after the explicit wp-admin nav below.
+    const dismissRemindLater = async (): Promise<void> => {
+        const remindLater = page.getByRole('link', { name: /remind me later/i });
+        if ((await remindLater.count()) > 0) {
+            await remindLater.first().click().catch(() => undefined);
+        }
+    };
+    await dismissRemindLater();
+
+    // The post-login redirect target can vary / lag under CI load, which previously
+    // read as a missing #wpadminbar even though the login itself succeeded (the auth
+    // setup's known flake). Land on wp-admin explicitly so the admin bar is
+    // deterministically present, then re-dismiss the verification screen if it intercepts.
+    if ((await page.locator('#wpadminbar').count()) === 0) {
+        await page.goto(toPath('wp-admin/'), { waitUntil: 'domcontentloaded' });
+        await dismissRemindLater();
     }
 
     await expect(page.locator('#wpadminbar')).toBeVisible({ timeout: 45_000 });
@@ -139,6 +152,24 @@ export async function getApiNonce(page: Page, landing = 'wp-admin/admin.php?page
     return String(nonce ?? '');
 }
 
+/**
+ * Whether an erp-pro module is active on the site under test. The active-module
+ * list is captured into `ERP_PRO_ACTIVE_MODULES` by `_site.setup.ts`; @pro specs
+ * use this to SKIP (not fail) when their module is inactive in the current env —
+ * e.g. modules that need an external host plugin not installed here
+ * (`woocommerce` → WooCommerce, `awesome_support` → Awesome Support). This is
+ * Dokan's "needs external X" skip pattern.
+ *
+ * Fail-OPEN: when the var is unset (e.g. a run that skipped the seed chain and
+ * never captured it) we return `true` so the test still runs rather than the
+ * whole suite silently skipping on a missing env var.
+ */
+export function proModuleActive(moduleId: string): boolean {
+    const raw = process.env.ERP_PRO_ACTIVE_MODULES ?? '';
+    if (raw.trim() === '') return true;
+    return raw.split(',').map((s) => s.trim()).filter(Boolean).includes(moduleId);
+}
+
 export const helpers = {
     parseBoolean,
     toPath,
@@ -148,6 +179,7 @@ export const helpers = {
     ensureUser,
     login,
     getApiNonce,
+    proModuleActive,
     BASE_URL,
     SERVER_URL,
 };

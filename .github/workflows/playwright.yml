@@ -262,6 +262,18 @@ jobs:
                   retry_on: error
                   command: cd tests/pw && npm run start:env
 
+            # Dokan-style two-phase run: seed the site as an explicit, logged step
+            # (docker:setup runs the local_site_setup → site_setup → auth_setup →
+            # e2e_setup chain, including the separate @pro activation steps), then run
+            # e2e with NO_SETUP so the shard executes only the e2e_tests project. This
+            # makes Pro provisioning a distinct, trackable CI step instead of being
+            # folded invisibly into `npm test`.
+            - name: 🌱 Run setup (seed site + pro)
+              if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
+              timeout-minutes: 15
+              working-directory: tests/pw
+              run: npm run docker:setup
+
             # No --reporter override here: playwright.config.ts already resolves to
             # [['list'], ['blob'], [summary]] on CI — 'list' prints per-test progress
             # (✓/✗ with names, like Dokan) while 'blob' still feeds merge-reports.
@@ -269,7 +281,7 @@ jobs:
               if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
               timeout-minutes: 20
               working-directory: tests/pw
-              run: npm test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+              run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
             - name: Upload blob report
               if: always()

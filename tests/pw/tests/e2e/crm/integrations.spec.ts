@@ -1,6 +1,7 @@
 import { test, expect } from '@utils/test';
 import { CrmPage } from './crmPage';
 import { data } from '@utils/testData';
+import { proModuleActive } from '@utils/helpers';
 
 /**
  * CRM Integrations settings pages (PRO) — UI smoke.
@@ -70,15 +71,15 @@ test.describe('CRM Integrations (pro, admin)', () => {
 
     // INTG-UI-02 — provider nav renders every active integration tab.
     test('provider nav (ul.erp-nav) renders all active integration tabs', { tag: ['@pro', '@crm', '@admin'] }, async ({ page }) => {
+        // Only providers whose module is active render a nav tab; assert exactly those.
+        const activeProviders = PROVIDERS.filter((p) => proModuleActive(p));
+        test.skip(activeProviders.length === 0, 'no CRM integration provider module is active in this env');
         const crm = new CrmPage(page);
         await page.goto(crm.urls.integrations);
         await expect(page.locator(ERP_NAV)).toBeVisible();
-        // With all @pro modules active, module->is_active(key) is true for each,
-        // so every provider tab <a data-key="..."> renders (Module.php line 1011).
-        // Verified live: the provider nav lists exactly hubspot/mailchimp/
-        // salesforce/help_scout — awesome_support is NOT rendered here in this
-        // force-pro build, so it is not asserted.
-        for (const key of PROVIDERS) {
+        // Each active provider tab <a data-key="..."> renders (Module.php line 1011).
+        // awesome_support is NOT rendered here in this force-pro build, so it is not asserted.
+        for (const key of activeProviders) {
             expect(await page.locator(`${ERP_NAV} a[data-key="${key}"]`).count()).toBeGreaterThanOrEqual(1);
         }
     });
@@ -86,6 +87,7 @@ test.describe('CRM Integrations (pro, admin)', () => {
     // INTG-UI-03..06 — each provider sub-section renders a settings surface.
     for (const provider of PROVIDERS) {
         test(`${provider} sub-section renders a provider settings surface`, { tag: ['@pro', '@crm', '@admin'] }, async ({ page }) => {
+            test.skip(!proModuleActive(provider), `needs the ${provider} integration module (inactive in this env)`);
             const crm = new CrmPage(page);
             await page.goto(`${crm.urls.integrations}&sub-section=${provider}`);
 
@@ -135,6 +137,7 @@ test.describe('CRM Integrations (pro, manager)', () => {
     });
 
     test('manager can open the mailchimp sub-section', { tag: ['@pro', '@crm', '@manager'] }, async ({ page }) => {
+        test.skip(!proModuleActive('mailchimp'), 'needs the mailchimp integration module (inactive in this env)');
         const crm = new CrmPage(page);
         await page.goto(`${crm.urls.integrations}&sub-section=mailchimp`);
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
