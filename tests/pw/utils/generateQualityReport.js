@@ -103,6 +103,7 @@ const suiteShape = report => {
     const passed = num(report.passed);
     const failed = num(report.failed);
     const skipped = num(report.skipped);
+    const flaky = num(report.flaky);
     const ran = passed + failed;
     const passRate = ran > 0 ? Math.round((passed / ran) * 1000) / 10 : 0;
     return {
@@ -110,6 +111,7 @@ const suiteShape = report => {
         passed,
         failed,
         skipped,
+        flaky,
         ran,
         passRate,
         durationMs: num(report.suite_duration),
@@ -139,6 +141,7 @@ const totals = {
     passed: num(api?.passed) + num(e2e?.passed),
     failed: num(api?.failed) + num(e2e?.failed),
     skipped: num(api?.skipped) + num(e2e?.skipped),
+    flaky: num(api?.flaky) + num(e2e?.flaky),
     durationMs: num(api?.durationMs) + num(e2e?.durationMs),
 };
 totals.ran = totals.passed + totals.failed;
@@ -384,6 +387,7 @@ if (SUMMARY_FILE) {
     lines.push(metricTile('Total tests', fmtNum(totals.total), C.ink));
     lines.push(metricTile('Passed', fmtNum(totals.passed), C.green));
     lines.push(metricTile('Failed', fmtNum(totals.failed), totals.failed > 0 ? C.red : C.green));
+    lines.push(metricTile('Flaky', fmtNum(totals.flaky), totals.flaky > 0 ? C.amber : C.green));
     lines.push(metricTile('Skipped', fmtNum(totals.skipped), C.amber));
     lines.push(metricTile('Duration', formatDuration(totals.durationMs).replace(/ /g, '_'), C.purpleLight));
     lines.push(metricTile('Coverage', totalCovStr, C.purpleLight));
