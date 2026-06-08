@@ -12,7 +12,7 @@ class Headway {
     public function register_assets() {
         wp_register_script(
             'erp-headway',
-            WPERP_ASSETS . '/vendor/headway.js',
+            plugin_dir_url( __FILE__ ) . 'headway.js',
             [ 'jquery' ],
             WPERP_VERSION,
             true
