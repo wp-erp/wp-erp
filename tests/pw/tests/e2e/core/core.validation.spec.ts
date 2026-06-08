@@ -228,19 +228,23 @@ test.describe('CORE edge cases — Admin', () => {
         await expect(page.locator('body')).not.toContainText(CORE.criticalError);
     });
 
-    // EC-14 / BUG-14 — Setup wizard "done-on-visit": SetupWizard::__construct()
-    // calls update_option('erp_setup_wizard_ran','1') on EVERY admin request, so
-    // the flag is already '1' by the time any admin page loads — it is impossible
-    // to observe it being newly set by visiting the wizard.
-    test('EC-14/BUG-14 setup_wizard_ran is forced to 1 on any admin load', { tag: ['@lite', '@core', '@admin'] }, async ({ page }) => {
+    // EC-14 / BUG-14 — Setup wizard "done-on-load": AdminPage::includes() (hooked on
+    // 'init') runs `new SetupWizard()` whenever page=erp-setup, and
+    // SetupWizard::__construct() unconditionally update_option('erp_setup_wizard_ran','1')
+    // — so merely LOADING the wizard page (without completing the wizard) marks it "done".
+    // A normal admin page does NOT instantiate the wizard, so we drive the wizard URL and
+    // assert the forced flip. We seed the flag to a non-'1' value first so the flip is
+    // observable deterministically on a fresh OR an already-seeded install.
+    test('EC-14/BUG-14 loading the setup wizard page force-sets setup_wizard_ran=1', { tag: ['@lite', '@core', '@admin'] }, async ({ page }) => {
         const snap = await dbUtils.getOptionValue('erp_setup_wizard_ran');
-        await page.goto(CORE.dashboardUrl);
-        await expect(page.locator('.wrap.erp-overview')).toBeVisible({ timeout: 20_000 });
+        await dbUtils.setOptionValue('erp_setup_wizard_ran', '0');
 
+        await page.goto(CORE.setupWizardUrl);
+        await expect(page.locator('body')).not.toContainText(CORE.criticalError);
+
+        // BUG CANDIDATE: includes/Admin/SetupWizard.php __construct() sets the flag on
+        // construction, not on wizard completion — a mere page load marks the wizard "done".
         const ran = await dbUtils.getOptionValue('erp_setup_wizard_ran');
-        // BUG CANDIDATE: includes/Admin/SetupWizard.php __construct() unconditionally
-        // sets erp_setup_wizard_ran='1' on construction, not only when the wizard is
-        // completed — a mere admin page load marks the wizard "done".
         expect(String(ran ?? '')).toBe('1');
 
         if (snap !== undefined) await dbUtils.setOptionValue('erp_setup_wizard_ran', snap);
