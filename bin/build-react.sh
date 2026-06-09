@@ -36,16 +36,24 @@ fi
 
 echo "Building HRM React admin on $(node -v)…"
 
-if [ ! -d "$DIR/node_modules" ]; then
-	echo "  installing dependencies (first run)…"
-	if [ -f "$DIR/package-lock.json" ]; then
-		( cd "$DIR" && npm ci )
-	else
-		( cd "$DIR" && npm install )
-	fi
+# React deps are managed with pnpm (Node 24). pnpm installs atomically into the
+# module's own node_modules, so a partial/aborted tree can't make `wp-scripts`
+# resolve a stray webpack-cli from a parent node_modules. We still gate on the
+# build binary so an incomplete tree re-installs rather than building broken.
+# First run auto-imports the existing package-lock.json into pnpm-lock.yaml, so
+# pinned versions are preserved. node-linker=hoisted (.npmrc) keeps a flat
+# node_modules that the wp-scripts/webpack toolchain reads exactly like npm did.
+if ! command -v pnpm >/dev/null 2>&1; then
+	echo "ERROR: pnpm not found. Install it (brew install pnpm) and retry." >&2
+	exit 1
 fi
 
-( cd "$DIR" && npm run build )
+if [ ! -x "$DIR/node_modules/.bin/wp-scripts" ]; then
+	echo "  installing dependencies with pnpm (missing or incomplete)…"
+	( cd "$DIR" && pnpm install )
+fi
+
+( cd "$DIR" && pnpm run build )
 
 # Verify the build actually produced a non-empty bundle in dist-react.
 if [ -z "$(find "$OUT" -name '*.js' -size +0c 2>/dev/null | head -1)" ]; then
