@@ -27,10 +27,7 @@ import {
 	ArrowLeft,
 	Briefcase,
 	CalendarClock,
-	Mail,
-	MapPin,
 	Pencil,
-	Phone,
 	Shield,
 	StickyNote,
 	TrendingUp,
@@ -50,11 +47,11 @@ import type { MeUser } from '@/stores/me/types';
 import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
 import { useProfileExtraTabs } from '../employee-create/profile-tabs';
 import { AvatarUpload } from '../employee-profile/AvatarUpload';
-import { EmployeeGeneralSections } from '../employee-profile/general/EmployeeGeneralSections';
-import { OverviewStats } from '../employee-profile/general/OverviewStats';
-import { EmployeeJobTab } from '../employee-profile/job/EmployeeJobTab';
-import { EmployeeLeaveTab } from '../employee-profile/leave/EmployeeLeaveTab';
-import { EmployeeNotesTab } from '../employee-profile/notes/EmployeeNotesTab';
+import { EmployeeGeneralSections } from './general/EmployeeGeneralSections';
+import { OverviewStats } from './general/OverviewStats';
+import { EmployeeJobTab } from './job/EmployeeJobTab';
+import { EmployeeLeaveTab } from './leave/EmployeeLeaveTab';
+import { EmployeeNotesTab } from './notes/EmployeeNotesTab';
 import type { Option } from '../employee-profile/options';
 import {
 	BLOOD_GROUP_OPTIONS,
@@ -65,8 +62,8 @@ import {
 	STATUS_OPTIONS,
 	TYPE_OPTIONS,
 } from '../employee-profile/options';
-import { EmployeePerformanceTab } from '../employee-profile/performance/EmployeePerformanceTab';
-import { EmployeePermissionTab } from '../employee-profile/permission/EmployeePermissionTab';
+import { EmployeePerformanceTab } from './performance/EmployeePerformanceTab';
+import { EmployeePermissionTab } from './permission/EmployeePermissionTab';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
@@ -113,7 +110,7 @@ interface TabDef {
 	readonly icon:  LucideIcon;
 }
 
-/** Left-sidebar nav button — active row gets a card surface + primary accent bar. */
+/** Left-sidebar nav button — active row is a solid primary (blue) pill. */
 function SideTab( {
 	tab,
 	current,
@@ -131,25 +128,11 @@ function SideTab( {
 			onClick={ () => onSelect( tab.value ) }
 			aria-current={ isActive ? 'page' : undefined }
 			className={ [
-				'group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors',
-				isActive
-					? 'bg-card text-foreground shadow-sm ring-1 ring-border'
-					: 'text-muted-foreground hover:bg-card/60 hover:text-foreground',
+				'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors',
+				isActive ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted',
 			].join( ' ' ) }
 		>
-			<span
-				className={ [
-					'absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary transition-opacity',
-					isActive ? 'opacity-100' : 'opacity-0',
-				].join( ' ' ) }
-				aria-hidden="true"
-			/>
-			<Icon
-				size={ 18 }
-				strokeWidth={ 2 }
-				className={ isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground' }
-				aria-hidden="true"
-			/>
+			<Icon size={ 16 } aria-hidden="true" />
 			{ tab.label }
 		</button>
 	);
@@ -258,8 +241,6 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 		.filter( ( s ) => s.trim() !== '' )
 		.join( ' · ' );
 	const email    = str( record, 'email' );
-	const mobile   = str( record, 'mobile' );
-	const location = str( record, 'location_name' );
 
 	const tabs: TabDef[] = [
 		{ value: 'overview', label: __( 'Overview', 'erp' ), icon: User },
@@ -282,59 +263,38 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 				{ __( 'Back to People', 'erp' ) }
 			</button>
 
-			{ /* Hero header — large avatar, flat surface, no gradient. */ }
-			<section className="rounded-2xl bg-card p-8 shadow-sm ring-1 ring-border/60">
-				<div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
-					<div className="shrink-0">
-						{ canEdit ? (
-							<AvatarUpload
-								userId={ userId }
-								avatarUrl={ avatarUrl }
-								fullName={ fullName }
-								initials={ initials( fullName ) }
-								sizeClass="size-36"
-								fallbackClass="text-4xl"
-								onChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
-							/>
-						) : (
-							<Avatar className="size-36 shrink-0 ring-4 ring-background shadow-md">
-								{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
-								<AvatarFallback className="text-4xl">{ initials( fullName ) }</AvatarFallback>
-							</Avatar>
-						) }
-					</div>
+			{ /* Header card — compact avatar-left, name + status, with a summary info row. */ }
+			<section className="rounded-[10px] bg-card p-6 shadow-sm">
+				<div className="flex flex-wrap items-start gap-5">
+					{ canEdit ? (
+						<AvatarUpload
+							userId={ userId }
+							avatarUrl={ avatarUrl }
+							fullName={ fullName }
+							initials={ initials( fullName ) }
+							sizeClass="size-[90px]"
+							fallbackClass="text-xl"
+							onChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
+						/>
+					) : (
+						<Avatar className="size-[90px] shrink-0">
+							{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
+							<AvatarFallback className="text-xl">{ initials( fullName ) }</AvatarFallback>
+						</Avatar>
+					) }
 
-					<div className="flex min-w-0 flex-1 flex-col items-center gap-3 sm:items-start">
-						<div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
-							<h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground">
+					<div className="flex min-w-0 flex-1 flex-col gap-2">
+						<div className="flex flex-wrap items-center gap-3">
+							<h1 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
 								{ fullName || __( 'Employee', 'erp' ) }
 							</h1>
 							{ status ? (
 								<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>
 							) : null }
 						</div>
-						{ role ? (
-							<p className="text-base font-semibold text-foreground">{ role }</p>
-						) : null }
-						<div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground sm:justify-start">
-							{ email ? (
-								<span className="inline-flex items-center gap-1.5">
-									<Mail size={ 15 } aria-hidden="true" />
-									{ email }
-								</span>
-							) : null }
-							{ mobile ? (
-								<span className="inline-flex items-center gap-1.5">
-									<Phone size={ 15 } aria-hidden="true" />
-									{ mobile }
-								</span>
-							) : null }
-							{ location ? (
-								<span className="inline-flex items-center gap-1.5">
-									<MapPin size={ 15 } aria-hidden="true" />
-									{ location }
-								</span>
-							) : null }
+						<div className="flex flex-col gap-1">
+							{ role ? <p className="m-0 truncate text-sm font-semibold text-foreground">{ role }</p> : null }
+							{ email ? <p className="m-0 truncate text-sm text-muted-foreground">{ email }</p> : null }
 						</div>
 					</div>
 
@@ -350,18 +310,35 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 						</Button>
 					) : null }
 				</div>
+
+				{ /* Summary info row — key facts at a glance. */ }
+				<div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border pt-4 text-sm">
+					{ str( record, 'designation_name' ) ? (
+						<span className="text-muted-foreground">{ __( 'Job:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'designation_name' ) }</span></span>
+					) : null }
+					{ str( record, 'department_name' ) ? (
+						<span className="text-muted-foreground">{ __( 'Department:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'department_name' ) }</span></span>
+					) : null }
+					{ status ? (
+						<span className="text-muted-foreground">{ __( 'Status:', 'erp' ) } <span className="font-medium text-foreground">{ labelOf( STATUS_OPTIONS, status ) }</span></span>
+					) : null }
+					{ str( record, 'employee_id' ) ? (
+						<span className="text-muted-foreground">{ __( 'Employee ID:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'employee_id' ) }</span></span>
+					) : null }
+				</div>
 			</section>
 
-			{ /* Body — left sidebar nav + content. */ }
+			{ /* Body — left sidebar nav (white card, blue active) + content. */ }
 			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-				<nav
-					aria-label={ __( 'Profile sections', 'erp' ) }
-					className="flex shrink-0 gap-1 overflow-x-auto rounded-xl bg-muted/40 p-1.5 lg:sticky lg:top-6 lg:w-56 lg:flex-col lg:overflow-visible"
-				>
-					{ tabs.map( ( t ) => (
-						<SideTab key={ t.value } tab={ t } current={ tab } onSelect={ setTab } />
-					) ) }
-				</nav>
+				<aside className="shrink-0 lg:sticky lg:top-6 lg:w-60">
+					<div className="rounded-[10px] bg-card p-3 shadow-sm">
+						<nav aria-label={ __( 'Profile sections', 'erp' ) } className="space-y-1">
+							{ tabs.map( ( t ) => (
+								<SideTab key={ t.value } tab={ t } current={ tab } onSelect={ setTab } />
+							) ) }
+						</nav>
+					</div>
+				</aside>
 
 				<div className="min-w-0 flex-1">
 					{ tab === 'overview' ? (
