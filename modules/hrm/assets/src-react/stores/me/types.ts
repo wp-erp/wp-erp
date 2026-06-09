@@ -4,7 +4,7 @@
  * Mirrors the `/erp/v2/me/capabilities` response shape (backend-owned).
  */
 
-import type { Capability, ThemeMode } from '@/types/global';
+import type { Capability, NavLayout, ThemeMode } from '@/types/global';
 
 export interface MeUser {
 	readonly id:           number;
@@ -18,6 +18,7 @@ export interface MeUser {
 
 export interface MePreferences {
 	readonly erp_hr_color_scheme: ThemeMode;
+	readonly erp_hr_nav_layout:   NavLayout;
 }
 
 export interface MeError {
@@ -47,7 +48,7 @@ export interface RawMeResponse {
 	readonly is_hr_manager?: boolean | number | string;
 	readonly roles?:         readonly string[];
 	readonly capabilities?:  Record< string, unknown >;
-	readonly preferences?:   Partial< { erp_hr_color_scheme: string } >;
+	readonly preferences?:   Partial< { erp_hr_color_scheme: string; erp_hr_nav_layout: string } >;
 }
 
 export const STORE_NAME = 'erp-hr/me' as const;

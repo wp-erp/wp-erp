@@ -167,7 +167,11 @@ function normalizeMeResponse( raw: RawMeResponse ): {
 
 	const colorScheme = raw.preferences?.erp_hr_color_scheme;
 	const mode = toEnumOrNull( colorScheme, [ 'light', 'dark', 'auto' ] as const );
-	const preferences: Partial< MePreferences > = mode ? { erp_hr_color_scheme: mode } : {};
+	const layout = toEnumOrNull( raw.preferences?.erp_hr_nav_layout, [ 'topbar', 'sidebar' ] as const );
+	const preferences: Partial< MePreferences > = {
+		...( mode ? { erp_hr_color_scheme: mode } : {} ),
+		...( layout ? { erp_hr_nav_layout: layout } : {} ),
+	};
 
 	return { user, capabilities, preferences };
 }

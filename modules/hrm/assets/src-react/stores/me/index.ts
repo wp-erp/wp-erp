@@ -28,4 +28,4 @@ register( meStore );
 
 export type { MeError, MePreferences, MeState, MeUser, RawMeResponse } from './types';
 export { setMe, setCapabilities, setPreferences, invalidate, fetchMe, updatePreferences } from './actions';
-export { getUser, getCapabilities, hasCap, getPreferences, getResolvedThemeMode, isLoading, getError, isReady } from './selectors';
+export { getUser, getCapabilities, hasCap, getPreferences, getResolvedThemeMode, getNavLayout, isLoading, getError, isReady } from './selectors';

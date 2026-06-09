@@ -46,6 +46,10 @@ export function getResolvedThemeMode( state: MeState ): MePreferences[ 'erp_hr_c
 	return state.preferences.erp_hr_color_scheme;
 }
 
+export function getNavLayout( state: MeState ): MePreferences[ 'erp_hr_nav_layout' ] {
+	return state.preferences.erp_hr_nav_layout;
+}
+
 export function isLoading( state: MeState ): boolean {
 	return state.isLoading;
 }

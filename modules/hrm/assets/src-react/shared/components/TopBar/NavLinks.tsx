@@ -1,112 +1,35 @@
 /**
  * Top bar nav links — center cluster.
  *
- * Renders the canonical 11-item HR nav from `nav-items.ts`. Each item gates on
- * the spec's capability list (Pro-only items appear once HR Pro grants their
- * caps). Active state derived from the current hash route, not the link's own
- * `to` value, so a deep route (e.g. `/employees/42`) still highlights its
- * parent ("People").
+ * Renders the canonical HR nav from `nav-items.ts`, resolved + capability/pro
+ * gated by the shared `useNavMenu()` runtime (the same hook the vertical
+ * Sidebar uses, so the two layouts never drift). Active state derives from the
+ * current hash route, so a deep route (e.g. `/employees/42`) still highlights
+ * its parent ("People").
  *
  * Locked to openspec/changes/redesign-hr-free/figma-reference.md §Layer 2,
  * "Center cluster — horizontal nav".
  */
 
-import { useSelect } from '@wordpress/data';
-import {
-	BadgeCheck,
-	Banknote,
-	BarChart3,
-	Briefcase,
-	CalendarCheck,
-	CalendarDays,
-	FileText,
-	GraduationCap,
-	HelpCircle,
-	House,
-	LayoutGrid,
-	LayoutList,
-	Package,
-	Sparkles,
-	UsersRound,
-	Wallet,
-} from 'lucide-react';
-import type { ComponentType, JSX, SVGProps } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import type { JSX } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { useBoot } from '@/shared/hooks/useBoot';
-import { storeName as meStoreName } from '@/stores/me';
-import type { Capability } from '@/types/global';
-
-import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
+import { ProBadge } from '@/shared/components/pro/ProUpsell';
+import { ICON_MAP, isPathActive, useNavMenu } from '@/shared/components/nav/nav-runtime';
+import type { LucideIcon } from '@/shared/components/nav/nav-runtime';
 
 import { NavDropdown } from './NavDropdown';
-import { TOPBAR_NAV_ITEMS } from './nav-items';
-import type { NavIconId, NavItem } from './nav-items';
-
-type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
-
-const ICON_MAP: Readonly< Record< NavIconId, LucideIcon > > = {
-	'house':           House,
-	'users-round':     UsersRound,
-	'sparkles':        Sparkles,
-	'layout-list':     LayoutList,
-	'badge-check':     BadgeCheck,
-	'layout-grid':     LayoutGrid,
-	'calendar-days':   CalendarDays,
-	'calendar-check':  CalendarCheck,
-	'package':         Package,
-	'file-text':       FileText,
-	'graduation-cap': GraduationCap,
-	'briefcase':       Briefcase,
-	'bar-chart-3':     BarChart3,
-	'help-circle':     HelpCircle,
-	'wallet':          Wallet,
-	'banknote':        Banknote,
-};
-
-interface MeStoreSelectors {
-	hasCap: ( capability: Capability | readonly Capability[] ) => boolean;
-}
+import type { NavItem } from './nav-items';
 
 export function NavLinks(): JSX.Element {
-	const hasCap = useSelect(
-		( select ) => ( select( meStoreName ) as unknown as MeStoreSelectors ).hasCap,
-		[]
-	);
-	const location = useLocation();
-	const boot = useBoot();
-	const activeModules = boot.modules ?? [];
-	const isPro = boot.isPro;
-	const { openUpsell } = useProUpsell();
-
-	const visible = TOPBAR_NAV_ITEMS.filter( ( item ) => {
-		// Capability gate first.
-		if ( item.capabilities.length > 0 && ! hasCap( item.capabilities ) ) {
-			return false;
-		}
-		// Pro-module item whose module is inactive: show only as a "Pro" upsell
-		// badge when the Pro plugin is absent — otherwise hide (legacy parity:
-		// pro installed + module off ⇒ no menu item).
-		if ( item.module && ! activeModules.includes( item.module ) ) {
-			return Boolean( item.pro && ! isPro );
-		}
-		return true;
-	} );
+	const { entries, hasCap, currentPath, openUpsell, isActive } = useNavMenu();
 
 	return (
 		<nav
 			aria-label="HR sections"
 			className="ml-6 flex h-16 items-stretch flex-nowrap whitespace-nowrap"
 		>
-			{ visible.map( ( item ) => {
-				const Icon = ICON_MAP[ item.icon ];
-
-				// "Pro locked" = a pro item shown only because the Pro plugin is
-				// absent. It renders as a badge that opens the upgrade dialog
-				// instead of navigating to a page that does not exist.
-				const proLocked = Boolean(
-					item.pro && ! isPro && ( ! item.module || ! activeModules.includes( item.module ) )
-				);
+			{ entries.map( ( { item, Icon, proLocked, hasMenu } ) => {
 				if ( proLocked ) {
 					return (
 						<NavProItem
@@ -118,8 +41,7 @@ export function NavLinks(): JSX.Element {
 					);
 				}
 
-				const active  = isPathActive( item, location.pathname );
-				const hasMenu = ( item.children?.length ?? 0 ) > 0;
+				const active = isActive( item );
 
 				return hasMenu ? (
 					<NavDropdown
@@ -133,7 +55,7 @@ export function NavLinks(): JSX.Element {
 					<NavItemLink
 						key={ item.id }
 						item={ item }
-						currentPath={ location.pathname }
+						currentPath={ currentPath }
 					/>
 				);
 			} ) }
@@ -194,18 +116,4 @@ function NavItemLink( { item, currentPath }: NavItemLinkProps ): JSX.Element {
 			/>
 		</NavLink>
 	);
-}
-
-/**
- * Match the current hash route against an item's `activeMatches` prefix list.
- * Longest match wins implicitly — items are mutually exclusive in the spec.
- */
-function isPathActive( item: NavItem, currentPath: string ): boolean {
-	const normalized = currentPath === '' ? '/' : currentPath;
-	return item.activeMatches.some( ( prefix ) => {
-		if ( prefix === '/' ) {
-			return normalized === '/';
-		}
-		return normalized === prefix || normalized.startsWith( prefix + '/' );
-	} );
 }

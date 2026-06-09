@@ -29,7 +29,7 @@ function bootInitialState(): MeState {
 		return {
 			user:         null,
 			capabilities: {},
-			preferences:  { erp_hr_color_scheme: 'auto' },
+			preferences:  { erp_hr_color_scheme: 'auto', erp_hr_nav_layout: 'topbar' },
 			isLoading:    false,
 			error:        null,
 			isReady:      false,
@@ -47,7 +47,7 @@ function bootInitialState(): MeState {
 			roles:       [],
 		},
 		capabilities: { ...boot.capabilities },
-		preferences:  { erp_hr_color_scheme: boot.themeMode },
+		preferences:  { erp_hr_color_scheme: boot.themeMode, erp_hr_nav_layout: boot.navLayout },
 		isLoading:    false,
 		error:        null,
 		isReady:      true,

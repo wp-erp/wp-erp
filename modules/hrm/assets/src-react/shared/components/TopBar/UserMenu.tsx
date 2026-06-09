@@ -19,16 +19,18 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { LogOut, UserCircle2 } from 'lucide-react';
+import { LogOut, PanelLeft, PanelTop, UserCircle2 } from 'lucide-react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { __ } from '@/shared/i18n';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useNavLayout } from '@/shared/hooks/useNavLayout';
 
 export function UserMenu(): JSX.Element {
 	const boot = useBoot();
 	const navigate = useNavigate();
+	const { layout, toggle } = useNavLayout();
 
 	const initials =
 		boot.displayName
@@ -65,6 +67,17 @@ export function UserMenu(): JSX.Element {
 					<UserCircle2 size={ 16 } aria-hidden="true" />
 					{ __( 'My profile', 'erp' ) }
 				</DropdownMenuItem>
+				<DropdownMenuItem className="gap-2" onClick={ toggle }>
+					{ layout === 'sidebar' ? (
+						<PanelTop size={ 16 } aria-hidden="true" />
+					) : (
+						<PanelLeft size={ 16 } aria-hidden="true" />
+					) }
+					{ layout === 'sidebar'
+						? __( 'Top navigation', 'erp' )
+						: __( 'Sidebar navigation', 'erp' ) }
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
 				<DropdownMenuItem
 					className="gap-2 text-destructive focus:text-destructive"
 					onClick={ () => {

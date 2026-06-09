@@ -11,6 +11,9 @@ import type { JSX } from 'react';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ProUpsellProvider } from '@/shared/components/pro/ProUpsell';
 import { TopBar } from '@/shared/components/TopBar';
+import { RightCluster } from '@/shared/components/TopBar/RightCluster';
+import { Sidebar } from '@/shared/components/Sidebar';
+import { useNavLayout } from '@/shared/hooks/useNavLayout';
 import { EmployeeActionsProvider } from '@/features/employees/actions/EmployeeActionsContext';
 
 import { AppFooter } from './AppFooter';
@@ -35,18 +38,57 @@ function isChromeless( pathname: string ): boolean {
 export function AppShell(): JSX.Element {
 	const { pathname } = useLocation();
 	const chromeless   = isChromeless( pathname );
+	const { layout }   = useNavLayout();
 
+	// In sidebar mode the gray content panel rounds its top-left corner against
+	// the white sidebar + top strip (Figma HRM-Redesign-2024 node 1511:29973).
+	const sidebarRound = layout === 'sidebar' && ! chromeless ? ' rounded-tl-2xl' : '';
+	const mainClass = chromeless
+		? 'flex-1'
+		: 'erp-hr-panel flex-1 px-6 py-6 lg:px-12 lg:py-12' + sidebarRound;
+
+	const content = (
+		<main className={ mainClass }>
+			<ErrorBoundary>
+				<EmployeeActionsProvider>
+					<Outlet />
+				</EmployeeActionsProvider>
+			</ErrorBoundary>
+		</main>
+	);
+
+	// Sidebar layout: vertical nav on the left, a slim top strip keeps the
+	// RightCluster (search / theme / user / upgrade) above the content.
+	if ( layout === 'sidebar' ) {
+		return (
+			<ProUpsellProvider>
+				<div className="erp-hr-shell flex min-h-[calc(100vh-32px)] bg-background text-foreground">
+					<Sidebar />
+					<div className="flex min-w-0 flex-1 flex-col">
+						<header
+							role="banner"
+							className="sticky top-8 z-30 flex h-16 shrink-0 items-center bg-card px-6"
+						>
+							<div className="ml-auto">
+								<ErrorBoundary>
+									<RightCluster />
+								</ErrorBoundary>
+							</div>
+						</header>
+						{ content }
+						<AppFooter />
+					</div>
+				</div>
+			</ProUpsellProvider>
+		);
+	}
+
+	// Default: horizontal top-bar layout.
 	return (
 		<ProUpsellProvider>
 			<div className="erp-hr-shell flex min-h-[calc(100vh-32px)] flex-col bg-background text-foreground">
 				<TopBar />
-				<main className={ chromeless ? 'flex-1' : 'erp-hr-panel flex-1 px-6 py-6 lg:px-12 lg:py-12' }>
-					<ErrorBoundary>
-						<EmployeeActionsProvider>
-							<Outlet />
-						</EmployeeActionsProvider>
-					</ErrorBoundary>
-				</main>
+				{ content }
 				<AppFooter />
 			</div>
 		</ProUpsellProvider>

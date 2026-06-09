@@ -221,6 +221,7 @@ final class Enqueue {
 
 		$theme_mode = self::resolve_theme_mode( $user_id );
 		$color_scheme = self::resolve_color_scheme( $theme_mode );
+		$nav_layout = self::resolve_nav_layout( $user_id );
 
 		$payload = [
 			'currentUserId' => $user_id,
@@ -241,6 +242,7 @@ final class Enqueue {
 			'isRTL'         => is_rtl(),
 			'colorScheme'   => $color_scheme,
 			'themeMode'     => $theme_mode,
+			'navLayout'     => $nav_layout,
 			'switchUrl'     => UiEngineResolver::instance()->switch_url( $page_slug, 'legacy' ),
 			'pageSlug'      => $page_slug,
 			'assets'        => [
@@ -291,6 +293,21 @@ final class Enqueue {
 		}
 		$stored = (string) get_user_meta( $user_id, 'erp_hr_color_scheme', true );
 		return in_array( $stored, [ 'light', 'dark', 'auto' ], true ) ? $stored : 'auto';
+	}
+
+	/**
+	 * Resolve the user's preferred nav layout for first paint.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string 'topbar' | 'sidebar'
+	 */
+	private static function resolve_nav_layout( int $user_id ): string {
+		if ( ! $user_id ) {
+			return 'topbar';
+		}
+		$stored = (string) get_user_meta( $user_id, 'erp_hr_nav_layout', true );
+		return in_array( $stored, [ 'topbar', 'sidebar' ], true ) ? $stored : 'topbar';
 	}
 
 	/**

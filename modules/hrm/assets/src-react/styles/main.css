@@ -286,8 +286,57 @@ body:has(#erp-hr-app) {
 	background-color: #f1f1f4;
 }
 
+/* Dark mode: a professional near-black canvas (faint cool undertone) with a
+ * whisper of indigo glow for ambient depth — not a loud color. The glow lives
+ * on the whole shell and the panel goes transparent so EVERY page picks it up;
+ * cards stay opaque and one step lighter, so contrast is unchanged. */
+#erp-hr-app[data-color-scheme='dark'] .erp-hr-shell {
+	background-color: #0a0b0e;
+	background-image:
+		radial-gradient( 900px 720px at 88% 96%, rgba( 99, 102, 241, 0.10 ), transparent 62% ),
+		radial-gradient( 720px 600px at 10% 6%, rgba( 59, 130, 246, 0.06 ), transparent 58% );
+	background-attachment: fixed;
+}
+
 #erp-hr-app[data-color-scheme='dark'] .erp-hr-panel {
-	background-color: var( --background );
+	background-color: transparent;
+}
+
+/* Elevated dark surfaces (sidebar, top strip, cards — all `bg-card`): a neutral
+ * near-black one step lighter than the canvas, with the faintest cool cast so
+ * it reads professional rather than flat gray or saturated blue. */
+#erp-hr-app[data-color-scheme='dark'] .bg-card {
+	background-color: #131519 !important;
+}
+
+/* ─── Thin, smooth-blue scrollbars (Figma parity) ───
+ * The browser-default chunky gray bar in the sidebar (and tables) reads heavy.
+ * Slim it down and tint the thumb a soft blue that brightens on hover. */
+#erp-hr-app * {
+	scrollbar-width: thin;
+	scrollbar-color: rgba( 59, 130, 246, 0.45 ) transparent;
+}
+#erp-hr-app *::-webkit-scrollbar {
+	width: 7px;
+	height: 7px;
+}
+#erp-hr-app *::-webkit-scrollbar-track {
+	background: transparent;
+}
+#erp-hr-app *::-webkit-scrollbar-thumb {
+	background-color: rgba( 59, 130, 246, 0.45 );
+	border-radius: 9999px;
+}
+#erp-hr-app *::-webkit-scrollbar-thumb:hover {
+	background-color: rgba( 59, 130, 246, 0.7 );
+}
+
+/* ─── Hairline chrome borders ───
+ * The shell's structural dividers (sidebar edge, top strips) use a softer
+ * border than the default token so they read as a faint hairline, matching the
+ * Figma rather than a hard gray rule. */
+#erp-hr-app .erp-hr-hairline {
+	border-color: color-mix( in srgb, var( --border ) 55%, transparent );
 }
 
 /* ─── Horizontal-overflow guard ───

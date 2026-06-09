@@ -12,6 +12,7 @@
 
 export type ColorScheme = 'light' | 'dark';
 export type ThemeMode   = 'light' | 'dark' | 'auto';
+export type NavLayout   = 'topbar' | 'sidebar';
 export type Direction   = 'ltr' | 'rtl';
 export type Capability  = string;
 
@@ -57,6 +58,7 @@ export interface BootPayload {
 	readonly isRTL:         boolean;
 	readonly colorScheme:   ColorScheme;
 	readonly themeMode:     ThemeMode;
+	readonly navLayout:     NavLayout;
 	readonly switchUrl:     string;
 	readonly pageSlug:      string;
 	readonly assets:        BootPayloadAssets;

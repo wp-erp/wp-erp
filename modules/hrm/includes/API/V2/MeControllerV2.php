@@ -58,6 +58,10 @@ class MeControllerV2 extends RestControllerV2 {
 							'type' => 'string',
 							'enum' => [ 'light', 'dark', 'auto' ],
 						],
+						'erp_hr_nav_layout'   => [
+							'type' => 'string',
+							'enum' => [ 'topbar', 'sidebar' ],
+						],
 					],
 				],
 			]
@@ -89,9 +93,21 @@ class MeControllerV2 extends RestControllerV2 {
 			}
 		}
 
+		if ( $request->offsetExists( 'erp_hr_nav_layout' ) ) {
+			$layout = $this->cast_enum(
+				(string) $request->get_param( 'erp_hr_nav_layout' ),
+				[ 'topbar', 'sidebar' ]
+			);
+
+			if ( null !== $layout ) {
+				update_user_meta( $user_id, 'erp_hr_nav_layout', $layout );
+			}
+		}
+
 		return rest_ensure_response(
 			[
 				'erp_hr_color_scheme' => $this->resolve_color_scheme_preference( $user_id ),
+				'erp_hr_nav_layout'   => $this->resolve_nav_layout_preference( $user_id ),
 			]
 		);
 	}
@@ -127,6 +143,7 @@ class MeControllerV2 extends RestControllerV2 {
 			'capabilities'  => $capabilities,
 			'preferences'   => [
 				'erp_hr_color_scheme' => $this->resolve_color_scheme_preference( $user_id ),
+				'erp_hr_nav_layout'   => $this->resolve_nav_layout_preference( $user_id ),
 			],
 		];
 
@@ -199,6 +216,27 @@ class MeControllerV2 extends RestControllerV2 {
 	}
 
 	/**
+	 * Read the user's preferred nav layout.
+	 *
+	 * Returns one of: 'topbar' | 'sidebar'. Defaults to 'topbar' (the original
+	 * horizontal nav).
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	private function resolve_nav_layout_preference( int $user_id ): string {
+		if ( ! $user_id ) {
+			return 'topbar';
+		}
+
+		$stored = (string) get_user_meta( $user_id, 'erp_hr_nav_layout', true );
+		$stored = $this->cast_enum( $stored, [ 'topbar', 'sidebar' ] );
+
+		return $stored ?? 'topbar';
+	}
+
+	/**
 	 * JSON Schema for `/me/capabilities`.
 	 *
 	 * @return array
@@ -229,6 +267,10 @@ class MeControllerV2 extends RestControllerV2 {
 						'erp_hr_color_scheme' => [
 							'type' => 'string',
 							'enum' => [ 'light', 'dark', 'auto' ],
+						],
+						'erp_hr_nav_layout'   => [
+							'type' => 'string',
+							'enum' => [ 'topbar', 'sidebar' ],
 						],
 					],
 				],
