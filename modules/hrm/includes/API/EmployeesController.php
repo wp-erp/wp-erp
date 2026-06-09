@@ -1267,10 +1267,18 @@ class EmployeesController extends REST_Controller {
             return new WP_Error( 'rest_invalid_financial_year', __( 'No financial year defined for current year.', 'erp' ), [ 'status' => 404 ] );
         }
 
+        // Default to all leave statuses: 1 = Approved, 2 = Pending, 3 = Rejected.
+        // Allow callers to filter by passing a `status` query param (single value or comma-separated list).
+        $status = [ 1, 2, 3 ];
+
+        if ( ! empty( $request['status'] ) ) {
+            $status = array_filter( array_map( 'absint', wp_parse_list( $request['status'] ) ) );
+        }
+
         $args = [
             'user_id'   => $user_id,
             'f_year'    => $f_year->id,
-            'status'    => 1,
+            'status'    => $status,
             'orderby'   => 'created_at',
             'policy_id' => 0,
             'number'    => -1,
