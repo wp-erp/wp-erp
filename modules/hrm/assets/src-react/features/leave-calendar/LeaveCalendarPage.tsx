@@ -9,12 +9,15 @@
 
 import { Button } from '@wedevs/plugin-ui';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { __ } from '@/shared/i18n';
+
+import { loadLookup } from '../employees/filters/lookups';
+import type { LookupOption } from '../employees/filters/lookups';
 
 import type { CalendarEvent } from './types';
 import { useLeaveCalendar } from './useLeaveCalendar';
@@ -57,7 +60,27 @@ function LeaveCalendarInner(): JSX.Element {
 	const gridStart = useMemo( () => addDays( cursor, -cursor.getDay() ), [ cursor ] );
 	const gridEnd   = useMemo( () => addDays( gridStart, 41 ), [ gridStart ] );
 
-	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( gridEnd ) );
+	// Department / Designation filters — this is the whole-company admin calendar,
+	// so it queries every employee's leave ('all' scope), optionally narrowed.
+	const [ departmentId, setDepartmentId ]   = useState( 0 );
+	const [ designationId, setDesignationId ] = useState( 0 );
+	const [ departments, setDepartments ]     = useState< LookupOption[] >( [] );
+	const [ designations, setDesignations ]   = useState< LookupOption[] >( [] );
+
+	useEffect( () => {
+		let cancelled = false;
+		void loadLookup( 'departments' ).then( ( l ) => ! cancelled && setDepartments( l ) );
+		void loadLookup( 'designations' ).then( ( l ) => ! cancelled && setDesignations( l ) );
+		return () => {
+			cancelled = true;
+		};
+	}, [] );
+
+	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( gridEnd ), {
+		scope: 'all',
+		departmentId,
+		designationId,
+	} );
 
 	// Expand each event across the days it covers → per-day buckets.
 	const byDay = useMemo( () => {
@@ -154,6 +177,32 @@ function LeaveCalendarInner(): JSX.Element {
 					</div>
 				</div>
 
+				{ /* Department / Designation filters (auto-apply) */ }
+				<div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
+					<select
+						value={ departmentId }
+						onChange={ ( e ) => setDepartmentId( Number( e.target.value ) ) }
+						aria-label={ __( 'Filter by department', 'erp' ) }
+						className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
+					>
+						<option value={ 0 }>{ __( 'All Departments', 'erp' ) }</option>
+						{ departments.map( ( d ) => (
+							<option key={ d.id } value={ d.id }>{ d.title }</option>
+						) ) }
+					</select>
+					<select
+						value={ designationId }
+						onChange={ ( e ) => setDesignationId( Number( e.target.value ) ) }
+						aria-label={ __( 'Filter by designation', 'erp' ) }
+						className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
+					>
+						<option value={ 0 }>{ __( 'All Designations', 'erp' ) }</option>
+						{ designations.map( ( d ) => (
+							<option key={ d.id } value={ d.id }>{ d.title }</option>
+						) ) }
+					</select>
+				</div>
+
 				{ /* Legend */ }
 				<div className="flex flex-wrap items-center gap-4 border-b border-border px-4 py-2 text-xs text-muted-foreground">
 					<span className="inline-flex items-center gap-1.5">
@@ -236,10 +285,10 @@ function LeaveCalendarInner(): JSX.Element {
 															key={ `l-${ ev.id }-${ i }` }
 															className="flex items-center gap-1 truncate rounded px-1.5 py-0.5 text-[11px] text-foreground"
 															style={ { backgroundColor: ev.color ? `${ ev.color }22` : 'var(--muted)' } }
-															title={ ev.reason ? `${ ev.title } — ${ ev.reason }` : ev.title }
+															title={ [ ev.employee_name, ev.title, ev.reason ].filter( Boolean ).join( ' — ' ) }
 														>
 															<span aria-hidden="true" className="inline-block size-2 shrink-0 rounded-full" style={ { backgroundColor: ev.color || 'var(--primary)' } } />
-															<span className="truncate">{ ev.title }</span>
+															<span className="truncate">{ ev.employee_name || ev.title }</span>
 														</span>
 													) ) }
 												</div>

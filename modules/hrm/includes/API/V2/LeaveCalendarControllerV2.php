@@ -59,6 +59,22 @@ class LeaveCalendarControllerV2 extends RestControllerV2 {
 							'type'              => 'integer',
 							'sanitize_callback' => 'absint',
 						],
+						'scope'   => [
+							'description'       => __( '"me" (own leave — the dashboard widget) or "all" (every employee — the admin Calendar page, managers only). Defaults to "me".', 'erp' ),
+							'type'              => 'string',
+							'enum'              => [ 'me', 'all' ],
+							'sanitize_callback' => 'sanitize_text_field',
+						],
+						'department_id'  => [
+							'description'       => __( 'Narrow the "all" scope to a department.', 'erp' ),
+							'type'              => 'integer',
+							'sanitize_callback' => 'absint',
+						],
+						'designation_id' => [
+							'description'       => __( 'Narrow the "all" scope to a designation.', 'erp' ),
+							'type'              => 'integer',
+							'sanitize_callback' => 'absint',
+						],
 					],
 				],
 			]
@@ -104,17 +120,38 @@ class LeaveCalendarControllerV2 extends RestControllerV2 {
 			$user_id = get_current_user_id();
 		}
 
-		// --- Leave requests (current/selected user, all statuses) ---
-		$leave_requests = erp_hr_get_leave_requests(
-			[
-				'user_id'    => $user_id,
-				'status'     => 'all',
-				'number'     => '-1',
-				'start_date' => $start->getTimestamp(),
-				'end_date'   => $end->getTimestamp(),
-			],
-			false
-		);
+		// --- Leave requests --------------------------------------------------
+		// "all" scope (managers only) = the whole-company admin Calendar page:
+		// every employee's leave, optionally narrowed by department / designation
+		// (user_id 0 = no user filter). Otherwise per-user (the dashboard widget),
+		// and non-managers are always clamped to themselves above.
+		$is_manager = current_user_can( 'erp_leave_manage' );
+		$scope      = ( 'all' === (string) ( $request['scope'] ?? '' ) ) ? 'all' : 'me';
+
+		$leave_args = [
+			'status'     => 'all',
+			'number'     => '-1',
+			'start_date' => $start->getTimestamp(),
+			'end_date'   => $end->getTimestamp(),
+		];
+
+		if ( $is_manager && 'all' === $scope ) {
+			$leave_args['user_id'] = 0;
+
+			$department_id  = absint( $request['department_id'] ?? 0 );
+			$designation_id = absint( $request['designation_id'] ?? 0 );
+
+			if ( $department_id ) {
+				$leave_args['department_id'] = $department_id;
+			}
+			if ( $designation_id ) {
+				$leave_args['designation_id'] = $designation_id;
+			}
+		} else {
+			$leave_args['user_id'] = $user_id;
+		}
+
+		$leave_requests = erp_hr_get_leave_requests( $leave_args, false );
 		$leave_requests = isset( $leave_requests['data'] ) ? $leave_requests['data'] : [];
 
 		// --- Holidays overlapping the window ---
@@ -206,15 +243,16 @@ class LeaveCalendarControllerV2 extends RestControllerV2 {
 			}
 
 			$events[] = [
-				'id'      => (int) $leave_request->id,
-				'type'    => 'leave',
-				'title'   => $label,
-				'start'   => gmdate( 'Y-m-d', (int) $leave_request->start_date ),
-				'end'     => gmdate( 'Y-m-d', (int) $leave_request->end_date ),
-				'color'   => $this->cast_string_or_null( $leave_request->color ?? '' ) ?? '',
-				'reason'  => (string) ( $leave_request->reason ?? '' ),
-				'user_id' => $this->cast_int_or_null( $leave_request->user_id ?? null ),
-				'status'  => (int) $leave_request->status,
+				'id'            => (int) $leave_request->id,
+				'type'          => 'leave',
+				'title'         => $label,
+				'employee_name' => (string) ( $leave_request->display_name ?? $leave_request->name ?? '' ),
+				'start'         => gmdate( 'Y-m-d', (int) $leave_request->start_date ),
+				'end'           => gmdate( 'Y-m-d', (int) $leave_request->end_date ),
+				'color'         => $this->cast_string_or_null( $leave_request->color ?? '' ) ?? '',
+				'reason'        => (string) ( $leave_request->reason ?? '' ),
+				'user_id'       => $this->cast_int_or_null( $leave_request->user_id ?? null ),
+				'status'        => (int) $leave_request->status,
 			];
 		}
 
