@@ -179,7 +179,7 @@ class DashboardControllerV2 extends RestControllerV2 {
 			'leave_status'    => $leave_status,
 		];
 
-		return rest_ensure_response( [
+		$payload = [
 			'is_hr_manager' => $this->cast_bool( $is_manager ),
 			'summary'       => [
 				'total_employees'      => $total_employees,
@@ -194,7 +194,28 @@ class DashboardControllerV2 extends RestControllerV2 {
 			'holidays_upcoming'  => $holidays,
 			'announcements'      => $announcements,
 			'charts'             => $charts,
-		] );
+			// Pro modules push meaningful summary widgets here via the filter below;
+			// the React dashboard renders each entry under "Upcoming Holidays".
+			'pro_widgets'        => [],
+		];
+
+		/**
+		 * Filter the HR dashboard payload.
+		 *
+		 * Active pro modules (recruitment, assets, reimbursement, attendance,
+		 * payroll) append a widget to `pro_widgets` — each: `id`, `title`,
+		 * optional `icon`/`to`, a `stats` list (`label` + `value`) and/or an
+		 * `items` list (`label` + optional `meta`/`to`). Manager-gated figures
+		 * should respect `$is_manager`.
+		 *
+		 * @since 1.13.5
+		 *
+		 * @param array $payload    Dashboard payload.
+		 * @param bool  $is_manager Whether the current user is an HR manager.
+		 */
+		$payload = (array) apply_filters( 'erp_hr_v2_dashboard', $payload, $this->cast_bool( $is_manager ) );
+
+		return rest_ensure_response( $payload );
 	}
 
 	/**

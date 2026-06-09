@@ -21,16 +21,20 @@ import {
 } from '@wedevs/plugin-ui';
 import {
 	ArrowRight,
+	Banknote,
 	Briefcase,
 	Building2,
+	CalendarCheck,
 	CalendarClock,
 	Cake,
 	Clock4,
 	Gift,
 	Megaphone,
+	Package,
 	PalmtreeIcon,
 	UserPlus,
 	Users,
+	Wallet,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useState } from 'react';
@@ -47,7 +51,7 @@ import type { MeUser } from '@/stores/me/types';
 import { ChartsSection } from './DashboardCharts';
 import { LeaveCalendarWidget } from './LeaveCalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
-import type { BirthdayPerson, OnLeavePerson } from './types';
+import type { BirthdayPerson, DashboardProWidget, OnLeavePerson } from './types';
 import {
 	fetchAnnouncement,
 	markAnnouncementRead,
@@ -268,6 +272,73 @@ function BirthdayItem( {
 				</Button>
 			) : null }
 		</li>
+	);
+}
+
+const PRO_WIDGET_ICONS: Readonly< Record< string, LucideIcon > > = {
+	'briefcase':      Briefcase,
+	'package':        Package,
+	'wallet':         Wallet,
+	'calendar-check': CalendarCheck,
+	'banknote':       Banknote,
+};
+
+/**
+ * Generic renderer for a pro-module dashboard widget (recruitment, assets,
+ * reimbursement, attendance, payroll). Pro modules contribute these via the
+ * `erp_hr_v2_dashboard` PHP filter; the free dashboard knows nothing about the
+ * module — it just paints the stats row and/or item list it was handed.
+ */
+function ProWidget( { widget }: { widget: DashboardProWidget } ): JSX.Element {
+	const Icon = ( widget.icon && PRO_WIDGET_ICONS[ widget.icon ] ) || Briefcase;
+	const hasStats = ( widget.stats?.length ?? 0 ) > 0;
+	const hasItems = ( widget.items?.length ?? 0 ) > 0;
+
+	return (
+		<WidgetCard
+			icon={ Icon }
+			title={ widget.title }
+			action={ widget.to ? { label: __( 'View', 'erp' ), to: widget.to } : undefined }
+		>
+			{ hasStats ? (
+				<div className="grid grid-cols-2 gap-2 p-2">
+					{ widget.stats?.map( ( s, i ) => (
+						<div key={ i } className="rounded-lg bg-muted/40 px-3 py-2.5">
+							<p className="text-2xl font-bold leading-7 tabular-nums text-foreground">{ s.value }</p>
+							<p className="truncate text-xs text-muted-foreground">{ s.label }</p>
+						</div>
+					) ) }
+				</div>
+			) : null }
+
+			{ hasItems ? (
+				<ul>
+					{ widget.items?.map( ( it, i ) => {
+						const row = (
+							<>
+								<span className="min-w-0 truncate text-sm font-medium text-foreground">{ it.label }</span>
+								{ it.meta ? <span className="shrink-0 text-xs text-muted-foreground">{ it.meta }</span> : null }
+							</>
+						);
+						return (
+							<li key={ i }>
+								{ it.to ? (
+									<Link to={ it.to } viewTransition className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
+										{ row }
+									</Link>
+								) : (
+									<div className="flex items-center justify-between gap-3 rounded-lg px-3 py-2">{ row }</div>
+								) }
+							</li>
+						);
+					} ) }
+				</ul>
+			) : null }
+
+			{ ! hasStats && ! hasItems ? (
+				<EmptyRow text={ widget.empty ?? __( 'Nothing to show.', 'erp' ) } />
+			) : null }
+		</WidgetCard>
 	);
 }
 
@@ -541,6 +612,10 @@ function DashboardInner(): JSX.Element {
 								</ul>
 							) }
 						</WidgetCard>
+
+						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
+						   PHP filter; render only the ones active modules contributed. */ }
+						{ data?.pro_widgets?.map( ( w ) => <ProWidget key={ w.id } widget={ w } /> ) }
 					</div>
 				</>
 			) }

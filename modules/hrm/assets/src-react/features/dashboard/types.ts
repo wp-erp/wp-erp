@@ -59,6 +59,37 @@ export interface DashboardCharts {
 	readonly leave_status:    { readonly approved: number; readonly pending: number; readonly rejected: number };
 }
 
+/** A single figure inside a pro widget (e.g. "Open Openings: 5"). */
+export interface DashboardProStat {
+	readonly label: string;
+	readonly value: number | string;
+}
+
+/** A list row inside a pro widget (e.g. a recent candidate). */
+export interface DashboardProItem {
+	readonly label: string;
+	readonly meta?: string;
+	readonly to?:   string;
+}
+
+/**
+ * A pro-module dashboard widget. Pro modules append these to `pro_widgets` via
+ * the `erp_hr_v2_dashboard` PHP filter; the dashboard renders them generically
+ * (a stats row and/or an item list) under "Upcoming Holidays".
+ */
+export interface DashboardProWidget {
+	readonly id:     string;
+	readonly title:  string;
+	/** Stable icon id mapped to a lucide icon (default: a generic mark). */
+	readonly icon?:  string;
+	/** Optional "view all" route for the card header. */
+	readonly to?:    string;
+	readonly stats?: readonly DashboardProStat[];
+	readonly items?: readonly DashboardProItem[];
+	/** Empty-state text when there is nothing to show. */
+	readonly empty?: string;
+}
+
 export interface DashboardData {
 	readonly is_hr_manager:      boolean;
 	readonly summary:            DashboardSummary;
@@ -68,4 +99,5 @@ export interface DashboardData {
 	readonly holidays_upcoming:  readonly DashboardHoliday[];
 	readonly announcements:      readonly DashboardAnnouncement[];
 	readonly charts:             DashboardCharts;
+	readonly pro_widgets?:       readonly DashboardProWidget[];
 }
