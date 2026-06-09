@@ -339,6 +339,16 @@ body:has(#erp-hr-app) {
 	border-color: color-mix( in srgb, var( --border ) 55%, transparent );
 }
 
+/* ─── Sidebar nav: keyboard-only focus ring ───
+ * Mouse-clicking a sidebar link left the browser focus outline behind (the blue
+ * box around the active item). Drop the ring for pointer focus; keep it for
+ * keyboard navigation (`:focus-visible`) so accessibility is preserved. */
+#erp-hr-app .erp-hr-sidebar a:focus:not(:focus-visible),
+#erp-hr-app .erp-hr-sidebar button:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
 /* ─── Horizontal-overflow guard ───
  * Some inner surfaces are intentionally wider than a phone viewport (data
  * tables `min-w-[40rem]`, the line-tab strips) and own a local

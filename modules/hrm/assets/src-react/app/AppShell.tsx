@@ -40,12 +40,9 @@ export function AppShell(): JSX.Element {
 	const chromeless   = isChromeless( pathname );
 	const { layout }   = useNavLayout();
 
-	// In sidebar mode the gray content panel rounds its top-left corner against
-	// the white sidebar + top strip (Figma HRM-Redesign-2024 node 1511:29973).
-	const sidebarRound = layout === 'sidebar' && ! chromeless ? ' rounded-tl-2xl' : '';
 	const mainClass = chromeless
 		? 'flex-1'
-		: 'erp-hr-panel flex-1 px-6 py-6 lg:px-12 lg:py-12' + sidebarRound;
+		: 'erp-hr-panel flex-1 px-6 py-6 lg:px-12 lg:py-12';
 
 	const content = (
 		<main className={ mainClass }>
@@ -59,15 +56,21 @@ export function AppShell(): JSX.Element {
 
 	// Sidebar layout: vertical nav on the left, a slim top strip keeps the
 	// RightCluster (search / theme / user / upgrade) above the content.
+	//
+	// The right column is pinned to the viewport height and the CONTENT scrolls
+	// inside its own wrapper (not the window). That keeps the gray panel's
+	// rounded top-left corner — which rounds against the white sidebar + top
+	// strip (Figma HRM-Redesign-2024 node 1511:29973) — fixed on scroll instead
+	// of sliding up under the sticky header and going sharp.
 	if ( layout === 'sidebar' ) {
 		return (
 			<ProUpsellProvider>
-				<div className="erp-hr-shell flex min-h-[calc(100vh-32px)] bg-background text-foreground">
+				<div className="erp-hr-shell flex h-[calc(100vh-32px)] bg-background text-foreground">
 					<Sidebar />
-					<div className="flex min-w-0 flex-1 flex-col">
+					<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 						<header
 							role="banner"
-							className="sticky top-8 z-30 flex h-16 shrink-0 items-center bg-card px-6"
+							className="z-30 flex h-16 shrink-0 items-center bg-card px-6"
 						>
 							<div className="ml-auto">
 								<ErrorBoundary>
@@ -75,8 +78,16 @@ export function AppShell(): JSX.Element {
 								</ErrorBoundary>
 							</div>
 						</header>
-						{ content }
-						<AppFooter />
+						<div
+							className={
+								chromeless
+									? 'flex min-h-0 flex-1 flex-col overflow-y-auto'
+									: 'flex min-h-0 flex-1 flex-col overflow-y-auto rounded-tl-2xl'
+							}
+						>
+							{ content }
+							<AppFooter />
+						</div>
 					</div>
 				</div>
 			</ProUpsellProvider>
