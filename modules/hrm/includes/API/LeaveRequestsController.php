@@ -807,7 +807,23 @@ class LeaveRequestsController extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $employee = new Employee( $item->user_id );
-error_log(print_r( [$item], true ));
+
+        $attachments      = [];
+        $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id );
+
+        if ( ! empty( $leave_attachment ) ) {
+            foreach ( $leave_attachment as $attachment_id ) {
+                $file_url = wp_get_attachment_url( $attachment_id );
+
+                if ( $file_url ) {
+                    $attachments[] = [
+                        'id'   => (int) $attachment_id,
+                        'url'  => esc_url_raw( $file_url ),
+                        'name' => basename( $file_url ),
+                    ];
+                }
+            }
+        }
 
         $data = [
             'id'            => (int) $item->id,
@@ -819,6 +835,7 @@ error_log(print_r( [$item], true ));
             'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
             'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
             'reason'        => $item->reason,
+            'attachments'   => $attachments,
             'comments'      => isset( $item->comments ) ? $item->comments : '',
             'applied_on'    => erp_format_date( $item->created_at, 'Y-m-d H:i:s' ),
             'policy_name'   => isset( $item->policy_name ) ? $item->policy_name : '',
@@ -906,6 +923,12 @@ error_log(print_r( [$item], true ));
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                ],
+                'attachments' => [
+                    'description' => __( 'Attachments uploaded with the leave request.', 'erp' ),
+                    'type'        => 'array',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
             ],
         ];
