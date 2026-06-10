@@ -1286,6 +1286,29 @@ class EmployeesController extends REST_Controller {
         ];
         $leaves = erp_hr_get_leave_requests( $args );
 
+        if ( ! empty( $leaves['data'] ) ) {
+            foreach ( $leaves['data'] as $leave ) {
+                $attachments      = [];
+                $leave_attachment = get_user_meta( $leave->user_id, 'leave_document_' . $leave->id );
+
+                if ( ! empty( $leave_attachment ) ) {
+                    foreach ( $leave_attachment as $attachment_id ) {
+                        $file_url = wp_get_attachment_url( $attachment_id );
+
+                        if ( $file_url ) {
+                            $attachments[] = [
+                                'id'   => (int) $attachment_id,
+                                'url'  => esc_url_raw( $file_url ),
+                                'name' => basename( $file_url ),
+                            ];
+                        }
+                    }
+                }
+
+                $leave->attachments = $attachments;
+            }
+        }
+
         $response = rest_ensure_response( $leaves['data'] );
         $response = $this->format_collection_response( $response, $request, $leaves['total'] );
 
