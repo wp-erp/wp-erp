@@ -49,7 +49,7 @@ import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
 import { ChartsSection } from './DashboardCharts';
-import { LeaveCalendarWidget } from './LeaveCalendarWidget';
+import { MiniCalendarWidget } from './MiniCalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
 import type { BirthdayPerson, DashboardProWidget, OnLeavePerson } from './types';
 import {
@@ -381,6 +381,11 @@ function DashboardInner(): JSX.Element {
 	const summary = data?.summary;
 	const isManager = data?.is_hr_manager ?? false;
 
+	// Pro self-service widgets (e.g. Attendance punch card) appended via the
+	// `erp_hr.dashboard.widgets` filter; applied lazily so pro bundles that load
+	// after the free app are included. They drop straight into the card grid.
+	const proSelfWidgets = applyFilters( HOOKS.DASHBOARD_WIDGETS, [] ) as ComponentType[];
+
 	return (
 		<section className="mx-auto w-full max-w-7xl">
 			{ /* Quick actions — sit above the greeting card, outside it */ }
@@ -432,28 +437,6 @@ function DashboardInner(): JSX.Element {
 				</div>
 			</header>
 
-			{ /* Self-service row: pro widgets (e.g. Attendance self-service, appended via
-			   the `erp_hr.dashboard.widgets` filter and applied lazily so pro bundles that
-			   load after the free app are included) on the left, the leave calendar filling
-			   the rest — mirroring the legacy dashboard's calendar beside the punch card. */ }
-			{ ( () => {
-				const widgets = applyFilters( HOOKS.DASHBOARD_WIDGETS, [] ) as ComponentType[];
-				return (
-					widgets.length > 0 ? (
-						<div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_22rem]">
-							<LeaveCalendarWidget />
-							<div className="flex flex-col gap-4">
-								{ widgets.map( ( Widget, i ) => <Widget key={ i } /> ) }
-							</div>
-						</div>
-					) : (
-						<div className="mb-6">
-							<LeaveCalendarWidget className="w-full" />
-						</div>
-					)
-				);
-			} )() }
-
 			{ loading && ! data ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 					{ [ 0, 1, 2, 3 ].map( ( i ) => (
@@ -504,17 +487,14 @@ function DashboardInner(): JSX.Element {
 						) }
 					</div>
 
-					{ /* Analytics charts */ }
-					{ data ? (
-						<div className="mt-8">
-							<SectionLabel>{ __( 'Analytics', 'erp' ) }</SectionLabel>
-							<ChartsSection charts={ data.charts } isManager={ isManager } />
-						</div>
-					) : null }
-
-					{ /* Widget grid */ }
+					{ /* Widget grid — a robust multi-card layout (Figma dashboard):
+					   compact calendar leads, then the activity cards + any pro
+					   module / self-service widgets, all on one responsive grid. */ }
 					<SectionLabel className="mt-8">{ __( 'Activity', 'erp' ) }</SectionLabel>
-					<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+						{ /* Compact calendar */ }
+						<MiniCalendarWidget />
+
 						{ /* Who's out */ }
 						<WidgetCard
 							icon={ CalendarClock }
@@ -616,7 +596,18 @@ function DashboardInner(): JSX.Element {
 						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
 						   PHP filter; render only the ones active modules contributed. */ }
 						{ data?.pro_widgets?.map( ( w ) => <ProWidget key={ w.id } widget={ w } /> ) }
+
+						{ /* Pro self-service widgets (e.g. Attendance punch card). */ }
+						{ proSelfWidgets.map( ( Widget, i ) => <Widget key={ `self-${ i }` } /> ) }
 					</div>
+
+					{ /* Analytics charts — sit below the activity cards. */ }
+					{ data ? (
+						<div className="mt-8">
+							<SectionLabel>{ __( 'Analytics', 'erp' ) }</SectionLabel>
+							<ChartsSection charts={ data.charts } isManager={ isManager } />
+						</div>
+					) : null }
 				</>
 			) }
 
