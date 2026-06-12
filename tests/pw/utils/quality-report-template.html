@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Assurance Report - WP ERP</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-background-primary: #ffffff;
+            --color-background-secondary: #f8f9fa;
+            --color-text-primary: #1a1a1a;
+            --color-text-secondary: #6c757d;
+            --color-border-tertiary: rgba(0, 0, 0, 0.1);
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-text-primary);
+            background: var(--color-background-secondary);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .report-header {
+            background: linear-gradient(135deg, #7F77DD 0%, #534AB7 100%);
+            color: white;
+            padding: 2rem 2rem 1.5rem;
+        }
+
+        .report-header h1 {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            opacity: 0.95;
+            flex-wrap: wrap;
+        }
+
+        .report-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-banner {
+            background: #0F6E56;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+        }
+
+        .status-banner.failed {
+            background: #E24B4A;
+        }
+
+        .status-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            padding: 2rem;
+        }
+
+        .metric-card {
+            background: var(--color-background-secondary);
+            border-radius: var(--border-radius-md);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            line-height: 1;
+        }
+
+        .metric-value.success {
+            color: #639922;
+        }
+
+        .metric-value.warning {
+            color: #BA7517;
+        }
+
+        .metric-value.danger {
+            color: #E24B4A;
+        }
+
+        .test-suites {
+            padding: 0 2rem 2rem;
+        }
+
+        .suite-card {
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .suite-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 0.5px solid var(--color-border-tertiary);
+        }
+
+        .suite-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .suite-title h3 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .suite-badge {
+            background: #EAF3DE;
+            color: #3B6D11;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .suite-badge.failed {
+            background: #FCEBEB;
+            color: #A32D2D;
+        }
+
+        .suite-stats {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0;
+        }
+
+        .stat-item {
+            padding: 1rem 1.5rem;
+            border-right: 0.5px solid var(--color-border-tertiary);
+            text-align: center;
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .stat-value.passed {
+            color: #639922;
+        }
+
+        .stat-value.failed {
+            color: #E24B4A;
+        }
+
+        .stat-value.skipped {
+            color: #888780;
+        }
+
+        .progress-section {
+            padding: 1rem 1.5rem;
+            background: var(--color-background-secondary);
+        }
+
+        .progress-bar-container {
+            background: var(--color-background-primary);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #639922;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar.failed {
+            background: #E24B4A;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 2rem 2rem 1rem;
+            color: var(--color-text-primary);
+        }
+
+        .artifacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            padding: 0 2rem 2rem;
+        }
+
+        .artifact-item {
+            background: var(--color-background-primary);
+            border: 0.5px solid var(--color-border-tertiary);
+            border-radius: var(--border-radius-md);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .artifact-icon {
+            width: 36px;
+            height: 36px;
+            background: #E6F1FB;
+            color: #185FA5;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .artifact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .artifact-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .artifact-size {
+            font-size: 11px;
+            color: var(--color-text-secondary);
+        }
+
+        .footer {
+            padding: 1.5rem 2rem;
+            border-top: 0.5px solid var(--color-border-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .qa-credit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: var(--color-text-primary);
+        }
+
+        .qa-badge {
+            background: #EEEDFE;
+            color: #534AB7;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .suite-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .stat-item {
+                border-right: none;
+                border-bottom: 0.5px solid var(--color-border-tertiary);
+            }
+
+            .stat-item:nth-child(3n) {
+                border-right: none;
+            }
+
+            .stat-item:nth-last-child(-n+3) {
+                border-bottom: none;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="report-header">
+            <h1>
+                <i class="ti ti-flask" style="font-size: 28px; vertical-align: -4px; margin-right: 8px;" aria-hidden="true"></i>
+                Quality Assurance Report
+            </h1>
+            <div class="report-meta">
+                <span><i class="ti ti-git-branch" aria-hidden="true"></i> {{BRANCH_NAME}}</span>
+                <span><i class="ti ti-git-pull-request" aria-hidden="true"></i> PR #{{PR_NUMBER}}</span>
+                <span><i class="ti ti-git-commit" aria-hidden="true"></i> {{COMMIT_HASH}}</span>
+                <span><i class="ti ti-calendar" aria-hidden="true"></i> {{DATE}}</span>
+                <span><i class="ti ti-clock" aria-hidden="true"></i> {{DURATION}}</span>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="status-banner {{STATUS_CLASS}}">
+            <div class="status-banner-left">
+                <div class="status-icon">{{STATUS_ICON}}</div>
+                <div>
+                    <strong>{{STATUS_MESSAGE}}</strong> — {{STATUS_DESCRIPTION}}
+                </div>
+            </div>
+            <div>Pass rate: {{PASS_RATE}}%</div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total tests</div>
+                <div class="metric-value">{{TOTAL_TESTS}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Passed</div>
+                <div class="metric-value success">{{PASSED_TESTS}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Failed</div>
+                <div class="metric-value {{FAILED_CLASS}}">{{FAILED_TESTS}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Skipped</div>
+                <div class="metric-value warning">{{SKIPPED_TESTS}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Duration</div>
+                <div class="metric-value" style="font-size: 24px;">{{TOTAL_DURATION}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Coverage</div>
+                <div class="metric-value" style="font-size: 24px;">{{TOTAL_COVERAGE}}%</div>
+            </div>
+        </div>
+
+        <!-- Test Suites -->
+        <div class="test-suites">
+            <!-- API Tests Suite -->
+            <div class="suite-card">
+                <div class="suite-header">
+                    <div class="suite-title">
+                        <i class="ti ti-code" style="font-size: 24px; color: #7F77DD;" aria-hidden="true"></i>
+                        <div>
+                            <h3>API Tests</h3>
+                        </div>
+                    </div>
+                    <div class="suite-badge {{API_STATUS_CLASS}}">{{API_STATUS}}</div>
+                </div>
+
+                <div class="suite-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Total</div>
+                        <div class="stat-value">{{API_TOTAL}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Passed</div>
+                        <div class="stat-value passed">{{API_PASSED}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Failed</div>
+                        <div class="stat-value {{API_FAILED_CLASS}}">{{API_FAILED}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Skipped</div>
+                        <div class="stat-value skipped">{{API_SKIPPED}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Duration</div>
+                        <div class="stat-value" style="font-size: 16px;">{{API_DURATION}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Coverage</div>
+                        <div class="stat-value" style="font-size: 16px;">{{API_COVERAGE}}%</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar {{API_PROGRESS_CLASS}}" style="width: {{API_PASS_RATE}}%;"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>Pass rate: {{API_PASS_RATE}}%</span>
+                        <span>{{API_PASSED}} / {{API_TOTAL_RUN}} passed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E2E Tests Suite -->
+            <div class="suite-card">
+                <div class="suite-header">
+                    <div class="suite-title">
+                        <i class="ti ti-device-desktop" style="font-size: 24px; color: #1D9E75;" aria-hidden="true"></i>
+                        <div>
+                            <h3>E2E Tests</h3>
+                        </div>
+                    </div>
+                    <div class="suite-badge {{E2E_STATUS_CLASS}}">{{E2E_STATUS}}</div>
+                </div>
+
+                <div class="suite-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Total</div>
+                        <div class="stat-value">{{E2E_TOTAL}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Passed</div>
+                        <div class="stat-value passed">{{E2E_PASSED}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Failed</div>
+                        <div class="stat-value {{E2E_FAILED_CLASS}}">{{E2E_FAILED}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Skipped</div>
+                        <div class="stat-value skipped">{{E2E_SKIPPED}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Duration</div>
+                        <div class="stat-value" style="font-size: 16px;">{{E2E_DURATION}}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Coverage</div>
+                        <div class="stat-value" style="font-size: 16px;">{{E2E_COVERAGE}}%</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar {{E2E_PROGRESS_CLASS}}" style="width: {{E2E_PASS_RATE}}%;"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>Pass rate: {{E2E_PASS_RATE}}%</span>
+                        <span>{{E2E_PASSED}} / {{E2E_TOTAL_RUN}} passed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Artifacts -->
+        <h3 class="section-title">
+            <i class="ti ti-package" style="vertical-align: -2px; margin-right: 6px;" aria-hidden="true"></i>
+            Build Artifacts
+        </h3>
+
+        <div class="artifacts-grid" id="artifacts-container">
+            <!-- Artifacts will be inserted here dynamically -->
+            <!-- Example artifact:
+            <div class="artifact-item">
+                <div class="artifact-icon"><i class="ti ti-file-zip" aria-hidden="true"></i></div>
+                <div class="artifact-info">
+                    <div class="artifact-name">wp-erp-build</div>
+                    <div class="artifact-size">71.8 MB</div>
+                </div>
+            </div>
+            -->
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="qa-credit">
+                <i class="ti ti-shield-check" style="font-size: 16px; color: #534AB7;" aria-hidden="true"></i>
+                Prepared by
+                <span class="qa-badge">
+                    <i class="ti ti-users" aria-hidden="true"></i>
+                    WP ERP QA Team
+                </span>
+            </div>
+            <div>Run ID: {{RUN_ID}}</div>
+        </div>
+    </div>
+</body>
+</html>
