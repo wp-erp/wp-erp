@@ -153,7 +153,7 @@ export function LeavesReportPage(): JSX.Element {
 									type="date"
 									value={ start }
 									onChange={ ( e ) => setStart( e.target.value ) }
-									className="h-9 w-40 border-border text-sm"
+									className="h-10 w-40 border-border px-4 text-sm"
 								/>
 							</label>
 							<label className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -162,7 +162,7 @@ export function LeavesReportPage(): JSX.Element {
 									type="date"
 									value={ end }
 									onChange={ ( e ) => setEnd( e.target.value ) }
-									className="h-9 w-40 border-border text-sm"
+									className="h-10 w-40 border-border px-4 text-sm"
 								/>
 							</label>
 						</>

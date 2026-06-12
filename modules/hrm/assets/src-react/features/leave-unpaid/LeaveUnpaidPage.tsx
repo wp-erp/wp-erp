@@ -262,7 +262,7 @@ function LeaveUnpaidInner(): JSX.Element {
 												disabled={ ! canManage }
 												onBlur={ ( e ) => void handleAmountChange( r.id, e.target.value ) }
 												aria-label={ __( 'Amount per day', 'erp' ) }
-												className="h-9 w-28 rounded-md border border-border bg-background px-3 text-sm focus:border-primary focus:outline-none"
+												className="h-10 w-28 rounded-md border border-border bg-background px-4 text-sm focus:border-primary focus:outline-none"
 											/>
 										</td>
 										<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.total }</td>

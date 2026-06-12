@@ -101,30 +101,30 @@ function FinancialYearsInner(): JSX.Element {
 							{ draft.map( ( row, index ) => (
 								<div key={ index } className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
 									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-xs font-medium text-muted-foreground">{ __( 'Name', 'erp' ) }</span> : null }
+										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Name', 'erp' ) }</span> : null }
 										<Input
 											value={ row.fy_name }
 											onChange={ ( e ) => patch( index, 'fy_name', e.target.value ) }
 											placeholder={ __( 'e.g. 2025-2026', 'erp' ) }
-											className="h-10 bg-background"
+											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
 									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-xs font-medium text-muted-foreground">{ __( 'Start date', 'erp' ) }</span> : null }
+										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Start date', 'erp' ) }</span> : null }
 										<Input
 											type="date"
 											value={ row.start_date }
 											onChange={ ( e ) => patch( index, 'start_date', e.target.value ) }
-											className="h-10 bg-background"
+											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
 									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-xs font-medium text-muted-foreground">{ __( 'End date', 'erp' ) }</span> : null }
+										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'End date', 'erp' ) }</span> : null }
 										<Input
 											type="date"
 											value={ row.end_date }
 											onChange={ ( e ) => patch( index, 'end_date', e.target.value ) }
-											className="h-10 bg-background"
+											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
 									<Button

@@ -227,12 +227,12 @@ function InfoCard( {
 	readonly children: ReactNode;
 } ): JSX.Element {
 	return (
-		<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
+		<section className="rounded-[10px] bg-card p-6 shadow-sm">
 			<div className="flex items-center gap-3">
 				<span className={ `inline-flex size-9 items-center justify-center rounded-lg ${ tone }` }>
 					<Icon size={ 18 } strokeWidth={ 2 } aria-hidden="true" />
 				</span>
-				<h2 className="m-0 flex-1 text-base font-semibold tracking-tight text-foreground">{ title }</h2>
+				<h2 className="m-0 flex-1 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ onEdit ? (
 					<button
 						type="button"
@@ -245,7 +245,8 @@ function InfoCard( {
 					</button>
 				) : null }
 			</div>
-			<dl className="mt-2 divide-y divide-border">{ children }</dl>
+			<div className="mb-4 mt-4 h-px w-full bg-border" />
+			<dl className="divide-y divide-border">{ children }</dl>
 		</section>
 	);
 }

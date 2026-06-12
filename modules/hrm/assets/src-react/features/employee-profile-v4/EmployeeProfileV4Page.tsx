@@ -167,9 +167,9 @@ interface DetailCardProps {
 
 function DetailCard( { title, children }: DetailCardProps ): JSX.Element {
 	return (
-		<section className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border/60">
-			<h2 className="mt-0 text-lg font-semibold leading-tight tracking-tight text-foreground">{ title }</h2>
-			<div className="mb-5 mt-4 h-px w-full bg-border" />
+		<section className="rounded-[10px] bg-card p-6 shadow-sm">
+			<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+			<div className="mb-4 mt-4 h-px w-full bg-border" />
 			<dl className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
 				{ children }
 			</dl>
@@ -426,9 +426,9 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 							</DetailCard>
 
 							{ str( record, 'description' ).trim() !== '' ? (
-								<section className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border/60">
-									<h2 className="mt-0 text-lg font-semibold leading-tight tracking-tight text-foreground">{ __( 'Biography', 'erp' ) }</h2>
-									<div className="mb-5 mt-4 h-px w-full bg-border" />
+								<section className="rounded-[10px] bg-card p-6 shadow-sm">
+									<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Biography', 'erp' ) }</h2>
+									<div className="mb-4 mt-4 h-px w-full bg-border" />
 									<p className="whitespace-pre-line text-sm text-foreground">
 										{ str( record, 'description' ) }
 									</p>
