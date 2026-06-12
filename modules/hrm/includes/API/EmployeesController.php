@@ -1267,16 +1267,47 @@ class EmployeesController extends REST_Controller {
             return new WP_Error( 'rest_invalid_financial_year', __( 'No financial year defined for current year.', 'erp' ), [ 'status' => 404 ] );
         }
 
+        // Default to all leave statuses: 1 = Approved, 2 = Pending, 3 = Rejected.
+        // Allow callers to filter by passing a `status` query param (single value or comma-separated list).
+        $status = [ 1, 2, 3 ];
+
+        if ( ! empty( $request['status'] ) ) {
+            $status = array_filter( array_map( 'absint', wp_parse_list( $request['status'] ) ) );
+        }
+
         $args = [
             'user_id'   => $user_id,
             'f_year'    => $f_year->id,
-            'status'    => 1,
+            'status'    => $status,
             'orderby'   => 'created_at',
             'policy_id' => 0,
             'number'    => -1,
             'offset'    => 0,
         ];
         $leaves = erp_hr_get_leave_requests( $args );
+
+        if ( ! empty( $leaves['data'] ) ) {
+            foreach ( $leaves['data'] as $leave ) {
+                $attachments      = [];
+                $leave_attachment = get_user_meta( $leave->user_id, 'leave_document_' . $leave->id );
+
+                if ( ! empty( $leave_attachment ) ) {
+                    foreach ( $leave_attachment as $attachment_id ) {
+                        $file_url = wp_get_attachment_url( $attachment_id );
+
+                        if ( $file_url ) {
+                            $attachments[] = [
+                                'id'   => (int) $attachment_id,
+                                'url'  => esc_url_raw( $file_url ),
+                                'name' => basename( $file_url ),
+                            ];
+                        }
+                    }
+                }
+
+                $leave->attachments = $attachments;
+            }
+        }
 
         $response = rest_ensure_response( $leaves['data'] );
         $response = $this->format_collection_response( $response, $request, $leaves['total'] );

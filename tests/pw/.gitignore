@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+lib/
+
+# Local config & secrets (NEVER commit real credentials / license keys)
+.env
+.wp-env.override.json
+# The onboarding template MUST ship — re-include it (a parent .gitignore ignores
+# .env.example globally across the plugin).
+!.env.example
+
+# Auth state, wp-env data, generated run artifacts
+playwright/.auth/
+playwright/systemInfo.json
+wp-data/
+
+# Reports & test output
+playwright-report/
+test-results/
+blob-report/
+summary-report/
+*.log
+
+# Internal QA docs (kept local, not committed to the public repo)
+PLAN.md
+test-plans/
+bug-reports/
+
+# Editor / OS / TS build
+.DS_Store
+.idea/
+.vscode/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log

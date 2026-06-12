@@ -1,0 +1,37 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "playwright"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:playwright/recommended",
+    "prettier"
+  ],
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "settings": {
+    "playwright": {
+      "globalAliases": {
+        "test": ["setup"]
+      }
+    }
+  },
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-floating-promises": "off",
+    "playwright/no-skipped-test": "warn",
+    "playwright/expect-expect": "off",
+    "playwright/no-conditional-in-test": "off",
+    "playwright/no-conditional-expect": "off",
+    "playwright/no-wait-for-timeout": "off"
+  },
+  "ignorePatterns": ["node_modules/", "lib/", "playwright-report/", "test-results/"]
+}
