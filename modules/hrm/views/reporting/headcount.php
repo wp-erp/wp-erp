@@ -45,6 +45,11 @@
             $user_filtered[] = $user->user_id;
         }
 
+        $per_page     = 20;
+        $current_page = isset( $_REQUEST['paged'] ) ? max( 1, absint( $_REQUEST['paged'] ) ) : 1;
+        $total_items  = count( $user_filtered );
+        $total_pages  = (int) ceil( $total_items / $per_page );
+        $paged_users  = array_slice( $user_filtered, ( $current_page - 1 ) * $per_page, $per_page );
     ?>
     <div class="hr-headcount">
         <form method="get">
@@ -152,7 +157,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ( $user_filtered as $user_id ) :
+            <?php foreach ( $paged_users as $user_id ) :
                 $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
                 $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=people&sub-section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
             ?>
@@ -169,6 +174,24 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php
+    if ( $total_pages > 1 ) {
+        $page_links = paginate_links( array(
+            'base'      => add_query_arg( 'paged', '%#%' ),
+            'format'    => '',
+            'prev_text' => __( '&laquo;', 'erp' ),
+            'next_text' => __( '&raquo;', 'erp' ),
+            'total'     => $total_pages,
+            'current'   => $current_page,
+        ) );
+
+        echo '<div class="tablenav bottom"><div class="tablenav-pages">';
+        echo '<span class="displaying-num">' . esc_html( sprintf( _n( '%s item', '%s items', $total_items, 'erp' ), number_format_i18n( $total_items ) ) ) . '</span>';
+        echo wp_kses_post( $page_links );
+        echo '</div></div>';
+    }
+    ?>
 </div>
 
 <script>
