@@ -191,7 +191,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 				{ data.requests.length === 0 ? (
 					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
 				) : (
-					<div className="overflow-x-auto">
+					<div className="mt-4 overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-muted/40">
 								<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">

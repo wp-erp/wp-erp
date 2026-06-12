@@ -94,7 +94,7 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 				<header className="px-6 py-4">
 					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Notes', 'erp' ) }</h2>
 				</header>
-				<div className="mx-6 h-px bg-border" />
+				<div className="mx-6 mb-4 h-px bg-border" />
 				<div className="space-y-5 p-5">
 			{ canManage ? (
 				<form onSubmit={ ( e ) => void handleAdd( e ) } className="rounded-lg border border-border bg-card p-4 shadow-sm">

@@ -59,7 +59,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 					{ __( 'Add', 'erp' ) }
 				</Button>
 			</header>
-			<div className="mx-6 h-px bg-border" />
+			<div className="mx-6 mb-4 h-px bg-border" />
 			{ rowCount === 0 ? (
 				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (

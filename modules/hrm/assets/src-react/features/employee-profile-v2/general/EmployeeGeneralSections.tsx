@@ -62,7 +62,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 			{ rowCount === 0 ? (
 				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (
-				<div className="overflow-x-auto">
+				<div className="mt-4 overflow-x-auto">
 					<table className="w-full text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">

@@ -59,7 +59,7 @@ export function EmployeePermissionTab( { userId }: { readonly userId: number } )
 					{ __( 'Additional access for this employee beyond their default role.', 'erp' ) }
 				</p>
 			</header>
-			<div className="mx-6 h-px bg-border" />
+			<div className="mx-6 mb-4 h-px bg-border" />
 			<div className="divide-y divide-border">
 				{ roles.map( ( role ) => (
 					<div key={ role.key } className="flex items-center justify-between gap-4 p-5">

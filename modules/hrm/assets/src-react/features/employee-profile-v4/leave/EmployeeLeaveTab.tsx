@@ -95,7 +95,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						</Button>
 					) : null }
 				</header>
-				<div className="mx-6 h-px bg-border" />
+				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.summary.length === 0 ? (
 					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave policies assigned.', 'erp' ) }</p>
 				) : (
@@ -189,7 +189,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						</div>
 					) : null }
 				</header>
-				<div className="mx-6 h-px bg-border" />
+				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.requests.length === 0 ? (
 					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
 				) : (

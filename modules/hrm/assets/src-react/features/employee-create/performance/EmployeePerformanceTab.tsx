@@ -53,7 +53,7 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
 			</header>
-			<div className="mx-6 h-px bg-border" />
+			<div className="mx-6 mb-4 h-px bg-border" />
 			{ rowCount === 0 ? (
 				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (
