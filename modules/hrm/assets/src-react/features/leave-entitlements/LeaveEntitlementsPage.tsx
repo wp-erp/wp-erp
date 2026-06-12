@@ -26,6 +26,7 @@ import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -55,7 +56,9 @@ function LeaveEntitlementsInner(): JSX.Element {
 	} );
 
 	const [ policies, setPolicies ]   = useState< readonly IdOption[] >( [] );
-	const [ assignOpen, setAssignOpen ] = useState( false );
+	// Assign modal open-state lives in the URL (`?assign=open`) so a browser
+	// refresh re-opens it.
+	const [ assignParam, setAssignParam ] = useModalParam( 'assign' );
 	const [ deleting, setDeleting ]   = useState< Entitlement | null >( null );
 	const [ busy, setBusy ]           = useState( false );
 	const [ formError, setFormError ] = useState< string | null >( null );
@@ -92,7 +95,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 			if ( res.errors.length > 0 ) {
 				toast.error( res.errors.join( ' ' ) );
 			}
-			setAssignOpen( false );
+			setAssignParam( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not assign the policy.', 'erp' ) );
 		} finally {
@@ -174,7 +177,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 				</h1>
 				{ canManage ? (
 					<Button
-						onClick={ () => { setFormError( null ); setAssignOpen( true ); } }
+						onClick={ () => { setFormError( null ); setAssignParam( 'open' ); } }
 						variant="default"
 						className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5 shadow-sm"
 					>
@@ -349,11 +352,11 @@ function LeaveEntitlementsInner(): JSX.Element {
 			</div>
 
 			<EntitlementAssignDialog
-				open={ assignOpen }
+				open={ assignParam !== null }
 				policies={ policies }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => setAssignOpen( false ) }
+				onClose={ () => setAssignParam( null ) }
 				onSubmit={ ( payload ) => void handleAssign( payload ) }
 				loadEmployees={ loadEmployees }
 			/>

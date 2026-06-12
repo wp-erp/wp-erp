@@ -28,6 +28,7 @@ import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -66,9 +67,16 @@ function HolidaysInner(): JSX.Element {
 		perPage,
 	} );
 
-	const [ formOpen, setFormOpen ]   = useState( false );
-	const [ importOpen, setImportOpen ] = useState( false );
-	const [ editing, setEditing ]     = useState< Holiday | null >( null );
+	// Create/edit + import modal open-state lives in the URL (`?form=new` |
+	// `?form=<id>` and `?import=open`) so a browser refresh re-opens them. For
+	// edit, resolve the target from the loaded rows (legacy parity: holiday
+	// create/edit is a modal, not a route).
+	const [ formParam, setFormParam ]     = useModalParam( 'form' );
+	const [ importParam, setImportParam ] = useModalParam( 'import' );
+	const editing: Holiday | null =
+		formParam && formParam !== 'new'
+			? ( rows.find( ( h ) => h.id === Number( formParam ) ) ?? null )
+			: null;
 	const [ deleting, setDeleting ]   = useState< Holiday | null >( null );
 	const [ selectedIds, setSelectedIds ] = useState< readonly number[] >( [] );
 	const [ bulkConfirm, setBulkConfirm ] = useState( false );
@@ -133,15 +141,13 @@ function HolidaysInner(): JSX.Element {
 	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	function openCreate(): void {
-		setEditing( null );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( 'new' );
 	}
 
 	function openEdit( holiday: Holiday ): void {
-		setEditing( holiday );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( String( holiday.id ) );
 	}
 
 	async function handleSubmit( payload: HolidayInput ): Promise< void > {
@@ -150,8 +156,7 @@ function HolidaysInner(): JSX.Element {
 		try {
 			await save( editing ? editing.id : null, payload );
 			toast.success( editing ? __( 'Holiday updated.', 'erp' ) : __( 'Holiday created.', 'erp' ) );
-			setFormOpen( false );
-			setEditing( null );
+			setFormParam( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the holiday.', 'erp' ) );
 		} finally {
@@ -185,7 +190,7 @@ function HolidaysInner(): JSX.Element {
 				{ canManage ? (
 					<div className="flex items-center gap-2">
 						<Button
-							onClick={ () => setImportOpen( true ) }
+							onClick={ () => setImportParam( 'open' ) }
 							variant="outline"
 							className="inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium"
 						>
@@ -412,20 +417,17 @@ function HolidaysInner(): JSX.Element {
 			</div>
 
 			<HolidayFormDialog
-				open={ formOpen }
+				open={ formParam !== null }
 				editing={ editing }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => {
-					setFormOpen( false );
-					setEditing( null );
-				} }
+				onClose={ () => setFormParam( null ) }
 				onSubmit={ handleSubmit }
 			/>
 
 			<HolidayImportDialog
-				open={ importOpen }
-				onClose={ () => setImportOpen( false ) }
+				open={ importParam !== null }
+				onClose={ () => setImportParam( null ) }
 				onParse={ parseFile }
 				onImport={ importRows }
 			/>

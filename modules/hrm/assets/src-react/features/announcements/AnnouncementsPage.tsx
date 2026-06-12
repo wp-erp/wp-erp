@@ -25,6 +25,7 @@ import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -66,7 +67,10 @@ function AnnouncementsInner(): JSX.Element {
 	} );
 
 	const [ options, setOptions ]     = useState< AnnouncementFormOptions | null >( null );
-	const [ formOpen, setFormOpen ]   = useState( false );
+	// Create/edit modal open-state lives in the URL (`?form=new` | `?form=<id>`)
+	// so a browser refresh re-opens it. The edit dialog needs the full detail
+	// (not in the list), so it's fetched and cached in `editing`.
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
 	const [ editing, setEditing ]     = useState< AnnouncementDetail | null >( null );
 	const [ deleting, setDeleting ]   = useState< Announcement | null >( null );
 	const [ busy, setBusy ]           = useState( false );
@@ -96,7 +100,7 @@ function AnnouncementsInner(): JSX.Element {
 		await ensureOptions();
 		setEditing( null );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( 'new' );
 	}
 
 	async function openEdit( row: Announcement ): Promise< void > {
@@ -105,11 +109,37 @@ function AnnouncementsInner(): JSX.Element {
 		try {
 			const full = await getOne( row.id );
 			setEditing( full );
-			setFormOpen( true );
+			setFormParam( String( row.id ) );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the announcement.', 'erp' ) );
 		}
 	}
+
+	// Deep-link / refresh: when `?form=<id>` is present but the detail isn't
+	// loaded yet (e.g. opened the dialog, then refreshed), fetch it.
+	useEffect( () => {
+		const id = formParam && formParam !== 'new' ? Number( formParam ) : 0;
+		if ( ! id || editing?.id === id ) {
+			return;
+		}
+		let active = true;
+		void ensureOptions();
+		void getOne( id )
+			.then( ( full ) => {
+				if ( active ) {
+					setEditing( full );
+				}
+			} )
+			.catch( ( raw ) => {
+				if ( active ) {
+					toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the announcement.', 'erp' ) );
+					setFormParam( null );
+				}
+			} );
+		return () => {
+			active = false;
+		};
+	}, [ formParam, editing, ensureOptions, getOne, setFormParam ] );
 
 	async function handleSubmit( payload: AnnouncementInput ): Promise< void > {
 		setBusy( true );
@@ -117,7 +147,7 @@ function AnnouncementsInner(): JSX.Element {
 		try {
 			await save( editing ? editing.id : null, payload );
 			toast.success( editing ? __( 'Announcement updated.', 'erp' ) : __( 'Announcement saved.', 'erp' ) );
-			setFormOpen( false );
+			setFormParam( null );
 			setEditing( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the announcement.', 'erp' ) );
@@ -310,12 +340,12 @@ function AnnouncementsInner(): JSX.Element {
 			</div>
 
 			<AnnouncementFormDialog
-				open={ formOpen }
+				open={ formParam !== null }
 				editing={ editing }
 				options={ options }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => { setFormOpen( false ); setEditing( null ); } }
+				onClose={ () => { setFormParam( null ); setEditing( null ); } }
 				onSubmit={ ( payload ) => void handleSubmit( payload ) }
 			/>
 

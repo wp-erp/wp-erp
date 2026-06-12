@@ -25,6 +25,7 @@ import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -52,7 +53,11 @@ function LeavePoliciesInner(): JSX.Element {
 	} );
 
 	const [ options, setOptions ]     = useState< PolicyFormOptions | null >( null );
-	const [ formOpen, setFormOpen ]   = useState( false );
+	// Create/edit/duplicate modal open-state lives in the URL so a browser
+	// refresh re-opens it: `?form=new` (create), `?form=<id>` (edit), or
+	// `?form=copy-<id>` (duplicate). The dialog needs the full policy detail
+	// (not in the list rows), so it's fetched and cached in `editing` / `seed`.
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
 	const [ editing, setEditing ]     = useState< LeavePolicy | null >( null );
 	const [ seed, setSeed ]           = useState< LeavePolicy | null >( null );
 	const [ deleting, setDeleting ]   = useState< LeavePolicyListRow | null >( null );
@@ -95,7 +100,7 @@ function LeavePoliciesInner(): JSX.Element {
 		setEditing( null );
 		setSeed( null );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( 'new' );
 	}
 
 	async function openEdit( row: LeavePolicyListRow ): Promise< void > {
@@ -105,7 +110,7 @@ function LeavePoliciesInner(): JSX.Element {
 			const full = await getOne( row.id );
 			setEditing( full );
 			setSeed( null );
-			setFormOpen( true );
+			setFormParam( String( row.id ) );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the policy.', 'erp' ) );
 		}
@@ -120,11 +125,48 @@ function LeavePoliciesInner(): JSX.Element {
 			const full = await getOne( row.id );
 			setEditing( null );
 			setSeed( full );
-			setFormOpen( true );
+			setFormParam( `copy-${ row.id }` );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the policy.', 'erp' ) );
 		}
 	}
+
+	// Deep-link / refresh: when `?form=<id>` (edit) or `?form=copy-<id>`
+	// (duplicate) is present but the detail isn't loaded yet, fetch it.
+	useEffect( () => {
+		if ( ! formParam || formParam === 'new' ) {
+			return;
+		}
+		const isCopy = formParam.startsWith( 'copy-' );
+		const id     = Number( isCopy ? formParam.slice( 5 ) : formParam );
+		if ( ! id || ( isCopy ? seed?.id === id : editing?.id === id ) ) {
+			return;
+		}
+		let active = true;
+		void ensureOptions();
+		void getOne( id )
+			.then( ( full ) => {
+				if ( ! active ) {
+					return;
+				}
+				if ( isCopy ) {
+					setEditing( null );
+					setSeed( full );
+				} else {
+					setSeed( null );
+					setEditing( full );
+				}
+			} )
+			.catch( ( raw ) => {
+				if ( active ) {
+					toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the policy.', 'erp' ) );
+					setFormParam( null );
+				}
+			} );
+		return () => {
+			active = false;
+		};
+	}, [ formParam, editing, seed, ensureOptions, getOne, setFormParam ] );
 
 	async function handleSubmit( payload: LeavePolicyInput ): Promise< void > {
 		setBusy( true );
@@ -132,7 +174,7 @@ function LeavePoliciesInner(): JSX.Element {
 		try {
 			await save( editing ? editing.id : null, payload );
 			toast.success( editing ? __( 'Policy updated.', 'erp' ) : __( 'Policy created.', 'erp' ) );
-			setFormOpen( false );
+			setFormParam( null );
 			setEditing( null );
 			setSeed( null );
 		} catch ( raw ) {
@@ -358,14 +400,14 @@ function LeavePoliciesInner(): JSX.Element {
 			</div>
 
 			<LeavePolicyFormDialog
-				open={ formOpen }
+				open={ formParam !== null }
 				editing={ editing }
 				seed={ seed }
 				options={ options }
 				busy={ busy }
 				error={ formError }
 				onClose={ () => {
-					setFormOpen( false );
+					setFormParam( null );
 					setEditing( null );
 					setSeed( null );
 				} }

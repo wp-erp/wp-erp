@@ -29,6 +29,7 @@ import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -46,8 +47,14 @@ function DepartmentsInner(): JSX.Element {
 	const [ search, setSearch ]     = useState( '' );
 	const [ page, setPage ]         = useState( 1 );
 	const [ perPage, setPerPage ]   = useState( 10 );
-	const [ formOpen, setFormOpen ] = useState( false );
-	const [ editing, setEditing ]   = useState< Department | null >( null );
+	// Create/edit modal open-state lives in the URL (`?form=new` | `?form=<id>`)
+	// so a browser refresh re-opens it. For edit, resolve the target from the
+	// loaded rows (legacy parity: department create/edit is a modal, not a route).
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
+	const editing: Department | null =
+		formParam && formParam !== 'new'
+			? ( rows.find( ( d ) => d.id === Number( formParam ) ) ?? null )
+			: null;
 	const [ deleting, setDeleting ] = useState< Department | null >( null );
 	const [ busy, setBusy ]         = useState( false );
 	const [ formError, setFormError ] = useState< string | null >( null );
@@ -118,15 +125,13 @@ function DepartmentsInner(): JSX.Element {
 	}, [ search, parentFilter ] );
 
 	function openCreate(): void {
-		setEditing( null );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( 'new' );
 	}
 
 	function openEdit( department: Department ): void {
-		setEditing( department );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( String( department.id ) );
 	}
 
 	async function handleSubmit( payload: DepartmentInput ): Promise< void > {
@@ -139,8 +144,7 @@ function DepartmentsInner(): JSX.Element {
 					? __( 'Department updated.', 'erp' )
 					: __( 'Department created.', 'erp' )
 			);
-			setFormOpen( false );
-			setEditing( null );
+			setFormParam( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the department.', 'erp' ) );
 		} finally {
@@ -356,15 +360,12 @@ function DepartmentsInner(): JSX.Element {
 			</div>
 
 			<DepartmentFormDialog
-				open={ formOpen }
+				open={ formParam !== null }
 				editing={ editing }
 				departments={ rows }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => {
-					setFormOpen( false );
-					setEditing( null );
-				} }
+				onClose={ () => setFormParam( null ) }
 				onSubmit={ handleSubmit }
 			/>
 

@@ -28,6 +28,7 @@ import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -45,8 +46,14 @@ function LeaveTypesInner(): JSX.Element {
 	const [ perPage, setPerPage ] = useState( 10 );
 	const [ selected, setSelected ] = useState< Set< number > >( new Set() );
 
-	const [ formOpen, setFormOpen ]   = useState( false );
-	const [ editing, setEditing ]     = useState< LeaveType | null >( null );
+	// Create/edit modal open-state lives in the URL (`?form=new` | `?form=<id>`)
+	// so a browser refresh re-opens it. For edit, resolve the target from the
+	// loaded rows (legacy parity: leave-type create/edit is a modal, not a route).
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
+	const editing: LeaveType | null =
+		formParam && formParam !== 'new'
+			? ( rows.find( ( t ) => t.id === Number( formParam ) ) ?? null )
+			: null;
 	const [ deleting, setDeleting ]   = useState< LeaveType | null >( null );
 	const [ bulkOpen, setBulkOpen ]   = useState( false );
 	const [ busy, setBusy ]           = useState( false );
@@ -109,15 +116,13 @@ function LeaveTypesInner(): JSX.Element {
 	}
 
 	function openCreate(): void {
-		setEditing( null );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( 'new' );
 	}
 
 	function openEdit( type: LeaveType ): void {
-		setEditing( type );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( String( type.id ) );
 	}
 
 	async function handleSubmit( payload: LeaveTypeInput ): Promise< void > {
@@ -126,8 +131,7 @@ function LeaveTypesInner(): JSX.Element {
 		try {
 			await save( editing ? editing.id : null, payload );
 			toast.success( editing ? __( 'Leave type updated.', 'erp' ) : __( 'Leave type created.', 'erp' ) );
-			setFormOpen( false );
-			setEditing( null );
+			setFormParam( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the leave type.', 'erp' ) );
 		} finally {
@@ -323,14 +327,11 @@ function LeaveTypesInner(): JSX.Element {
 			</div>
 
 			<LeaveTypeFormDialog
-				open={ formOpen }
+				open={ formParam !== null }
 				editing={ editing }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => {
-					setFormOpen( false );
-					setEditing( null );
-				} }
+				onClose={ () => setFormParam( null ) }
 				onSubmit={ handleSubmit }
 			/>
 

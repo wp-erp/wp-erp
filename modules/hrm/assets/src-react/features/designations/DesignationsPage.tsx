@@ -25,6 +25,7 @@ import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -42,8 +43,14 @@ function DesignationsInner(): JSX.Element {
 	const [ search, setSearch ]       = useState( '' );
 	const [ page, setPage ]           = useState( 1 );
 	const [ perPage, setPerPage ]     = useState( 10 );
-	const [ formOpen, setFormOpen ]   = useState( false );
-	const [ editing, setEditing ]     = useState< Designation | null >( null );
+	// Create/edit modal open-state lives in the URL (`?form=new` | `?form=<id>`)
+	// so a browser refresh re-opens it. For edit, resolve the target from the
+	// loaded rows (legacy parity: designation create/edit is a modal, not a route).
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
+	const editing: Designation | null =
+		formParam && formParam !== 'new'
+			? ( rows.find( ( d ) => d.id === Number( formParam ) ) ?? null )
+			: null;
 	const [ deleting, setDeleting ]   = useState< Designation | null >( null );
 	const [ busy, setBusy ]           = useState( false );
 	const [ formError, setFormError ] = useState< string | null >( null );
@@ -105,15 +112,13 @@ function DesignationsInner(): JSX.Element {
 	}, [ search, employeesFilter ] );
 
 	function openCreate(): void {
-		setEditing( null );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( 'new' );
 	}
 
 	function openEdit( designation: Designation ): void {
-		setEditing( designation );
 		setFormError( null );
-		setFormOpen( true );
+		setFormParam( String( designation.id ) );
 	}
 
 	async function handleSubmit( payload: DesignationInput ): Promise< void > {
@@ -126,8 +131,7 @@ function DesignationsInner(): JSX.Element {
 					? __( 'Designation updated.', 'erp' )
 					: __( 'Designation created.', 'erp' )
 			);
-			setFormOpen( false );
-			setEditing( null );
+			setFormParam( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the designation.', 'erp' ) );
 		} finally {
@@ -329,14 +333,11 @@ function DesignationsInner(): JSX.Element {
 			</div>
 
 			<DesignationFormDialog
-				open={ formOpen }
+				open={ formParam !== null }
 				editing={ editing }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => {
-					setFormOpen( false );
-					setEditing( null );
-				} }
+				onClose={ () => setFormParam( null ) }
 				onSubmit={ handleSubmit }
 			/>
 

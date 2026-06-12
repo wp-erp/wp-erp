@@ -32,6 +32,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PersonCell } from '@/shared/components/PersonCell';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
@@ -101,7 +102,9 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ leaveTypes, setLeaveTypes ] = useState< readonly LeaveTypeOption[] >( [] );
 	const [ moderate, setModerate ]   = useState< { action: 'approve' | 'reject'; request: LeaveRequest } | null >( null );
 	const [ deleting, setDeleting ]   = useState< LeaveRequest | null >( null );
-	const [ creating, setCreating ]   = useState( false );
+	// Create modal open-state lives in the URL (`?form=new`) so a browser
+	// refresh re-opens it.
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
 	const [ busy, setBusy ]           = useState( false );
 	const [ moderateError, setModerateError ] = useState< string | null >( null );
 	const [ selected, setSelected ]   = useState< ReadonlySet< number > >( new Set() );
@@ -241,7 +244,7 @@ function LeaveRequestsInner(): JSX.Element {
 					{ __( 'Leave Requests', 'erp' ) }
 				</h1>
 				{ canManage ? (
-					<Button className="h-10 gap-1.5 px-4" onClick={ () => setCreating( true ) }>
+					<Button className="h-10 gap-1.5 px-4" onClick={ () => setFormParam( 'new' ) }>
 						<Plus size={ 16 } aria-hidden="true" />
 						{ __( 'New Request', 'erp' ) }
 					</Button>
@@ -518,10 +521,10 @@ function LeaveRequestsInner(): JSX.Element {
 			</div>
 
 			<NewLeaveRequestDialog
-				open={ creating }
-				onClose={ () => setCreating( false ) }
+				open={ formParam !== null }
+				onClose={ () => setFormParam( null ) }
 				onSubmitted={ () => {
-					setCreating( false );
+					setFormParam( null );
 					toast.success( __( 'Leave request submitted.', 'erp' ) );
 					void reload();
 				} }
