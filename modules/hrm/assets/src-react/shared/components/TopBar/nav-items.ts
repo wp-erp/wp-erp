@@ -339,6 +339,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 			{ id: 'recruitment-ai-settings', label: __( 'AI Settings', 'erp' ), to: '/recruitment/ai-settings', capabilities: [ 'erp_hr_manager' ] },
 			{ id: 'recruitment-ai-talent-pool', label: __( 'AI Talent Pool', 'erp' ), to: '/recruitment/ai-talent-pool', capabilities: [ 'erp_hr_manager' ] },
 			{ id: 'recruitment-ai-job-settings', label: __( 'AI Job Settings', 'erp' ), to: '/recruitment/ai-job-settings', capabilities: [ 'erp_hr_manager' ] },
+			{ id: 'recruitment-ai-job-writer', label: __( 'AI Job Writer', 'erp' ), to: '/recruitment/ai-job-writer', capabilities: [ 'erp_hr_manager' ] },
 		],
 	},
 	{
