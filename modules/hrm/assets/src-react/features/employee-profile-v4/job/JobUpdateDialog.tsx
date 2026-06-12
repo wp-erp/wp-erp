@@ -23,7 +23,14 @@ import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { QuickAddButton } from '@/shared/components/QuickAddButton';
+import type { ApiError } from '@/shared/utils/apiFetch';
+import { request, restPath } from '@/shared/utils/apiFetch';
 
+import { DepartmentFormDialog } from '../../departments/DepartmentFormDialog';
+import type { Department, DepartmentInput } from '../../departments/types';
+import { DesignationFormDialog } from '../../designations/DesignationFormDialog';
+import type { Designation, DesignationInput } from '../../designations/types';
 import { loadLookup } from '../../employees/filters/lookups';
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import type { LookupOption } from '../../employees/filters/lookups';
@@ -142,6 +149,43 @@ export function JobUpdateDialog( {
 	const set = ( key: keyof FormState ) => ( value: string ): void =>
 		setForm( ( prev ) => ( { ...prev, [ key ]: value } ) );
 
+	// Inline "+ Add new" for the two required org dependencies — open the same
+	// dialogs the Departments / Designations screens use, merge + select.
+	const [ quickDeptOpen, setQuickDeptOpen ]   = useState( false );
+	const [ quickDeptBusy, setQuickDeptBusy ]   = useState( false );
+	const [ quickDeptErr, setQuickDeptErr ]     = useState< string | null >( null );
+	const [ quickDesigOpen, setQuickDesigOpen ] = useState( false );
+	const [ quickDesigBusy, setQuickDesigBusy ] = useState( false );
+	const [ quickDesigErr, setQuickDesigErr ]   = useState< string | null >( null );
+
+	function handleQuickDept( payload: DepartmentInput ): void {
+		setQuickDeptBusy( true );
+		setQuickDeptErr( null );
+		request< Department >( restPath( 'v2', '/departments' ), { method: 'POST', data: payload } )
+			.then( ( created ) => {
+				const opt: Option = { value: String( created.id ), label: created.title };
+				setDepartments( ( prev ) => [ ...prev, opt ] );
+				set( 'department' )( opt.value );
+				setQuickDeptOpen( false );
+			} )
+			.catch( ( raw ) => setQuickDeptErr( ( raw as ApiError )?.message ?? __( 'Could not create the department.', 'erp' ) ) )
+			.finally( () => setQuickDeptBusy( false ) );
+	}
+
+	function handleQuickDesig( payload: DesignationInput ): void {
+		setQuickDesigBusy( true );
+		setQuickDesigErr( null );
+		request< Designation >( restPath( 'v2', '/designations' ), { method: 'POST', data: payload } )
+			.then( ( created ) => {
+				const opt: Option = { value: String( created.id ), label: created.title };
+				setDesignations( ( prev ) => [ ...prev, opt ] );
+				set( 'designation' )( opt.value );
+				setQuickDesigOpen( false );
+			} )
+			.catch( ( raw ) => setQuickDesigErr( ( raw as ApiError )?.message ?? __( 'Could not create the job title.', 'erp' ) ) )
+			.finally( () => setQuickDesigBusy( false ) );
+	}
+
 	const payload = useMemo< Record< string, unknown > >( () => {
 		switch ( action ) {
 			case 'status':
@@ -190,6 +234,7 @@ export function JobUpdateDialog( {
 	}
 
 	return (
+		<>
 		<Dialog open={ action !== null } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
@@ -262,8 +307,8 @@ export function JobUpdateDialog( {
 
 					{ action === 'job' ? (
 						<>
-							<SmartSelectField id="job_department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department } onChange={ set( 'department' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } />
-							<SmartSelectField id="job_designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation } onChange={ set( 'designation' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } />
+							<SmartSelectField id="job_department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department } onChange={ set( 'department' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ () => { setQuickDeptErr( null ); setQuickDeptOpen( true ); } } disabled={ busy } /> } />
+							<SmartSelectField id="job_designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation } onChange={ set( 'designation' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ () => { setQuickDesigErr( null ); setQuickDesigOpen( true ); } } disabled={ busy } /> } />
 							<SmartSelectField id="job_location" label={ __( 'Location', 'erp' ) } options={ locations } value={ form.location } onChange={ set( 'location' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search locations…', 'erp' ) } />
 							<SmartSelectField id="job_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ reporting.options } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } onSearch={ reporting.onSearch } loading={ reporting.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 						</>
@@ -280,5 +325,24 @@ export function JobUpdateDialog( {
 				</form>
 			</DialogContent>
 		</Dialog>
+
+		<DepartmentFormDialog
+			open={ quickDeptOpen }
+			editing={ null }
+			departments={ [] }
+			busy={ quickDeptBusy }
+			error={ quickDeptErr }
+			onClose={ () => setQuickDeptOpen( false ) }
+			onSubmit={ handleQuickDept }
+		/>
+		<DesignationFormDialog
+			open={ quickDesigOpen }
+			editing={ null }
+			busy={ quickDesigBusy }
+			error={ quickDesigErr }
+			onClose={ () => setQuickDesigOpen( false ) }
+			onSubmit={ handleQuickDesig }
+		/>
+		</>
 	);
 }

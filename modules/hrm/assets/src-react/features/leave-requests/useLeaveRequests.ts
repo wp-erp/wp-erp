@@ -52,6 +52,7 @@ export interface UseLeaveRequestsResult {
 	readonly approve:        ( id: number, reason: string ) => Promise< void >;
 	readonly reject:         ( id: number, reason: string ) => Promise< void >;
 	readonly remove:         ( id: number ) => Promise< void >;
+	readonly bulk:           ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ) => Promise< void >;
 	readonly loadLeaveTypes: () => Promise< readonly LeaveTypeOption[] >;
 }
 
@@ -134,10 +135,18 @@ export function useLeaveRequests( {
 		[ reload ]
 	);
 
+	const bulk = useCallback(
+		async ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ): Promise< void > => {
+			await request( restPath( 'v2', '/leave-requests/bulk' ), { method: 'POST', data: { action, ids } } );
+			await reload();
+		},
+		[ reload ]
+	);
+
 	const loadLeaveTypes = useCallback( async (): Promise< readonly LeaveTypeOption[] > => {
 		const res = await request< IdName[] >( restPath( 'v2', '/leave-types', { per_page: 100 } ) );
 		return Array.isArray( res ) ? res.map( ( t ) => ( { value: t.id, label: t.name } ) ) : [];
 	}, [] );
 
-	return { rows, total, counts, loading, error, reload, approve, reject, remove, loadLeaveTypes };
+	return { rows, total, counts, loading, error, reload, approve, reject, remove, bulk, loadLeaveTypes };
 }

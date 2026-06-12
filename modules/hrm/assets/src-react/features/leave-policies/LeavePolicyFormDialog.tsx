@@ -35,11 +35,16 @@ import {
 	setLeaveFieldValue,
 } from '@/shared/components/LeaveExtraFields';
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
+import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
+import type { ApiError } from '@/shared/utils/apiFetch';
+import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
+import { LeaveTypeFormDialog } from '../leave-types/LeaveTypeFormDialog';
+import type { LeaveType, LeaveTypeInput } from '../leave-types/types';
 import type { LeavePolicy, LeavePolicyInput, PolicyFormOptions } from './types';
 
 interface LeavePolicyFormDialogProps {
@@ -50,6 +55,8 @@ interface LeavePolicyFormDialogProps {
 	readonly error:    string | null;
 	readonly onClose:  () => void;
 	readonly onSubmit: ( payload: LeavePolicyInput ) => void;
+	/** Refresh the host's cached form-options after an inline dependency is created. */
+	readonly onOptionsStale?: () => void;
 }
 
 interface FormState {
@@ -101,6 +108,7 @@ export function LeavePolicyFormDialog( {
 	error,
 	onClose,
 	onSubmit,
+	onOptionsStale,
 }: LeavePolicyFormDialogProps ): JSX.Element {
 	const [ form, setForm ]     = useState< FormState >( EMPTY );
 	const [ errors, setErrors ] = useState< {
@@ -108,6 +116,14 @@ export function LeavePolicyFormDialog( {
 		days?:     string | undefined;
 		f_year?:   string | undefined;
 	} >( {} );
+
+	// Inline "+ Add new" leave type — opens the same dialog the Leave Types
+	// screen uses, then merges the new type into this select and selects it,
+	// so the user never leaves the half-filled policy form.
+	const [ quickTypeOpen, setQuickTypeOpen ] = useState( false );
+	const [ quickTypeBusy, setQuickTypeBusy ] = useState( false );
+	const [ quickTypeErr, setQuickTypeErr ]   = useState< string | null >( null );
+	const [ createdTypes, setCreatedTypes ]   = useState< Option[] >( [] );
 
 	// Pro-injected fields (Advanced Leave). Definitions arrive via wp.hooks; the
 	// pro filter prefills each `default` from the saved policy (`saved`) on edit.
@@ -132,6 +148,9 @@ export function LeavePolicyFormDialog( {
 			return;
 		}
 		setErrors( {} );
+		setQuickTypeOpen( false );
+		setQuickTypeErr( null );
+		setCreatedTypes( [] );
 		setForm(
 			editing
 				? {
@@ -155,9 +174,30 @@ export function LeavePolicyFormDialog( {
 	}, [ open, editing ] );
 
 	const leaveTypeOpts = useMemo< Option[] >(
-		() => ( options?.leaveTypes ?? [] ).map( ( t ) => ( { value: String( t.id ), label: t.label } ) ),
-		[ options ]
+		() => {
+			const base = ( options?.leaveTypes ?? [] ).map( ( t ) => ( { value: String( t.id ), label: t.label } ) );
+			// Merge inline-created types not yet reflected in the host's cached options.
+			const seen = new Set( base.map( ( o ) => o.value ) );
+			return [ ...base, ...createdTypes.filter( ( o ) => ! seen.has( o.value ) ) ];
+		},
+		[ options, createdTypes ]
 	);
+
+	function handleQuickTypeCreate( payload: LeaveTypeInput ): void {
+		setQuickTypeBusy( true );
+		setQuickTypeErr( null );
+		request< LeaveType >( restPath( 'v2', '/leave-types' ), { method: 'POST', data: payload } )
+			.then( ( created ) => {
+				const opt: Option = { value: String( created.id ), label: created.name };
+				setCreatedTypes( ( prev ) => [ ...prev, opt ] );
+				setForm( ( p ) => ( { ...p, leave_id: opt.value } ) );
+				setErrors( ( p ) => ( { ...p, leave_id: undefined } ) );
+				setQuickTypeOpen( false );
+				onOptionsStale?.();
+			} )
+			.catch( ( raw ) => setQuickTypeErr( ( raw as ApiError )?.message ?? __( 'Could not create the leave type.', 'erp' ) ) )
+			.finally( () => setQuickTypeBusy( false ) );
+	}
 	const fYearOpts = useMemo< Option[] >(
 		() => ( options?.financialYears ?? [] ).map( ( y ) => ( { value: String( y.id ), label: y.label } ) ),
 		[ options ]
@@ -262,6 +302,15 @@ export function LeavePolicyFormDialog( {
 							placeholder={ __( '- Select -', 'erp' ) }
 							searchPlaceholder={ __( 'Search leave types…', 'erp' ) }
 							emptyMessage={ __( 'No leave types found.', 'erp' ) }
+							labelAction={
+								! editing ? (
+									<QuickAddButton
+										label={ __( 'Add new', 'erp' ) }
+										onClick={ () => { setQuickTypeErr( null ); setQuickTypeOpen( true ); } }
+										disabled={ busy }
+									/>
+								) : undefined
+							}
 						/>
 						<SmartSelectField
 							id="policy_f_year"
@@ -449,6 +498,15 @@ export function LeavePolicyFormDialog( {
 					</DialogFooter>
 				</form>
 			</DialogContent>
+
+			<LeaveTypeFormDialog
+				open={ quickTypeOpen }
+				editing={ null }
+				busy={ quickTypeBusy }
+				error={ quickTypeErr }
+				onClose={ () => setQuickTypeOpen( false ) }
+				onSubmit={ handleQuickTypeCreate }
+			/>
 		</Dialog>
 	);
 }

@@ -20,12 +20,19 @@ import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DependencyHint } from '@/shared/components/DependencyHint';
+import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
+import type { ApiError } from '@/shared/utils/apiFetch';
+import { request, restPath } from '@/shared/utils/apiFetch';
 import type { EmployeeCreateInput } from '@/stores/employees';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 
+import { DepartmentFormDialog } from '../departments/DepartmentFormDialog';
+import type { Department, DepartmentInput } from '../departments/types';
+import { DesignationFormDialog } from '../designations/DesignationFormDialog';
+import type { Designation, DesignationInput } from '../designations/types';
 import { loadLookup } from '../employees/filters/lookups';
 import type { LookupOption } from '../employees/filters/lookups';
 import { ExtraFields } from './ExtraFields';
@@ -126,6 +133,16 @@ export function EmployeeForm( {
 	const [ locations, setLocations ] = useState< Option[] >( [] );
 	const reporting = useEmployeeSearch( ! isEdit, undefined, form.reporting_to ?? '' );
 	const [ lookupsLoaded, setLookupsLoaded ] = useState( false );
+
+	// Inline "+ Add new" for the two required org dependencies — open the same
+	// dialogs the Departments / Designations screens use, then merge the new
+	// record into the select and select it (no navigating away mid-form).
+	const [ quickDeptOpen, setQuickDeptOpen ]   = useState( false );
+	const [ quickDeptBusy, setQuickDeptBusy ]   = useState( false );
+	const [ quickDeptErr, setQuickDeptErr ]     = useState< string | null >( null );
+	const [ quickDesigOpen, setQuickDesigOpen ] = useState( false );
+	const [ quickDesigBusy, setQuickDesigBusy ] = useState( false );
+	const [ quickDesigErr, setQuickDesigErr ]   = useState< string | null >( null );
 
 	// Pro-injected custom fields (Custom Field Builder). Empty when pro is absent.
 	const [ extraFields, setExtraFields ] = useState< ExtraField[] >( [] );
@@ -241,6 +258,34 @@ export function EmployeeForm( {
 		} );
 	};
 
+	function handleQuickDept( payload: DepartmentInput ): void {
+		setQuickDeptBusy( true );
+		setQuickDeptErr( null );
+		request< Department >( restPath( 'v2', '/departments' ), { method: 'POST', data: payload } )
+			.then( ( created ) => {
+				const opt: Option = { value: String( created.id ), label: created.title };
+				setDepartments( ( prev ) => [ ...prev, opt ] );
+				set( 'department' )( opt.value );
+				setQuickDeptOpen( false );
+			} )
+			.catch( ( raw ) => setQuickDeptErr( ( raw as ApiError )?.message ?? __( 'Could not create the department.', 'erp' ) ) )
+			.finally( () => setQuickDeptBusy( false ) );
+	}
+
+	function handleQuickDesig( payload: DesignationInput ): void {
+		setQuickDesigBusy( true );
+		setQuickDesigErr( null );
+		request< Designation >( restPath( 'v2', '/designations' ), { method: 'POST', data: payload } )
+			.then( ( created ) => {
+				const opt: Option = { value: String( created.id ), label: created.title };
+				setDesignations( ( prev ) => [ ...prev, opt ] );
+				set( 'designation' )( opt.value );
+				setQuickDesigOpen( false );
+			} )
+			.catch( ( raw ) => setQuickDesigErr( ( raw as ApiError )?.message ?? __( 'Could not create the job title.', 'erp' ) ) )
+			.finally( () => setQuickDesigBusy( false ) );
+	}
+
 	function validate(): boolean {
 		const next: Record< string, string > = {};
 		for ( const key of requiredFields( mode ) ) {
@@ -343,6 +388,7 @@ export function EmployeeForm( {
 	}
 
 	return (
+		<>
 		<form onSubmit={ handleSubmit } className="w-full">
 			{ submitError ? (
 				<Alert variant="destructive" className="mb-6">
@@ -420,8 +466,8 @@ export function EmployeeForm( {
 					) : null }
 					<TextField id="hiring_date" label={ __( 'Date of Hire', 'erp' ) } type="date" required value={ form.hiring_date ?? '' } onChange={ set( 'hiring_date' ) } error={ errors.hiring_date } />
 					<TextField id="end_date" label={ __( 'Employee End Date', 'erp' ) } type="date" value={ form.end_date ?? '' } onChange={ set( 'end_date' ) } />
-					<SmartSelectField id="department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department ?? '' } onChange={ set( 'department' ) } error={ errors.department } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } />
-					<SmartSelectField id="designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation ?? '' } onChange={ set( 'designation' ) } error={ errors.designation } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } />
+					<SmartSelectField id="department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department ?? '' } onChange={ set( 'department' ) } error={ errors.department } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ () => { setQuickDeptErr( null ); setQuickDeptOpen( true ); } } disabled={ submitting } /> } />
+					<SmartSelectField id="designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation ?? '' } onChange={ set( 'designation' ) } error={ errors.designation } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ () => { setQuickDesigErr( null ); setQuickDesigOpen( true ); } } disabled={ submitting } /> } />
 				</FormSection>
 
 				<ExtraFields fields={ extraBySection( 'basic' ) } values={ form } onChange={ set } />
@@ -501,5 +547,24 @@ export function EmployeeForm( {
 				</Button>
 			</div>
 		</form>
+
+		<DepartmentFormDialog
+			open={ quickDeptOpen }
+			editing={ null }
+			departments={ [] }
+			busy={ quickDeptBusy }
+			error={ quickDeptErr }
+			onClose={ () => setQuickDeptOpen( false ) }
+			onSubmit={ handleQuickDept }
+		/>
+		<DesignationFormDialog
+			open={ quickDesigOpen }
+			editing={ null }
+			busy={ quickDesigBusy }
+			error={ quickDesigErr }
+			onClose={ () => setQuickDesigOpen( false ) }
+			onSubmit={ handleQuickDesig }
+		/>
+		</>
 	);
 }

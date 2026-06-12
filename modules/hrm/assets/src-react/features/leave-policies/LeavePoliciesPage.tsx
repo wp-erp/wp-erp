@@ -345,6 +345,7 @@ function LeavePoliciesInner(): JSX.Element {
 					setEditing( null );
 				} }
 				onSubmit={ handleSubmit }
+				onOptionsStale={ () => { void loadOptions().then( setOptions ); } }
 			/>
 
 			<OrgDeleteDialog

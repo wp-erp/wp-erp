@@ -511,39 +511,16 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
-						{ /* Birthdays */ }
-						<WidgetCard
-							icon={ Cake }
-							title={ __( 'Birthdays', 'erp' ) }
-							count={ ( data?.birthdays_today.length ?? 0 ) + ( data?.birthdays_upcoming.length ?? 0 ) }
-						>
-							{ ( data?.birthdays_today.length ?? 0 ) === 0 && ( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
-								<EmptyRow text={ __( 'No birthdays in the next 7 days.', 'erp' ) } />
-							) : (
-								<ul>
-									{ data?.birthdays_today.map( ( p ) => (
-										<BirthdayItem
-											key={ `t-${ p.user_id }` }
-											person={ p }
-											today
-											canWish={ p.user_id !== currentUserId }
-											wished={ wished.has( p.user_id ) }
-											onWish={ handleWish }
-										/>
-									) ) }
-									{ data?.birthdays_upcoming.map( ( p ) => (
-										<BirthdayItem
-											key={ `u-${ p.user_id }` }
-											person={ p }
-											today={ false }
-											canWish={ false }
-											wished={ wished.has( p.user_id ) }
-											onWish={ handleWish }
-										/>
-									) ) }
-								</ul>
-							) }
-						</WidgetCard>
+						{ /* Pro self-service widgets (e.g. Attendance punch card) first,
+						   so the Attendance card lands top-right (row 1, col 3) for every
+						   role — admins get extra `pro_widgets` below it that would
+						   otherwise push the punch card out of that slot. Swapped with
+						   Birthdays per the dashboard layout request. */ }
+						{ proSelfWidgets.map( ( Widget, i ) => <Widget key={ `self-${ i }` } /> ) }
+
+						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
+						   PHP filter; render only the ones active modules contributed. */ }
+						{ data?.pro_widgets?.map( ( w ) => <ProWidget key={ w.id } widget={ w } /> ) }
 
 						{ /* Upcoming holidays */ }
 						<WidgetCard
@@ -593,12 +570,41 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
-						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
-						   PHP filter; render only the ones active modules contributed. */ }
-						{ data?.pro_widgets?.map( ( w ) => <ProWidget key={ w.id } widget={ w } /> ) }
-
-						{ /* Pro self-service widgets (e.g. Attendance punch card). */ }
-						{ proSelfWidgets.map( ( Widget, i ) => <Widget key={ `self-${ i }` } /> ) }
+						{ /* Birthdays — moved to the end (slot after announcements) so it
+						   sits below the Attendance card; swapped with the pro widgets
+						   above per the dashboard layout request. */ }
+						<WidgetCard
+							icon={ Cake }
+							title={ __( 'Birthdays', 'erp' ) }
+							count={ ( data?.birthdays_today.length ?? 0 ) + ( data?.birthdays_upcoming.length ?? 0 ) }
+						>
+							{ ( data?.birthdays_today.length ?? 0 ) === 0 && ( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
+								<EmptyRow text={ __( 'No birthdays in the next 7 days.', 'erp' ) } />
+							) : (
+								<ul>
+									{ data?.birthdays_today.map( ( p ) => (
+										<BirthdayItem
+											key={ `t-${ p.user_id }` }
+											person={ p }
+											today
+											canWish={ p.user_id !== currentUserId }
+											wished={ wished.has( p.user_id ) }
+											onWish={ handleWish }
+										/>
+									) ) }
+									{ data?.birthdays_upcoming.map( ( p ) => (
+										<BirthdayItem
+											key={ `u-${ p.user_id }` }
+											person={ p }
+											today={ false }
+											canWish={ false }
+											wished={ wished.has( p.user_id ) }
+											onWish={ handleWish }
+										/>
+									) ) }
+								</ul>
+							) }
+						</WidgetCard>
 					</div>
 
 					{ /* Analytics charts — sit below the activity cards. */ }

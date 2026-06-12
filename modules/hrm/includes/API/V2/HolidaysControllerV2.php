@@ -340,7 +340,16 @@ class HolidaysControllerV2 extends RestControllerV2 {
 	public function parse_file( $request ) {
 		unset( $request );
 
-		if ( empty( $_FILES['file']['tmp_name'] ) ) {
+		if ( empty( $_FILES['file']['tmp_name'] )
+			|| ( isset( $_FILES['file']['error'] ) && UPLOAD_ERR_OK !== (int) $_FILES['file']['error'] )
+		) {
+			return new \WP_Error( 'rest_no_file', __( 'File upload error!', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$temp_name = wp_unslash( $_FILES['file']['tmp_name'] );
+
+		// Only operate on a genuine PHP upload, never an arbitrary server path.
+		if ( ! is_uploaded_file( $temp_name ) ) {
 			return new \WP_Error( 'rest_no_file', __( 'File upload error!', 'erp' ), [ 'status' => 400 ] );
 		}
 
@@ -348,7 +357,6 @@ class HolidaysControllerV2 extends RestControllerV2 {
 		$last_day_of_year  = strtotime( gmdate( 'Y-12-31 23:59:59' ) );
 
 		$holiday_model = new LeaveHoliday();
-		$temp_name     = sanitize_url( wp_unslash( $_FILES['file']['tmp_name'] ) );
 
 		// CSV branch — delegate to the shared parser used by the legacy handler.
 		$mimes = [ 'application/vnd.ms-excel', 'text/csv' ];

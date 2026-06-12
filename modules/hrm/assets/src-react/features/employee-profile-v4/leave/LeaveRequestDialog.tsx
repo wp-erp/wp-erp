@@ -167,6 +167,14 @@ export function LeaveRequestDialog( {
 
 	async function handleSubmit( e: FormEvent ): Promise< void > {
 		e.preventDefault();
+		if ( ! policy || ! from || ! to ) {
+			setError( __( 'Please select a policy and date range.', 'erp' ) );
+			return;
+		}
+		if ( to < from ) {
+			setDateError( __( 'The end date must be on or after the start date.', 'erp' ) );
+			return;
+		}
 		setBusy( true );
 		setError( null );
 		try {

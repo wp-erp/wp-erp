@@ -39,6 +39,7 @@ export interface UseEntitlementsResult {
 	readonly reload:        () => Promise< void >;
 	readonly assign:        ( payload: EntitlementAssignInput ) => Promise< EntitlementAssignResult >;
 	readonly remove:        ( id: number, userId: number ) => Promise< void >;
+	readonly bulkRemove:    ( ids: readonly number[] ) => Promise< void >;
 	readonly loadPolicies:  () => Promise< readonly IdOption[] >;
 	readonly loadEmployees: ( policyId: number ) => Promise< readonly IdOption[] >;
 }
@@ -104,6 +105,14 @@ export function useEntitlements( {
 		[ reload ]
 	);
 
+	const bulkRemove = useCallback(
+		async ( ids: readonly number[] ): Promise< void > => {
+			await request( restPath( 'v2', '/leave-entitlements/bulk-delete' ), { method: 'POST', data: { ids } } );
+			await reload();
+		},
+		[ reload ]
+	);
+
 	const loadPolicies = useCallback( async (): Promise< readonly IdOption[] > => {
 		const res = await request< IdOption[] >( restPath( 'v2', '/leave-entitlements/policies' ) );
 		return Array.isArray( res ) ? res : [];
@@ -117,5 +126,5 @@ export function useEntitlements( {
 		return Array.isArray( res ) ? res : [];
 	}, [] );
 
-	return { rows, total, loading, error, reload, assign, remove, loadPolicies, loadEmployees };
+	return { rows, total, loading, error, reload, assign, remove, bulkRemove, loadPolicies, loadEmployees };
 }

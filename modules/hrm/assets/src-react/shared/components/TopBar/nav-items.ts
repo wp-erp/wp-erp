@@ -127,7 +127,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 			{
 				id:           'people-requests',
 				label:        __( 'Requests', 'erp' ),
-				to:           '/leave/requests',
+				to:           '/requests',
 				capabilities: [ 'erp_leave_manage' ],
 				description:  __( 'Employee requests', 'erp' ),
 			},
@@ -217,6 +217,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				description:  __( 'Month view of leave and holidays', 'erp' ),
 			},
 			{
+				id:           'financial-years',
+				label:        __( 'Financial Years', 'erp' ),
+				to:           '/leave/financial-years',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Define the financial years entitlements run against', 'erp' ),
+			},
+			{
 				id:           'leave-unpaid',
 				label:        __( 'Unpaid Leaves', 'erp' ),
 				to:           '/leave/unpaid',
@@ -271,6 +278,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/attendance/reports',
 				capabilities: [ 'erp_hr_manager' ],
 				description:  __( 'Per-employee attendance report', 'erp' ),
+			},
+			{
+				id:           'attendance-settings',
+				label:        __( 'Settings', 'erp' ),
+				to:           '/attendance/settings',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Grace times, IP restriction and reminders', 'erp' ),
 			},
 		],
 	},

@@ -6,6 +6,10 @@
  * Dropdown items render as inline accordions (children indented below the
  * parent) instead of hover flyouts — the active section auto-expands.
  *
+ * When `collapsed` is set the rail is icon-only: labels, pro badges, and the
+ * accordion chevrons are hidden, sections degrade to a single link to their own
+ * route (no inline children), and every row carries a `title` tooltip.
+ *
  * Reference: Figma HRM-Redesign-2024 node 1511:29973 (sidebar layout).
  */
 
@@ -22,16 +26,23 @@ import type { NavItem } from '@/shared/components/TopBar/nav-items';
 const ROW_BASE =
 	'group flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors';
 
-function rowClass( active: boolean ): string {
+const ROW_BASE_COLLAPSED =
+	'group flex w-full items-center justify-center rounded-md p-2 text-sm transition-colors';
+
+function rowClass( active: boolean, collapsed = false ): string {
 	return [
-		ROW_BASE,
+		collapsed ? ROW_BASE_COLLAPSED : ROW_BASE,
 		active
 			? 'bg-primary/10 font-medium text-primary'
 			: 'font-normal text-foreground hover:bg-muted',
 	].join( ' ' );
 }
 
-export function SidebarNav(): JSX.Element {
+interface SidebarNavProps {
+	readonly collapsed?: boolean;
+}
+
+export function SidebarNav( { collapsed = false }: SidebarNavProps ): JSX.Element {
 	const { entries, currentPath, openUpsell, isActive } = useNavMenu();
 
 	// Track which dropdown sections are expanded. Seed with the active section
@@ -72,7 +83,10 @@ export function SidebarNav(): JSX.Element {
 		} );
 
 	return (
-		<nav aria-label="HR sections" className="flex flex-col gap-0.5 px-3 py-3">
+		<nav
+			aria-label="HR sections"
+			className={ `flex flex-col gap-0.5 py-3 ${ collapsed ? 'px-2' : 'px-3' }` }
+		>
 			{ entries.map( ( { item, Icon, proLocked, hasMenu } ) => {
 				if ( proLocked ) {
 					return (
@@ -80,17 +94,25 @@ export function SidebarNav(): JSX.Element {
 							key={ item.id }
 							type="button"
 							onClick={ () => openUpsell( item.label ) }
-							className={ rowClass( false ) }
+							className={ rowClass( false, collapsed ) }
+							title={ collapsed ? item.label : undefined }
 						>
 							<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
-							<span className="flex-1 truncate">{ item.label }</span>
-							<ProBadge />
+							{ ! collapsed && (
+								<>
+									<span className="flex-1 truncate">{ item.label }</span>
+									<ProBadge />
+								</>
+							) }
 						</button>
 					);
 				}
 
-				if ( ! hasMenu ) {
-					return <SidebarLeaf key={ item.id } item={ item } Icon={ Icon } />;
+				// In the collapsed rail every top-level item — including ones with a
+				// submenu — renders as a single icon link to its own route; the
+				// accordion only exists in the expanded rail.
+				if ( ! hasMenu || collapsed ) {
+					return <SidebarLeaf key={ item.id } item={ item } Icon={ Icon } collapsed={ collapsed } />;
 				}
 
 				return (
@@ -109,21 +131,23 @@ export function SidebarNav(): JSX.Element {
 }
 
 interface LeafProps {
-	readonly item: NavItem;
-	readonly Icon: LucideIcon;
+	readonly item:       NavItem;
+	readonly Icon:       LucideIcon;
+	readonly collapsed?: boolean;
 }
 
 /** A childless top-level item — a plain route link. */
-function SidebarLeaf( { item, Icon }: LeafProps ): JSX.Element {
+function SidebarLeaf( { item, Icon, collapsed = false }: LeafProps ): JSX.Element {
 	return (
 		<NavLink
 			to={ item.path }
 			end={ item.path === '/' }
 			viewTransition
-			className={ ( { isActive } ) => rowClass( isActive ) }
+			title={ collapsed ? item.label : undefined }
+			className={ ( { isActive } ) => rowClass( isActive, collapsed ) }
 		>
 			<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
-			<span className="flex-1 truncate">{ item.label }</span>
+			{ ! collapsed && <span className="flex-1 truncate">{ item.label }</span> }
 		</NavLink>
 	);
 }

@@ -111,6 +111,18 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 				],
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/bulk',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'bulk_action' ],
+					'permission_callback' => [ $this, 'permission_manage' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -254,6 +266,56 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 		}
 
 		return rest_ensure_response( [ 'deleted' => true, 'id' => $id ] );
+	}
+
+	/**
+	 * POST /erp/v2/leave-requests/bulk
+	 *
+	 * Bulk approve / reject / delete — restores the legacy list-table bulk actions
+	 * (`FormHandler::leave_request_bulk_action()`). Reuses the same per-item helpers
+	 * (`erp_hr_leave_request_update_status()` / `erp_hr_delete_leave_request()`) so
+	 * every hook + cache purge fires exactly as the single-item path.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function bulk_action( $request ) {
+		$action = sanitize_text_field( (string) ( $request['action'] ?? '' ) );
+		$ids    = array_values( array_filter( array_map( 'absint', (array) ( $request['ids'] ?? [] ) ) ) );
+
+		if ( empty( $ids ) || ! \in_array( $action, [ 'approve', 'reject', 'delete' ], true ) ) {
+			return new \WP_Error( 'rest_leave_request_bad_request', __( 'Provide a valid action and at least one request.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$done   = [];
+		$failed = [];
+
+		foreach ( $ids as $id ) {
+			if ( 'delete' === $action ) {
+				$res = erp_hr_delete_leave_request( $id );
+			} else {
+				$status  = 'approve' === $action ? 1 : 3;
+				$comment = 'approve' === $action
+					? __( 'Approved from bulk action', 'erp' )
+					: __( 'Rejected from bulk action', 'erp' );
+				$res = erp_hr_leave_request_update_status( $id, $status, $comment );
+			}
+
+			if ( is_wp_error( $res ) ) {
+				$failed[] = $id;
+			} else {
+				$done[] = $id;
+			}
+		}
+
+		return rest_ensure_response(
+			[
+				'action' => $action,
+				'done'   => $done,
+				'failed' => $failed,
+			]
+		);
 	}
 
 	/**

@@ -175,7 +175,16 @@ class DepartmentsControllerV2 extends RestControllerV2 {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function create_item( $request ) {
-		$id = erp_hr_create_department( $this->prepare_item_for_database( $request ) );
+		$data = $this->prepare_item_for_database( $request );
+
+		if ( isset( $data['title'] ) ) {
+			$dup = $this->duplicate_title_error( (string) $data['title'], 0 );
+			if ( $dup ) {
+				return $dup;
+			}
+		}
+
+		$id = erp_hr_create_department( $data );
 
 		if ( is_wp_error( $id ) ) {
 			return $this->to_rest_error( $id );
@@ -209,6 +218,18 @@ class DepartmentsControllerV2 extends RestControllerV2 {
 		$data       = $this->prepare_item_for_database( $request );
 		$data['id'] = $dept_id;
 
+		// A department cannot be its own parent (mirrors the legacy guard).
+		if ( isset( $data['parent'] ) && (int) $data['parent'] === $dept_id ) {
+			$data['parent'] = 0;
+		}
+
+		if ( isset( $data['title'] ) ) {
+			$dup = $this->duplicate_title_error( (string) $data['title'], $dept_id );
+			if ( $dup ) {
+				return $dup;
+			}
+		}
+
 		$id = erp_hr_create_department( $data );
 
 		if ( is_wp_error( $id ) ) {
@@ -216,6 +237,26 @@ class DepartmentsControllerV2 extends RestControllerV2 {
 		}
 
 		return rest_ensure_response( $this->prepare_item_for_response( new Department( $dept_id ), $request ) );
+	}
+
+	/**
+	 * A `WP_Error` when another department already uses this title (case-insensitive),
+	 * else null. Mirrors the legacy `department_create` duplicate guard.
+	 *
+	 * @param string $title      Proposed title.
+	 * @param int    $exclude_id Department id to exclude (0 on create).
+	 *
+	 * @return \WP_Error|null
+	 */
+	protected function duplicate_title_error( string $title, int $exclude_id ) {
+		$exist = \WeDevs\ERP\HRM\Models\Department::where( 'id', '!=', $exclude_id )
+			->where( 'title', 'like', $title )->first();
+
+		if ( $exist && (int) $exist->id !== $exclude_id ) {
+			return new \WP_Error( 'rest_department_duplicate', __( 'Multiple department with the same name is not allowed.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
 	}
 
 	/**

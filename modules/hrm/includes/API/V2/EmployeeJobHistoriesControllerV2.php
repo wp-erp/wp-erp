@@ -146,12 +146,16 @@ class EmployeeJobHistoriesControllerV2 extends RestControllerV2 {
 	}
 
 	/**
-	 * Adding a job-history entry requires the manage-jobinfo cap (matches v1).
+	 * Adding a job-history entry requires the manage-jobinfo cap on the TARGET
+	 * employee (matches the legacy `update_job_history`, which scoped the cap to
+	 * the `$user_id`).
+	 *
+	 * @param \WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
-	public function permission_manage(): bool {
-		return $this->permission_cap( 'erp_manage_jobinfo' );
+	public function permission_manage( $request ): bool {
+		return $this->permission_cap( 'erp_manage_jobinfo', (int) $request['user_id'] );
 	}
 
 	/**
@@ -181,6 +185,11 @@ class EmployeeJobHistoriesControllerV2 extends RestControllerV2 {
 
 		$params = $request->get_params();
 
+		// Snapshot before the write so the `erp_hr_employee_update` action can carry
+		// the old data — the model methods below fire only their `*_create` hooks, so
+		// the legacy AjaxHandler fired this update action separately after each write.
+		$old_data = $employee->get_data();
+
 		if ( 'employee' === $module || 'employment' === $module ) {
 			$result = $employee->update_employment_status( $params );
 		} elseif ( 'compensation' === $module ) {
@@ -196,6 +205,8 @@ class EmployeeJobHistoriesControllerV2 extends RestControllerV2 {
 				[ 'status' => 400 ]
 			);
 		}
+
+		do_action( 'erp_hr_employee_update', $user_id, $old_data );
 
 		$response = rest_ensure_response( [ 'created' => true ] );
 		$response->set_status( 201 );

@@ -118,6 +118,42 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 				],
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/bulk-delete',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'bulk_delete' ],
+					'permission_callback' => [ $this, 'permission_manage' ],
+				],
+			]
+		);
+	}
+
+	/**
+	 * POST /erp/v2/leave-entitlements/bulk-delete
+	 *
+	 * Restores the legacy list-table bulk delete (`FormHandler::entitlement_bulk_action()`).
+	 * Mirrors it exactly: `erp_hr_delete_entitlement( $id, 0, $id )` per row.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function bulk_delete( $request ) {
+		$ids = array_values( array_filter( array_map( 'absint', (array) ( $request['ids'] ?? [] ) ) ) );
+
+		if ( empty( $ids ) ) {
+			return new \WP_Error( 'rest_entitlement_bad_request', __( 'Provide at least one entitlement.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		foreach ( $ids as $id ) {
+			erp_hr_delete_entitlement( $id, 0, $id );
+		}
+
+		return rest_ensure_response( [ 'deleted' => $ids ] );
 	}
 
 	/**

@@ -483,7 +483,7 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 
 		$row                 = $this->prepare_item_for_response( $post, null );
 		$row['content']      = (string) $post->post_content; // raw — the editor binds to this.
-		$row['html_content'] = (string) wpautop( (string) $post->post_content ); // display-ready (view modal).
+		$row['html_content'] = (string) wp_kses_post( wpautop( (string) $post->post_content ) ); // display-ready (view modal); KSES'd next to the React dangerouslySetInnerHTML sink.
 		$row['type']         = (string) get_post_meta( $post_id, '_announcement_type', true );
 
 		return $row;

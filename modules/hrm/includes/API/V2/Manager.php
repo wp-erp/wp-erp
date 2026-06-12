@@ -82,6 +82,7 @@ class Manager {
 			LeaveEntitlementsControllerV2::class,
 			LeaveRequestsControllerV2::class,
 			LeaveCalendarControllerV2::class,
+			FinancialYearsControllerV2::class,
 			AnnouncementsControllerV2::class,
 			ReportsControllerV2::class,
 			DashboardControllerV2::class,

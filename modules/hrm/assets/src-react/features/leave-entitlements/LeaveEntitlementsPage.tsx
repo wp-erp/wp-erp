@@ -9,6 +9,7 @@
 
 import {
 	Button,
+	Checkbox,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -44,7 +45,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 	const [ page, setPage ]           = useState( 1 );
 	const [ perPage, setPerPage ]     = useState( 20 );
 
-	const { rows, total, loading, error, assign, remove, loadPolicies, loadEmployees } = useEntitlements( {
+	const { rows, total, loading, error, assign, remove, bulkRemove, loadPolicies, loadEmployees } = useEntitlements( {
 		year,
 		policyId,
 		employeeType: '',
@@ -58,6 +59,8 @@ function LeaveEntitlementsInner(): JSX.Element {
 	const [ deleting, setDeleting ]   = useState< Entitlement | null >( null );
 	const [ busy, setBusy ]           = useState( false );
 	const [ formError, setFormError ] = useState< string | null >( null );
+	const [ selected, setSelected ]   = useState< ReadonlySet< number > >( new Set() );
+	const [ bulkDeleting, setBulkDeleting ] = useState( false );
 
 	const totalPages = Math.max( 1, Math.ceil( total / perPage ) );
 
@@ -109,6 +112,47 @@ function LeaveEntitlementsInner(): JSX.Element {
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the entitlement.', 'erp' ) );
 			setDeleting( null );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	// Clear the selection whenever the visible rows change (filter / page / reload).
+	useEffect( () => {
+		setSelected( new Set() );
+	}, [ rows ] );
+
+	const allOnPageSelected = rows.length > 0 && rows.every( ( r ) => selected.has( r.id ) );
+
+	function toggleAll(): void {
+		setSelected( allOnPageSelected ? new Set() : new Set( rows.map( ( r ) => r.id ) ) );
+	}
+
+	function toggleOne( id: number ): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( next.has( id ) ) {
+				next.delete( id );
+			} else {
+				next.add( id );
+			}
+			return next;
+		} );
+	}
+
+	async function runBulkDelete(): Promise< void > {
+		const ids = [ ...selected ];
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			await bulkRemove( ids );
+			toast.success( __( 'Selected entitlements deleted.', 'erp' ) );
+			setSelected( new Set() );
+			setBulkDeleting( false );
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Bulk delete failed.', 'erp' ) );
 		} finally {
 			setBusy( false );
 		}
@@ -203,6 +247,20 @@ function LeaveEntitlementsInner(): JSX.Element {
 					</div>
 				) : null }
 
+				{ canManage && selected.size > 0 ? (
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">
+							{ sprintf( __( '%d selected', 'erp' ), selected.size ) }
+						</span>
+						<Button size="sm" variant="outline" disabled={ busy } onClick={ () => setBulkDeleting( true ) } className="h-8 gap-1.5 text-destructive hover:text-destructive">
+							<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+						</Button>
+						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
+							{ __( 'Clear', 'erp' ) }
+						</button>
+					</div>
+				) : null }
+
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
@@ -218,6 +276,11 @@ function LeaveEntitlementsInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+								{ canManage ? (
+									<th scope="col" className="w-10 px-4">
+										<Checkbox checked={ allOnPageSelected } onCheckedChange={ toggleAll } aria-label={ __( 'Select all', 'erp' ) } />
+									</th>
+								) : null }
 								<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
 								<th scope="col" className="px-4">{ __( 'Policy', 'erp' ) }</th>
 								<th scope="col" className="px-4">{ __( 'Days', 'erp' ) }</th>
@@ -230,6 +293,11 @@ function LeaveEntitlementsInner(): JSX.Element {
 						<tbody>
 							{ rows.map( ( ent ) => (
 								<tr key={ ent.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
+									{ canManage ? (
+										<td className="w-10 px-4 align-middle">
+											<Checkbox checked={ selected.has( ent.id ) } onCheckedChange={ () => toggleOne( ent.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), ent.employee_name ) } />
+										</td>
+									) : null }
 									<td className="px-4 align-middle font-medium text-foreground">
 										{ ent.employee_name || <span className="text-muted-foreground">—</span> }
 									</td>
@@ -305,6 +373,18 @@ function LeaveEntitlementsInner(): JSX.Element {
 				busy={ busy }
 				onConfirm={ () => void handleDelete() }
 				onCancel={ () => setDeleting( null ) }
+			/>
+
+			<OrgDeleteDialog
+				open={ bulkDeleting }
+				title={ __( 'Delete selected entitlements?', 'erp' ) }
+				description={ sprintf(
+					__( '%d entitlement(s) will be deleted along with any dependent leave requests. This cannot be undone.', 'erp' ),
+					selected.size
+				) }
+				busy={ busy }
+				onConfirm={ () => void runBulkDelete() }
+				onCancel={ () => setBulkDeleting( false ) }
 			/>
 		</section>
 	);

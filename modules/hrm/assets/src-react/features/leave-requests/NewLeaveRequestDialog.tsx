@@ -209,6 +209,10 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 			setError( __( 'Please select an employee, policy and date range.', 'erp' ) );
 			return;
 		}
+		if ( to < from ) {
+			setError( __( 'The end date must be on or after the start date.', 'erp' ) );
+			return;
+		}
 		setBusy( true );
 		setError( null );
 		try {

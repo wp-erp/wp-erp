@@ -93,8 +93,16 @@ const LeaveRequestsPage = lazy( () =>
 	import( '@/features/leave-requests' ).then( ( m ) => ( { default: m.LeaveRequestsPage } ) )
 );
 
+const RequestsPage = lazy( () =>
+	import( '@/features/requests' ).then( ( m ) => ( { default: m.RequestsPage } ) )
+);
+
 const LeaveCalendarPage = lazy( () =>
 	import( '@/features/leave-calendar' ).then( ( m ) => ( { default: m.LeaveCalendarPage } ) )
+);
+
+const FinancialYearsPage = lazy( () =>
+	import( '@/features/financial-years' ).then( ( m ) => ( { default: m.FinancialYearsPage } ) )
 );
 
 // Advanced Leave (pro) pages — mounted in the free router but only reachable via
@@ -346,6 +354,18 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
+		id:           'requests',
+		path:         '/requests',
+		element:      RequestsPage,
+		capabilities: [ 'erp_leave_manage' ],
+		handle: {
+			id:        'requests',
+			title:     __( 'Requests', 'erp' ),
+			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
 		id:           'leave-types',
 		path:         '/leave/types',
 		element:      LeaveTypesPage,
@@ -377,6 +397,18 @@ const baseRoutes: AppRoute[] = [
 		handle: {
 			id:        'leave-entitlements',
 			title:     __( 'Leave Entitlements', 'erp' ),
+			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'financial-years',
+		path:         '/leave/financial-years',
+		element:      FinancialYearsPage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'financial-years',
+			title:     __( 'Financial Years', 'erp' ),
 			group:     'leave',
 			showInNav: false,
 		},

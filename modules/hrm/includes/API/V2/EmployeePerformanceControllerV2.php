@@ -87,25 +87,47 @@ class EmployeePerformanceControllerV2 extends RestControllerV2 {
 	}
 
 	/**
-	 * Adding a performance record requires the create-review meta cap.
+	 * Adding a performance record requires the create-review meta cap OR being the
+	 * target employee's department lead (the legacy `employee_update_performance`
+	 * allowed the dept lead even without the cap).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
 	public function permission_manage( $request ): bool {
-		return $this->permission_cap( 'erp_create_review', (int) $request['user_id'] );
+		$user_id = (int) $request['user_id'];
+
+		return $this->permission_cap( 'erp_create_review', $user_id ) || $this->is_department_lead( $user_id );
 	}
 
 	/**
-	 * Deleting a performance record requires the delete-review meta cap.
+	 * Deleting a performance record requires the delete-review meta cap OR being the
+	 * target employee's department lead (mirrors the legacy delete check).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
 	public function permission_delete( $request ): bool {
-		return $this->permission_cap( 'erp_delete_review', (int) $request['user_id'] );
+		$user_id = (int) $request['user_id'];
+
+		return $this->permission_cap( 'erp_delete_review', $user_id ) || $this->is_department_lead( $user_id );
+	}
+
+	/**
+	 * Whether the current user is the department lead of the given employee.
+	 *
+	 * @param int $user_id Target employee user id.
+	 *
+	 * @return bool
+	 */
+	protected function is_department_lead( int $user_id ): bool {
+		if ( ! $user_id || ! function_exists( 'erp_hr_get_department_lead_by_user' ) ) {
+			return false;
+		}
+
+		return get_current_user_id() === (int) erp_hr_get_department_lead_by_user( $user_id );
 	}
 
 	/**

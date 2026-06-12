@@ -178,7 +178,16 @@ class DesignationsControllerV2 extends RestControllerV2 {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function create_item( $request ) {
-		$id = erp_hr_create_designation( $this->prepare_item_for_database( $request ) );
+		$data = $this->prepare_item_for_database( $request );
+
+		if ( isset( $data['title'] ) ) {
+			$dup = $this->duplicate_title_error( (string) $data['title'], 0 );
+			if ( $dup ) {
+				return $dup;
+			}
+		}
+
+		$id = erp_hr_create_designation( $data );
 
 		if ( is_wp_error( $id ) ) {
 			return $this->to_rest_error( $id );
@@ -212,6 +221,13 @@ class DesignationsControllerV2 extends RestControllerV2 {
 		$data       = $this->prepare_item_for_database( $request );
 		$data['id'] = $desig_id;
 
+		if ( isset( $data['title'] ) ) {
+			$dup = $this->duplicate_title_error( (string) $data['title'], $desig_id );
+			if ( $dup ) {
+				return $dup;
+			}
+		}
+
 		$id = erp_hr_create_designation( $data );
 
 		if ( is_wp_error( $id ) ) {
@@ -219,6 +235,26 @@ class DesignationsControllerV2 extends RestControllerV2 {
 		}
 
 		return rest_ensure_response( $this->prepare_item_for_response( new Designation( $desig_id ), $request ) );
+	}
+
+	/**
+	 * A `WP_Error` when another designation already uses this title (case-insensitive),
+	 * else null. Mirrors the legacy `designation_create` duplicate guard.
+	 *
+	 * @param string $title      Proposed title.
+	 * @param int    $exclude_id Designation id to exclude (0 on create).
+	 *
+	 * @return \WP_Error|null
+	 */
+	protected function duplicate_title_error( string $title, int $exclude_id ) {
+		$exist = \WeDevs\ERP\HRM\Models\Designation::where( 'id', '!=', $exclude_id )
+			->where( 'title', 'like', $title )->first();
+
+		if ( $exist && (int) $exist->id !== $exclude_id ) {
+			return new \WP_Error( 'rest_designation_duplicate', __( 'Multiple designation with the same name is not allowed.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
 	}
 
 	/**

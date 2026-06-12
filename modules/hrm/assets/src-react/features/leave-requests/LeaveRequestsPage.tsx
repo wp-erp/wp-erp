@@ -14,6 +14,7 @@
 import {
 	Badge,
 	Button,
+	Checkbox,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -88,7 +89,7 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ page, setPage ]           = useState( 1 );
 	const [ perPage, setPerPage ]     = useState( 20 );
 
-	const { rows, total, counts, loading, error, reload, approve, reject, remove, loadLeaveTypes } = useLeaveRequests( {
+	const { rows, total, counts, loading, error, reload, approve, reject, remove, bulk, loadLeaveTypes } = useLeaveRequests( {
 		status,
 		leaveId,
 		year,
@@ -103,6 +104,8 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ creating, setCreating ]   = useState( false );
 	const [ busy, setBusy ]           = useState( false );
 	const [ moderateError, setModerateError ] = useState< string | null >( null );
+	const [ selected, setSelected ]   = useState< ReadonlySet< number > >( new Set() );
+	const [ bulkDeleting, setBulkDeleting ] = useState( false );
 
 	const totalPages = Math.max( 1, Math.ceil( total / perPage ) );
 
@@ -179,6 +182,53 @@ function LeaveRequestsInner(): JSX.Element {
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the request.', 'erp' ) );
 			setDeleting( null );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	// Clear the selection whenever the visible rows change (filter / page / reload).
+	useEffect( () => {
+		setSelected( new Set() );
+	}, [ rows ] );
+
+	const allOnPageSelected = rows.length > 0 && rows.every( ( r ) => selected.has( r.id ) );
+
+	function toggleAll(): void {
+		setSelected( allOnPageSelected ? new Set() : new Set( rows.map( ( r ) => r.id ) ) );
+	}
+
+	function toggleOne( id: number ): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( next.has( id ) ) {
+				next.delete( id );
+			} else {
+				next.add( id );
+			}
+			return next;
+		} );
+	}
+
+	async function runBulk( action: 'approve' | 'reject' | 'delete' ): Promise< void > {
+		const ids = [ ...selected ];
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			await bulk( action, ids );
+			toast.success(
+				action === 'approve'
+					? __( 'Selected requests approved.', 'erp' )
+					: action === 'reject'
+					? __( 'Selected requests rejected.', 'erp' )
+					: __( 'Selected requests deleted.', 'erp' )
+			);
+			setSelected( new Set() );
+			setBulkDeleting( false );
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Bulk action failed.', 'erp' ) );
 		} finally {
 			setBusy( false );
 		}
@@ -296,6 +346,28 @@ function LeaveRequestsInner(): JSX.Element {
 					</div>
 				) : null }
 
+				{ canManage && selected.size > 0 ? (
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">
+							{ sprintf( __( '%d selected', 'erp' ), selected.size ) }
+						</span>
+						<div className="flex items-center gap-2">
+							<Button size="sm" variant="outline" disabled={ busy } onClick={ () => void runBulk( 'approve' ) } className="h-8 gap-1.5">
+								<Check size={ 14 } aria-hidden="true" /> { __( 'Approve', 'erp' ) }
+							</Button>
+							<Button size="sm" variant="outline" disabled={ busy } onClick={ () => void runBulk( 'reject' ) } className="h-8 gap-1.5">
+								<X size={ 14 } aria-hidden="true" /> { __( 'Reject', 'erp' ) }
+							</Button>
+							<Button size="sm" variant="outline" disabled={ busy } onClick={ () => setBulkDeleting( true ) } className="h-8 gap-1.5 text-destructive hover:text-destructive">
+								<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+							</Button>
+						</div>
+						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
+							{ __( 'Clear', 'erp' ) }
+						</button>
+					</div>
+				) : null }
+
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
@@ -309,6 +381,15 @@ function LeaveRequestsInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+								{ canManage ? (
+									<th scope="col" className="w-10 px-4">
+										<Checkbox
+											checked={ allOnPageSelected }
+											onCheckedChange={ toggleAll }
+											aria-label={ __( 'Select all', 'erp' ) }
+										/>
+									</th>
+								) : null }
 								<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
 								<th scope="col" className="px-4">{ __( 'Leave Type', 'erp' ) }</th>
 								<th scope="col" className="px-4">{ __( 'Duration', 'erp' ) }</th>
@@ -322,6 +403,15 @@ function LeaveRequestsInner(): JSX.Element {
 						<tbody>
 							{ rows.map( ( req ) => (
 								<tr key={ req.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
+									{ canManage ? (
+										<td className="w-10 px-4 align-middle">
+											<Checkbox
+												checked={ selected.has( req.id ) }
+												onCheckedChange={ () => toggleOne( req.id ) }
+												aria-label={ sprintf( __( 'Select %s', 'erp' ), req.name ) }
+											/>
+										</td>
+									) : null }
 									<td className="px-4 align-middle font-medium text-foreground">
 										{ req.name ? (
 											<PersonCell name={ req.name } avatar={ req.avatar } />
@@ -443,6 +533,18 @@ function LeaveRequestsInner(): JSX.Element {
 				busy={ busy }
 				onConfirm={ () => void handleDelete() }
 				onCancel={ () => setDeleting( null ) }
+			/>
+
+			<OrgDeleteDialog
+				open={ bulkDeleting }
+				title={ __( 'Delete selected requests?', 'erp' ) }
+				description={ sprintf(
+					__( '%d leave request(s) will be permanently deleted and any used balance restored. This cannot be undone.', 'erp' ),
+					selected.size
+				) }
+				busy={ busy }
+				onConfirm={ () => void runBulk( 'delete' ) }
+				onCancel={ () => setBulkDeleting( false ) }
 			/>
 		</section>
 	);

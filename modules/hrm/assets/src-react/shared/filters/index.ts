@@ -18,6 +18,11 @@ export const HOOKS = {
 	// Attendance self-service widget). Applied lazily at render.
 	DASHBOARD_WIDGETS:  'erp_hr.dashboard.widgets',
 
+	// People → Requests tabs. Free seeds the Leave tab; pro modules append their
+	// own request type (Asset, Reimbursement, …) — mirrors the legacy
+	// `erp_hr_employee_request_types` filter. Each tab: { id, label, element }.
+	REQUEST_TABS:       'erp_hr.request_tabs',
+
 	// Employee create/edit form — pro injects extra (custom) field definitions.
 	EMPLOYEE_EXTRA_FIELDS:   'erp_hr.employee.extra_fields',
 

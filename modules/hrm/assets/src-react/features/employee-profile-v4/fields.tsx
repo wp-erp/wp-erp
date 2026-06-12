@@ -36,6 +36,8 @@ interface FieldShellProps {
 	readonly className?: string | undefined;
 	readonly children: ReactNode;
 	readonly hint?:    string | undefined;
+	/** Optional affordance rendered to the right of the label — e.g. a "+ Add new" quick-create button. */
+	readonly labelAction?: ReactNode;
 }
 
 function FieldShell( {
@@ -46,13 +48,17 @@ function FieldShell( {
 	className,
 	children,
 	hint,
+	labelAction,
 }: FieldShellProps ): JSX.Element {
 	return (
 		<div className={ [ 'flex min-w-0 flex-col gap-2.5', className ?? '' ].join( ' ' ) }>
-			<Label htmlFor={ id } className="text-sm font-medium text-foreground">
-				{ label }
-				{ required ? <span className="ml-0.5 text-destructive">*</span> : null }
-			</Label>
+			<div className="flex min-h-[1.25rem] items-center justify-between gap-2">
+				<Label htmlFor={ id } className="text-sm font-medium text-foreground">
+					{ label }
+					{ required ? <span className="ml-0.5 text-destructive">*</span> : null }
+				</Label>
+				{ labelAction }
+			</div>
 			{ children }
 			{ hint && ! error ? (
 				<p className="text-xs text-muted-foreground">{ hint }</p>
@@ -173,6 +179,8 @@ interface SmartSelectFieldProps {
 	readonly className?:        string | undefined;
 	readonly onSearch?:         ( ( query: string ) => void | Promise< void > ) | undefined;
 	readonly loading?:          boolean | undefined;
+	/** Optional affordance rendered to the right of the label — e.g. a "+ Add new" quick-create button. */
+	readonly labelAction?:      ReactNode;
 }
 
 /**
@@ -194,9 +202,10 @@ export function SmartSelectField( {
 	className,
 	onSearch,
 	loading,
+	labelAction,
 }: SmartSelectFieldProps ): JSX.Element {
 	return (
-		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
+		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className } labelAction={ labelAction }>
 			<SmartSelect
 				options={ options as { value: string; label: string }[] }
 				value={ value }
