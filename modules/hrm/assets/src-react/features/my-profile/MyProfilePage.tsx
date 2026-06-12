@@ -11,7 +11,7 @@
 import { useSelect } from '@wordpress/data';
 import type { JSX } from 'react';
 
-import { EmployeeSingleInner } from '@/features/employee-create/EmployeeSinglePage';
+import { EmployeeProfileV4Inner } from '@/features/employee-profile-v4/EmployeeProfileV4Page';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { __ } from '@/shared/i18n';
 import { storeName as meStoreName } from '@/stores/me';
@@ -26,7 +26,7 @@ export function MyProfilePage(): JSX.Element {
 	return (
 		<ErrorBoundary>
 			{ userId > 0 ? (
-				<EmployeeSingleInner userId={ userId } />
+				<EmployeeProfileV4Inner userId={ userId } />
 			) : (
 				<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
 					{ __( 'Your employee profile could not be found.', 'erp' ) }
