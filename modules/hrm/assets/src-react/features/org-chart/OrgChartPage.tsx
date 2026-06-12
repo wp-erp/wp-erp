@@ -84,45 +84,36 @@ function OrgCard( { node }: { node: ServerNode } ): JSX.Element {
 }
 
 /**
- * Recursive subtree. Connector lines are drawn with bordered wrappers:
- *   - a vertical stub drops from each parent to the row of children,
- *   - each child has a top stub, and a horizontal rule spans the siblings
- *     (trimmed at the first/last child so the ends don't overhang).
+ * Recursive subtree, vertical (indented-tree) orientation. Children are stacked
+ * in a column beneath the parent and connected with pure-CSS rules:
+ *   - the children list carries a continuous vertical border running down its
+ *     left edge,
+ *   - each child draws a horizontal elbow from that border to its card,
+ *   - the last child masks the border below its elbow so the line stops there.
  */
 function OrgSubtree( { node }: { node: ServerNode } ): JSX.Element {
 	const children = ( node.children ?? [] ).filter( ( c ) => c.id > 0 );
 	const hasChildren = children.length > 0;
 
 	return (
-		<li className="flex flex-col items-center">
+		<li className="flex flex-col items-start">
 			<OrgCard node={ node } />
 
 			{ hasChildren ? (
-				<>
-					<span aria-hidden="true" className="h-6 w-px bg-border" />
-					<ul className="flex items-start justify-center">
-						{ children.map( ( child, index ) => {
-							const isFirst = index === 0;
-							const isLast  = index === children.length - 1;
-							const isOnly  = children.length === 1;
-							return (
-								<li key={ child.id } className="relative flex flex-col items-center px-4 pt-6">
-									{ ! isOnly ? (
-										<span
-											aria-hidden="true"
-											className={ [
-												'absolute top-0 h-px bg-border',
-												isFirst ? 'left-1/2 right-0' : isLast ? 'left-0 right-1/2' : 'inset-x-0',
-											].join( ' ' ) }
-										/>
-									) : null }
-									<span aria-hidden="true" className="absolute top-0 left-1/2 h-6 w-px -translate-x-1/2 bg-border" />
-									<OrgSubtree node={ child } />
-								</li>
-							);
-						} ) }
-					</ul>
-				</>
+				<ul className="relative ml-7 mt-2 flex flex-col gap-3 border-l border-border pl-7">
+					{ children.map( ( child, index ) => {
+						const isLast = index === children.length - 1;
+						return (
+							<li key={ child.id } className="relative">
+								<span aria-hidden="true" className="absolute -left-7 top-10 h-px w-7 bg-border" />
+								{ isLast ? (
+									<span aria-hidden="true" className="absolute -left-7 bottom-0 top-10 w-px bg-card" />
+								) : null }
+								<OrgSubtree node={ child } />
+							</li>
+						);
+					} ) }
+				</ul>
 			) : null }
 		</li>
 	);
@@ -220,7 +211,7 @@ function OrgChartInner(): JSX.Element {
 							className="origin-top transition-transform"
 							style={ { transform: `scale(${ zoom })`, width: `${ 100 / zoom }%` } }
 						>
-							<ul className="flex items-start justify-center gap-10 p-2">
+							<ul className="flex flex-col items-start gap-10 p-2">
 								{ roots.map( ( root ) => (
 									<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } />
 								) ) }
