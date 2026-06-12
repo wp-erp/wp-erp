@@ -231,10 +231,10 @@ function AnnouncementsInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-4">{ __( 'Recipients', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-4">{ __( 'Author', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-4">{ __( 'Date', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Title', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Recipients', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Author', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Date', 'erp' ) }</th>
 								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 								</th>
@@ -242,18 +242,18 @@ function AnnouncementsInner(): JSX.Element {
 						</thead>
 						<tbody>
 							{ rows.map( ( row ) => (
-								<tr key={ row.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="max-w-md px-4 align-middle">
+								<tr key={ row.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+									<td className="max-w-md px-2 align-middle">
 										<div className="truncate font-medium text-foreground">{ row.title || __( '(no title)', 'erp' ) }</div>
 										{ row.excerpt ? (
 											<div className="truncate text-xs text-muted-foreground">{ row.excerpt }</div>
 										) : null }
 									</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">
+									<td className="px-2 align-middle text-sm text-muted-foreground">
 										<EmployeeAvatarStack people={ row.recipients_preview } total={ row.recipient_count } />
 									</td>
-									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ row.author || '—' }</td>
-									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ fmt( row.date ) }</td>
+									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ row.author || '—' }</td>
+									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmt( row.date ) }</td>
 									<td className="px-4 align-middle">
 										{ canManage ? (
 											<div className="flex justify-end">

@@ -48,7 +48,7 @@ interface SectionProps {
 
 function Section( { title, columns, empty, rowCount, hasActions, headerAction, children }: SectionProps ): JSX.Element {
 	return (
-		<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
+		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
 				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
@@ -62,9 +62,9 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-6">{ col }</th>
+									<th key={ col } scope="col" className="px-2">{ col }</th>
 								) ) }
-								{ hasActions ? <th scope="col" className="w-12 px-6" /> : null }
+								{ hasActions ? <th scope="col" className="w-12 px-4" /> : null }
 							</tr>
 						</thead>
 						<tbody>{ children }</tbody>
@@ -126,7 +126,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 
 	const deleteCell = ( id: number ): ReactNode =>
 		canDelete ? (
-			<td className="px-6 align-middle text-right">
+			<td className="px-4 align-middle text-right">
 				<Button
 					variant="ghost"
 					size="icon-sm"
@@ -171,14 +171,14 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				headerAction={ addButton( 'reviews', __( 'Add Review', 'erp' ) ) }
 			>
 				{ data.reviews.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.job_knowledge ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.work_quality ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.attendance ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.communication ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.dependability ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.job_knowledge ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.work_quality ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.attendance ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.communication ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.dependability ) }</td>
 						{ deleteCell( row.id ) }
 					</tr>
 				) ) }
@@ -193,10 +193,10 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				headerAction={ addButton( 'comments', __( 'Add Comment', 'erp' ) ) }
 			>
 				{ data.comments.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.reviewer ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reviewer ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
 						{ deleteCell( row.id ) }
 					</tr>
 				) ) }
@@ -218,13 +218,13 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				headerAction={ addButton( 'goals', __( 'Add Goal', 'erp' ) ) }
 			>
 				{ data.goals.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.set_date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.completion_date ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.goal_description ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.employee_assessment ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.supervisor ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.supervisor_assessment ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.set_date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.completion_date ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.goal_description ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.employee_assessment ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.supervisor ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.supervisor_assessment ) }</td>
 						{ deleteCell( row.id ) }
 					</tr>
 				) ) }

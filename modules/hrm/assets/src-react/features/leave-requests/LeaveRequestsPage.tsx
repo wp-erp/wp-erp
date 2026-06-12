@@ -390,11 +390,11 @@ function LeaveRequestsInner(): JSX.Element {
 										/>
 									</th>
 								) : null }
-								<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Leave Type', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Duration', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Days', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Status', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Leave Type', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Status', 'erp' ) }</th>
 								<th scope="col" className="w-24 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 								</th>
@@ -402,7 +402,7 @@ function LeaveRequestsInner(): JSX.Element {
 						</thead>
 						<tbody>
 							{ rows.map( ( req ) => (
-								<tr key={ req.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<tr key={ req.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
 									{ canManage ? (
 										<td className="w-10 px-4 align-middle">
 											<Checkbox
@@ -412,24 +412,24 @@ function LeaveRequestsInner(): JSX.Element {
 											/>
 										</td>
 									) : null }
-									<td className="px-4 align-middle font-medium text-foreground">
+									<td className="px-2 align-middle font-medium text-foreground">
 										{ req.name ? (
 											<PersonCell name={ req.name } avatar={ req.avatar } />
 										) : (
 											<span className="text-muted-foreground">—</span>
 										) }
 									</td>
-									<td className="px-4 align-middle text-sm text-foreground">
+									<td className="px-2 align-middle text-sm text-foreground">
 										<span className="inline-flex items-center gap-2">
 											<span aria-hidden="true" className="inline-block size-2.5 shrink-0 rounded-full" style={ { backgroundColor: req.color || 'transparent' } } />
 											{ req.policy_name }
 										</span>
 									</td>
-									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">
+									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">
 										{ `${ fmt( req.start_date ) } – ${ fmt( req.end_date ) }` }
 									</td>
-									<td className="px-4 align-middle text-sm text-foreground">{ req.days }</td>
-									<td className="px-4 align-middle">
+									<td className="px-2 align-middle text-sm text-foreground">{ req.days }</td>
+									<td className="px-2 align-middle">
 										<StatusPill status={ req.status } label={ req.status_label } />
 									</td>
 									<td className="px-4 align-middle">

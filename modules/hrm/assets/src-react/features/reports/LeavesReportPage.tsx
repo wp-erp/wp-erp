@@ -216,20 +216,21 @@ export function LeavesReportPage(): JSX.Element {
 				empty={ rows.length === 0 }
 				emptyText={ __( 'No record found.', 'erp' ) }
 			>
-				<div className="overflow-x-auto">
+				<div className="rounded-lg border border-border bg-card shadow-sm">
+					<div className="overflow-x-auto">
 						<table className="w-full text-left">
 					<thead className="border-b border-border bg-muted/40">
-						<tr className="h-11 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-muted/40 px-4">{ __( 'Name', 'erp' ) }</th>
+						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-muted/40 px-2">{ __( 'Name', 'erp' ) }</th>
 							{ columns.map( ( col ) => (
-								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-4 text-right">{ col.name }</th>
+								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-2 text-right">{ col.name }</th>
 							) ) }
 						</tr>
 					</thead>
 					<tbody>
 						{ rows.map( ( row ) => (
-							<tr key={ row.user_id } className="group h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
-								<td className="sticky left-0 z-10 whitespace-nowrap bg-card px-4 align-middle font-medium text-foreground group-hover:bg-muted/40">
+							<tr key={ row.user_id } className="group h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<td className="sticky left-0 z-10 whitespace-nowrap bg-card px-2 align-middle font-medium text-foreground group-hover:bg-muted/40">
 									{ row.name ? (
 										<ReportNameCell name={ row.name } avatar={ row.avatar } />
 									) : (
@@ -239,7 +240,7 @@ export function LeavesReportPage(): JSX.Element {
 								{ columns.map( ( col ) => {
 									const cell = row.cells[ String( col.leave_id ) ];
 									return (
-										<td key={ col.leave_id } className="whitespace-nowrap px-4 text-right align-middle text-sm tabular-nums text-foreground">
+										<td key={ col.leave_id } className="whitespace-nowrap px-2 text-right align-middle text-sm tabular-nums text-foreground">
 											{ cell ? fmtCell( cell.spent, cell.days ) : '—' }
 										</td>
 									);
@@ -249,18 +250,19 @@ export function LeavesReportPage(): JSX.Element {
 					</tbody>
 				</table>
 					</div>
-			</ReportState>
 
-			{ ! error && ! loading && total > 0 ? (
-				<OrgPagination
-					page={ page }
-					totalPages={ totalPages }
-					total={ total }
-					perPage={ perPage }
-					onPage={ setPage }
-					onPerPage={ ( n ) => { setPerPage( n ); setPage( 1 ); } }
-				/>
-			) : null }
+					{ total > 0 ? (
+						<OrgPagination
+							page={ page }
+							totalPages={ totalPages }
+							total={ total }
+							perPage={ perPage }
+							onPage={ setPage }
+							onPerPage={ ( n ) => { setPerPage( n ); setPage( 1 ); } }
+						/>
+					) : null }
+				</div>
+			</ReportState>
 		</ReportShell>
 	);
 }

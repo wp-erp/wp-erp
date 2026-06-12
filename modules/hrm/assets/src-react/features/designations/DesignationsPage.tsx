@@ -254,12 +254,12 @@ function DesignationsInner(): JSX.Element {
 					<table className="w-full text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-4">
+								<th scope="col" className="px-2">
 									<button type="button" onClick={ () => toggleSort( 'title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
 										{ __( 'Name', 'erp' ) }{ sortIcon( 'title' ) }
 									</button>
 								</th>
-								<th scope="col" className="px-4">
+								<th scope="col" className="px-2">
 									<button type="button" onClick={ () => toggleSort( 'total_employees' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
 										{ __( 'Employees', 'erp' ) }{ sortIcon( 'total_employees' ) }
 									</button>
@@ -271,14 +271,14 @@ function DesignationsInner(): JSX.Element {
 						</thead>
 						<tbody>
 							{ pageRows.map( ( desig ) => (
-								<tr key={ desig.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="px-4 align-middle">
+								<tr key={ desig.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+									<td className="px-2 align-middle">
 										<div className="font-medium text-foreground">{ desig.title }</div>
 										{ desig.description ? (
 											<div className="truncate text-xs text-muted-foreground">{ desig.description }</div>
 										) : null }
 									</td>
-									<td className="px-4 align-middle text-sm text-foreground">
+									<td className="px-2 align-middle text-sm text-foreground">
 										<EmployeeAvatarStack people={ desig.employees } total={ desig.total_employees } />
 									</td>
 									<td className="px-4 align-middle">

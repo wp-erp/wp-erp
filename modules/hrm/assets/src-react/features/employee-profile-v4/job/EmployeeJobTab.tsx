@@ -56,7 +56,7 @@ interface HistoryCardProps {
 
 function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction, children }: HistoryCardProps ): JSX.Element {
 	return (
-		<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
+		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
 				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
@@ -70,10 +70,10 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-6">{ col }</th>
+									<th key={ col } scope="col" className="px-2">{ col }</th>
 								) ) }
 								{ canDelete ? (
-									<th scope="col" className="w-16 px-6"><span className="sr-only">{ __( 'Actions', 'erp' ) }</span></th>
+									<th scope="col" className="w-16 px-4"><span className="sr-only">{ __( 'Actions', 'erp' ) }</span></th>
 								) : null }
 							</tr>
 						</thead>
@@ -88,7 +88,7 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 /** Trailing trash cell for a deletable history row. */
 function DeleteCell( { onDelete }: { readonly onDelete: () => void } ): JSX.Element {
 	return (
-		<td className="px-6 align-middle text-right">
+		<td className="px-4 align-middle text-right">
 			<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
 				<Trash2 size={ 14 } aria-hidden="true" />
 			</Button>
@@ -186,10 +186,10 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'status', __( 'Update Status', 'erp' ) ) }
 			>
 				{ data.status.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.status ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.status ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
 						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
 					</tr>
 				) ) }
@@ -204,10 +204,10 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'type', __( 'Update Type', 'erp' ) ) }
 			>
 				{ data.employment.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.type ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.type ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
 						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
 					</tr>
 				) ) }
@@ -222,12 +222,12 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'compensation', __( 'Update Compensation', 'erp' ) ) }
 			>
 				{ data.compensation.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.pay_rate ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.pay_type ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.reason ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_rate ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_type ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reason ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
 						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
 					</tr>
 				) ) }
@@ -242,12 +242,12 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'job', __( 'Update Job Information', 'erp' ) ) }
 			>
 				{ data.job.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.department ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.designation ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.location ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.department ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.designation ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.location ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
 						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
 					</tr>
 				) ) }

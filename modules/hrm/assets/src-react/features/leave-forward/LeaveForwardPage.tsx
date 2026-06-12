@@ -173,16 +173,16 @@ function LeaveForwardInner(): JSX.Element {
 							</thead>
 							<tbody>
 								{ rows.map( ( r, i ) => (
-									<tr key={ `${ r.user_id }-${ i }` } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
-										<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.employee_name }</td>
-										<td className="px-4 align-middle text-sm text-muted-foreground">{ r.policy_name }</td>
-										{ pending ? <td className="px-4 align-middle text-sm text-foreground">{ r.available ?? 0 }</td> : null }
-										{ pending ? <td className="px-4 align-middle text-sm text-muted-foreground">{ r.max_encash_days ?? 0 }</td> : null }
-										{ pending ? <td className="px-4 align-middle text-sm text-muted-foreground">{ r.max_carry_days ?? 0 }</td> : null }
-										<td className="px-4 align-middle text-sm text-foreground">{ r.encash_days }</td>
-										<td className="px-4 align-middle text-sm text-foreground">{ r.forward_days }</td>
-										<td className="px-4 align-middle text-sm text-muted-foreground">{ r.amount }</td>
-										<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.total }</td>
+									<tr key={ `${ r.user_id }-${ i }` } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+										<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.employee_name }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.policy_name }</td>
+										{ pending ? <td className="px-2 align-middle text-sm text-foreground">{ r.available ?? 0 }</td> : null }
+										{ pending ? <td className="px-2 align-middle text-sm text-muted-foreground">{ r.max_encash_days ?? 0 }</td> : null }
+										{ pending ? <td className="px-2 align-middle text-sm text-muted-foreground">{ r.max_carry_days ?? 0 }</td> : null }
+										<td className="px-2 align-middle text-sm text-foreground">{ r.encash_days }</td>
+										<td className="px-2 align-middle text-sm text-foreground">{ r.forward_days }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.amount }</td>
+										<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.total }</td>
 									</tr>
 								) ) }
 							</tbody>
@@ -226,7 +226,7 @@ export function LeaveForwardPage(): JSX.Element {
 }
 
 function Th( { children }: { children: ReactNode } ): JSX.Element {
-	return <th scope="col" className="px-4">{ children }</th>;
+	return <th scope="col" className="px-2">{ children }</th>;
 }
 
 /** Trigger a client-side CSV download. */

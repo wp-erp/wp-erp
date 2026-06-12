@@ -247,8 +247,8 @@ function LeaveTypesInner(): JSX.Element {
 										/>
 									</th>
 								) : null }
-								<th scope="col" className="px-4">{ __( 'Leave Type', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Description', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Leave Type', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
 								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 								</th>
@@ -256,7 +256,7 @@ function LeaveTypesInner(): JSX.Element {
 						</thead>
 						<tbody>
 							{ pageRows.map( ( type ) => (
-								<tr key={ type.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<tr key={ type.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
 									{ canManage ? (
 										<td className="px-4 align-middle">
 											<Checkbox
@@ -266,8 +266,8 @@ function LeaveTypesInner(): JSX.Element {
 											/>
 										</td>
 									) : null }
-									<td className="px-4 align-middle font-medium text-foreground">{ type.name }</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">
+									<td className="px-2 align-middle font-medium text-foreground">{ type.name }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">
 										{ type.description ? (
 											<span className="line-clamp-1">{ type.description }</span>
 										) : (

@@ -71,13 +71,14 @@ export function GenderProfilePage(): JSX.Element {
 						</ChartContainer>
 					</div>
 				) : null }
-				<div className="overflow-x-auto">
+				<div className="rounded-lg border border-border bg-card shadow-sm">
+					<div className="overflow-x-auto">
 						<table className="w-full min-w-[40rem] text-left">
 					<thead className="border-b border-border bg-muted/40">
 						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="px-4">{ __( 'Gender', 'erp' ) }</th>
-							<th scope="col" className="px-4 text-right">{ __( 'Count', 'erp' ) }</th>
-							<th scope="col" className="px-4 text-right">{ __( 'Percentage', 'erp' ) }</th>
+							<th scope="col" className="px-2">{ __( 'Gender', 'erp' ) }</th>
+							<th scope="col" className="px-2 text-right">{ __( 'Count', 'erp' ) }</th>
+							<th scope="col" className="px-2 text-right">{ __( 'Percentage', 'erp' ) }</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -87,19 +88,20 @@ export function GenderProfilePage(): JSX.Element {
 								<tr
 									key={ `${ row.gender }-${ idx }` }
 									className={ [
-										'h-12 border-b border-border last:border-b-0',
+										'h-18 border-b border-border last:border-b-0',
 										isTotal ? 'bg-muted/30 font-semibold text-foreground' : 'hover:bg-muted/40',
 									].join( ' ' ) }
 								>
-									<td className="px-4 align-middle font-medium text-foreground">{ row.gender }</td>
-									<td className="px-4 text-right align-middle text-sm text-foreground">{ row.count }</td>
-									<td className="px-4 text-right align-middle text-sm text-foreground">{ row.percentage }</td>
+									<td className="px-2 align-middle font-medium text-foreground">{ row.gender }</td>
+									<td className="px-2 text-right align-middle text-sm text-foreground">{ row.count }</td>
+									<td className="px-2 text-right align-middle text-sm text-foreground">{ row.percentage }</td>
 								</tr>
 							);
 						} ) }
 					</tbody>
 				</table>
 					</div>
+				</div>
 			</ReportState>
 		</ReportShell>
 	);

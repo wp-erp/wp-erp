@@ -51,7 +51,7 @@ interface SectionCardProps {
 
 function SectionCard( { title, columns, empty, rowCount, onAdd, children }: SectionCardProps ): JSX.Element {
 	return (
-		<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
+		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
 				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onAdd }>
@@ -67,9 +67,9 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-6">{ col }</th>
+									<th key={ col } scope="col" className="px-2">{ col }</th>
 								) ) }
-								<th scope="col" className="w-20 px-6">
+								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 								</th>
 							</tr>
@@ -84,7 +84,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 
 function RowActions( { onEdit, onDelete }: { readonly onEdit: () => void; readonly onDelete: () => void } ): JSX.Element {
 	return (
-		<td className="px-6 align-middle">
+		<td className="px-4 align-middle">
 			<div className="flex items-center justify-end gap-1">
 				<Button variant="ghost" size="icon" className="size-8" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
 					<Pencil size={ 14 } aria-hidden="true" />
@@ -171,11 +171,11 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				onAdd={ () => openAdd( 'experiences' ) }
 			>
 				{ experiences.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.company_name ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.job_title ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.from ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.to ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.company_name ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.job_title ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.from ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.to ) }</td>
 						<RowActions onEdit={ () => openEdit( 'experiences', row as unknown as Record< string, unknown > ) } onDelete={ () => setPending( { section: 'experiences', id: row.id } ) } />
 					</tr>
 				) ) }
@@ -189,12 +189,12 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				onAdd={ () => openAdd( 'educations' ) }
 			>
 				{ educations.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.school ) }</td>
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.degree ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.field ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ resultLabel( row.result ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.finished ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.school ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.degree ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.field ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ resultLabel( row.result ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.finished ) }</td>
 						<RowActions onEdit={ () => openEdit( 'educations', row as unknown as Record< string, unknown > ) } onDelete={ () => setPending( { section: 'educations', id: row.id } ) } />
 					</tr>
 				) ) }
@@ -208,10 +208,10 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				onAdd={ () => openAdd( 'dependents' ) }
 			>
 				{ dependents.map( ( row ) => (
-					<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-						<td className="px-6 align-middle text-sm text-foreground">{ cell( row.name ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.relation ) }</td>
-						<td className="px-6 align-middle text-sm text-muted-foreground">{ cell( row.dob ) }</td>
+					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.name ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.relation ) }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.dob ) }</td>
 						<RowActions onEdit={ () => openEdit( 'dependents', row as unknown as Record< string, unknown > ) } onDelete={ () => setPending( { section: 'dependents', id: row.id } ) } />
 					</tr>
 				) ) }

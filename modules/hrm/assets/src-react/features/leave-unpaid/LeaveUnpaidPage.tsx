@@ -234,26 +234,26 @@ function LeaveUnpaidInner(): JSX.Element {
 						<table className="w-full min-w-3xl text-left">
 							<thead className="border-b border-border bg-muted/40">
 								<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-									<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'Policy', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'Days', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'Year', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'Start', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'End', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'Amount/day', 'erp' ) }</th>
-									<th scope="col" className="px-4">{ __( 'Total', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Year', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Start', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'End', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Amount/day', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Total', 'erp' ) }</th>
 								</tr>
 							</thead>
 							<tbody>
 								{ rows.map( ( r ) => (
-									<tr key={ r.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
-										<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.employee_name }</td>
-										<td className="px-4 align-middle text-sm text-muted-foreground">{ r.policy_name }</td>
-										<td className="px-4 align-middle text-sm text-foreground">{ r.days }</td>
-										<td className="px-4 align-middle text-sm text-muted-foreground">{ r.f_year }</td>
-										<td className="px-4 align-middle text-sm text-muted-foreground">{ r.start_date }</td>
-										<td className="px-4 align-middle text-sm text-muted-foreground">{ r.end_date }</td>
-										<td className="px-4 align-middle">
+									<tr key={ r.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+										<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.employee_name }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.policy_name }</td>
+										<td className="px-2 align-middle text-sm text-foreground">{ r.days }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.f_year }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.start_date }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.end_date }</td>
+										<td className="px-2 align-middle">
 											<input
 												type="number"
 												min="0"
@@ -265,7 +265,7 @@ function LeaveUnpaidInner(): JSX.Element {
 												className="h-9 w-28 rounded-md border border-border bg-background px-3 text-sm focus:border-primary focus:outline-none"
 											/>
 										</td>
-										<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.total }</td>
+										<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.total }</td>
 									</tr>
 								) ) }
 							</tbody>

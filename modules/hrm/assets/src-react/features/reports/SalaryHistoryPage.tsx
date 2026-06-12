@@ -38,32 +38,34 @@ export function SalaryHistoryPage(): JSX.Element {
 				empty={ rows.length === 0 }
 				emptyText={ __( 'No employee found.', 'erp' ) }
 			>
-				<div className="overflow-x-auto">
+				<div className="rounded-lg border border-border bg-card shadow-sm">
+					<div className="overflow-x-auto">
 						<table className="w-full min-w-[40rem] text-left">
 					<thead className="border-b border-border bg-muted/40">
 						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
-							<th scope="col" className="px-4">{ __( 'Date', 'erp' ) }</th>
-							<th scope="col" className="px-4">{ __( 'Pay Rate', 'erp' ) }</th>
-							<th scope="col" className="px-4">{ __( 'Pay Type', 'erp' ) }</th>
-							<th scope="col" className="px-4">{ __( 'Employee ID', 'erp' ) }</th>
+							<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
+							<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
+							<th scope="col" className="px-2">{ __( 'Pay Rate', 'erp' ) }</th>
+							<th scope="col" className="px-2">{ __( 'Pay Type', 'erp' ) }</th>
+							<th scope="col" className="px-2">{ __( 'Employee ID', 'erp' ) }</th>
 						</tr>
 					</thead>
 					<tbody>
 						{ rows.map( ( row, idx ) => (
-							<tr key={ `${ row.user_id }-${ idx }` } className="h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
-								<td className="px-4 align-middle font-medium text-foreground">
+							<tr key={ `${ row.user_id }-${ idx }` } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<td className="px-2 align-middle font-medium text-foreground">
 									{ row.name ? <ReportNameCell name={ row.name } avatar={ row.avatar } /> : <span aria-hidden="true">&nbsp;</span> }
 								</td>
-								<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ fmtDate( row.date ) }</td>
-								<td className="px-4 align-middle text-sm text-foreground">{ row.pay_rate ?? '—' }</td>
-								<td className="px-4 align-middle text-sm text-foreground">{ row.pay_type ?? '—' }</td>
-								<td className="px-4 align-middle text-sm text-muted-foreground">{ row.employee_id ?? '—' }</td>
+								<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( row.date ) }</td>
+								<td className="px-2 align-middle text-sm text-foreground">{ row.pay_rate ?? '—' }</td>
+								<td className="px-2 align-middle text-sm text-foreground">{ row.pay_type ?? '—' }</td>
+								<td className="px-2 align-middle text-sm text-muted-foreground">{ row.employee_id ?? '—' }</td>
 							</tr>
 						) ) }
 					</tbody>
 				</table>
 					</div>
+				</div>
 			</ReportState>
 		</ReportShell>
 	);

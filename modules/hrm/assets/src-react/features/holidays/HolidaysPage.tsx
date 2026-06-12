@@ -322,10 +322,10 @@ function HolidaysInner(): JSX.Element {
 										/>
 									</th>
 								) : null }
-								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Date', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Duration', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Description', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Title', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
 								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 								</th>
@@ -333,7 +333,7 @@ function HolidaysInner(): JSX.Element {
 						</thead>
 						<tbody>
 							{ rows.map( ( holiday ) => (
-								<tr key={ holiday.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<tr key={ holiday.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
 									{ canManage ? (
 										<td className="w-10 px-4 align-middle">
 											<Checkbox
@@ -343,20 +343,20 @@ function HolidaysInner(): JSX.Element {
 											/>
 										</td>
 									) : null }
-									<td className="px-4 align-middle font-medium text-foreground">{ holiday.title }</td>
-									<td className="whitespace-nowrap px-4 align-middle text-sm text-foreground">
+									<td className="px-2 align-middle font-medium text-foreground">{ holiday.title }</td>
+									<td className="whitespace-nowrap px-2 align-middle text-sm text-foreground">
 										{ holiday.range
 											? `${ fmt( holiday.start ) } – ${ fmt( holiday.end ) }`
 											: fmt( holiday.start ) }
 									</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">
+									<td className="px-2 align-middle text-sm text-muted-foreground">
 										{ sprintf(
 											/* translators: %d: number of days */
 											holiday.duration === 1 ? __( '%d day', 'erp' ) : __( '%d days', 'erp' ),
 											holiday.duration
 										) }
 									</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">
+									<td className="px-2 align-middle text-sm text-muted-foreground">
 										{ holiday.description ? (
 											<span className="line-clamp-1">{ holiday.description }</span>
 										) : (

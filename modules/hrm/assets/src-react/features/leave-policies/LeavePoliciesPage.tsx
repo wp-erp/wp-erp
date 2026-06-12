@@ -257,12 +257,12 @@ function LeavePoliciesInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Days', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Department', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Designation', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Type', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Year', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Name', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Designation', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Type', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Year', 'erp' ) }</th>
 								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 								</th>
@@ -270,8 +270,8 @@ function LeavePoliciesInner(): JSX.Element {
 						</thead>
 						<tbody>
 							{ rows.map( ( policy ) => (
-								<tr key={ policy.id } className="h-14 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="px-4 align-middle">
+								<tr key={ policy.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+									<td className="px-2 align-middle">
 										<div className="flex items-center gap-2">
 											<span
 												aria-hidden="true"
@@ -281,11 +281,11 @@ function LeavePoliciesInner(): JSX.Element {
 											<span className="font-medium text-foreground">{ policy.name }</span>
 										</div>
 									</td>
-									<td className="px-4 align-middle text-sm text-foreground">{ policy.days }</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">{ policy.department }</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">{ policy.designation }</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">{ policy.employee_type }</td>
-									<td className="px-4 align-middle text-sm text-muted-foreground">{ policy.f_year }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ policy.days }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.department }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.designation }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.employee_type }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.f_year }</td>
 									<td className="px-4 align-middle">
 										{ canManage ? (
 											<div className="flex justify-end">

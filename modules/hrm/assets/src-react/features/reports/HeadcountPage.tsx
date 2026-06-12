@@ -160,31 +160,33 @@ export function HeadcountPage(): JSX.Element {
 						{ __( 'No employees match these filters.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-x-auto">
+					<div className="rounded-lg border border-border bg-card shadow-sm">
+						<div className="overflow-x-auto">
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Hire Date', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Job Title', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Department', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Location', 'erp' ) }</th>
-								<th scope="col" className="px-4">{ __( 'Status', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Name', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Hire Date', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Job Title', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Location', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Status', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
 							{ ( data?.employees ?? [] ).map( ( emp ) => (
-								<tr key={ emp.user_id } className="h-12 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="px-4 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
-									<td className="whitespace-nowrap px-4 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
-									<td className="px-4 align-middle text-sm text-foreground">{ emp.designation ?? '—' }</td>
-									<td className="px-4 align-middle text-sm text-foreground">{ emp.department ?? '—' }</td>
-									<td className="px-4 align-middle text-sm text-foreground">{ emp.location ?? '—' }</td>
-									<td className="px-4 align-middle text-sm capitalize text-muted-foreground">{ emp.status ?? '—' }</td>
+								<tr key={ emp.user_id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+									<td className="px-2 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
+									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ emp.designation ?? '—' }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ emp.department ?? '—' }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ emp.location ?? '—' }</td>
+									<td className="px-2 align-middle text-sm capitalize text-muted-foreground">{ emp.status ?? '—' }</td>
 								</tr>
 							) ) }
 						</tbody>
 					</table>
+						</div>
 					</div>
 				) }
 			</ReportState>

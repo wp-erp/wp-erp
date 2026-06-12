@@ -147,7 +147,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			</section>
 
 			{ /* Request history */ }
-			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
+			<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 				<header className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
 					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
 					{ meta ? (
@@ -197,27 +197,27 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-muted/40">
 								<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-									<th scope="col" className="px-6">{ __( 'Date', 'erp' ) }</th>
-									<th scope="col" className="px-6">{ __( 'Policy', 'erp' ) }</th>
-									<th scope="col" className="px-6">{ __( 'Reason', 'erp' ) }</th>
-									<th scope="col" className="px-6">{ __( 'Request', 'erp' ) }</th>
-									<th scope="col" className="px-6">{ __( 'Status', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Reason', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Request', 'erp' ) }</th>
+									<th scope="col" className="px-2">{ __( 'Status', 'erp' ) }</th>
 								</tr>
 							</thead>
 							<tbody>
 								{ data.requests.map( ( row ) => (
-									<tr key={ row.id } className="h-12 border-b border-border last:border-b-0">
-										<td className="px-6 align-middle text-sm text-foreground">{ dateRange( row.start_date, row.end_date ) }</td>
-										<td className="px-6 align-middle text-sm text-foreground">{ row.policy || '—' }</td>
-										<td className="px-6 align-middle text-sm text-muted-foreground">{ row.reason || '—' }</td>
-										<td className="px-6 align-middle text-sm text-foreground">
+									<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+										<td className="px-2 align-middle text-sm text-foreground">{ dateRange( row.start_date, row.end_date ) }</td>
+										<td className="px-2 align-middle text-sm text-foreground">{ row.policy || '—' }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ row.reason || '—' }</td>
+										<td className="px-2 align-middle text-sm text-foreground">
 											{ row.duration || sprintf(
 												/* translators: %s: number of days */
 												__( '%s days', 'erp' ),
 												num( row.days )
 											) }
 										</td>
-										<td className="px-6 align-middle">
+										<td className="px-2 align-middle">
 											{ row.status ? (
 												<Badge variant={ statusVariant( row.status_code ) }>{ row.status }</Badge>
 											) : '—' }
