@@ -24,14 +24,36 @@ import {
 } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
+	Activity,
 	ArrowLeft,
 	Briefcase,
+	Building2,
+	Calendar,
 	CalendarClock,
+	CalendarOff,
+	Compass,
+	DollarSign,
+	Droplets,
+	Flag,
+	Globe,
+	Hash,
+	Heart,
+	IdCard,
+	Mail,
+	Map,
+	MapPin,
 	Pencil,
+	Phone,
 	Shield,
+	Smartphone,
+	Sparkles,
 	StickyNote,
+	Tag,
 	TrendingUp,
 	User,
+	UserCog,
+	Users,
+	Wallet,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { ComponentType, JSX, ReactNode, SVGProps } from 'react';
@@ -155,11 +177,18 @@ function DetailCard( { title, children }: DetailCardProps ): JSX.Element {
 	);
 }
 
-function Item( { label, value }: { readonly label: string; readonly value: string } ): JSX.Element {
+function Item( { label, value, icon: Icon }: { readonly label: string; readonly value: string; readonly icon?: LucideIcon } ): JSX.Element {
 	return (
-		<div className="flex flex-col gap-0.5">
-			<dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{ label }</dt>
-			<dd className="text-sm text-foreground">{ value.trim() === '' ? '—' : value }</dd>
+		<div className="flex items-start gap-2.5">
+			{ Icon ? (
+				<span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+					<Icon size={ 14 } aria-hidden="true" />
+				</span>
+			) : null }
+			<div className="flex min-w-0 flex-col gap-0.5">
+				<dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{ label }</dt>
+				<dd className="text-sm text-foreground">{ value.trim() === '' ? '—' : value }</dd>
+			</div>
 		</div>
 	);
 }
@@ -314,16 +343,16 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 				{ /* Summary info row — key facts at a glance. */ }
 				<div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border pt-4 text-sm">
 					{ str( record, 'designation_name' ) ? (
-						<span className="text-muted-foreground">{ __( 'Job:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'designation_name' ) }</span></span>
+						<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Tag size={ 14 } aria-hidden="true" />{ __( 'Job:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'designation_name' ) }</span></span>
 					) : null }
 					{ str( record, 'department_name' ) ? (
-						<span className="text-muted-foreground">{ __( 'Department:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'department_name' ) }</span></span>
+						<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Building2 size={ 14 } aria-hidden="true" />{ __( 'Department:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'department_name' ) }</span></span>
 					) : null }
 					{ status ? (
-						<span className="text-muted-foreground">{ __( 'Status:', 'erp' ) } <span className="font-medium text-foreground">{ labelOf( STATUS_OPTIONS, status ) }</span></span>
+						<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Activity size={ 14 } aria-hidden="true" />{ __( 'Status:', 'erp' ) } <span className="font-medium text-foreground">{ labelOf( STATUS_OPTIONS, status ) }</span></span>
 					) : null }
 					{ str( record, 'employee_id' ) ? (
-						<span className="text-muted-foreground">{ __( 'Employee ID:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'employee_id' ) }</span></span>
+						<span className="inline-flex items-center gap-1.5 text-muted-foreground"><IdCard size={ 14 } aria-hidden="true" />{ __( 'Employee ID:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'employee_id' ) }</span></span>
 					) : null }
 				</div>
 			</section>
@@ -351,49 +380,49 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 							<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
 
 							<DetailCard title={ __( 'Employment', 'erp' ) }>
-								<Item label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
-								<Item label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
-								<Item label={ __( 'Employee Status', 'erp' ) } value={ labelOf( STATUS_OPTIONS, status ) } />
-								<Item label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
-								<Item label={ __( 'Employee End Date', 'erp' ) } value={ str( record, 'end_date' ) } />
-								<Item label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
-								<Item label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
-								<Item label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
-								<Item label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
-								<Item label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
-								<Item label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
-								<Item label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
+								<Item icon={ IdCard } label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
+								<Item icon={ Briefcase } label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
+								<Item icon={ Activity } label={ __( 'Employee Status', 'erp' ) } value={ labelOf( STATUS_OPTIONS, status ) } />
+								<Item icon={ Calendar } label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
+								<Item icon={ CalendarOff } label={ __( 'Employee End Date', 'erp' ) } value={ str( record, 'end_date' ) } />
+								<Item icon={ Building2 } label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
+								<Item icon={ Tag } label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
+								<Item icon={ MapPin } label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
+								<Item icon={ UserCog } label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
+								<Item icon={ Compass } label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
+								<Item icon={ DollarSign } label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
+								<Item icon={ Wallet } label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
 							</DetailCard>
 
 							<DetailCard title={ __( 'Contact', 'erp' ) }>
-								<Item label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
-								<Item label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
-								<Item label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
-								<Item label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
-								<Item label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
-								<Item label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
+								<Item icon={ Mail } label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
+								<Item icon={ Mail } label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
+								<Item icon={ Smartphone } label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
+								<Item icon={ Phone } label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
+								<Item icon={ Phone } label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
+								<Item icon={ Globe } label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
 							</DetailCard>
 
 							<DetailCard title={ __( 'Personal Details', 'erp' ) }>
-								<Item label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
-								<Item label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
-								<Item label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
-								<Item label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
-								<Item label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
-								<Item label={ __( 'Driving License', 'erp' ) } value={ str( record, 'driving_license' ) } />
-								<Item label={ __( 'Hobbies', 'erp' ) } value={ str( record, 'hobbies' ) } />
-								<Item label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
-								<Item label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
-								<Item label={ __( "Spouse's name", 'erp' ) } value={ str( record, 'spouse_name' ) } />
+								<Item icon={ Calendar } label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
+								<Item icon={ User } label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
+								<Item icon={ Heart } label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
+								<Item icon={ Droplets } label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
+								<Item icon={ Flag } label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
+								<Item icon={ IdCard } label={ __( 'Driving License', 'erp' ) } value={ str( record, 'driving_license' ) } />
+								<Item icon={ Sparkles } label={ __( 'Hobbies', 'erp' ) } value={ str( record, 'hobbies' ) } />
+								<Item icon={ User } label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
+								<Item icon={ User } label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
+								<Item icon={ Users } label={ __( "Spouse's name", 'erp' ) } value={ str( record, 'spouse_name' ) } />
 							</DetailCard>
 
 							<DetailCard title={ __( 'Address', 'erp' ) }>
-								<Item label={ __( 'Address 1', 'erp' ) } value={ str( record, 'street_1' ) } />
-								<Item label={ __( 'Address 2', 'erp' ) } value={ str( record, 'street_2' ) } />
-								<Item label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
-								<Item label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
-								<Item label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
-								<Item label={ __( 'Post Code / Zip Code', 'erp' ) } value={ str( record, 'postal_code' ) } />
+								<Item icon={ MapPin } label={ __( 'Address 1', 'erp' ) } value={ str( record, 'street_1' ) } />
+								<Item icon={ MapPin } label={ __( 'Address 2', 'erp' ) } value={ str( record, 'street_2' ) } />
+								<Item icon={ Building2 } label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
+								<Item icon={ Map } label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
+								<Item icon={ Globe } label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
+								<Item icon={ Hash } label={ __( 'Post Code / Zip Code', 'erp' ) } value={ str( record, 'postal_code' ) } />
 							</DetailCard>
 
 							{ str( record, 'description' ).trim() !== '' ? (

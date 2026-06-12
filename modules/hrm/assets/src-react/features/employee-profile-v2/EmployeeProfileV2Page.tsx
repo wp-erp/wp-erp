@@ -24,21 +24,7 @@ import {
 	toast,
 } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import {
-	Briefcase,
-	CalendarDays,
-	Check,
-	Copy,
-	Droplet,
-	Globe,
-	GraduationCap,
-	Home,
-	Mail,
-	Pencil,
-	Phone,
-	User,
-	UserCircle,
-} from 'lucide-react';
+import { Briefcase, Building2, Calendar, CalendarDays, Check, Compass, Copy, DollarSign, Droplet, Droplets, Flag, Globe, GraduationCap, Hash, Heart, Home, IdCard, Mail, Map, MapPin, Pencil, Phone, Smartphone, Tag, User, UserCircle, UserCog, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { ComponentType, JSX, ReactNode, SVGProps } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -168,7 +154,7 @@ function BasicRow( {
 } ): JSX.Element {
 	return (
 		<div className="flex items-start gap-3">
-			<span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+			<span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
 				<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 			</span>
 			<div className="flex min-w-0 flex-col">
@@ -265,13 +251,20 @@ function InfoCard( {
 }
 
 /** Label (left) → value (right) split row. */
-function SplitRow( { label, value }: { readonly label: string; readonly value: string } ): JSX.Element {
+function SplitRow( { label, value, icon: Icon }: { readonly label: string; readonly value: string; readonly icon?: LucideIcon } ): JSX.Element {
 	return (
-		<div className="flex items-start justify-between gap-6 py-3.5">
-			<dt className="text-sm text-muted-foreground">{ label }</dt>
-			<dd className="max-w-[60%] text-right text-sm font-medium text-foreground">
-				{ value.trim() === '' ? '—' : value }
-			</dd>
+		<div className="flex items-start gap-3 py-3.5">
+			{ Icon ? (
+				<span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+					<Icon size={ 14 } aria-hidden="true" />
+				</span>
+			) : null }
+			<div className="flex min-w-0 flex-1 items-start justify-between gap-6">
+				<dt className="text-sm text-muted-foreground">{ label }</dt>
+				<dd className="max-w-[60%] text-right text-sm font-medium text-foreground">
+					{ value.trim() === '' ? '—' : value }
+				</dd>
+			</div>
 		</div>
 	);
 }
@@ -459,15 +452,15 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 									title={ __( 'Employment', 'erp' ) }
 									onEdit={ canEdit ? goEdit : undefined }
 								>
-									<SplitRow label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
-									<SplitRow label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
-									<SplitRow label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
-									<SplitRow label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
-									<SplitRow label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
-									<SplitRow label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
-									<SplitRow label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
-									<SplitRow label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
-									<SplitRow label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
+									<SplitRow icon={ IdCard } label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
+									<SplitRow icon={ Briefcase } label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
+									<SplitRow icon={ Calendar } label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
+									<SplitRow icon={ Building2 } label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
+									<SplitRow icon={ Tag } label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
+									<SplitRow icon={ UserCog } label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
+									<SplitRow icon={ Compass } label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
+									<SplitRow icon={ DollarSign } label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
+									<SplitRow icon={ Wallet } label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
 								</InfoCard>
 
 								<InfoCard
@@ -476,12 +469,12 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 									title={ __( 'Contact', 'erp' ) }
 									onEdit={ canEdit ? goEdit : undefined }
 								>
-									<SplitRow label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
-									<SplitRow label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
-									<SplitRow label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
-									<SplitRow label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
-									<SplitRow label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
-									<SplitRow label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
+									<SplitRow icon={ Mail } label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
+									<SplitRow icon={ Mail } label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
+									<SplitRow icon={ Smartphone } label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
+									<SplitRow icon={ Phone } label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
+									<SplitRow icon={ Phone } label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
+									<SplitRow icon={ Globe } label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
 								</InfoCard>
 
 								<InfoCard
@@ -490,13 +483,13 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 									title={ __( 'Personal Details', 'erp' ) }
 									onEdit={ canEdit ? goEdit : undefined }
 								>
-									<SplitRow label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
-									<SplitRow label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
-									<SplitRow label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
-									<SplitRow label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
-									<SplitRow label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
-									<SplitRow label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
-									<SplitRow label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
+									<SplitRow icon={ Calendar } label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
+									<SplitRow icon={ User } label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
+									<SplitRow icon={ Heart } label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
+									<SplitRow icon={ Droplets } label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
+									<SplitRow icon={ Flag } label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
+									<SplitRow icon={ User } label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
+									<SplitRow icon={ User } label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
 								</InfoCard>
 
 								<InfoCard
@@ -505,12 +498,12 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 									title={ __( 'Home Address', 'erp' ) }
 									onEdit={ canEdit ? goEdit : undefined }
 								>
-									<SplitRow label={ __( 'Address', 'erp' ) } value={ str( record, 'street_1' ) } />
-									<SplitRow label={ __( 'Address (cont.)', 'erp' ) } value={ str( record, 'street_2' ) } />
-									<SplitRow label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
-									<SplitRow label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
-									<SplitRow label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
-									<SplitRow label={ __( 'Postal code', 'erp' ) } value={ str( record, 'postal_code' ) } />
+									<SplitRow icon={ MapPin } label={ __( 'Address', 'erp' ) } value={ str( record, 'street_1' ) } />
+									<SplitRow icon={ MapPin } label={ __( 'Address (cont.)', 'erp' ) } value={ str( record, 'street_2' ) } />
+									<SplitRow icon={ Building2 } label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
+									<SplitRow icon={ Map } label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
+									<SplitRow icon={ Globe } label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
+									<SplitRow icon={ Hash } label={ __( 'Postal code', 'erp' ) } value={ str( record, 'postal_code' ) } />
 								</InfoCard>
 
 								{ str( record, 'description' ).trim() !== '' ? (
