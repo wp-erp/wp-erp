@@ -50,6 +50,12 @@ import type { LeavePolicy, LeavePolicyInput, PolicyFormOptions } from './types';
 interface LeavePolicyFormDialogProps {
 	readonly open:     boolean;
 	readonly editing:  LeavePolicy | null;
+	/**
+	 * Create-mode prefill (Duplicate action): when `editing` is null but `seed`
+	 * is set, the form fields are pre-populated from this policy so the user
+	 * saves a copy. Ignored while editing.
+	 */
+	readonly seed?:    LeavePolicy | null;
 	readonly options:  PolicyFormOptions | null;
 	readonly busy:     boolean;
 	readonly error:    string | null;
@@ -103,6 +109,7 @@ function withAll( opts: readonly Option[] ): Option[] {
 export function LeavePolicyFormDialog( {
 	open,
 	editing,
+	seed,
 	options,
 	busy,
 	error,
@@ -137,11 +144,11 @@ export function LeavePolicyFormDialog( {
 		const fields = applyFilters(
 			HOOKS.LEAVE_POLICY_FIELDS,
 			[],
-			{ mode: editing ? 'edit' : 'create', saved: editing ?? {} }
+			{ mode: editing ? 'edit' : 'create', saved: editing ?? seed ?? {} }
 		) as LeaveExtraField[];
 		setExtraFields( fields );
 		setExtra( initLeaveFieldValues( fields ) );
-	}, [ open, editing ] );
+	}, [ open, editing, seed ] );
 
 	useEffect( () => {
 		if ( ! open ) {
@@ -151,27 +158,30 @@ export function LeavePolicyFormDialog( {
 		setQuickTypeOpen( false );
 		setQuickTypeErr( null );
 		setCreatedTypes( [] );
+		// On edit, prefill from the policy. On a Duplicate (create + `seed`),
+		// prefill the same scope/days/colour so the user saves a copy.
+		const source = editing ?? seed ?? null;
 		setForm(
-			editing
+			source
 				? {
-						leave_id:            editing.leave_id ? String( editing.leave_id ) : '',
-						days:                String( editing.days ),
-						color:               editing.color || '#3b82f6',
-						description:         editing.description,
-						f_year:              editing.f_year ? String( editing.f_year ) : '',
-						applicable_from:     String( editing.applicable_from ?? 0 ),
-						employee_type:       editing.employee_type || ALL,
-						department_id:       editing.department_id || ALL,
-						designation_id:      editing.designation_id || ALL,
-						location_id:         editing.location_id || ALL,
-						gender:              editing.gender || ALL,
-						marital:             editing.marital || ALL,
-						apply_for_new_users: editing.apply_for_new_users,
+						leave_id:            source.leave_id ? String( source.leave_id ) : '',
+						days:                String( source.days ),
+						color:               source.color || '#3b82f6',
+						description:         source.description,
+						f_year:              source.f_year ? String( source.f_year ) : '',
+						applicable_from:     String( source.applicable_from ?? 0 ),
+						employee_type:       source.employee_type || ALL,
+						department_id:       source.department_id || ALL,
+						designation_id:      source.designation_id || ALL,
+						location_id:         source.location_id || ALL,
+						gender:              source.gender || ALL,
+						marital:             source.marital || ALL,
+						apply_for_new_users: source.apply_for_new_users,
 						apply_for_existing:  false,
 				  }
 				: EMPTY
 		);
-	}, [ open, editing ] );
+	}, [ open, editing, seed ] );
 
 	const leaveTypeOpts = useMemo< Option[] >(
 		() => {

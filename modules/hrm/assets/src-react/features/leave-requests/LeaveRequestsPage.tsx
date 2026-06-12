@@ -23,7 +23,7 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Check, Filter, MoreVertical, Plus, Search, Trash2, X } from 'lucide-react';
+import { Check, Filter, MoreVertical, Plus, RotateCcw, Search, Trash2, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -466,6 +466,25 @@ function LeaveRequestsInner(): JSX.Element {
 														}
 													/>
 													<DropdownMenuContent align="end" className="min-w-44">
+														{ /* Reverse moderation — reject an approved request, or approve a rejected one (legacy list-table behaviour). */ }
+														{ req.status === 1 ? (
+															<DropdownMenuItem
+																className="gap-2"
+																onClick={ () => { setModerateError( null ); setModerate( { action: 'reject', request: req } ); } }
+															>
+																<RotateCcw size={ 14 } aria-hidden="true" />
+																{ __( 'Reject', 'erp' ) }
+															</DropdownMenuItem>
+														) : null }
+														{ req.status === 3 ? (
+															<DropdownMenuItem
+																className="gap-2"
+																onClick={ () => { setModerateError( null ); setModerate( { action: 'approve', request: req } ); } }
+															>
+																<RotateCcw size={ 14 } aria-hidden="true" />
+																{ __( 'Approve', 'erp' ) }
+															</DropdownMenuItem>
+														) : null }
 														<DropdownMenuItem
 															variant="destructive"
 															className="gap-2"

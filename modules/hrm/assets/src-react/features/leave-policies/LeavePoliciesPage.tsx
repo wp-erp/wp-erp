@@ -17,7 +17,7 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Filter, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Copy, Filter, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -54,6 +54,7 @@ function LeavePoliciesInner(): JSX.Element {
 	const [ options, setOptions ]     = useState< PolicyFormOptions | null >( null );
 	const [ formOpen, setFormOpen ]   = useState( false );
 	const [ editing, setEditing ]     = useState< LeavePolicy | null >( null );
+	const [ seed, setSeed ]           = useState< LeavePolicy | null >( null );
 	const [ deleting, setDeleting ]   = useState< LeavePolicyListRow | null >( null );
 	const [ busy, setBusy ]           = useState( false );
 	const [ formError, setFormError ] = useState< string | null >( null );
@@ -92,6 +93,7 @@ function LeavePoliciesInner(): JSX.Element {
 	async function openCreate(): Promise< void > {
 		await ensureOptions();
 		setEditing( null );
+		setSeed( null );
 		setFormError( null );
 		setFormOpen( true );
 	}
@@ -102,6 +104,22 @@ function LeavePoliciesInner(): JSX.Element {
 		try {
 			const full = await getOne( row.id );
 			setEditing( full );
+			setSeed( null );
+			setFormOpen( true );
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the policy.', 'erp' ) );
+		}
+	}
+
+	// Duplicate — load the policy and open the create dialog prefilled from it
+	// (legacy list-table "Copy" row action). Saves as a brand-new policy.
+	async function openDuplicate( row: LeavePolicyListRow ): Promise< void > {
+		await ensureOptions();
+		setFormError( null );
+		try {
+			const full = await getOne( row.id );
+			setEditing( null );
+			setSeed( full );
 			setFormOpen( true );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the policy.', 'erp' ) );
@@ -116,6 +134,7 @@ function LeavePoliciesInner(): JSX.Element {
 			toast.success( editing ? __( 'Policy updated.', 'erp' ) : __( 'Policy created.', 'erp' ) );
 			setFormOpen( false );
 			setEditing( null );
+			setSeed( null );
 		} catch ( raw ) {
 			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the policy.', 'erp' ) );
 		} finally {
@@ -302,6 +321,10 @@ function LeavePoliciesInner(): JSX.Element {
 															<Pencil size={ 14 } aria-hidden="true" />
 															{ __( 'Edit', 'erp' ) }
 														</DropdownMenuItem>
+														<DropdownMenuItem className="gap-2" onClick={ () => void openDuplicate( policy ) }>
+															<Copy size={ 14 } aria-hidden="true" />
+															{ __( 'Duplicate', 'erp' ) }
+														</DropdownMenuItem>
 														<DropdownMenuItem
 															variant="destructive"
 															className="gap-2"
@@ -337,12 +360,14 @@ function LeavePoliciesInner(): JSX.Element {
 			<LeavePolicyFormDialog
 				open={ formOpen }
 				editing={ editing }
+				seed={ seed }
 				options={ options }
 				busy={ busy }
 				error={ formError }
 				onClose={ () => {
 					setFormOpen( false );
 					setEditing( null );
+					setSeed( null );
 				} }
 				onSubmit={ handleSubmit }
 				onOptionsStale={ () => { void loadOptions().then( setOptions ); } }
