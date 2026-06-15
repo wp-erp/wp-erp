@@ -9,7 +9,7 @@
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent, SmartSelect } from '@wedevs/plugin-ui';
 import { Filter, Users } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
@@ -49,6 +49,12 @@ export function HeadcountPage(): JSX.Element {
 	const [ showFilters, setShowFilters ] = useState( false );
 
 	const { data, loading, error } = useHeadcount( year, department );
+
+	// Incremental "load more" so a large active-employee list doesn't render at
+	// once. Reset the window whenever the filtered dataset changes.
+	const PAGE = 20;
+	const [ visible, setVisible ] = useState( PAGE );
+	useEffect( () => { setVisible( PAGE ); }, [ data ] );
 
 	const yearOptions = useMemo( () => {
 		const ys = data?.years ?? [];
@@ -174,7 +180,7 @@ export function HeadcountPage(): JSX.Element {
 							</tr>
 						</thead>
 						<tbody>
-							{ ( data?.employees ?? [] ).map( ( emp ) => (
+							{ ( data?.employees ?? [] ).slice( 0, visible ).map( ( emp ) => (
 								<tr key={ emp.user_id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
 									<td className="px-2 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
 									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
@@ -187,6 +193,13 @@ export function HeadcountPage(): JSX.Element {
 						</tbody>
 					</table>
 						</div>
+						{ ( data?.employees?.length ?? 0 ) > visible ? (
+							<div className="flex justify-center border-t border-border p-3">
+								<button type="button" onClick={ () => setVisible( ( v ) => v + PAGE ) } className="inline-flex h-9 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+									{ __( 'Load more', 'erp' ) } ({ ( data?.employees?.length ?? 0 ) - visible })
+								</button>
+							</div>
+						) : null }
 					</div>
 				) }
 			</ReportState>

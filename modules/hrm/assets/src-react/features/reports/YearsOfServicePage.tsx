@@ -6,6 +6,7 @@
  * Data from `GET /reports/years-of-service`.
  */
 
+import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
 import { __, sprintf } from '@/shared/i18n';
@@ -25,11 +26,16 @@ export function YearsOfServicePage(): JSX.Element {
 	const { data, loading, error } = useReport< YearsOfServiceResponse >( '/reports/years-of-service' );
 	const months = data?.months ?? [];
 
+	// Render months incrementally so a long history doesn't mount all at once.
+	const PAGE = 4;
+	const [ visible, setVisible ] = useState( PAGE );
+	useEffect( () => { setVisible( PAGE ); }, [ data ] );
+
 	return (
 		<ReportShell title={ __( 'Years of Service', 'erp' ) }>
 			<ReportState loading={ loading } error={ error } empty={ months.length === 0 }>
 				<div className="divide-y divide-border">
-					{ months.map( ( month ) => (
+					{ months.slice( 0, visible ).map( ( month ) => (
 						<div key={ month.month } className="px-4 py-4">
 							<h3 className="mb-2 text-sm font-semibold text-foreground">{ month.month_name }</h3>
 							<div className="overflow-x-auto">
@@ -63,6 +69,13 @@ export function YearsOfServicePage(): JSX.Element {
 					</div>
 						</div>
 					) ) }
+					{ months.length > visible ? (
+						<div className="flex justify-center p-3">
+							<button type="button" onClick={ () => setVisible( ( v ) => v + PAGE ) } className="inline-flex h-9 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+								{ __( 'Load more', 'erp' ) } ({ months.length - visible })
+							</button>
+						</div>
+					) : null }
 				</div>
 			</ReportState>
 		</ReportShell>

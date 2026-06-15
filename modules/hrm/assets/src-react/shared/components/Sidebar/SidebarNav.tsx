@@ -13,8 +13,9 @@
  * Reference: Figma HRM-Redesign-2024 node 1511:29973 (sidebar layout).
  */
 
+import { Popover, PopoverContent, PopoverTrigger } from '@wedevs/plugin-ui';
 import { ChevronDown } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -108,11 +109,16 @@ export function SidebarNav( { collapsed = false }: SidebarNavProps ): JSX.Elemen
 					);
 				}
 
-				// In the collapsed rail every top-level item — including ones with a
-				// submenu — renders as a single icon link to its own route; the
-				// accordion only exists in the expanded rail.
-				if ( ! hasMenu || collapsed ) {
-					return <SidebarLeaf key={ item.id } item={ item } Icon={ Icon } collapsed={ collapsed } />;
+				// In the collapsed rail a top-level item with a submenu shows its
+				// children in a hover flyout (Popover, portaled so it escapes the
+				// rail's overflow); childless items stay a plain icon link.
+				if ( collapsed ) {
+					return hasMenu
+						? <SidebarFlyout key={ item.id } item={ item } Icon={ Icon } active={ isActive( item ) } />
+						: <SidebarLeaf key={ item.id } item={ item } Icon={ Icon } collapsed />;
+				}
+				if ( ! hasMenu ) {
+					return <SidebarLeaf key={ item.id } item={ item } Icon={ Icon } />;
 				}
 
 				return (
@@ -149,6 +155,78 @@ function SidebarLeaf( { item, Icon, collapsed = false }: LeafProps ): JSX.Elemen
 			<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
 			{ ! collapsed && <span className="flex-1 truncate">{ item.label }</span> }
 		</NavLink>
+	);
+}
+
+interface FlyoutProps {
+	readonly item:   NavItem;
+	readonly Icon:   LucideIcon;
+	readonly active: boolean;
+}
+
+/** Collapsed-rail item with children — icon link + a hover flyout of sub-links. */
+function SidebarFlyout( { item, Icon, active }: FlyoutProps ): JSX.Element {
+	const { childrenOf, openUpsell } = useNavMenu();
+	const kids = childrenOf( item );
+
+	// Hover-driven flyout: open on enter, close on leave with a small delay so the
+	// pointer can cross the gap from the icon to the portaled panel.
+	const [ open, setOpen ] = useState( false );
+	const closeTimer = useRef< number | undefined >( undefined );
+	const show = (): void => { window.clearTimeout( closeTimer.current ); setOpen( true ); };
+	const hide = (): void => { closeTimer.current = window.setTimeout( () => setOpen( false ), 120 ); };
+
+	return (
+		<Popover open={ open } onOpenChange={ setOpen }>
+			<PopoverTrigger
+				render={
+					<NavLink
+						to={ item.path }
+						end={ item.path === '/' }
+						viewTransition
+						aria-label={ item.label }
+						className={ rowClass( active, true ) }
+						onMouseEnter={ show }
+						onMouseLeave={ hide }
+					>
+						<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
+					</NavLink>
+				}
+			/>
+			<PopoverContent side="right" align="start" sideOffset={ 8 } className="min-w-48 p-1.5" onMouseEnter={ show } onMouseLeave={ hide }>
+				<div className="px-2 py-1.5 text-xs font-semibold text-foreground">{ item.label }</div>
+				{ kids.map( ( { sub, proLocked } ) =>
+					proLocked ? (
+						<button
+							key={ sub.id }
+							type="button"
+							onClick={ () => openUpsell( sub.label ) }
+							className="flex w-full items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-sm font-normal text-foreground transition-colors hover:bg-muted"
+						>
+							<span className="truncate">{ sub.label }</span>
+							<ProBadge />
+						</button>
+					) : (
+						<NavLink
+							key={ sub.id }
+							to={ sub.to }
+							end
+							viewTransition
+							className={ ( { isActive } ) =>
+								[
+									'block rounded px-2 py-1.5 text-sm transition-colors',
+									isActive
+										? 'font-medium text-primary'
+										: 'font-normal text-muted-foreground hover:bg-muted hover:text-foreground',
+								].join( ' ' )
+							}
+						>
+							{ sub.label }
+						</NavLink>
+					)
+				) }
+			</PopoverContent>
+		</Popover>
 	);
 }
 
