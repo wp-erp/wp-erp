@@ -193,38 +193,40 @@ function SidebarFlyout( { item, Icon, active }: FlyoutProps ): JSX.Element {
 					</NavLink>
 				}
 			/>
-			<PopoverContent side="right" align="start" sideOffset={ 8 } className="min-w-48 p-1.5" onMouseEnter={ show } onMouseLeave={ hide }>
-				<div className="px-2 py-1.5 text-xs font-semibold text-foreground">{ item.label }</div>
-				{ kids.map( ( { sub, proLocked } ) =>
-					proLocked ? (
-						<button
-							key={ sub.id }
-							type="button"
-							onClick={ () => openUpsell( sub.label ) }
-							className="flex w-full items-center justify-between gap-2 rounded px-2 py-1.5 text-left text-sm font-normal text-foreground transition-colors hover:bg-muted"
-						>
-							<span className="truncate">{ sub.label }</span>
-							<ProBadge />
-						</button>
-					) : (
-						<NavLink
-							key={ sub.id }
-							to={ sub.to }
-							end
-							viewTransition
-							className={ ( { isActive } ) =>
-								[
-									'block rounded px-2 py-1.5 text-sm transition-colors',
-									isActive
-										? 'font-medium text-primary'
-										: 'font-normal text-muted-foreground hover:bg-muted hover:text-foreground',
-								].join( ' ' )
-							}
-						>
-							{ sub.label }
-						</NavLink>
-					)
-				) }
+			<PopoverContent side="right" align="start" sideOffset={ 10 } className="w-56 rounded-xl border border-border bg-popover p-1.5 text-popover-foreground shadow-lg" onMouseEnter={ show } onMouseLeave={ hide }>
+				<div className="px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{ item.label }</div>
+				<div className="flex flex-col gap-0.5">
+					{ kids.map( ( { sub, proLocked } ) =>
+						proLocked ? (
+							<button
+								key={ sub.id }
+								type="button"
+								onClick={ () => openUpsell( sub.label ) }
+								className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-sm font-normal text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+							>
+								<span className="truncate">{ sub.label }</span>
+								<ProBadge />
+							</button>
+						) : (
+							<NavLink
+								key={ sub.id }
+								to={ sub.to }
+								end
+								viewTransition
+								className={ ( { isActive } ) =>
+									[
+										'block rounded-lg px-2.5 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+										isActive
+											? 'bg-primary/10 font-medium text-primary'
+											: 'font-normal text-muted-foreground hover:bg-muted hover:text-foreground',
+									].join( ' ' )
+								}
+							>
+								{ sub.label }
+							</NavLink>
+						)
+					) }
+				</div>
 			</PopoverContent>
 		</Popover>
 	);

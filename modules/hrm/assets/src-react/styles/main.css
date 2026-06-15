@@ -349,6 +349,16 @@ body:has(#erp-hr-app) {
 	box-shadow: none;
 }
 
+/* The collapsed-rail submenu flyout is a Popover portaled to <body>, so the
+ * `#erp-hr-app .erp-hr-sidebar` rule above can't reach it — a mouse click on a
+ * flyout link left WP's blue focus box behind. Suppress it for pointer focus
+ * only; keep the keyboard `:focus-visible` ring (set on the links themselves). */
+[data-slot='popover-content'] a:focus:not(:focus-visible),
+[data-slot='popover-content'] button:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
 /* ─── Horizontal-overflow guard ───
  * Some inner surfaces are intentionally wider than a phone viewport (data
  * tables `min-w-[40rem]`, the line-tab strips) and own a local
