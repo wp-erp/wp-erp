@@ -55,9 +55,9 @@ import {
 	Users,
 	Wallet,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ComponentType, JSX, ReactNode, SVGProps } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
@@ -213,7 +213,22 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
-	const [ tab, setTab ] = useState( 'overview' );
+
+	// Active tab lives in the URL (`?tab=job`) so a refresh / deep-link keeps the
+	// open tab instead of snapping back to Overview. `replace` so tab switches
+	// don't pile up browser-history entries.
+	const [ searchParams, setSearchParams ] = useSearchParams();
+	const rawTab = searchParams.get( 'tab' ) ?? 'overview';
+	const setTab = useCallback( ( value: string ): void => {
+		setSearchParams(
+			( prev ) => {
+				const out = new URLSearchParams( prev );
+				out.set( 'tab', value );
+				return out;
+			},
+			{ replace: true }
+		);
+	}, [ setSearchParams ] );
 
 	// Pro-injectable profile tabs (Documents). Before any early return — Rules of Hooks.
 	const extraTabs = useProfileExtraTabs( { userId, canEdit } );
@@ -280,6 +295,10 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 		...( canViewPermission ? [ { value: 'permission', label: __( 'Permission', 'erp' ), icon: Shield } ] : [] ),
 		...extraTabs.map( ( t ) => ( { value: t.id, label: t.label, icon: t.icon } ) ),
 	];
+
+	// Fall back to Overview when the URL names a tab the current user can't see
+	// (e.g. a deep-link to ?tab=permission without the cap) so the body never blanks.
+	const tab = tabs.some( ( t ) => t.value === rawTab ) ? rawTab : 'overview';
 
 	return (
 		<div className="mx-auto w-full max-w-7xl space-y-6">
