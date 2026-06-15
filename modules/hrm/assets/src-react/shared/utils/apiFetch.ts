@@ -33,6 +33,16 @@ export interface ApiFetchOptions {
 	readonly parse?:   boolean;
 }
 
+/** Per-request timeout. A hung endpoint rejects instead of spinning forever. */
+const REQUEST_TIMEOUT_MS = 30000;
+
+/** Bounded retry for transient 5xx — GET/HEAD only, never on mutations. */
+const MAX_RETRIES = 2;
+
+function delay( ms: number ): Promise< void > {
+	return new Promise( ( resolve ) => setTimeout( resolve, ms ) );
+}
+
 let booted = false;
 
 /**
@@ -72,6 +82,51 @@ export function bootApiFetch(): void {
 			return await next( options );
 		} catch ( raw: unknown ) {
 			throw normalizeError( raw );
+		}
+	} );
+
+	// Timeout + transient-retry middleware. Registered last so it is the
+	// outermost wrapper: it injects a 30s abort signal (chained to any caller
+	// signal) and retries GET/HEAD on a 5xx, leaving mutations untouched so a
+	// timed-out POST never silently double-submits.
+	apiFetch.use( async ( options, next ) => {
+		const method       = String( options.method ?? 'GET' ).toUpperCase();
+		const isIdempotent = method === 'GET' || method === 'HEAD';
+		const callerSignal = options.signal as AbortSignal | undefined;
+
+		const runOnce = (): Promise< unknown > => {
+			const controller = new AbortController();
+			const timer      = setTimeout( () => controller.abort(), REQUEST_TIMEOUT_MS );
+
+			if ( callerSignal ) {
+				if ( callerSignal.aborted ) {
+					controller.abort();
+				} else {
+					callerSignal.addEventListener( 'abort', () => controller.abort(), { once: true } );
+				}
+			}
+
+			return Promise.resolve( next( { ...options, signal: controller.signal } ) ).finally(
+				() => clearTimeout( timer )
+			);
+		};
+
+		let attempt = 0;
+		for ( ;; ) {
+			try {
+				return await runOnce();
+			} catch ( err: unknown ) {
+				const status    = ( err as Partial< ApiError > )?.status ?? 0;
+				const transient = status >= 500 && status <= 599;
+
+				if ( isIdempotent && transient && attempt < MAX_RETRIES && ! callerSignal?.aborted ) {
+					attempt += 1;
+					await delay( 2 ** attempt * 250 ); // 500ms, then 1000ms
+					continue;
+				}
+
+				throw err;
+			}
 		}
 	} );
 }
