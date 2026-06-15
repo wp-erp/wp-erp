@@ -265,7 +265,7 @@ function HolidaysInner(): JSX.Element {
 								onValueChange={ ( v ) => setYear( Number( v || 0 ) ) }
 								placeholder={ __( 'All Years', 'erp' ) }
 								showClear
-								className="h-9 w-36"
+								className="h-9 w-36 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>

@@ -17,6 +17,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	toast,
 } from '@wedevs/plugin-ui';
 import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
@@ -142,6 +143,24 @@ export function PerformanceFormDialog( {
 
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
+
+		if ( ! form.performance_date ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+		if ( type === 'reviews' && ! form.reporting_to ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+		if ( type === 'comments' && ! form.reviewer ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+		if ( type === 'goals' && ( ! form.completion_date || ! form.supervisor ) ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+
 		onSubmit( payload );
 	}
 

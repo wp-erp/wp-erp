@@ -18,6 +18,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	toast,
 } from '@wedevs/plugin-ui';
 import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
@@ -186,6 +187,34 @@ export function JobUpdateDialog( {
 
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
+
+		if ( ! form.date ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+		if ( action === 'status' ) {
+			if ( ! form.category ) {
+				toast.error( __( 'Please fill all required fields.', 'erp' ) );
+				return;
+			}
+			if ( form.category === 'terminated' && ( ! form.termination_type || ! form.termination_reason || ! form.eligible_for_rehire ) ) {
+				toast.error( __( 'Please fill all required fields.', 'erp' ) );
+				return;
+			}
+		}
+		if ( action === 'type' && ! form.type ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+		if ( action === 'compensation' && ( ! form.pay_rate.trim() || ! form.pay_type ) ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+		if ( action === 'job' && ( ! form.department || ! form.designation || ! form.reporting_to ) ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+			return;
+		}
+
 		onSubmit( payload );
 	}
 

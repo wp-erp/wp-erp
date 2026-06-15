@@ -105,7 +105,7 @@ export function LookupFilter( {
 				searchPlaceholder={ __( 'Search…', 'erp' ) }
 				emptyMessage={ __( 'No matches found.', 'erp' ) }
 				showClear
-				className="h-9 w-52"
+				className="h-9 w-52 bg-background"
 				contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 			/>
 		</div>

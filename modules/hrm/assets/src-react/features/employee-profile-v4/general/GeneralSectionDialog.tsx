@@ -13,6 +13,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	toast,
 } from '@wedevs/plugin-ui';
 import { useEffect, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
@@ -94,6 +95,21 @@ export function GeneralSectionDialog( {
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
 		if ( ! section ) {
+			return;
+		}
+
+		if ( section === 'experiences' ) {
+			if ( ! ( form.company_name ?? '' ).trim() || ! ( form.job_title ?? '' ).trim() ) {
+				toast.error( __( 'Please fill all required fields.', 'erp' ) );
+				return;
+			}
+		} else if ( section === 'educations' ) {
+			if ( ! ( form.school ?? '' ).trim() || ! ( form.degree ?? '' ).trim() || ! ( form.field ?? '' ).trim() || ! ( form.finished ?? '' ).trim() ) {
+				toast.error( __( 'Please fill all required fields.', 'erp' ) );
+				return;
+			}
+		} else if ( ! ( form.name ?? '' ).trim() || ! ( form.relation ?? '' ).trim() ) {
+			toast.error( __( 'Please fill all required fields.', 'erp' ) );
 			return;
 		}
 

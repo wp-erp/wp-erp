@@ -164,32 +164,35 @@ class OrgChartControllerV2 extends RestControllerV2 {
 			'children'  => [],
 		];
 
-		$where = [ "department = {$dept_id}" ];
+		$where = [ $wpdb->prepare( 'department = %d', $dept_id ) ];
 
 		if ( ! $emp_id ) {
 			$data['className'] .= ' no-content';
 
 			if ( 1 === $depth ) {
-				$where[] = "(
+				$where[] = $wpdb->prepare(
+					"(
 					reporting_to = 0
 					OR reporting_to IS NULL
 					OR reporting_to NOT IN (
 						SELECT emp.user_id
 						FROM {$wpdb->prefix}erp_hr_employees AS emp
-						WHERE emp.department = {$dept_id}
+						WHERE emp.department = %d
 						AND emp.status = 'active'
 						AND emp.deleted_at IS NULL
 					)
-				)";
+				)",
+					$dept_id
+				);
 
 				$data['className'] .= ' no-parent';
 			}
 		} else {
 			if ( 1 === $depth ) {
-				$where[] = "( reporting_to = {$emp_id} OR reporting_to = 0 OR reporting_to IS NULL )";
-				$where[] = "user_id != {$emp_id}";
+				$where[] = $wpdb->prepare( '( reporting_to = %d OR reporting_to = 0 OR reporting_to IS NULL )', $emp_id );
+				$where[] = $wpdb->prepare( 'user_id != %d', $emp_id );
 			} else {
-				$where[] = "reporting_to = {$emp_id}";
+				$where[] = $wpdb->prepare( 'reporting_to = %d', $emp_id );
 			}
 
 			$manager = new Employee( $emp_id );

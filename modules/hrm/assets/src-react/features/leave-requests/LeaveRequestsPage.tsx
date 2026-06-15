@@ -330,7 +330,7 @@ function LeaveRequestsInner(): JSX.Element {
 								onValueChange={ ( v ) => setLeaveId( Number( v || 0 ) ) }
 								placeholder={ __( 'All Types', 'erp' ) }
 								showClear
-								className="h-9 w-48"
+								className="h-9 w-48 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>
@@ -342,7 +342,7 @@ function LeaveRequestsInner(): JSX.Element {
 								onValueChange={ ( v ) => setYear( Number( v || 0 ) ) }
 								placeholder={ __( 'All Years', 'erp' ) }
 								showClear
-								className="h-9 w-36"
+								className="h-9 w-36 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>

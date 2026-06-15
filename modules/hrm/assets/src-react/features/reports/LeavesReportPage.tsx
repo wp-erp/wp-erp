@@ -120,7 +120,7 @@ export function LeavesReportPage(): JSX.Element {
 						value={ year }
 						onValueChange={ setYear }
 						placeholder={ __( 'Select year', 'erp' ) }
-						className="h-9 w-44"
+						className="h-9 w-44 bg-background"
 						contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 					/>
 				</label>
@@ -175,7 +175,7 @@ export function LeavesReportPage(): JSX.Element {
 							onValueChange={ ( v ) => setDesignation( Number( v || 0 ) ) }
 							placeholder={ __( 'All Designations', 'erp' ) }
 							showClear
-							className="h-9 w-48"
+							className="h-9 w-48 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
 					</label>
@@ -187,7 +187,7 @@ export function LeavesReportPage(): JSX.Element {
 							onValueChange={ ( v ) => setDepartment( Number( v || 0 ) ) }
 							placeholder={ __( 'All Departments', 'erp' ) }
 							showClear
-							className="h-9 w-48"
+							className="h-9 w-48 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
 					</label>
@@ -199,7 +199,7 @@ export function LeavesReportPage(): JSX.Element {
 							onValueChange={ setEmploymentType }
 							placeholder={ __( 'All Types', 'erp' ) }
 							showClear
-							className="h-9 w-44"
+							className="h-9 w-44 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
 					</label>

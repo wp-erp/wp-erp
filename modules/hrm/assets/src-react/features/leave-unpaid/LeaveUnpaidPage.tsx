@@ -216,7 +216,7 @@ function LeaveUnpaidInner(): JSX.Element {
 								onValueChange={ ( v ) => { setFYear( Number( v || 0 ) ); setPage( 1 ); } }
 								placeholder={ __( 'All Years', 'erp' ) }
 								showClear
-								className="h-9 w-40"
+								className="h-9 w-40 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>

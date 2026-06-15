@@ -274,7 +274,7 @@ function LeavePoliciesInner(): JSX.Element {
 								onValueChange={ ( v ) => setFYear( Number( v || 0 ) ) }
 								placeholder={ __( 'All Years', 'erp' ) }
 								showClear
-								className="h-9 w-40"
+								className="h-9 w-40 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>
@@ -286,7 +286,7 @@ function LeavePoliciesInner(): JSX.Element {
 								onValueChange={ ( v ) => setDepartmentId( Number( v || 0 ) ) }
 								placeholder={ __( 'All Departments', 'erp' ) }
 								showClear
-								className="h-9 w-48"
+								className="h-9 w-48 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>
@@ -298,7 +298,7 @@ function LeavePoliciesInner(): JSX.Element {
 								onValueChange={ ( v ) => setEmployeeType( v ?? '' ) }
 								placeholder={ __( 'All Types', 'erp' ) }
 								showClear
-								className="h-9 w-40"
+								className="h-9 w-40 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>

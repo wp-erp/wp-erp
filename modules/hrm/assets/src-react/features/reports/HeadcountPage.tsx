@@ -88,7 +88,7 @@ export function HeadcountPage(): JSX.Element {
 							value={ year }
 							onValueChange={ ( v ) => setYear( v || String( now ) ) }
 							placeholder={ String( now ) }
-							className="h-9 w-32"
+							className="h-9 w-32 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
 					</label>
@@ -122,7 +122,7 @@ export function HeadcountPage(): JSX.Element {
 							onValueChange={ ( v ) => setDepartment( Number( v || 0 ) ) }
 							placeholder={ __( 'All Departments', 'erp' ) }
 							showClear
-							className="h-9 w-56"
+							className="h-9 w-56 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
 					</label>

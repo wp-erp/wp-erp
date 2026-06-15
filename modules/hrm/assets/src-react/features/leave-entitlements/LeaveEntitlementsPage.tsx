@@ -243,7 +243,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 								onValueChange={ ( v ) => setPolicyId( Number( v || 0 ) ) }
 								placeholder={ __( 'All Policies', 'erp' ) }
 								showClear
-								className="h-9 w-52"
+								className="h-9 w-52 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>

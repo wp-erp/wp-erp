@@ -164,7 +164,7 @@ function OrgSubtree( { node, deptName }: { node: ServerNode; deptName: DeptName 
 	);
 }
 
-/** A team pill in the left sidebar. */
+/** A team pill in the top filter bar. */
 function DeptPill( { label, active, onClick }: { readonly label: string; readonly active: boolean; readonly onClick: () => void } ): JSX.Element {
 	return (
 		<button
@@ -172,7 +172,7 @@ function DeptPill( { label, active, onClick }: { readonly label: string; readonl
 			onClick={ onClick }
 			aria-pressed={ active }
 			className={ [
-				'w-full truncate rounded-md border px-3 py-1.5 text-left text-xs font-medium transition-colors',
+				'max-w-[14rem] shrink-0 truncate rounded-md border px-3 py-1.5 text-left text-xs font-medium transition-colors',
 				active
 					? 'border-primary/30 bg-primary/10 text-primary'
 					: 'border-border bg-card text-foreground hover:bg-muted',
@@ -255,49 +255,47 @@ function OrgChartInner(): JSX.Element {
 				</div>
 			</header>
 
-			<div className="flex gap-4">
-				{ departments.length > 0 ? (
-					<aside className="hidden w-44 shrink-0 flex-col gap-1.5 sm:flex">
-						<DeptPill label={ __( 'All Teams', 'erp' ) } active={ deptId === '' } onClick={ () => setDeptId( '' ) } />
-						{ departments.map( ( d ) => (
-							<DeptPill
-								key={ d.value }
-								label={ d.label }
-								active={ deptId === d.value }
-								onClick={ () => setDeptId( d.value ) }
-							/>
-						) ) }
-					</aside>
-				) : null }
-
-				<div
-					className="min-w-0 flex-1 overflow-auto rounded-lg border border-border bg-card p-6 shadow-sm"
-					style={ {
-						backgroundImage: 'radial-gradient(color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px)',
-						backgroundSize:  '22px 22px',
-					} }
-				>
-					{ error ? (
-						<p className="p-6 text-center text-sm text-destructive">{ error }</p>
-					) : loading ? (
-						<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
-					) : roots.length === 0 ? (
-						<p className="p-10 text-center text-sm text-muted-foreground">
-							{ __( 'No reporting structure for this team.', 'erp' ) }
-						</p>
-					) : (
-						<div
-							className="origin-top transition-transform"
-							style={ { transform: `scale(${ zoom })`, width: `${ 100 / zoom }%` } }
-						>
-							<ul className="flex items-start justify-center gap-12 p-2">
-								{ roots.map( ( root ) => (
-									<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } deptName={ deptName } />
-								) ) }
-							</ul>
-						</div>
-					) }
+			{ departments.length > 0 ? (
+				<div role="group" aria-label={ __( 'Filter by team', 'erp' ) } className="mb-4 flex flex-wrap items-center gap-1.5">
+					<DeptPill label={ __( 'All Teams', 'erp' ) } active={ deptId === '' } onClick={ () => setDeptId( '' ) } />
+					{ departments.map( ( d ) => (
+						<DeptPill
+							key={ d.value }
+							label={ d.label }
+							active={ deptId === d.value }
+							onClick={ () => setDeptId( d.value ) }
+						/>
+					) ) }
 				</div>
+			) : null }
+
+			<div
+				className="overflow-auto rounded-lg border border-border bg-card p-6 shadow-sm"
+				style={ {
+					backgroundImage: 'radial-gradient(color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px)',
+					backgroundSize:  '22px 22px',
+				} }
+			>
+				{ error ? (
+					<p className="p-6 text-center text-sm text-destructive">{ error }</p>
+				) : loading ? (
+					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+				) : roots.length === 0 ? (
+					<p className="p-10 text-center text-sm text-muted-foreground">
+						{ __( 'No reporting structure for this team.', 'erp' ) }
+					</p>
+				) : (
+					<div
+						className="mx-auto w-max origin-top transition-transform"
+						style={ { transform: `scale(${ zoom })` } }
+					>
+						<ul className="flex items-start justify-center gap-12 p-2">
+							{ roots.map( ( root ) => (
+								<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } deptName={ deptName } />
+							) ) }
+						</ul>
+					</div>
+				) }
 			</div>
 		</section>
 	);
