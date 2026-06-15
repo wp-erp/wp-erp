@@ -286,10 +286,10 @@ function OrgChartInner(): JSX.Element {
 					</p>
 				) : (
 					<div
-						className="mx-auto w-max origin-top transition-transform"
-						style={ { transform: `scale(${ zoom })` } }
+						className="origin-top transition-transform"
+						style={ { transform: `scale(${ zoom })`, width: `${ 100 / zoom }%` } }
 					>
-						<ul className="flex items-start justify-center gap-12 p-2">
+						<ul className="flex flex-wrap items-start justify-center gap-12 p-2">
 							{ roots.map( ( root ) => (
 								<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } deptName={ deptName } />
 							) ) }

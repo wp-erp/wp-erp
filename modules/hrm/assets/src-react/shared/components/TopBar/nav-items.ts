@@ -35,7 +35,14 @@ export type NavIconId =
 	| 'bar-chart-3'
 	| 'help-circle'
 	| 'wallet'
-	| 'banknote';
+	| 'banknote'
+	| 'log-out'
+	| 'circle-check'
+	| 'folder'
+	| 'book-open'
+	| 'contact'
+	| 'monitor'
+	| 'circle-dollar-sign';
 
 /** A single entry inside a nav item's dropdown submenu. */
 export interface NavSubItem {
@@ -165,7 +172,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'leave',
 		label:         __( 'Leave', 'erp' ),
 		path:          '/leave/requests',
-		icon:          'calendar-days',
+		icon:          'log-out',
 		hasDropdown:   true,
 		// Free leave caps are `erp_leave_manage` (manager) + `erp_leave_create_request`.
 		// There is NO `erp_leave_list_request` cap, so the old gate never passed and
@@ -247,7 +254,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'attendance',
 		label:         __( 'Attendance', 'erp' ),
 		path:          '/attendance',
-		icon:          'calendar-check',
+		icon:          'circle-check',
 		hasDropdown:   true,
 		// Manager/admin only — legacy parity (an employee sees no Attendance nav;
 		// their self-attendance lives on the dashboard widget). `erp_hr_manager` is a
@@ -292,7 +299,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'documents',
 		label:         __( 'Documents', 'erp' ),
 		path:          '/documents',
-		icon:          'file-text',
+		icon:          'folder',
 		hasDropdown:   false,
 		// Company documents = manager/admin (legacy parity). Employees use the
 		// per-employee Documents tab in their profile, not this top-nav page.
@@ -305,7 +312,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'training',
 		label:         __( 'Training', 'erp' ),
 		path:          '/training',
-		icon:          'graduation-cap',
+		icon:          'book-open',
 		hasDropdown:   false,
 		// Manager/admin — matches the pro Training submenu (`erp_hr_manager`) and,
 		// unlike the pro-only `erp_view_training`, this cap is in the free boot map
@@ -319,7 +326,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'recruitment',
 		label:         __( 'Recruitment', 'erp' ),
 		path:          '/recruitment',
-		icon:          'briefcase',
+		icon:          'contact',
 		hasDropdown:   true,
 		// Manager/admin (legacy parity). Shows only when the pro Recruitment module
 		// is active. Routes provided by the pro module via `erp_hr.routes`.
@@ -346,7 +353,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'asset',
 		label:         __( 'Assets', 'erp' ),
 		path:          '/assets',
-		icon:          'briefcase',
+		icon:          'monitor',
 		hasDropdown:   true,
 		// Manager/admin (legacy parity). Shows only when the pro Asset Management
 		// module is active. Routes provided by the pro module via `erp_hr.routes`.
@@ -378,7 +385,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		id:            'payroll',
 		label:         __( 'Payroll', 'erp' ),
 		path:          '/payroll',
-		icon:          'banknote',
+		icon:          'circle-dollar-sign',
 		hasDropdown:   true,
 		// Shows only when the pro Payroll module is active. Routes + submenu provided
 		// by the pro module via `erp_hr.routes`. Mirrors the legacy payroll submenu
