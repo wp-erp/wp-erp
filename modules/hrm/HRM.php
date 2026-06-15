@@ -13,6 +13,7 @@ use WeDevs\ERP\HRM\Announcement;
 use WeDevs\ERP\HRM\Admin\AdminMenu;
 use WeDevs\ERP\HRM\Admin\Enqueue;
 use WeDevs\ERP\HRM\Admin\UiEngineResolver;
+use WeDevs\ERP\HRM\Admin\WelcomeNotice;
 use WeDevs\ERP\HRM\Admin\UserProfile;
 use WeDevs\ERP\HRM\API\V2\Manager as V2Manager;
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -118,6 +119,7 @@ class HRM {
         // Redesign — register the React engine resolver + the erp/v2 REST manager.
         // The legacy admin_scripts() path stays intact; resolver picks engine per request.
         UiEngineResolver::instance()->register_hooks();
+        WelcomeNotice::instance()->register_hooks();
         V2Manager::init();
     }
 
