@@ -270,7 +270,7 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 	 */
 	public function form_options(): WP_REST_Response {
 		$leave_types = erp_hr_get_leave_policy_names();
-		$leave_types = method_exists( $leave_types, 'toArray' ) ? $leave_types->toArray() : (array) $leave_types;
+		$leave_types = is_object( $leave_types ) && method_exists( $leave_types, 'toArray' ) ? $leave_types->toArray() : (array) $leave_types;
 
 		$financial_years = [];
 		foreach ( FinancialYear::all() as $fy ) {

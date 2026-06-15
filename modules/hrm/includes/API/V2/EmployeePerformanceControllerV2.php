@@ -252,7 +252,7 @@ class EmployeePerformanceControllerV2 extends RestControllerV2 {
 		// a grouped Eloquent Collection — `toArray()` unwraps it into plain arrays
 		// (a bare `(array)` cast leaves the items in a protected prop → empty).
 		$collection = $employee->get_performances( 'all', 100, 0 );
-		$grouped    = is_object( $collection ) && method_exists( $collection, 'toArray' )
+		$grouped    = is_object( $collection ) && is_object( $collection ) && method_exists( $collection, 'toArray' )
 			? $collection->toArray()
 			: (array) $collection;
 		$ratings    = (array) erp_performance_rating();
@@ -278,7 +278,7 @@ class EmployeePerformanceControllerV2 extends RestControllerV2 {
 		$rows = $grouped[ $type ] ?? [];
 
 		// Eloquent collection → array.
-		if ( is_object( $rows ) && method_exists( $rows, 'toArray' ) ) {
+		if ( is_object( $rows ) && is_object( $rows ) && method_exists( $rows, 'toArray' ) ) {
 			$rows = $rows->toArray();
 		}
 

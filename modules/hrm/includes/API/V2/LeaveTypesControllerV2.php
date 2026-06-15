@@ -139,7 +139,7 @@ class LeaveTypesControllerV2 extends RestControllerV2 {
 	 */
 	public function get_items( $request ): WP_REST_Response {
 		$types  = erp_hr_get_leave_policy_names();
-		$types  = method_exists( $types, 'toArray' ) ? $types->toArray() : (array) $types;
+		$types  = is_object( $types ) && method_exists( $types, 'toArray' ) ? $types->toArray() : (array) $types;
 		$search = strtolower( sanitize_text_field( (string) ( $request['search'] ?? '' ) ) );
 
 		$items = [];
@@ -338,7 +338,7 @@ class LeaveTypesControllerV2 extends RestControllerV2 {
 	public function prepare_item_for_response( $leave, $request ) {
 		unset( $request );
 
-		$leave = (object) ( method_exists( $leave, 'toArray' ) ? $leave->toArray() : (array) $leave );
+		$leave = (object) ( is_object( $leave ) && method_exists( $leave, 'toArray' ) ? $leave->toArray() : (array) $leave );
 
 		return [
 			'id'          => (int) ( $leave->id ?? 0 ),
