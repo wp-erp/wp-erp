@@ -266,6 +266,13 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		// Sub-pages provided by the pro Attendance module (registered via `erp_hr.routes`).
 		children: [
 			{
+				id:           'attendance-overview',
+				label:        __( 'Overview', 'erp' ),
+				to:           '/attendance/overview',
+				capabilities: [ 'erp_hr_manager' ],
+				description:  __( 'Today\'s present, late and absent across departments', 'erp' ),
+			},
+			{
 				id:           'attendance-logs',
 				label:        __( 'Logs', 'erp' ),
 				to:           '/attendance',

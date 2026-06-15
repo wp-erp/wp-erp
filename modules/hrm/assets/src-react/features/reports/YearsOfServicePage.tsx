@@ -26,16 +26,40 @@ export function YearsOfServicePage(): JSX.Element {
 	const { data, loading, error } = useReport< YearsOfServiceResponse >( '/reports/years-of-service' );
 	const months = data?.months ?? [];
 
-	// Render months incrementally so a long history doesn't mount all at once.
-	const PAGE = 4;
+	// Paginate by PEOPLE (not months): anniversaries often cluster into a few
+	// months, so a month-based cap would render hundreds of rows with no button.
+	// Trim months/days down to the first `visible` people and load more in chunks.
+	const PAGE = 25;
 	const [ visible, setVisible ] = useState( PAGE );
 	useEffect( () => { setVisible( PAGE ); }, [ data ] );
+
+	const totalPeople = months.reduce( ( sum, m ) => sum + m.days.reduce( ( s, d ) => s + d.people.length, 0 ), 0 );
+
+	let budget = visible;
+	const shownMonths = [];
+	for ( const month of months ) {
+		if ( budget <= 0 ) {
+			break;
+		}
+		const days = [];
+		for ( const day of month.days ) {
+			if ( budget <= 0 ) {
+				break;
+			}
+			const people = day.people.slice( 0, budget );
+			budget -= people.length;
+			days.push( { ...day, people } );
+		}
+		if ( days.length > 0 ) {
+			shownMonths.push( { ...month, days } );
+		}
+	}
 
 	return (
 		<ReportShell title={ __( 'Years of Service', 'erp' ) }>
 			<ReportState loading={ loading } error={ error } empty={ months.length === 0 }>
 				<div className="divide-y divide-border">
-					{ months.slice( 0, visible ).map( ( month ) => (
+					{ shownMonths.map( ( month ) => (
 						<div key={ month.month } className="px-4 py-4">
 							<h3 className="mb-2 text-sm font-semibold text-foreground">{ month.month_name }</h3>
 							<div className="overflow-x-auto">
@@ -69,10 +93,10 @@ export function YearsOfServicePage(): JSX.Element {
 					</div>
 						</div>
 					) ) }
-					{ months.length > visible ? (
+					{ totalPeople > visible ? (
 						<div className="flex justify-center p-3">
 							<button type="button" onClick={ () => setVisible( ( v ) => v + PAGE ) } className="inline-flex h-9 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted">
-								{ __( 'Load more', 'erp' ) } ({ months.length - visible })
+								{ __( 'Load more', 'erp' ) } ({ totalPeople - visible })
 							</button>
 						</div>
 					) : null }

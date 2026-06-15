@@ -15,7 +15,7 @@ interface NameCellProps {
 
 export function NameCell( { row }: NameCellProps ): JSX.Element {
 	const initials = makeInitials( row.full_name || row.email );
-	const subtitle = row.designation?.name ?? row.employee_id ?? '';
+	const subtitle = row.designation?.name ?? row.department?.name ?? '';
 
 	return (
 		<div className="flex items-center gap-3">

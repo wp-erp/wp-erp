@@ -82,7 +82,7 @@ export function AppShell(): JSX.Element {
 							className={
 								chromeless
 									? 'flex min-h-0 flex-1 flex-col overflow-y-auto'
-									: 'flex min-h-0 flex-1 flex-col overflow-y-auto rounded-tl-2xl'
+									: 'erp-hr-panel flex min-h-0 flex-1 flex-col overflow-y-auto rounded-tl-2xl'
 							}
 						>
 							{ content }
