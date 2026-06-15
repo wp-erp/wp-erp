@@ -32,3 +32,4 @@ plugin-deploy.sh
 
 # Internal planning docs — not shipped, not tracked
 /openspec/
+.vscode/sftp.json
