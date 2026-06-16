@@ -3,7 +3,7 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.9.4
+Tested up to: 7.0
 Requires PHP: 7.4
 Stable tag: 1.17.4
 License: GPLv2
