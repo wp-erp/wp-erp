@@ -42,6 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WeDevs\ERP\Emailer;
 use WeDevs\ERP\Scripts;
+use WeDevs\ERP\Headway\Headway;
 use WeDevs\ERP\Tracker;
 use WeDevs\ERP\Updates;
 use WeDevs\ERP\ERP_i18n;
@@ -301,6 +302,7 @@ final class WeDevs_ERP {
         new AdminPage();
         new UserProfile();
         new Scripts();
+        new Headway();
         new Updates();
         new ApiRegistrar();
         new Promotion();

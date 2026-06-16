@@ -7,7 +7,7 @@
         <# } #>
 
         <# if ( data.schedule.type == 'tasks' ) { #>
-            <?php esc_attr_e( 'assigned a task', 'erp' ); ?>
+            <?php esc_attr_e( 'assigned task', 'erp' ); ?>
         <# } else if( ( data.schedule.type == 'log_activity' ) && ( new Date() < new Date( data.schedule.start_date ) ) ) { #>
             <?php esc_attr_e( 'have scheduled', 'erp' ); ?>
         <# } else { #>

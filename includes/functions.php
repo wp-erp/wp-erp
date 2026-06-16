@@ -4155,10 +4155,11 @@ function erp_serialize_string_to_array( $serialized_string ) {
 }
 
 /**
- * Load the Headway changelog badge widget (mirrors WPUF pattern)
+ * Load the Headway changelog badge widget.
  */
 function erp_load_headway_badge() {
     wp_enqueue_script( 'erp-headway' );
+    wp_enqueue_style( 'erp-headway' );
     ?>
     <span class="erp-headway-wrap">
         <button type="button" id="erp-headway-btn" class="erp-cta-hover-btn erp-headway-trigger" title="<?php esc_attr_e( "What's New", 'erp' ); ?>">

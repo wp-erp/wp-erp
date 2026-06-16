@@ -129,45 +129,50 @@
             }
         },
         initContactListAjax: function() {
-            $( 'select.erp-crm-contact-list-dropdown' ).select2({
-                allowClear: true,
-                placeholder: $(this).attr('data-placeholder'),
-                minimumInputLength: 1,
-                ajax: {
-                    url: wpErpCrm.ajaxurl,
-                    dataType: 'json',
-                    delay: 250,
-                    escapeMarkup: function (m) {
-                        return m;
-                    },
-                    data: function (params) {
-                        return {
-                            s: params.term, // search term
-                            _wpnonce: wpErpCrm.nonce,
-                            types: $(this).attr('data-types').split(','),
-                            action: 'erp-search-crm-contacts'
-                        };
-                    },
-                    processResults: function (data, params) {
-                        var terms = [];
+            $( 'select.erp-crm-contact-list-dropdown' ).each( function() {
+                var $select = $( this );
+                var $parent = $select.closest( '.content-container, .erp-modal' );
+                $select.select2({
+                    allowClear: true,
+                    placeholder: $select.attr('data-placeholder'),
+                    minimumInputLength: 1,
+                    dropdownParent: $parent.length ? $parent : $( 'body' ),
+                    ajax: {
+                        url: wpErpCrm.ajaxurl,
+                        dataType: 'json',
+                        delay: 250,
+                        escapeMarkup: function (m) {
+                            return m;
+                        },
+                        data: function (params) {
+                            return {
+                                s: params.term, // search term
+                                _wpnonce: wpErpCrm.nonce,
+                                types: $select.attr('data-types').split(','),
+                                action: 'erp-search-crm-contacts'
+                            };
+                        },
+                        processResults: function (data, params) {
+                            var terms = [];
 
-                        if (data) {
-                            $.each(data.data, function (id, text) {
-                                terms.push({
-                                    id: id,
-                                    text: text
+                            if (data) {
+                                $.each(data.data, function (id, text) {
+                                    terms.push({
+                                        id: id,
+                                        text: text
+                                    });
                                 });
-                            });
-                        }
+                            }
 
-                        if (terms.length) {
-                            return {results: terms};
-                        } else {
-                            return {results: ''};
-                        }
-                    },
-                    cache: true
-                }
+                            if (terms.length) {
+                                return {results: terms};
+                            } else {
+                                return {results: ''};
+                            }
+                        },
+                        cache: true
+                    }
+                });
             });
         },
 

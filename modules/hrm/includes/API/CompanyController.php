@@ -164,6 +164,16 @@ class CompanyController extends REST_Controller {
                 'permission_callback' => '__return_true',
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/work-days', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_work_days' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_view_list' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -317,6 +327,50 @@ class CompanyController extends REST_Controller {
         $response = $this->format_collection_response( $response, $request, count( $options ) );
 
         return $response;
+    }
+
+    /**
+     * Get the company weekly work-day schedule.
+     *
+     * Mirrors WP ERP HR settings → Work Days. Returns the raw per-weekday hours
+     * (0 = non-working) plus derived state labels and working/weekend lists so
+     * clients (e.g. the mobile app) can render the schedule without re-deriving
+     * the full/half/off mapping themselves.
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_REST_Response
+     */
+    public function get_work_days( $request ) {
+        $hours = erp_hr_get_work_days();
+
+        $labels       = [];
+        $working_days = [];
+        $weekends     = [];
+
+        foreach ( $hours as $day => $value ) {
+            $value = (int) $value;
+
+            if ( 0 === $value ) {
+                $labels[ $day ] = 'non_working';
+                $weekends[]     = $day;
+            } elseif ( $value >= 8 ) {
+                $labels[ $day ] = 'full_day';
+                $working_days[] = $day;
+            } else {
+                $labels[ $day ] = 'half_day';
+                $working_days[] = $day;
+            }
+        }
+
+        return rest_ensure_response(
+            [
+                'work_days'    => $hours,        // { mon: 8, ..., sat: 0, sun: 0 }
+                'states'       => $labels,       // { mon: 'full_day', ..., sun: 'non_working' }
+                'working_days' => $working_days, // [ 'mon', ..., 'fri' ]
+                'weekends'     => $weekends,     // [ 'sat', 'sun' ]
+            ]
+        );
     }
 
     public function get_genders() {
