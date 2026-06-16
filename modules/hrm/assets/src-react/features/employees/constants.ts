@@ -30,7 +30,8 @@ export const COLUMN_IDS = {
 	DEPARTMENT:  'department',
 	DESIGNATION: 'designation',
 	LOCATION:    'location',
-	PHONE:       'phone',
-	STATUS:      'status',
-	HIRE_DATE:   'hire_date',
+	PHONE:           'phone',
+	STATUS:          'status',
+	EMPLOYMENT_TYPE: 'employment_type',
+	HIRE_DATE:       'hire_date',
 } as const;

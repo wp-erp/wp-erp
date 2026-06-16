@@ -29,6 +29,7 @@ import {
 	Cake,
 	Clock4,
 	Gift,
+	Hourglass,
 	Megaphone,
 	Package,
 	PalmtreeIcon,
@@ -51,7 +52,7 @@ import type { MeUser } from '@/stores/me/types';
 import { ChartsSection } from './DashboardCharts';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
-import type { BirthdayPerson, DashboardProWidget, OnLeavePerson } from './types';
+import type { AboutToEndPerson, BirthdayPerson, DashboardProWidget, OnLeavePerson } from './types';
 import {
 	fetchAnnouncement,
 	markAnnouncementRead,
@@ -228,11 +229,28 @@ function OnLeaveItem( { person }: { person: OnLeavePerson } ): JSX.Element {
 		<li className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
 			<PersonAvatar name={ person.name } src={ person.avatar_url } />
 			<div className="min-w-0 flex-1">
-				<p className="truncate text-sm font-medium text-foreground">{ person.name }</p>
+				<p className="flex items-center gap-1.5 truncate text-sm font-medium text-foreground">
+					{ person.name }
+					{ /* Half-day indicator (legacy Morning/Afternoon SVGs → pill). */ }
+					{ person.day_status_id > 1 && person.day_status ? (
+						<span className="inline-flex shrink-0 items-center rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+							{ person.day_status }
+						</span>
+					) : null }
+				</p>
 				<p className="text-xs text-muted-foreground">
 					{ `${ fmtDate( person.start_date ) } – ${ fmtDate( person.end_date ) }` }
 				</p>
 			</div>
+		</li>
+	);
+}
+
+function AboutToEndItem( { person }: { person: AboutToEndPerson } ): JSX.Element {
+	return (
+		<li className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
+			<span className="min-w-0 truncate text-sm font-medium text-foreground">{ person.name }</span>
+			<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( person.end_date ) }</span>
 		</li>
 	);
 }
@@ -354,10 +372,14 @@ function DashboardInner(): JSX.Element {
 	const [ viewing, setViewing ] = useState< AnnouncementContent | null >( null );
 	const [ viewLoading, setViewLoading ] = useState( false );
 	const [ wished, setWished ] = useState< ReadonlySet< number > >( new Set() );
+	// Locally-marked-read announcements (optimistic; the dashboard payload
+	// carries the persisted per-user read state on load).
+	const [ readAnnouncements, setReadAnnouncements ] = useState< ReadonlySet< number > >( new Set() );
 
 	function openAnnouncement( id: number ): void {
 		setViewLoading( true );
 		setViewing( null );
+		setReadAnnouncements( ( prev ) => new Set( prev ).add( id ) );
 		void markAnnouncementRead( id ).catch( () => undefined );
 		void fetchAnnouncement( id )
 			.then( ( content ) => setViewing( content ) )
@@ -503,13 +525,69 @@ function DashboardInner(): JSX.Element {
 							action={ canManageLeave ? { label: __( 'Calendar', 'erp' ), to: '/leave/calendar' } : undefined }
 						>
 							{ ( data?.on_leave.length ?? 0 ) === 0 ? (
-								<EmptyRow text={ __( 'Nobody is on leave this month.', 'erp' ) } />
+								<EmptyRow text={ __( 'Nobody is on leave this or next month.', 'erp' ) } />
 							) : (
-								<ul>
-									{ data?.on_leave.map( ( p ) => <OnLeaveItem key={ `${ p.user_id }-${ p.start_date }` } person={ p } /> ) }
-								</ul>
+								( () => {
+									const thisMonth = data?.on_leave.filter( ( p ) => p.period !== 'next_month' ) ?? [];
+									const nextMonth = data?.on_leave.filter( ( p ) => p.period === 'next_month' ) ?? [];
+									return (
+										<>
+											{ thisMonth.length > 0 ? (
+												<>
+													<p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+														{ __( 'This Month', 'erp' ) }
+													</p>
+													<ul>
+														{ thisMonth.map( ( p ) => <OnLeaveItem key={ `t-${ p.user_id }-${ p.start_date }` } person={ p } /> ) }
+													</ul>
+												</>
+											) : null }
+											{ nextMonth.length > 0 ? (
+												<>
+													<p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+														{ __( 'Next Month', 'erp' ) }
+													</p>
+													<ul>
+														{ nextMonth.map( ( p ) => <OnLeaveItem key={ `n-${ p.user_id }-${ p.start_date }` } person={ p } /> ) }
+													</ul>
+												</>
+											) : null }
+										</>
+									);
+								} )()
 							) }
 						</WidgetCard>
+
+						{ /* About to End — contractual & trainee employees whose job
+						   period ends within 21 days. Manager-only (legacy gate). */ }
+						{ isManager && ( ( data?.about_to_end?.contract.length ?? 0 ) + ( data?.about_to_end?.trainee.length ?? 0 ) > 0 ) ? (
+							<WidgetCard
+								icon={ Hourglass }
+								title={ __( 'About to End', 'erp' ) }
+								count={ ( data?.about_to_end?.contract.length ?? 0 ) + ( data?.about_to_end?.trainee.length ?? 0 ) }
+							>
+								{ ( data?.about_to_end?.contract.length ?? 0 ) > 0 ? (
+									<>
+										<p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+											{ __( 'Contractual Employees', 'erp' ) }
+										</p>
+										<ul>
+											{ data?.about_to_end?.contract.map( ( p ) => <AboutToEndItem key={ `c-${ p.user_id }` } person={ p } /> ) }
+										</ul>
+									</>
+								) : null }
+								{ ( data?.about_to_end?.trainee.length ?? 0 ) > 0 ? (
+									<>
+										<p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+											{ __( 'Trainee Employees', 'erp' ) }
+										</p>
+										<ul>
+											{ data?.about_to_end?.trainee.map( ( p ) => <AboutToEndItem key={ `tr-${ p.user_id }` } person={ p } /> ) }
+										</ul>
+									</>
+								) : null }
+							</WidgetCard>
+						) : null }
 
 						{ /* Pro self-service widgets (e.g. Attendance punch card) first,
 						   so the Attendance card lands top-right (row 1, col 3) for every
@@ -554,18 +632,31 @@ function DashboardInner(): JSX.Element {
 								<EmptyRow text={ __( 'No announcements yet.', 'erp' ) } />
 							) : (
 								<ul>
-									{ data?.announcements.map( ( a ) => (
-										<li key={ a.id }>
-											<button
-												type="button"
-												onClick={ () => openAnnouncement( a.id ) }
-												className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/50"
-											>
-												<span className="min-w-0 truncate text-sm font-medium text-foreground">{ a.title }</span>
-												<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( a.date ) }</span>
-											</button>
-										</li>
-									) ) }
+									{ data?.announcements.map( ( a ) => {
+										const unread = ! a.read && ! readAnnouncements.has( a.id );
+										return (
+											<li key={ a.id }>
+												<button
+													type="button"
+													onClick={ () => openAnnouncement( a.id ) }
+													className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/50"
+												>
+													<span className="flex min-w-0 items-center gap-2">
+														{ unread ? (
+															<span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-primary" />
+														) : null }
+														<span className={ `min-w-0 truncate text-sm ${ unread ? 'font-semibold text-foreground' : 'font-medium text-muted-foreground' }` }>
+															{ a.title }
+														</span>
+														{ unread ? (
+															<span className="sr-only">{ __( '(unread)', 'erp' ) }</span>
+														) : null }
+													</span>
+													<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( a.date ) }</span>
+												</button>
+											</li>
+										);
+									} ) }
 								</ul>
 							) }
 						</WidgetCard>

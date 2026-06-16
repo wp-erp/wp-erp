@@ -15,7 +15,7 @@
 
 import { Alert, AlertDescription, AlertTitle, Button, Checkbox, toast } from '@wedevs/plugin-ui';
 import { applyFilters } from '@wordpress/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,6 +28,7 @@ import { request, restPath } from '@/shared/utils/apiFetch';
 import type { EmployeeCreateInput } from '@/stores/employees';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
+import { useBoot } from '@/shared/hooks/useBoot';
 
 import { DepartmentFormDialog } from '../departments/DepartmentFormDialog';
 import type { Department, DepartmentInput } from '../departments/types';
@@ -133,6 +134,22 @@ export function EmployeeForm( {
 	const [ locations, setLocations ] = useState< Option[] >( [] );
 	const reporting = useEmployeeSearch( ! isEdit, undefined, form.reporting_to ?? '' );
 	const [ lookupsLoaded, setLookupsLoaded ] = useState( false );
+
+	// Country / state options for the address selects — sourced from the boot
+	// payload (parity with the legacy new-employee.php Countries dropdowns).
+	const boot = useBoot();
+	const countryOptions = useMemo< Option[] >(
+		() => ( boot.countries ?? [] ).map( ( c ) => ( { value: c.value, label: c.label } ) ),
+		[ boot.countries ]
+	);
+	// State options depend on the selected country; empty when the country has
+	// no states defined (the field then stays an empty/disabled select).
+	const stateOptions = useMemo< Option[] >(
+		() => ( ( boot.states ?? {} )[ form.country ?? '' ] ?? [] ).map(
+			( s ) => ( { value: s.value, label: s.label } )
+		),
+		[ boot.states, form.country ]
+	);
 
 	// Inline "+ Add new" for the two required org dependencies — open the same
 	// dialogs the Departments / Designations screens use, then merge the new
@@ -256,6 +273,12 @@ export function EmployeeForm( {
 			delete next[ key ];
 			return next;
 		} );
+	};
+
+	// Country select — also resets the dependent state field so a stale state
+	// code can't survive a country change.
+	const setCountry = ( value: string ): void => {
+		setForm( ( prev ) => ( { ...prev, country: value, state: '' } ) );
 	};
 
 	function handleQuickDept( payload: DepartmentInput ): void {
@@ -499,7 +522,11 @@ export function EmployeeForm( {
 					<TextField id="phone" label={ __( 'Phone', 'erp' ) } type="tel" value={ form.phone ?? '' } onChange={ set( 'phone' ) } />
 					<TextField id="other_email" label={ __( 'Other Email', 'erp' ) } type="email" value={ form.other_email ?? '' } onChange={ set( 'other_email' ) } />
 					<TextField id="date_of_birth" label={ __( 'Date of Birth', 'erp' ) } type="date" value={ form.date_of_birth ?? '' } onChange={ set( 'date_of_birth' ) } />
-					<TextField id="nationality" label={ __( 'Nationality', 'erp' ) } value={ form.nationality ?? '' } onChange={ set( 'nationality' ) } />
+					{ countryOptions.length > 0 ? (
+						<SmartSelectField id="nationality" label={ __( 'Nationality', 'erp' ) } options={ countryOptions } value={ form.nationality ?? '' } onChange={ set( 'nationality' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search countries…', 'erp' ) } />
+					) : (
+						<TextField id="nationality" label={ __( 'Nationality', 'erp' ) } value={ form.nationality ?? '' } onChange={ set( 'nationality' ) } />
+					) }
 					<SelectField id="gender" label={ __( 'Gender', 'erp' ) } options={ GENDER_OPTIONS } value={ form.gender ?? '' } onChange={ set( 'gender' ) } placeholder={ __( '- Select -', 'erp' ) } />
 					<SelectField id="marital_status" label={ __( 'Marital Status', 'erp' ) } options={ MARITAL_OPTIONS } value={ form.marital_status ?? '' } onChange={ set( 'marital_status' ) } placeholder={ __( '- Select -', 'erp' ) } />
 					<TextField id="driving_license" label={ __( 'Driving License', 'erp' ) } value={ form.driving_license ?? '' } onChange={ set( 'driving_license' ) } />
@@ -508,8 +535,16 @@ export function EmployeeForm( {
 					<TextField id="street_1" label={ __( 'Address 1', 'erp' ) } value={ form.street_1 ?? '' } onChange={ set( 'street_1' ) } />
 					<TextField id="street_2" label={ __( 'Address 2', 'erp' ) } value={ form.street_2 ?? '' } onChange={ set( 'street_2' ) } />
 					<TextField id="city" label={ __( 'City', 'erp' ) } value={ form.city ?? '' } onChange={ set( 'city' ) } />
-					<TextField id="country" label={ __( 'Country', 'erp' ) } value={ form.country ?? '' } onChange={ set( 'country' ) } />
-					<TextField id="state" label={ __( 'Province / State', 'erp' ) } value={ form.state ?? '' } onChange={ set( 'state' ) } />
+					{ countryOptions.length > 0 ? (
+						<SmartSelectField id="country" label={ __( 'Country', 'erp' ) } options={ countryOptions } value={ form.country ?? '' } onChange={ setCountry } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search countries…', 'erp' ) } />
+					) : (
+						<TextField id="country" label={ __( 'Country', 'erp' ) } value={ form.country ?? '' } onChange={ set( 'country' ) } />
+					) }
+					{ countryOptions.length > 0 && stateOptions.length > 0 ? (
+						<SmartSelectField id="state" label={ __( 'Province / State', 'erp' ) } options={ stateOptions } value={ form.state ?? '' } onChange={ set( 'state' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search states…', 'erp' ) } />
+					) : (
+						<TextField id="state" label={ __( 'Province / State', 'erp' ) } value={ form.state ?? '' } onChange={ set( 'state' ) } />
+					) }
 					<TextField id="postal_code" label={ __( 'Post Code / Zip Code', 'erp' ) } value={ form.postal_code ?? '' } onChange={ set( 'postal_code' ) } />
 					<TextareaField id="description" label={ __( 'Biography', 'erp' ) } value={ form.description ?? '' } onChange={ set( 'description' ) } className="sm:col-span-2 lg:col-span-3" />
 				</FormSection>

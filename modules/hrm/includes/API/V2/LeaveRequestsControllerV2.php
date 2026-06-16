@@ -61,8 +61,13 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 					'callback'            => [ $this, 'get_counts' ],
 					'permission_callback' => [ $this, 'permission_view' ],
 					'args'                => [
+						'year'   => [
+							'description'       => __( 'Calendar year; scopes the counts the same way the list does.', 'erp' ),
+							'type'              => 'integer',
+							'sanitize_callback' => 'absint',
+						],
 						'f_year' => [
-							'description'       => __( 'Financial year ID; defaults to the current financial year.', 'erp' ),
+							'description'       => __( 'Financial year ID; used only when no calendar year is given (defaults to the current financial year).', 'erp' ),
 							'type'              => 'integer',
 							'sanitize_callback' => 'absint',
 						],
@@ -173,6 +178,8 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 			'f_year'        => (int) ( $request['f_year'] ?? 0 ),
 			'policy_id'     => (int) ( $request['policy_id'] ?? 0 ),
 			'department_id' => (int) ( $request['department_id'] ?? 0 ),
+			'designation_id'=> (int) ( $request['designation_id'] ?? 0 ),
+			'type'          => sanitize_text_field( (string) ( $request['type'] ?? '' ) ),
 			's'             => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
 			'orderby'       => 'created_at',
 			'order'         => strtoupper( (string) ( $request['order'] ?? 'DESC' ) ) === 'ASC' ? 'ASC' : 'DESC',
@@ -321,15 +328,38 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 	/**
 	 * GET /erp/v2/leave-requests/counts
 	 *
-	 * Per-status request counts for the status tabs — mirrors the legacy list
-	 * table's view counts (`erp_hr_leave_get_requests_count()`), scoped to a
-	 * financial year (defaults to the current one).
+	 * Per-status request counts for the status tabs. These MUST agree with the
+	 * list rows. The list (`erp_hr_get_leave_requests()`) buckets by CALENDAR
+	 * year (`year` → `request.start_date >= Jan 1 AND end_date <= Dec 31`), so
+	 * when a `year` is supplied the counts are computed with the same
+	 * calendar-year scope. With no `year` we fall back to the legacy
+	 * financial-year view counts (`erp_hr_leave_get_requests_count()`, current FY
+	 * by default) — matching the list's "All Years" default, which is FY-agnostic
+	 * but uses the same model layer.
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return WP_REST_Response
 	 */
 	public function get_counts( $request ): WP_REST_Response {
+		$year = (int) ( $request['year'] ?? 0 );
+
+		// Calendar-year scope: count rows exactly as the list filters them.
+		if ( $year ) {
+			$counts = $this->calendar_year_counts( $year );
+
+			return rest_ensure_response(
+				[
+					'all'      => $counts['all'],
+					'approved' => $counts['1'],
+					'pending'  => $counts['2'],
+					'rejected' => $counts['3'],
+					'year'     => $year,
+				]
+			);
+		}
+
+		// No year filter ("All Years") → legacy financial-year view counts.
 		$f_year = (int) ( $request['f_year'] ?? 0 );
 
 		if ( ! $f_year && function_exists( 'erp_hr_get_financial_year_from_date' ) ) {
@@ -352,6 +382,52 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 				'f_year'   => $f_year,
 			]
 		);
+	}
+
+	/**
+	 * Per-status leave-request counts for a single calendar year, scoped exactly
+	 * like `erp_hr_get_leave_requests()` (same join + date bucketing) so the tab
+	 * counts agree with the list rows.
+	 *
+	 * @param int $year Calendar year (e.g. 2025).
+	 *
+	 * @return array{all:int,1:int,2:int,3:int}
+	 */
+	private function calendar_year_counts( int $year ): array {
+		global $wpdb;
+
+		$from = ( new \DateTime( $year . '-01-01 00:00:00', wp_timezone() ) )->getTimestamp();
+		$to   = ( new \DateTime( $year . '-12-31 23:59:59', wp_timezone() ) )->getTimestamp();
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT request.last_status AS status, COUNT( request.id ) AS total
+				 FROM {$wpdb->prefix}erp_hr_leave_requests AS request
+				 LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id
+				 WHERE entl.trn_type = 'leave_policies'
+				   AND request.start_date >= %d
+				   AND request.end_date <= %d
+				 GROUP BY request.last_status",
+				$from,
+				$to
+			),
+			ARRAY_A
+		);
+
+		$counts = [ 'all' => 0, '1' => 0, '2' => 0, '3' => 0 ];
+
+		foreach ( (array) $rows as $row ) {
+			$status = (string) ( $row['status'] ?? '' );
+			$total  = (int) ( $row['total'] ?? 0 );
+
+			if ( isset( $counts[ $status ] ) ) {
+				$counts[ $status ] = $total;
+			}
+
+			$counts['all'] += $total;
+		}
+
+		return $counts;
 	}
 
 	/**
@@ -468,9 +544,11 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 		$params['status']        = [ 'type' => 'integer', 'enum' => [ 1, 2, 3 ], 'sanitize_callback' => 'absint' ];
 		$params['year']          = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
 		$params['f_year']        = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
-		$params['policy_id']     = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
-		$params['department_id'] = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
-		$params['order']         = [ 'type' => 'string', 'default' => 'desc', 'enum' => [ 'asc', 'desc' ], 'sanitize_callback' => 'sanitize_key' ];
+		$params['policy_id']      = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
+		$params['department_id']  = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
+		$params['designation_id'] = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
+		$params['type']           = [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ];
+		$params['order']          = [ 'type' => 'string', 'default' => 'desc', 'enum' => [ 'asc', 'desc' ], 'sanitize_callback' => 'sanitize_key' ];
 
 		return $params;
 	}

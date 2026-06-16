@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { formatNumberI18n } from '@/shared/utils/number';
 
 import { OrgPagination } from '../org/OrgPagination';
 import { ReportNameCell } from './ReportNameCell';
@@ -22,7 +23,9 @@ import type { LeaveReportFormOptions } from './types';
 import { useLeaveReport } from './useReports';
 
 function fmtCell( spent: number, days: number ): string {
-	return `${ spent } / ${ days }`;
+	// Match legacy erp_number_format_i18n (locale separators, 1 decimal only
+	// when fractional).
+	return `${ formatNumberI18n( spent ) } / ${ formatNumberI18n( days ) }`;
 }
 
 export function LeavesReportPage(): JSX.Element {

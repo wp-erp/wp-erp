@@ -34,12 +34,15 @@ export interface LeaveRequestCounts {
 const EMPTY_COUNTS: LeaveRequestCounts = { all: 0, approved: 0, pending: 0, rejected: 0 };
 
 interface UseLeaveRequestsArgs {
-	readonly status:   number;
-	readonly leaveId:  number;
-	readonly year:     number;
-	readonly search:   string;
-	readonly page:     number;
-	readonly perPage:  number;
+	readonly status:        number;
+	readonly leaveId:       number;
+	readonly year:          number;
+	readonly departmentId:  number;
+	readonly designationId: number;
+	readonly type:          string;
+	readonly search:        string;
+	readonly page:          number;
+	readonly perPage:       number;
 }
 
 export interface UseLeaveRequestsResult {
@@ -60,6 +63,9 @@ export function useLeaveRequests( {
 	status,
 	leaveId,
 	year,
+	departmentId,
+	designationId,
+	type,
 	search,
 	page,
 	perPage,
@@ -76,19 +82,24 @@ export function useLeaveRequests( {
 		try {
 			const { body, headers } = await requestWithHeaders< LeaveRequest[] >(
 				restPath( 'v2', '/leave-requests', {
-					status:    status || '',
-					policy_id: leaveId,
+					status:         status || '',
+					policy_id:      leaveId,
 					year,
+					department_id:  departmentId || '',
+					designation_id: designationId || '',
+					type:           type || '',
 					search,
 					page,
-					per_page:  perPage,
+					per_page:       perPage,
 				} )
 			);
 			const list = Array.isArray( body ) ? body : [];
 			setRows( list );
 			setTotal( toInt( headers.get( 'X-WP-Total' ), list.length ) );
 
-			// Per-status tab counts (FY-scoped, independent of the active filters).
+			// Per-status tab counts, scoped to the SAME calendar year as the list
+			// (the controller buckets counts identically) so the tab numbers always
+			// agree with the visible rows.
 			try {
 				const c = await request< LeaveRequestCounts >( restPath( 'v2', '/leave-requests/counts', { year } ) );
 				setCounts( {
@@ -105,7 +116,7 @@ export function useLeaveRequests( {
 		} finally {
 			setLoading( false );
 		}
-	}, [ status, leaveId, year, search, page, perPage ] );
+	}, [ status, leaveId, year, departmentId, designationId, type, search, page, perPage ] );
 
 	useEffect( () => {
 		void reload();

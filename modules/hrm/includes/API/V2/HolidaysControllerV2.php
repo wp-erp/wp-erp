@@ -200,7 +200,15 @@ class HolidaysControllerV2 extends RestControllerV2 {
 		}
 
 		$holidays = (array) erp_hr_get_holidays( $args );
-		$total    = (int) erp_hr_count_holidays( $args );
+
+		// Count must reflect the full (filtered) result set, not the page slice.
+		// erp_hr_count_holidays() caches on the serialized $args and ignores the
+		// pagination keys, so passing the paged $args would both cap the total at
+		// per_page and collide with the list query's count cache key. Strip the
+		// pagination keys before counting.
+		$count_args = $args;
+		unset( $count_args['number'], $count_args['offset'], $count_args['page'], $count_args['per_page'] );
+		$total = (int) erp_hr_count_holidays( $count_args );
 
 		$items = [];
 		foreach ( $holidays as $holiday ) {
@@ -545,6 +553,15 @@ class HolidaysControllerV2 extends RestControllerV2 {
 			$duration = (int) erp_date_duration( $holiday->start, $holiday->end );
 		}
 
+		// Derive `range` from the normalized calendar dates. The stored `start` is
+		// bare (Y-m-d) while `end` is pinned to `Y-m-d 23:59:59`, so the formatted
+		// `$start`/`$end` strings never match even for a single-day holiday.
+		$is_range = false;
+		if ( ! empty( $holiday->start ) && ! empty( $holiday->end ) ) {
+			$is_range = gmdate( 'Y-m-d', strtotime( (string) $holiday->start ) )
+				!== gmdate( 'Y-m-d', strtotime( (string) $holiday->end ) );
+		}
+
 		return [
 			'id'          => (int) ( $holiday->id ?? 0 ),
 			'title'       => $this->cast_string_or_null( $holiday->title ?? '' ) ?? '',
@@ -552,7 +569,7 @@ class HolidaysControllerV2 extends RestControllerV2 {
 			'end'         => $end,
 			'description' => $this->cast_string_or_null( $holiday->description ?? '' ) ?? '',
 			'duration'    => $duration,
-			'range'       => $start !== $end,
+			'range'       => $is_range,
 		];
 	}
 

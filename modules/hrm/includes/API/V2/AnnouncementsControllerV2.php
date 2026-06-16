@@ -421,8 +421,14 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 			$designations[] = [ 'id' => (int) $desig_id, 'title' => (string) $title ];
 		}
 
-		$employees = [];
+		$employees      = [];
+		$current_user_id = get_current_user_id();
 		foreach ( (array) erp_hr_get_employees( [ 'no_object' => true, 'number' => '-1' ] ) as $emp ) {
+			// Mirror the legacy picker (Announcement.php:241-242): the author can't be
+			// a recipient of their own announcement, so skip the current user.
+			if ( (int) $emp->user_id === (int) $current_user_id ) {
+				continue;
+			}
 			$employees[] = [ 'id' => (int) $emp->user_id, 'name' => (string) $emp->display_name ];
 		}
 

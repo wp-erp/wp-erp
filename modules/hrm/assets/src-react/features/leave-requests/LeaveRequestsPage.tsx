@@ -27,6 +27,9 @@ import { Check, Filter, MoreVertical, Plus, RotateCcw, Search, Trash2, X } from 
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { TYPE_OPTIONS } from '@/features/employee-create/options';
+import { loadLookup } from '@/features/employees/filters/lookups';
+import type { LookupOption } from '@/features/employees/filters/lookups';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PersonCell } from '@/shared/components/PersonCell';
@@ -84,6 +87,9 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ status, setStatus ]       = useState( 0 );
 	const [ leaveId, setLeaveId ]     = useState( 0 );
 	const [ year, setYear ]           = useState( 0 );
+	const [ departmentId, setDepartmentId ]   = useState( 0 );
+	const [ designationId, setDesignationId ] = useState( 0 );
+	const [ employmentType, setEmploymentType ] = useState( '' );
 	const [ searchInput, setSearchInput ] = useState( '' );
 	const [ search, setSearch ]       = useState( '' );
 	const [ showFilters, setShowFilters ] = useState( false );
@@ -94,12 +100,17 @@ function LeaveRequestsInner(): JSX.Element {
 		status,
 		leaveId,
 		year,
+		departmentId,
+		designationId,
+		type: employmentType,
 		search,
 		page,
 		perPage,
 	} );
 
 	const [ leaveTypes, setLeaveTypes ] = useState< readonly LeaveTypeOption[] >( [] );
+	const [ departments, setDepartments ]   = useState< readonly LookupOption[] >( [] );
+	const [ designations, setDesignations ] = useState< readonly LookupOption[] >( [] );
 	const [ moderate, setModerate ]   = useState< { action: 'approve' | 'reject'; request: LeaveRequest } | null >( null );
 	const [ deleting, setDeleting ]   = useState< LeaveRequest | null >( null );
 	// Create modal open-state lives in the URL (`?form=new`) so a browser
@@ -120,7 +131,7 @@ function LeaveRequestsInner(): JSX.Element {
 
 	useEffect( () => {
 		setPage( 1 );
-	}, [ status, leaveId, year, search ] );
+	}, [ status, leaveId, year, departmentId, designationId, employmentType, search ] );
 
 	useEffect( () => {
 		let active = true;
@@ -133,6 +144,17 @@ function LeaveRequestsInner(): JSX.Element {
 			active = false;
 		};
 	}, [ loadLeaveTypes ] );
+
+	// Department + Designation options reuse the shared lookup cache (same
+	// source as the Employees-table filters).
+	useEffect( () => {
+		let active = true;
+		void loadLookup( 'departments' ).then( ( list ) => { if ( active ) { setDepartments( list ); } } );
+		void loadLookup( 'designations' ).then( ( list ) => { if ( active ) { setDesignations( list ); } } );
+		return () => {
+			active = false;
+		};
+	}, [] );
 
 	const yearOptions = useMemo( () => {
 		const now = new Date().getFullYear();
@@ -148,7 +170,27 @@ function LeaveRequestsInner(): JSX.Element {
 		[ leaveTypes ]
 	);
 
-	const activeFilterCount = ( leaveId ? 1 : 0 ) + ( year ? 1 : 0 );
+	const departmentOpts = useMemo(
+		() => [ { value: '', label: __( 'All Departments', 'erp' ) }, ...departments.map( ( d ) => ( { value: String( d.id ), label: d.title } ) ) ],
+		[ departments ]
+	);
+
+	const designationOpts = useMemo(
+		() => [ { value: '', label: __( 'All Designations', 'erp' ) }, ...designations.map( ( d ) => ( { value: String( d.id ), label: d.title } ) ) ],
+		[ designations ]
+	);
+
+	const employmentTypeOpts = useMemo(
+		() => [ { value: '', label: __( 'All Employment Types', 'erp' ) }, ...TYPE_OPTIONS.map( ( t ) => ( { value: t.value, label: t.label } ) ) ],
+		[]
+	);
+
+	const activeFilterCount =
+		( leaveId ? 1 : 0 ) +
+		( year ? 1 : 0 ) +
+		( departmentId ? 1 : 0 ) +
+		( designationId ? 1 : 0 ) +
+		( employmentType ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	async function handleModerate( reason: string ): Promise< void > {
@@ -343,6 +385,44 @@ function LeaveRequestsInner(): JSX.Element {
 								placeholder={ __( 'All Years', 'erp' ) }
 								showClear
 								className="h-9 w-36 bg-background"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Department', 'erp' ) }
+							<SmartSelect
+								options={ departmentOpts }
+								value={ String( departmentId || '' ) }
+								onValueChange={ ( v ) => setDepartmentId( Number( v || 0 ) ) }
+								placeholder={ __( 'All Departments', 'erp' ) }
+								searchPlaceholder={ __( 'Search…', 'erp' ) }
+								showClear
+								className="h-9 w-48 bg-background"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Designation', 'erp' ) }
+							<SmartSelect
+								options={ designationOpts }
+								value={ String( designationId || '' ) }
+								onValueChange={ ( v ) => setDesignationId( Number( v || 0 ) ) }
+								placeholder={ __( 'All Designations', 'erp' ) }
+								searchPlaceholder={ __( 'Search…', 'erp' ) }
+								showClear
+								className="h-9 w-48 bg-background"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Type', 'erp' ) }
+							<SmartSelect
+								options={ employmentTypeOpts }
+								value={ employmentType }
+								onValueChange={ ( v ) => setEmploymentType( v || '' ) }
+								placeholder={ __( 'All Employment Types', 'erp' ) }
+								showClear
+								className="h-9 w-48 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
 						</label>

@@ -108,8 +108,6 @@ class DashboardControllerV2 extends RestControllerV2 {
 		$departments     = erp_hr_get_departments( [ 'number' => '-1' ] );
 		$designations    = erp_hr_get_designations( [ 'number' => '-1' ] );
 
-		$headcount_this_month = (int) erp_hr_get_headcount( current_time( 'Y-m' ), '', 'month' );
-
 		// --- Pending leave approvals + status split (manager-only) ------
 		$pending_requests = 0;
 		$leave_status     = [
@@ -127,16 +125,24 @@ class DashboardControllerV2 extends RestControllerV2 {
 			$leave_status['rejected'] = (int) ( $counts['3']['count'] ?? 0 );
 		}
 
-		// --- Who is out (current-month approved leave) ------------------
+		// --- Who is out (approved leave: this month + next month) -------
+		// Mirrors the legacy "Who is out" widget, which lists both This Month
+		// and Next Month approved leave, each row optionally flagged half-day
+		// (day_status_id 2 = Morning, 3 = Afternoon).
 		$on_leave = [];
 		foreach ( (array) erp_hr_get_current_month_leave_list() as $leave ) {
-			$on_leave[] = [
-				'user_id'    => (int) ( $leave->user_id ?? 0 ),
-				'name'       => $this->cast_string_or_null( $leave->display_name ?? '' ) ?? '',
-				'avatar_url' => get_avatar_url( (int) ( $leave->user_id ?? 0 ), [ 'size' => 40 ] ) ?: '',
-				'start_date' => $this->ts_to_iso( $leave->start_date ?? null ),
-				'end_date'   => $this->ts_to_iso( $leave->end_date ?? null ),
-			];
+			$on_leave[] = $this->prepare_on_leave_row( $leave, 'this_month' );
+		}
+		foreach ( (array) erp_hr_get_next_month_leave_list() as $leave ) {
+			$on_leave[] = $this->prepare_on_leave_row( $leave, 'next_month' );
+		}
+
+		// --- About to end (manager-only): contractual + trainee employees
+		// whose job period ends within 21 days (legacy "About to end" widget,
+		// gated to managers). -------------------------------------------
+		$about_to_end = [ 'contract' => [], 'trainee' => [] ];
+		if ( $is_manager ) {
+			$about_to_end = $this->about_to_end_employees();
 		}
 
 		// --- Birthdays ---------------------------------------------------
@@ -161,14 +167,30 @@ class DashboardControllerV2 extends RestControllerV2 {
 		}
 
 		// --- Latest announcements ---------------------------------------
+		// Mirrors the legacy "Latest Announcement" widget: managers see the 5
+		// most recent published announcements (no per-user read state), everyone
+		// else sees their assigned announcements with a per-user read/unread flag.
 		$announcements = [];
-		$posts = erp_hr_get_announcements( [ 'numberposts' => 5, 'post_status' => 'publish' ] );
-		foreach ( (array) $posts as $post ) {
-			$announcements[] = [
-				'id'    => (int) $post->ID,
-				'title' => $this->cast_string_or_null( $post->post_title ) ?? __( '(no title)', 'erp' ),
-				'date'  => $this->cast_date_iso( $post->post_date ),
-			];
+		if ( $is_manager ) {
+			$posts = erp_hr_get_announcements( [ 'numberposts' => 5, 'post_status' => 'publish' ] );
+			foreach ( (array) $posts as $post ) {
+				$announcements[] = [
+					'id'    => (int) $post->ID,
+					'title' => $this->cast_string_or_null( $post->post_title ) ?? __( '(no title)', 'erp' ),
+					'date'  => $this->cast_date_iso( $post->post_date ),
+					'read'  => true,
+				];
+			}
+		} else {
+			$assigned = erp_hr_employee_dashboard_announcement( get_current_user_id() );
+			foreach ( (array) $assigned as $row ) {
+				$announcements[] = [
+					'id'    => (int) ( $row->post_id ?? $row->ID ?? 0 ),
+					'title' => $this->cast_string_or_null( $row->post_title ?? '' ) ?? __( '(no title)', 'erp' ),
+					'date'  => $this->cast_date_iso( $row->post_date ?? null ),
+					'read'  => ( $row->status ?? 'unread' ) === 'read',
+				];
+			}
 		}
 
 		// --- Charts ------------------------------------------------------
@@ -185,10 +207,10 @@ class DashboardControllerV2 extends RestControllerV2 {
 				'total_employees'      => $total_employees,
 				'total_departments'    => count( (array) $departments ),
 				'total_designations'   => count( (array) $designations ),
-				'headcount_this_month' => $headcount_this_month,
 				'pending_requests'     => $pending_requests,
 			],
 			'on_leave'           => $on_leave,
+			'about_to_end'       => $about_to_end,
 			'birthdays_today'    => $birthdays_today,
 			'birthdays_upcoming' => $birthdays_upcoming,
 			'holidays_upcoming'  => $holidays,
@@ -327,6 +349,90 @@ class DashboardControllerV2 extends RestControllerV2 {
 		}
 
 		return $people;
+	}
+
+	/**
+	 * Shape a "who is out" leave row.
+	 *
+	 * @param mixed  $leave  Leave row (from `erp_hr_get_*_month_leave_list()`).
+	 * @param string $period 'this_month' | 'next_month'.
+	 *
+	 * @return array
+	 */
+	private function prepare_on_leave_row( $leave, string $period ): array {
+		$day_status_id = (int) ( $leave->day_status_id ?? 1 );
+
+		return [
+			'user_id'       => (int) ( $leave->user_id ?? 0 ),
+			'name'          => $this->cast_string_or_null( $leave->display_name ?? '' ) ?? '',
+			'avatar_url'    => get_avatar_url( (int) ( $leave->user_id ?? 0 ), [ 'size' => 40 ] ) ?: '',
+			'start_date'    => $this->ts_to_iso( $leave->start_date ?? null ),
+			'end_date'      => $this->ts_to_iso( $leave->end_date ?? null ),
+			'period'        => $period,
+			// 1 = full day (no badge), 2 = Morning half-day, 3 = Afternoon half-day.
+			'day_status_id' => $day_status_id,
+			'day_status'    => $day_status_id > 1 && function_exists( 'erp_hr_leave_request_get_day_statuses' )
+				? ( $this->cast_string_or_null( erp_hr_leave_request_get_day_statuses( $day_status_id ) ) ?? '' )
+				: '',
+		];
+	}
+
+	/**
+	 * Contractual + trainee employees whose job period ends within 21 days.
+	 *
+	 * Mirrors `erp_hr_dashboard_widget_about_to_end()`: reads each employee's
+	 * `end_date` user-meta, keeps those 1–20 days out, splits by type and sorts
+	 * ascending by end date.
+	 *
+	 * @return array{contract:array,trainee:array}
+	 */
+	private function about_to_end_employees(): array {
+		$contract = [];
+		$trainee  = [];
+
+		$today = date_create( current_time( 'Y-m-d' ) );
+
+		foreach ( (array) erp_hr_get_contractual_employee() as $user ) {
+			$user_id  = (int) ( $user->user_id ?? 0 );
+			$end_date = $user_id ? (string) get_user_meta( $user_id, 'end_date', true ) : '';
+
+			if ( ! $user_id || '' === $end_date ) {
+				continue;
+			}
+
+			$end = date_create( $end_date );
+			if ( ! $end ) {
+				continue;
+			}
+
+			$diff = date_diff( $today, $end );
+
+			// Legacy keeps strictly future end dates within 21 days.
+			if ( $diff->invert !== 1 || $diff->days <= 0 || $diff->days >= 21 ) {
+				continue;
+			}
+
+			$employee = new \WeDevs\ERP\HRM\Employee( $user_id );
+			$row      = [
+				'user_id'  => $user_id,
+				'name'     => $this->cast_string_or_null( $employee->get_full_name() ) ?? '',
+				'end_date' => $this->cast_date_iso( $end_date ),
+			];
+
+			if ( 'contract' === ( $user->type ?? '' ) ) {
+				$contract[] = $row;
+			} elseif ( 'trainee' === ( $user->type ?? '' ) ) {
+				$trainee[] = $row;
+			}
+		}
+
+		$sort_by_end = static function ( $a, $b ) {
+			return strcmp( (string) ( $a['end_date'] ?? '' ), (string) ( $b['end_date'] ?? '' ) );
+		};
+		usort( $contract, $sort_by_end );
+		usort( $trainee, $sort_by_end );
+
+		return [ 'contract' => $contract, 'trainee' => $trainee ];
 	}
 
 	/**

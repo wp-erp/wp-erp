@@ -52,8 +52,10 @@ export function LeaveRequestModerateDialog( {
 		}
 	}, [ open ] );
 
-	const isReject = action === 'reject';
-	const who      = request?.name ?? '';
+	const isReject     = action === 'reject';
+	const who          = request?.name ?? '';
+	// Legacy hard-rejects an empty reason on reject (functions-leave.php:1695).
+	const reasonMissing = isReject && reason.trim() === '';
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onCancel() ) }>
@@ -76,13 +78,20 @@ export function LeaveRequestModerateDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<TextareaField
-					id="leave_request_reason"
-					label={ isReject ? __( 'Reason', 'erp' ) : __( 'Note (optional)', 'erp' ) }
-					value={ reason }
-					onChange={ setReason }
-					rows={ 3 }
-				/>
+				<div>
+					<TextareaField
+						id="leave_request_reason"
+						label={ isReject ? __( 'Reason', 'erp' ) : __( 'Note (optional)', 'erp' ) }
+						value={ reason }
+						onChange={ setReason }
+						rows={ 3 }
+					/>
+					{ reasonMissing ? (
+						<p className="mt-1.5 text-sm text-destructive">
+							{ __( 'A reason is required to reject this request.', 'erp' ) }
+						</p>
+					) : null }
+				</div>
 
 				{ error ? (
 					<Alert variant="destructive">
@@ -98,7 +107,7 @@ export function LeaveRequestModerateDialog( {
 						type="button"
 						variant={ isReject ? 'destructive' : 'default' }
 						className="h-10 px-6"
-						disabled={ busy }
+						disabled={ busy || reasonMissing }
 						onClick={ () => onConfirm( reason.trim() ) }
 					>
 						{ busy

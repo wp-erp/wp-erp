@@ -287,6 +287,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 								<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
+								<th scope="col" className="px-2">{ __( 'Available', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Spent', 'erp' ) }</th>
 								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
@@ -306,6 +307,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 									</td>
 									<td className="px-2 align-middle text-sm text-foreground">{ ent.policy_name }</td>
 									<td className="px-2 align-middle text-sm text-foreground">{ ent.days }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ ent.available }</td>
 									<td className="px-2 align-middle text-sm text-muted-foreground">{ ent.spent }</td>
 									<td className="px-4 align-middle">
 										{ canManage ? (

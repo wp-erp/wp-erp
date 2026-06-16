@@ -23,6 +23,7 @@ import { COLUMN_IDS, EMPLOYEES_HOOKS } from './constants';
 import { DepartmentCell } from './columns/DepartmentCell';
 import { DesignationCell } from './columns/DesignationCell';
 import { EmailCell } from './columns/EmailCell';
+import { EmploymentTypeCell } from './columns/EmploymentTypeCell';
 import { HireDateCell } from './columns/HireDateCell';
 import { NameCell } from './columns/NameCell';
 import { StatusCell } from './columns/StatusCell';
@@ -124,8 +125,18 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 				),
 			},
 			{
+				id:             COLUMN_IDS.EMPLOYMENT_TYPE,
+				label:          __( 'Employment Type', 'erp' ),
+				priority:       48,
+				defaultVisible: true,
+				sortable:       false,
+				filterable:     false,
+				getValue:       ( row ) => row.employee_type ?? null,
+				render:         ( row ) => <EmploymentTypeCell row={ row } />,
+			},
+			{
 				id:             COLUMN_IDS.STATUS,
-				label:          __( 'Type', 'erp' ),
+				label:          __( 'Status', 'erp' ),
 				priority:       50,
 				defaultVisible: true,
 				sortable:       true,

@@ -11,6 +11,7 @@ export interface Entitlement {
 	readonly policy_id:     number | null;
 	readonly policy_name:   string;
 	readonly days:          number;
+	readonly available:     number;
 	readonly spent:         number;
 	readonly f_year:        number | null;
 	readonly from_date:     string | null;

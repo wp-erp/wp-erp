@@ -129,21 +129,33 @@ class DepartmentsControllerV2 extends RestControllerV2 {
 		$order   = \in_array( $order, [ 'ASC', 'DESC' ], true ) ? $order : 'ASC';
 
 		$args = [
-			'number'  => $per_page,
-			'offset'  => ( $page - 1 ) * $per_page,
+			'number'  => -1,
 			'orderby' => $orderby,
 			'order'   => $order,
 			's'       => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
 		];
 
-		$departments = (array) erp_hr_get_departments( $args );
-		$total       = (int) erp_hr_count_departments();
+		// erp_hr_get_departments() ignores number/offset/orderby/order — it always
+		// returns the full set, parent-sorted (a deliberate hierarchy ordering we
+		// must preserve). So fetch all (search-filtered), then derive the true
+		// search-aware total and the requested page slice here in the controller.
+		// Otherwise departments beyond #100 are silently lost.
+		$departments = array_values(
+			array_filter(
+				(array) erp_hr_get_departments( $args ),
+				static function ( $department ) {
+					return $department instanceof Department;
+				}
+			)
+		);
+
+		$total  = \count( $departments );
+		$offset = ( $page - 1 ) * $per_page;
+		$page_departments = \array_slice( $departments, $offset, $per_page );
 
 		$items = [];
-		foreach ( $departments as $department ) {
-			if ( $department instanceof Department ) {
-				$items[] = $this->prepare_item_for_response( $department, $request );
-			}
+		foreach ( $page_departments as $department ) {
+			$items[] = $this->prepare_item_for_response( $department, $request );
 		}
 
 		$response = rest_ensure_response( $items );

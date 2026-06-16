@@ -459,6 +459,17 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 
 		$row = (object) $row;
 
+		// The base entitlement row's `day_out` is always 0 (it's only written into
+		// a separate approval-status row), so compute Available + Spent via the same
+		// aggregate helper the legacy list table and the profile Leave tab use.
+		$balance   = erp_hr_leave_get_balance_for_single_entitlement( (int) ( $row->id ?? 0 ) );
+		$available = ( ! empty( $balance ) && ! is_wp_error( $balance ) )
+			? (float) ( $balance['available'] ?? 0 )
+			: 0;
+		$spent     = ( ! empty( $balance ) && ! is_wp_error( $balance ) )
+			? (float) ( $balance['spent'] ?? 0 )
+			: 0;
+
 		return [
 			'id'            => (int) ( $row->id ?? 0 ),
 			'user_id'       => $this->cast_int_or_null( $row->user_id ?? null ),
@@ -467,7 +478,8 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 			'policy_id'     => $this->cast_int_or_null( $row->trn_id ?? null ),
 			'policy_name'   => (string) ( $row->policy_name ?? '' ),
 			'days'          => $this->cast_float_or_null( $row->day_in ?? null ) ?? 0,
-			'spent'         => $this->cast_float_or_null( $row->day_out ?? null ) ?? 0,
+			'available'     => $available,
+			'spent'         => $spent,
 			'f_year'        => $this->cast_int_or_null( $row->f_year ?? null ),
 			'from_date'     => $this->cast_date_iso( $row->from_date ?? null ),
 			'to_date'       => $this->cast_date_iso( $row->to_date ?? null ),

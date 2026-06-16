@@ -1331,6 +1331,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         'end_date'       => '',
         'department_id'  => 0,
         'designation_id' => 0,
+        'type'           => '',
         'lead'           => 0,
         's'              => '',
         'created_at'     => '',
@@ -1450,6 +1451,25 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
 
         }
+    }
+
+    // filter by employment type (permanent, contract, trainee, …); composes
+    // with the department/designation filters above by further narrowing the
+    // matching user set.
+    if ( ! empty( $args['type'] ) ) {
+        $type_users = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+            ->where( 'type', $args['type'] );
+
+        if ( $args['department_id'] ) {
+            $type_users->where( 'department', $args['department_id'] );
+        }
+
+        if ( $args['designation_id'] ) {
+            $type_users->where( 'designation', $args['designation_id'] );
+        }
+
+        $type_user_ids = $type_users->count() ? $type_users->pluck( 'user_id' )->toArray() : [ 0 ];
+        $where        .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $type_user_ids ) );
     }
 
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {

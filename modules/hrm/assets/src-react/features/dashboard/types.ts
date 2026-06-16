@@ -6,11 +6,10 @@
  */
 
 export interface DashboardSummary {
-	readonly total_employees:      number;
-	readonly total_departments:    number;
-	readonly total_designations:   number;
-	readonly headcount_this_month: number;
-	readonly pending_requests:     number;
+	readonly total_employees:    number;
+	readonly total_departments:  number;
+	readonly total_designations: number;
+	readonly pending_requests:   number;
 }
 
 export interface DashboardPerson {
@@ -22,6 +21,12 @@ export interface DashboardPerson {
 export interface OnLeavePerson extends DashboardPerson {
 	readonly start_date: string | null;
 	readonly end_date:   string | null;
+	/** Which bucket this row belongs to (legacy "This Month" / "Next Month"). */
+	readonly period:        'this_month' | 'next_month';
+	/** 1 = full day, 2 = Morning half-day, 3 = Afternoon half-day. */
+	readonly day_status_id: number;
+	/** Localised half-day label (empty for full-day rows). */
+	readonly day_status:    string;
 }
 
 export interface BirthdayPerson extends DashboardPerson {
@@ -40,6 +45,20 @@ export interface DashboardAnnouncement {
 	readonly id:    number;
 	readonly title: string;
 	readonly date:  string | null;
+	/** Per-user read state (managers always see `true`). */
+	readonly read:  boolean;
+}
+
+/** A contractual / trainee employee whose job period is about to end. */
+export interface AboutToEndPerson {
+	readonly user_id:  number;
+	readonly name:     string;
+	readonly end_date: string | null;
+}
+
+export interface AboutToEnd {
+	readonly contract: readonly AboutToEndPerson[];
+	readonly trainee:  readonly AboutToEndPerson[];
 }
 
 export interface HeadcountTrendPoint {
@@ -94,6 +113,7 @@ export interface DashboardData {
 	readonly is_hr_manager:      boolean;
 	readonly summary:            DashboardSummary;
 	readonly on_leave:           readonly OnLeavePerson[];
+	readonly about_to_end?:      AboutToEnd;
 	readonly birthdays_today:    readonly BirthdayPerson[];
 	readonly birthdays_upcoming: readonly BirthdayPerson[];
 	readonly holidays_upcoming:  readonly DashboardHoliday[];

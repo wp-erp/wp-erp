@@ -157,7 +157,9 @@ class EmployeeProfileControllerV2 extends RestControllerV2 {
 			return $employee;
 		}
 
-		switch ( $this->section( $request ) ) {
+		$section = $this->section( $request );
+
+		switch ( $section ) {
 			case 'educations':
 				$rows = $employee->get_educations( 100, 0 );
 				break;
@@ -170,7 +172,13 @@ class EmployeeProfileControllerV2 extends RestControllerV2 {
 
 		$items = [];
 		foreach ( $rows as $row ) {
-			$items[] = is_array( $row ) ? $row : $row->toArray();
+			$item = is_array( $row ) ? $row : $row->toArray();
+
+			if ( 'educations' === $section ) {
+				$item = $this->decode_education_result( $item );
+			}
+
+			$items[] = $item;
 		}
 
 		return rest_ensure_response( $items );
@@ -267,6 +275,25 @@ class EmployeeProfileControllerV2 extends RestControllerV2 {
 			'to'           => wp_strip_all_tags( sanitize_text_field( (string) ( $request['to'] ?? '' ) ) ),
 			'description'  => wp_strip_all_tags( sanitize_text_field( (string) ( $request['description'] ?? '' ) ) ),
 		];
+	}
+
+	/**
+	 * Decode the stored `result` JSON of an education row back into the
+	 * `gpa` / `scale` keys the edit dialog rehydrates from. `result_type`
+	 * is already a column, so it is left untouched. Without this, the edit
+	 * dialog renders blank GPA/scale fields (data-loss on edit).
+	 *
+	 * @param array $item Education row as an associative array.
+	 *
+	 * @return array
+	 */
+	private function decode_education_result( array $item ): array {
+		$decoded = isset( $item['result'] ) ? json_decode( (string) $item['result'], true ) : null;
+
+		$item['gpa']   = is_array( $decoded ) && isset( $decoded['gpa'] ) ? $decoded['gpa'] : '';
+		$item['scale'] = is_array( $decoded ) && isset( $decoded['scale'] ) ? $decoded['scale'] : '';
+
+		return $item;
 	}
 
 	/**
