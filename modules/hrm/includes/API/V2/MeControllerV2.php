@@ -237,6 +237,13 @@ class MeControllerV2 extends RestControllerV2 {
 		// React Reports nav can never resolve its gate.
 		$all[] = erp_hr_get_manager_role();
 
+		// Legacy-menu gates the React nav follows but which are NOT per-role HR cap
+		// keys: Recruitment gates on `manage_recruitment`, Reimbursement on the
+		// `employee` cap. Add them so the nav resolves those gates (mirrors
+		// Enqueue::hr_capability_keys()).
+		$all[] = 'manage_recruitment';
+		$all[] = 'employee';
+
 		/**
 		 * Filter the capability keys returned to the React shell.
 		 *

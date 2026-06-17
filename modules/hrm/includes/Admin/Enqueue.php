@@ -421,6 +421,13 @@ final class Enqueue {
 		// Mirrors MeControllerV2::hr_capability_keys().
 		$keys[] = erp_hr_get_manager_role();
 
+		// Legacy-menu gates the React nav follows but which are NOT per-role HR cap
+		// keys: Recruitment menu gates on `manage_recruitment`, Reimbursement on the
+		// `employee` cap. Add them so the nav can resolve those gates from the boot
+		// payload (mirrors MeControllerV2::hr_capability_keys()).
+		$keys[] = 'manage_recruitment';
+		$keys[] = 'employee';
+
 		return array_values( array_unique( array_map( 'strval', $keys ) ) );
 	}
 
