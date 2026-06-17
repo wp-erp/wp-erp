@@ -262,7 +262,7 @@ function AnnouncementsInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-2">{ __( 'Title', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
 								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Recipients', 'erp' ) }</th>
 								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Author', 'erp' ) }</th>
 								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Date', 'erp' ) }</th>
@@ -274,7 +274,7 @@ function AnnouncementsInner(): JSX.Element {
 						<tbody>
 							{ rows.map( ( row ) => (
 								<tr key={ row.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="max-w-md px-2 align-middle">
+									<td className="max-w-md px-4 align-middle">
 										<div className="truncate font-medium text-foreground">{ row.title || __( '(no title)', 'erp' ) }</div>
 										{ row.excerpt ? (
 											<div className="truncate text-xs text-muted-foreground">{ row.excerpt }</div>

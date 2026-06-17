@@ -319,7 +319,7 @@ function LeavePoliciesInner(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-2">{ __( 'Name', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Designation', 'erp' ) }</th>
@@ -333,7 +333,7 @@ function LeavePoliciesInner(): JSX.Element {
 						<tbody>
 							{ rows.map( ( policy ) => (
 								<tr key={ policy.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="px-2 align-middle">
+									<td className="px-4 align-middle">
 										<div className="flex items-center gap-2">
 											<span
 												aria-hidden="true"

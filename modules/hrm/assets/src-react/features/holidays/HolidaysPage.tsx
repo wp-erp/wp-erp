@@ -328,7 +328,7 @@ function HolidaysInner(): JSX.Element {
 										/>
 									</th>
 								) : null }
-								<th scope="col" className="px-2">{ __( 'Title', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
@@ -349,7 +349,7 @@ function HolidaysInner(): JSX.Element {
 											/>
 										</td>
 									) : null }
-									<td className="px-2 align-middle font-medium text-foreground">{ holiday.title }</td>
+									<td className="px-4 align-middle font-medium text-foreground">{ holiday.title }</td>
 									<td className="whitespace-nowrap px-2 align-middle text-sm text-foreground">
 										{ holiday.range
 											? `${ fmt( holiday.start ) } – ${ fmt( holiday.end ) }`

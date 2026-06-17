@@ -224,7 +224,7 @@ export function LeavesReportPage(): JSX.Element {
 						<table className="w-full text-left">
 					<thead className="border-b border-border bg-muted/40">
 						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-muted/40 px-2">{ __( 'Name', 'erp' ) }</th>
+							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-muted/40 px-4">{ __( 'Name', 'erp' ) }</th>
 							{ columns.map( ( col ) => (
 								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-2 text-right">{ col.name }</th>
 							) ) }
@@ -233,7 +233,7 @@ export function LeavesReportPage(): JSX.Element {
 					<tbody>
 						{ rows.map( ( row ) => (
 							<tr key={ row.user_id } className="group h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-								<td className="sticky left-0 z-10 whitespace-nowrap bg-card px-2 align-middle font-medium text-foreground group-hover:bg-muted/40">
+								<td className="sticky left-0 z-10 whitespace-nowrap bg-card px-4 align-middle font-medium text-foreground group-hover:bg-muted/40">
 									{ row.name ? (
 										<ReportNameCell name={ row.name } avatar={ row.avatar } />
 									) : (

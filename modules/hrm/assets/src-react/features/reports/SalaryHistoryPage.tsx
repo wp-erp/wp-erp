@@ -43,7 +43,7 @@ export function SalaryHistoryPage(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 					<thead className="border-b border-border bg-muted/40">
 						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
+							<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
 							<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
 							<th scope="col" className="px-2">{ __( 'Pay Rate', 'erp' ) }</th>
 							<th scope="col" className="px-2">{ __( 'Pay Type', 'erp' ) }</th>
@@ -53,7 +53,7 @@ export function SalaryHistoryPage(): JSX.Element {
 					<tbody>
 						{ rows.map( ( row, idx ) => (
 							<tr key={ `${ row.user_id }-${ idx }` } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-								<td className="px-2 align-middle font-medium text-foreground">
+								<td className="px-4 align-middle font-medium text-foreground">
 									{ row.name ? <ReportNameCell name={ row.name } avatar={ row.avatar } /> : <span aria-hidden="true">&nbsp;</span> }
 								</td>
 								<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( row.date ) }</td>

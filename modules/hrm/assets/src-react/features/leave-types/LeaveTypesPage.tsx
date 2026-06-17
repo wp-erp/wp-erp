@@ -252,7 +252,7 @@ function LeaveTypesInner(): JSX.Element {
 										/>
 									</th>
 								) : null }
-								<th scope="col" className="px-2">{ __( 'Leave Type', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Leave Type', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
 								<th scope="col" className="w-20 px-4">
 									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
@@ -271,7 +271,7 @@ function LeaveTypesInner(): JSX.Element {
 											/>
 										</td>
 									) : null }
-									<td className="px-2 align-middle font-medium text-foreground">{ type.name }</td>
+									<td className="px-4 align-middle font-medium text-foreground">{ type.name }</td>
 									<td className="px-2 align-middle text-sm text-muted-foreground">
 										{ type.description ? (
 											<span className="line-clamp-1">{ type.description }</span>

@@ -71,7 +71,7 @@ export function AgeProfilePage(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 					<thead className="border-b border-border bg-muted/40">
 						<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-							<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
+							<th scope="col" className="px-4">{ __( 'Department', 'erp' ) }</th>
 							{ BANDS.map( ( b ) => (
 								<th key={ b.key } scope="col" className="px-2 text-right">{ b.label }</th>
 							) ) }
@@ -88,7 +88,7 @@ export function AgeProfilePage(): JSX.Element {
 										isTotal ? 'bg-muted/30 font-semibold text-foreground' : 'hover:bg-muted/40',
 									].join( ' ' ) }
 								>
-									<td className="px-2 align-middle font-medium text-foreground">{ row.department }</td>
+									<td className="px-4 align-middle font-medium text-foreground">{ row.department }</td>
 									{ BANDS.map( ( b ) => (
 										<td key={ b.key } className="px-2 text-right align-middle text-sm text-foreground">
 											{ row[ b.key ] }

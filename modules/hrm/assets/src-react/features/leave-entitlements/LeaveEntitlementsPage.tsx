@@ -285,7 +285,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 										<Checkbox checked={ allOnPageSelected } onCheckedChange={ toggleAll } aria-label={ __( 'Select all', 'erp' ) } />
 									</th>
 								) : null }
-								<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Available', 'erp' ) }</th>
@@ -303,7 +303,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 											<Checkbox checked={ selected.has( ent.id ) } onCheckedChange={ () => toggleOne( ent.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), ent.employee_name ) } />
 										</td>
 									) : null }
-									<td className="px-2 align-middle font-medium text-foreground">
+									<td className="px-4 align-middle font-medium text-foreground">
 										{ ent.employee_name || <span className="text-muted-foreground">—</span> }
 									</td>
 									<td className="px-2 align-middle text-sm text-foreground">{ ent.policy_name }</td>

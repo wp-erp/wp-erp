@@ -474,7 +474,7 @@ function LeaveRequestsInner(): JSX.Element {
 										/>
 									</th>
 								) : null }
-								<th scope="col" className="px-2">{ __( 'Employee', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Leave Type', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
@@ -496,7 +496,7 @@ function LeaveRequestsInner(): JSX.Element {
 											/>
 										</td>
 									) : null }
-									<td className="px-2 align-middle font-medium text-foreground">
+									<td className="px-4 align-middle font-medium text-foreground">
 										{ req.name ? (
 											<PersonCell name={ req.name } avatar={ req.avatar } />
 										) : (

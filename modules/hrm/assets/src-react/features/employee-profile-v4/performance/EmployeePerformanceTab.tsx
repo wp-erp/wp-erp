@@ -62,7 +62,7 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-2">{ col }</th>
+									<th key={ col } scope="col" className="px-4">{ col }</th>
 								) ) }
 								{ hasActions ? <th scope="col" className="w-12 px-4" /> : null }
 							</tr>
@@ -172,7 +172,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 			>
 				{ data.reviews.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
-						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.job_knowledge ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.work_quality ) }</td>

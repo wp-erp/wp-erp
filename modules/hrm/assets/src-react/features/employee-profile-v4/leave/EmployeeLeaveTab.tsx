@@ -197,7 +197,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-muted/40">
 								<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-									<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
+									<th scope="col" className="px-4">{ __( 'Date', 'erp' ) }</th>
 									<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
 									<th scope="col" className="px-2">{ __( 'Reason', 'erp' ) }</th>
 									<th scope="col" className="px-2">{ __( 'Request', 'erp' ) }</th>
@@ -207,7 +207,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 							<tbody>
 								{ data.requests.map( ( row ) => (
 									<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
-										<td className="px-2 align-middle text-sm text-foreground">{ dateRange( row.start_date, row.end_date ) }</td>
+										<td className="px-4 align-middle text-sm text-foreground">{ dateRange( row.start_date, row.end_date ) }</td>
 										<td className="px-2 align-middle text-sm text-foreground">{ row.policy || '—' }</td>
 										<td className="px-2 align-middle text-sm text-muted-foreground">{ row.reason || '—' }</td>
 										<td className="px-2 align-middle text-sm text-foreground">

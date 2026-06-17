@@ -171,7 +171,7 @@ export function HeadcountPage(): JSX.Element {
 						<table className="w-full min-w-[40rem] text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-2">{ __( 'Name', 'erp' ) }</th>
+								<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Hire Date', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Job Title', 'erp' ) }</th>
 								<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
@@ -182,7 +182,7 @@ export function HeadcountPage(): JSX.Element {
 						<tbody>
 							{ ( data?.employees ?? [] ).slice( 0, visible ).map( ( emp ) => (
 								<tr key={ emp.user_id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="px-2 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
+									<td className="px-4 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
 									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
 									<td className="px-2 align-middle text-sm text-foreground">{ emp.designation ?? '—' }</td>
 									<td className="px-2 align-middle text-sm text-foreground">{ emp.department ?? '—' }</td>

@@ -70,7 +70,7 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
 								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-2">{ col }</th>
+									<th key={ col } scope="col" className="px-4">{ col }</th>
 								) ) }
 								{ canDelete ? (
 									<th scope="col" className="w-16 px-4"><span className="sr-only">{ __( 'Actions', 'erp' ) }</span></th>
@@ -187,7 +187,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 			>
 				{ data.status.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
-						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.status ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
 						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }

@@ -42,6 +42,12 @@ module.exports = {
 			__dirname,
 			'assets/src-react/app/pages/employees.entry.tsx'
 		),
+		// Tiny globals exposer for pro STANDALONE pages (workflow / CFB) to share
+		// this build's plugin-ui + react-router-dom (shares the same vendor.js).
+		'hr-globals': path.resolve(
+			__dirname,
+			'assets/src-react/app/pages/hr-globals.entry.tsx'
+		),
 	},
 	output: {
 		...defaultConfig.output,
