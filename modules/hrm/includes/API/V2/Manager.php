@@ -88,6 +88,7 @@ class Manager {
 			DashboardControllerV2::class,
 			SearchControllerV2::class,
 			OrgChartControllerV2::class,
+			RequestsControllerV2::class,
 		];
 
 		/**

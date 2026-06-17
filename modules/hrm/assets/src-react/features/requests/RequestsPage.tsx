@@ -14,13 +14,14 @@
 import { applyFilters } from '@wordpress/hooks';
 import { CalendarDays, Inbox, LogOut, Laptop } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ComponentType, JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
+import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { LeaveRequestsPage } from '../leave-requests';
 
@@ -71,6 +72,20 @@ function RequestsInner(): JSX.Element {
 	const current = tabs.find( ( t ) => t.id === active ) ?? tabs[ 0 ];
 	const ActiveEl = current?.element ?? LeaveRequestsPage;
 
+	// Per-type totals for the tab badges (Leave / Asset / Reimbursement / …),
+	// keyed by tab id. Restores the legacy unified-Requests counts.
+	const [ counts, setCounts ] = useState< Record< string, number > >( {} );
+	useEffect( () => {
+		const ctrl = new AbortController();
+		request< { totals?: Record< string, number > } >(
+			restPath( 'v2', '/requests/counts' ),
+			{ signal: ctrl.signal }
+		)
+			.then( ( res ) => setCounts( res.totals ?? {} ) )
+			.catch( () => undefined );
+		return () => ctrl.abort();
+	}, [] );
+
 	return (
 		<section className="mx-auto w-full max-w-7xl">
 			<header className="mb-5">
@@ -96,6 +111,9 @@ function RequestsInner(): JSX.Element {
 							>
 								{ Icon ? <Icon size={ 16 } aria-hidden="true" /> : null }
 								{ tab.label }
+								<span className={ [ 'tabular-nums', selected ? 'text-primary/70' : 'text-muted-foreground/70' ].join( ' ' ) }>
+									({ counts[ tab.id ] ?? 0 })
+								</span>
 							</button>
 						);
 					} ) }
