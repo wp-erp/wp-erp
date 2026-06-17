@@ -16,6 +16,7 @@
 import { Button, SmartSelect, toast } from '@wedevs/plugin-ui';
 import { Calculator, Download, Filter } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -226,7 +227,7 @@ function LeaveUnpaidInner(): JSX.Element {
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'No unpaid leaves found.', 'erp' ) }</p>
 				) : (

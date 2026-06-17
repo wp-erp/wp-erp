@@ -25,6 +25,7 @@ import {
 } from '@wedevs/plugin-ui';
 import { Check, Filter, MoreVertical, Plus, RotateCcw, Search, Trash2, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { TYPE_OPTIONS } from '@/features/employee-create/options';
@@ -454,7 +455,7 @@ function LeaveRequestsInner(): JSX.Element {
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">
 						{ __( 'No leave requests match these filters.', 'erp' ) }

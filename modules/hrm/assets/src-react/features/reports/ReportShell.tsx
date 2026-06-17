@@ -6,6 +6,7 @@
  */
 
 import type { JSX, ReactNode } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -59,7 +60,7 @@ export function ReportState( { loading, error, empty, emptyText, children }: Rep
 		return <p className="py-6 text-sm text-destructive">{ error }</p>;
 	}
 	if ( loading ) {
-		return <p className="py-6 text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>;
+		return <TableSkeleton rows={ 6 } />;
 	}
 	if ( empty ) {
 		return (

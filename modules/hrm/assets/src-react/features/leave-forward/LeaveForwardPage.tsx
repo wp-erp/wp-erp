@@ -27,6 +27,7 @@ import {
 } from '@wedevs/plugin-ui';
 import { Download } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX, ReactNode } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -152,7 +153,7 @@ function LeaveForwardInner(): JSX.Element {
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'No forward leaves to process.', 'erp' ) }</p>
 				) : (

@@ -16,6 +16,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@wedevs/plugin-ui';
 import { Mail, Minus, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -279,7 +280,7 @@ function OrgChartInner(): JSX.Element {
 				{ error ? (
 					<p className="p-6 text-center text-sm text-destructive">{ error }</p>
 				) : loading ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+					<TableSkeleton rows={ 6 } />
 				) : roots.length === 0 ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">
 						{ __( 'No reporting structure for this team.', 'erp' ) }

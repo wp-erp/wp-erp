@@ -10,6 +10,7 @@
 import { Button, Input, toast } from '@wedevs/plugin-ui';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -94,7 +95,7 @@ function FinancialYearsInner(): JSX.Element {
 				{ error ? (
 					<p className="text-sm text-destructive">{ error }</p>
 				) : loading ? (
-					<p className="text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+					<TableSkeleton rows={ 6 } />
 				) : (
 					<>
 						<div className="space-y-3">
