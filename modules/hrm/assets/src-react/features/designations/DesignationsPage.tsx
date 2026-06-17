@@ -8,6 +8,7 @@
 
 import {
 	Button,
+	Checkbox,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -38,8 +39,9 @@ import type { Designation, DesignationInput } from './types';
 type SortKey = 'title' | 'total_employees';
 
 function DesignationsInner(): JSX.Element {
-	const { rows, loading, error, save, remove } = useOrgCrud< Designation >( 'designations' );
+	const { rows, loading, error, save, remove, bulkRemove } = useOrgCrud< Designation >( 'designations' );
 	const canManage = useCan( 'erp_manage_designation' );
+	const [ selected, setSelected ] = useState< ReadonlySet< number > >( new Set() );
 
 	const [ search, setSearch ]       = useState( '' );
 	const [ page, setPage ]           = useState( 1 );
@@ -106,6 +108,54 @@ function DesignationsInner(): JSX.Element {
 	const totalPages = Math.max( 1, Math.ceil( filtered.length / perPage ) );
 	const safePage   = Math.min( page, totalPages );
 	const pageRows   = sorted.slice( ( safePage - 1 ) * perPage, safePage * perPage );
+
+	const pageIds    = pageRows.map( ( d ) => d.id );
+	const allChecked = pageIds.length > 0 && pageIds.every( ( id ) => selected.has( id ) );
+
+	function toggleAll(): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( allChecked ) {
+				pageIds.forEach( ( id ) => next.delete( id ) );
+			} else {
+				pageIds.forEach( ( id ) => next.add( id ) );
+			}
+			return next;
+		} );
+	}
+
+	function toggleOne( id: number ): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( next.has( id ) ) {
+				next.delete( id );
+			} else {
+				next.add( id );
+			}
+			return next;
+		} );
+	}
+
+	async function handleBulkDelete(): Promise< void > {
+		const ids = Array.from( selected );
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			const failed = await bulkRemove( ids );
+			setSelected( new Set() );
+			if ( failed > 0 ) {
+				toast.error( sprintf( __( '%d designation(s) could not be deleted (they may have employees).', 'erp' ), failed ) );
+			} else {
+				toast.success( __( 'Designations deleted.', 'erp' ) );
+			}
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the designations.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
 
 	// Reset to the first page whenever the search query or filter changes.
 	useEffect( () => {
@@ -245,6 +295,15 @@ function DesignationsInner(): JSX.Element {
 					</div>
 				) : null }
 
+				{ canManage && selected.size > 0 ? (
+					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
+						<Button variant="outline" className="h-9 gap-1.5 text-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
+							<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+						</Button>
+					</div>
+				) : null }
+
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
@@ -259,6 +318,11 @@ function DesignationsInner(): JSX.Element {
 					<table className="w-full text-left">
 						<thead className="border-b border-border bg-muted/40">
 							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+								{ canManage ? (
+									<th scope="col" className="w-10 px-2">
+										<Checkbox checked={ allChecked } onCheckedChange={ toggleAll } aria-label={ __( 'Select all', 'erp' ) } />
+									</th>
+								) : null }
 								<th scope="col" className="px-2">
 									<button type="button" onClick={ () => toggleSort( 'title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
 										{ __( 'Name', 'erp' ) }{ sortIcon( 'title' ) }
@@ -277,6 +341,11 @@ function DesignationsInner(): JSX.Element {
 						<tbody>
 							{ pageRows.map( ( desig ) => (
 								<tr key={ desig.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+									{ canManage ? (
+										<td className="px-2 align-middle">
+											<Checkbox checked={ selected.has( desig.id ) } onCheckedChange={ () => toggleOne( desig.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), desig.title ) } />
+										</td>
+									) : null }
 									<td className="px-2 align-middle">
 										<div className="font-medium text-foreground">{ desig.title }</div>
 										{ desig.description ? (

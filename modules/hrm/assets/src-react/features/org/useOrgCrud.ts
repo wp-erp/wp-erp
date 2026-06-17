@@ -30,6 +30,8 @@ export interface UseOrgCrudResult< T extends OrgEntity > {
 	readonly save:    ( id: number | null, payload: Record< string, unknown > ) => Promise< void >;
 	/** Delete an entity. Rejects with ApiError (e.g. the "not empty" guard). */
 	readonly remove:  ( id: number ) => Promise< void >;
+	/** Bulk delete. Attempts every id, reloads once, returns how many failed. */
+	readonly bulkRemove: ( ids: readonly number[] ) => Promise< number >;
 }
 
 export function useOrgCrud< T extends OrgEntity >(
@@ -81,5 +83,18 @@ export function useOrgCrud< T extends OrgEntity >(
 		[ resource, reload ]
 	);
 
-	return { rows, total, loading, error, reload, save, remove };
+	const bulkRemove = useCallback(
+		async ( ids: readonly number[] ): Promise< number > => {
+			const results = await Promise.allSettled(
+				ids.map( ( id ) =>
+					request( restPath( 'v2', `/${ resource }/${ id }` ), { method: 'DELETE' } )
+				)
+			);
+			await reload();
+			return results.filter( ( r ) => r.status === 'rejected' ).length;
+		},
+		[ resource, reload ]
+	);
+
+	return { rows, total, loading, error, reload, save, remove, bulkRemove };
 }

@@ -434,8 +434,11 @@ class EmployeesControllerV2 extends RestControllerV2 {
 	}
 
 	/**
-	 * Permission callback for the single-read endpoint. Mirrors v1: a manager
-	 * with `erp_view_employee`, or the employee viewing their own record.
+	 * Permission callback for the single-read endpoint. Mirrors legacy
+	 * `single.php`: a manager (`erp_view_employee`), the employee viewing their
+	 * own record, OR any HR-listed user (`erp_list_employee`) viewing a peer —
+	 * the latter receives a basic-info-only record (sensitive fields stripped in
+	 * `get_item()`), matching the legacy peer view.
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
@@ -443,6 +446,7 @@ class EmployeesControllerV2 extends RestControllerV2 {
 	 */
 	public function permission_view_employee( $request ): bool {
 		return $this->permission_cap( 'erp_view_employee' )
+			|| $this->permission_cap( 'erp_list_employee' )
 			|| (int) $request['user_id'] === get_current_user_id();
 	}
 
@@ -636,6 +640,28 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		$data['designation_name']  = (string) $employee->get_designation( 'view' );
 		$data['location_name']     = (string) $employee->get_location( 'view' );
 		$data['reporting_to_name'] = $reporting['full_name'] ?? '';
+
+		// Field-level privacy (mirrors legacy tab-general.php:26 / tab-job.php:126,
+		// and the v4 client guards): pay + personal + address + bio are visible
+		// only to the employee themselves or an HR manager (erp_edit_employee).
+		// Defense-in-depth — the route 403 already blocks peers, this stays correct
+		// if that gate is ever loosened (e.g. a peer-directory mode).
+		$can_see_private = get_current_user_id() === $user_id
+			|| current_user_can( 'erp_edit_employee', $user_id );
+		if ( ! $can_see_private ) {
+			$private_fields = [
+				'pay_rate', 'pay_type',
+				'date_of_birth', 'gender', 'marital_status', 'blood_group', 'nationality',
+				'driving_license', 'hobbies', 'father_name', 'mother_name', 'spouse_name',
+				'street_1', 'street_2', 'city', 'state', 'country', 'postal_code',
+				'description',
+			];
+			foreach ( $private_fields as $field ) {
+				if ( array_key_exists( $field, $data ) ) {
+					$data[ $field ] = '';
+				}
+			}
+		}
 
 		return rest_ensure_response( $data );
 	}

@@ -85,9 +85,12 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 			},
 			{
 				id:             COLUMN_IDS.DESIGNATION,
+				// Hidden by default — the designation already shows as the subtitle
+				// under the employee name (NameCell), so a dedicated column duplicates
+				// it. Still available via the column toggle + as a filter.
 				label:          __( 'Designation', 'erp' ),
 				priority:       40,
-				defaultVisible: true,
+				defaultVisible: false,
 				sortable:       false,
 				filterable:     true,
 				getValue:       ( row ) => row.designation?.name ?? null,

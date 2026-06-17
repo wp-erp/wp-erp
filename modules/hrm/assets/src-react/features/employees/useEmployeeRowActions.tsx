@@ -84,7 +84,10 @@ export function useEmployeeRowActions(
 				onSelect: ( emp: EmployeeListItem ) => {
 					navigate( `/employees/${ emp.user_id }`, { viewTransition: true } );
 				},
-				capability: 'erp_view_employee',
+				// Any HR-listed user can open a profile (peers see a basic-info-only
+				// view; sensitive fields are stripped server-side). Mirrors legacy
+				// single.php having no manager-only entry gate.
+				capability: 'erp_list_employee',
 			},
 			// Temporary design-preview entries — view each profile layout variant.
 			// Remove these (and the unused profile routes/folders) once a final

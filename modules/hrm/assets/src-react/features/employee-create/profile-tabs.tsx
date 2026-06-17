@@ -116,6 +116,15 @@ export function useProfileExtraTabs( ctx: ProfileTabContext ): ProfileTab[] {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ ctx.userId, ctx.canEdit ] );
 
+	// Pro-injected tabs (Documents / Attendance / Training / Assets / Payslip)
+	// surface THIS employee's sensitive data. They are visible only on one's own
+	// profile or to a manager (`canEdit` = self || erp_edit_employee), never to a
+	// peer — mirrors legacy `single.php`, and keeps every profile variant
+	// (v1–v4) in sync since they all consume this hook.
+	if ( ! ctx.canEdit ) {
+		return [];
+	}
+
 	return tabs
 		.filter( ( t ) => ! t.capabilities?.length || hasCap( t.capabilities ) )
 		.slice()

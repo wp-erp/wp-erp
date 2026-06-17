@@ -61,6 +61,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
+import { request, restPath } from '@/shared/utils/apiFetch';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import { storeName as meStoreName } from '@/stores/me';
@@ -196,8 +197,27 @@ function Item( { label, value, icon: Icon }: { readonly label: string; readonly 
 export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.Element {
 	const navigate     = useNavigate();
 	const canEditCap   = useCan( 'erp_edit_employee' );
-	const canViewNotes = useCan( 'erp_manage_review' );
-	const canViewPerf  = useCan( 'erp_create_review' );
+	const canViewNotesCap = useCan( 'erp_manage_review' );
+	const canViewPerfCap  = useCan( 'erp_create_review' );
+
+	// Per-target caps (meta-mapped against THIS employee). The global `useCan`
+	// map resolves review/edit caps to manager-only; a department lead is granted
+	// review caps only for their direct reports, so the Notes/Performance tabs
+	// need this target-aware resolution to match legacy `single.php`.
+	const [ targetCaps, setTargetCaps ] = useState< Record< string, boolean > >( {} );
+	useEffect( () => {
+		if ( ! userId ) {
+			return;
+		}
+		const ctrl = new AbortController();
+		request< { capabilities: Record< string, boolean > } >(
+			restPath( 'v2', `/me/employee-capabilities/${ userId }` ),
+			{ signal: ctrl.signal }
+		)
+			.then( ( res ) => setTargetCaps( res.capabilities ?? {} ) )
+			.catch( () => undefined );
+		return () => ctrl.abort();
+	}, [ userId ] );
 
 	const currentUserId = useSelect(
 		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
@@ -207,8 +227,14 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 	// (Personal, Job, Leave, …) even without the manager `erp_edit_employee` cap —
 	// mirrors the legacy "My Profile". `erp_edit_employee` is a meta-cap that the
 	// generic `useCan` check resolves to false for employees.
-	const canEdit = canEditCap || currentUserId === userId;
-	const canViewPermission = canViewPerf && currentUserId !== userId;
+	const canEdit = canEditCap || currentUserId === userId || Boolean( targetCaps.erp_edit_employee );
+	// Notes / Performance also surface for a department lead viewing a report
+	// (per-target caps), not just full HR managers.
+	const canViewNotes = canViewNotesCap || Boolean( targetCaps.erp_manage_review );
+	const canViewPerf  = canViewPerfCap || Boolean( targetCaps.erp_create_review );
+	// Permission tab stays manager-only (global cap) and never for self — legacy
+	// single.php removes it for self and shows it only to managers.
+	const canViewPermission = canViewPerfCap && currentUserId !== userId;
 	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
@@ -409,8 +435,13 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 								<Item icon={ MapPin } label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
 								<Item icon={ UserCog } label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
 								<Item icon={ Compass } label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
-								<Item icon={ DollarSign } label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
-								<Item icon={ Wallet } label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
+								{ /* Pay is sensitive — only self / managers (erp_edit_employee), matching legacy tab-job.php. */ }
+								{ canEdit ? (
+									<>
+										<Item icon={ DollarSign } label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
+										<Item icon={ Wallet } label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
+									</>
+								) : null }
 							</DetailCard>
 
 							<DetailCard title={ __( 'Contact', 'erp' ) }>
@@ -422,6 +453,8 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 								<Item icon={ Globe } label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
 							</DetailCard>
 
+							{ /* Personal details are sensitive — self / managers only (legacy tab-general.php:26). */ }
+							{ canEdit ? (
 							<DetailCard title={ __( 'Personal Details', 'erp' ) }>
 								<Item icon={ Calendar } label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
 								<Item icon={ User } label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
@@ -434,7 +467,9 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 								<Item icon={ User } label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
 								<Item icon={ Users } label={ __( "Spouse's name", 'erp' ) } value={ str( record, 'spouse_name' ) } />
 							</DetailCard>
+							) : null }
 
+							{ canEdit ? (
 							<DetailCard title={ __( 'Address', 'erp' ) }>
 								<Item icon={ MapPin } label={ __( 'Address 1', 'erp' ) } value={ str( record, 'street_1' ) } />
 								<Item icon={ MapPin } label={ __( 'Address 2', 'erp' ) } value={ str( record, 'street_2' ) } />
@@ -443,8 +478,9 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 								<Item icon={ Globe } label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
 								<Item icon={ Hash } label={ __( 'Post Code / Zip Code', 'erp' ) } value={ str( record, 'postal_code' ) } />
 							</DetailCard>
+							) : null }
 
-							{ str( record, 'description' ).trim() !== '' ? (
+							{ canEdit && str( record, 'description' ).trim() !== '' ? (
 								<section className="rounded-[10px] bg-card p-6 shadow-sm">
 									<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Biography', 'erp' ) }</h2>
 									<div className="mb-4 mt-4 h-px w-full bg-border" />

@@ -47,6 +47,18 @@ class MeControllerV2 extends RestControllerV2 {
 
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/employee-capabilities/(?P<employee_id>[\d]+)',
+			[
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_employee_capabilities' ],
+					'permission_callback' => [ $this, 'permission_logged_in' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/preferences',
 			[
 				[
@@ -160,6 +172,48 @@ class MeControllerV2 extends RestControllerV2 {
 		$payload = (array) apply_filters( 'erp_hr_v2_me_capabilities', $payload, $user_id );
 
 		return rest_ensure_response( $payload );
+	}
+
+	/**
+	 * GET /erp/v2/me/employee-capabilities/{employee_id}
+	 *
+	 * Per-target capability resolution. The HR caps (`erp_edit_employee`,
+	 * `erp_create_review`, `erp_manage_review`, …) are meta-mapped against a
+	 * specific employee (`erp_hr_map_meta_caps`) — e.g. a department lead is
+	 * granted review caps only for their own direct reports. The arg-less
+	 * `/me/capabilities` map resolves these to manager-only, so the profile needs
+	 * this target-aware variant to show the Performance/Notes tabs a lead has for
+	 * a report (parity with legacy single.php).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_employee_capabilities( WP_REST_Request $request ): WP_REST_Response {
+		$employee_id = (int) $request['employee_id'];
+
+		$target_caps = [
+			'erp_view_employee',
+			'erp_edit_employee',
+			'erp_view_jobinfo',
+			'erp_create_review',
+			'erp_manage_review',
+			'erp_can_terminate',
+			'erp_delete_employee',
+		];
+
+		$capabilities = [];
+		foreach ( $target_caps as $cap ) {
+			$capabilities[ $cap ] = current_user_can( $cap, $employee_id );
+		}
+
+		return rest_ensure_response(
+			[
+				'employee_id'  => $employee_id,
+				'is_self'      => get_current_user_id() === $employee_id,
+				'capabilities' => $capabilities,
+			]
+		);
 	}
 
 	/**

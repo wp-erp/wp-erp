@@ -14,6 +14,7 @@ import type { JSX } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { makeInitials } from '@/shared/components/PersonCell';
+import { useCan } from '@/shared/hooks/useCan';
 import { __, dateI18n, sprintf } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeListItem, EmployeesState } from '@/stores/employees';
@@ -38,6 +39,7 @@ function typeLine( row: EmployeeListItem ): string {
 
 export function EmployeesGrid(): JSX.Element {
 	const { rows, page, perPage, total, totalPages } = useEmployeesQuery();
+	const canView = useCan( 'erp_list_employee' );
 	const selectedIds = useSelect(
 		( select ) => ( select( employeesStoreName ) as unknown as EmployeesStoreSelectors ).getSelectedIds(),
 		[]
@@ -125,13 +127,15 @@ export function EmployeesGrid(): JSX.Element {
 										? sprintf( __( 'Joined %s', 'erp' ), dateI18n( 'M j, Y', row.hire_date ) )
 										: ' ' }
 								</span>
-								<NavLink
-									to={ `/employees/${ row.user_id }` }
-									viewTransition
-									className="shrink-0 font-medium text-primary hover:underline"
-								>
-									{ __( 'View details', 'erp' ) }
-								</NavLink>
+								{ canView ? (
+									<NavLink
+										to={ `/employees/${ row.user_id }` }
+										viewTransition
+										className="shrink-0 font-medium text-primary hover:underline"
+									>
+										{ __( 'View details', 'erp' ) }
+									</NavLink>
+								) : null }
 							</div>
 						</li>
 					);

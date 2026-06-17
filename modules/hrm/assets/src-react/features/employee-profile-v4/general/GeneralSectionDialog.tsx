@@ -99,13 +99,22 @@ export function GeneralSectionDialog( {
 		}
 
 		if ( section === 'experiences' ) {
-			if ( ! ( form.company_name ?? '' ).trim() || ! ( form.job_title ?? '' ).trim() ) {
+			if ( ! ( form.company_name ?? '' ).trim() || ! ( form.job_title ?? '' ).trim() || ! ( form.from ?? '' ).trim() || ! ( form.to ?? '' ).trim() ) {
 				toast.error( __( 'Please fill all required fields.', 'erp' ) );
 				return;
 			}
 		} else if ( section === 'educations' ) {
-			if ( ! ( form.school ?? '' ).trim() || ! ( form.degree ?? '' ).trim() || ! ( form.field ?? '' ).trim() || ! ( form.finished ?? '' ).trim() ) {
+			if ( ! ( form.school ?? '' ).trim() || ! ( form.degree ?? '' ).trim() || ! ( form.field ?? '' ).trim() || ! ( form.gpa ?? '' ).trim() || ! ( form.finished ?? '' ).trim() ) {
 				toast.error( __( 'Please fill all required fields.', 'erp' ) );
+				return;
+			}
+			if ( form.result_type === 'grade' && ! ( form.scale ?? '' ).trim() ) {
+				toast.error( __( 'Please fill all required fields.', 'erp' ) );
+				return;
+			}
+			const year = Number( form.finished );
+			if ( ! ( year >= 1970 && year <= 2099 ) ) {
+				toast.error( __( 'Please enter a completion year between 1970 and 2099.', 'erp' ) );
 				return;
 			}
 		} else if ( ! ( form.name ?? '' ).trim() || ! ( form.relation ?? '' ).trim() ) {
@@ -174,8 +183,8 @@ export function GeneralSectionDialog( {
 						<>
 							<TextField id="exp_company" label={ __( 'Company Name', 'erp' ) } required value={ form.company_name ?? '' } onChange={ set( 'company_name' ) } />
 							<TextField id="exp_title" label={ __( 'Job Title', 'erp' ) } required value={ form.job_title ?? '' } onChange={ set( 'job_title' ) } />
-							<TextField id="exp_from" label={ __( 'From', 'erp' ) } type="date" value={ form.from ?? '' } onChange={ set( 'from' ) } />
-							<TextField id="exp_to" label={ __( 'To', 'erp' ) } type="date" value={ form.to ?? '' } onChange={ set( 'to' ) } />
+							<TextField id="exp_from" label={ __( 'From', 'erp' ) } type="date" required value={ form.from ?? '' } onChange={ set( 'from' ) } />
+							<TextField id="exp_to" label={ __( 'To', 'erp' ) } type="date" required value={ form.to ?? '' } onChange={ set( 'to' ) } />
 							<TextareaField id="exp_desc" label={ __( 'Description', 'erp' ) } value={ form.description ?? '' } onChange={ set( 'description' ) } />
 						</>
 					) : null }
@@ -186,9 +195,9 @@ export function GeneralSectionDialog( {
 							<TextField id="edu_degree" label={ __( 'Degree', 'erp' ) } required value={ form.degree ?? '' } onChange={ set( 'degree' ) } />
 							<TextField id="edu_field" label={ __( 'Field of Study', 'erp' ) } required value={ form.field ?? '' } onChange={ set( 'field' ) } />
 							<SelectField id="edu_result_type" label={ __( 'Result Type', 'erp' ) } options={ RESULT_TYPE_OPTIONS } value={ form.result_type ?? 'gpa' } onChange={ set( 'result_type' ) } required />
-							<TextField id="edu_gpa" label={ form.result_type === 'grade' ? __( 'Grade', 'erp' ) : __( 'GPA', 'erp' ) } value={ form.gpa ?? '' } onChange={ set( 'gpa' ) } />
+							<TextField id="edu_gpa" label={ form.result_type === 'grade' ? __( 'Grade', 'erp' ) : __( 'GPA', 'erp' ) } required value={ form.gpa ?? '' } onChange={ set( 'gpa' ) } />
 							{ form.result_type === 'grade' ? (
-								<TextField id="edu_scale" label={ __( 'Scale', 'erp' ) } value={ form.scale ?? '' } onChange={ set( 'scale' ) } />
+								<TextField id="edu_scale" label={ __( 'Scale', 'erp' ) } required value={ form.scale ?? '' } onChange={ set( 'scale' ) } />
 							) : null }
 							<TextField id="edu_finished" label={ __( 'Completion Year', 'erp' ) } type="number" required value={ form.finished ?? '' } onChange={ set( 'finished' ) } />
 							<TextareaField id="edu_notes" label={ __( 'Notes', 'erp' ) } value={ form.notes ?? '' } onChange={ set( 'notes' ) } />
