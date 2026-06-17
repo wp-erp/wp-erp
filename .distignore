@@ -1,5 +1,6 @@
 /.git
 /.github
+/.claude
 /.wordpress-org
 /node_modules
 /tests
