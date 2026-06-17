@@ -17,6 +17,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useRequestsPendingCount } from '@/shared/hooks/useRequestsPendingCount';
 import type { Capability } from '@/types/global';
 
 import type { NavItem } from './nav-items';
@@ -46,6 +47,7 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 	const activeModules = boot.modules ?? [];
 	const isPro = boot.isPro;
 	const { openUpsell } = useProUpsell();
+	const pendingRequests = useRequestsPendingCount();
 
 	const children = ( item.children ?? [] ).filter(
 		( sub ) => ( sub.capabilities.length === 0 || hasCap( sub.capabilities ) )
@@ -199,6 +201,11 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 								}
 							>
 								{ sub.label }
+								{ sub.id === 'people-requests' && pendingRequests > 0 ? (
+									<span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-xs font-semibold text-destructive-foreground">
+										{ pendingRequests }
+									</span>
+								) : null }
 							</NavLink>
 						);
 					} ) }
