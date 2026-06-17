@@ -76,6 +76,12 @@ class HRM {
         if ( ! \defined( 'WPERP_HRM_VERSION' ) ) {
             define( 'WPERP_HRM_VERSION', \defined( 'WPERP_VERSION' ) ? WPERP_VERSION : '1.0.0' );
         }
+        // Minimum free HR version that ships the v2 REST + React admin contract.
+        // The React UI is introduced in 1.18.0; pro refuses to load its React
+        // bundles against an older free (see wp-erp-pro version guard).
+        if ( ! \defined( 'WPERP_HRM_MIN_VERSION' ) ) {
+            define( 'WPERP_HRM_MIN_VERSION', '1.18.0' );
+        }
     }
 
     /**
