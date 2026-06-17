@@ -2382,7 +2382,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                 } elseif ( 'if_has' === $search_val ) {
                                     $custom_sql['where'][] = "( $field is not null AND $field != '' ) $add_or";
                                 } else {
-                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $add_or";
+                                    $custom_sql['where'][] = $wpdb->prepare( "$field $search_condition %s $add_or", $search_val );
                                 }
 
                                 $j ++;
@@ -2401,9 +2401,9 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             $add_or                 = ( $j === count( $value ) - 1 ) ? '' : ' OR ';
 
                             if ( count( $key_value ) > 1 ) {
-                                $custom_sql['where'][] = "( country $condition '$key_value[0]' AND state $condition '$key_value[1]')$add_or";
+                                $custom_sql['where'][] = $wpdb->prepare( "( country $condition %s AND state $condition %s )$add_or", $key_value[0], $key_value[1] );
                             } else {
-                                $custom_sql['where'][] = "(country $condition '$key_value[0]')$add_or";
+                                $custom_sql['where'][] = $wpdb->prepare( "(country $condition %s )$add_or", $key_value[0] );
                             }
 
                             $j ++;
@@ -2432,16 +2432,16 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             switch ( $condition ) {
                                 case 'NOT LIKE':
                                     $search       = str_replace( '!~', '', $search );
-                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NOT NULL )";
+                                    $and_clause[] = $wpdb->prepare( "( subscriber.group_id = %d AND subscriber.unsubscribe_at IS NOT NULL )", $search );
                                     break;
 
                                 case '!=':
                                     $search       = str_replace( '!', '', $search );
-                                    $and_clause[] = "subscriber.group_id != {$search}";
+                                    $and_clause[] = $wpdb->prepare( "subscriber.group_id != %d", $search );
                                     break;
 
                                 default:
-                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NULL )";
+                                    $and_clause[] = $wpdb->prepare( "( subscriber.group_id = %d AND subscriber.unsubscribe_at IS NULL )", $search );
                                     break;
                             }
                         }
@@ -2577,7 +2577,7 @@ function erp_crm_is_people_belongs_to_saved_search( $sql, $args ) {
         return $sql;
     }
 
-    $sql['post_where_queries'][] = 'AND people.id = ' . $args['test_user'];
+    $sql['post_where_queries'][] = 'AND people.id = ' . absint( $args['test_user'] );
 
     return $sql;
 }
