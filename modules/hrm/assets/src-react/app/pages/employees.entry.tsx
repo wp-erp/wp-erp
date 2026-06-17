@@ -8,6 +8,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as ReactRouterDOM from 'react-router-dom';
 import { RouterProvider } from 'react-router-dom';
+import * as ERPPluginUI from '@wedevs/plugin-ui';
 import { doAction } from '@wordpress/hooks';
 
 // Expose the free app's `react-router-dom` instance so pro sub-module bundles
@@ -17,6 +18,14 @@ import { doAction } from '@wordpress/hooks';
 // used only in the context of a <Router>". React itself is already shared the
 // same way (window.React via @wordpress/scripts).
 ( window as unknown as { ReactRouterDOM?: typeof ReactRouterDOM } ).ReactRouterDOM = ReactRouterDOM;
+
+// Expose the free app's `@wedevs/plugin-ui` instance so in-app pro sub-module
+// bundles externalize against it instead of each shipping its own ~3.5MB copy
+// (plugin-ui pulls recharts/sonner/radix/cmdk). Same mechanism + load order as
+// ReactRouterDOM above, so the pro modules that already share the router share
+// this too. Standalone pro pages (workflow / custom-field-builder) do NOT use
+// this and keep bundling their own copy.
+( window as unknown as { ERPPluginUI?: typeof ERPPluginUI } ).ERPPluginUI = ERPPluginUI;
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ACTIONS } from '@/shared/filters';
