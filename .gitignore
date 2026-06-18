@@ -6,6 +6,23 @@
 # Build artifacts
 build
 
+# Compiled assets (built + shipped by GitHub Actions, see .github/workflows/deploy-erp.yml)
+/assets/js/erp-settings-bootstrap.js
+/assets/js/erp-settings.js
+/assets/js/i18n.js
+/assets/js/vendor.js
+/assets/css/erp-settings-bootstrap.css
+/assets/css/erp-settings-bootstrap.css.map
+/assets/css/erp-settings.js
+/modules/accounting/assets/js/frontend.js
+/modules/accounting/assets/js/admin.js
+/modules/accounting/assets/js/bootstrap.js
+/modules/accounting/assets/js/style.js
+/modules/accounting/assets/css/admin.css
+/modules/accounting/assets/css/admin.css.map
+/modules/accounting/assets/css/bootstrap.css
+/modules/accounting/assets/css/bootstrap.css.map
+
 # OS / IDE
 .DS_Store
 .idea
