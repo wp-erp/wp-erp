@@ -1,0 +1,48 @@
+name: Deploy to WordPress.org
+on:
+  push:
+    tags:
+      - "*"
+permissions:
+  contents: write
+jobs:
+  tag:
+    name: Deploy plugin for new Tag
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+      - name: Use Node.js 12.1.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: '12.1.0'
+          cache: 'npm'
+      - name: Use desired version of php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: wp-cli
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+      - name: Generate POT
+        run: npm run makepot
+      - name: Composer install and build
+        run: |
+          composer install --no-dev --optimize-autoloader
+      - name: Generate zip
+        uses: 10up/action-wordpress-plugin-build-zip@stable
+        with:
+          retention-days: 5
+        env:
+          SLUG: erp # wp.org slug differs from repo name (wp-erp)
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          dry-run: false
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: erp
+          ASSETS_DIR: .wordpress-org

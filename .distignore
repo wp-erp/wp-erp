@@ -1,6 +1,8 @@
 /.git
 /.github
+/.claude
 /.wordpress-org
+/zipfile
 /node_modules
 /tests
 /vendor/bin
@@ -43,3 +45,4 @@ phpcs-report.txt
 plugin-deploy.sh
 README.md
 CONTRIBUTING.md
+wp-erp.zip

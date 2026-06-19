@@ -1,33 +1,35 @@
-=== ERP: Complete HR, Accounting & CRM Suite with WooCommerce CRM Support ===
+=== ERP: Complete HR, Accounting & CRM Suite with Recruitment and WooCommerce CRM Support ===
 Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventory, ERP, Employee management, Leave management, Attendance, Reimbursement, WooCommerce Accounting, Document manager, Custom field builder, CRM integration
 Requires at least: 5.6
-Tested up to: 6.9.4
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.4
+Stable tag: 1.17.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Manage your business with a complete ERP system featuring powerful HR management, CRM tools, accounting, and seamless WooCommerce CRM integration.
+Self-hosted ERP for WordPress with HR, CRM, accounting, and recruitment. Run your business from one dashboard and keep your data yours.
 
 == Description ==
 
-= ULTIMATE COMPANY/BUSINESS MANAGEMENT SOLUTION FOR WORDPRESS =
+= The Ultimate Company/Business Management Solution For WordPress =
 
 👉 Official Free Demo Link: [Official Demo of ERP](https://wperp.com/demo/)
 👉 Learn More About ERP (PRO): [All The Features of ERP PRO](https://wperp.com/pro/)
 
-= SUPERCHARGE YOUR GROWING BUSINESS FROM YOUR WORDPRESS DASHBOARD =
+= Supercharge Your Growing Business From Your WordPress Dashboard With Our All-in-One ERP Plugin =
 
 [ERP](https://wperp.com/) is the only complete Enterprise Resource Planning (ERP) solution built specifically for WordPress. It helps you manage your business, employees, and finances all in one place, directly from your WordPress dashboard.
 
 You can manage HR, CRM, accounting, and even connect your WooCommerce store using powerful CRM tools to handle customer relationships more effectively.
 
-The WooCommerce CRM module helps you see customer activity, order history, and interactions, all in one place.
+The WooCommerce CRM module helps you see customer activity, order history, and interactions, everything in one place.
 
 ERP is ideal for small to medium-sized businesses. It's designed to be simple and easy to use, with no technical expertise required. With just one-click activation, you can get started in minutes and begin managing your business more efficiently.
+
+The mobile app version of ERP is also available for both Android and iOS. If you are an ERP Pro user, you will get the mobile app included in a specific tier. 
 
 == Core Modules of ERP to Manage Your Business ==
 
@@ -35,34 +37,32 @@ ERP comes with three essential, pre-built modules that help you streamline your 
 
 * [WordPress HR Management](https://wperp.com/hr/): Manage your team effortlessly. Keep track of employee profiles, attendance, leaves, payroll, and more right from your WordPress admin panel.
 * [WordPress CRM System](https://wperp.com/crm/): Streamline customer relationships. Track leads, manage sales, and maintain detailed customer records, all within an easy-to-use interface. Ideal for growing businesses.
-* [WordPress Accounting System](https://wperp.com/accounting/): Stay on top of your finances. Easily manage invoices, track expenses, and generate financial reports to keep your business running smoothly.
-
-***Other Modules***
-
-* Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/): Organize and track your projects seamlessly. Manage tasks, set deadlines, and collaborate with your team, all integrated within the ERP system.
+* [WordPress Accounting System](https://wperp.com/accounting/): Stay on top of your finances. Easily manage invoices, track expenses, generate financial reports, and integrate seamlessly with WooCommerce to keep your business running smoothly.
 
 = Why Choose ERP for Your Business? =
 
-* **Free Core Plugin:** You get the basic features at no cost. Only pay for additional components, support, and updates.
+* **Free Core Plugin:** You get the basic features (HR, CRM, and Accounting) at no cost. Only pay for additional extensions, users, and premium support.
+* **Self-Hosted:** ERP runs on your own server, so your business data belongs to you and not a third-party cloud service.
+* **WooCommerce Accounting & CRM:** Seamlessly sync WooCommerce customers, orders, and inventory with your accounting and CRM systems.
+* **Complete Recruitment System:** Post jobs, accept applications, and manage your entire hiring workflow directly from WordPress.
+* **Top Accounting Features:** ERP offers the required accounting tools for small businesses.
+* **ERP Mobile App:** Comes with both Android and iOS versions.
 * **Fast & Real-Time:** Enjoy quick performance, especially with a personal hosting server.
 * **Access Anywhere:** Use ERP on any platform or device. It’s that simple.
 * **Easy to Use:** The interface is intuitive. Anyone can use it without much training.
-* **Cloud-Based:** Your data is safe and synced across all devices, so you never lose anything.
 * **Secure:** ERP meets WordPress security standards. Your data stays private and under your control.
 * **Lightweight & Modular:** ERP is divided into components. You can expand your system step-by-step as your business grows.
 * **Customizable:** You can easily modify ERP to fit your industry-specific needs.
 * **Open-Source:** ERP is open-source. It’s easy to customize and develop.
 * **Designed for Collaboration:** Easily share, track time, and review projects with your team.
 * **Privacy Focused:** Your data is protected at every level of work.
-* **WooCommerce Integration:** Option to manage WooCommerce CRM directly within ERP.
-* **Manage Job Listings:** Keep track of job postings and recruitment tasks in the HR module.
-* **Top Accounting Features:** ERP offers the required accounting tools for small businesses.
 
 = 🔥What You Get with ERP Core (Free Version)🔥 =
 Here are some of the key benefits you get with ERP, the pioneer WordPress ERP solution:
 
 * **Your Own Company Profile:** Set up and manage your company profile easily within the system.
 * **Full Control Over Operations:** Get complete control of your business processes from one place.
+* **Unlimited Users:** You can use the ERP free version by adding unlimited users.
 * **Easy Employee Management:** Manage employee details, attendance, and leave requests without the hassle.
 * **44+ Currency Support:** Handle transactions in over 44 currencies, which makes it easy to work with international clients.
 * **Overview of All Modules:** Get a clear view of HR, CRM, and Accounting modules to keep your business organized.
@@ -85,6 +85,7 @@ Free Features of [ERP HR Manager Module](https://wperp.com/hr/) module:
 * **Leave Requests:** Allow employees to submit leave requests directly through the system.
 * **Leave Policies & Attendance:** Set leave policies and manage attendance with ease.
 * **Employee Reports:** Generate reports based on employee age, gender, headcount, salary, and years of service.
+* **Recruitment:** Publish job posts directly on your site, build custom screening questionnaires, and systematically manage candidates through every stage of the hiring pipeline using the ERP Recruitment feature.
 
 = Free CRM – Manage Clients Without the Mess =
 
@@ -146,6 +147,7 @@ Upgrade your ERP experience and manage your growing business with more control, 
 * Build a reliable and scalable business management system.
 * Get 9 powerful premium extensions with a single plan.
 * Pick and use only the features your business needs.
+* ERP mobile app (Android & iOS) included in a specific tier of ERP Pro.
 * Enjoy priority support from our expert team.
 * Pay only for what you use with user-based pricing.
 * Upgrade or downgrade anytime, no hassle.
@@ -158,7 +160,7 @@ Upgrade your ERP experience and manage your growing business with more control, 
 Take your workflow to the next level with these premium extensions:
 
 * **[Advanced Leave Management](https://wperp.com/downloads/advanced-leave-management/)**: Set up different types of leave like sick, casual, or earned leave. Define rules, assign policies, and track balances for every employee. It’s flexible and works for teams of any size.
-* **[ERP HR Frontend](https://wperp.com/downloads/hr-frontend/)**: Bring HR features to the frontend of your site. Let employees clock in, clock out, apply for leave, and view their profiles—without accessing the backend. Idea for remote teams and non-tech users.
+* **[ERP HR Frontend](https://wperp.com/downloads/hr-frontend/)**: Bring HR features to the frontend of your site. Let employees clock in, clock out, apply for leave, and view their profiles—without accessing the backend. Ideal for remote teams and non-tech users.
 * **[Awesome Support Sync](https://wperp.com/downloads/awesome-support-sync/)**: If you're using Awesome Support for ticketing, you can connect it with your CRM. See support tickets inside the contact’s CRM profile, so you always have full context when dealing with clients.
 * **[Gravity Forms Sync](https://wperp.com/downloads/crm-gravity-forms/)**: Every time someone fills out a form created with Gravity Forms, ERP CRM can instantly turn that data into a contact. No manual data entry needed.
 * **[Help Scout Integration](https://wperp.com/downloads/help-scout-integration/)**: Sync contacts between Help Scout and ERP CRM. You’ll be able to see contact details and previous communication from both platforms, saving you time and avoiding confusion.
@@ -325,6 +327,11 @@ We strive to respond to all queries within 12 hours. Our response time may be ju
 It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured of the best service.
 
 == Changelog ==
+= v1.17.5 → Jun 17, 2026
+--------------------------
+* [Fixed] Hardened CRM contact filters against SQL injection by using prepared statements.
+* [New] Added leave calculation and work-days REST API endpoints for HR.
+
 = v1.17.4 → May 13, 2026
 --------------------------
 * [Fixed] CRM Contact Group links that navigate to contact profile were blank.
