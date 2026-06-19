@@ -26,6 +26,21 @@ jobs:
         run: |
           npm ci
           npm run build
+
+      # The HR React admin builds on Node 24 + pnpm (the legacy Vue build above
+      # runs on Node 12). Without this, dist-react is never produced and the
+      # WordPress.org zip ships with no React UI.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Setup Node.js 24 for React build
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Build HR React admin
+        run: npm run build:react
+
       - name: Generate POT
         run: npm run makepot
       - name: Composer install and build
