@@ -45,4 +45,4 @@ phpcs-report.txt
 plugin-deploy.sh
 README.md
 CONTRIBUTING.md
-/zipfile
+wp-erp.zip
