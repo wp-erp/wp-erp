@@ -422,8 +422,8 @@ body:has(#erp-hr-app) {
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
-	height: 64px;
-	padding: 0 1.5rem;
+	height: 48px;
+	padding: 0 1.25rem;
 	/* Raw token vars (per-scheme via ThemeProvider) — see note above on why
 	 * `--color-*` must not be used in hand-written rules. */
 	background: var(--background, #ffffff);
@@ -447,8 +447,8 @@ body:has(#erp-hr-app) {
 @media screen and ( max-width: 782px ) {
 	#erp-hr-app .erp-hr-topbar {
 		top: 46px;
-		padding: 0 1rem;
-		height: 56px;
+		padding: 0 0.75rem;
+		height: 44px;
 	}
 }
 

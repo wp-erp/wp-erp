@@ -205,12 +205,12 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 	};
 
 	if ( loadError ) {
-		return <div className="mx-auto w-full max-w-7xl text-center text-sm text-destructive">{ loadError }</div>;
+		return <div className="mx-auto w-full max-w-full text-center text-sm text-destructive">{ loadError }</div>;
 	}
 
 	if ( ! record ) {
 		return (
-			<div className="mx-auto w-full max-w-7xl space-y-6">
+			<div className="mx-auto w-full max-w-full space-y-6">
 				<Skeleton className="h-52 w-full rounded-2xl" />
 				<div className="flex flex-col gap-6 lg:flex-row">
 					<Skeleton className="h-96 w-full rounded-2xl lg:w-64" />
@@ -240,7 +240,7 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 	const activeLabel = navItems.find( ( i ) => i.value === tab )?.label ?? '';
 
 	return (
-		<div className="mx-auto w-full max-w-7xl space-y-6">
+		<div className="mx-auto w-full max-w-full space-y-6">
 			{ /* HEADER card. */ }
 			<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
 				<div className="flex flex-wrap items-start gap-5">

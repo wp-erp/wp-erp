@@ -42,7 +42,7 @@ export function AppShell(): JSX.Element {
 
 	const mainClass = chromeless
 		? 'flex-1'
-		: 'erp-hr-panel flex-1 px-6 py-6 lg:px-12 lg:py-12';
+		: 'erp-hr-panel flex-1 px-6 py-4 lg:px-12 lg:py-6';
 
 	const content = (
 		<main className={ mainClass }>
@@ -70,7 +70,7 @@ export function AppShell(): JSX.Element {
 					<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 						<header
 							role="banner"
-							className="z-30 flex h-16 shrink-0 items-center bg-card px-6"
+							className="z-30 flex h-12 shrink-0 items-center bg-card px-4"
 						>
 							<div className="ml-auto">
 								<ErrorBoundary>

@@ -155,7 +155,7 @@ function LeaveUnpaidInner(): JSX.Element {
 	const totalPages     = Math.max( 1, Math.ceil( total / perPage ) );
 
 	return (
-		<section className="mx-auto w-full max-w-7xl">
+		<section className="mx-auto w-full max-w-full">
 			<header className="mb-6 flex items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Unpaid Leaves', 'erp' ) }</h1>
 				{ canManage ? (

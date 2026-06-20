@@ -286,7 +286,7 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 
 	if ( loadError ) {
 		return (
-			<div className="mx-auto w-full max-w-7xl text-center text-sm text-destructive">
+			<div className="mx-auto w-full max-w-full text-center text-sm text-destructive">
 				{ loadError }
 			</div>
 		);
@@ -294,7 +294,7 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 
 	if ( ! record ) {
 		return (
-			<div className="mx-auto w-full max-w-7xl space-y-6">
+			<div className="mx-auto w-full max-w-full space-y-6">
 				<Skeleton className="h-44 w-full rounded-xl" />
 				<div className="flex gap-6">
 					<Skeleton className="h-72 w-60 shrink-0 rounded-xl" />
@@ -327,7 +327,7 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 	const tab = tabs.some( ( t ) => t.value === rawTab ) ? rawTab : 'overview';
 
 	return (
-		<div className="mx-auto w-full max-w-7xl space-y-6">
+		<div className="mx-auto w-full max-w-full space-y-6">
 			<button
 				type="button"
 				onClick={ back }

@@ -218,7 +218,7 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 
 	if ( loadError ) {
 		return (
-			<div className="mx-auto w-full max-w-7xl text-center text-sm text-destructive">
+			<div className="mx-auto w-full max-w-full text-center text-sm text-destructive">
 				{ loadError }
 			</div>
 		);
@@ -226,7 +226,7 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 
 	if ( ! record ) {
 		return (
-			<div className="mx-auto w-full max-w-7xl space-y-6">
+			<div className="mx-auto w-full max-w-full space-y-6">
 				<Skeleton className="h-28 w-full rounded-lg" />
 				{ [ 0, 1, 2 ].map( ( i ) => (
 					<Skeleton key={ i } className="h-44 w-full rounded-lg" />
@@ -240,7 +240,7 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 	const status     = str( record, 'status' );
 
 	return (
-		<div className="mx-auto w-full max-w-7xl space-y-6">
+		<div className="mx-auto w-full max-w-full space-y-6">
 				<button
 					type="button"
 					onClick={ back }

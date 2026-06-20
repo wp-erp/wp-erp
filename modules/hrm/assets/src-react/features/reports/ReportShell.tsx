@@ -25,7 +25,7 @@ export function ReportShell( { title, toolbar, children }: ReportShellProps ): J
 	return (
 		<CapabilityGate caps={ [ 'erp_hr_manager' ] }>
 			<ErrorBoundary>
-				<div className="mx-auto w-full max-w-7xl space-y-6">
+				<div className="mx-auto w-full max-w-full space-y-6">
 					<header>
 						<h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground">
 							{ __( 'Reports', 'erp' ) }

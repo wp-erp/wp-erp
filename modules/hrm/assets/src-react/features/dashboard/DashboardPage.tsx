@@ -409,7 +409,7 @@ function DashboardInner(): JSX.Element {
 	const proSelfWidgets = applyFilters( HOOKS.DASHBOARD_WIDGETS, [] ) as ComponentType[];
 
 	return (
-		<section className="mx-auto w-full max-w-7xl">
+		<section className="mx-auto w-full max-w-full">
 			{ /* Quick actions — sit above the greeting card, outside it */ }
 			{ canManageLeave || canCreateEmployee ? (
 				<div className="mb-4 flex flex-wrap items-center justify-end gap-2">

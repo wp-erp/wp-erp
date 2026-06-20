@@ -171,7 +171,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	return (
-		<section className="mx-auto w-full max-w-7xl">
+		<section className="mx-auto w-full max-w-full">
 			<header className="mb-6 flex items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Leave Entitlements', 'erp' ) }

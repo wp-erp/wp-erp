@@ -27,7 +27,7 @@ export function NavLinks(): JSX.Element {
 	return (
 		<nav
 			aria-label="HR sections"
-			className="ml-6 flex h-16 items-stretch flex-nowrap whitespace-nowrap"
+			className="ml-4 flex h-12 items-stretch flex-nowrap whitespace-nowrap"
 		>
 			{ entries.map( ( { item, Icon, proLocked, hasMenu } ) => {
 				if ( proLocked ) {
@@ -75,9 +75,9 @@ function NavProItem( { item, Icon, onClick }: NavProItemProps ): JSX.Element {
 		<button
 			type="button"
 			onClick={ onClick }
-			className="group relative inline-flex shrink-0 items-center gap-2 px-5 text-sm font-normal text-foreground transition-colors hover:text-primary"
+			className="group relative inline-flex shrink-0 items-center gap-1.5 px-3 text-sm font-normal text-foreground transition-colors hover:text-primary"
 		>
-			<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
+			<Icon size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
 			<span>{ item.label }</span>
 			<ProBadge />
 		</button>
@@ -99,13 +99,13 @@ function NavItemLink( { item, currentPath }: NavItemLinkProps ): JSX.Element {
 			viewTransition
 			aria-current={ active ? 'page' : undefined }
 			className={ [
-				'group relative inline-flex shrink-0 items-center gap-2 px-5 text-sm transition-colors',
+				'group relative inline-flex shrink-0 items-center gap-1.5 px-3 text-sm transition-colors',
 				active
 					? 'font-medium text-primary'
 					: 'font-normal text-foreground hover:text-primary',
 			].join( ' ' ) }
 		>
-			<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
+			<Icon size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
 			<span>{ item.label }</span>
 			<span
 				aria-hidden="true"

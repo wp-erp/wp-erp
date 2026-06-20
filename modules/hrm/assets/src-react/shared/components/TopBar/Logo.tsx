@@ -15,8 +15,8 @@ export function Logo(): JSX.Element {
 			className="flex shrink-0 items-center gap-2 text-foreground"
 			aria-label={ __( 'WP-ERP HR', 'erp' ) }
 		>
-			<Briefcase size={ 24 } strokeWidth={ 1.75 } aria-hidden="true" />
-			<span className="text-sm font-semibold leading-6">HR</span>
+			<Briefcase size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
+			<span className="text-sm font-semibold leading-none">HR</span>
 		</div>
 	);
 }

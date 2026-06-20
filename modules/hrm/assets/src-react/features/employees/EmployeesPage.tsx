@@ -49,7 +49,7 @@ function EmployeesPageInner(): JSX.Element {
 	);
 
 	return (
-		<section className="mx-auto w-full max-w-7xl">
+		<section className="mx-auto w-full max-w-full">
 			<EmployeesToolbar />
 
 			<div className="mb-3 flex items-center justify-end">

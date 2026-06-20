@@ -110,7 +110,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 	}
 
 	return (
-		<div className="mx-auto w-full max-w-7xl space-y-6">
+		<div className="mx-auto w-full max-w-full space-y-6">
 			<section className="flex flex-wrap items-start justify-between gap-4 rounded-[10px] bg-card p-6 shadow-sm">
 				<div className="min-w-0">
 					<h1 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">

@@ -230,7 +230,7 @@ function OrgChartInner(): JSX.Element {
 	}, [] );
 
 	return (
-		<section className="mx-auto w-full max-w-7xl">
+		<section className="mx-auto w-full max-w-full">
 			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Org Chart', 'erp' ) }</h1>
 				<div className="inline-flex items-center gap-1 rounded-md border border-border bg-card p-1">

@@ -127,14 +127,14 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 				aria-expanded={ open }
 				onClick={ () => ( open ? setOpen( false ) : openMenu() ) }
 				className={ [
-					'group relative inline-flex shrink-0 items-center gap-2 px-5 text-sm transition-colors',
+					'group relative inline-flex shrink-0 items-center gap-1.5 px-3 text-sm transition-colors',
 					active ? 'font-medium text-primary' : 'font-normal text-foreground hover:text-primary',
 				].join( ' ' ) }
 			>
-				<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
+				<Icon size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
 				<span>{ item.label }</span>
 				<ChevronDown
-					size={ 16 }
+					size={ 14 }
 					strokeWidth={ 1.75 }
 					aria-hidden="true"
 					className={ [
