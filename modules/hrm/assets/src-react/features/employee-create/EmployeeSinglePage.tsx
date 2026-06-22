@@ -8,25 +8,24 @@
  *   - a LEFT nav card with an icon menu (active row highlighted in the brand
  *     blue) and a RIGHT content card that renders the selected section.
  *
- * Fully self-contained: keeps a private copy of every tab body under this folder
- * and imports nothing from `employee-create`. Delete the folder + the blocks
- * tagged `[NEW-PROFILE-V4]` to remove it cleanly.
+ * Chrome pieces live alongside: `SingleHeader` (header card), `NavMenu`
+ * (left nav), `SingleOverview` (personal-tab body), `FieldGrid`/`Field`
+ * (cards), `single-format` (pure helpers). Tab bodies are reused from
+ * `employee-profile-v4`.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Skeleton } from '@wedevs/plugin-ui';
+import { Skeleton } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	Briefcase,
 	CalendarClock,
-	CalendarPlus,
-	Pencil,
 	Shield,
 	StickyNote,
 	TrendingUp,
 	User,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { ComponentType, JSX, ReactNode, SVGProps } from 'react';
+import type { JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -36,127 +35,19 @@ import { storeName as employeesStoreName } from '@/stores/employees';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
-import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
-import { EmployeeGeneralSections } from '../employee-profile-v4/general/EmployeeGeneralSections';
 import { EmployeeJobTab } from '../employee-profile-v4/job/EmployeeJobTab';
 import { EmployeeLeaveTab } from '../employee-profile-v4/leave/EmployeeLeaveTab';
 import { EmployeeNotesTab } from '../employee-profile-v4/notes/EmployeeNotesTab';
-import type { Option } from '../employee-profile-v4/options';
-import {
-	BLOOD_GROUP_OPTIONS,
-	GENDER_OPTIONS,
-	MARITAL_OPTIONS,
-	PAY_TYPE_OPTIONS,
-	SOURCE_OPTIONS,
-	STATUS_OPTIONS,
-	TYPE_OPTIONS,
-} from '../employee-profile-v4/options';
 import { EmployeePerformanceTab } from '../employee-profile-v4/performance/EmployeePerformanceTab';
 import { EmployeePermissionTab } from '../employee-profile-v4/permission/EmployeePermissionTab';
+import { SingleHeader } from './SingleHeader';
+import { SingleOverview } from './SingleOverview';
+import { NavMenu, type NavItem } from './SingleNavMenu';
 import { useProfileExtraTabs } from './profile-tabs';
+import type { Record_ } from './single-format';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
-}
-
-type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
-type Record_ = Record< string, unknown >;
-
-function str( record: Record_, key: string ): string {
-	const value = record[ key ];
-	return value === null || value === undefined ? '' : String( value );
-}
-
-function labelOf( options: readonly Option[], value: string ): string {
-	return options.find( ( o ) => o.value === value )?.label ?? value;
-}
-
-function initials( name: string ): string {
-	const parts = name.trim().split( /\s+/ ).filter( Boolean );
-	if ( parts.length === 0 ) {
-		return '?';
-	}
-	const first = parts[ 0 ]?.[ 0 ] ?? '';
-	const last  = parts.length > 1 ? parts[ parts.length - 1 ]?.[ 0 ] ?? '' : '';
-	return ( first + last ).toUpperCase();
-}
-
-function statusVariant( status: string ): 'success' | 'secondary' | 'destructive' {
-	switch ( status ) {
-		case 'active':
-			return 'success';
-		case 'terminated':
-		case 'deceased':
-			return 'destructive';
-		default:
-			return 'secondary';
-	}
-}
-
-interface NavItem {
-	readonly value: string;
-	readonly label: string;
-	readonly icon:  LucideIcon;
-}
-
-/** Left-card vertical nav. Active row is filled with the brand blue. */
-function NavMenu( {
-	items,
-	current,
-	onSelect,
-}: {
-	readonly items:    readonly NavItem[];
-	readonly current:  string;
-	readonly onSelect: ( v: string ) => void;
-} ): JSX.Element {
-	return (
-		<nav aria-label={ __( 'Profile sections', 'erp' ) } className="flex flex-col gap-1">
-			{ items.map( ( item ) => {
-				const isActive = current === item.value;
-				const Icon = item.icon;
-				return (
-					<button
-						key={ item.value }
-						type="button"
-						aria-current={ isActive ? 'page' : undefined }
-						onClick={ () => onSelect( item.value ) }
-						className={ [
-							'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors',
-							isActive
-								? 'bg-primary text-primary-foreground'
-								: 'text-foreground hover:bg-muted',
-						].join( ' ' ) }
-					>
-						<Icon size={ 18 } strokeWidth={ 2 } aria-hidden="true" />
-						{ item.label }
-					</button>
-				);
-			} ) }
-		</nav>
-	);
-}
-
-interface DetailCardProps {
-	readonly title:    string;
-	readonly children: ReactNode;
-}
-
-function FieldGrid( { title, children }: DetailCardProps ): JSX.Element {
-	return (
-		<section>
-			<h3 className="m-0 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{ title }</h3>
-			<dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">{ children }</dl>
-		</section>
-	);
-}
-
-function Field( { label, value }: { readonly label: string; readonly value: string } ): JSX.Element {
-	return (
-		<div className="flex flex-col gap-0.5">
-			<dt className="text-xs text-muted-foreground">{ label }</dt>
-			<dd className="text-sm font-medium text-foreground">{ value.trim() === '' ? '—' : value }</dd>
-		</div>
-	);
 }
 
 export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
@@ -220,13 +111,6 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 		);
 	}
 
-	const fullName    = str( record, 'full_name' );
-	const avatarUrl   = str( record, 'avatar_url' );
-	const status      = str( record, 'status' );
-	const designation = str( record, 'designation_name' );
-	const department  = str( record, 'department_name' );
-	const email       = str( record, 'email' );
-
 	const navItems: NavItem[] = [
 		{ value: 'personal', label: __( 'Personal Information', 'erp' ), icon: User },
 		...( canEdit ? [ { value: 'job', label: __( 'Job Information', 'erp' ), icon: Briefcase } ] : [] ),
@@ -242,83 +126,13 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
 			{ /* HEADER card. */ }
-			<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
-				<div className="flex flex-wrap items-start gap-5">
-					<Avatar className="size-20 shrink-0">
-						{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
-						<AvatarFallback className="text-lg">{ initials( fullName ) }</AvatarFallback>
-					</Avatar>
-
-					<div className="flex min-w-0 flex-1 flex-col gap-2">
-						<div className="flex items-center gap-2">
-							<h1 className="m-0 text-2xl font-bold tracking-tight text-foreground">
-								{ fullName || __( 'Employee', 'erp' ) }
-							</h1>
-							{ canEdit ? (
-								<button
-									type="button"
-									onClick={ goEdit }
-									className="inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-									aria-label={ __( 'Edit employee', 'erp' ) }
-									title={ __( 'Edit employee', 'erp' ) }
-								>
-									<Pencil size={ 15 } aria-hidden="true" />
-								</button>
-							) : null }
-						</div>
-						{ designation ? <p className="m-0 text-sm font-semibold text-foreground">{ designation }</p> : null }
-						{ email ? <p className="m-0 text-sm text-muted-foreground">{ email }</p> : null }
-						{ status ? (
-							<div className="mt-1">
-								<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>
-							</div>
-						) : null }
-
-						{ /* Quick actions — jump to the relevant section. */ }
-						<div className="mt-3 flex flex-wrap gap-2">
-							{ canEdit ? (
-								<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setTab( 'leave' ) }>
-									<CalendarPlus size={ 15 } aria-hidden="true" />
-									{ __( 'Leave', 'erp' ) }
-								</Button>
-							) : null }
-							{ canViewNotes ? (
-								<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setTab( 'notes' ) }>
-									<StickyNote size={ 15 } aria-hidden="true" />
-									{ __( 'Notes', 'erp' ) }
-								</Button>
-							) : null }
-						</div>
-					</div>
-
-					{ canEdit ? (
-						<Button variant="default" size="sm" className="h-9 gap-1.5 px-4" onClick={ goEdit }>
-							<Pencil size={ 14 } aria-hidden="true" />
-							{ __( 'Edit', 'erp' ) }
-						</Button>
-					) : null }
-				</div>
-
-				{ /* Meta strip — complements the header; no repeat of designation/status. */ }
-				<div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-border pt-5 text-sm">
-					<span className="inline-flex items-center gap-2">
-						<span className="text-muted-foreground">{ __( 'Employee ID:', 'erp' ) }</span>
-						<span className="font-medium text-foreground">{ str( record, 'employee_id' ) || '—' }</span>
-					</span>
-					<span className="inline-flex items-center gap-2">
-						<span className="text-muted-foreground">{ __( 'Department:', 'erp' ) }</span>
-						<span className="font-medium text-foreground">{ department || '—' }</span>
-					</span>
-					<span className="inline-flex items-center gap-2">
-						<span className="text-muted-foreground">{ __( 'Date of Hire:', 'erp' ) }</span>
-						<span className="font-medium text-foreground">{ str( record, 'hiring_date' ) || '—' }</span>
-					</span>
-					<span className="inline-flex items-center gap-2">
-						<span className="text-muted-foreground">{ __( 'Type:', 'erp' ) }</span>
-						<span className="font-medium text-foreground">{ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) || '—' }</span>
-					</span>
-				</div>
-			</section>
+			<SingleHeader
+				record={ record }
+				canEdit={ canEdit }
+				canViewNotes={ canViewNotes }
+				onEdit={ goEdit }
+				onSetTab={ setTab }
+			/>
 
 			{ /* BODY — left nav card + right content card. */ }
 			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">
@@ -330,63 +144,12 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 
 				<div className="min-w-0 flex-1">
 					{ tab === 'personal' ? (
-						<div className="space-y-6">
-							<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
-
-							<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
-							<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
-								{ activeLabel }
-							</h2>
-							<div className="mb-4 mt-4 h-px w-full bg-border" />
-
-							<div className="space-y-8">
-								<FieldGrid title={ __( 'Employment', 'erp' ) }>
-									<Field label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
-									<Field label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
-									<Field label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
-									<Field label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
-									<Field label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
-									<Field label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
-									<Field label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
-									<Field label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
-									<Field label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
-								</FieldGrid>
-
-								<FieldGrid title={ __( 'Contact', 'erp' ) }>
-									<Field label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
-									<Field label={ __( 'Other Email', 'erp' ) } value={ str( record, 'other_email' ) } />
-									<Field label={ __( 'Mobile', 'erp' ) } value={ str( record, 'mobile' ) } />
-									<Field label={ __( 'Phone', 'erp' ) } value={ str( record, 'phone' ) } />
-									<Field label={ __( 'Work Phone', 'erp' ) } value={ str( record, 'work_phone' ) } />
-									<Field label={ __( 'Website', 'erp' ) } value={ str( record, 'user_url' ) } />
-								</FieldGrid>
-
-								<FieldGrid title={ __( 'Personal Details', 'erp' ) }>
-									<Field label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
-									<Field label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
-									<Field label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
-									<Field label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />
-									<Field label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
-									<Field label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
-									<Field label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
-								</FieldGrid>
-
-								<FieldGrid title={ __( 'Home Address', 'erp' ) }>
-									<Field label={ __( 'Address', 'erp' ) } value={ str( record, 'street_1' ) } />
-									<Field label={ __( 'Address (cont.)', 'erp' ) } value={ str( record, 'street_2' ) } />
-									<Field label={ __( 'City', 'erp' ) } value={ str( record, 'city' ) } />
-									<Field label={ __( 'Province / State', 'erp' ) } value={ str( record, 'state' ) } />
-									<Field label={ __( 'Country', 'erp' ) } value={ str( record, 'country' ) } />
-									<Field label={ __( 'Postal code', 'erp' ) } value={ str( record, 'postal_code' ) } />
-								</FieldGrid>
-
-							</div>
-							</section>
-
-							<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'basic', 'work', 'personal', 'bottom' ] } />
-
-							{ canEdit ? <EmployeeGeneralSections userId={ userId } /> : null }
-						</div>
+						<SingleOverview
+							userId={ userId }
+							record={ record }
+							canEdit={ canEdit }
+							activeLabel={ activeLabel }
+						/>
 					) : (
 						<>
 							{ canEdit && tab === 'job' ? <EmployeeJobTab userId={ userId } /> : null }

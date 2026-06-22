@@ -7,6 +7,10 @@
  *
  * Mirrors the legacy job-tab modals. Submits a flat payload to the v2
  * `/job-histories` POST, which delegates to the unchanged v1 model methods.
+ *
+ * The per-action field groups live alongside (JobStatusFields, JobTypeFields,
+ * JobCompensationFields, JobInfoFields); shared types/defaults are in
+ * job-update-helpers. This file owns state, lookups, payload and submit.
  */
 
 import {
@@ -24,7 +28,6 @@ import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
-import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
@@ -34,17 +37,21 @@ import { DesignationFormDialog } from '../../designations/DesignationFormDialog'
 import type { Designation, DesignationInput } from '../../designations/types';
 import { loadLookup } from '../../employees/filters/lookups';
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
-import type { LookupOption } from '../../employees/filters/lookups';
-import {
-	REHIRE_OPTIONS,
-	TERMINATION_REASON_OPTIONS,
-	TERMINATION_TYPE_OPTIONS,
-} from '../../employees/terminate-options';
-import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
+import { TextField } from '../fields';
 import type { Option } from '../options';
-import { PAY_CHANGE_REASON_OPTIONS, PAY_TYPE_OPTIONS, STATUS_OPTIONS, TYPE_OPTIONS } from '../options';
+import { JobCompensationFields } from './JobCompensationFields';
+import { JobInfoFields } from './JobInfoFields';
+import { JobStatusFields } from './JobStatusFields';
+import { JobTypeFields } from './JobTypeFields';
+import {
+	emptyForm,
+	TITLES,
+	toOptions,
+} from './job-update-helpers';
+import type { FormState, JobAction } from './job-update-helpers';
 
-export type JobAction = 'status' | 'type' | 'compensation' | 'job';
+// Re-exported so existing consumers keep importing this from JobUpdateDialog.
+export type { JobAction };
 
 interface JobUpdateDialogProps {
 	readonly action:   JobAction | null;
@@ -52,64 +59,6 @@ interface JobUpdateDialogProps {
 	readonly error:    string | null;
 	readonly onClose:  () => void;
 	readonly onSubmit: ( payload: Record< string, unknown > ) => void;
-}
-
-interface FormState {
-	date:         string;
-	category:     string; // status code
-	type:         string; // type code
-	comments:     string;
-	pay_rate:     string;
-	pay_type:     string;
-	reason:       string;
-	comment:      string;
-	department:   string;
-	designation:  string;
-	location:     string;
-	reporting_to: string;
-	// Termination fields — shown only when status === 'terminated'.
-	termination_type:    string;
-	termination_reason:  string;
-	eligible_for_rehire: string;
-}
-
-function todayISO(): string {
-	const d = new Date();
-	if ( Number.isNaN( d.getTime() ) ) {
-		return '';
-	}
-	return d.toISOString().slice( 0, 10 );
-}
-
-function emptyForm(): FormState {
-	return {
-		date:         todayISO(),
-		category:     '',
-		type:         '',
-		comments:     '',
-		pay_rate:     '',
-		pay_type:     '',
-		reason:       '',
-		comment:      '',
-		department:   '',
-		designation:  '',
-		location:     '',
-		reporting_to: '',
-		termination_type:    '',
-		termination_reason:  '',
-		eligible_for_rehire: '',
-	};
-}
-
-const TITLES: Record< JobAction, string > = {
-	status:       __( 'Update Status', 'erp' ),
-	type:         __( 'Update Type', 'erp' ),
-	compensation: __( 'Update Compensation', 'erp' ),
-	job:          __( 'Update Job Information', 'erp' ),
-};
-
-function toOptions( list: readonly LookupOption[] ): Option[] {
-	return list.map( ( l ) => ( { value: String( l.id ), label: l.title } ) );
 }
 
 export function JobUpdateDialog( {
@@ -288,59 +237,29 @@ export function JobUpdateDialog( {
 					/>
 
 					{ action === 'status' ? (
-						<>
-							<SelectField
-								id="job_status"
-								label={ __( 'Employee Status', 'erp' ) }
-								required
-								options={ STATUS_OPTIONS }
-								value={ form.category }
-								onChange={ set( 'category' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-							/>
-							{ form.category === 'terminated' ? (
-								<>
-									<SelectField id="job_term_type" label={ __( 'Termination Type', 'erp' ) } required options={ TERMINATION_TYPE_OPTIONS } value={ form.termination_type } onChange={ set( 'termination_type' ) } placeholder={ __( '- Select -', 'erp' ) } />
-									<SelectField id="job_term_reason" label={ __( 'Termination Reason', 'erp' ) } required options={ TERMINATION_REASON_OPTIONS } value={ form.termination_reason } onChange={ set( 'termination_reason' ) } placeholder={ __( '- Select -', 'erp' ) } />
-									<SelectField id="job_term_rehire" label={ __( 'Eligible for Rehire', 'erp' ) } required options={ REHIRE_OPTIONS } value={ form.eligible_for_rehire } onChange={ set( 'eligible_for_rehire' ) } placeholder={ __( '- Select -', 'erp' ) } />
-								</>
-							) : (
-								<TextareaField id="job_status_comment" label={ __( 'Comment', 'erp' ) } value={ form.comments } onChange={ set( 'comments' ) } />
-							) }
-						</>
+						<JobStatusFields form={ form } set={ set } />
 					) : null }
 
 					{ action === 'type' ? (
-						<>
-							<SelectField
-								id="job_type"
-								label={ __( 'Employment Type', 'erp' ) }
-								required
-								options={ TYPE_OPTIONS }
-								value={ form.type }
-								onChange={ set( 'type' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-							/>
-							<TextareaField id="job_type_comment" label={ __( 'Comment', 'erp' ) } value={ form.comments } onChange={ set( 'comments' ) } />
-						</>
+						<JobTypeFields form={ form } set={ set } />
 					) : null }
 
 					{ action === 'compensation' ? (
-						<>
-							<TextField id="job_pay_rate" label={ __( 'Pay Rate', 'erp' ) } type="number" required value={ form.pay_rate } onChange={ set( 'pay_rate' ) } />
-							<SelectField id="job_pay_type" label={ __( 'Pay Type', 'erp' ) } required options={ PAY_TYPE_OPTIONS } value={ form.pay_type } onChange={ set( 'pay_type' ) } placeholder={ __( '- Select -', 'erp' ) } />
-							<SelectField id="job_reason" label={ __( 'Change Reason', 'erp' ) } options={ PAY_CHANGE_REASON_OPTIONS } value={ form.reason } onChange={ set( 'reason' ) } placeholder={ __( '- Select -', 'erp' ) } />
-							<TextareaField id="job_comp_comment" label={ __( 'Comment', 'erp' ) } value={ form.comment } onChange={ set( 'comment' ) } />
-						</>
+						<JobCompensationFields form={ form } set={ set } />
 					) : null }
 
 					{ action === 'job' ? (
-						<>
-							<SmartSelectField id="job_department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department } onChange={ set( 'department' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ () => { setQuickDeptErr( null ); setQuickDeptOpen( true ); } } disabled={ busy } /> } />
-							<SmartSelectField id="job_designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation } onChange={ set( 'designation' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ () => { setQuickDesigErr( null ); setQuickDesigOpen( true ); } } disabled={ busy } /> } />
-							<SmartSelectField id="job_location" label={ __( 'Location', 'erp' ) } options={ locations } value={ form.location } onChange={ set( 'location' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search locations…', 'erp' ) } />
-							<SmartSelectField id="job_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ reporting.options } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } onSearch={ reporting.onSearch } loading={ reporting.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
-						</>
+						<JobInfoFields
+							form={ form }
+							set={ set }
+							busy={ busy }
+							departments={ departments }
+							designations={ designations }
+							locations={ locations }
+							reporting={ reporting }
+							onAddDept={ () => { setQuickDeptErr( null ); setQuickDeptOpen( true ); } }
+							onAddDesig={ () => { setQuickDesigErr( null ); setQuickDesigOpen( true ); } }
+						/>
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">

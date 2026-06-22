@@ -9,6 +9,10 @@
  *
  * The server re-validates and dedupes (a duplicate scope returns "Policy
  * already exists.").
+ *
+ * The field markup lives in flat siblings (PrimaryFields, ScopeFields, Toggles)
+ * and the pure form shape/helpers in leave-policy-form-helpers; this file keeps
+ * the state, effects, option memos and submit/validation handlers.
  */
 
 import {
@@ -21,8 +25,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	Label,
-	Switch,
 } from '@wedevs/plugin-ui';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo, useState } from 'react';
@@ -35,16 +37,25 @@ import {
 	setLeaveFieldValue,
 } from '@/shared/components/LeaveExtraFields';
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
-import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
-import { SelectField, SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
+import { TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
 import { LeaveTypeFormDialog } from '../leave-types/LeaveTypeFormDialog';
 import type { LeaveType, LeaveTypeInput } from '../leave-types/types';
+import { LeavePolicyPrimaryFields } from './LeavePolicyPrimaryFields';
+import { LeavePolicyScopeFields } from './LeavePolicyScopeFields';
+import { LeavePolicyToggles } from './LeavePolicyToggles';
+import {
+	ALL,
+	EMPTY,
+	withAll,
+	type FormState,
+	type PolicyErrors,
+} from './leave-policy-form-helpers';
 import type { LeavePolicy, LeavePolicyInput, PolicyFormOptions } from './types';
 
 interface LeavePolicyFormDialogProps {
@@ -65,47 +76,6 @@ interface LeavePolicyFormDialogProps {
 	readonly onOptionsStale?: () => void;
 }
 
-interface FormState {
-	leave_id:            string;
-	days:                string;
-	color:               string;
-	description:         string;
-	f_year:              string;
-	applicable_from:     string;
-	employee_type:       string;
-	department_id:       string;
-	designation_id:      string;
-	location_id:         string;
-	gender:              string;
-	marital:             string;
-	apply_for_new_users: boolean;
-	apply_for_existing:  boolean;
-}
-
-const ALL = '-1';
-
-const EMPTY: FormState = {
-	leave_id:            '',
-	days:                '',
-	color:               '#3b82f6',
-	description:         '',
-	f_year:              '',
-	applicable_from:     '0',
-	employee_type:       ALL,
-	department_id:       ALL,
-	designation_id:      ALL,
-	location_id:         ALL,
-	gender:              ALL,
-	marital:             ALL,
-	apply_for_new_users: false,
-	apply_for_existing:  false,
-};
-
-/** Prepend the "All" sentinel option to a scope select. */
-function withAll( opts: readonly Option[] ): Option[] {
-	return [ { value: ALL, label: __( 'All', 'erp' ) }, ...opts ];
-}
-
 export function LeavePolicyFormDialog( {
 	open,
 	editing,
@@ -118,11 +88,7 @@ export function LeavePolicyFormDialog( {
 	onOptionsStale,
 }: LeavePolicyFormDialogProps ): JSX.Element {
 	const [ form, setForm ]     = useState< FormState >( EMPTY );
-	const [ errors, setErrors ] = useState< {
-		leave_id?: string | undefined;
-		days?:     string | undefined;
-		f_year?:   string | undefined;
-	} >( {} );
+	const [ errors, setErrors ] = useState< PolicyErrors >( {} );
 
 	// Inline "+ Add new" leave type — opens the same dialog the Leave Types
 	// screen uses, then merges the new type into this select and selects it,
@@ -297,155 +263,28 @@ export function LeavePolicyFormDialog( {
 				) : null }
 
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
-					<div className="grid grid-cols-2 gap-4">
-						<SmartSelectField
-							id="policy_leave_id"
-							label={ __( 'Leave Type', 'erp' ) }
-							required
-							options={ leaveTypeOpts }
-							value={ form.leave_id }
-							onChange={ ( v ) => {
-								setForm( ( p ) => ( { ...p, leave_id: v } ) );
-								setErrors( ( p ) => ( { ...p, leave_id: undefined } ) );
-							} }
-							error={ errors.leave_id }
-							placeholder={ __( '- Select -', 'erp' ) }
-							searchPlaceholder={ __( 'Search leave types…', 'erp' ) }
-							emptyMessage={ __( 'No leave types found.', 'erp' ) }
-							labelAction={
-								! editing ? (
-									<QuickAddButton
-										label={ __( 'Add new', 'erp' ) }
-										onClick={ () => { setQuickTypeErr( null ); setQuickTypeOpen( true ); } }
-										disabled={ busy }
-									/>
-								) : undefined
-							}
-						/>
-						<SmartSelectField
-							id="policy_f_year"
-							label={ __( 'Financial Year', 'erp' ) }
-							required
-							options={ fYearOpts }
-							value={ form.f_year }
-							onChange={ ( v ) => {
-								setForm( ( p ) => ( { ...p, f_year: v } ) );
-								setErrors( ( p ) => ( { ...p, f_year: undefined } ) );
-							} }
-							error={ errors.f_year }
-							placeholder={ __( '- Select -', 'erp' ) }
-							searchPlaceholder={ __( 'Search…', 'erp' ) }
-							emptyMessage={ __( 'No financial years found.', 'erp' ) }
-						/>
-					</div>
+					<LeavePolicyPrimaryFields
+						form={ form }
+						errors={ errors }
+						setForm={ setForm }
+						setErrors={ setErrors }
+						editing={ editing }
+						leaveTypeOpts={ leaveTypeOpts }
+						fYearOpts={ fYearOpts }
+						busy={ busy }
+						onAddType={ () => { setQuickTypeErr( null ); setQuickTypeOpen( true ); } }
+					/>
 
-					<div className="grid grid-cols-2 gap-4">
-						<TextField
-							id="policy_days"
-							label={ __( 'Days', 'erp' ) }
-							type="number"
-							required={ ! editing }
-							value={ form.days }
-							onChange={ ( v ) => {
-								setForm( ( p ) => ( { ...p, days: v } ) );
-								setErrors( ( p ) => ( { ...p, days: undefined } ) );
-							} }
-							error={ errors.days }
-							className={ editing ? 'opacity-60' : undefined }
-						/>
-						<div className="flex min-w-0 flex-col gap-2.5">
-							<Label htmlFor="policy_color" className="text-sm font-medium text-foreground">
-								{ __( 'Color', 'erp' ) }
-								<span className="ml-0.5 text-destructive">*</span>
-							</Label>
-							<div className="flex items-center gap-3">
-								<input
-									id="policy_color"
-									type="color"
-									value={ form.color }
-									onChange={ ( e ) => setForm( ( p ) => ( { ...p, color: e.target.value } ) ) }
-									className="h-10 w-16 cursor-pointer rounded-md border border-border bg-background p-1"
-								/>
-								<span className="text-sm text-muted-foreground">{ form.color }</span>
-							</div>
-						</div>
-					</div>
-
-					{ editing ? (
-						<p className="-mt-2 text-xs text-muted-foreground">
-							{ __( 'The number of days cannot be changed after a policy is created.', 'erp' ) }
-						</p>
-					) : null }
-
-					<div className="grid grid-cols-2 gap-4">
-						<SelectField
-							id="policy_employee_type"
-							label={ __( 'Employee Type', 'erp' ) }
-							options={ empTypeOpts }
-							value={ form.employee_type }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, employee_type: v } ) ) }
-						/>
-						<SmartSelectField
-							id="policy_department"
-							label={ __( 'Department', 'erp' ) }
-							options={ deptOpts }
-							value={ form.department_id }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, department_id: v || ALL } ) ) }
-							placeholder={ __( 'All', 'erp' ) }
-							searchPlaceholder={ __( 'Search departments…', 'erp' ) }
-							emptyMessage={ __( 'No departments found.', 'erp' ) }
-						/>
-					</div>
-
-					<div className="grid grid-cols-2 gap-4">
-						<SmartSelectField
-							id="policy_designation"
-							label={ __( 'Designation', 'erp' ) }
-							options={ desigOpts }
-							value={ form.designation_id }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, designation_id: v || ALL } ) ) }
-							placeholder={ __( 'All', 'erp' ) }
-							searchPlaceholder={ __( 'Search designations…', 'erp' ) }
-							emptyMessage={ __( 'No designations found.', 'erp' ) }
-						/>
-						<SelectField
-							id="policy_gender"
-							label={ __( 'Gender', 'erp' ) }
-							options={ genderOpts }
-							value={ form.gender }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, gender: v } ) ) }
-						/>
-					</div>
-
-					<div className="grid grid-cols-2 gap-4">
-						<SelectField
-							id="policy_marital"
-							label={ __( 'Marital Status', 'erp' ) }
-							options={ maritalOpts }
-							value={ form.marital }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, marital: v } ) ) }
-						/>
-					</div>
-
-					<div className="grid grid-cols-2 gap-4">
-						<SmartSelectField
-							id="policy_location"
-							label={ __( 'Location', 'erp' ) }
-							options={ locationOpts }
-							value={ form.location_id }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, location_id: v || ALL } ) ) }
-							placeholder={ __( 'All', 'erp' ) }
-							searchPlaceholder={ __( 'Search locations…', 'erp' ) }
-							emptyMessage={ __( 'No locations found.', 'erp' ) }
-						/>
-						<TextField
-							id="policy_applicable_from"
-							label={ __( 'Applicable After (days)', 'erp' ) }
-							type="number"
-							value={ form.applicable_from }
-							onChange={ ( v ) => setForm( ( p ) => ( { ...p, applicable_from: v } ) ) }
-						/>
-					</div>
+					<LeavePolicyScopeFields
+						form={ form }
+						setForm={ setForm }
+						empTypeOpts={ empTypeOpts }
+						deptOpts={ deptOpts }
+						desigOpts={ desigOpts }
+						genderOpts={ genderOpts }
+						maritalOpts={ maritalOpts }
+						locationOpts={ locationOpts }
+					/>
 
 					<TextareaField
 						id="policy_description"
@@ -455,32 +294,7 @@ export function LeavePolicyFormDialog( {
 						rows={ 2 }
 					/>
 
-					<div className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-4 py-3">
-						<Label htmlFor="policy_apply_new" className="text-sm font-medium text-foreground">
-							{ __( 'Apply to new employees automatically', 'erp' ) }
-						</Label>
-						<Switch
-							id="policy_apply_new"
-							checked={ form.apply_for_new_users }
-							onCheckedChange={ ( checked ) => setForm( ( p ) => ( { ...p, apply_for_new_users: checked } ) ) }
-						/>
-					</div>
-
-					{ ! editing ? (
-						<div className="flex items-center justify-between rounded-md border border-border bg-muted/20 px-4 py-3">
-							<Label htmlFor="policy_apply_existing" className="text-sm font-medium text-foreground">
-								{ __( 'Apply for existing employees', 'erp' ) }
-								<span className="mt-0.5 block text-xs font-normal text-muted-foreground">
-									{ __( 'Entitle existing matching employees to this policy now.', 'erp' ) }
-								</span>
-							</Label>
-							<Switch
-								id="policy_apply_existing"
-								checked={ form.apply_for_existing }
-								onCheckedChange={ ( checked ) => setForm( ( p ) => ( { ...p, apply_for_existing: checked } ) ) }
-							/>
-						</div>
-					) : null }
+					<LeavePolicyToggles form={ form } setForm={ setForm } editing={ editing } />
 
 					<LeaveExtraFields
 						fields={ extraFields }
