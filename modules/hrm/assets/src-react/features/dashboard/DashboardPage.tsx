@@ -5,14 +5,15 @@
  * summary stat cards, then a two-column grid of widgets (who's out, birthdays,
  * upcoming holidays, latest announcements) — the same information the legacy
  * `views/dashboard.php` widgets surface, restyled for the React design system.
+ *
+ * This file is the orchestrator: data loading + page composition. The
+ * presentational pieces live in `DashboardCards.tsx` (layout primitives),
+ * `DashboardWidgets.tsx` (data rows) and `format.ts` (helpers).
  */
 
 import { useSelect } from '@wordpress/data';
+import { applyFilters } from '@wordpress/hooks';
 import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-	Button,
 	Dialog,
 	DialogContent,
 	DialogHeader,
@@ -20,26 +21,19 @@ import {
 	toast,
 } from '@wedevs/plugin-ui';
 import {
-	ArrowRight,
-	Banknote,
 	Briefcase,
 	Building2,
-	CalendarCheck,
-	CalendarClock,
 	Cake,
+	CalendarClock,
 	Clock4,
-	Gift,
 	Hourglass,
 	Megaphone,
-	Package,
 	PalmtreeIcon,
 	UserPlus,
 	Users,
-	Wallet,
 } from 'lucide-react';
-import { applyFilters } from '@wordpress/hooks';
-import { useEffect, useState } from 'react';
-import type { ComponentType, JSX, SVGProps } from 'react';
+import { useState } from 'react';
+import type { ComponentType, JSX } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -49,10 +43,23 @@ import { __, sprintf } from '@/shared/i18n';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
+import {
+	EmptyRow,
+	LiveTime,
+	SectionLabel,
+	StatCard,
+	WidgetCard,
+} from './DashboardCards';
 import { ChartsSection } from './DashboardCharts';
+import {
+	AboutToEndItem,
+	BirthdayItem,
+	OnLeaveItem,
+	ProWidget,
+} from './DashboardWidgets';
+import { fmtDate, greeting } from './format';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
-import type { AboutToEndPerson, BirthdayPerson, DashboardProWidget, OnLeavePerson } from './types';
 import {
 	fetchAnnouncement,
 	markAnnouncementRead,
@@ -61,320 +68,33 @@ import {
 } from './useDashboard';
 import type { AnnouncementContent } from './useDashboard';
 
-type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
-
-/** Live wall-clock that re-renders every second. */
-function LiveTime(): JSX.Element {
-	const [ now, setNow ] = useState( () => new Date() );
-	useEffect( () => {
-		const id = window.setInterval( () => setNow( new Date() ), 1000 );
-		return () => window.clearInterval( id );
-	}, [] );
-	return (
-		<span className="font-medium tabular-nums text-foreground">
-			{ now.toLocaleTimeString( undefined, {
-				hour:   '2-digit',
-				minute: '2-digit',
-				second: '2-digit',
-			} ) }
-		</span>
-	);
-}
-
-function greeting(): string {
-	const h = new Date().getHours();
-	if ( h < 12 ) {
-		return __( 'Good morning', 'erp' );
-	}
-	if ( h < 18 ) {
-		return __( 'Good afternoon', 'erp' );
-	}
-	return __( 'Good evening', 'erp' );
-}
-
-function fmtDate( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 0, 10 );
-	}
-	return d.toLocaleDateString( undefined, { month: 'short', day: 'numeric' } );
-}
-
-function fmtDayMonth( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 5, 10 );
-	}
-	return d.toLocaleDateString( undefined, { month: 'long', day: 'numeric' } );
-}
-
-function initials( name: string ): string {
-	const parts = name.trim().split( /\s+/ ).filter( Boolean );
-	if ( parts.length === 0 ) {
-		return '?';
-	}
-	const first = parts[ 0 ]?.[ 0 ] ?? '';
-	const last = parts.length > 1 ? parts[ parts.length - 1 ]?.[ 0 ] ?? '' : '';
-	return ( first + last ).toUpperCase();
-}
-
-function PersonAvatar( { name, src, size = 'size-9' }: { name: string; src: string; size?: string } ): JSX.Element {
-	return (
-		<Avatar className={ `${ size } shrink-0` }>
-			{ src ? <AvatarImage src={ src } alt={ name } /> : null }
-			<AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
-				{ initials( name ) }
-			</AvatarFallback>
-		</Avatar>
-	);
-}
-
-interface StatCardProps {
-	readonly icon:    LucideIcon;
-	readonly label:   string;
-	readonly value:   number;
-	readonly tint:    string;
-	readonly to?:     string;
-}
-
-function StatCard( { icon: Icon, label, value, tint, to }: StatCardProps ): JSX.Element {
-	const body = (
-		<div className="group relative flex items-center gap-4 overflow-hidden rounded-[10px] bg-card p-5 shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
-			<span className={ `inline-flex size-12 shrink-0 items-center justify-center rounded-xl shadow-sm transition-transform duration-200 group-hover:scale-105 ${ tint }` }>
-				<Icon size={ 22 } strokeWidth={ 1.9 } aria-hidden="true" />
-			</span>
-			<div className="min-w-0">
-				<p className="text-3xl font-bold leading-8 text-foreground tabular-nums">{ value }</p>
-				<p className="truncate text-sm text-muted-foreground">{ label }</p>
-			</div>
-			{ to ? (
-				<ArrowRight
-					size={ 16 }
-					className="ml-auto shrink-0 text-muted-foreground/40 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-primary"
-					aria-hidden="true"
-				/>
-			) : null }
-		</div>
-	);
-	return to ? (
-		<Link to={ to } viewTransition className="group block rounded-[10px] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-			{ body }
-		</Link>
-	) : (
-		body
-	);
-}
-
-interface WidgetCardProps {
-	readonly icon:     LucideIcon;
-	readonly title:    string;
-	readonly count?:   number | undefined;
-	readonly action?:  { label: string; to: string } | undefined;
-	readonly children: React.ReactNode;
-}
-
-function WidgetCard( { icon: Icon, title, count, action, children }: WidgetCardProps ): JSX.Element {
-	return (
-		<section className="flex flex-col rounded-[10px] bg-card shadow-sm">
-			<header className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
-				<h2 className="flex items-center gap-2 text-base font-bold leading-tight tracking-tight text-foreground">
-					<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-						<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
-					</span>
-					{ title }
-					{ count && count > 0 ? (
-						<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium text-muted-foreground">
-							{ count }
-						</span>
-					) : null }
-				</h2>
-				{ action ? (
-					<Link
-						to={ action.to }
-						viewTransition
-						className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-					>
-						{ action.label }
-						<ArrowRight size={ 13 } aria-hidden="true" />
-					</Link>
-				) : null }
-			</header>
-			{ /* Scroll long lists inside the card instead of stretching the page. */ }
-			<div className="max-h-80 flex-1 overflow-y-auto p-2">{ children }</div>
-		</section>
-	);
-}
-
-function EmptyRow( { text }: { text: string } ): JSX.Element {
-	return <p className="px-3 py-6 text-center text-sm text-muted-foreground">{ text }</p>;
-}
-
-/** Small uppercase divider label that groups the dashboard sections. */
-function SectionLabel( { children, className }: { children: React.ReactNode; className?: string } ): JSX.Element {
-	return (
-		<h2 className={ `mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground ${ className ?? '' }` }>
-			{ children }
-		</h2>
-	);
-}
-
-function OnLeaveItem( { person }: { person: OnLeavePerson } ): JSX.Element {
-	return (
-		<li className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
-			<PersonAvatar name={ person.name } src={ person.avatar_url } />
-			<div className="min-w-0 flex-1">
-				<p className="flex items-center gap-1.5 truncate text-sm font-medium text-foreground">
-					{ person.name }
-					{ /* Half-day indicator (legacy Morning/Afternoon SVGs → pill). */ }
-					{ person.day_status_id > 1 && person.day_status ? (
-						<span className="inline-flex shrink-0 items-center rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-							{ person.day_status }
-						</span>
-					) : null }
-				</p>
-				<p className="text-xs text-muted-foreground">
-					{ `${ fmtDate( person.start_date ) } – ${ fmtDate( person.end_date ) }` }
-				</p>
-			</div>
-		</li>
-	);
-}
-
-function AboutToEndItem( { person }: { person: AboutToEndPerson } ): JSX.Element {
-	return (
-		<li className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
-			<span className="min-w-0 truncate text-sm font-medium text-foreground">{ person.name }</span>
-			<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( person.end_date ) }</span>
-		</li>
-	);
-}
-
-function BirthdayItem( {
-	person,
-	today,
-	canWish,
-	wished,
-	onWish,
-}: {
-	person: BirthdayPerson;
-	today: boolean;
-	canWish: boolean;
-	wished: boolean;
-	onWish: ( id: number ) => void;
-} ): JSX.Element {
-	return (
-		<li className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
-			<PersonAvatar name={ person.name } src={ person.avatar_url } />
-			<div className="min-w-0 flex-1">
-				<p className="truncate text-sm font-medium text-foreground">{ person.name }</p>
-				<p className="text-xs text-muted-foreground">
-					{ today ? __( 'Today 🎉', 'erp' ) : fmtDayMonth( person.date_of_birth ) }
-				</p>
-			</div>
-			{ canWish ? (
-				<Button
-					variant="ghost"
-					size="sm"
-					className="h-8 gap-1.5 text-primary hover:text-primary"
-					disabled={ wished }
-					onClick={ () => onWish( person.user_id ) }
-				>
-					<Gift size={ 14 } aria-hidden="true" />
-					{ wished ? __( 'Sent', 'erp' ) : __( 'Wish', 'erp' ) }
-				</Button>
-			) : null }
-		</li>
-	);
-}
-
-const PRO_WIDGET_ICONS: Readonly< Record< string, LucideIcon > > = {
-	'briefcase':      Briefcase,
-	'package':        Package,
-	'wallet':         Wallet,
-	'calendar-check': CalendarCheck,
-	'banknote':       Banknote,
-};
-
-/**
- * Generic renderer for a pro-module dashboard widget (recruitment, assets,
- * reimbursement, attendance, payroll). Pro modules contribute these via the
- * `erp_hr_v2_dashboard` PHP filter; the free dashboard knows nothing about the
- * module — it just paints the stats row and/or item list it was handed.
- */
-function ProWidget( { widget }: { widget: DashboardProWidget } ): JSX.Element {
-	const Icon = ( widget.icon && PRO_WIDGET_ICONS[ widget.icon ] ) || Briefcase;
-	const hasStats = ( widget.stats?.length ?? 0 ) > 0;
-	const hasItems = ( widget.items?.length ?? 0 ) > 0;
-
-	return (
-		<WidgetCard
-			icon={ Icon }
-			title={ widget.title }
-			action={ widget.to ? { label: __( 'View', 'erp' ), to: widget.to } : undefined }
-		>
-			{ hasStats ? (
-				<div className="grid grid-cols-2 gap-2 p-2">
-					{ widget.stats?.map( ( s, i ) => (
-						<div key={ i } className="rounded-lg bg-muted/40 px-3 py-2.5">
-							<p className="text-2xl font-bold leading-7 tabular-nums text-foreground">{ s.value }</p>
-							<p className="truncate text-xs text-muted-foreground">{ s.label }</p>
-						</div>
-					) ) }
-				</div>
-			) : null }
-
-			{ hasItems ? (
-				<ul>
-					{ widget.items?.map( ( it, i ) => {
-						const row = (
-							<>
-								<span className="min-w-0 truncate text-sm font-medium text-foreground">{ it.label }</span>
-								{ it.meta ? <span className="shrink-0 text-xs text-muted-foreground">{ it.meta }</span> : null }
-							</>
-						);
-						return (
-							<li key={ i }>
-								{ it.to ? (
-									<Link to={ it.to } viewTransition className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
-										{ row }
-									</Link>
-								) : (
-									<div className="flex items-center justify-between gap-3 rounded-lg px-3 py-2">{ row }</div>
-								) }
-							</li>
-						);
-					} ) }
-				</ul>
-			) : null }
-
-			{ ! hasStats && ! hasItems ? (
-				<EmptyRow text={ widget.empty ?? __( 'Nothing to show.', 'erp' ) } />
-			) : null }
-		</WidgetCard>
-	);
-}
-
 function DashboardInner(): JSX.Element {
 	const { data, loading, error } = useDashboard();
-	const user = useSelect( ( select ) => ( select( meStoreName ) as { getUser: () => MeUser | null } ).getUser(), [] );
+	const user = useSelect(
+		( select ) =>
+			(
+				select( meStoreName ) as { getUser: () => MeUser | null }
+			 ).getUser(),
+		[]
+	);
 	const canCreateEmployee = useCan( 'erp_create_employee' );
-	const canManageLeave    = useCan( 'erp_leave_manage' );
+	const canManageLeave = useCan( 'erp_leave_manage' );
 
 	const currentUserId = user?.id ?? 0;
 	const name = user?.displayName ? user.displayName.split( ' ' )[ 0 ] : '';
 
-	const [ viewing, setViewing ] = useState< AnnouncementContent | null >( null );
+	const [ viewing, setViewing ] = useState< AnnouncementContent | null >(
+		null
+	);
 	const [ viewLoading, setViewLoading ] = useState( false );
-	const [ wished, setWished ] = useState< ReadonlySet< number > >( new Set() );
+	const [ wished, setWished ] = useState< ReadonlySet< number > >(
+		new Set()
+	);
 	// Locally-marked-read announcements (optimistic; the dashboard payload
 	// carries the persisted per-user read state on load).
-	const [ readAnnouncements, setReadAnnouncements ] = useState< ReadonlySet< number > >( new Set() );
+	const [ readAnnouncements, setReadAnnouncements ] = useState<
+		ReadonlySet< number >
+	>( new Set() );
 
 	function openAnnouncement( id: number ): void {
 		setViewLoading( true );
@@ -383,7 +103,9 @@ function DashboardInner(): JSX.Element {
 		void markAnnouncementRead( id ).catch( () => undefined );
 		void fetchAnnouncement( id )
 			.then( ( content ) => setViewing( content ) )
-			.catch( () => toast.error( __( 'Could not open the announcement.', 'erp' ) ) )
+			.catch( () =>
+				toast.error( __( 'Could not open the announcement.', 'erp' ) )
+			)
 			.finally( () => setViewLoading( false ) );
 	}
 
@@ -393,11 +115,17 @@ function DashboardInner(): JSX.Element {
 				setWished( ( prev ) => new Set( prev ).add( employeeUserId ) );
 				toast.success( __( 'Birthday wish sent!', 'erp' ) );
 			} )
-			.catch( () => toast.error( __( 'Could not send the birthday wish.', 'erp' ) ) );
+			.catch( () =>
+				toast.error( __( 'Could not send the birthday wish.', 'erp' ) )
+			);
 	}
 
 	if ( error ) {
-		return <p className="mx-auto my-12 max-w-md text-center text-sm text-destructive">{ error }</p>;
+		return (
+			<p className="mx-auto my-12 max-w-md text-center text-sm text-destructive">
+				{ error }
+			</p>
+		);
 	}
 
 	const summary = data?.summary;
@@ -406,7 +134,10 @@ function DashboardInner(): JSX.Element {
 	// Pro self-service widgets (e.g. Attendance punch card) appended via the
 	// `erp_hr.dashboard.widgets` filter; applied lazily so pro bundles that load
 	// after the free app are included. They drop straight into the card grid.
-	const proSelfWidgets = applyFilters( HOOKS.DASHBOARD_WIDGETS, [] ) as ComponentType[];
+	const proSelfWidgets = applyFilters(
+		HOOKS.DASHBOARD_WIDGETS,
+		[]
+	) as ComponentType[];
 
 	return (
 		<section className="mx-auto w-full max-w-full">
@@ -440,15 +171,26 @@ function DashboardInner(): JSX.Element {
 			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/50">
 				<div className="relative">
 					<h1 className="text-3xl font-bold leading-9 tracking-tight text-foreground">
-						{ name ? sprintf( __( '%1$s, %2$s', 'erp' ), greeting(), name ) : greeting() }
-						<span className="ml-1.5 inline-block" aria-hidden="true">👋</span>
+						{ name
+							? sprintf(
+									__( '%1$s, %2$s', 'erp' ),
+									greeting(),
+									name
+							  )
+							: greeting() }
+						<span
+							className="ml-1.5 inline-block"
+							aria-hidden="true"
+						>
+							👋
+						</span>
 					</h1>
 					<p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground">
 						{ new Date().toLocaleDateString( undefined, {
 							weekday: 'long',
-							year:    'numeric',
-							month:   'long',
-							day:     'numeric',
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
 						} ) }
 						<span aria-hidden="true">·</span>
 						<LiveTime />
@@ -462,7 +204,10 @@ function DashboardInner(): JSX.Element {
 			{ loading && ! data ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 					{ [ 0, 1, 2, 3 ].map( ( i ) => (
-						<div key={ i } className="h-24 animate-pulse rounded-[10px] bg-card shadow-sm" />
+						<div
+							key={ i }
+							className="h-24 animate-pulse rounded-[10px] bg-card shadow-sm"
+						/>
 					) ) }
 				</div>
 			) : (
@@ -503,7 +248,10 @@ function DashboardInner(): JSX.Element {
 							<StatCard
 								icon={ Cake }
 								label={ __( 'Birthdays This Week', 'erp' ) }
-								value={ ( data?.birthdays_today.length ?? 0 ) + ( data?.birthdays_upcoming.length ?? 0 ) }
+								value={
+									( data?.birthdays_today.length ?? 0 ) +
+									( data?.birthdays_upcoming.length ?? 0 )
+								}
 								tint="bg-pink-500/10 text-pink-600 dark:text-pink-400"
 							/>
 						) }
@@ -512,7 +260,9 @@ function DashboardInner(): JSX.Element {
 					{ /* Widget grid — a robust multi-card layout (Figma dashboard):
 					   compact calendar leads, then the activity cards + any pro
 					   module / self-service widgets, all on one responsive grid. */ }
-					<SectionLabel className="mt-8">{ __( 'Activity', 'erp' ) }</SectionLabel>
+					<SectionLabel className="mt-8">
+						{ __( 'Activity', 'erp' ) }
+					</SectionLabel>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 						{ /* Compact calendar */ }
 						<MiniCalendarWidget />
@@ -522,33 +272,71 @@ function DashboardInner(): JSX.Element {
 							icon={ CalendarClock }
 							title={ __( 'Who’s Out', 'erp' ) }
 							count={ data?.on_leave.length }
-							action={ canManageLeave ? { label: __( 'Calendar', 'erp' ), to: '/leave/calendar' } : undefined }
+							action={
+								canManageLeave
+									? {
+											label: __( 'Calendar', 'erp' ),
+											to: '/leave/calendar',
+									  }
+									: undefined
+							}
 						>
 							{ ( data?.on_leave.length ?? 0 ) === 0 ? (
-								<EmptyRow text={ __( 'Nobody is on leave this or next month.', 'erp' ) } />
+								<EmptyRow
+									text={ __(
+										'Nobody is on leave this or next month.',
+										'erp'
+									) }
+								/>
 							) : (
 								( () => {
-									const thisMonth = data?.on_leave.filter( ( p ) => p.period !== 'next_month' ) ?? [];
-									const nextMonth = data?.on_leave.filter( ( p ) => p.period === 'next_month' ) ?? [];
+									const thisMonth =
+										data?.on_leave.filter(
+											( p ) => p.period !== 'next_month'
+										) ?? [];
+									const nextMonth =
+										data?.on_leave.filter(
+											( p ) => p.period === 'next_month'
+										) ?? [];
 									return (
 										<>
 											{ thisMonth.length > 0 ? (
 												<>
 													<p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-														{ __( 'This Month', 'erp' ) }
+														{ __(
+															'This Month',
+															'erp'
+														) }
 													</p>
 													<ul>
-														{ thisMonth.map( ( p ) => <OnLeaveItem key={ `t-${ p.user_id }-${ p.start_date }` } person={ p } /> ) }
+														{ thisMonth.map(
+															( p ) => (
+																<OnLeaveItem
+																	key={ `t-${ p.user_id }-${ p.start_date }` }
+																	person={ p }
+																/>
+															)
+														) }
 													</ul>
 												</>
 											) : null }
 											{ nextMonth.length > 0 ? (
 												<>
 													<p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-														{ __( 'Next Month', 'erp' ) }
+														{ __(
+															'Next Month',
+															'erp'
+														) }
 													</p>
 													<ul>
-														{ nextMonth.map( ( p ) => <OnLeaveItem key={ `n-${ p.user_id }-${ p.start_date }` } person={ p } /> ) }
+														{ nextMonth.map(
+															( p ) => (
+																<OnLeaveItem
+																	key={ `n-${ p.user_id }-${ p.start_date }` }
+																	person={ p }
+																/>
+															)
+														) }
 													</ul>
 												</>
 											) : null }
@@ -560,29 +348,55 @@ function DashboardInner(): JSX.Element {
 
 						{ /* About to End — contractual & trainee employees whose job
 						   period ends within 21 days. Manager-only (legacy gate). */ }
-						{ isManager && ( ( data?.about_to_end?.contract.length ?? 0 ) + ( data?.about_to_end?.trainee.length ?? 0 ) > 0 ) ? (
+						{ isManager &&
+						( data?.about_to_end?.contract.length ?? 0 ) +
+							( data?.about_to_end?.trainee.length ?? 0 ) >
+							0 ? (
 							<WidgetCard
 								icon={ Hourglass }
 								title={ __( 'About to End', 'erp' ) }
-								count={ ( data?.about_to_end?.contract.length ?? 0 ) + ( data?.about_to_end?.trainee.length ?? 0 ) }
+								count={
+									( data?.about_to_end?.contract.length ??
+										0 ) +
+									( data?.about_to_end?.trainee.length ?? 0 )
+								}
 							>
-								{ ( data?.about_to_end?.contract.length ?? 0 ) > 0 ? (
+								{ ( data?.about_to_end?.contract.length ?? 0 ) >
+								0 ? (
 									<>
 										<p className="px-3 pt-1 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-											{ __( 'Contractual Employees', 'erp' ) }
+											{ __(
+												'Contractual Employees',
+												'erp'
+											) }
 										</p>
 										<ul>
-											{ data?.about_to_end?.contract.map( ( p ) => <AboutToEndItem key={ `c-${ p.user_id }` } person={ p } /> ) }
+											{ data?.about_to_end?.contract.map(
+												( p ) => (
+													<AboutToEndItem
+														key={ `c-${ p.user_id }` }
+														person={ p }
+													/>
+												)
+											) }
 										</ul>
 									</>
 								) : null }
-								{ ( data?.about_to_end?.trainee.length ?? 0 ) > 0 ? (
+								{ ( data?.about_to_end?.trainee.length ?? 0 ) >
+								0 ? (
 									<>
 										<p className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 											{ __( 'Trainee Employees', 'erp' ) }
 										</p>
 										<ul>
-											{ data?.about_to_end?.trainee.map( ( p ) => <AboutToEndItem key={ `tr-${ p.user_id }` } person={ p } /> ) }
+											{ data?.about_to_end?.trainee.map(
+												( p ) => (
+													<AboutToEndItem
+														key={ `tr-${ p.user_id }` }
+														person={ p }
+													/>
+												)
+											) }
 										</ul>
 									</>
 								) : null }
@@ -594,27 +408,54 @@ function DashboardInner(): JSX.Element {
 						   role — admins get extra `pro_widgets` below it that would
 						   otherwise push the punch card out of that slot. Swapped with
 						   Birthdays per the dashboard layout request. */ }
-						{ proSelfWidgets.map( ( Widget, i ) => <Widget key={ `self-${ i }` } /> ) }
+						{ proSelfWidgets.map( ( Widget, i ) => (
+							<Widget key={ `self-${ i }` } />
+						) ) }
 
 						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
 						   PHP filter; render only the ones active modules contributed. */ }
-						{ data?.pro_widgets?.map( ( w ) => <ProWidget key={ w.id } widget={ w } /> ) }
+						{ data?.pro_widgets?.map( ( w ) => (
+							<ProWidget key={ w.id } widget={ w } />
+						) ) }
 
 						{ /* Upcoming holidays */ }
 						<WidgetCard
 							icon={ PalmtreeIcon }
 							title={ __( 'Upcoming Holidays', 'erp' ) }
-							action={ canManageLeave ? { label: __( 'All', 'erp' ), to: '/leave/holidays' } : undefined }
+							action={
+								canManageLeave
+									? {
+											label: __( 'All', 'erp' ),
+											to: '/leave/holidays',
+									  }
+									: undefined
+							}
 						>
 							{ ( data?.holidays_upcoming.length ?? 0 ) === 0 ? (
-								<EmptyRow text={ __( 'No holidays in the next 30 days.', 'erp' ) } />
+								<EmptyRow
+									text={ __(
+										'No holidays in the next 30 days.',
+										'erp'
+									) }
+								/>
 							) : (
 								<ul>
 									{ data?.holidays_upcoming.map( ( h ) => (
-										<li key={ h.id } className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50">
-											<span className="min-w-0 truncate text-sm font-medium text-foreground">{ h.title }</span>
+										<li
+											key={ h.id }
+											className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
+										>
+											<span className="min-w-0 truncate text-sm font-medium text-foreground">
+												{ h.title }
+											</span>
 											<span className="shrink-0 text-xs text-muted-foreground">
-												{ h.start === h.end || ! h.end ? fmtDate( h.start ) : `${ fmtDate( h.start ) } – ${ fmtDate( h.end ) }` }
+												{ h.start === h.end || ! h.end
+													? fmtDate( h.start )
+													: `${ fmtDate(
+															h.start
+													  ) } – ${ fmtDate(
+															h.end
+													  ) }` }
 											</span>
 										</li>
 									) ) }
@@ -626,33 +467,61 @@ function DashboardInner(): JSX.Element {
 						<WidgetCard
 							icon={ Megaphone }
 							title={ __( 'Latest Announcements', 'erp' ) }
-							action={ { label: __( 'All', 'erp' ), to: '/announcements' } }
+							action={ {
+								label: __( 'All', 'erp' ),
+								to: '/announcements',
+							} }
 						>
 							{ ( data?.announcements.length ?? 0 ) === 0 ? (
-								<EmptyRow text={ __( 'No announcements yet.', 'erp' ) } />
+								<EmptyRow
+									text={ __(
+										'No announcements yet.',
+										'erp'
+									) }
+								/>
 							) : (
 								<ul>
 									{ data?.announcements.map( ( a ) => {
-										const unread = ! a.read && ! readAnnouncements.has( a.id );
+										const unread =
+											! a.read &&
+											! readAnnouncements.has( a.id );
 										return (
 											<li key={ a.id }>
 												<button
 													type="button"
-													onClick={ () => openAnnouncement( a.id ) }
+													onClick={ () =>
+														openAnnouncement( a.id )
+													}
 													className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/50"
 												>
 													<span className="flex min-w-0 items-center gap-2">
 														{ unread ? (
-															<span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-primary" />
+															<span
+																aria-hidden="true"
+																className="size-2 shrink-0 rounded-full bg-primary"
+															/>
 														) : null }
-														<span className={ `min-w-0 truncate text-sm ${ unread ? 'font-semibold text-foreground' : 'font-medium text-muted-foreground' }` }>
+														<span
+															className={ `min-w-0 truncate text-sm ${
+																unread
+																	? 'font-semibold text-foreground'
+																	: 'font-medium text-muted-foreground'
+															}` }
+														>
 															{ a.title }
 														</span>
 														{ unread ? (
-															<span className="sr-only">{ __( '(unread)', 'erp' ) }</span>
+															<span className="sr-only">
+																{ __(
+																	'(unread)',
+																	'erp'
+																) }
+															</span>
 														) : null }
 													</span>
-													<span className="shrink-0 text-xs text-muted-foreground">{ fmtDate( a.date ) }</span>
+													<span className="shrink-0 text-xs text-muted-foreground">
+														{ fmtDate( a.date ) }
+													</span>
 												</button>
 											</li>
 										);
@@ -667,10 +536,19 @@ function DashboardInner(): JSX.Element {
 						<WidgetCard
 							icon={ Cake }
 							title={ __( 'Birthdays', 'erp' ) }
-							count={ ( data?.birthdays_today.length ?? 0 ) + ( data?.birthdays_upcoming.length ?? 0 ) }
+							count={
+								( data?.birthdays_today.length ?? 0 ) +
+								( data?.birthdays_upcoming.length ?? 0 )
+							}
 						>
-							{ ( data?.birthdays_today.length ?? 0 ) === 0 && ( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
-								<EmptyRow text={ __( 'No birthdays in the next 7 days.', 'erp' ) } />
+							{ ( data?.birthdays_today.length ?? 0 ) === 0 &&
+							( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
+								<EmptyRow
+									text={ __(
+										'No birthdays in the next 7 days.',
+										'erp'
+									) }
+								/>
 							) : (
 								<ul>
 									{ data?.birthdays_today.map( ( p ) => (
@@ -678,7 +556,9 @@ function DashboardInner(): JSX.Element {
 											key={ `t-${ p.user_id }` }
 											person={ p }
 											today
-											canWish={ p.user_id !== currentUserId }
+											canWish={
+												p.user_id !== currentUserId
+											}
 											wished={ wished.has( p.user_id ) }
 											onWish={ handleWish }
 										/>
@@ -701,15 +581,25 @@ function DashboardInner(): JSX.Element {
 					{ /* Analytics charts — sit below the activity cards. */ }
 					{ data ? (
 						<div className="mt-8">
-							<SectionLabel>{ __( 'Analytics', 'erp' ) }</SectionLabel>
-							<ChartsSection charts={ data.charts } isManager={ isManager } />
+							<SectionLabel>
+								{ __( 'Analytics', 'erp' ) }
+							</SectionLabel>
+							<ChartsSection
+								charts={ data.charts }
+								isManager={ isManager }
+							/>
 						</div>
 					) : null }
 				</>
 			) }
 
 			{ /* Announcement view modal (marks read on open). */ }
-			<Dialog open={ viewing !== null || viewLoading } onOpenChange={ ( next ) => ( next ? undefined : setViewing( null ) ) }>
+			<Dialog
+				open={ viewing !== null || viewLoading }
+				onOpenChange={ ( next ) =>
+					next ? undefined : setViewing( null )
+				}
+			>
 				<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 					<DialogHeader>
 						<DialogTitle className="m-0 text-xl font-bold leading-tight tracking-tight text-foreground">
@@ -718,16 +608,22 @@ function DashboardInner(): JSX.Element {
 					</DialogHeader>
 					<div className="h-px w-full bg-border" />
 					{ viewLoading && ! viewing ? (
-						<p className="text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
+						<p className="text-sm text-muted-foreground">
+							{ __( 'Loading…', 'erp' ) }
+						</p>
 					) : viewing ? (
 						<>
 							{ viewing.date ? (
-								<p className="text-xs text-muted-foreground">{ fmtDate( viewing.date ) }</p>
+								<p className="text-xs text-muted-foreground">
+									{ fmtDate( viewing.date ) }
+								</p>
 							) : null }
 							{ /* eslint-disable-next-line react/no-danger -- admin-authored, manage-gated content */ }
 							<div
 								className="prose prose-sm max-w-none text-sm text-foreground [&_a]:text-primary"
-								dangerouslySetInnerHTML={ { __html: viewing.content } }
+								dangerouslySetInnerHTML={ {
+									__html: viewing.content,
+								} }
 							/>
 						</>
 					) : null }
