@@ -5,24 +5,19 @@
  * counts + inline search, the shared `OrgPagination` footer, per-row actions.
  * Create + edit happen in a dialog; trash / restore / permanent-delete mirror
  * the legacy bulk handlers.
+ *
+ * Orchestration only — list state, data hook, and mutation handlers. Chrome
+ * lives alongside: `AnnouncementsToolbar` (status tabs + search),
+ * `AnnouncementsTable` (rows), `announcements-format` (pure consts/formatter).
  */
 
-import {
-	Button,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-	Input,
-	toast,
-} from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, Plus, RotateCcw, Search, Trash2 } from 'lucide-react';
+import { Button, toast } from '@wedevs/plugin-ui';
+import { Plus } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
-import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -32,24 +27,11 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { AnnouncementFormDialog } from './AnnouncementFormDialog';
+import { AnnouncementsTable } from './AnnouncementsTable';
+import { AnnouncementsToolbar } from './AnnouncementsToolbar';
+import { SEARCH_DEBOUNCE_MS } from './announcements-format';
 import type { Announcement, AnnouncementDetail, AnnouncementFormOptions, AnnouncementInput } from './types';
 import { useAnnouncements } from './useAnnouncements';
-
-const STATUS_TABS: ReadonlyArray< { value: string; label: string } > = [
-	{ value: 'publish', label: __( 'Published', 'erp' ) },
-	{ value: 'draft', label: __( 'Draft', 'erp' ) },
-	{ value: 'trash', label: __( 'Trash', 'erp' ) },
-];
-
-const SEARCH_DEBOUNCE_MS = 350;
-
-function fmt( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	return Number.isNaN( d.getTime() ) ? value.slice( 0, 10 ) : d.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
-}
 
 function AnnouncementsInner(): JSX.Element {
 	const canManage = useCan( 'erp_manage_announcement' );
@@ -207,47 +189,13 @@ function AnnouncementsInner(): JSX.Element {
 			</header>
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
-				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Announcement status', 'erp' ) } className="flex items-stretch">
-						{ STATUS_TABS.map( ( tab ) => {
-							const selected = status === tab.value;
-							return (
-								<button
-									key={ tab.value }
-									role="tab"
-									type="button"
-									aria-selected={ selected }
-									onClick={ () => setStatus( tab.value ) }
-									className={ [
-										'relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium',
-										selected ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-									].join( ' ' ) }
-								>
-									<span>{ tab.label }</span>
-									<span className="font-normal text-muted-foreground">({ countFor( tab.value ) })</span>
-									{ selected ? (
-										<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
-									) : null }
-								</button>
-							);
-						} ) }
-					</div>
-					<div className="relative">
-						<Search
-							size={ 16 }
-							aria-hidden="true"
-							className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-						/>
-						<Input
-							type="search"
-							value={ searchInput }
-							onChange={ ( e ) => setSearchInput( e.target.value ) }
-							placeholder={ __( 'Search', 'erp' ) }
-							className="h-9 w-60 rounded-md border-border pl-9 text-sm"
-							aria-label={ __( 'Search announcements', 'erp' ) }
-						/>
-					</div>
-				</div>
+				<AnnouncementsToolbar
+					status={ status }
+					onStatus={ setStatus }
+					searchInput={ searchInput }
+					onSearchInput={ setSearchInput }
+					countFor={ countFor }
+				/>
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
@@ -258,74 +206,13 @@ function AnnouncementsInner(): JSX.Element {
 						{ search ? __( 'No announcements match your search.', 'erp' ) : __( 'No announcements here yet.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
-						<thead className="border-b border-border bg-muted/40">
-							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Recipients', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Author', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-2">{ __( 'Date', 'erp' ) }</th>
-								<th scope="col" className="w-20 px-4">
-									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ rows.map( ( row ) => (
-								<tr key={ row.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									<td className="max-w-md px-4 align-middle">
-										<div className="truncate font-medium text-foreground">{ row.title || __( '(no title)', 'erp' ) }</div>
-										{ row.excerpt ? (
-											<div className="truncate text-xs text-muted-foreground">{ row.excerpt }</div>
-										) : null }
-									</td>
-									<td className="px-2 align-middle text-sm text-muted-foreground">
-										<EmployeeAvatarStack people={ row.recipients_preview } total={ row.recipient_count } />
-									</td>
-									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ row.author || '—' }</td>
-									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmt( row.date ) }</td>
-									<td className="px-4 align-middle">
-										{ canManage ? (
-											<div className="flex justify-end">
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={
-															<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), row.title ) }>
-																<MoreVertical size={ 16 } aria-hidden="true" />
-															</Button>
-														}
-													/>
-													<DropdownMenuContent align="end" className="min-w-44">
-														{ row.status === 'trash' ? (
-															<DropdownMenuItem className="gap-2" onClick={ () => void handleRestore( row ) }>
-																<RotateCcw size={ 14 } aria-hidden="true" />
-																{ __( 'Restore', 'erp' ) }
-															</DropdownMenuItem>
-														) : (
-															<DropdownMenuItem className="gap-2" onClick={ () => void openEdit( row ) }>
-																<Pencil size={ 14 } aria-hidden="true" />
-																{ __( 'Edit', 'erp' ) }
-															</DropdownMenuItem>
-														) }
-														<DropdownMenuItem
-															variant="destructive"
-															className="gap-2"
-															onClick={ () => setDeleting( row ) }
-														>
-															<Trash2 size={ 14 } aria-hidden="true" />
-															{ row.status === 'trash' ? __( 'Delete permanently', 'erp' ) : __( 'Trash', 'erp' ) }
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</div>
-										) : null }
-									</td>
-								</tr>
-							) ) }
-						</tbody>
-					</table>
-					</div>
+					<AnnouncementsTable
+						rows={ rows }
+						canManage={ canManage }
+						onEdit={ ( row ) => void openEdit( row ) }
+						onRestore={ ( row ) => void handleRestore( row ) }
+						onDelete={ setDeleting }
+					/>
 				) }
 
 				{ ! error && ! loading && total > 0 ? (

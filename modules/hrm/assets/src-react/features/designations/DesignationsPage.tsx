@@ -8,22 +8,14 @@
 
 import {
 	Button,
-	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-	Input,
-	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { ArrowDown, ArrowUp, ArrowUpDown, Filter, MoreVertical, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
-import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -34,9 +26,9 @@ import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { useOrgCrud } from '../org/useOrgCrud';
 import { DesignationFormDialog } from './DesignationFormDialog';
+import { DesignationsTable, type SortKey } from './DesignationsTable';
+import { DesignationsToolbar } from './DesignationsToolbar';
 import type { Designation, DesignationInput } from './types';
-
-type SortKey = 'title' | 'total_employees';
 
 function DesignationsInner(): JSX.Element {
 	const { rows, loading, error, save, remove, bulkRemove } = useOrgCrud< Designation >( 'designations' );
@@ -94,15 +86,6 @@ function DesignationsInner(): JSX.Element {
 
 	function toggleSort( key: SortKey ): void {
 		setSort( ( prev ) => ( prev.key === key ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' } ) );
-	}
-
-	function sortIcon( key: SortKey ): JSX.Element {
-		if ( sort.key !== key ) {
-			return <ArrowUpDown size={ 12 } aria-hidden="true" />;
-		}
-		return sort.dir === 'asc'
-			? <ArrowUp size={ 12 } aria-hidden="true" />
-			: <ArrowDown size={ 12 } aria-hidden="true" />;
 	}
 
 	const totalPages = Math.max( 1, Math.ceil( filtered.length / perPage ) );
@@ -226,74 +209,16 @@ function DesignationsInner(): JSX.Element {
 			</header>
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
-				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Designations', 'erp' ) } className="flex items-stretch">
-						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
-							<span>{ __( 'All', 'erp' ) }</span>
-							<span className="font-normal text-muted-foreground">({ rows.length })</span>
-							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
-						</span>
-					</div>
-					<div className="flex items-center gap-3">
-						<div className="relative">
-							<Search
-								size={ 16 }
-								aria-hidden="true"
-								className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-							/>
-							<Input
-								type="search"
-								value={ search }
-								onChange={ ( e ) => setSearch( e.target.value ) }
-								placeholder={ __( 'Search designations…', 'erp' ) }
-								className="h-9 w-60 rounded-md border-border pl-9 text-sm"
-								aria-label={ __( 'Search designations', 'erp' ) }
-							/>
-						</div>
-						<button
-							type="button"
-							aria-label={ __( 'Toggle filters', 'erp' ) }
-							aria-pressed={ filterButtonActive }
-							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-							className={ [
-								'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
-								filterButtonActive
-									? 'border-primary text-primary'
-									: 'border-border text-muted-foreground hover:text-foreground',
-							].join( ' ' ) }
-						>
-							<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
-							<span>{ __( 'Filter', 'erp' ) }</span>
-							{ activeFilterCount > 0 ? (
-								<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
-									{ activeFilterCount }
-								</span>
-							) : null }
-						</button>
-					</div>
-				</div>
-
-				{ filterButtonActive ? (
-					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-						<label className="flex items-center gap-2 text-sm text-muted-foreground">
-							{ __( 'Employees', 'erp' ) }
-							<SmartSelect
-								options={ [
-									{ value: 'with', label: __( 'With employees', 'erp' ) },
-									{ value: 'without', label: __( 'Without employees', 'erp' ) },
-								] }
-								value={ employeesFilter }
-								onValueChange={ ( v ) => setEmployeesFilter( ( v ?? '' ) as '' | 'with' | 'without' ) }
-								placeholder={ __( 'All', 'erp' ) }
-								searchPlaceholder={ __( 'Search…', 'erp' ) }
-								emptyMessage={ __( 'No matches found.', 'erp' ) }
-								showClear
-								className="h-9 w-52 bg-background"
-								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
-							/>
-						</label>
-					</div>
-				) : null }
+				<DesignationsToolbar
+					total={ rows.length }
+					search={ search }
+					onSearch={ setSearch }
+					filterButtonActive={ filterButtonActive }
+					activeFilterCount={ activeFilterCount }
+					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
+					employeesFilter={ employeesFilter }
+					onEmployeesFilter={ setEmployeesFilter }
+				/>
 
 				{ canManage && selected.size > 0 ? (
 					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
@@ -315,79 +240,18 @@ function DesignationsInner(): JSX.Element {
 							: __( 'No designations yet.', 'erp' ) }
 					</p>
 				) : (
-					<table className="w-full text-left">
-						<thead className="border-b border-border bg-muted/40">
-							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								{ canManage ? (
-									<th scope="col" className="w-10 px-2">
-										<Checkbox checked={ allChecked } onCheckedChange={ toggleAll } aria-label={ __( 'Select all', 'erp' ) } />
-									</th>
-								) : null }
-								<th scope="col" className="px-2">
-									<button type="button" onClick={ () => toggleSort( 'title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-										{ __( 'Name', 'erp' ) }{ sortIcon( 'title' ) }
-									</button>
-								</th>
-								<th scope="col" className="px-2">
-									<button type="button" onClick={ () => toggleSort( 'total_employees' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-										{ __( 'Employees', 'erp' ) }{ sortIcon( 'total_employees' ) }
-									</button>
-								</th>
-								<th scope="col" className="w-20 px-4">
-									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ pageRows.map( ( desig ) => (
-								<tr key={ desig.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									{ canManage ? (
-										<td className="px-2 align-middle">
-											<Checkbox checked={ selected.has( desig.id ) } onCheckedChange={ () => toggleOne( desig.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), desig.title ) } />
-										</td>
-									) : null }
-									<td className="px-2 align-middle">
-										<div className="font-medium text-foreground">{ desig.title }</div>
-										{ desig.description ? (
-											<div className="truncate text-xs text-muted-foreground">{ desig.description }</div>
-										) : null }
-									</td>
-									<td className="px-2 align-middle text-sm text-foreground">
-										<EmployeeAvatarStack people={ desig.employees } total={ desig.total_employees } />
-									</td>
-									<td className="px-4 align-middle">
-										{ canManage ? (
-											<div className="flex justify-end">
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={
-															<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), desig.title ) }>
-																<MoreVertical size={ 16 } aria-hidden="true" />
-															</Button>
-														}
-													/>
-													<DropdownMenuContent align="end" className="min-w-44">
-														<DropdownMenuItem className="gap-2" onClick={ () => openEdit( desig ) }>
-															<Pencil size={ 14 } aria-hidden="true" />
-															{ __( 'Edit', 'erp' ) }
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															variant="destructive"
-															className="gap-2"
-															onClick={ () => setDeleting( desig ) }
-														>
-															<Trash2 size={ 14 } aria-hidden="true" />
-															{ __( 'Delete', 'erp' ) }
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</div>
-										) : null }
-									</td>
-								</tr>
-							) ) }
-						</tbody>
-					</table>
+					<DesignationsTable
+						rows={ pageRows }
+						canManage={ canManage }
+						selected={ selected }
+						allChecked={ allChecked }
+						sort={ sort }
+						onToggleAll={ toggleAll }
+						onToggleOne={ toggleOne }
+						onToggleSort={ toggleSort }
+						onEdit={ openEdit }
+						onDelete={ setDeleting }
+					/>
 				) }
 
 				{ ! error && ! loading && filtered.length > 0 ? (

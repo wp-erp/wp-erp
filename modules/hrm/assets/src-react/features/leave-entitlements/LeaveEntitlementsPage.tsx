@@ -5,20 +5,16 @@
  * search filters, an Assign action, and per-row delete. Assign + delete
  * delegate (server-side) to the unchanged v1 model layer, so the
  * already-assigned / employee-active guards and the cascade delete all stay.
+ *
+ * Orchestration only: filters live in `LeaveEntitlementsFilters`, the list in
+ * `LeaveEntitlementsTable`, data in `useEntitlements`.
  */
 
 import {
 	Button,
-	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-	Input,
-	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Filter, MoreVertical, Plus, Search, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -33,6 +29,8 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { EntitlementAssignDialog } from './EntitlementAssignDialog';
+import { LeaveEntitlementsFilters } from './LeaveEntitlementsFilters';
+import { LeaveEntitlementsTable } from './LeaveEntitlementsTable';
 import type { Entitlement, EntitlementAssignInput, IdOption } from './types';
 import { useEntitlements } from './useEntitlements';
 
@@ -162,14 +160,6 @@ function LeaveEntitlementsInner(): JSX.Element {
 		}
 	}
 
-	const policyFilterOpts = [
-		{ value: '', label: __( 'All Policies', 'erp' ) },
-		...policies.map( ( p ) => ( { value: String( p.value ), label: p.label } ) ),
-	];
-
-	const activeFilterCount  = policyId ? 1 : 0;
-	const filterButtonActive = showFilters || activeFilterCount > 0;
-
 	return (
 		<section className="mx-auto w-full max-w-full">
 			<header className="mb-6 flex items-center justify-between gap-4">
@@ -189,67 +179,16 @@ function LeaveEntitlementsInner(): JSX.Element {
 			</header>
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
-				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Leave Entitlements', 'erp' ) } className="flex items-stretch">
-						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
-							<span>{ __( 'All', 'erp' ) }</span>
-							<span className="font-normal text-muted-foreground">({ total })</span>
-							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
-						</span>
-					</div>
-					<div className="flex items-center gap-3">
-						<div className="relative">
-							<Search
-								size={ 16 }
-								aria-hidden="true"
-								className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-							/>
-							<Input
-								type="search"
-								value={ search }
-								onChange={ ( e ) => setSearch( e.target.value ) }
-								placeholder={ __( 'Search employees…', 'erp' ) }
-								className="h-9 w-56 rounded-md border-border pl-9 text-sm"
-								aria-label={ __( 'Search entitlements by employee', 'erp' ) }
-							/>
-						</div>
-						<button
-							type="button"
-							aria-label={ __( 'Toggle filters', 'erp' ) }
-							aria-pressed={ filterButtonActive }
-							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-							className={ [
-								'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
-								filterButtonActive ? 'border-primary text-primary' : 'border-border text-muted-foreground hover:text-foreground',
-							].join( ' ' ) }
-						>
-							<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
-							<span>{ __( 'Filter', 'erp' ) }</span>
-							{ activeFilterCount > 0 ? (
-								<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
-									{ activeFilterCount }
-								</span>
-							) : null }
-						</button>
-					</div>
-				</div>
-
-				{ filterButtonActive ? (
-					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-						<label className="flex items-center gap-2 text-sm text-muted-foreground">
-							{ __( 'Policy', 'erp' ) }
-							<SmartSelect
-								options={ policyFilterOpts }
-								value={ String( policyId || '' ) }
-								onValueChange={ ( v ) => setPolicyId( Number( v || 0 ) ) }
-								placeholder={ __( 'All Policies', 'erp' ) }
-								showClear
-								className="h-9 w-52 bg-background"
-								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
-							/>
-						</label>
-					</div>
-				) : null }
+				<LeaveEntitlementsFilters
+					total={ total }
+					search={ search }
+					onSearch={ setSearch }
+					policyId={ policyId }
+					onPolicyId={ setPolicyId }
+					showFilters={ showFilters }
+					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
+					policies={ policies }
+				/>
 
 				{ canManage && selected.size > 0 ? (
 					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
@@ -276,70 +215,15 @@ function LeaveEntitlementsInner(): JSX.Element {
 							: __( 'No entitlements assigned yet.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
-						<thead className="border-b border-border bg-muted/40">
-							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								{ canManage ? (
-									<th scope="col" className="w-10 px-4">
-										<Checkbox checked={ allOnPageSelected } onCheckedChange={ toggleAll } aria-label={ __( 'Select all', 'erp' ) } />
-									</th>
-								) : null }
-								<th scope="col" className="px-4">{ __( 'Employee', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Available', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Spent', 'erp' ) }</th>
-								<th scope="col" className="w-20 px-4">
-									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ rows.map( ( ent ) => (
-								<tr key={ ent.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									{ canManage ? (
-										<td className="w-10 px-4 align-middle">
-											<Checkbox checked={ selected.has( ent.id ) } onCheckedChange={ () => toggleOne( ent.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), ent.employee_name ) } />
-										</td>
-									) : null }
-									<td className="px-4 align-middle font-medium text-foreground">
-										{ ent.employee_name || <span className="text-muted-foreground">—</span> }
-									</td>
-									<td className="px-2 align-middle text-sm text-foreground">{ ent.policy_name }</td>
-									<td className="px-2 align-middle text-sm text-foreground">{ ent.days }</td>
-									<td className="px-2 align-middle text-sm text-foreground">{ ent.available }</td>
-									<td className="px-2 align-middle text-sm text-muted-foreground">{ ent.spent }</td>
-									<td className="px-4 align-middle">
-										{ canManage ? (
-											<div className="flex justify-end">
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={
-															<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), ent.employee_name ) }>
-																<MoreVertical size={ 16 } aria-hidden="true" />
-															</Button>
-														}
-													/>
-													<DropdownMenuContent align="end" className="min-w-44">
-														<DropdownMenuItem
-															variant="destructive"
-															className="gap-2"
-															onClick={ () => setDeleting( ent ) }
-														>
-															<Trash2 size={ 14 } aria-hidden="true" />
-															{ __( 'Delete', 'erp' ) }
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</div>
-										) : null }
-									</td>
-								</tr>
-							) ) }
-						</tbody>
-					</table>
-					</div>
+					<LeaveEntitlementsTable
+						rows={ rows }
+						canManage={ canManage }
+						selected={ selected }
+						allOnPageSelected={ allOnPageSelected }
+						onToggleAll={ toggleAll }
+						onToggleOne={ toggleOne }
+						onDelete={ setDeleting }
+					/>
 				) }
 
 				{ ! error && ! loading && total > 0 ? (

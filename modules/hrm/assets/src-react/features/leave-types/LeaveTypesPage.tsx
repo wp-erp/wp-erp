@@ -12,15 +12,10 @@
 
 import {
 	Button,
-	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
 	Input,
 	toast,
 } from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { Plus, Search, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -35,6 +30,7 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { LeaveTypeFormDialog } from './LeaveTypeFormDialog';
+import { LeaveTypesTable } from './LeaveTypesTable';
 import type { LeaveType, LeaveTypeInput } from './types';
 import { useLeaveTypes } from './useLeaveTypes';
 
@@ -239,80 +235,16 @@ function LeaveTypesInner(): JSX.Element {
 							: __( 'No leave types yet.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
-						<thead className="border-b border-border bg-muted/40">
-							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								{ canManage ? (
-									<th scope="col" className="w-10 px-4">
-										<Checkbox
-											checked={ allPageSelected }
-											onCheckedChange={ toggleAll }
-											aria-label={ __( 'Select all on this page', 'erp' ) }
-										/>
-									</th>
-								) : null }
-								<th scope="col" className="px-4">{ __( 'Leave Type', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
-								<th scope="col" className="w-20 px-4">
-									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ pageRows.map( ( type ) => (
-								<tr key={ type.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									{ canManage ? (
-										<td className="px-4 align-middle">
-											<Checkbox
-												checked={ selected.has( type.id ) }
-												onCheckedChange={ () => toggleOne( type.id ) }
-												aria-label={ sprintf( __( 'Select %s', 'erp' ), type.name ) }
-											/>
-										</td>
-									) : null }
-									<td className="px-4 align-middle font-medium text-foreground">{ type.name }</td>
-									<td className="px-2 align-middle text-sm text-muted-foreground">
-										{ type.description ? (
-											<span className="line-clamp-1">{ type.description }</span>
-										) : (
-											<span className="text-muted-foreground">—</span>
-										) }
-									</td>
-									<td className="px-4 align-middle">
-										{ canManage ? (
-											<div className="flex justify-end">
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={
-															<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), type.name ) }>
-																<MoreVertical size={ 16 } aria-hidden="true" />
-															</Button>
-														}
-													/>
-													<DropdownMenuContent align="end" className="min-w-44">
-														<DropdownMenuItem className="gap-2" onClick={ () => openEdit( type ) }>
-															<Pencil size={ 14 } aria-hidden="true" />
-															{ __( 'Edit', 'erp' ) }
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															variant="destructive"
-															className="gap-2"
-															onClick={ () => setDeleting( type ) }
-														>
-															<Trash2 size={ 14 } aria-hidden="true" />
-															{ __( 'Delete', 'erp' ) }
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</div>
-										) : null }
-									</td>
-								</tr>
-							) ) }
-						</tbody>
-					</table>
-					</div>
+					<LeaveTypesTable
+						rows={ pageRows }
+						canManage={ canManage }
+						selected={ selected }
+						allPageSelected={ allPageSelected }
+						onToggleAll={ toggleAll }
+						onToggleOne={ toggleOne }
+						onEdit={ openEdit }
+						onDelete={ setDeleting }
+					/>
 				) }
 
 				{ ! error && ! loading && filtered.length > 0 ? (

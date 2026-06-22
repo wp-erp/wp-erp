@@ -11,16 +11,9 @@
 
 import {
 	Button,
-	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-	Input,
-	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Filter, MoreVertical, Pencil, Plus, Search, Trash2, Upload } from 'lucide-react';
+import { Plus, Trash2, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -36,20 +29,10 @@ import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { HolidayFormDialog } from './HolidayFormDialog';
 import { HolidayImportDialog } from './HolidayImportDialog';
+import { HolidaysTable } from './HolidaysTable';
+import { HolidaysToolbar } from './HolidaysToolbar';
 import type { Holiday, HolidayInput } from './types';
 import { useHolidays } from './useHolidays';
-
-/** Format a `YYYY-MM-DD` value for display (locale short date). */
-function fmt( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 0, 10 );
-	}
-	return d.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
-}
 
 function HolidaysInner(): JSX.Element {
 	const thisYear = new Date().getFullYear();
@@ -211,67 +194,17 @@ function HolidaysInner(): JSX.Element {
 			</header>
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
-				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Holidays', 'erp' ) } className="flex items-stretch">
-						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
-							<span>{ __( 'All', 'erp' ) }</span>
-							<span className="font-normal text-muted-foreground">({ total })</span>
-							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
-						</span>
-					</div>
-					<div className="flex items-center gap-3">
-						<div className="relative">
-							<Search
-								size={ 16 }
-								aria-hidden="true"
-								className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-							/>
-							<Input
-								type="search"
-								value={ search }
-								onChange={ ( e ) => setSearch( e.target.value ) }
-								placeholder={ __( 'Search holidays…', 'erp' ) }
-								className="h-9 w-60 rounded-md border-border pl-9 text-sm"
-								aria-label={ __( 'Search holidays', 'erp' ) }
-							/>
-						</div>
-						<button
-							type="button"
-							aria-label={ __( 'Toggle filters', 'erp' ) }
-							aria-pressed={ filterButtonActive }
-							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-							className={ [
-								'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
-								filterButtonActive ? 'border-primary text-primary' : 'border-border text-muted-foreground hover:text-foreground',
-							].join( ' ' ) }
-						>
-							<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
-							<span>{ __( 'Filter', 'erp' ) }</span>
-							{ activeFilterCount > 0 ? (
-								<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
-									{ activeFilterCount }
-								</span>
-							) : null }
-						</button>
-					</div>
-				</div>
-
-				{ filterButtonActive ? (
-					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-						<label className="flex items-center gap-2 text-sm text-muted-foreground">
-							{ __( 'Year', 'erp' ) }
-							<SmartSelect
-								options={ yearOptions }
-								value={ String( year || '0' ) }
-								onValueChange={ ( v ) => setYear( Number( v || 0 ) ) }
-								placeholder={ __( 'All Years', 'erp' ) }
-								showClear
-								className="h-9 w-36 bg-background"
-								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
-							/>
-						</label>
-					</div>
-				) : null }
+				<HolidaysToolbar
+					total={ total }
+					search={ search }
+					onSearch={ setSearch }
+					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
+					filterButtonActive={ filterButtonActive }
+					activeFilterCount={ activeFilterCount }
+					year={ year }
+					onYear={ ( v ) => setYear( v ) }
+					yearOptions={ yearOptions }
+				/>
 
 				{ canManage && selectedIds.length > 0 ? (
 					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
@@ -315,94 +248,16 @@ function HolidaysInner(): JSX.Element {
 							: __( 'No holidays for this year yet.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
-						<thead className="border-b border-border bg-muted/40">
-							<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
-								{ canManage ? (
-									<th scope="col" className="w-10 px-4">
-										<Checkbox
-											checked={ allSelected }
-											onCheckedChange={ toggleAll }
-											aria-label={ __( 'Select all holidays', 'erp' ) }
-										/>
-									</th>
-								) : null }
-								<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
-								<th scope="col" className="w-20 px-4">
-									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ rows.map( ( holiday ) => (
-								<tr key={ holiday.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-									{ canManage ? (
-										<td className="w-10 px-4 align-middle">
-											<Checkbox
-												checked={ selectedIds.includes( holiday.id ) }
-												onCheckedChange={ () => toggleRow( holiday.id ) }
-												aria-label={ sprintf( __( 'Select %s', 'erp' ), holiday.title ) }
-											/>
-										</td>
-									) : null }
-									<td className="px-4 align-middle font-medium text-foreground">{ holiday.title }</td>
-									<td className="whitespace-nowrap px-2 align-middle text-sm text-foreground">
-										{ holiday.range
-											? `${ fmt( holiday.start ) } – ${ fmt( holiday.end ) }`
-											: fmt( holiday.start ) }
-									</td>
-									<td className="px-2 align-middle text-sm text-muted-foreground">
-										{ sprintf(
-											/* translators: %d: number of days */
-											holiday.duration === 1 ? __( '%d day', 'erp' ) : __( '%d days', 'erp' ),
-											holiday.duration
-										) }
-									</td>
-									<td className="px-2 align-middle text-sm text-muted-foreground">
-										{ holiday.description ? (
-											<span className="line-clamp-1">{ holiday.description }</span>
-										) : (
-											<span className="text-muted-foreground">—</span>
-										) }
-									</td>
-									<td className="px-4 align-middle">
-										{ canManage ? (
-											<div className="flex justify-end">
-												<DropdownMenu>
-													<DropdownMenuTrigger
-														render={
-															<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), holiday.title ) }>
-																<MoreVertical size={ 16 } aria-hidden="true" />
-															</Button>
-														}
-													/>
-													<DropdownMenuContent align="end" className="min-w-44">
-														<DropdownMenuItem className="gap-2" onClick={ () => openEdit( holiday ) }>
-															<Pencil size={ 14 } aria-hidden="true" />
-															{ __( 'Edit', 'erp' ) }
-														</DropdownMenuItem>
-														<DropdownMenuItem
-															variant="destructive"
-															className="gap-2"
-															onClick={ () => setDeleting( holiday ) }
-														>
-															<Trash2 size={ 14 } aria-hidden="true" />
-															{ __( 'Delete', 'erp' ) }
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
-											</div>
-										) : null }
-									</td>
-								</tr>
-							) ) }
-						</tbody>
-					</table>
-					</div>
+					<HolidaysTable
+						rows={ rows }
+						canManage={ canManage }
+						selectedIds={ selectedIds }
+						allSelected={ allSelected }
+						onToggleAll={ toggleAll }
+						onToggleRow={ toggleRow }
+						onEdit={ openEdit }
+						onDelete={ setDeleting }
+					/>
 				) }
 
 				{ ! error && ! loading && total > 0 ? (
