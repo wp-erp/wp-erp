@@ -244,6 +244,7 @@ class AdminMenu {
         ?>
         <style>
             .erp-hr-newer-version-banner {
+                clear: both;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -283,17 +284,74 @@ class AdminMenu {
                 width: 14px;
                 height: 14px;
             }
+            .erp-hr-newer-version-banner__actions {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .erp-hr-newer-version-banner__dismiss {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 26px;
+                height: 26px;
+                padding: 0;
+                background: transparent;
+                border: 0;
+                border-radius: 4px;
+                color: #50575e;
+                cursor: pointer;
+                transition: background 0.15s ease, color 0.15s ease;
+            }
+            .erp-hr-newer-version-banner__dismiss:hover,
+            .erp-hr-newer-version-banner__dismiss:focus {
+                background: #dce5ef;
+                color: #1d2327;
+            }
+            .erp-hr-newer-version-banner__dismiss svg {
+                width: 16px;
+                height: 16px;
+            }
         </style>
-        <div class="erp-hr-newer-version-banner" role="region" aria-label="<?php esc_attr_e( 'New HR experience', 'erp' ); ?>">
+        <div class="erp-hr-newer-version-banner" id="erp-hr-newer-version-banner" role="region" aria-label="<?php esc_attr_e( 'New HR experience', 'erp' ); ?>">
             <div class="erp-hr-newer-version-banner__text">
                 <strong><?php esc_html_e( "We've redesigned the HR experience.", 'erp' ); ?></strong>
                 <span><?php esc_html_e( 'Faster, cleaner, and built for your workflow.', 'erp' ); ?></span>
             </div>
-            <a class="erp-hr-newer-version-banner__cta" href="<?php echo esc_url( $switch_url ); ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                <?php esc_html_e( 'View newer version', 'erp' ); ?>
-            </a>
+            <div class="erp-hr-newer-version-banner__actions">
+                <a class="erp-hr-newer-version-banner__cta" href="<?php echo esc_url( $switch_url ); ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    <?php esc_html_e( 'View newer version', 'erp' ); ?>
+                </a>
+                <button type="button" class="erp-hr-newer-version-banner__dismiss" aria-label="<?php esc_attr_e( 'Dismiss', 'erp' ); ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
         </div>
+        <script>
+            ( function () {
+                var KEY = 'erp-hr-newer-version-banner-dismissed';
+                var el  = document.getElementById( 'erp-hr-newer-version-banner' );
+                if ( ! el ) {
+                    return;
+                }
+                try {
+                    if ( window.localStorage.getItem( KEY ) ) {
+                        el.style.display = 'none';
+                        return;
+                    }
+                } catch ( e ) {}
+                var btn = el.querySelector( '.erp-hr-newer-version-banner__dismiss' );
+                if ( btn ) {
+                    btn.addEventListener( 'click', function () {
+                        el.style.display = 'none';
+                        try {
+                            window.localStorage.setItem( KEY, '1' );
+                        } catch ( e ) {}
+                    } );
+                }
+            } )();
+        </script>
         <?php
     }
 
