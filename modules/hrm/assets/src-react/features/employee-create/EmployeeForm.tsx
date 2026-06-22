@@ -13,21 +13,12 @@
  * erp_is_valid_employee_id() pattern for Employee ID.
  */
 
-import {
-	Alert,
-	AlertDescription,
-	AlertTitle,
-	Button,
-	Checkbox,
-	toast,
-} from '@wedevs/plugin-ui';
+import { Button, toast } from '@wedevs/plugin-ui';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { DependencyHint } from '@/shared/components/DependencyHint';
-import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -43,27 +34,16 @@ import { DesignationFormDialog } from '../designations/DesignationFormDialog';
 import type { Designation, DesignationInput } from '../designations/types';
 import { loadLookup } from '../employees/filters/lookups';
 import type { LookupOption } from '../employees/filters/lookups';
+import { EmployeeBasicSection } from './EmployeeBasicSection';
+import { EmployeeFormAlerts } from './EmployeeFormAlerts';
+import { EmployeeNotificationSection } from './EmployeeNotificationSection';
+import { EmployeePersonalSection } from './EmployeePersonalSection';
+import { EmployeeWorkSection } from './EmployeeWorkSection';
 import { ExtraFields } from './ExtraFields';
 import type { ExtraField } from './ExtraFields';
-import {
-	FormSection,
-	SelectField,
-	SmartSelectField,
-	TextField,
-	TextareaField,
-} from './fields';
 import { checkUser, convertUser } from './useUserCheck';
 import type { UserCheckResult } from './useUserCheck';
 import type { Option } from './options';
-import {
-	BLOOD_GROUP_OPTIONS,
-	GENDER_OPTIONS,
-	MARITAL_OPTIONS,
-	PAY_TYPE_OPTIONS,
-	SOURCE_OPTIONS,
-	STATUS_OPTIONS,
-	TYPE_OPTIONS,
-} from './options';
 import {
 	buildEmployeePayload,
 	EMAIL_RE,
@@ -370,97 +350,15 @@ export function EmployeeForm( {
 	return (
 		<>
 			<form onSubmit={ handleSubmit } className="w-full">
-				{ submitError ? (
-					<Alert variant="destructive" className="mb-6">
-						<AlertTitle>
-							{ __( 'Something went wrong', 'erp' ) }
-						</AlertTitle>
-						<AlertDescription>{ submitError }</AlertDescription>
-					</Alert>
-				) : null }
-
-				{ missingOrgSteps.length > 0 ? (
-					<div className="mb-6">
-						<DependencyHint
-							message={ __(
-								'Set up your organisation before adding employees — Department and Designation are required.',
-								'erp'
-							) }
-							steps={ missingOrgSteps }
-						/>
-					</div>
-				) : null }
-
-				{ ! isEdit && userCheck && userCheck.type === 'employee' ? (
-					<Alert variant="destructive" className="mb-6">
-						<AlertTitle>
-							{ __( 'Email already in use', 'erp' ) }
-						</AlertTitle>
-						<AlertDescription>
-							{ __(
-								'An employee already exists with this email address.',
-								'erp'
-							) }
-						</AlertDescription>
-					</Alert>
-				) : null }
-
-				{ ! isEdit &&
-				userCheck &&
-				userCheck.type === 'wp_user' &&
-				userCheck.user ? (
-					<Alert className="mb-6">
-						<AlertTitle>
-							{ __(
-								'This email belongs to an existing user',
-								'erp'
-							) }
-						</AlertTitle>
-						<AlertDescription>
-							<div className="flex flex-col gap-3">
-								<span>
-									{ __(
-										'A WordPress user with this email already exists. Convert them into an employee instead of creating a new account.',
-										'erp'
-									) }
-								</span>
-								<div>
-									<Button
-										type="button"
-										variant="outline"
-										className="h-9 px-4"
-										disabled={ converting }
-										onClick={ () => void handleConvert() }
-									>
-										{ converting
-											? __( 'Converting…', 'erp' )
-											: __(
-													'Convert to employee',
-													'erp'
-											  ) }
-									</Button>
-								</div>
-							</div>
-						</AlertDescription>
-					</Alert>
-				) : null }
-
-				{ Object.keys( errors ).length > 0 ? (
-					<Alert variant="destructive" className="mb-6">
-						<AlertTitle>
-							{ __( 'Please correct the following', 'erp' ) }
-						</AlertTitle>
-						<AlertDescription>
-							<ul className="list-disc pl-5">
-								{ Array.from(
-									new Set( Object.values( errors ) )
-								).map( ( msg ) => (
-									<li key={ msg }>{ msg }</li>
-								) ) }
-							</ul>
-						</AlertDescription>
-					</Alert>
-				) : null }
+				<EmployeeFormAlerts
+					submitError={ submitError }
+					missingOrgSteps={ missingOrgSteps }
+					isEdit={ isEdit }
+					userCheck={ userCheck }
+					converting={ converting }
+					onConvert={ () => void handleConvert() }
+					errors={ errors }
+				/>
 
 				<div className="space-y-6">
 					<ExtraFields
@@ -469,143 +367,23 @@ export function EmployeeForm( {
 						onChange={ set }
 					/>
 
-					<FormSection
-						title={ __( 'Basic Information', 'erp' ) }
-						description={ __(
-							'Fields marked with * are required.',
-							'erp'
-						) }
-					>
-						<TextField
-							id="first_name"
-							label={ __( 'First Name', 'erp' ) }
-							required
-							value={ form.first_name ?? '' }
-							onChange={ set( 'first_name' ) }
-							error={ errors.first_name }
-							maxLength={ 30 }
-						/>
-						<TextField
-							id="middle_name"
-							label={ __( 'Middle Name', 'erp' ) }
-							value={ form.middle_name ?? '' }
-							onChange={ set( 'middle_name' ) }
-							maxLength={ 30 }
-						/>
-						<TextField
-							id="last_name"
-							label={ __( 'Last Name', 'erp' ) }
-							required
-							value={ form.last_name ?? '' }
-							onChange={ set( 'last_name' ) }
-							error={ errors.last_name }
-							maxLength={ 30 }
-						/>
-						<TextField
-							id="employee_id"
-							label={ __( 'Employee ID', 'erp' ) }
-							value={ form.employee_id ?? '' }
-							onChange={ set( 'employee_id' ) }
-							error={ errors.employee_id }
-						/>
-						<TextField
-							id="email"
-							label={ __( 'Email', 'erp' ) }
-							type="email"
-							required
-							value={ form.email ?? '' }
-							onChange={ set( 'email' ) }
-							error={ errors.email }
-						/>
-						{ ! isEdit ? (
-							<>
-								<SelectField
-									id="type"
-									label={ __( 'Employee Type', 'erp' ) }
-									required
-									options={ TYPE_OPTIONS }
-									value={ form.type ?? '' }
-									onChange={ set( 'type' ) }
-									error={ errors.type }
-									placeholder={ __( '- Select -', 'erp' ) }
-								/>
-								<SelectField
-									id="status"
-									label={ __( 'Employee Status', 'erp' ) }
-									required
-									options={ STATUS_OPTIONS }
-									value={ form.status ?? '' }
-									onChange={ set( 'status' ) }
-									error={ errors.status }
-									placeholder={ __( '- Select -', 'erp' ) }
-								/>
-							</>
-						) : null }
-						<TextField
-							id="hiring_date"
-							label={ __( 'Date of Hire', 'erp' ) }
-							type="date"
-							required
-							value={ form.hiring_date ?? '' }
-							onChange={ set( 'hiring_date' ) }
-							error={ errors.hiring_date }
-						/>
-						<TextField
-							id="end_date"
-							label={ __( 'Employee End Date', 'erp' ) }
-							type="date"
-							value={ form.end_date ?? '' }
-							onChange={ set( 'end_date' ) }
-						/>
-						<SmartSelectField
-							id="department"
-							label={ __( 'Department', 'erp' ) }
-							required
-							options={ departments }
-							value={ form.department ?? '' }
-							onChange={ set( 'department' ) }
-							error={ errors.department }
-							placeholder={ __( '- Select -', 'erp' ) }
-							searchPlaceholder={ __(
-								'Search departments…',
-								'erp'
-							) }
-							labelAction={
-								<QuickAddButton
-									label={ __( 'Add new', 'erp' ) }
-									onClick={ () => {
-										setQuickDeptErr( null );
-										setQuickDeptOpen( true );
-									} }
-									disabled={ submitting }
-								/>
-							}
-						/>
-						<SmartSelectField
-							id="designation"
-							label={ __( 'Job Title', 'erp' ) }
-							required
-							options={ designations }
-							value={ form.designation ?? '' }
-							onChange={ set( 'designation' ) }
-							error={ errors.designation }
-							placeholder={ __( '- Select -', 'erp' ) }
-							searchPlaceholder={ __(
-								'Search job titles…',
-								'erp'
-							) }
-							labelAction={
-								<QuickAddButton
-									label={ __( 'Add new', 'erp' ) }
-									onClick={ () => {
-										setQuickDesigErr( null );
-										setQuickDesigOpen( true );
-									} }
-									disabled={ submitting }
-								/>
-							}
-						/>
-					</FormSection>
+					<EmployeeBasicSection
+						form={ form }
+						errors={ errors }
+						set={ set }
+						isEdit={ isEdit }
+						departments={ departments }
+						designations={ designations }
+						submitting={ submitting }
+						onAddDept={ () => {
+							setQuickDeptErr( null );
+							setQuickDeptOpen( true );
+						} }
+						onAddDesig={ () => {
+							setQuickDesigErr( null );
+							setQuickDesigOpen( true );
+						} }
+					/>
 
 					<ExtraFields
 						fields={ extraBySection( 'basic' ) }
@@ -613,83 +391,13 @@ export function EmployeeForm( {
 						onChange={ set }
 					/>
 
-					{ ! isEdit ? (
-						<FormSection title={ __( 'Work', 'erp' ) }>
-							<SmartSelectField
-								id="location"
-								label={ __( 'Location', 'erp' ) }
-								options={ locations }
-								value={ form.location ?? '' }
-								onChange={ set( 'location' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-								searchPlaceholder={ __(
-									'Search locations…',
-									'erp'
-								) }
-							/>
-							<SmartSelectField
-								id="reporting_to"
-								label={ __( 'Reporting To', 'erp' ) }
-								options={ reporting.options }
-								value={ form.reporting_to ?? '' }
-								onChange={ set( 'reporting_to' ) }
-								onSearch={ reporting.onSearch }
-								loading={ reporting.loading }
-								placeholder={ __( '- Select -', 'erp' ) }
-								searchPlaceholder={ __(
-									'Search employees…',
-									'erp'
-								) }
-							/>
-							<SelectField
-								id="hiring_source"
-								label={ __( 'Source of Hire', 'erp' ) }
-								options={ SOURCE_OPTIONS }
-								value={ form.hiring_source ?? '' }
-								onChange={ set( 'hiring_source' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-							/>
-							<TextField
-								id="pay_rate"
-								label={ __( 'Pay Rate', 'erp' ) }
-								value={ form.pay_rate ?? '' }
-								onChange={ set( 'pay_rate' ) }
-							/>
-							<SelectField
-								id="pay_type"
-								label={ __( 'Pay Type', 'erp' ) }
-								options={ PAY_TYPE_OPTIONS }
-								value={ form.pay_type ?? '' }
-								onChange={ set( 'pay_type' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-							/>
-							<TextField
-								id="work_phone"
-								label={ __( 'Work Phone', 'erp' ) }
-								type="tel"
-								value={ form.work_phone ?? '' }
-								onChange={ set( 'work_phone' ) }
-							/>
-						</FormSection>
-					) : (
-						<FormSection title={ __( 'Work', 'erp' ) }>
-							<SelectField
-								id="hiring_source"
-								label={ __( 'Source of Hire', 'erp' ) }
-								options={ SOURCE_OPTIONS }
-								value={ form.hiring_source ?? '' }
-								onChange={ set( 'hiring_source' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-							/>
-							<TextField
-								id="work_phone"
-								label={ __( 'Work Phone', 'erp' ) }
-								type="tel"
-								value={ form.work_phone ?? '' }
-								onChange={ set( 'work_phone' ) }
-							/>
-						</FormSection>
-					) }
+					<EmployeeWorkSection
+						form={ form }
+						set={ set }
+						isEdit={ isEdit }
+						locations={ locations }
+						reporting={ reporting }
+					/>
 
 					<ExtraFields
 						fields={ extraBySection( 'work' ) }
@@ -697,192 +405,13 @@ export function EmployeeForm( {
 						onChange={ set }
 					/>
 
-					<FormSection title={ __( 'Personal Details', 'erp' ) }>
-						<SelectField
-							id="blood_group"
-							label={ __( 'Blood Group', 'erp' ) }
-							options={ BLOOD_GROUP_OPTIONS }
-							value={ form.blood_group ?? '' }
-							onChange={ set( 'blood_group' ) }
-							placeholder={ __( '- Select -', 'erp' ) }
-						/>
-						<TextField
-							id="spouse_name"
-							label={ __( "Spouse's name", 'erp' ) }
-							value={ form.spouse_name ?? '' }
-							onChange={ set( 'spouse_name' ) }
-						/>
-						<TextField
-							id="father_name"
-							label={ __( "Father's name", 'erp' ) }
-							value={ form.father_name ?? '' }
-							onChange={ set( 'father_name' ) }
-						/>
-						<TextField
-							id="mother_name"
-							label={ __( "Mother's name", 'erp' ) }
-							value={ form.mother_name ?? '' }
-							onChange={ set( 'mother_name' ) }
-						/>
-						<TextField
-							id="mobile"
-							label={ __( 'Mobile', 'erp' ) }
-							type="tel"
-							value={ form.mobile ?? '' }
-							onChange={ set( 'mobile' ) }
-						/>
-						<TextField
-							id="phone"
-							label={ __( 'Phone', 'erp' ) }
-							type="tel"
-							value={ form.phone ?? '' }
-							onChange={ set( 'phone' ) }
-						/>
-						<TextField
-							id="other_email"
-							label={ __( 'Other Email', 'erp' ) }
-							type="email"
-							value={ form.other_email ?? '' }
-							onChange={ set( 'other_email' ) }
-						/>
-						<TextField
-							id="date_of_birth"
-							label={ __( 'Date of Birth', 'erp' ) }
-							type="date"
-							value={ form.date_of_birth ?? '' }
-							onChange={ set( 'date_of_birth' ) }
-						/>
-						{ countryOptions.length > 0 ? (
-							<SmartSelectField
-								id="nationality"
-								label={ __( 'Nationality', 'erp' ) }
-								options={ countryOptions }
-								value={ form.nationality ?? '' }
-								onChange={ set( 'nationality' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-								searchPlaceholder={ __(
-									'Search countries…',
-									'erp'
-								) }
-							/>
-						) : (
-							<TextField
-								id="nationality"
-								label={ __( 'Nationality', 'erp' ) }
-								value={ form.nationality ?? '' }
-								onChange={ set( 'nationality' ) }
-							/>
-						) }
-						<SelectField
-							id="gender"
-							label={ __( 'Gender', 'erp' ) }
-							options={ GENDER_OPTIONS }
-							value={ form.gender ?? '' }
-							onChange={ set( 'gender' ) }
-							placeholder={ __( '- Select -', 'erp' ) }
-						/>
-						<SelectField
-							id="marital_status"
-							label={ __( 'Marital Status', 'erp' ) }
-							options={ MARITAL_OPTIONS }
-							value={ form.marital_status ?? '' }
-							onChange={ set( 'marital_status' ) }
-							placeholder={ __( '- Select -', 'erp' ) }
-						/>
-						<TextField
-							id="driving_license"
-							label={ __( 'Driving License', 'erp' ) }
-							value={ form.driving_license ?? '' }
-							onChange={ set( 'driving_license' ) }
-						/>
-						<TextField
-							id="hobbies"
-							label={ __( 'Hobbies', 'erp' ) }
-							value={ form.hobbies ?? '' }
-							onChange={ set( 'hobbies' ) }
-						/>
-						<TextField
-							id="user_url"
-							label={ __( 'Website', 'erp' ) }
-							type="url"
-							value={ form.user_url ?? '' }
-							onChange={ set( 'user_url' ) }
-						/>
-						<TextField
-							id="street_1"
-							label={ __( 'Address 1', 'erp' ) }
-							value={ form.street_1 ?? '' }
-							onChange={ set( 'street_1' ) }
-						/>
-						<TextField
-							id="street_2"
-							label={ __( 'Address 2', 'erp' ) }
-							value={ form.street_2 ?? '' }
-							onChange={ set( 'street_2' ) }
-						/>
-						<TextField
-							id="city"
-							label={ __( 'City', 'erp' ) }
-							value={ form.city ?? '' }
-							onChange={ set( 'city' ) }
-						/>
-						{ countryOptions.length > 0 ? (
-							<SmartSelectField
-								id="country"
-								label={ __( 'Country', 'erp' ) }
-								options={ countryOptions }
-								value={ form.country ?? '' }
-								onChange={ setCountry }
-								placeholder={ __( '- Select -', 'erp' ) }
-								searchPlaceholder={ __(
-									'Search countries…',
-									'erp'
-								) }
-							/>
-						) : (
-							<TextField
-								id="country"
-								label={ __( 'Country', 'erp' ) }
-								value={ form.country ?? '' }
-								onChange={ set( 'country' ) }
-							/>
-						) }
-						{ countryOptions.length > 0 &&
-						stateOptions.length > 0 ? (
-							<SmartSelectField
-								id="state"
-								label={ __( 'Province / State', 'erp' ) }
-								options={ stateOptions }
-								value={ form.state ?? '' }
-								onChange={ set( 'state' ) }
-								placeholder={ __( '- Select -', 'erp' ) }
-								searchPlaceholder={ __(
-									'Search states…',
-									'erp'
-								) }
-							/>
-						) : (
-							<TextField
-								id="state"
-								label={ __( 'Province / State', 'erp' ) }
-								value={ form.state ?? '' }
-								onChange={ set( 'state' ) }
-							/>
-						) }
-						<TextField
-							id="postal_code"
-							label={ __( 'Post Code / Zip Code', 'erp' ) }
-							value={ form.postal_code ?? '' }
-							onChange={ set( 'postal_code' ) }
-						/>
-						<TextareaField
-							id="description"
-							label={ __( 'Biography', 'erp' ) }
-							value={ form.description ?? '' }
-							onChange={ set( 'description' ) }
-							className="sm:col-span-2 lg:col-span-3"
-						/>
-					</FormSection>
+					<EmployeePersonalSection
+						form={ form }
+						set={ set }
+						countryOptions={ countryOptions }
+						stateOptions={ stateOptions }
+						onCountryChange={ setCountry }
+					/>
 
 					<ExtraFields
 						fields={ extraBySection( 'personal' ) }
@@ -897,40 +426,12 @@ export function EmployeeForm( {
 					/>
 
 					{ ! isEdit ? (
-						<FormSection title={ __( 'Notification', 'erp' ) }>
-							<label className="flex items-start gap-2.5 sm:col-span-2 lg:col-span-3">
-								<Checkbox
-									checked={ notify }
-									onCheckedChange={ ( v ) =>
-										setNotify( v === true )
-									}
-									className="mt-0.5"
-								/>
-								<span className="text-sm text-foreground">
-									{ __(
-										'Send the employee a welcome email.',
-										'erp'
-									) }
-								</span>
-							</label>
-							{ notify ? (
-								<label className="flex items-start gap-2.5 sm:col-span-2 lg:col-span-3">
-									<Checkbox
-										checked={ sendLogin }
-										onCheckedChange={ ( v ) =>
-											setSendLogin( v === true )
-										}
-										className="mt-0.5"
-									/>
-									<span className="text-sm text-foreground">
-										{ __(
-											'Include login details in the welcome email.',
-											'erp'
-										) }
-									</span>
-								</label>
-							) : null }
-						</FormSection>
+						<EmployeeNotificationSection
+							notify={ notify }
+							setNotify={ setNotify }
+							sendLogin={ sendLogin }
+							setSendLogin={ setSendLogin }
+						/>
 					) : null }
 				</div>
 
