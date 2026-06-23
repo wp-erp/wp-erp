@@ -62,6 +62,12 @@ foreach ( array_keys( $locales ) as $locale ) {
 			if ( $key === '' ) {
 				continue;
 			}
+			// Skip empty/untranslated values so a chunk that carries a key with a
+			// blank translation can't clobber the real one merged from another chunk
+			// (glob order is arbitrary — last-write-wins would otherwise lose it).
+			if ( ! is_array( $val ) || ! isset( $val[0] ) || $val[0] === '' ) {
+				continue;
+			}
 			$merged[ $key ] = $val;
 		}
 	}
