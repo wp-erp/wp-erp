@@ -8,11 +8,12 @@
  * `GET /reports/leaves` (+ `/reports/leaves/form-options` for the pickers).
  */
 
-import { Input, SmartSelect } from '@wedevs/plugin-ui';
+import { SmartSelect } from '@wedevs/plugin-ui';
 import { Filter } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
 import { formatNumberI18n } from '@/shared/utils/number';
 
@@ -152,19 +153,17 @@ export function LeavesReportPage(): JSX.Element {
 						<>
 							<label className="flex items-center gap-2 text-sm text-muted-foreground">
 								{ __( 'From', 'erp' ) }
-								<Input
-									type="date"
+								<DateField
 									value={ start }
-									onChange={ ( e ) => setStart( e.target.value ) }
+									onChange={ ( v ) => setStart( v ) }
 									className="h-10 w-40 border-border px-4 text-sm"
 								/>
 							</label>
 							<label className="flex items-center gap-2 text-sm text-muted-foreground">
 								{ __( 'To', 'erp' ) }
-								<Input
-									type="date"
+								<DateField
 									value={ end }
-									onChange={ ( e ) => setEnd( e.target.value ) }
+									onChange={ ( v ) => setEnd( v ) }
 									className="h-10 w-40 border-border px-4 text-sm"
 								/>
 							</label>

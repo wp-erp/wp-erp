@@ -17,6 +17,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useDir } from '@/shared/hooks/useDir';
 import { useRequestsPendingCount } from '@/shared/hooks/useRequestsPendingCount';
 import type { Capability } from '@/types/global';
 
@@ -32,13 +33,15 @@ interface NavDropdownProps {
 }
 
 interface Coords {
-	readonly top:  number;
-	readonly left: number;
+	readonly top:   number;
+	readonly left:  number;
+	readonly right: number;
 }
 
 export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ): JSX.Element {
 	const [ open, setOpen ]     = useState( false );
-	const [ coords, setCoords ] = useState< Coords >( { top: 0, left: 0 } );
+	const [ coords, setCoords ] = useState< Coords >( { top: 0, left: 0, right: 0 } );
+	const dir = useDir();
 	const wrapRef    = useRef< HTMLDivElement >( null );
 	const triggerRef = useRef< HTMLButtonElement >( null );
 	const closeTimer = useRef< number | undefined >( undefined );
@@ -62,7 +65,11 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 			return;
 		}
 		const rect = el.getBoundingClientRect();
-		setCoords( { top: Math.round( rect.bottom ), left: Math.round( rect.left ) } );
+		setCoords( {
+			top:   Math.round( rect.bottom ),
+			left:  Math.round( rect.left ),
+			right: Math.round( window.innerWidth - rect.right ),
+		} );
 	}, [] );
 
 	const openMenu = useCallback( () => {
@@ -157,7 +164,14 @@ export function NavDropdown( { item, active, Icon, hasCap }: NavDropdownProps ):
 					aria-label={ item.label }
 					onMouseEnter={ openMenu }
 					onMouseLeave={ closeSoon }
-					style={ { position: 'fixed', top: coords.top, left: coords.left } }
+					style={ {
+						position: 'fixed',
+						top: coords.top,
+						// RTL: anchor the panel to the trigger's right edge so the
+						// min-w-64 menu grows leftward (toward the page interior)
+						// instead of overflowing the left viewport edge.
+						...( dir === 'rtl' ? { right: coords.right } : { left: coords.left } ),
+					} }
 					className="z-50 mt-1 min-w-64 overflow-hidden rounded-lg border border-border bg-popover p-1.5 text-popover-foreground shadow-lg"
 				>
 					{ children.map( ( sub ) => {

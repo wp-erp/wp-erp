@@ -20,6 +20,7 @@ import {
 } from '@wedevs/plugin-ui';
 import type { JSX, ReactNode } from 'react';
 
+import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
 
 import type { Option } from './options';
@@ -97,18 +98,28 @@ export function TextField( {
 }: TextFieldProps ): JSX.Element {
 	return (
 		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
-			<Input
-				id={ id }
-				type={ type }
-				value={ value }
-				required={ required }
-				disabled={ disabled }
-				placeholder={ placeholder }
-				maxLength={ maxLength }
-				onChange={ ( e ) => onChange( e.target.value ) }
-				className="h-10 w-full border-border bg-background px-4 text-sm"
-				aria-invalid={ error ? true : undefined }
-			/>
+			{ type === 'date' ? (
+				<DateField
+					value={ value }
+					onChange={ onChange }
+					disabled={ disabled }
+					placeholder={ placeholder }
+					className="h-10 w-full border-border bg-background px-4 text-sm"
+				/>
+			) : (
+				<Input
+					id={ id }
+					type={ type }
+					value={ value }
+					required={ required }
+					disabled={ disabled }
+					placeholder={ placeholder }
+					maxLength={ maxLength }
+					onChange={ ( e ) => onChange( e.target.value ) }
+					className="h-10 w-full border-border bg-background px-4 text-sm"
+					aria-invalid={ error ? true : undefined }
+				/>
+			) }
 		</FieldShell>
 	);
 }

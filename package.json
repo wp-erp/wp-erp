@@ -18,6 +18,7 @@
     "build:assets": "bash bin/build.sh",
     "makepot": "wpvuei18n makepot --exclude=\"node_modules/.*,modules/[^/]+/node_modules/.*,modules/hrm/assets/dist-react/.*,modules/hrm/assets/src-react/.*,build/.*,vendor/.*\" && npm run makepot:react",
     "makepot:react": "wp i18n make-pot . i18n/languages/erp.pot --domain=erp --merge=i18n/languages/erp.pot --include=\"modules/hrm/assets/dist-react\" --skip-php",
+    "makejson:react": "bash bin/make-react-json.sh",
     "lint": "eslint --config eslintrc.js --ext .js,.vue .",
     "lint-fix": "npm run lint -- --fix"
   },

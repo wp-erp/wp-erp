@@ -437,8 +437,9 @@ final class Enqueue {
 	 * admin sidebar (36 px icon strip) intact.
 	 *
 	 * What this DOES:
-	 *   - Strips `#wpcontent`'s default 20 px left padding on HR React pages,
-	 *     so our app rail sits flush against the folded sidebar.
+	 *   - Strips `#wpcontent`'s default 20 px inline-start padding on HR React
+	 *     pages, so our app rail sits flush against the folded sidebar (the
+	 *     padding sits on the left in LTR, the right in RTL — hence logical).
 	 *   - Hides `.wrap > h1.wp-heading-inline` if any plugin still injects it
 	 *     above our mount node.
 	 *   - Resets `#wpbody-content`'s `.notice` reservation padding so our
@@ -457,9 +458,13 @@ final class Enqueue {
 		}
 		?>
 		<style id="erp-hr-react-admin-chrome">
-			/* Strip WP's default content padding so the React app sits flush. */
+			/* Strip WP's default content padding so the React app sits flush.
+			 * Use the logical `padding-inline-start` (not `padding-left`): WP puts
+			 * the 20px gutter next to the folded sidebar, which is on the LEFT in
+			 * LTR but the RIGHT in RTL admin. A physical `padding-left: 0` would
+			 * miss the RTL case and leave a 20px gap on the right. */
 			body.erp-hr-react-page #wpbody-content { padding-bottom: 0; }
-			body.erp-hr-react-page #wpcontent { padding-left: 0; }
+			body.erp-hr-react-page #wpcontent { padding-inline-start: 0 !important; }
 			body.erp-hr-react-page #wpfooter { display: none; }
 
 			/* Hide any leftover `.wrap > h1` core might inject above mount. */

@@ -14,6 +14,7 @@ import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { DateField } from '@/shared/DateField';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -112,19 +113,17 @@ function FinancialYearsInner(): JSX.Element {
 									</label>
 									<label className="flex flex-col gap-1.5">
 										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Start date', 'erp' ) }</span> : null }
-										<Input
-											type="date"
+										<DateField
 											value={ row.start_date }
-											onChange={ ( e ) => patch( index, 'start_date', e.target.value ) }
+											onChange={ ( v ) => patch( index, 'start_date', v ) }
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
 									<label className="flex flex-col gap-1.5">
 										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'End date', 'erp' ) }</span> : null }
-										<Input
-											type="date"
+										<DateField
 											value={ row.end_date }
-											onChange={ ( e ) => patch( index, 'end_date', e.target.value ) }
+											onChange={ ( v ) => patch( index, 'end_date', v ) }
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
