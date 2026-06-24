@@ -124,7 +124,7 @@ export function WeatherWidget( { embedded = false }: WeatherWidgetProps ): JSX.E
 
 			<div className="min-w-0 leading-tight">
 				<div className="flex items-baseline gap-0.5">
-					<span className="text-3xl font-bold text-foreground tabular-nums">{ Math.round( data.tempC ) }°</span>
+					<span className="text-3xl font-bold text-foreground">{ Math.round( data.tempC ) }°</span>
 					<span className="text-base font-medium text-muted-foreground">C</span>
 				</div>
 				<div className="flex items-center gap-1 text-sm text-muted-foreground">

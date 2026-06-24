@@ -111,7 +111,7 @@ function RequestsInner(): JSX.Element {
 							>
 								{ Icon ? <Icon size={ 16 } aria-hidden="true" /> : null }
 								{ tab.label }
-								<span className={ [ 'tabular-nums', selected ? 'text-primary/70' : 'text-muted-foreground/70' ].join( ' ' ) }>
+								<span className={ [ '', selected ? 'text-primary/70' : 'text-muted-foreground/70' ].join( ' ' ) }>
 									({ counts[ tab.id ] ?? 0 })
 								</span>
 							</button>

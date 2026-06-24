@@ -52,7 +52,7 @@ export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImpo
 						<tbody>
 							{ result.failed.map( ( f ) => (
 								<tr key={ `${ f.row }-${ f.email }` } className="border-t border-border">
-									<td className="px-3 py-2 tabular-nums">{ f.row }</td>
+									<td className="px-3 py-2">{ f.row }</td>
 									<td className="px-3 py-2">{ f.email }</td>
 									<td className="px-3 py-2 text-destructive">{ f.message }</td>
 								</tr>

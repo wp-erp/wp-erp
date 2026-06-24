@@ -114,12 +114,12 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 											<span className="size-2.5 shrink-0 rounded-full" style={ { backgroundColor: color } } aria-hidden="true" />
 											{ row.policy || __( 'Policy', 'erp' ) }
 										</span>
-										<span className="shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
+										<span className="shrink-0 text-xs font-medium text-muted-foreground">
 											{ sprintf( __( '%s%% used', 'erp' ), String( pctUsed ) ) }
 										</span>
 									</div>
 									<div className="mt-3 flex items-end gap-1.5">
-										<span className="text-3xl font-bold leading-none tabular-nums text-foreground">{ num( row.available ) }</span>
+										<span className="text-3xl font-bold leading-none text-foreground">{ num( row.available ) }</span>
 										<span className="pb-0.5 text-xs text-muted-foreground">
 											{ sprintf(
 												/* translators: %s: total entitled days */

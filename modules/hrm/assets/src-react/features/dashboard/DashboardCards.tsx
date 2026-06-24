@@ -22,7 +22,7 @@ export function LiveTime(): JSX.Element {
 		return () => window.clearInterval( id );
 	}, [] );
 	return (
-		<span className="font-medium tabular-nums text-foreground">
+		<span className="font-medium text-foreground">
 			{ now.toLocaleTimeString( undefined, {
 				hour: '2-digit',
 				minute: '2-digit',
@@ -74,7 +74,7 @@ export function StatCard( {
 				<Icon size={ 22 } strokeWidth={ 1.9 } aria-hidden="true" />
 			</span>
 			<div className="min-w-0">
-				<p className="text-3xl font-bold leading-8 text-foreground tabular-nums">
+				<p className="text-3xl font-bold leading-8 text-foreground">
 					{ value }
 				</p>
 				<p className="truncate text-sm text-muted-foreground">

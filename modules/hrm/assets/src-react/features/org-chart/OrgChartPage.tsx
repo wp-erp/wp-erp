@@ -94,7 +94,7 @@ function OrgChartInner(): JSX.Element {
 					>
 						<Minus size={ 16 } aria-hidden="true" />
 					</button>
-					<span className="w-10 text-center text-xs tabular-nums text-muted-foreground">{ Math.round( zoom * 100 ) }%</span>
+					<span className="w-10 text-center text-xs text-muted-foreground">{ Math.round( zoom * 100 ) }%</span>
 					<button
 						type="button"
 						aria-label={ __( 'Zoom in', 'erp' ) }

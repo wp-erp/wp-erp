@@ -159,7 +159,7 @@ export function MiniCalendarWidget(): JSX.Element {
 							>
 								<ChevronLeft size={ 16 } aria-hidden="true" />
 							</button>
-							<span className="text-sm font-semibold tabular-nums text-foreground">{ monthLabel }</span>
+							<span className="text-sm font-semibold text-foreground">{ monthLabel }</span>
 							<button
 								type="button"
 								onClick={ () => shiftMonth( 1 ) }
@@ -203,7 +203,7 @@ export function MiniCalendarWidget(): JSX.Element {
 										<div className="flex flex-col items-center justify-start py-1">
 											<span
 												className={ [
-													'inline-flex size-8 items-center justify-center rounded-full text-sm tabular-nums',
+													'inline-flex size-8 items-center justify-center rounded-full text-sm',
 													isToday
 														? 'bg-primary font-semibold text-primary-foreground'
 														: inMonth

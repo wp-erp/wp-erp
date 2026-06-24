@@ -180,7 +180,7 @@ export function EmployeesTable(): JSX.Element {
 			</div>
 
 			<footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3 text-sm text-muted-foreground">
-				<span className="text-xs tabular-nums">
+				<span className="text-xs">
 					{ sprintf(
 						/* translators: 1: start row, 2: end row, 3: total */
 						__( 'Showing %1$d–%2$d of %3$d', 'erp' ),
@@ -218,7 +218,7 @@ export function EmployeesTable(): JSX.Element {
 						>
 							<ChevronLeft size={ 14 } aria-hidden="true" />
 						</button>
-						<span className="min-w-20 px-2 text-center text-xs font-medium tabular-nums text-foreground">
+						<span className="min-w-20 px-2 text-center text-xs font-medium text-foreground">
 							{ sprintf( __( '%1$d of %2$d', 'erp' ), page, Math.max( totalPages, 1 ) ) }
 						</span>
 						<button

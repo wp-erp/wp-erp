@@ -242,7 +242,7 @@ export function LeavesReportPage(): JSX.Element {
 								{ columns.map( ( col ) => {
 									const cell = row.cells[ String( col.leave_id ) ];
 									return (
-										<td key={ col.leave_id } className="whitespace-nowrap px-2 text-right align-middle text-sm tabular-nums text-foreground">
+										<td key={ col.leave_id } className="whitespace-nowrap px-2 text-right align-middle text-sm text-foreground">
 											{ cell ? fmtCell( cell.spent, cell.days ) : '—' }
 										</td>
 									);

@@ -156,7 +156,7 @@ export function ProWidget( {
 							key={ i }
 							className="rounded-lg bg-muted/40 px-3 py-2.5"
 						>
-							<p className="text-2xl font-bold leading-7 tabular-nums text-foreground">
+							<p className="text-2xl font-bold leading-7 text-foreground">
 								{ s.value }
 							</p>
 							<p className="truncate text-xs text-muted-foreground">

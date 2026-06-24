@@ -55,7 +55,7 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 				render:         ( row ) => (
 					row.employee_id ? (
 						<span className="group/cell inline-flex items-center gap-1 whitespace-nowrap">
-							<span className="font-medium tabular-nums text-foreground">{ row.employee_id }</span>
+							<span className="font-medium text-foreground">{ row.employee_id }</span>
 							<CopyButton value={ row.employee_id } label={ __( 'Copy employee ID', 'erp' ) } />
 						</span>
 					) : (
@@ -119,7 +119,7 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 				render:         ( row ) => (
 					row.phone ? (
 						<span className="group/cell inline-flex items-center gap-1 whitespace-nowrap">
-							<a href={ `tel:${ row.phone }` } className="text-sm tabular-nums text-foreground hover:text-primary hover:underline">{ row.phone }</a>
+							<a href={ `tel:${ row.phone }` } className="text-sm text-foreground hover:text-primary hover:underline">{ row.phone }</a>
 							<CopyButton value={ row.phone } label={ __( 'Copy phone number', 'erp' ) } />
 						</span>
 					) : (

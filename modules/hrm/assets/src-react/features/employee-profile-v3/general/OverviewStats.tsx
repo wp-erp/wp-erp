@@ -88,7 +88,7 @@ function Stat( { icon: Icon, label, value, sub, tint }: StatProps ): JSX.Element
 				<Icon size={ 20 } strokeWidth={ 1.9 } aria-hidden="true" />
 			</span>
 			<div className="min-w-0">
-				<p className="truncate text-2xl font-bold leading-7 text-foreground tabular-nums">{ value }</p>
+				<p className="truncate text-2xl font-bold leading-7 text-foreground">{ value }</p>
 				<p className="truncate text-xs text-muted-foreground">{ sub ? `${ label } · ${ sub }` : label }</p>
 			</div>
 		</div>
