@@ -27,6 +27,7 @@ class ApiRegistrar {
     public function register_rest_routes() {
         $controllers = [
             '\WeDevs\ERP\API\UtilityController',
+            '\WeDevs\ERP\Admin\Onboarding\OnboardingController',
         ];
 
         if ( erp_is_module_active( 'CRM' ) ) {
