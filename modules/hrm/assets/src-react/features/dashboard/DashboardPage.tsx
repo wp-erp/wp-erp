@@ -168,7 +168,7 @@ function DashboardInner(): JSX.Element {
 			) : null }
 
 			{ /* Greeting hero */ }
-			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/50">
+			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-lg bg-card p-6 shadow-sm ring-1 ring-border/50">
 				<div className="relative">
 					<h1 className="text-3xl font-bold leading-9 tracking-tight text-foreground">
 						{ name

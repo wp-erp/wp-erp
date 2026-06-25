@@ -67,9 +67,9 @@ export function StatCard( {
 	to,
 }: StatCardProps ): JSX.Element {
 	const body = (
-		<div className="group relative flex items-center gap-4 overflow-hidden rounded-[10px] bg-card p-5 shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
+		<div className="group relative flex items-center gap-4 overflow-hidden rounded-lg bg-card p-5 shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
 			<span
-				className={ `inline-flex size-12 shrink-0 items-center justify-center rounded-xl shadow-sm transition-transform duration-200 group-hover:scale-105 ${ tint }` }
+				className={ `inline-flex size-12 shrink-0 items-center justify-center rounded-lg shadow-sm transition-transform duration-200 group-hover:scale-105 ${ tint }` }
 			>
 				<Icon size={ 22 } strokeWidth={ 1.9 } aria-hidden="true" />
 			</span>
@@ -94,7 +94,7 @@ export function StatCard( {
 		<Link
 			to={ to }
 			viewTransition
-			className="group block rounded-[10px] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+			className="group block rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 		>
 			{ body }
 		</Link>
@@ -119,7 +119,7 @@ export function WidgetCard( {
 	children,
 }: WidgetCardProps ): JSX.Element {
 	return (
-		<section className="flex flex-col rounded-[10px] bg-card shadow-sm">
+		<section className="flex flex-col rounded-lg bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
 				<h2 className="flex items-center gap-2 text-base font-bold leading-tight tracking-tight text-foreground">
 					<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
