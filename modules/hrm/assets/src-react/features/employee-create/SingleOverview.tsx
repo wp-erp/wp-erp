@@ -70,6 +70,9 @@ export function SingleOverview( { userId, record, canEdit, activeLabel }: Single
 					<Field label={ __( 'Nationality', 'erp' ) } value={ str( record, 'nationality' ) } />
 					<Field label={ __( "Father's name", 'erp' ) } value={ str( record, 'father_name' ) } />
 					<Field label={ __( "Mother's name", 'erp' ) } value={ str( record, 'mother_name' ) } />
+					<Field label={ __( "Spouse's name", 'erp' ) } value={ str( record, 'spouse_name' ) } />
+					<Field label={ __( 'Driver License', 'erp' ) } value={ str( record, 'driving_license' ) } />
+					<Field label={ __( 'Hobbies', 'erp' ) } value={ str( record, 'hobbies' ) } />
 				</FieldGrid>
 
 				<FieldGrid title={ __( 'Home Address', 'erp' ) }>

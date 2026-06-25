@@ -200,6 +200,8 @@ export function GeneralSectionDialog( {
 								<TextField id="edu_scale" label={ __( 'Scale', 'erp' ) } required value={ form.scale ?? '' } onChange={ set( 'scale' ) } />
 							) : null }
 							<TextField id="edu_finished" label={ __( 'Completion Year', 'erp' ) } type="number" required value={ form.finished ?? '' } onChange={ set( 'finished' ) } />
+							<TextField id="edu_interest" label={ __( 'Interests', 'erp' ) } value={ form.interest ?? '' } onChange={ set( 'interest' ) } />
+							<TextField id="edu_expiration" label={ __( 'Expiration Date', 'erp' ) } type="date" value={ form.expiration_date ?? '' } onChange={ set( 'expiration_date' ) } />
 							<TextareaField id="edu_notes" label={ __( 'Notes', 'erp' ) } value={ form.notes ?? '' } onChange={ set( 'notes' ) } />
 						</>
 					) : null }

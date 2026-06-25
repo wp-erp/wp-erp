@@ -505,7 +505,7 @@ function LeaveRequestsInner(): JSX.Element {
 								variant="outline"
 								disabled={ busy }
 								onClick={ () => setBulkDeleting( true ) }
-								className="h-8 gap-1.5 text-destructive hover:text-destructive"
+								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 							>
 								<Trash2 size={ 14 } aria-hidden="true" />{ ' ' }
 								{ __( 'Delete', 'erp' ) }

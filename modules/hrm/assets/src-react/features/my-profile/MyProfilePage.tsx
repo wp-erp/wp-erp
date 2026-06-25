@@ -17,6 +17,8 @@ import { __ } from '@/shared/i18n';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
+import { MyRequestActions } from './MyRequestsCard';
+
 export function MyProfilePage(): JSX.Element {
 	const userId = useSelect(
 		( select ) => ( select( meStoreName ) as unknown as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
@@ -26,7 +28,7 @@ export function MyProfilePage(): JSX.Element {
 	return (
 		<ErrorBoundary>
 			{ userId > 0 ? (
-				<EmployeeProfileV4Inner userId={ userId } />
+				<EmployeeProfileV4Inner userId={ userId } headerActions={ <MyRequestActions /> } />
 			) : (
 				<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
 					{ __( 'Your employee profile could not be found.', 'erp' ) }

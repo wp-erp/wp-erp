@@ -27,6 +27,8 @@ export interface ApiError {
 export interface ApiFetchOptions {
 	readonly method?:  'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 	readonly data?:    unknown;
+	/** Raw body (e.g. `FormData` for multipart uploads). Bypasses JSON encoding. */
+	readonly body?:    unknown;
 	readonly query?:   Record< string, unknown >;
 	readonly signal?:  AbortSignal;
 	readonly headers?: Record< string, string >;
@@ -180,11 +182,15 @@ export async function request< T = unknown >(
 	path: string,
 	opts: ApiFetchOptions = {}
 ): Promise< T > {
-	const { method = 'GET', data, query, signal, headers } = opts;
+	const { method = 'GET', data, body, query, signal, headers } = opts;
 	const url = query ? appendQuery( path, query ) : path;
 
 	const base: Record< string, unknown > = { path: url, method };
-	if ( data !== undefined ) {
+	if ( body !== undefined ) {
+		// Raw body (FormData) — apiFetch leaves it untouched so the browser sets
+		// the multipart boundary; never JSON-encoded.
+		base.body = body;
+	} else if ( data !== undefined ) {
 		base.data = data;
 	}
 	if ( signal !== undefined ) {

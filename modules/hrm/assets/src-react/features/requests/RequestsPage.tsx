@@ -12,7 +12,7 @@
  */
 
 import { applyFilters } from '@wordpress/hooks';
-import { CalendarDays, Inbox, LogOut, Laptop } from 'lucide-react';
+import { CalendarDays, LogOut, Laptop } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { ComponentType, JSX } from 'react';
@@ -24,6 +24,8 @@ import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { LeaveRequestsPage } from '../leave-requests';
+import { ResignationRequests } from './ResignationRequests';
+import { RemoteWorkRequests } from './RemoteWorkRequests';
 
 export interface RequestTab {
 	readonly id:      string;
@@ -32,39 +34,11 @@ export interface RequestTab {
 	readonly icon?:   LucideIcon;
 }
 
-/**
- * Empty-state shown for request types whose owning module isn't active yet
- * (Resignation, Remote Work). Mirrors the legacy "No requests found." placeholder
- * — the type stays visible so the UI matches the design, and a pro module can
- * replace the tab (same `id`) with a real list via `erp_hr.request_tabs`.
- */
-function RequestPlaceholder( { label }: { readonly label: string } ): JSX.Element {
-	return (
-		<div className="rounded-lg border border-border bg-card p-12 text-center shadow-sm">
-			<Inbox size={ 32 } aria-hidden="true" className="mx-auto text-muted-foreground/60" />
-			<p className="mt-3 text-sm font-medium text-foreground">
-				{ /* translators: %s: request type label. */ }
-				{ __( 'No requests found.', 'erp' ) }
-			</p>
-			<p className="mt-1 text-xs text-muted-foreground">
-				{ label }
-			</p>
-		</div>
-	);
-}
-
-function ResignationPlaceholder(): JSX.Element {
-	return <RequestPlaceholder label={ __( 'Resignation requests appear here once the feature is enabled.', 'erp' ) } />;
-}
-function RemoteWorkPlaceholder(): JSX.Element {
-	return <RequestPlaceholder label={ __( 'Remote work requests appear here once the feature is enabled.', 'erp' ) } />;
-}
-
 function RequestsInner(): JSX.Element {
 	const baseTabs: RequestTab[] = [
 		{ id: 'leave', label: __( 'Leave', 'erp' ), element: LeaveRequestsPage, icon: CalendarDays },
-		{ id: 'resignation', label: __( 'Resignation', 'erp' ), element: ResignationPlaceholder, icon: LogOut },
-		{ id: 'remote_work', label: __( 'Remote Work', 'erp' ), element: RemoteWorkPlaceholder, icon: Laptop },
+		{ id: 'resignation', label: __( 'Resignation', 'erp' ), element: ResignationRequests, icon: LogOut },
+		{ id: 'remote_work', label: __( 'Remote Work', 'erp' ), element: RemoteWorkRequests, icon: Laptop },
 	];
 	const tabs = applyFilters( HOOKS.REQUEST_TABS, baseTabs ) as RequestTab[];
 

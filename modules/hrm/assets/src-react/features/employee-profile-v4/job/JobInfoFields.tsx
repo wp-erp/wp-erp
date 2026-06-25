@@ -7,6 +7,7 @@
 import type { JSX } from 'react';
 
 import { QuickAddButton } from '@/shared/components/QuickAddButton';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
@@ -38,10 +39,13 @@ export function JobInfoFields( {
 	onAddDept,
 	onAddDesig,
 }: JobInfoFieldsProps ): JSX.Element {
+	const canAddDept  = useCan( 'erp_manage_department' );
+	const canAddDesig = useCan( 'erp_manage_designation' );
+
 	return (
 		<>
-			<SmartSelectField id="job_department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department } onChange={ set( 'department' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ onAddDept } disabled={ busy } /> } />
-			<SmartSelectField id="job_designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation } onChange={ set( 'designation' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } labelAction={ <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ onAddDesig } disabled={ busy } /> } />
+			<SmartSelectField id="job_department" label={ __( 'Department', 'erp' ) } required options={ departments } value={ form.department } onChange={ set( 'department' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search departments…', 'erp' ) } labelAction={ canAddDept ? <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ onAddDept } disabled={ busy } /> : undefined } />
+			<SmartSelectField id="job_designation" label={ __( 'Job Title', 'erp' ) } required options={ designations } value={ form.designation } onChange={ set( 'designation' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search job titles…', 'erp' ) } labelAction={ canAddDesig ? <QuickAddButton label={ __( 'Add new', 'erp' ) } onClick={ onAddDesig } disabled={ busy } /> : undefined } />
 			<SmartSelectField id="job_location" label={ __( 'Location', 'erp' ) } options={ locations } value={ form.location } onChange={ set( 'location' ) } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search locations…', 'erp' ) } />
 			<SmartSelectField id="job_reporting" label={ __( 'Reporting To', 'erp' ) } required options={ reporting.options } value={ form.reporting_to } onChange={ set( 'reporting_to' ) } onSearch={ reporting.onSearch } loading={ reporting.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 		</>

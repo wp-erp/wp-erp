@@ -8,6 +8,7 @@
 import type { JSX } from 'react';
 
 import { QuickAddButton } from '@/shared/components/QuickAddButton';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 
 import {
@@ -43,6 +44,12 @@ export function EmployeeBasicSection( {
 	onAddDept,
 	onAddDesig,
 }: EmployeeBasicSectionProps ): JSX.Element {
+	// The inline "+ Add new" quick-creates department/designation rows, so only
+	// surface them to users who hold the matching manage capability (same cap the
+	// v2 create endpoints enforce). Others just pick from the existing options.
+	const canAddDept  = useCan( 'erp_manage_department' );
+	const canAddDesig = useCan( 'erp_manage_designation' );
+
 	return (
 		<FormSection
 			title={ __( 'Basic Information', 'erp' ) }
@@ -146,11 +153,13 @@ export function EmployeeBasicSection( {
 					'erp'
 				) }
 				labelAction={
-					<QuickAddButton
-						label={ __( 'Add new', 'erp' ) }
-						onClick={ onAddDept }
-						disabled={ submitting }
-					/>
+					canAddDept ? (
+						<QuickAddButton
+							label={ __( 'Add new', 'erp' ) }
+							onClick={ onAddDept }
+							disabled={ submitting }
+						/>
+					) : undefined
 				}
 			/>
 			<SmartSelectField
@@ -167,11 +176,13 @@ export function EmployeeBasicSection( {
 					'erp'
 				) }
 				labelAction={
-					<QuickAddButton
-						label={ __( 'Add new', 'erp' ) }
-						onClick={ onAddDesig }
-						disabled={ submitting }
-					/>
+					canAddDesig ? (
+						<QuickAddButton
+							label={ __( 'Add new', 'erp' ) }
+							onClick={ onAddDesig }
+							disabled={ submitting }
+						/>
+					) : undefined
 				}
 			/>
 		</FormSection>

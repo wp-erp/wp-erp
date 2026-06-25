@@ -195,7 +195,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 						<span className="text-sm font-medium text-foreground">
 							{ sprintf( __( '%d selected', 'erp' ), selected.size ) }
 						</span>
-						<Button size="sm" variant="outline" disabled={ busy } onClick={ () => setBulkDeleting( true ) } className="h-8 gap-1.5 text-destructive hover:text-destructive">
+						<Button size="sm" variant="outline" disabled={ busy } onClick={ () => setBulkDeleting( true ) } className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive">
 							<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
 						</Button>
 						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>

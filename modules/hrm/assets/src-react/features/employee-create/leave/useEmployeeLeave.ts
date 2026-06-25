@@ -118,9 +118,30 @@ export async function submitLeaveRequest(
 		 * bridges these onto `$_POST` for the legacy `erp_hr_leave_new_args` filter.
 		 */
 		extra?:       Record< string, unknown >;
-	}
+	},
+	/**
+	 * Optional supporting documents. Sent multipart as `leave_document[]` so the
+	 * legacy `erp_hr_save_leave_attachment` hook (on `erp_hr_leave_new`) stores them
+	 * as `leave_document_{id}` user-meta — same as the legacy form.
+	 */
+	files?: readonly File[]
 ): Promise< void > {
 	const path = restPath( 'v2', `/employees/${ userId }/leave/requests` );
+
+	if ( files && files.length > 0 ) {
+		const fd = new FormData();
+		fd.append( 'leave_policy', String( payload.leave_policy ) );
+		fd.append( 'leave_from', payload.leave_from );
+		fd.append( 'leave_to', payload.leave_to );
+		fd.append( 'leave_reason', payload.leave_reason );
+		if ( payload.extra ) {
+			Object.entries( payload.extra ).forEach( ( [ k, v ] ) => fd.append( `extra[${ k }]`, String( v ?? '' ) ) );
+		}
+		files.forEach( ( file ) => fd.append( 'leave_document[]', file ) );
+		await request( path, { method: 'POST', body: fd } );
+		return;
+	}
+
 	await request( path, { method: 'POST', data: payload } );
 }
 

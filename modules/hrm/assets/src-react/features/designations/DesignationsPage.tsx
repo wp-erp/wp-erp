@@ -223,7 +223,7 @@ function DesignationsInner(): JSX.Element {
 				{ canManage && selected.size > 0 ? (
 					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
 						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
-						<Button variant="outline" className="h-9 gap-1.5 text-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
+						<Button variant="outline" className="h-9 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
 							<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
 						</Button>
 					</div>

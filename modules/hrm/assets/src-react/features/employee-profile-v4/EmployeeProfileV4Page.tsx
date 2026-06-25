@@ -30,7 +30,7 @@ import {
 	User,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import type { JSX } from 'react';
+import type { JSX, ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -56,7 +56,7 @@ interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
 }
 
-export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.Element {
+export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
 	const navigate     = useNavigate();
 	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotesCap = useCan( 'erp_manage_review' );
@@ -197,6 +197,7 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 				canEdit={ canEdit }
 				onEdit={ () => navigate( `/employees/${ userId }/edit`, { viewTransition: true } ) }
 				onAvatarChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
+				extraActions={ headerActions }
 			/>
 
 			{ /* Body — left sidebar nav (white card, blue active) + content. */ }

@@ -6,7 +6,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage, Badge, Button } from '@wedevs/plugin-ui';
 import { Activity, Building2, IdCard, Pencil, Tag } from 'lucide-react';
-import type { JSX } from 'react';
+import type { JSX, ReactNode } from 'react';
 
 import { __ } from '@/shared/i18n';
 
@@ -20,9 +20,11 @@ interface ProfileHeaderProps {
 	readonly canEdit:        boolean;
 	readonly onEdit:         () => void;
 	readonly onAvatarChange: ( url: string ) => void;
+	/** Extra header actions rendered beside Edit (e.g. self-service request buttons). */
+	readonly extraActions?:  ReactNode;
 }
 
-export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange }: ProfileHeaderProps ): JSX.Element {
+export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange, extraActions }: ProfileHeaderProps ): JSX.Element {
 	const fullName  = str( record, 'full_name' );
 	const avatarUrl = str( record, 'avatar_url' );
 	const status    = str( record, 'status' );
@@ -66,16 +68,21 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 					</div>
 				</div>
 
-				{ canEdit ? (
-					<Button
-						variant="default"
-						size="sm"
-						className="h-9 gap-1.5 px-4"
-						onClick={ onEdit }
-					>
-						<Pencil size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
-						{ __( 'Edit', 'erp' ) }
-					</Button>
+				{ canEdit || extraActions ? (
+					<div className="flex flex-wrap items-center gap-2">
+						{ extraActions }
+						{ canEdit ? (
+							<Button
+								variant="default"
+								size="sm"
+								className="h-9 gap-1.5 px-4"
+								onClick={ onEdit }
+							>
+								<Pencil size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+								{ __( 'Edit', 'erp' ) }
+							</Button>
+						) : null }
+					</div>
 				) : null }
 			</div>
 

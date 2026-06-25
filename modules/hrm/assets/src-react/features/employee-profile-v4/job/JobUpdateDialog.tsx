@@ -203,10 +203,8 @@ export function JobUpdateDialog( {
 			toast.error( __( 'Please fill all required fields.', 'erp' ) );
 			return;
 		}
-		if ( action === 'job' && ( ! form.department || ! form.designation || ! form.reporting_to ) ) {
-			toast.error( __( 'Please fill all required fields.', 'erp' ) );
-			return;
-		}
+		// Legacy job-info required only the effective date (enforced above); department,
+		// designation and reporting-to were all optional. Don't over-validate here.
 
 		onSubmit( payload );
 	}

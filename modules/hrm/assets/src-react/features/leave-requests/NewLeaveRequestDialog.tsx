@@ -65,6 +65,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 	const [ from, setFrom ]             = useState( '' );
 	const [ to, setTo ]                 = useState( '' );
 	const [ reason, setReason ]         = useState( '' );
+	const [ files, setFiles ]           = useState< File[] >( [] );
 
 	const [ busy, setBusy ]   = useState( false );
 	const [ error, setError ] = useState< string | null >( null );
@@ -92,6 +93,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 		setFrom( '' );
 		setTo( '' );
 		setReason( '' );
+		setFiles( [] );
 		setError( null );
 		setValidation( null );
 		setDateError( null );
@@ -209,7 +211,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 				leave_to:     to,
 				leave_reason: reason,
 				...( extraFields.length > 0 ? { extra } : {} ),
-			} );
+			}, files );
 			onSubmitted();
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Could not submit the leave request.', 'erp' ) );
@@ -227,7 +229,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ __( 'New Leave Request', 'erp' ) }
@@ -261,6 +263,8 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 					setTo={ setTo }
 					reason={ reason }
 					setReason={ setReason }
+					files={ files }
+					setFiles={ setFiles }
 					validating={ validating }
 					dateError={ dateError }
 					validation={ validation }
