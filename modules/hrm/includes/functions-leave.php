@@ -1364,22 +1364,25 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         }
     } );
 
-    // fix orderby parameter
-    if ( $args['orderby'] == 'created_on' ) {
-        $args['orderby'] = 'request.created_at';
-    } elseif ( in_array( $args['orderby'], [ 'start_date', 'end_date', 'name', 'created_at' ] ) ) {
-        $args['orderby'] = 'request.' . $args['orderby'];
-    } elseif ( $args['orderby'] == 'name' ) {
-        $args['orderby'] = 'u.' . $args['orderby'];
-    }elseif ( $args['orderby'] == 'days' ) {
-        $args['orderby'] = 'request.days';
-    }elseif ( $args['orderby'] == 'policy' ) {
-        $args['orderby'] = 'policy.id';
-    }elseif ( $args['orderby'] == 'last_status' ) {
-        $args['orderby'] = 'request.last_status';
-    }elseif ( $args['orderby'] == 'available' ) {
-        $args['orderby'] = 'request.leave_entitlement_id';
-    }
+    // Map allowed orderby values to their safe column expressions. ORDER BY targets
+    // a column/expression (an identifier), not a string literal, so it cannot be
+    // safely escaped with $wpdb->prepare(). Any value outside this whitelist falls
+    // back to a known-safe default to prevent SQL injection via the orderby param.
+    $orderby_map = [
+        'created_on'  => 'request.created_at',
+        'created_at'  => 'request.created_at',
+        'start_date'  => 'request.start_date',
+        'end_date'    => 'request.end_date',
+        'name'        => 'u.display_name',
+        'days'        => 'request.days',
+        'policy'      => 'policy.id',
+        'last_status' => 'request.last_status',
+        'available'   => 'request.leave_entitlement_id',
+    ];
+
+    $args['orderby'] = isset( $orderby_map[ $args['orderby'] ] )
+        ? $orderby_map[ $args['orderby'] ]
+        : 'request.created_at';
 
     $last_changed = erp_cache_get_last_changed( 'hrm', 'leave_request' );
     $cache_key    = 'erp_hr_leave_requests_' . md5( serialize( $args ) ) . ": $last_changed";
@@ -1405,8 +1408,8 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     $where .= " AND entl.trn_type = 'leave_policies'";
 
     $groupby = '';
-    $orderby = $wpdb->prepare( " ORDER BY %s %s", $args['orderby'], $args['order'] );
-    $orderby = esc_sql( str_replace( '\'', '', $orderby ) );
+    $order   = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
+    $orderby = " ORDER BY {$args['orderby']} {$order}";
     $offset = absint( $args['offset'] );
     $number = absint( $args['number'] );
     $limit  = $args['number'] == '-1' ? '' : $wpdb->prepare(" LIMIT %d, %d", $offset, $number);
