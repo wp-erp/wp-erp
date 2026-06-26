@@ -27,6 +27,7 @@ import type { EmployeeCreateInput } from '@/stores/employees';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useCan } from '@/shared/hooks/useCan';
 
 import { DepartmentFormDialog } from '../departments/DepartmentFormDialog';
 import type { Department, DepartmentInput } from '../departments/types';
@@ -84,6 +85,11 @@ export function EmployeeForm( {
 	employeeId,
 }: EmployeeFormProps ): JSX.Element {
 	const isEdit = mode === 'edit';
+
+	// Manager (bare `erp_edit_employee`) vs an employee editing their OWN profile.
+	// The Work section (Source of Hire, Work Phone) is manager-only in the legacy
+	// form, so hide it from a self-editor — they keep Basic + Personal.
+	const isManager = useCan( 'erp_edit_employee' );
 	const navigate = useNavigate();
 
 	const [ form, setForm ] = useState< FormState >( initialValues );
@@ -391,13 +397,15 @@ export function EmployeeForm( {
 						onChange={ set }
 					/>
 
-					<EmployeeWorkSection
-						form={ form }
-						set={ set }
-						isEdit={ isEdit }
-						locations={ locations }
-						reporting={ reporting }
-					/>
+					{ ( ! isEdit || isManager ) && (
+						<EmployeeWorkSection
+							form={ form }
+							set={ set }
+							isEdit={ isEdit }
+							locations={ locations }
+							reporting={ reporting }
+						/>
+					) }
 
 					<ExtraFields
 						fields={ extraBySection( 'work' ) }

@@ -195,6 +195,7 @@ interface SmartSelectFieldProps {
 	 */
 	readonly onSearch?:         ( ( query: string ) => void | Promise< void > ) | undefined;
 	readonly loading?:          boolean | undefined;
+	readonly disabled?:         boolean | undefined;
 	/** Optional affordance rendered to the right of the label — e.g. a "+ Add new" quick-create button. */
 	readonly labelAction?:      ReactNode;
 }
@@ -218,6 +219,7 @@ export function SmartSelectField( {
 	className,
 	onSearch,
 	loading,
+	disabled,
 	labelAction,
 }: SmartSelectFieldProps ): JSX.Element {
 	return (
@@ -230,6 +232,7 @@ export function SmartSelectField( {
 				searchPlaceholder={ searchPlaceholder ?? __( 'Search…', 'erp' ) }
 				emptyMessage={ emptyMessage ?? __( 'No matches found.', 'erp' ) }
 				invalid={ error ? true : false }
+				{ ...( disabled !== undefined ? { disabled } : {} ) }
 				{ ...( onSearch ? { onSearch } : {} ) }
 				{ ...( loading !== undefined ? { loading } : {} ) }
 				showClear

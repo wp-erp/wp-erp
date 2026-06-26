@@ -199,7 +199,7 @@ class EmployeesControllerV2 extends RestControllerV2 {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'reactivate_item' ],
-					'permission_callback' => [ $this, 'permission_edit_employee' ],
+					'permission_callback' => [ $this, 'permission_reactivate_employee' ],
 				],
 			]
 		);
@@ -451,11 +451,29 @@ class EmployeesControllerV2 extends RestControllerV2 {
 	}
 
 	/**
-	 * Permission callback for the update endpoint.
+	 * Permission callback for the update + avatar endpoints.
+	 *
+	 * Meta-mapped against the target user so an employee may edit their OWN
+	 * profile (and a department lead their reports), matching the legacy AJAX
+	 * gate `current_user_can( 'erp_edit_employee', $user_id )`
+	 * (AjaxHandler::ajax_update_employee). A bare cap check would 403 self-edit.
+	 *
+	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
-	public function permission_edit_employee(): bool {
+	public function permission_edit_employee( $request ): bool {
+		return $this->permission_cap( 'erp_edit_employee', (int) $request['user_id'] );
+	}
+
+	/**
+	 * Permission callback for the reactivate endpoint. Un-terminating an
+	 * employee is a manager action only — never self-service — so this keeps the
+	 * bare `erp_edit_employee` (manager) cap rather than the meta-mapped variant.
+	 *
+	 * @return bool
+	 */
+	public function permission_reactivate_employee(): bool {
 		return $this->permission_cap( 'erp_edit_employee' );
 	}
 
@@ -685,7 +703,25 @@ class EmployeesControllerV2 extends RestControllerV2 {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
-		$data    = $this->prepare_item_for_database( $request );
+		$data = $this->prepare_item_for_database( $request );
+
+		// Field-level access (legacy parity): Employee ID, job/org and compensation
+		// fields are manager-only. An employee editing their OWN profile reaches
+		// this endpoint via the meta-mapped `erp_edit_employee` cap but does NOT
+		// hold the bare manager cap — strip those fields so a crafted request can't
+		// bypass the read-only form inputs. `date_of_birth` stays (a self-editable
+		// personal field). Mirrors the legacy form's capability-gated inputs.
+		if ( ! current_user_can( 'erp_edit_employee' ) ) {
+			foreach ( [
+				'employee_id', 'hiring_source', 'hiring_date', 'end_date',
+				'pay_rate', 'pay_type', 'type', 'status',
+				'designation', 'department', 'reporting_to', 'location',
+			] as $manager_only ) {
+				unset( $data['work'][ $manager_only ] );
+			}
+			unset( $data['personal']['employee_id'] );
+		}
+
 		$updated = $employee->update_employee( $data );
 
 		if ( is_wp_error( $updated ) ) {

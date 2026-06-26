@@ -50,6 +50,14 @@ export function EmployeeBasicSection( {
 	const canAddDept  = useCan( 'erp_manage_department' );
 	const canAddDesig = useCan( 'erp_manage_designation' );
 
+	// Field-level access (legacy parity): Employee ID, hire/end dates, Department
+	// and Job Title are manager-only fields. When an employee edits their OWN
+	// profile (no bare `erp_edit_employee` manager cap), these stay read-only —
+	// the legacy form hid them behind `current_user_can( 'erp_edit_employee' )`.
+	// Create mode is manager-only already, so this only bites self-edit.
+	const isManager   = useCan( 'erp_edit_employee' );
+	const lockManager = isEdit && ! isManager;
+
 	return (
 		<FormSection
 			title={ __( 'Basic Information', 'erp' ) }
@@ -89,6 +97,7 @@ export function EmployeeBasicSection( {
 				value={ form.employee_id ?? '' }
 				onChange={ set( 'employee_id' ) }
 				error={ errors.employee_id }
+				disabled={ lockManager }
 			/>
 			<TextField
 				id="email"
@@ -131,6 +140,7 @@ export function EmployeeBasicSection( {
 				value={ form.hiring_date ?? '' }
 				onChange={ set( 'hiring_date' ) }
 				error={ errors.hiring_date }
+				disabled={ lockManager }
 			/>
 			<TextField
 				id="end_date"
@@ -138,6 +148,7 @@ export function EmployeeBasicSection( {
 				type="date"
 				value={ form.end_date ?? '' }
 				onChange={ set( 'end_date' ) }
+				disabled={ lockManager }
 			/>
 			<SmartSelectField
 				id="department"
@@ -152,6 +163,7 @@ export function EmployeeBasicSection( {
 					'Search departments…',
 					'erp'
 				) }
+				disabled={ lockManager }
 				labelAction={
 					canAddDept ? (
 						<QuickAddButton
@@ -175,6 +187,7 @@ export function EmployeeBasicSection( {
 					'Search job titles…',
 					'erp'
 				) }
+				disabled={ lockManager }
 				labelAction={
 					canAddDesig ? (
 						<QuickAddButton
