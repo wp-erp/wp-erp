@@ -38,9 +38,11 @@ import { useCan } from '@/shared/hooks/useCan';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
+import type { EmployeeTerminateInput } from '@/stores/employees';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
+import { TerminateDialog } from '../employees/actions/TerminateDialog';
 import { useProfileExtraTabs } from '../employee-create/profile-tabs';
 import { OverviewTab } from './OverviewTab';
 import { ProfileHeader } from './ProfileHeader';
@@ -50,10 +52,11 @@ import { EmployeeLeaveTab } from './leave/EmployeeLeaveTab';
 import { EmployeeNotesTab } from './notes/EmployeeNotesTab';
 import { EmployeePerformanceTab } from './performance/EmployeePerformanceTab';
 import { EmployeePermissionTab } from './permission/EmployeePermissionTab';
-import type { Record_ } from './profile-format';
+import { str, type Record_ } from './profile-format';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
+	terminateEmployee:    ( userId: number, payload: EmployeeTerminateInput ) => Promise< void >;
 }
 
 export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
@@ -61,6 +64,7 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotesCap = useCan( 'erp_manage_review' );
 	const canViewPerfCap  = useCan( 'erp_create_review' );
+	const canTerminateCap = useCan( 'erp_can_terminate' );
 
 	// Per-target caps (meta-mapped against THIS employee). The global `useCan`
 	// map resolves review/edit caps to manager-only; a department lead is granted
@@ -97,10 +101,35 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 	// Permission tab stays manager-only (global cap) and never for self — legacy
 	// single.php removes it for self and shows it only to managers.
 	const canViewPermission = canViewPerfCap && currentUserId !== userId;
-	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
+	const { fetchEmployeeForEdit, terminateEmployee } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
+
+	// Header Actions: Terminate (manager, active, not self) + Print — mirroring the
+	// legacy single.php Actions panel (Edit | Terminate | Print).
+	const [ termOpen, setTermOpen ]   = useState( false );
+	const [ termBusy, setTermBusy ]   = useState( false );
+	const [ termError, setTermError ] = useState< string | null >( null );
+
+	const submitTerminate = useCallback(
+		( payload: EmployeeTerminateInput ): void => {
+			setTermBusy( true );
+			setTermError( null );
+			void terminateEmployee( userId, payload )
+				.then( () => {
+					setTermOpen( false );
+					// Reflect the new status in the header without a full reload.
+					setRecord( ( prev ) => ( prev ? { ...prev, status: 'terminated' } : prev ) );
+				} )
+				.catch( ( raw ) => {
+					const err = raw as { message?: string };
+					setTermError( err?.message || __( 'Could not terminate the employee. Please try again.', 'erp' ) );
+				} )
+				.finally( () => setTermBusy( false ) );
+		},
+		[ terminateEmployee, userId ]
+	);
 
 	// Active tab lives in the URL (`?tab=job`) so a refresh / deep-link keeps the
 	// open tab instead of snapping back to Overview. `replace` so tab switches
@@ -198,6 +227,18 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 				onEdit={ () => navigate( `/employees/${ userId }/edit`, { viewTransition: true } ) }
 				onAvatarChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
 				extraActions={ headerActions }
+				onPrint={ () => window.print() }
+				onTerminate={ () => { setTermError( null ); setTermOpen( true ); } }
+				canTerminate={ canTerminateCap && currentUserId !== userId && str( record, 'status' ) !== 'terminated' }
+			/>
+
+			<TerminateDialog
+				open={ termOpen }
+				employeeName={ str( record, 'full_name' ) }
+				busy={ termBusy }
+				error={ termError }
+				onClose={ () => setTermOpen( false ) }
+				onSubmit={ submitTerminate }
 			/>
 
 			{ /* Body — left sidebar nav (white card, blue active) + content. */ }
