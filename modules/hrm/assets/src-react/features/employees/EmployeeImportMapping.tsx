@@ -47,7 +47,7 @@ export function EmployeeImportMapping( {
 			{ /* Column headers */ }
 			<div className="grid grid-cols-[1fr_1.3fr] gap-4 border-b border-border bg-muted/40 px-6 py-3 text-sm font-medium text-muted-foreground">
 				<span>{ sprintf( /* translators: %d: column count */ __( 'Columns (%d)', 'erp' ), headers.length ) }</span>
-				<span>{ __( 'Profile Field', 'erp' ) }</span>
+				<span />
 			</div>
 
 			{ requiredMissing.length > 0 ? (
