@@ -417,7 +417,9 @@ const baseRoutes: AppRoute[] = [
 		id:           'leave-calendar',
 		path:         '/leave/calendar',
 		element:      LeaveCalendarPage,
-		capabilities: [ 'erp_leave_manage' ],
+		// Open to any HR-app user — the page + the v2 controller scope a
+		// non-manager to their OWN leave; managers get the whole-company view.
+		capabilities: [],
 		handle: {
 			id:        'leave-calendar',
 			title:     __( 'Leave Calendar', 'erp' ),

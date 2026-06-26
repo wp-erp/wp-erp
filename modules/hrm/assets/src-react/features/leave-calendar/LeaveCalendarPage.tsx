@@ -14,8 +14,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
-import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 
 import { loadLookup } from '../employees/filters/lookups';
@@ -27,6 +27,12 @@ import { addDays, parseYmd, ymd, type DayEvents } from './leave-calendar-format'
 import { useLeaveCalendar } from './useLeaveCalendar';
 
 function LeaveCalendarInner(): JSX.Element {
+	// Managers see the whole-company calendar ('all' scope) with dept/designation
+	// filters; an employee without `erp_leave_manage` sees only their OWN leave
+	// ('me' scope — the v2 controller clamps non-managers to self regardless, this
+	// just hides the manager-only affordances).
+	const canManage = useCan( 'erp_leave_manage' );
+
 	// `cursor` is the first day of the displayed month.
 	const [ cursor, setCursor ] = useState( () => {
 		const now = new Date();
@@ -54,7 +60,7 @@ function LeaveCalendarInner(): JSX.Element {
 	}, [] );
 
 	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( gridEnd ), {
-		scope: 'all',
+		scope: canManage ? 'all' : 'me',
 		departmentId,
 		designationId,
 	} );
@@ -121,7 +127,7 @@ function LeaveCalendarInner(): JSX.Element {
 		<section className="mx-auto w-full max-w-full">
 			<header className="mb-6 flex items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
-					{ __( 'Leave Calendar', 'erp' ) }
+					{ canManage ? __( 'Leave Calendar', 'erp' ) : __( 'My Leave Calendar', 'erp' ) }
 				</h1>
 			</header>
 
@@ -137,6 +143,7 @@ function LeaveCalendarInner(): JSX.Element {
 					onToday={ goToday }
 					onDepartmentChange={ setDepartmentId }
 					onDesignationChange={ setDesignationId }
+					showFilters={ canManage }
 				/>
 
 				{ error ? (
@@ -156,11 +163,11 @@ function LeaveCalendarInner(): JSX.Element {
 }
 
 export function LeaveCalendarPage(): JSX.Element {
+	// No capability gate here: the route is reachable by any HR-app user and the
+	// inner view + the v2 controller scope a non-manager to their OWN leave.
 	return (
-		<CapabilityGate caps={ [ 'erp_leave_manage' ] }>
-			<ErrorBoundary>
-				<LeaveCalendarInner />
-			</ErrorBoundary>
-		</CapabilityGate>
+		<ErrorBoundary>
+			<LeaveCalendarInner />
+		</ErrorBoundary>
 	);
 }

@@ -23,6 +23,9 @@ interface CalendarToolbarProps {
 	readonly onToday:              () => void;
 	readonly onDepartmentChange:   ( id: number ) => void;
 	readonly onDesignationChange:  ( id: number ) => void;
+	// Department / designation filters are a manager-only affordance — an employee
+	// viewing their own calendar has nothing to narrow. Defaults to shown.
+	readonly showFilters?:         boolean;
 }
 
 export function CalendarToolbar( {
@@ -36,6 +39,7 @@ export function CalendarToolbar( {
 	onToday,
 	onDepartmentChange,
 	onDesignationChange,
+	showFilters = true,
 }: CalendarToolbarProps ): JSX.Element {
 	return (
 		<>
@@ -67,31 +71,33 @@ export function CalendarToolbar( {
 				</div>
 			</div>
 
-			{ /* Department / Designation filters (auto-apply) */ }
-			<div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
-				<select
-					value={ departmentId }
-					onChange={ ( e ) => onDepartmentChange( Number( e.target.value ) ) }
-					aria-label={ __( 'Filter by department', 'erp' ) }
-					className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
-				>
-					<option value={ 0 }>{ __( 'All Departments', 'erp' ) }</option>
-					{ departments.map( ( d ) => (
-						<option key={ d.id } value={ d.id }>{ d.title }</option>
-					) ) }
-				</select>
-				<select
-					value={ designationId }
-					onChange={ ( e ) => onDesignationChange( Number( e.target.value ) ) }
-					aria-label={ __( 'Filter by designation', 'erp' ) }
-					className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
-				>
-					<option value={ 0 }>{ __( 'All Designations', 'erp' ) }</option>
-					{ designations.map( ( d ) => (
-						<option key={ d.id } value={ d.id }>{ d.title }</option>
-					) ) }
-				</select>
-			</div>
+			{ /* Department / Designation filters (auto-apply) — managers only */ }
+			{ showFilters && (
+				<div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
+					<select
+						value={ departmentId }
+						onChange={ ( e ) => onDepartmentChange( Number( e.target.value ) ) }
+						aria-label={ __( 'Filter by department', 'erp' ) }
+						className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
+					>
+						<option value={ 0 }>{ __( 'All Departments', 'erp' ) }</option>
+						{ departments.map( ( d ) => (
+							<option key={ d.id } value={ d.id }>{ d.title }</option>
+						) ) }
+					</select>
+					<select
+						value={ designationId }
+						onChange={ ( e ) => onDesignationChange( Number( e.target.value ) ) }
+						aria-label={ __( 'Filter by designation', 'erp' ) }
+						className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
+					>
+						<option value={ 0 }>{ __( 'All Designations', 'erp' ) }</option>
+						{ designations.map( ( d ) => (
+							<option key={ d.id } value={ d.id }>{ d.title }</option>
+						) ) }
+					</select>
+				</div>
+			) }
 
 			{ /* Legend */ }
 			<div className="flex flex-wrap items-center gap-4 border-b border-border px-4 py-2 text-xs text-muted-foreground">
