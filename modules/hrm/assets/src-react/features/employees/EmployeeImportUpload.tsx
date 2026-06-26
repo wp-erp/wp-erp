@@ -13,12 +13,11 @@ import {
 	cn,
 } from '@wedevs/plugin-ui';
 import { CloudUpload, Download, Upload } from 'lucide-react';
-import type { ChangeEvent, DragEvent, JSX, RefObject } from 'react';
+import type { ChangeEvent, DragEvent, JSX, ReactNode, RefObject } from 'react';
 
-import { __, sprintf } from '@/shared/i18n';
+import { __ } from '@/shared/i18n';
 
 import { downloadCsv, importTemplateCsv } from './useEmployeeImportExport';
-import type { Parsed } from './employee-import-helpers';
 
 interface EmployeeImportUploadProps {
 	readonly fileRef:     RefObject< HTMLInputElement | null >;
@@ -28,11 +27,12 @@ interface EmployeeImportUploadProps {
 	readonly onDrop:      ( e: DragEvent< HTMLDivElement > ) => void;
 	readonly onFile:      ( e: ChangeEvent< HTMLInputElement > ) => void;
 	readonly parseError:  string | null;
-	readonly parsed:      Parsed | null;
 	readonly submitting:  boolean;
 	readonly canImport:   boolean;
 	readonly onCancel:    () => void;
 	readonly onImport:    () => void;
+	/** Column-matching step, rendered below the dropzone once a file is parsed. */
+	readonly children?:   ReactNode;
 }
 
 export function EmployeeImportUpload( {
@@ -43,11 +43,11 @@ export function EmployeeImportUpload( {
 	onDrop,
 	onFile,
 	parseError,
-	parsed,
 	submitting,
 	canImport,
 	onCancel,
 	onImport,
+	children,
 }: EmployeeImportUploadProps ): JSX.Element {
 	return (
 		<div className="space-y-4">
@@ -102,50 +102,7 @@ export function EmployeeImportUpload( {
 				</Alert>
 			) : null }
 
-			{ parsed ? (
-				<div className="space-y-2 rounded-lg border border-border bg-card p-4 text-sm">
-					<p className="m-0 font-medium text-foreground">
-						{ sprintf(
-							/* translators: 1: row count, 2: recognised column count */
-							__( '%1$d rows · %2$d recognised columns', 'erp' ),
-							parsed.rows.length,
-							parsed.headers.length
-						) }
-					</p>
-					{ parsed.headers.length > 0 ? (
-						<div className="flex flex-wrap gap-1.5">
-							{ parsed.headers.map( ( h ) => (
-								<span
-									key={ h }
-									className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-								>
-									{ h }
-								</span>
-							) ) }
-						</div>
-					) : null }
-					{ parsed.missing.length > 0 ? (
-						<Alert variant="destructive">
-							<AlertDescription>
-								{ sprintf(
-									/* translators: %s: comma-separated column names */
-									__( 'Missing required columns: %s', 'erp' ),
-									parsed.missing.join( ', ' )
-								) }
-							</AlertDescription>
-						</Alert>
-					) : null }
-					{ parsed.unknownHeaders.length > 0 ? (
-						<p className="m-0 text-xs text-muted-foreground">
-							{ sprintf(
-								/* translators: %s: comma-separated column names */
-								__( 'Ignored columns: %s', 'erp' ),
-								parsed.unknownHeaders.join( ', ' )
-							) }
-						</p>
-					) : null }
-				</div>
-			) : null }
+			{ children }
 
 			<DialogFooter className="gap-5 sm:gap-5">
 				<Button type="button" variant="outline" className="h-10 px-6" disabled={ submitting } onClick={ onCancel }>

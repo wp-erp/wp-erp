@@ -1,13 +1,13 @@
 /**
  * Employee CSV import dialog.
  *
- * Pick/drop a CSV → parse client-side → preview the detected rows/columns →
- * POST to the bulk-import endpoint → show a success screen (with a per-row
- * failure table when needed). On any success the employee list + counts are
- * invalidated so the table refreshes.
+ * Pick/drop a CSV → parse client-side → MATCH each CSV column to an ERP field
+ * (auto-detected, editable) → POST to the bulk-import endpoint → show a success
+ * screen (with a per-row failure table when needed). On any success the employee
+ * list + counts are invalidated so the table refreshes.
  *
  * The visual language follows the HRM 2024 redesign (upload dropzone,
- * celebratory success state); the parsing/import logic is unchanged.
+ * column-matching step, celebratory success state).
  */
 
 import {
@@ -18,20 +18,22 @@ import {
 	toast,
 } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent, JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 
+import { EmployeeImportMapping } from './EmployeeImportMapping';
 import { EmployeeImportResult } from './EmployeeImportResult';
 import { EmployeeImportUpload } from './EmployeeImportUpload';
 import { REQUIRED } from './employee-import-helpers';
-import type { Parsed } from './employee-import-helpers';
 import {
+	autoMatchField,
+	buildRowsFromMapping,
 	importEmployees,
+	IMPORT_FIELD_OPTIONS,
 	parseCsv,
-	rowsToEmployees,
 } from './useEmployeeImportExport';
 import type { ImportResult } from './useEmployeeImportExport';
 
@@ -40,21 +42,30 @@ interface EmployeeImportDialogProps {
 	readonly onClose: () => void;
 }
 
+/** Human label for an ERP field key (for the required-field notice). */
+function fieldLabel( key: string ): string {
+	return IMPORT_FIELD_OPTIONS.find( ( o ) => o.value === key )?.label ?? key;
+}
+
 export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogProps ): JSX.Element {
 	const { invalidate } = useDispatch( employeesStoreName ) as unknown as { invalidate: () => void };
 	const fileRef = useRef< HTMLInputElement >( null );
 
-	const [ fileName, setFileName ]   = useState( '' );
-	const [ dragging, setDragging ]   = useState( false );
-	const [ parsed, setParsed ]       = useState< Parsed | null >( null );
+	const [ fileName, setFileName ]     = useState( '' );
+	const [ dragging, setDragging ]     = useState( false );
+	const [ matrix, setMatrix ]         = useState< string[][] | null >( null );
+	const [ headers, setHeaders ]       = useState< string[] >( [] );
+	const [ mapping, setMapping ]       = useState< string[] >( [] );
 	const [ parseError, setParseError ] = useState< string | null >( null );
 	const [ submitting, setSubmitting ] = useState( false );
-	const [ result, setResult ]       = useState< ImportResult | null >( null );
+	const [ result, setResult ]         = useState< ImportResult | null >( null );
 
 	function reset(): void {
 		setFileName( '' );
 		setDragging( false );
-		setParsed( null );
+		setMatrix( null );
+		setHeaders( [] );
+		setMapping( [] );
 		setParseError( null );
 		setSubmitting( false );
 		setResult( null );
@@ -69,7 +80,9 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 	}
 
 	function handleFile( file: File | undefined ): void {
-		setParsed( null );
+		setMatrix( null );
+		setHeaders( [] );
+		setMapping( [] );
 		setParseError( null );
 		setResult( null );
 		if ( ! file ) {
@@ -81,14 +94,17 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 		const reader = new FileReader();
 		reader.onload = () => {
 			try {
-				const text = String( reader.result ?? '' );
-				const { rows, headers, unknownHeaders } = rowsToEmployees( parseCsv( text ) );
-				const missing = REQUIRED.filter( ( c ) => ! headers.includes( c ) );
-				if ( rows.length === 0 ) {
+				const parsed = parseCsv( String( reader.result ?? '' ) );
+				const head   = ( parsed[ 0 ] ?? [] ).map( ( h ) => h.trim() );
+				const hasData = parsed.slice( 1 ).some( ( row ) => row.some( ( c ) => c.trim() !== '' ) );
+				if ( head.length === 0 || ! hasData ) {
 					setParseError( __( 'No data rows found in the file.', 'erp' ) );
 					return;
 				}
-				setParsed( { rows, headers, unknownHeaders, missing } );
+				setMatrix( parsed );
+				setHeaders( head );
+				// Pre-fill the mapping by auto-matching each header to a field.
+				setMapping( head.map( ( h ) => autoMatchField( h ) ) );
 			} catch {
 				setParseError( __( 'Could not read this file. Make sure it is a valid CSV.', 'erp' ) );
 			}
@@ -107,12 +123,29 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 		handleFile( e.dataTransfer.files?.[ 0 ] );
 	}
 
+	function setColumn( index: number, value: string ): void {
+		setMapping( ( prev ) => prev.map( ( f, i ) => ( i === index ? value : f ) ) );
+	}
+
+	// Required ERP fields not yet mapped to any column → block import.
+	const requiredMissing = useMemo(
+		() => REQUIRED.filter( ( key ) => ! mapping.includes( key ) ).map( ( key ) => ( { key, label: fieldLabel( key ) } ) ),
+		[ mapping ]
+	);
+
+	const canImport = !! matrix && requiredMissing.length === 0 && ! submitting;
+
 	function handleImport(): void {
-		if ( ! parsed || parsed.missing.length > 0 ) {
+		if ( ! matrix || requiredMissing.length > 0 ) {
+			return;
+		}
+		const rows = buildRowsFromMapping( matrix, mapping );
+		if ( rows.length === 0 ) {
+			setParseError( __( 'No data rows found in the file.', 'erp' ) );
 			return;
 		}
 		setSubmitting( true );
-		importEmployees( parsed.rows )
+		importEmployees( rows )
 			.then( ( res ) => {
 				setResult( res );
 				if ( res.created > 0 ) {
@@ -122,8 +155,6 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 			.catch( () => toast.error( __( 'Import failed. Please try again.', 'erp' ) ) )
 			.finally( () => setSubmitting( false ) );
 	}
-
-	const canImport = !! parsed && parsed.missing.length === 0 && ! submitting;
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next ? undefined : close() ) }>
@@ -148,12 +179,21 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 						onDrop={ onDrop }
 						onFile={ onFile }
 						parseError={ parseError }
-						parsed={ parsed }
 						submitting={ submitting }
 						canImport={ canImport }
 						onCancel={ close }
 						onImport={ handleImport }
-					/>
+					>
+						{ matrix && headers.length > 0 ? (
+							<EmployeeImportMapping
+								headers={ headers }
+								sampleRow={ matrix[ 1 ] ?? [] }
+								mapping={ mapping }
+								onChange={ setColumn }
+								requiredMissing={ requiredMissing }
+							/>
+						) : null }
+					</EmployeeImportUpload>
 				) }
 			</DialogContent>
 		</Dialog>

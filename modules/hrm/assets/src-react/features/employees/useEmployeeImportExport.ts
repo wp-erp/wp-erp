@@ -38,6 +38,102 @@ export const IMPORT_COLUMNS: readonly string[] = [
 
 const IMPORT_COLUMN_SET = new Set( IMPORT_COLUMNS );
 
+/** Human labels for the importable fields — used in the column-mapping step. */
+export const IMPORT_FIELD_OPTIONS: ReadonlyArray< { value: string; label: string } > = [
+	{ value: 'first_name',     label: __( 'First Name', 'erp' ) },
+	{ value: 'last_name',      label: __( 'Last Name', 'erp' ) },
+	{ value: 'middle_name',    label: __( 'Middle Name', 'erp' ) },
+	{ value: 'email',          label: __( 'Email', 'erp' ) },
+	{ value: 'employee_id',    label: __( 'Employee ID', 'erp' ) },
+	{ value: 'type',           label: __( 'Employee Type', 'erp' ) },
+	{ value: 'status',         label: __( 'Status', 'erp' ) },
+	{ value: 'hiring_date',    label: __( 'Date of Hire', 'erp' ) },
+	{ value: 'end_date',       label: __( 'End Date', 'erp' ) },
+	{ value: 'date_of_birth',  label: __( 'Date of Birth', 'erp' ) },
+	{ value: 'department',     label: __( 'Department', 'erp' ) },
+	{ value: 'designation',    label: __( 'Designation', 'erp' ) },
+	{ value: 'location',       label: __( 'Location', 'erp' ) },
+	{ value: 'reporting_to',   label: __( 'Reporting To', 'erp' ) },
+	{ value: 'pay_rate',       label: __( 'Pay Rate', 'erp' ) },
+	{ value: 'pay_type',       label: __( 'Pay Type', 'erp' ) },
+	{ value: 'hiring_source',  label: __( 'Source of Hire', 'erp' ) },
+	{ value: 'phone',          label: __( 'Phone', 'erp' ) },
+	{ value: 'mobile',         label: __( 'Mobile', 'erp' ) },
+	{ value: 'gender',         label: __( 'Gender', 'erp' ) },
+	{ value: 'marital_status', label: __( 'Marital Status', 'erp' ) },
+];
+
+/** Normalise a header/label for fuzzy auto-matching (drop case + non-alphanumerics). */
+function normaliseHeader( value: string ): string {
+	return value.toLowerCase().replace( /[^a-z0-9]/g, '' );
+}
+
+/** Common header spellings that don't normalise straight onto a field key. */
+const HEADER_ALIASES: Readonly< Record< string, string > > = {
+	useremail:    'email',
+	emailaddress: 'email',
+	dob:          'date_of_birth',
+	birthdate:    'date_of_birth',
+	jobtitle:     'designation',
+	role:         'designation',
+	mobilephone:  'mobile',
+	cell:         'mobile',
+	phonenumber:  'phone',
+	workphone:    'phone',
+	employeetype: 'type',
+	maritalstatus:'marital_status',
+	sourceofhire: 'hiring_source',
+	dateofhire:   'hiring_date',
+	hiredate:     'hiring_date',
+	enddate:      'end_date',
+	reportingto:  'reporting_to',
+};
+
+/**
+ * Best-guess ERP field for a CSV header — exact key, normalised key, label, or a
+ * known alias. Returns `''` when nothing matches (the column defaults to skipped).
+ */
+export function autoMatchField( header: string ): string {
+	const raw = header.trim();
+	if ( IMPORT_COLUMN_SET.has( raw ) ) {
+		return raw;
+	}
+	const norm = normaliseHeader( raw );
+	const byKey = IMPORT_COLUMNS.find( ( k ) => normaliseHeader( k ) === norm );
+	if ( byKey ) {
+		return byKey;
+	}
+	const byLabel = IMPORT_FIELD_OPTIONS.find( ( o ) => normaliseHeader( o.label ) === norm );
+	if ( byLabel ) {
+		return byLabel.value;
+	}
+	return HEADER_ALIASES[ norm ] ?? '';
+}
+
+/**
+ * Build create-payload rows from a parsed CSV matrix and a per-column mapping
+ * (`mapping[i]` = the ERP field key for CSV column `i`, or `''` to skip it).
+ * Fully blank rows are dropped. This replaces header-name auto-detection with an
+ * explicit, user-confirmed column→field mapping (legacy import parity).
+ */
+export function buildRowsFromMapping( matrix: string[][], mapping: readonly string[] ): ImportRow[] {
+	const rows: ImportRow[] = [];
+	for ( let r = 1; r < matrix.length; r++ ) {
+		const cells = matrix[ r ] ?? [];
+		if ( cells.every( ( c ) => c.trim() === '' ) ) {
+			continue;
+		}
+		const obj: Record< string, string > = {};
+		mapping.forEach( ( field, idx ) => {
+			if ( field ) {
+				obj[ field ] = ( cells[ idx ] ?? '' ).trim();
+			}
+		} );
+		rows.push( obj );
+	}
+	return rows;
+}
+
 export interface ImportRow {
 	readonly [ key: string ]: string;
 }
