@@ -110,7 +110,7 @@ export function EmployeeImportUpload( {
 				</Button>
 				<Button type="button" className="h-10 gap-1.5 px-6" disabled={ ! canImport } onClick={ onImport }>
 					<Upload size={ 15 } aria-hidden="true" />
-					{ submitting ? __( 'Importing…', 'erp' ) : __( 'Import', 'erp' ) }
+					{ submitting ? __( 'Importing…', 'erp' ) : __( 'Import Employee', 'erp' ) }
 				</Button>
 			</DialogFooter>
 		</div>

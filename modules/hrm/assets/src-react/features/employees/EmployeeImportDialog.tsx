@@ -187,7 +187,6 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 						{ matrix && headers.length > 0 ? (
 							<EmployeeImportMapping
 								headers={ headers }
-								sampleRow={ matrix[ 1 ] ?? [] }
 								mapping={ mapping }
 								onChange={ setColumn }
 								requiredMissing={ requiredMissing }
