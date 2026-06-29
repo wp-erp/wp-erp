@@ -808,8 +808,17 @@ class LeaveRequestsController extends REST_Controller {
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $employee = new Employee( $item->user_id );
 
-        $attachments      = [];
-        $leave_attachment = get_user_meta( $item->user_id, 'leave_document_' . $item->id );
+        $attachments = [];
+
+        // Leave documents may contain sensitive HR material. Only expose attachment
+        // URLs to the leave owner or to users who can manage leave, rather than to
+        // anyone holding the broad list/view capability.
+        $can_view_attachments = ( get_current_user_id() === (int) $item->user_id )
+            || current_user_can( 'erp_leave_manage' );
+
+        $leave_attachment = $can_view_attachments
+            ? get_user_meta( $item->user_id, 'leave_document_' . $item->id )
+            : [];
 
         if ( ! empty( $leave_attachment ) ) {
             foreach ( $leave_attachment as $attachment_id ) {
