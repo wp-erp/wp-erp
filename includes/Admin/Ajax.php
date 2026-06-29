@@ -810,7 +810,11 @@ class Ajax {
             return;
         }
 
-        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+        // Bulk-importing every WP user as a CRM contact is a CRM-manager operation.
+        // The previous condition (! manager && agent) was inverted: it let any
+        // user who was NOT a CRM agent (e.g. no CRM role at all) pass. Block
+        // everyone who is not a CRM manager.
+        if ( ! erp_crm_is_current_user_manager() ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
