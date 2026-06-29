@@ -849,7 +849,15 @@ class AjaxHandler {
 		$this->verify_hrm_nonce();
 
 		$employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-		$employee    = new Employee( $employee_id );
+
+		// Object-scoped authorization: erp_view_employee is mapped (erp_hr_map_meta_caps)
+		// to allow only the employee themselves or an HR manager, preventing any
+		// logged-in user from reading another employee's PII by id.
+		if ( ! current_user_can( 'erp_view_employee', $employee_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		$employee = new Employee( $employee_id );
 
 		if ( ! $employee->is_employee() ) {
 			$this->send_error( __( 'Employee does not exists.', 'erp' ) );
