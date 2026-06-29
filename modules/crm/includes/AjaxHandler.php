@@ -1800,6 +1800,13 @@ class AjaxHandler {
 			$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
 		}
 
+		// Restrict to CRM staff; the nonce alone let any authenticated user read
+		// arbitrary activity/schedule feeds by id. Matches the capability gate used
+		// by the sibling activity-feed handlers in this file.
+		if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$query_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
 
 		$result = erp_crm_customer_get_single_activity_feed( $query_id );
