@@ -2179,6 +2179,14 @@ class AjaxHandler {
 		$policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 		$status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'all';
 
+		// Object-scoped authorization: erp_view_employee is mapped to allow only
+		// the employee themselves or an HR manager, so a user cannot read another
+		// employee's leave history by changing employee_id (is_employee() below
+		// only validates the target, not the caller).
+		if ( ! current_user_can( 'erp_view_employee', $user_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$args = array(
 			'f_year'  => $year,
 			'user_id' => $user_id,
