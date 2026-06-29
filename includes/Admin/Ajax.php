@@ -979,10 +979,20 @@ class Ajax {
             return;
         }
 
+        // Deleting REST API credentials is administrator-only; the shared
+        // 'erp-nonce' is localized on every admin page and is not authorization.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
-            APIKey::find( $id )->delete();
+            $api_key = APIKey::find( $id );
+
+            if ( $api_key ) {
+                $api_key->delete();
+            }
         }
 
         $this->send_success();
