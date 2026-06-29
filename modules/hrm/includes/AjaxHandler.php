@@ -1581,9 +1581,18 @@ class AjaxHandler {
 	public function employee_delete_performance() {
 		$this->verify_hrm_nonce();
 
-		$id      = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-		$user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+		$id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
+		$performance = \WeDevs\ERP\HRM\Models\Performance::find( $id );
+
+		if ( ! $performance ) {
+			$this->send_error( __( 'Performance review does not exist.', 'erp' ) );
+		}
+
+		// Authorize against the employee the review actually belongs to, NOT a
+		// separate request parameter. Otherwise an attacker can pass a user_id
+		// they are allowed to manage while deleting any other employee's review.
+		$user_id            = (int) $performance->employee_id;
 		$department_lead_id = erp_hr_get_department_lead_by_user( $user_id );
 
 		// Check permission
@@ -1594,7 +1603,7 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		\WeDevs\ERP\HRM\Models\Performance::find( $id )->delete();
+		$performance->delete();
 
 		$this->send_success();
 	}
