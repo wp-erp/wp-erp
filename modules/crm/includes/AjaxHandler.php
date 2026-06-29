@@ -1777,10 +1777,23 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filterId'] ) ) : 0;
+		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? intval( wp_unslash( $_POST['filterId'] ) ) : 0;
 
 		if ( ! $id ) {
 			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		// Object-scope the delete: a non-manager agent may only delete saved
+		// searches they own, not other agents' or global segments.
+		$search_item = \WeDevs\ERP\CRM\Models\SaveSearch::find( $id );
+
+		if ( ! $search_item ) {
+			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		if ( ! current_user_can( erp_crm_get_manager_role() )
+			&& get_current_user_id() !== (int) $search_item->user_id ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$result = erp_crm_delete_save_search_item( $id );
