@@ -1517,11 +1517,18 @@ class AjaxHandler {
 	public function birthday_wish() {
 		$this->verify_hrm_nonce();
 
+		// Sending birthday wishes is an HR-manager action (the widget that exposes
+		// this button is itself gated on erp_hr_manager); the nonce is not authorization.
+		if ( ! current_user_can( 'erp_hr_manager' ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$employee_user_id = ( isset( $_POST['employee_user_id'] ) ) ? intval( wp_unslash( $_POST['employee_user_id'] ) ) : '';
 
 		// To prevent sending wish multiple time
-		// set email already sent status: true
-		setcookie( $employee_user_id, true, strtotime( 'tomorrow' ) );
+		// set email already sent status: true. Use a namespaced cookie key rather
+		// than the bare user id.
+		setcookie( 'erp_hr_birthday_wish_' . $employee_user_id, true, strtotime( 'tomorrow' ) );
 
 		$emailer = wperp()->emailer->get_email( 'BirthdayWish' );
 
