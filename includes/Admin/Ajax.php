@@ -578,13 +578,24 @@ class Ajax {
             return;
         }
 
+        // Audit-log entries span HR/CRM/accounting changes and are an admin-only
+        // view; the shared 'erp-nonce' is not an authorization control.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $log_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
         if ( ! $log_id ) {
             $this->send_error();
         }
 
-        $log       = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
+        $log = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
+
+        if ( ! $log ) {
+            $this->send_error( __( 'Audit log entry does not exist.', 'erp' ) );
+        }
+
         $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
         $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
         ob_start(); ?>
