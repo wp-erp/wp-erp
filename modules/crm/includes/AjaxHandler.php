@@ -410,7 +410,17 @@ class AjaxHandler {
 			$this->send_error( __( 'Cotact does not exists.', 'erp' ) );
 		}
 
-		$this->send_success( $customer->to_array() );
+		$customer_data = $customer->to_array();
+
+		// erp_crm_list_contact is a flat capability, so it does not scope an agent
+		// to their own contacts. Mirror the edit-handler ownership check: a
+		// non-manager agent may only read contacts they own (contact_owner).
+		if ( ! current_user_can( 'erp_crm_edit_contact', $customer_id )
+			&& get_current_user_id() !== (int) $customer_data['contact_owner'] ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		$this->send_success( $customer_data );
 	}
 
 	/**
