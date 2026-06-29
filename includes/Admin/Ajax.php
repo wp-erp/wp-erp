@@ -932,10 +932,21 @@ class Ajax {
             return;
         }
 
+        // Creating/updating REST API credentials (and binding them to an arbitrary
+        // user_id) is an administrator-only operation; the nonce alone is not an
+        // authorization control.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
             $api_key = \WeDevs\ERP\Framework\Models\APIKey::find( $id );
+
+            if ( ! $api_key ) {
+                $this->send_error( __( 'API key does not exist.', 'erp' ) );
+            }
 
             $api_key->update( [
                 'name'    => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
