@@ -1492,9 +1492,20 @@ class AjaxHandler {
 			$this->send_error();
 		}
 
-		\WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->update( array( 'status' => 'read' ) );
-
+		// Only return content for an actual announcement post type — get_post()
+		// would otherwise disclose the title/content of any post (drafts, other CPTs).
 		$post = get_post( $post_id );
+
+		if ( ! $post || 'erp_hr_announcement' !== $post->post_type ) {
+			$this->send_error( __( 'Announcement not found.', 'erp' ) );
+		}
+
+		// Scope the read-status update to the current user's own recipient row,
+		// otherwise it flips the flag for every recipient of the announcement.
+		\WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )
+			->where( 'user_id', get_current_user_id() )
+			->update( array( 'status' => 'read' ) );
+
 		setup_postdata( $post );
 
 		$post_data = array(
