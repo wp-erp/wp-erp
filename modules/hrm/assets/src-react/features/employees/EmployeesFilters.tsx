@@ -101,14 +101,13 @@ export function EmployeesFilters(): JSX.Element {
 						aria-pressed={ filterButtonActive }
 						onClick={ () => setShowFilters( ( prev ) => ! prev ) }
 						className={ [
-							'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
+							'relative inline-flex items-center justify-center gap-1 transition-colors',
 							filterButtonActive
 								? 'border-primary text-primary'
 								: 'border-border text-muted-foreground hover:text-foreground',
 						].join( ' ' ) }
 					>
-						<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
-						<span>{ __( 'Filter', 'erp' ) }</span>
+						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
 						{ activeFilterCount > 0 ? (
 							<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
 								{ activeFilterCount }

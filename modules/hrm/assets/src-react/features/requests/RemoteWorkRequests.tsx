@@ -90,15 +90,15 @@ export function RemoteWorkRequests(): JSX.Element {
 			) : (
 				<div className="overflow-x-auto">
 					<table className="w-full min-w-[44rem] text-left text-sm">
-						<thead className="border-b border-border bg-muted/40">
+						<thead className="border-b border-border bg-card">
 							<tr className="h-10">
-								<th className="px-4 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'Employee', 'erp' ) }</th>
-								<th className="px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'Reason', 'erp' ) }</th>
-								<th className="px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'From', 'erp' ) }</th>
-								<th className="px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'To', 'erp' ) }</th>
-								<th className="px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'Days', 'erp' ) }</th>
-								<th className="px-2 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'Status', 'erp' ) }</th>
-								<th className="px-2 text-right text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'Actions', 'erp' ) }</th>
+								<th className="px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Employee', 'erp' ) }</th>
+								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
+								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'From', 'erp' ) }</th>
+								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'To', 'erp' ) }</th>
+								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Days', 'erp' ) }</th>
+								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
+								<th className="px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>

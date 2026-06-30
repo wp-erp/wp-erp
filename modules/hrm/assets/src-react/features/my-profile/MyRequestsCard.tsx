@@ -88,7 +88,7 @@ function MyHistory( { base, primary }: { readonly base: string; readonly primary
 	}
 	return (
 		<div className="rounded-md border border-border">
-			<div className="border-b border-border bg-muted/40 px-3 py-2 text-xs font-medium uppercase tracking-normal text-muted-foreground">{ __( 'Your Requests', 'erp' ) }</div>
+			<div className="border-b border-border bg-muted/40 px-3 py-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Your Requests', 'erp' ) }</div>
 			<ul className="max-h-40 divide-y divide-border/60 overflow-y-auto">
 				{ rows.map( ( r ) => (
 					<li key={ r.id } className="flex items-center justify-between gap-2 px-3 py-2 text-sm">

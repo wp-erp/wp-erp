@@ -88,7 +88,7 @@ export function StatusFilter(): JSX.Element {
 					>
 						<span>{ tab.label }</span>
 						{ count !== null ? (
-							<span className="font-normal text-muted-foreground">
+							<span className="font-normal text-[#a5a5aa]">
 								({ count })
 							</span>
 						) : null }

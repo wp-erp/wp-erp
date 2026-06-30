@@ -45,7 +45,7 @@ export function AnnouncementsToolbar( {
 							].join( ' ' ) }
 						>
 							<span>{ tab.label }</span>
-							<span className="font-normal text-muted-foreground">({ countFor( tab.value ) })</span>
+							<span className="font-normal text-[#a5a5aa]">({ countFor( tab.value ) })</span>
 							{ selected ? (
 								<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 							) : null }

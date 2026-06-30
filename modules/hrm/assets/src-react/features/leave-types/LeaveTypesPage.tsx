@@ -191,7 +191,7 @@ function LeaveTypesInner(): JSX.Element {
 					<div role="tablist" aria-label={ __( 'Leave Types', 'erp' ) } className="flex items-stretch">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ __( 'All', 'erp' ) }</span>
-							<span className="font-normal text-muted-foreground">({ rows.length })</span>
+							<span className="font-normal text-[#a5a5aa]">({ rows.length })</span>
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>

@@ -193,8 +193,8 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 				) : (
 					<div className="mt-4 overflow-x-auto">
 						<table className="w-full text-left">
-							<thead className="border-b border-border bg-muted/40">
-								<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+							<thead className="border-b border-border bg-card">
+								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 									<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
 									<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
 									<th scope="col" className="px-2">{ __( 'Reason', 'erp' ) }</th>

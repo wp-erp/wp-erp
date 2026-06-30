@@ -525,3 +525,16 @@ body:has(#erp-hr-app) {
 .rdp-root[dir="rtl"] .rdp-weeks_before_enter { animation: rdp-slide_in_right var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
 .rdp-root[dir="rtl"] .rdp-weeks_after_exit { animation: rdp-slide_out_left var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
 /*rtl:end:ignore*/
+
+/* Standard button = 40px tall (matches the primary "Add …" CTA): px-5 (20px)
+ * inline padding, gap-2 (8px), 6px radius. plugin-ui default size = .h-9 (36px). */
+#erp-hr-app [data-slot='button'].h-9,
+#erp-hr-app [data-slot='button'].h-10 {
+	height: 40px !important;
+	gap: 8px !important;
+	padding: 0 20px !important;
+	border-radius: 6px !important;
+}
+
+/* Table header titles are not bold — let the th/tr spec (font-normal #828282) win over the UA th{font-weight:bold} default. */
+#erp-hr-app thead th { font-weight: inherit; }

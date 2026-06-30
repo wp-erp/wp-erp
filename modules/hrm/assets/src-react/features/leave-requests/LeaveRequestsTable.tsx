@@ -93,8 +93,8 @@ export function LeaveRequestsTable( {
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-[40rem] text-left">
-				<thead className="border-b border-border bg-muted/40">
-					<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+				<thead className="border-b border-border bg-card">
+					<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 						{ canManage ? (
 							<th scope="col" className="w-10 px-4">
 								<Checkbox

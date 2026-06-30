@@ -39,7 +39,7 @@ export function DepartmentsToolbar( {
 				<div role="tablist" aria-label={ __( 'Departments', 'erp' ) } className="flex items-stretch">
 					<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 						<span>{ __( 'All', 'erp' ) }</span>
-						<span className="font-normal text-muted-foreground">({ count })</span>
+						<span className="font-normal text-[#a5a5aa]">({ count })</span>
 						<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 					</span>
 				</div>
@@ -65,14 +65,13 @@ export function DepartmentsToolbar( {
 						aria-pressed={ filterButtonActive }
 						onClick={ onToggleFilters }
 						className={ [
-							'inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm font-medium transition-colors',
+							'relative inline-flex items-center justify-center gap-1 transition-colors',
 							filterButtonActive
 								? 'border-primary text-primary'
 								: 'border-border text-muted-foreground hover:text-foreground',
 						].join( ' ' ) }
 					>
-						<Filter size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
-						<span>{ __( 'Filter', 'erp' ) }</span>
+						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
 						{ activeFilterCount > 0 ? (
 							<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
 								{ activeFilterCount }

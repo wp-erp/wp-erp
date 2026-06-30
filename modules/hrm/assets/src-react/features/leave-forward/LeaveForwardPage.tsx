@@ -144,7 +144,7 @@ function LeaveForwardInner(): JSX.Element {
 					<div role="tablist" aria-label={ __( 'Forward Leaves', 'erp' ) } className="flex items-stretch">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ pending ? __( 'Pending', 'erp' ) : __( 'Applied', 'erp' ) }</span>
-							<span className="font-normal text-muted-foreground">({ rows.length })</span>
+							<span className="font-normal text-[#a5a5aa]">({ rows.length })</span>
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>
@@ -159,8 +159,8 @@ function LeaveForwardInner(): JSX.Element {
 				) : (
 					<div className="overflow-x-auto">
 						<table className="w-full min-w-3xl text-left">
-							<thead className="border-b border-border bg-muted/40">
-								<tr className="h-10 text-xs font-medium uppercase tracking-normal text-muted-foreground">
+							<thead className="border-b border-border bg-card">
+								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 									<Th>{ __( 'Employee', 'erp' ) }</Th>
 									<Th>{ __( 'Policy', 'erp' ) }</Th>
 									{ pending ? <Th>{ __( 'Available', 'erp' ) }</Th> : null }
