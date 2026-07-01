@@ -40,7 +40,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 	const email = str( record, 'email' );
 
 	return (
-		<section className="rounded-[10px] bg-card p-6 shadow-sm">
+		<section className="rounded-[10px] border border-border bg-card p-6 shadow-sm">
 			<div className="flex flex-wrap items-start gap-5">
 				{ canEdit ? (
 					<AvatarUpload
