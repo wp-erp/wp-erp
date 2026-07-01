@@ -86,6 +86,16 @@
             </div>
 
             <div class="wperp-form-group mt-10">
+                <label>{{ i18n.labelLifeStage }}</label>
+                <select class="" v-model="formData.lifeStage">
+                    <option value="">{{ i18n.labelSelectLifeStage }}</option>
+                    <option v-for="(stageTitle, stageKey) in data.lifeStages" :value="stageKey" :key="stageKey">
+                        {{ stageTitle }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="wperp-form-group mt-10">
                 <button type="button" class="wperp-btn btn--default settings-button-reset pull-left" v-on:click="reset_mapping">
                     {{ __( 'Reset', 'erp' ) }}
                 </button>
@@ -228,6 +238,7 @@ export default {
                 map         : self.formData.map,
                 contactGroup: self.formData.contactGroup,
                 contactOwner: self.formData.contactOwner,
+                lifeStage   : self.formData.lifeStage,
             }
 
             $.ajax({
@@ -243,7 +254,8 @@ export default {
                         ...postData,
                         map         : response.map,
                         contactGroup: response.contactGroup,
-                        contactOwner: response.contactOwner
+                        contactOwner: response.contactOwner,
+                        lifeStage   : response.lifeStage
                     }
                     self.$emit('reset_contact_form_data', data)
                 }
