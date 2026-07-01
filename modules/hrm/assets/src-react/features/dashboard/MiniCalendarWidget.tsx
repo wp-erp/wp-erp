@@ -125,7 +125,7 @@ export function MiniCalendarWidget(): JSX.Element {
 		<section className="flex flex-col rounded-[10px] bg-card shadow-sm">
 			{ /* Header: title + "View" link */ }
 			<header className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
-				<h2 className="m-0 mb-4 text-base font-bold leading-tight tracking-tight text-foreground">
+				<h2 className="m-0 text-base font-bold leading-tight tracking-tight text-foreground">
 					{ canManageLeave ? __( 'Team Calendar', 'erp' ) : __( 'My Calendar', 'erp' ) }
 				</h2>
 				<Link
@@ -181,7 +181,7 @@ export function MiniCalendarWidget(): JSX.Element {
 
 						{ /* Day grid: number + up to 3 event dots beneath. Days with
 						   leaves/holidays get a hover tooltip listing them. */ }
-						<TooltipProvider delayDuration={ 120 }>
+						<TooltipProvider>
 							<div className="grid grid-cols-7">
 								{ days.map( ( day ) => {
 									const key      = ymd( day );
@@ -233,7 +233,7 @@ export function MiniCalendarWidget(): JSX.Element {
 
 									return (
 										<Tooltip key={ key }>
-											<TooltipTrigger asChild>{ cell }</TooltipTrigger>
+											<TooltipTrigger render={ cell } />
 											<TooltipContent className="max-w-64">
 												<div className="space-y-1.5">
 													<p className="text-xs font-semibold">

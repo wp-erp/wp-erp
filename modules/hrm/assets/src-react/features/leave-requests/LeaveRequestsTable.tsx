@@ -63,7 +63,7 @@ function StatusPill( {
 			: status === 3
 			? 'bg-destructive-light text-destructive-on-light'
 			: 'bg-warning-light text-warning-on-light';
-	return <Badge className={ `${ className } rounded-full` }>{ label }</Badge>;
+	return <Badge className={ `${ className } rounded-md` }>{ label }</Badge>;
 }
 
 interface LeaveRequestsTableProps {

@@ -56,5 +56,5 @@ function visualFor( status: EmployeeStatus | null ): StatusVisual {
 
 export function StatusCell( { row }: StatusCellProps ): JSX.Element {
 	const { label, className } = visualFor( row.status );
-	return <Badge className={ `${ className } rounded-full` }>{ label }</Badge>;
+	return <Badge className={ `${ className } rounded-md` }>{ label }</Badge>;
 }
