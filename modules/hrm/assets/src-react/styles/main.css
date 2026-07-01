@@ -1,0 +1,614 @@
+/**
+ * WP-ERP HR React shell — Tailwind v4 entry.
+ *
+ * Mirrors Dokan's `src/base-tailwind.css` pattern. Plugin-ui's ThemeProvider
+ * writes the `--primary`, `--background`, etc. CSS variables onto the
+ * `.pui-root` scope at runtime. The `@theme inline` block below maps those
+ * variables into Tailwind utilities (`bg-primary`, `text-foreground`, etc.).
+ *
+ * Source of truth: openspec/changes/redesign-hr-free/design-tokens.md +
+ * Dokan reference at ~/Desktop/dokan-ref/src/base-tailwind.css.
+ */
+
+/* Default UI font — Inter (variable weight + italic). */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+
+@source "../**/*.{ts,tsx}";
+@source "../../../node_modules/@wedevs/plugin-ui/dist";
+
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+/* ─── Class-based dark variant (root fix) ───
+ * Tailwind v4's default `dark:` variant is `@media (prefers-color-scheme: dark)`.
+ * plugin-ui ships components with `dark:bg-input/30` etc., and our own code
+ * authors `dark:text-…` utilities — and this build GENERATES them all (the
+ * `@source` lines scan both). With the media default they fire on the OS scheme,
+ * so a dark OS repaints fields/dropdowns even though the ERP app is forced light.
+ * ThemeProvider signals dark with a `.dark` class (`className="pui-root dark"`),
+ * NOT the OS, so redefine `dark:` to key off that class. Now every `dark:` utility
+ * applies only in genuine app-dark mode. Supersedes the per-slot `!important`
+ * field/switch pins below, which are now redundant for the OS-dark case. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Plugin-UI / shadcn token → Tailwind variable mapping ───
+ * @theme inline tells Tailwind to use these var() references when generating
+ * utilities. The actual values (`--primary`, `--border`, etc.) come from the
+ * Plugin-UI ThemeProvider inline styles on `.pui-root`.
+ */
+@theme inline {
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-background: var(--background, #ffffff);
+	--color-foreground: var(--foreground, #000000);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-info: var(--info);
+	--color-info-foreground: var(--info-foreground);
+	--color-border: var(--border, #e5e7eb);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	/* Status — light pill variants */
+	--color-success-light: var(--success-light);
+	--color-success-on-light: var(--success-on-light);
+	--color-destructive-light: var(--destructive-light);
+	--color-destructive-on-light: var(--destructive-on-light);
+	--color-warning-light: var(--warning-light);
+	--color-warning-on-light: var(--warning-on-light);
+	--color-info-light: var(--info-light);
+	--color-info-on-light: var(--info-on-light);
+	--color-neutral-light: var(--neutral-light);
+	--color-neutral-on-light: var(--neutral-on-light);
+
+	--font-sans: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+@layer base {
+	:root {
+		--color-border: #e5e7eb;
+	}
+
+	/* Headless UI portal visibility fix (carried over from Dokan). */
+	#headlessui-portal-root {
+		display: none;
+	}
+
+	/* Z-index for popover / modal layers. */
+	div[data-radix-popper-content-wrapper],
+	div[data-headlessui-state='open'][role='dialog'] {
+		z-index: 999 !important;
+	}
+}
+
+/* ─── Scoped Layout — Preflight + Utilities + Components inside the shell ─── */
+/* `.pui-root` (no attribute filter) is required so plugin-ui's portaled
+ * content — DropdownMenu, Tooltip, Popover — picks up our tokens + utilities.
+ * Plugin-ui renders portals at <body> with only the `pui-root` class, not the
+ * `data-pui-plugin` attribute. Mirrors Dokan's base-tailwind.css scope. */
+.pui-root,
+#erp-hr-app {
+	@import "tailwindcss/preflight.css" layer(base);
+	@import "tailwindcss/utilities.css" important;
+
+	line-height: 1.5;
+	-webkit-text-size-adjust: 100%;
+	tab-size: 4;
+	/* Force Inter as the default UI font, ahead of any --font-sans the
+	 * ThemeProvider may inject. */
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-feature-settings: normal;
+	font-variation-settings: normal;
+	-webkit-tap-highlight-color: transparent;
+	/* Use the raw token var (set by ThemeProvider per scheme), NOT `--color-border`.
+	 * Tailwind v4's `@theme inline` inlines `--color-*` into utilities and does
+	 * not emit them as real custom properties, so `var(--color-border)` would
+	 * fall back to the light default and never go dark. */
+	border-color: var(--border, #e5e7eb) !important;
+}
+
+body:has(#erp-hr-app) {
+	--wp-components-color-accent: var(--primary);
+}
+
+/* ─── WP admin form-reset inside our scope ───
+ * WordPress admin loads `wp-admin/css/forms.min.css` which globally styles
+ * `input[type='text|search|email|number|password']`, `select`, `textarea`,
+ * and `.button`. Those rules use tag/attribute selectors, so they can leak
+ * into our plugin-ui inputs and override Tailwind utilities silently when
+ * a third-party plugin (or older WP version) layers `!important` on them.
+ *
+ * Reset them inside `#erp-hr-app` only — outside, WP admin keeps its native
+ * styling for the rest of the dashboard.
+ */
+#erp-hr-app input[type='text'],
+#erp-hr-app input[type='search'],
+#erp-hr-app input[type='email'],
+#erp-hr-app input[type='url'],
+#erp-hr-app input[type='tel'],
+#erp-hr-app input[type='number'],
+#erp-hr-app input[type='password'],
+#erp-hr-app input[type='date'],
+#erp-hr-app input[type='datetime-local'],
+#erp-hr-app input[type='month'],
+#erp-hr-app input[type='time'],
+#erp-hr-app input[type='week'],
+#erp-hr-app input[type='file'],
+#erp-hr-app select,
+#erp-hr-app textarea {
+	box-shadow: none;
+	min-height: 0;
+	max-width: none;
+	background-image: none;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
+/* ─── Field background = app theme, not OS ───
+ * Root cause: plugin-ui's bundle compiles its `dark:` variants as
+ * `@media (prefers-color-scheme: dark)` (not the `.dark` class). So controls
+ * carrying `dark:bg-input/30` (Textarea, Select trigger, SmartSelect, Combobox,
+ * InputGroup) repaint their background to `var(--input)` — a light-gray token —
+ * whenever the *OS* is in dark mode, even though the ERP app is in light theme.
+ * That gray (`var(--input)`) is what leaks; `bg-transparent` never gets a chance.
+ *
+ * Pin the field background to `var(--background)`, which the ThemeProvider sets
+ * per *app* mode (white in light, dark surface in dark) — so it stays correct in
+ * both themes and ignores the OS. Higher specificity + `!important` beats the
+ * plugin's `.dark\:bg-input\/30 { ...!important }`. Applies in the app shell and
+ * in body-level portals (`.pui-root`) where dialogs mount. */
+#erp-hr-app :is( [data-slot='select-trigger'], [data-slot='textarea'], [data-slot='smart-select-trigger'], [data-slot='combobox-value'], [data-slot='input-group'] ),
+.pui-root :is( [data-slot='select-trigger'], [data-slot='textarea'], [data-slot='smart-select-trigger'], [data-slot='combobox-value'], [data-slot='input-group'] ),
+[data-slot='dialog-content'] :is( [data-slot='select-trigger'], [data-slot='textarea'], [data-slot='smart-select-trigger'], [data-slot='combobox-value'], [data-slot='input-group'] ),
+[data-slot='dialog-content'] :is( select, textarea ) {
+	background-color: var( --background, #fff ) !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+
+
+/* ─── Native <select> reset inside portaled dialogs ───
+ * `SelectField` renders a native `<select>` (plugin-ui's own Select is a button,
+ * so this only matches our field). Inside a body-level portal (`.pui-root`) —
+ * where every Dialog mounts — the `#erp-hr-app` reset above doesn't reach it, so
+ * WordPress's global `select { max-width: 25rem }` from `forms.css` caps it and
+ * it renders narrower than the sibling text inputs. Neutralize it so the
+ * field's own `w-full` wins and all controls share one width. */
+.pui-root select,
+.pui-root textarea {
+	box-shadow: none;
+	min-height: 0;
+	max-width: none;
+	background-image: none;
+	background-color: var( --background, #fff );
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
+/* ─── Text input color inside portaled dialogs ───
+ * Same blind spot as the select/textarea reset above: a `<input>` (text, date,
+ * number, email…) rendered in a body-level portal (`.pui-root` / dialog content)
+ * is NOT reached by the `#erp-hr-app input[...]` reset, so WordPress's global
+ * `input { color: #2c3338 }` paints the value (and the native date picker text)
+ * near-black — invisible on a dark dialog. Inherit the dialog's foreground so the
+ * value follows the app scheme. `.pui-root input` (0,1,1) outranks WP's tag rule
+ * (0,0,1); no `!important` needed. The SmartSelect search input keeps its own
+ * `[data-slot='command-input']` rule (higher specificity), so it's unaffected. */
+.pui-root input,
+[data-slot='dialog-content'] input {
+	color: inherit;
+}
+
+/* ─── Switch off-track = app theme, not OS ───
+ * The plugin Switch paints its unchecked track with `data-unchecked:bg-input`
+ * plus a `dark:data-unchecked:bg-input/80` variant. That `dark:` variant is
+ * compiled as `@media (prefers-color-scheme: dark)` (see the field note above),
+ * so on a dark *OS* it darkens the track to near-black even when the ERP app is
+ * in light mode — the off state then reads as solid black instead of gray.
+ *
+ * Pin the off-track to `var(--input)`, the per-*app*-mode token the ThemeProvider
+ * sets (light gray in light, mid gray in dark). Higher specificity + `!important`
+ * beats the plugin's media variant, so the toggle stays gray-when-off in both
+ * themes regardless of the OS scheme. */
+#erp-hr-app [role='switch'][data-unchecked],
+.pui-root [role='switch'][data-unchecked] {
+	background-color: var( --input ) !important;
+}
+
+/* ─── Heading / paragraph margin reset ───
+ * Bare `<h1>`–`<h4>` and `<p>` inside the app (and inside body-level `.pui-root`
+ * portals where every Dialog mounts) inherit browser UA + WP-admin block margins
+ * — Tailwind's preflight doesn't reach them. That adds stray top/bottom space
+ * above card and dialog titles. Zero out the block margins with `:where()` (zero
+ * specificity) so any explicit Tailwind `m*` utility still wins. */
+#erp-hr-app :where( h1, h2, h3, h4, h5, h6, p ),
+.pui-root :where( h1, h2, h3, h4, h5, h6, p ) {
+	margin-block: 0;
+}
+
+/* ─── SmartSelect / Combobox search input reset ───
+ * The searchable dropdown (plugin-ui SmartSelect) renders its popover — and the
+ * search `<input>` inside it — in a body-level portal (`.pui-root`), OUTSIDE
+ * `#erp-hr-app`. So the WP-admin form-reset above never reaches it, and
+ * WordPress's global `input:focus` rule paints a stray blue border + box-shadow
+ * inside the otherwise-clean popover. Neutralize it so the input stays flush
+ * with the plugin-ui styling, and give the row a little breathing room so the
+ * focus state never sits flush against the popover's rounded edge. */
+[data-slot='command-input'],
+[data-slot='command-input']:focus,
+[data-slot='command-input']:focus-visible {
+	box-shadow: none !important;
+	border: 0 !important;
+	outline: none !important;
+	background: transparent !important;
+	min-height: 0;
+}
+
+/* Inset the search row from the popover's rounded top edge so the input never
+ * sits flush against the corner. Top-only padding keeps the separator under
+ * the search box spanning the full popover width. */
+[data-slot='smart-select-content'] {
+	padding-top: 0.25rem;
+}
+
+/* ─── Page panel surface — follows the app scheme ───
+ * The content panel behind cards is `#F1F1F4` in light mode (no token alias for
+ * that exact gray). Hardcoding it meant the panel stayed light in dark mode while
+ * the cards went dark — a bright slab behind the page title. Drive it off the
+ * resolved scheme (`data-color-scheme`, set by Providers) so it darkens too:
+ * light → the panel gray; dark → `--background` (the darkest surface, so cards on
+ * `--card` still read one step lighter). */
+#erp-hr-app .erp-hr-panel {
+	background-color: #F0F0F1;
+}
+
+/* Dark mode: a professional near-black canvas (faint cool undertone) with a
+ * whisper of indigo glow for ambient depth — not a loud color. The glow lives
+ * on the whole shell and the panel goes transparent so EVERY page picks it up;
+ * cards stay opaque and one step lighter, so contrast is unchanged. */
+#erp-hr-app[data-color-scheme='dark'] .erp-hr-shell {
+	background-color: #0a0b0e;
+	background-image:
+		radial-gradient( 900px 720px at 88% 96%, rgba( 99, 102, 241, 0.10 ), transparent 62% ),
+		radial-gradient( 720px 600px at 10% 6%, rgba( 59, 130, 246, 0.06 ), transparent 58% );
+	background-attachment: fixed;
+}
+
+#erp-hr-app[data-color-scheme='dark'] .erp-hr-panel {
+	background-color: transparent;
+}
+
+/* Elevated dark surfaces (sidebar, top strip, cards — all `bg-card`): a neutral
+ * near-black one step lighter than the canvas, with the faintest cool cast so
+ * it reads professional rather than flat gray or saturated blue. */
+#erp-hr-app[data-color-scheme='dark'] .bg-card {
+	background-color: #131519 !important;
+}
+
+/* ─── Thin, smooth-blue scrollbars (Figma parity) ───
+ * The browser-default chunky gray bar in the sidebar (and tables) reads heavy.
+ * Slim it down and tint the thumb a soft blue that brightens on hover. */
+#erp-hr-app * {
+	scrollbar-width: thin;
+	scrollbar-color: rgba( 59, 130, 246, 0.45 ) transparent;
+}
+#erp-hr-app *::-webkit-scrollbar {
+	width: 7px;
+	height: 7px;
+}
+#erp-hr-app *::-webkit-scrollbar-track {
+	background: transparent;
+}
+#erp-hr-app *::-webkit-scrollbar-thumb {
+	background-color: rgba( 59, 130, 246, 0.45 );
+	border-radius: 9999px;
+}
+#erp-hr-app *::-webkit-scrollbar-thumb:hover {
+	background-color: rgba( 59, 130, 246, 0.7 );
+}
+
+/* ─── Hairline chrome borders ───
+ * The shell's structural dividers (sidebar edge, top strips) use a softer
+ * border than the default token so they read as a faint hairline, matching the
+ * Figma rather than a hard gray rule. */
+#erp-hr-app .erp-hr-hairline {
+	border-color: color-mix( in srgb, var( --border ) 55%, transparent );
+}
+
+/* ─── Sidebar nav: keyboard-only focus ring ───
+ * Mouse-clicking a sidebar link left the browser focus outline behind (the blue
+ * box around the active item). Drop the ring for pointer focus; keep it for
+ * keyboard navigation (`:focus-visible`) so accessibility is preserved. */
+#erp-hr-app .erp-hr-sidebar a:focus:not(:focus-visible),
+#erp-hr-app .erp-hr-sidebar button:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
+/* The collapsed-rail submenu flyout is a Popover portaled to <body>, so the
+ * `#erp-hr-app .erp-hr-sidebar` rule above can't reach it — a mouse click on a
+ * flyout link left WP's blue focus box behind. Suppress it for pointer focus
+ * only; keep the keyboard `:focus-visible` ring (set on the links themselves). */
+[data-slot='popover-content'] a:focus:not(:focus-visible),
+[data-slot='popover-content'] button:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
+/* ─── Horizontal-overflow guard ───
+ * Some inner surfaces are intentionally wider than a phone viewport (data
+ * tables `min-w-[40rem]`, the line-tab strips) and own a local
+ * `overflow-x-auto` scroller. Without a clamp on the shell, that width leaks
+ * up and gives the whole document a horizontal scroll on mobile — dragging
+ * right exposes the bare (light) page behind the app. Clamp the shell to its
+ * column and clip the leak. `clip` (not `hidden`/`auto`) is required so it does
+ * NOT establish a scroll container, which would break the sticky top bar.
+ * Inner `overflow-x-auto` scrollers keep their own scrolling regardless. */
+#erp-hr-app,
+#erp-hr-app .erp-hr-shell {
+	max-width: 100%;
+	overflow-x: clip;
+}
+
+/* ─── Portaled popups must never exceed the viewport ───
+ * plugin-ui anchors Select / Combobox / SmartSelect popups with a min-width of
+ * `anchor-width + 28px` and grows them to fit the widest option label. On a
+ * phone a long Department / Job-title / employee name pushes the popup past the
+ * right edge, giving the whole document a horizontal scroll (the bare page
+ * shows behind the app). Popups portal to `<body>` as `.pui-root`, so the
+ * `#erp-hr-app` clip above can't contain them — clamp them here instead and
+ * clip any option that still overruns. Triggers carry a `min-w-[200/260px]`
+ * that can outgrow a narrow modal column, so let them collapse too. */
+.pui-root [data-slot='select-content'],
+.pui-root [data-slot='combobox-content'],
+.pui-root [data-slot='smart-select-content'],
+.pui-root [data-slot='smart-multi-select-content'],
+.pui-root [data-slot='popover-content'],
+.pui-root [data-slot='dropdown-menu-content'],
+.pui-root [data-slot='dropdown-menu-sub-content'] {
+	/* `min-width` must be cleared too: plugin-ui sets `min-w-[anchor-width+28px]`
+	 * on combobox/smart-select popups, and a min-width always beats max-width —
+	 * without this the popup keeps its oversized floor and overruns the screen. */
+	min-width: 0 !important;
+	max-width: calc( 100vw - 1rem ) !important;
+	overflow-x: clip;
+}
+
+@media screen and ( max-width: 782px ) {
+	.pui-root [data-slot='select-trigger'],
+	.pui-root [data-slot='combobox-trigger'],
+	.pui-root [data-slot='smart-select-trigger'],
+	.pui-root [data-slot='smart-multi-select-trigger'] {
+		min-width: 0 !important;
+	}
+
+	/* Wrap long option labels instead of forcing the popup wider. */
+	.pui-root [data-slot='select-item'],
+	.pui-root [data-slot='combobox-item'] {
+		white-space: normal;
+	}
+}
+
+/* ─── Top bar — sits below WP admin bar (32 px) inside #erp-hr-app ─── */
+#erp-hr-app .erp-hr-topbar {
+	position: sticky;
+	top: 32px;
+	z-index: 30;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	height: 48px;
+	padding: 0 1.25rem;
+	/* Raw token vars (per-scheme via ThemeProvider) — see note above on why
+	 * `--color-*` must not be used in hand-written rules. */
+	background: var(--background, #ffffff);
+	border-bottom: 1px solid var(--border, #e5e7eb);
+	color: var(--foreground, #1e1e1e);
+}
+
+/* Horizontal scroll surface for the nav links on narrow viewports.
+ * Hide the scrollbar visually — users discover the overflow by drag /
+ * touch / shift+wheel. Mirror the Tailwind `.no-scrollbar` utility from
+ * Dokan's base-tailwind.css. */
+#erp-hr-app .erp-hr-topbar-nav-scroll {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+#erp-hr-app .erp-hr-topbar-nav-scroll::-webkit-scrollbar {
+	display: none;
+}
+
+@media screen and ( max-width: 782px ) {
+	#erp-hr-app .erp-hr-topbar {
+		top: 46px;
+		padding: 0 0.75rem;
+		height: 44px;
+	}
+}
+
+/* ─── RTL: mirror horizontal directional icons ───
+ * rtlcss flips physical CSS (margin/padding/text-align/float/left·right) in the
+ * generated `*-rtl.css` bundle, so layout already mirrors. But the lucide
+ * chevron/arrow icons are inline SVG components with a fixed path — CSS can't
+ * flip their geometry, so "previous/next" pagination and "back" arrows still
+ * point the LTR way under RTL. lucide-react tags every icon with a class
+ * (`lucide-chevron-left`, `lucide-arrow-right`, …); mirror only the HORIZONTAL
+ * ones. Vertical chevrons (up/down — sort carets, accordion toggles) are
+ * intentionally excluded. The `rtl:ignore` directive stops rtlcss re-flipping
+ * this transform inside the RTL bundle (the selector already gates on
+ * `data-dir='rtl'`, set on the root by Providers from `is_rtl()`). */
+#erp-hr-app[data-dir='rtl'] :is(
+	.lucide-chevron-left,
+	.lucide-chevron-right,
+	.lucide-arrow-left,
+	.lucide-arrow-right,
+	.lucide-arrow-up-right
+) {
+	transform: scaleX( -1 ); /*rtl:ignore*/
+}
+
+/* ── View Transitions ─────────────────────────────────────────────────
+ * Smooth cross-fade between in-app route changes (React Router
+ * `viewTransition`). Progressive enhancement: browsers without the
+ * View Transitions API ignore these rules and navigate instantly.
+ * Disabled under reduced-motion. */
+@media ( prefers-reduced-motion: no-preference ) {
+	::view-transition-old( root ),
+	::view-transition-new( root ) {
+		animation-duration: 220ms;
+		animation-timing-function: cubic-bezier( 0.4, 0, 0.2, 1 );
+	}
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	::view-transition-group( * ),
+	::view-transition-old( * ),
+	::view-transition-new( * ) {
+		animation: none !important;
+	}
+}
+
+/* ─── react-day-picker month-transition keyframes (plugin-ui DatePicker) ───
+ * plugin-ui enables react-day-picker's month-change slide in JS, but the
+ * @keyframes + animation rules ship only in plugin-ui's own index.css — which
+ * this app never loads (we Tailwind-`@source` plugin-ui's class names, not its
+ * stylesheet). Without the keyframes the slide-out never fires `animationend`,
+ * so react-day-picker never unmounts the OUTGOING month and it stacks on the
+ * incoming one (duplicate dates when changing month). Porting the exact rules
+ * restores the lifecycle so the old month is removed. The block is wrapped in
+ * `rtl:ignore` because plugin-ui already bakes the `[dir=rtl]` slide overrides —
+ * rtlcss must not re-flip them in the `-rtl.css` bundle. Source: plugin-ui index.css. */
+/*rtl:begin:ignore*/
+.rdp-root { --rdp-animation_duration: 0.2s; --rdp-animation_timing: cubic-bezier( 0.4, 0, 0.2, 1 ); }
+@keyframes rdp-slide_in_left { 0% { transform: translate( -100% ); } to { transform: translate( 0 ); } }
+@keyframes rdp-slide_in_right { 0% { transform: translate( 100% ); } to { transform: translate( 0 ); } }
+@keyframes rdp-slide_out_left { 0% { transform: translate( 0 ); } to { transform: translate( -100% ); } }
+@keyframes rdp-slide_out_right { 0% { transform: translate( 0 ); } to { transform: translate( 100% ); } }
+@keyframes rdp-fade_in { 0% { opacity: 0; } to { opacity: 1; } }
+@keyframes rdp-fade_out { 0% { opacity: 1; } to { opacity: 0; } }
+.rdp-weeks_before_enter { animation: rdp-slide_in_left var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-weeks_before_exit { animation: rdp-slide_out_left var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-weeks_after_enter { animation: rdp-slide_in_right var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-weeks_after_exit { animation: rdp-slide_out_right var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-caption_before_enter { animation: rdp-fade_in var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-caption_before_exit { animation: rdp-fade_out var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-caption_after_enter { animation: rdp-fade_in var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-caption_after_exit { animation: rdp-fade_out var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-root[dir="rtl"] .rdp-weeks_after_enter { animation: rdp-slide_in_left var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-root[dir="rtl"] .rdp-weeks_before_exit { animation: rdp-slide_out_right var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-root[dir="rtl"] .rdp-weeks_before_enter { animation: rdp-slide_in_right var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+.rdp-root[dir="rtl"] .rdp-weeks_after_exit { animation: rdp-slide_out_left var( --rdp-animation_duration ) var( --rdp-animation_timing ) forwards; }
+/*rtl:end:ignore*/
+
+/* Standard button = 40px tall (matches the primary "Add …" CTA): px-5 (20px)
+ * inline padding, gap-2 (8px), 6px radius. plugin-ui default size = .h-9 (36px). */
+#erp-hr-app [data-slot='button'].h-9,
+#erp-hr-app [data-slot='button'].h-10 {
+	height: 40px !important;
+	gap: 8px !important;
+	padding: 0 20px !important;
+	border-radius: 6px !important;
+}
+
+/* Table header titles are not bold — let the th/tr spec (font-normal #828282) win over the UA th{font-weight:bold} default. */
+#erp-hr-app thead th { font-weight: inherit; }
+
+/* ─── Card/section + page titles → #25252D ───
+ * Page headings (<h1>) and card/section headings (<h2>, plugin-ui CardTitle)
+ * use `text-foreground` (#25262B). Pin their color one shade darker per design.
+ * Id-scoped + !important to beat Tailwind's `important` utilities layer. */
+#erp-hr-app h1,
+#erp-hr-app h2,
+#erp-hr-app [data-slot='card-title'],
+.pui-root h1,
+.pui-root h2,
+.pui-root [data-slot='card-title'] {
+	color: #25252D !important;
+}
+
+/* ─── Input placeholder text → #A5A5AA ───
+ * All field placeholders (input/textarea/search, incl. portaled dialogs).
+ * Id-scoped + !important + opacity:1 to beat utilities layer + UA dimming. */
+#erp-hr-app ::placeholder,
+#erp-hr-app ::-webkit-input-placeholder,
+.pui-root ::placeholder,
+.pui-root ::-webkit-input-placeholder {
+	color: #A5A5AA !important;
+	opacity: 1 !important;
+}
+
+/* ─── Select / SmartSelect / Combobox placeholder → #A5A5AA ───
+ * DS selects show their placeholder via a [data-placeholder] element (styled
+ * `text-muted-foreground`), not a native ::placeholder — cover it too. */
+#erp-hr-app [data-placeholder],
+.pui-root [data-placeholder] {
+	color: #A5A5AA !important;
+}
+
+/* ─── No compact buttons — every button ≥ 40px ───
+ * Extends the 40px CTA rule to small (h-8) text buttons and icon-only buttons
+ * (w-8/w-9/size-8/size-9 squares → 40×40, no side padding). */
+#erp-hr-app [data-slot='button'].h-8 {
+	height: 40px !important;
+}
+#erp-hr-app [data-slot='button'].h-8:not(.w-8):not(.w-9):not(.size-8):not(.size-9) {
+	padding: 0 20px !important;
+	gap: 8px !important;
+	border-radius: 6px !important;
+}
+#erp-hr-app [data-slot='button'].w-8,
+#erp-hr-app [data-slot='button'].w-9,
+#erp-hr-app [data-slot='button'].size-8,
+#erp-hr-app [data-slot='button'].size-9 {
+	width: 40px !important;
+	height: 40px !important;
+	padding: 0 !important;
+	border-radius: 6px !important;
+}
+
+/* Catch-all button min-height — any button with no explicit size still ≥ 40px. */
+#erp-hr-app [data-slot='button'] {
+	min-height: 40px !important;
+}
+
+/* ─── Raw <button> action/icon buttons → 40px too ───
+ * Non-DS <button>s that carry a button size (h-8/9/10 text, size-8/9/10 icon).
+ * Text-link buttons (no size class) + tiny nav/pagination (size-6/7) untouched. */
+#erp-hr-app button.h-8,
+#erp-hr-app button.h-9,
+#erp-hr-app button.h-10 {
+	min-height: 40px !important;
+	height: 40px !important;
+}
+#erp-hr-app button.size-8,
+#erp-hr-app button.size-9,
+#erp-hr-app button.size-10 {
+	width: 40px !important;
+	height: 40px !important;
+}

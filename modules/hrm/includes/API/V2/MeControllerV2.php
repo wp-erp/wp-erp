@@ -1,0 +1,341 @@
+<?php
+/**
+ * WP-ERP HR — `erp/v2/me` REST controller.
+ *
+ * Endpoints:
+ *   GET /erp/v2/me/capabilities — current user identity + HR capability map.
+ *
+ * Consumed once on React boot to hydrate the `erp-hr/me` `@wordpress/data`
+ * store. Response shape locked in
+ * openspec/changes/redesign-hr-free/playbooks/_first-deliverable.md (§REST
+ * contract).
+ */
+
+namespace WeDevs\ERP\HRM\API\V2;
+
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_REST_Server;
+
+defined( 'ABSPATH' ) || exit;
+
+class MeControllerV2 extends RestControllerV2 {
+
+	/**
+	 * Rest base.
+	 *
+	 * @var string
+	 */
+	protected $rest_base = 'me';
+
+	/**
+	 * @return void
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/capabilities',
+			[
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_capabilities' ],
+					'permission_callback' => [ $this, 'permission_logged_in' ],
+				],
+				'schema' => [ $this, 'get_capabilities_schema' ],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/employee-capabilities/(?P<employee_id>[\d]+)',
+			[
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_employee_capabilities' ],
+					'permission_callback' => [ $this, 'permission_logged_in' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/preferences',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'update_preferences' ],
+					'permission_callback' => [ $this, 'permission_logged_in' ],
+					'args'                => [
+						'erp_hr_color_scheme' => [
+							'type' => 'string',
+							'enum' => [ 'light', 'dark', 'auto' ],
+						],
+						'erp_hr_nav_layout'   => [
+							'type' => 'string',
+							'enum' => [ 'topbar', 'sidebar' ],
+						],
+					],
+				],
+			]
+		);
+	}
+
+	/**
+	 * POST /erp/v2/me/preferences
+	 *
+	 * Persists the current user's React-shell preferences (currently only the
+	 * theme color scheme) as user meta. Symmetric with the `preferences` block
+	 * returned by `get_capabilities()`.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function update_preferences( WP_REST_Request $request ): WP_REST_Response {
+		$user_id = get_current_user_id();
+
+		if ( $request->offsetExists( 'erp_hr_color_scheme' ) ) {
+			$scheme = $this->cast_enum(
+				(string) $request->get_param( 'erp_hr_color_scheme' ),
+				[ 'light', 'dark', 'auto' ]
+			);
+
+			if ( null !== $scheme ) {
+				update_user_meta( $user_id, 'erp_hr_color_scheme', $scheme );
+			}
+		}
+
+		if ( $request->offsetExists( 'erp_hr_nav_layout' ) ) {
+			$layout = $this->cast_enum(
+				(string) $request->get_param( 'erp_hr_nav_layout' ),
+				[ 'topbar', 'sidebar' ]
+			);
+
+			if ( null !== $layout ) {
+				update_user_meta( $user_id, 'erp_hr_nav_layout', $layout );
+			}
+		}
+
+		return rest_ensure_response(
+			[
+				'erp_hr_color_scheme' => $this->resolve_color_scheme_preference( $user_id ),
+				'erp_hr_nav_layout'   => $this->resolve_nav_layout_preference( $user_id ),
+			]
+		);
+	}
+
+	/**
+	 * GET /erp/v2/me/capabilities
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_capabilities( WP_REST_Request $request ): WP_REST_Response {
+		unset( $request );
+
+		$user_id = get_current_user_id();
+		$user    = wp_get_current_user();
+
+		$caps_keys    = $this->hr_capability_keys();
+		$capabilities = [];
+
+		foreach ( $caps_keys as $cap ) {
+			$capabilities[ $cap ] = current_user_can( $cap );
+		}
+
+		$payload = [
+			'user_id'       => (int) $user_id,
+			'display_name'  => $this->cast_string_or_null( $user->display_name ) ?? '',
+			'email'         => $this->cast_string_or_null( $user->user_email ) ?? '',
+			'avatar_url'    => get_avatar_url( $user_id, [ 'size' => 80 ] ) ?: '',
+			'is_pro'        => $this->cast_bool( class_exists( 'WP_ERP_Pro' ) ),
+			'is_hr_manager' => current_user_can( erp_hr_get_manager_role() ) || in_array( erp_hr_get_manager_role(), (array) $user->roles, true ),
+			'roles'         => array_values( array_map( 'strval', (array) $user->roles ) ),
+			'capabilities'  => $capabilities,
+			'preferences'   => [
+				'erp_hr_color_scheme' => $this->resolve_color_scheme_preference( $user_id ),
+				'erp_hr_nav_layout'   => $this->resolve_nav_layout_preference( $user_id ),
+			],
+		];
+
+		/**
+		 * Filter the `/erp/v2/me/capabilities` response payload.
+		 *
+		 * Pro plugins can append fields. Pro must never replace a free field.
+		 *
+		 * @since 1.13.5
+		 *
+		 * @param array $payload Response payload.
+		 * @param int   $user_id Current user ID.
+		 */
+		$payload = (array) apply_filters( 'erp_hr_v2_me_capabilities', $payload, $user_id );
+
+		return rest_ensure_response( $payload );
+	}
+
+	/**
+	 * GET /erp/v2/me/employee-capabilities/{employee_id}
+	 *
+	 * Per-target capability resolution. The HR caps (`erp_edit_employee`,
+	 * `erp_create_review`, `erp_manage_review`, …) are meta-mapped against a
+	 * specific employee (`erp_hr_map_meta_caps`) — e.g. a department lead is
+	 * granted review caps only for their own direct reports. The arg-less
+	 * `/me/capabilities` map resolves these to manager-only, so the profile needs
+	 * this target-aware variant to show the Performance/Notes tabs a lead has for
+	 * a report (parity with legacy single.php).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_employee_capabilities( WP_REST_Request $request ): WP_REST_Response {
+		$employee_id = (int) $request['employee_id'];
+
+		$target_caps = [
+			'erp_view_employee',
+			'erp_edit_employee',
+			'erp_view_jobinfo',
+			'erp_create_review',
+			'erp_manage_review',
+			'erp_can_terminate',
+			'erp_delete_employee',
+		];
+
+		$capabilities = [];
+		foreach ( $target_caps as $cap ) {
+			$capabilities[ $cap ] = current_user_can( $cap, $employee_id );
+		}
+
+		return rest_ensure_response(
+			[
+				'employee_id'  => $employee_id,
+				'is_self'      => get_current_user_id() === $employee_id,
+				'capabilities' => $capabilities,
+			]
+		);
+	}
+
+	/**
+	 * Union of every HR capability key exposed to the React shell.
+	 *
+	 * Source: erp_hr_get_caps_for_role() for the two HR roles. The
+	 * intentional typo `erp_crate_announcement` is preserved verbatim
+	 * (see openspec/ground-truth.md §8).
+	 *
+	 * @return string[]
+	 */
+	private function hr_capability_keys(): array {
+		$manager_caps  = (array) erp_hr_get_caps_for_role( erp_hr_get_manager_role() );
+		$employee_caps = (array) erp_hr_get_caps_for_role( erp_hr_get_employee_role() );
+
+		$all = array_keys( array_merge( $manager_caps, $employee_caps ) );
+
+		// The HR-manager role doubles as the gate for the Reports menu
+		// (AdminMenu.php uses `'capability' => 'erp_hr_manager'`). It is a role,
+		// not one of the per-role cap keys, so add it explicitly — otherwise the
+		// React Reports nav can never resolve its gate.
+		$all[] = erp_hr_get_manager_role();
+
+		// Legacy-menu gates the React nav follows but which are NOT per-role HR cap
+		// keys: Recruitment gates on `manage_recruitment`, Reimbursement on the
+		// `employee` cap. Add them so the nav resolves those gates (mirrors
+		// Enqueue::hr_capability_keys()).
+		$all[] = 'manage_recruitment';
+		$all[] = 'employee';
+
+		/**
+		 * Filter the capability keys returned to the React shell.
+		 *
+		 * @since 1.13.5
+		 *
+		 * @param string[] $all Capability keys.
+		 */
+		$all = (array) apply_filters( 'erp_hr_v2_me_capability_keys', $all );
+
+		return array_values( array_unique( array_map( 'strval', $all ) ) );
+	}
+
+	/**
+	 * Read the user's preferred theme mode.
+	 *
+	 * Returns one of: 'light' | 'dark' | 'auto'. Defaults to 'auto'.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	private function resolve_color_scheme_preference( int $user_id ): string {
+		if ( ! $user_id ) {
+			return 'auto';
+		}
+
+		$stored = (string) get_user_meta( $user_id, 'erp_hr_color_scheme', true );
+		$stored = $this->cast_enum( $stored, [ 'light', 'dark', 'auto' ] );
+
+		return $stored ?? 'auto';
+	}
+
+	/**
+	 * Read the user's preferred nav layout.
+	 *
+	 * Returns one of: 'topbar' | 'sidebar'. Defaults to 'topbar' (the original
+	 * horizontal nav).
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	private function resolve_nav_layout_preference( int $user_id ): string {
+		if ( ! $user_id ) {
+			return 'topbar';
+		}
+
+		$stored = (string) get_user_meta( $user_id, 'erp_hr_nav_layout', true );
+		$stored = $this->cast_enum( $stored, [ 'topbar', 'sidebar' ] );
+
+		return $stored ?? 'topbar';
+	}
+
+	/**
+	 * JSON Schema for `/me/capabilities`.
+	 *
+	 * @return array
+	 */
+	public function get_capabilities_schema(): array {
+		return [
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'me-capabilities',
+			'type'       => 'object',
+			'properties' => [
+				'user_id'       => [ 'type' => 'integer' ],
+				'display_name'  => [ 'type' => 'string' ],
+				'email'         => [ 'type' => 'string' ],
+				'avatar_url'    => [ 'type' => 'string' ],
+				'is_pro'        => [ 'type' => 'boolean' ],
+				'is_hr_manager' => [ 'type' => 'boolean' ],
+				'roles'         => [
+					'type'  => 'array',
+					'items' => [ 'type' => 'string' ],
+				],
+				'capabilities'  => [
+					'type'                 => 'object',
+					'additionalProperties' => [ 'type' => 'boolean' ],
+				],
+				'preferences'   => [
+					'type'       => 'object',
+					'properties' => [
+						'erp_hr_color_scheme' => [
+							'type' => 'string',
+							'enum' => [ 'light', 'dark', 'auto' ],
+						],
+						'erp_hr_nav_layout'   => [
+							'type' => 'string',
+							'enum' => [ 'topbar', 'sidebar' ],
+						],
+					],
+				],
+			],
+		];
+	}
+}

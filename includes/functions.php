@@ -4177,3 +4177,29 @@ function erp_load_headway_badge() {
     </script>
     <?php
 }
+
+/**
+ * Enforce the legacy 2 MB upload cap on ERP React uploads, server-side.
+ *
+ * The React admin uploads via the core `/wp/v2/media` endpoint and tags the
+ * request with an `X-ERP-Upload` header. We cap only those requests (so normal
+ * WP media is untouched), mirroring the old Vue/AjaxHandler 2 MB check instead of
+ * trusting a client-side guard.
+ *
+ * @param array $file `$_FILES` entry being uploaded.
+ *
+ * @return array
+ */
+function erp_enforce_react_upload_size( $file ) {
+    if ( empty( $_SERVER['HTTP_X_ERP_UPLOAD'] ) ) {
+        return $file;
+    }
+
+    $limit = 2 * 1024 * 1024; // 2 MB — legacy value.
+    if ( isset( $file['size'] ) && (int) $file['size'] > $limit ) {
+        $file['error'] = __( 'File size cannot be greater than 2MB.', 'erp' );
+    }
+
+    return $file;
+}
+add_filter( 'wp_handle_upload_prefilter', 'erp_enforce_react_upload_size' );

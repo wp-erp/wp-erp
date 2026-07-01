@@ -199,6 +199,67 @@ function erp_hr_get_caps_for_role( $role = '' ) {
 }
 
 /**
+ * Sync the actual WP role capabilities with the (filterable) `erp_hr_get_caps_for_role`
+ * map.
+ *
+ * `add_role()` in the installer does NOT update a role that already exists, so once
+ * a role is created its caps go stale whenever `erp_hr_get_caps_for_role()` gains a
+ * new cap — including caps a pro module appends via the `erp_hr_get_caps_for_role`
+ * filter. That stale state means `current_user_can()` disagrees with the cap map the
+ * React client probes (boot payload + `/erp/v2/me/capabilities`), so UI gated on those
+ * caps silently disappears (e.g. an employee's own profile tabs).
+ *
+ * This grants every mapped cap onto the live role. Idempotent.
+ *
+ * @return void
+ */
+function erp_hr_sync_role_caps() {
+    if ( ! function_exists( 'erp_hr_get_roles' ) ) {
+        return;
+    }
+
+    foreach ( array_keys( (array) erp_hr_get_roles() ) as $role_key ) {
+        $role = get_role( $role_key );
+        if ( ! $role ) {
+            continue;
+        }
+        foreach ( (array) erp_hr_get_caps_for_role( $role_key ) as $cap => $grant ) {
+            if ( $grant && empty( $role->capabilities[ $cap ] ) ) {
+                $role->add_cap( $cap );
+            }
+        }
+    }
+}
+
+/**
+ * Re-sync role caps only when the cap map changes (cheap admin_init guard).
+ *
+ * The signature covers every ERP HR role's full (filtered) cap map, so the moment a
+ * pro module adds a cap via the `erp_hr_get_caps_for_role` filter the signature
+ * changes and the new caps land on the live roles automatically — the canonical way
+ * for any new module to register its capabilities.
+ *
+ * @return void
+ */
+function erp_hr_maybe_sync_role_caps() {
+    if ( ! function_exists( 'erp_hr_get_roles' ) ) {
+        return;
+    }
+
+    $map = [];
+    foreach ( array_keys( (array) erp_hr_get_roles() ) as $role_key ) {
+        $map[ $role_key ] = erp_hr_get_caps_for_role( $role_key );
+    }
+    $signature = md5( serialize( $map ) );
+
+    if ( get_option( 'erp_hr_role_caps_signature' ) !== $signature ) {
+        erp_hr_sync_role_caps();
+        update_option( 'erp_hr_role_caps_signature', $signature );
+    }
+}
+add_action( 'admin_init', 'erp_hr_maybe_sync_role_caps' );
+
+/**
  * Maps HR capabilities to employee or HR manager
  *
  * @param array  $caps    Capabilities for meta capability

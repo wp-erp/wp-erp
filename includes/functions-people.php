@@ -1017,3 +1017,50 @@ function erp_is_people_trashed( $id ) {
 
     return false;
 }
+
+/**
+ * Use an ERP person's stored profile photo (the `photo_id` attachment) as their
+ * avatar everywhere `get_avatar()` / `get_avatar_url()` is called — so the React
+ * admin lists (employees, shift assign, etc.) show the real photo instead of the
+ * Gravatar fallback. No-op when the avatar is already resolved or no photo is set.
+ *
+ * @param array $args        get_avatar_data() arguments.
+ * @param mixed $id_or_email User id, email, WP_User or WP_Comment.
+ *
+ * @return array
+ */
+function erp_people_photo_avatar_data( $args, $id_or_email ) {
+    if ( ! empty( $args['url'] ) ) {
+        return $args;
+    }
+
+    $user_id = 0;
+    if ( is_numeric( $id_or_email ) ) {
+        $user_id = (int) $id_or_email;
+    } elseif ( $id_or_email instanceof WP_User ) {
+        $user_id = (int) $id_or_email->ID;
+    } elseif ( $id_or_email instanceof WP_Comment ) {
+        $user_id = (int) $id_or_email->user_id;
+    } elseif ( is_string( $id_or_email ) && is_email( $id_or_email ) ) {
+        $user = get_user_by( 'email', $id_or_email );
+        $user_id = $user ? (int) $user->ID : 0;
+    }
+
+    if ( ! $user_id ) {
+        return $args;
+    }
+
+    $photo_id = (int) get_user_meta( $user_id, 'photo_id', true );
+    if ( ! $photo_id ) {
+        return $args;
+    }
+
+    $url = wp_get_attachment_image_url( $photo_id, 'thumbnail' );
+    if ( $url ) {
+        $args['url']          = $url;
+        $args['found_avatar'] = true;
+    }
+
+    return $args;
+}
+add_filter( 'pre_get_avatar_data', 'erp_people_photo_avatar_data', 10, 2 );
