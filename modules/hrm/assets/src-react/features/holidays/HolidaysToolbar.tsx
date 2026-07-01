@@ -70,13 +70,15 @@ export function HolidaysToolbar( {
 						aria-pressed={ filterButtonActive }
 						onClick={ onToggleFilters }
 						className={ [
-							'relative inline-flex items-center justify-center gap-1 transition-colors',
-							filterButtonActive ? 'text-muted-foreground hover:text-foreground' : 'text-muted-foreground hover:text-foreground',
+							'relative inline-flex size-5 items-center justify-center transition-colors',
+							filterButtonActive
+								? 'text-primary'
+								: 'text-muted-foreground hover:text-foreground',
 						].join( ' ' ) }
 					>
 						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
 						{ activeFilterCount > 0 ? (
-							<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
+							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
 								{ activeFilterCount }
 							</span>
 						) : null }

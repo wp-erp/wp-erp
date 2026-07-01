@@ -64,10 +64,10 @@ export function EmployeeImportUpload( {
 				) }
 			>
 				<CloudUpload size={ 36 } strokeWidth={ 1.5 } className="text-muted-foreground" aria-hidden="true" />
-				<p className="m-0 text-sm font-semibold text-foreground">
+				<p className="m-0 mb-4 text-sm font-semibold text-foreground">
 					{ fileName || __( 'Upload a CSV file', 'erp' ) }
 				</p>
-				<p className="m-0 text-xs text-muted-foreground">
+				<p className="m-0 mb-4 text-xs text-muted-foreground">
 					{ __( 'Drag and drop CSV file here', 'erp' ) }
 				</p>
 				<Button

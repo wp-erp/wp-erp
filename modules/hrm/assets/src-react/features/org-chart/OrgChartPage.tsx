@@ -16,6 +16,7 @@
  * `OrgCard`, `OrgTree` (`OrgSubtree`), `DeptPill`, `org-chart-format`.
  */
 
+import { Button } from '@wedevs/plugin-ui';
 import { Minus, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
@@ -85,25 +86,29 @@ function OrgChartInner(): JSX.Element {
 			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Org Chart', 'erp' ) }</h1>
 				<div className="inline-flex items-center gap-1 rounded-md border border-border bg-card p-1">
-					<button
+					<Button
+						variant="ghost"
+						size="icon"
 						type="button"
 						aria-label={ __( 'Zoom out', 'erp' ) }
 						disabled={ zoom <= ZOOM_MIN }
 						onClick={ () => zoomBy( -ZOOM_STEP ) }
-						className="inline-flex size-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40"
+						className="size-7 rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40"
 					>
 						<Minus size={ 16 } aria-hidden="true" />
-					</button>
+					</Button>
 					<span className="w-10 text-center text-xs text-muted-foreground">{ Math.round( zoom * 100 ) }%</span>
-					<button
+					<Button
+						variant="ghost"
+						size="icon"
 						type="button"
 						aria-label={ __( 'Zoom in', 'erp' ) }
 						disabled={ zoom >= ZOOM_MAX }
 						onClick={ () => zoomBy( ZOOM_STEP ) }
-						className="inline-flex size-7 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40"
+						className="size-7 rounded text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40"
 					>
 						<Plus size={ 16 } aria-hidden="true" />
-					</button>
+					</Button>
 				</div>
 			</header>
 

@@ -7,7 +7,7 @@
  * `Employee::update_employee()` model.
  */
 
-import { Skeleton, toast } from '@wedevs/plugin-ui';
+import { Button, Skeleton, toast } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -120,14 +120,16 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 						{ fullName || __( 'Update employee details.', 'erp' ) }
 					</p>
 				</div>
-				<button
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
 					onClick={ close }
 					aria-label={ __( 'Close', 'erp' ) }
-					className="inline-flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+					className="size-9 shrink-0 border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
 				>
 					<X size={ 18 } aria-hidden="true" />
-				</button>
+				</Button>
 			</section>
 
 			{ loadError ? (

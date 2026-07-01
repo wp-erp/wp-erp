@@ -570,3 +570,45 @@ body:has(#erp-hr-app) {
 .pui-root [data-placeholder] {
 	color: #A5A5AA !important;
 }
+
+/* ─── No compact buttons — every button ≥ 40px ───
+ * Extends the 40px CTA rule to small (h-8) text buttons and icon-only buttons
+ * (w-8/w-9/size-8/size-9 squares → 40×40, no side padding). */
+#erp-hr-app [data-slot='button'].h-8 {
+	height: 40px !important;
+}
+#erp-hr-app [data-slot='button'].h-8:not(.w-8):not(.w-9):not(.size-8):not(.size-9) {
+	padding: 0 20px !important;
+	gap: 8px !important;
+	border-radius: 6px !important;
+}
+#erp-hr-app [data-slot='button'].w-8,
+#erp-hr-app [data-slot='button'].w-9,
+#erp-hr-app [data-slot='button'].size-8,
+#erp-hr-app [data-slot='button'].size-9 {
+	width: 40px !important;
+	height: 40px !important;
+	padding: 0 !important;
+	border-radius: 6px !important;
+}
+
+/* Catch-all button min-height — any button with no explicit size still ≥ 40px. */
+#erp-hr-app [data-slot='button'] {
+	min-height: 40px !important;
+}
+
+/* ─── Raw <button> action/icon buttons → 40px too ───
+ * Non-DS <button>s that carry a button size (h-8/9/10 text, size-8/9/10 icon).
+ * Text-link buttons (no size class) + tiny nav/pagination (size-6/7) untouched. */
+#erp-hr-app button.h-8,
+#erp-hr-app button.h-9,
+#erp-hr-app button.h-10 {
+	min-height: 40px !important;
+	height: 40px !important;
+}
+#erp-hr-app button.size-8,
+#erp-hr-app button.size-9,
+#erp-hr-app button.size-10 {
+	width: 40px !important;
+	height: 40px !important;
+}

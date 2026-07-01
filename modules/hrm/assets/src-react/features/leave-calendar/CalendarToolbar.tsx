@@ -4,7 +4,7 @@
  * legend. Presentational — all state lives in the page.
  */
 
-import { Button } from '@wedevs/plugin-ui';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@wedevs/plugin-ui';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { JSX } from 'react';
 
@@ -74,28 +74,36 @@ export function CalendarToolbar( {
 			{ /* Department / Designation filters (auto-apply) — managers only */ }
 			{ showFilters && (
 				<div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
-					<select
-						value={ departmentId }
-						onChange={ ( e ) => onDepartmentChange( Number( e.target.value ) ) }
-						aria-label={ __( 'Filter by department', 'erp' ) }
-						className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
+					<Select
+						items={ [ { value: '0', label: __( 'All Departments', 'erp' ) }, ...departments.map( ( d ) => ( { value: String( d.id ), label: d.title } ) ) ] }
+						value={ String( departmentId ) }
+						onValueChange={ ( v ) => onDepartmentChange( Number( v ) ) }
 					>
-						<option value={ 0 }>{ __( 'All Departments', 'erp' ) }</option>
-						{ departments.map( ( d ) => (
-							<option key={ d.id } value={ d.id }>{ d.title }</option>
-						) ) }
-					</select>
-					<select
-						value={ designationId }
-						onChange={ ( e ) => onDesignationChange( Number( e.target.value ) ) }
-						aria-label={ __( 'Filter by designation', 'erp' ) }
-						className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground"
+						<SelectTrigger aria-label={ __( 'Filter by department', 'erp' ) } className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground">
+							<SelectValue placeholder={ __( 'All Departments', 'erp' ) } />
+						</SelectTrigger>
+						<SelectContent align="start" alignItemWithTrigger={ false }>
+							<SelectItem value="0">{ __( 'All Departments', 'erp' ) }</SelectItem>
+							{ departments.map( ( d ) => (
+								<SelectItem key={ d.id } value={ String( d.id ) }>{ d.title }</SelectItem>
+							) ) }
+						</SelectContent>
+					</Select>
+					<Select
+						items={ [ { value: '0', label: __( 'All Designations', 'erp' ) }, ...designations.map( ( d ) => ( { value: String( d.id ), label: d.title } ) ) ] }
+						value={ String( designationId ) }
+						onValueChange={ ( v ) => onDesignationChange( Number( v ) ) }
 					>
-						<option value={ 0 }>{ __( 'All Designations', 'erp' ) }</option>
-						{ designations.map( ( d ) => (
-							<option key={ d.id } value={ d.id }>{ d.title }</option>
-						) ) }
-					</select>
+						<SelectTrigger aria-label={ __( 'Filter by designation', 'erp' ) } className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground">
+							<SelectValue placeholder={ __( 'All Designations', 'erp' ) } />
+						</SelectTrigger>
+						<SelectContent align="start" alignItemWithTrigger={ false }>
+							<SelectItem value="0">{ __( 'All Designations', 'erp' ) }</SelectItem>
+							{ designations.map( ( d ) => (
+								<SelectItem key={ d.id } value={ String( d.id ) }>{ d.title }</SelectItem>
+							) ) }
+						</SelectContent>
+					</Select>
 				</div>
 			) }
 

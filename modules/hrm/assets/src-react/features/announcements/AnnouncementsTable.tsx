@@ -45,8 +45,8 @@ export function AnnouncementsTable( { rows, canManage, onEdit, onRestore, onDele
 			</thead>
 			<tbody>
 				{ rows.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-						<td className="max-w-md px-4 align-middle">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+						<td className="max-w-md px-4 align-middle text-sm">
 							<div className="truncate font-medium text-foreground">{ row.title || __( '(no title)', 'erp' ) }</div>
 							{ row.excerpt ? (
 								<div className="truncate text-xs text-muted-foreground">{ row.excerpt }</div>

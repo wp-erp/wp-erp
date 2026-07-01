@@ -53,7 +53,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 	return (
 		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
-				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onAdd }>
 					<Plus size={ 14 } aria-hidden="true" />
 					{ __( 'Add', 'erp' ) }
@@ -172,7 +172,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				onAdd={ () => openAdd( 'experiences' ) }
 			>
 				{ experiences.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-4 align-middle text-sm text-foreground">{ cell( row.company_name ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.job_title ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.from ) }</td>
@@ -190,7 +190,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				onAdd={ () => openAdd( 'educations' ) }
 			>
 				{ educations.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.school ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.degree ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.field ) }</td>
@@ -209,7 +209,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				onAdd={ () => openAdd( 'dependents' ) }
 			>
 				{ dependents.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.name ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.relation ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.dob ) }</td>

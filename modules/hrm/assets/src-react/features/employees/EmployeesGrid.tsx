@@ -7,7 +7,7 @@
  * so behaviour stays in sync with the list view.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Checkbox } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Checkbox, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { ChevronLeft, ChevronRight, Hash, Mail, Phone } from 'lucide-react';
 import type { JSX } from 'react';
@@ -155,16 +155,20 @@ export function EmployeesGrid(): JSX.Element {
 				<div className="flex items-center gap-3">
 					<label className="flex items-center gap-2">
 						<span className="text-xs">{ __( 'Per page', 'erp' ) }</span>
-						<select
-							value={ perPage }
-							onChange={ ( e ) => setPagination( { page: 1, perPage: parseInt( e.target.value, 10 ) } ) }
-							aria-label={ __( 'Cards per page', 'erp' ) }
-							className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+						<Select
+							items={ [ 12, 24, 48, 96 ].map( ( n ) => ( { value: String( n ), label: String( n ) } ) ) }
+							value={ String( perPage ) }
+							onValueChange={ ( v ) => setPagination( { page: 1, perPage: parseInt( String( v ), 10 ) } ) }
 						>
-							{ [ 12, 24, 48, 96 ].map( ( n ) => (
-								<option key={ n } value={ n }>{ n }</option>
-							) ) }
-						</select>
+							<SelectTrigger aria-label={ __( 'Cards per page', 'erp' ) } className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none">
+								<SelectValue placeholder={ __( 'Cards per page', 'erp' ) } />
+							</SelectTrigger>
+							<SelectContent align="start" alignItemWithTrigger={ false }>
+								{ [ 12, 24, 48, 96 ].map( ( n ) => (
+									<SelectItem key={ n } value={ String( n ) }>{ n }</SelectItem>
+								) ) }
+							</SelectContent>
+						</Select>
 					</label>
 
 					<div className="inline-flex items-center gap-1">

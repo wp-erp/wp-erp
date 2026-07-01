@@ -59,7 +59,7 @@ export function HolidaysTable( {
 			</thead>
 			<tbody>
 				{ rows.map( ( holiday ) => (
-					<tr key={ holiday.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+					<tr key={ holiday.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						{ canManage ? (
 							<td className="w-10 px-4 align-middle">
 								<Checkbox
@@ -69,7 +69,7 @@ export function HolidaysTable( {
 								/>
 							</td>
 						) : null }
-						<td className="px-4 align-middle font-medium text-foreground">{ holiday.title }</td>
+						<td className="px-4 align-middle text-sm font-medium text-foreground">{ holiday.title }</td>
 						<td className="whitespace-nowrap px-2 align-middle text-sm text-foreground">
 							{ holiday.range
 								? `${ fmt( holiday.start ) } – ${ fmt( holiday.end ) }`

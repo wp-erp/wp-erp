@@ -62,7 +62,7 @@ export function DepartmentsTable( {
 			<thead className="border-b border-border bg-card">
 				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 					{ canManage ? (
-						<th scope="col" className="w-10 px-2">
+						<th scope="col" className="w-10 px-4">
 							<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
 						</th>
 					) : null }
@@ -93,13 +93,13 @@ export function DepartmentsTable( {
 			</thead>
 			<tbody>
 				{ rows.map( ( dept ) => (
-					<tr key={ dept.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+					<tr key={ dept.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						{ canManage ? (
-							<td className="px-2 align-middle">
+							<td className="px-4 align-middle">
 								<Checkbox checked={ selected.has( dept.id ) } onCheckedChange={ () => onToggleOne( dept.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), dept.title ) } />
 							</td>
 						) : null }
-						<td className="px-2 align-middle">
+						<td className="px-2 align-middle text-sm">
 							<div className="font-medium text-foreground">{ dept.title }</div>
 							{ dept.description ? (
 								<div className="truncate text-xs text-muted-foreground">{ dept.description }</div>

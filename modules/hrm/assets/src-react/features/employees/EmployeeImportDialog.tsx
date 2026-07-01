@@ -160,7 +160,7 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next ? undefined : close() ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader className="space-y-1.5 text-center sm:text-center">
-					<DialogTitle className="m-0 text-center text-2xl font-bold leading-tight tracking-tight text-foreground">
+					<DialogTitle className="m-0 mb-4 text-center text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ __( 'Import Employee', 'erp' ) }
 					</DialogTitle>
 					<p className="mx-auto max-w-md text-sm text-muted-foreground">

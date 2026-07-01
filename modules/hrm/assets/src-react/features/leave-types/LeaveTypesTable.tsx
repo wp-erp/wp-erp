@@ -63,7 +63,7 @@ export function LeaveTypesTable( {
 			</thead>
 			<tbody>
 				{ rows.map( ( type ) => (
-					<tr key={ type.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+					<tr key={ type.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						{ canManage ? (
 							<td className="px-4 align-middle">
 								<Checkbox
@@ -73,7 +73,7 @@ export function LeaveTypesTable( {
 								/>
 							</td>
 						) : null }
-						<td className="px-4 align-middle font-medium text-foreground">{ type.name }</td>
+						<td className="px-4 align-middle text-sm font-medium text-foreground">{ type.name }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">
 							{ type.description ? (
 								<span className="line-clamp-1">{ type.description }</span>

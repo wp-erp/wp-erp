@@ -12,6 +12,7 @@
  * browser.
  */
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@wedevs/plugin-ui';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { JSX } from 'react';
 
@@ -45,18 +46,22 @@ export function OrgPagination( { page, totalPages, total, perPage, onPage, onPer
 			<div className="flex items-center gap-3">
 				<label className="flex items-center gap-2">
 					<span className="text-xs">{ __( 'Rows per page', 'erp' ) }</span>
-					<select
-						value={ perPage }
-						onChange={ ( e ) => onPerPage( parseInt( e.target.value, 10 ) ) }
-						aria-label={ __( 'Rows per page', 'erp' ) }
-						className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+					<Select
+						items={ [ 10, 20, 50, 100 ].map( ( n ) => ( { value: String( n ), label: String( n ) } ) ) }
+						value={ String( perPage ) }
+						onValueChange={ ( v ) => onPerPage( parseInt( String( v ), 10 ) ) }
 					>
-						{ [ 10, 20, 50, 100 ].map( ( n ) => (
-							<option key={ n } value={ n }>
-								{ n }
-							</option>
-						) ) }
-					</select>
+						<SelectTrigger aria-label={ __( 'Rows per page', 'erp' ) } className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none">
+							<SelectValue placeholder={ __( 'Rows per page', 'erp' ) } />
+						</SelectTrigger>
+						<SelectContent align="start" alignItemWithTrigger={ false }>
+							{ [ 10, 20, 50, 100 ].map( ( n ) => (
+								<SelectItem key={ n } value={ String( n ) }>
+									{ n }
+								</SelectItem>
+							) ) }
+						</SelectContent>
+					</Select>
 				</label>
 
 				<div className="inline-flex items-center gap-1">

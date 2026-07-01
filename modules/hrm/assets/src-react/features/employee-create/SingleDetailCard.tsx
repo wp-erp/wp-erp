@@ -14,7 +14,7 @@ interface DetailCardProps {
 export function FieldGrid( { title, children }: DetailCardProps ): JSX.Element {
 	return (
 		<section>
-			<h3 className="m-0 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{ title }</h3>
+			<h3 className="m-0 mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{ title }</h3>
 			<dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">{ children }</dl>
 		</section>
 	);

@@ -58,7 +58,7 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 	return (
 		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
-				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
 			</header>
 			<div className="mx-6 mb-4 h-px bg-border" />
@@ -186,7 +186,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'status', __( 'Update Status', 'erp' ) ) }
 			>
 				{ data.status.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.status ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
@@ -204,7 +204,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'type', __( 'Update Type', 'erp' ) ) }
 			>
 				{ data.employment.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.type ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
@@ -222,7 +222,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'compensation', __( 'Update Compensation', 'erp' ) ) }
 			>
 				{ data.compensation.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_rate ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_type ) }</td>
@@ -242,7 +242,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				headerAction={ actionButton( 'job', __( 'Update Job Information', 'erp' ) ) }
 			>
 				{ data.job.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.department ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.designation ) }</td>

@@ -61,7 +61,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
 					<div className="flex flex-wrap items-center gap-3">
-						<h1 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
+						<h1 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						{ status ? (
@@ -69,8 +69,8 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 						) : null }
 					</div>
 					<div className="flex flex-col gap-1">
-						{ role ? <p className="m-0 truncate text-sm font-semibold text-foreground">{ role }</p> : null }
-						{ email ? <p className="m-0 truncate text-sm text-muted-foreground">{ email }</p> : null }
+						{ role ? <p className="m-0 mb-4 truncate text-sm font-semibold text-foreground">{ role }</p> : null }
+						{ email ? <p className="m-0 mb-4 truncate text-sm text-muted-foreground">{ email }</p> : null }
 					</div>
 				</div>
 

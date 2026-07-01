@@ -5,7 +5,7 @@
  * list of icon-led rows. `CopyId` and `BasicRow` are private pieces of this card.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, toast } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, toast } from '@wedevs/plugin-ui';
 import { Briefcase, CalendarDays, Check, Copy, Globe, Mail, Pencil, Phone, User, UserCircle } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
@@ -91,15 +91,17 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 				{ /* Soft cover band — flat tint, no gradient. */ }
 				<div className="relative h-28 bg-muted">
 					{ canEdit ? (
-						<button
+						<Button
 							type="button"
+							variant="ghost"
+							size="icon"
 							onClick={ onEdit }
 							className="absolute right-3 top-3 inline-flex size-8 items-center justify-center rounded-full bg-card text-muted-foreground shadow-sm ring-1 ring-border transition-colors hover:text-foreground"
 							aria-label={ __( 'Edit employee', 'erp' ) }
 							title={ __( 'Edit employee', 'erp' ) }
 						>
 							<Pencil size={ 14 } aria-hidden="true" />
-						</button>
+						</Button>
 					) : null }
 				</div>
 
@@ -127,7 +129,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 					</div>
 
 					<div className="flex items-center gap-2">
-						<h1 className="m-0 text-xl font-bold tracking-tight text-foreground">
+						<h1 className="m-0 mb-4 text-xl font-bold tracking-tight text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						<CopyId value={ str( record, 'employee_id' ) } />

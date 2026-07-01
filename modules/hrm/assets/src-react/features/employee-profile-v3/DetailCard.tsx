@@ -4,6 +4,7 @@
  * label/value rows (`Field`). Presentational only.
  */
 
+import { Button } from '@wedevs/plugin-ui';
 import { Pencil } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 
@@ -31,17 +32,19 @@ export function InfoCard( {
 				<span className={ `inline-flex size-9 items-center justify-center rounded-xl ${ tone }` }>
 					<Icon size={ 18 } strokeWidth={ 2 } aria-hidden="true" />
 				</span>
-				<h2 className="m-0 flex-1 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+				<h2 className="m-0 mb-4 flex-1 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ onEdit ? (
-					<button
+					<Button
 						type="button"
+						variant="ghost"
+						size="icon"
 						onClick={ onEdit }
 						className="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground ring-1 ring-border transition-colors hover:bg-muted hover:text-foreground"
 						aria-label={ __( 'Edit', 'erp' ) }
 						title={ __( 'Edit', 'erp' ) }
 					>
 						<Pencil size={ 14 } aria-hidden="true" />
-					</button>
+					</Button>
 				) : null }
 			</div>
 			<div className="mb-4 mt-4 h-px w-full bg-border" />

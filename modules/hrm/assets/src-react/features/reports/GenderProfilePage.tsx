@@ -89,7 +89,7 @@ export function GenderProfilePage(): JSX.Element {
 									key={ `${ row.gender }-${ idx }` }
 									className={ [
 										'h-18 border-b border-border last:border-b-0',
-										isTotal ? 'bg-muted/30 font-semibold text-foreground' : 'hover:bg-muted/40',
+										isTotal ? 'bg-muted/30 font-semibold text-foreground' : 'bg-card hover:bg-muted/40',
 									].join( ' ' ) }
 								>
 									<td className="px-4 align-middle font-medium text-foreground">{ row.gender }</td>

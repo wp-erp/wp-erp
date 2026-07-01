@@ -130,7 +130,7 @@ export function LeaveRequestsTable( {
 					{ rows.map( ( req ) => (
 						<tr
 							key={ req.id }
-							className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40"
+							className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40"
 						>
 							{ canManage ? (
 								<td className="w-10 px-4 align-middle">
@@ -146,7 +146,7 @@ export function LeaveRequestsTable( {
 									/>
 								</td>
 							) : null }
-							<td className="px-4 align-middle font-medium text-foreground">
+							<td className="px-4 align-middle text-sm font-medium text-foreground">
 								{ req.name ? (
 									<PersonCell
 										name={ req.name }

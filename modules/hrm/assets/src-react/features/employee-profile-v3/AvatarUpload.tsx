@@ -11,7 +11,7 @@
  */
 
 import apiFetch from '@wordpress/api-fetch';
-import { Avatar, AvatarFallback, AvatarImage, Spinner, toast } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Button, Spinner, toast } from '@wedevs/plugin-ui';
 import { Camera, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { JSX } from 'react';
@@ -106,25 +106,29 @@ export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange 
 					<Spinner className="size-5 text-white" />
 				) : (
 					<>
-						<button
+						<Button
 							type="button"
+							variant="ghost"
+							size="icon"
 							className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-full bg-white/90 text-foreground hover:bg-white"
 							onClick={ () => inputRef.current?.click() }
 							aria-label={ __( 'Upload photo', 'erp' ) }
 							title={ __( 'Upload photo', 'erp' ) }
 						>
 							<Camera size={ 16 } aria-hidden="true" />
-						</button>
+						</Button>
 						{ avatarUrl ? (
-							<button
+							<Button
 								type="button"
+								variant="ghost"
+								size="icon"
 								className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-full bg-white/90 text-destructive hover:bg-white"
 								onClick={ () => setConfirmOpen( true ) }
 								aria-label={ __( 'Remove photo', 'erp' ) }
 								title={ __( 'Remove photo', 'erp' ) }
 							>
 								<Trash2 size={ 16 } aria-hidden="true" />
-							</button>
+							</Button>
 						) : null }
 					</>
 				) }

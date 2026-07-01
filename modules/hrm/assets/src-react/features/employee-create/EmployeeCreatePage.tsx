@@ -9,7 +9,7 @@
  * action, and a sticky action bar.
  */
 
-import { toast } from '@wedevs/plugin-ui';
+import { Button, toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
 import { X } from 'lucide-react';
 import { useState } from 'react';
@@ -69,14 +69,16 @@ function EmployeeCreateInner(): JSX.Element {
 							{ __( 'Create a new member of your team.', 'erp' ) }
 						</p>
 					</div>
-					<button
+					<Button
 						type="button"
+						variant="outline"
+						size="icon"
 						onClick={ close }
 						aria-label={ __( 'Close', 'erp' ) }
-						className="inline-flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+						className="size-9 shrink-0 border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
 					>
 						<X size={ 18 } aria-hidden="true" />
-					</button>
+					</Button>
 				</section>
 
 				<EmployeeForm

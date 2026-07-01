@@ -183,7 +183,7 @@ export function LeaveExtraFields( { fields, values, onChange }: LeaveExtraFields
 					{ group.section ? (
 						<div className="flex flex-col gap-3">
 							<div className="h-px w-full bg-border" />
-							<h3 className="m-0 text-sm font-semibold text-foreground">{ group.section }</h3>
+							<h3 className="m-0 mb-4 text-sm font-semibold text-foreground">{ group.section }</h3>
 						</div>
 					) : null }
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

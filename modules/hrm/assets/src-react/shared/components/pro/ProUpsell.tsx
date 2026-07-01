@@ -167,7 +167,7 @@ export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.
 								</span>
 							) }
 
-							<h2 className="m-0 text-3xl font-bold leading-tight tracking-tight text-foreground">
+							<h2 className="m-0 mb-4 text-3xl font-bold leading-tight tracking-tight text-foreground">
 								<span className="text-[#f7941d]">{ __( 'Upgrade to', 'erp' ) }</span>{ ' ' }
 								{ __( 'WP ERP', 'erp' ) } <strong>{ __( 'Pro', 'erp' ) }</strong>
 							</h2>
@@ -175,7 +175,7 @@ export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.
 								{ __( 'to experience even more powerful features 🎉', 'erp' ) }
 							</p>
 
-							<ul className="m-0 flex flex-col gap-4">
+							<ul className="m-0 mb-4 flex flex-col gap-4">
 								{ FEATURES.map( ( item, i ) => (
 									<li key={ i } className="flex items-start gap-3 text-sm leading-relaxed text-foreground">
 										<span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">

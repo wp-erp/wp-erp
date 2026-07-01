@@ -23,7 +23,7 @@ export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImpo
 			<div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card px-6 py-10 text-center">
 				<span className="text-4xl" aria-hidden="true">🎉</span>
 				<div className="space-y-1">
-					<h3 className="m-0 text-lg font-semibold text-foreground">
+					<h3 className="m-0 mb-4 text-lg font-semibold text-foreground">
 						{ result.failed.length > 0
 							? __( 'Import finished', 'erp' )
 							: __( 'Successfully Imported', 'erp' ) }
@@ -42,19 +42,19 @@ export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImpo
 			{ result.failed.length > 0 ? (
 				<div className="max-h-56 overflow-auto rounded-md border border-border">
 					<table className="w-full min-w-[22rem] text-left text-sm">
-						<thead className="bg-muted/50 text-xs text-muted-foreground">
-							<tr>
-								<th className="px-3 py-2">{ __( 'Row', 'erp' ) }</th>
-								<th className="px-3 py-2">{ __( 'Email', 'erp' ) }</th>
-								<th className="px-3 py-2">{ __( 'Error', 'erp' ) }</th>
+						<thead className="border-b border-border bg-card">
+							<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+								<th scope="col" className="px-3">{ __( 'Row', 'erp' ) }</th>
+								<th scope="col" className="px-3">{ __( 'Email', 'erp' ) }</th>
+								<th scope="col" className="px-3">{ __( 'Error', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
 							{ result.failed.map( ( f ) => (
-								<tr key={ `${ f.row }-${ f.email }` } className="border-t border-border">
-									<td className="px-3 py-2">{ f.row }</td>
-									<td className="px-3 py-2">{ f.email }</td>
-									<td className="px-3 py-2 text-destructive">{ f.message }</td>
+								<tr key={ `${ f.row }-${ f.email }` } className="h-11 border-b border-border last:border-b-0">
+									<td className="px-3 align-middle font-medium text-foreground">{ f.row }</td>
+									<td className="px-3 align-middle text-muted-foreground">{ f.email }</td>
+									<td className="px-3 align-middle text-destructive">{ f.message }</td>
 								</tr>
 							) ) }
 						</tbody>

@@ -52,7 +52,7 @@ export function SalaryHistoryPage(): JSX.Element {
 					</thead>
 					<tbody>
 						{ rows.map( ( row, idx ) => (
-							<tr key={ `${ row.user_id }-${ idx }` } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+							<tr key={ `${ row.user_id }-${ idx }` } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 								<td className="px-4 align-middle font-medium text-foreground">
 									{ row.name ? <ReportNameCell name={ row.name } avatar={ row.avatar } /> : <span aria-hidden="true">&nbsp;</span> }
 								</td>

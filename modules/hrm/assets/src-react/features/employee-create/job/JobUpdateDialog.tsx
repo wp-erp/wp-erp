@@ -167,7 +167,7 @@ export function JobUpdateDialog( {
 		<Dialog open={ action !== null } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
-					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ action ? TITLES[ action ] : '' }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ action ? TITLES[ action ] : '' }</DialogTitle>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 

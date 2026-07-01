@@ -60,13 +60,13 @@ export function LeaveEntitlementsTable( {
 			</thead>
 			<tbody>
 				{ rows.map( ( ent ) => (
-					<tr key={ ent.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+					<tr key={ ent.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						{ canManage ? (
 							<td className="w-10 px-4 align-middle">
 								<Checkbox checked={ selected.has( ent.id ) } onCheckedChange={ () => onToggleOne( ent.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), ent.employee_name ) } />
 							</td>
 						) : null }
-						<td className="px-4 align-middle font-medium text-foreground">
+						<td className="px-4 align-middle text-sm font-medium text-foreground">
 							{ ent.employee_name || <span className="text-muted-foreground">—</span> }
 						</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ ent.policy_name }</td>

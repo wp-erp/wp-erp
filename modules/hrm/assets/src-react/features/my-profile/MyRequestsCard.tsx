@@ -19,12 +19,14 @@ import {
 	DialogHeader,
 	DialogTitle,
 	SmartSelect,
+	Textarea,
 	toast,
 } from '@wedevs/plugin-ui';
 import { Laptop, LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -119,7 +121,7 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 		<Dialog open onOpenChange={ ( o ) => ( o || busy ? undefined : onClose() ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Apply for Resignation', 'erp' ) }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Apply for Resignation', 'erp' ) }</DialogTitle>
 					<DialogDescription>{ __( 'Submit a resignation request to HR.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
 				<MyHistory base="/hrm/resignations" primary={ ( r ) => r.date || '—' } />
@@ -128,8 +130,8 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 					<SmartSelect options={ reasons } value={ reason } onValueChange={ ( v ) => setReason( v ?? '' ) } placeholder={ __( 'Select reason', 'erp' ) } searchPlaceholder={ __( 'Search…', 'erp' ) } emptyMessage={ __( 'No reasons.', 'erp' ) } className="h-10 w-full" />
 				</div>
 				<div className="flex flex-col gap-2.5">
-					<label htmlFor="my_resign_date" className="text-sm font-medium text-foreground">{ __( 'Resignation Date', 'erp' ) }</label>
-					<input id="my_resign_date" type="date" value={ date } onChange={ ( e ) => setDate( e.target.value ) } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
+					<label className="text-sm font-medium text-foreground">{ __( 'Resignation Date', 'erp' ) }</label>
+					<DateField value={ date } onChange={ setDate } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 				</div>
 				<DialogFooter className="gap-3">
 					<Button variant="outline" disabled={ busy } onClick={ onClose }>{ __( 'Cancel', 'erp' ) }</Button>
@@ -161,7 +163,7 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 		<Dialog open onOpenChange={ ( o ) => ( o || busy ? undefined : onClose() ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Apply for Remote Work', 'erp' ) }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Apply for Remote Work', 'erp' ) }</DialogTitle>
 					<DialogDescription>{ __( 'Submit a remote work request to HR.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
 				<MyHistory base="/hrm/remote-work" primary={ ( r ) => `${ r.startDate ?? '' } → ${ r.endDate ?? '' }` } />
@@ -172,17 +174,17 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 				{ 'other' === reason ? (
 					<div className="flex flex-col gap-2.5">
 						<label htmlFor="my_rw_other" className="text-sm font-medium text-foreground">{ __( 'Other Reason', 'erp' ) }</label>
-						<textarea id="my_rw_other" rows={ 2 } value={ other } onChange={ ( e ) => setOther( e.target.value ) } className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
+						<Textarea id="my_rw_other" rows={ 2 } value={ other } onChange={ ( e ) => setOther( e.target.value ) } className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
 					</div>
 				) : null }
 				<div className="grid grid-cols-2 gap-3">
 					<div className="flex flex-col gap-2.5">
-						<label htmlFor="my_rw_from" className="text-sm font-medium text-foreground">{ __( 'From', 'erp' ) }</label>
-						<input id="my_rw_from" type="date" value={ from } onChange={ ( e ) => setFrom( e.target.value ) } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
+						<label className="text-sm font-medium text-foreground">{ __( 'From', 'erp' ) }</label>
+						<DateField value={ from } onChange={ setFrom } max={ to || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 					<div className="flex flex-col gap-2.5">
-						<label htmlFor="my_rw_to" className="text-sm font-medium text-foreground">{ __( 'To', 'erp' ) }</label>
-						<input id="my_rw_to" type="date" value={ to } onChange={ ( e ) => setTo( e.target.value ) } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
+						<label className="text-sm font-medium text-foreground">{ __( 'To', 'erp' ) }</label>
+						<DateField value={ to } onChange={ setTo } min={ from || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 				</div>
 				<DialogFooter className="gap-3">

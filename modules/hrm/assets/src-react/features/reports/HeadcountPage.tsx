@@ -104,13 +104,15 @@ export function HeadcountPage(): JSX.Element {
 						aria-pressed={ filterButtonActive }
 						onClick={ () => setShowFilters( ( prev ) => ! prev ) }
 						className={ [
-							'relative inline-flex items-center justify-center gap-1 transition-colors',
-							filterButtonActive ? 'text-muted-foreground hover:text-foreground' : 'text-muted-foreground hover:text-foreground',
+							'relative inline-flex size-5 items-center justify-center transition-colors',
+							filterButtonActive
+								? 'text-primary'
+								: 'text-muted-foreground hover:text-foreground',
 						].join( ' ' ) }
 					>
 						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
 						{ activeFilterCount > 0 ? (
-							<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-medium text-primary-foreground">
+							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
 								{ activeFilterCount }
 							</span>
 						) : null }
@@ -180,7 +182,7 @@ export function HeadcountPage(): JSX.Element {
 						</thead>
 						<tbody>
 							{ ( data?.employees ?? [] ).slice( 0, visible ).map( ( emp ) => (
-								<tr key={ emp.user_id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+								<tr key={ emp.user_id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 									<td className="px-4 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
 									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
 									<td className="px-2 align-middle text-sm text-foreground">{ emp.designation ?? '—' }</td>

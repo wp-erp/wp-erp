@@ -186,8 +186,8 @@ function LeaveUnpaidInner(): JSX.Element {
 							aria-pressed={ showFilters }
 							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
 							className={ [
-								'relative inline-flex items-center justify-center gap-1 transition-colors',
-								showFilters || fYear ? 'text-muted-foreground hover:text-foreground' : 'text-muted-foreground hover:text-foreground',
+								'relative inline-flex size-5 items-center justify-center transition-colors',
+								showFilters || fYear ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
 							].join( ' ' ) }
 						>
 							<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />

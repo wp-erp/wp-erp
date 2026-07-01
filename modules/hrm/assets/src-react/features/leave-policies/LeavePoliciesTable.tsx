@@ -51,8 +51,8 @@ export function LeavePoliciesTable( {
 			</thead>
 			<tbody>
 				{ rows.map( ( policy ) => (
-					<tr key={ policy.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
-						<td className="px-4 align-middle">
+					<tr key={ policy.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+						<td className="px-4 align-middle text-sm">
 							<div className="flex items-center gap-2">
 								<span
 									aria-hidden="true"

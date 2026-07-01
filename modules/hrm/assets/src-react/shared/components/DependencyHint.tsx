@@ -36,7 +36,7 @@ export function DependencyHint( { message, steps, onBeforeNavigate }: Dependency
 	return (
 		<Alert variant="destructive">
 			<AlertDescription>
-				<p className="m-0">{ message }</p>
+				<p className="m-0 mb-4">{ message }</p>
 				<div className="mt-2 flex flex-col gap-1 text-sm">
 					{ steps.map( ( step ) => (
 						<button

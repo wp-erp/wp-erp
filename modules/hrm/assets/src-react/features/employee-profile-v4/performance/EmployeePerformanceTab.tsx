@@ -50,7 +50,7 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 	return (
 		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
-				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
 			</header>
 			<div className="mx-6 mb-4 h-px bg-border" />
@@ -171,7 +171,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				headerAction={ addButton( 'reviews', __( 'Add Review', 'erp' ) ) }
 			>
 				{ data.reviews.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.job_knowledge ) }</td>
@@ -193,7 +193,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				headerAction={ addButton( 'comments', __( 'Add Comment', 'erp' ) ) }
 			>
 				{ data.comments.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reviewer ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
@@ -218,7 +218,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				headerAction={ addButton( 'goals', __( 'Add Goal', 'erp' ) ) }
 			>
 				{ data.goals.map( ( row ) => (
-					<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.set_date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.completion_date ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.goal_description ) }</td>

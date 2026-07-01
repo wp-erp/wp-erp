@@ -41,23 +41,25 @@ export function SingleHeader( { record, canEdit, canViewNotes, onEdit, onSetTab 
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<h1 className="m-0 text-2xl font-bold tracking-tight text-foreground">
+						<h1 className="m-0 mb-4 text-2xl font-bold tracking-tight text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						{ canEdit ? (
-							<button
+							<Button
 								type="button"
+								variant="ghost"
+								size="icon"
 								onClick={ onEdit }
-								className="inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+								className="size-7 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
 								aria-label={ __( 'Edit employee', 'erp' ) }
 								title={ __( 'Edit employee', 'erp' ) }
 							>
 								<Pencil size={ 15 } aria-hidden="true" />
-							</button>
+							</Button>
 						) : null }
 					</div>
-					{ designation ? <p className="m-0 text-sm font-semibold text-foreground">{ designation }</p> : null }
-					{ email ? <p className="m-0 text-sm text-muted-foreground">{ email }</p> : null }
+					{ designation ? <p className="m-0 mb-4 text-sm font-semibold text-foreground">{ designation }</p> : null }
+					{ email ? <p className="m-0 mb-4 text-sm text-muted-foreground">{ email }</p> : null }
 					{ status ? (
 						<div className="mt-1">
 							<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>

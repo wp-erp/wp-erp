@@ -44,14 +44,15 @@ export function EmployeesToolbar(): JSX.Element {
 						{ /* Split button: Export is the primary action; the chevron
 						   reveals Import (mirrors the HRM 2024 toolbar design). */ }
 						<div className="inline-flex h-10 items-center rounded-md border border-border bg-background shadow-sm">
-							<button
+							<Button
 								type="button"
+								variant="ghost"
 								onClick={ () => setExportOpen( true ) }
-								className="inline-flex h-full items-center gap-2 rounded-l-md py-2 pl-3 pr-2.5 text-sm font-medium leading-5 text-foreground transition-colors hover:bg-muted/50"
+								className="h-full gap-2 rounded-l-md rounded-r-none py-2 pl-3 pr-2.5 text-sm font-medium leading-5 text-foreground shadow-none hover:bg-muted/50"
 							>
 								<SquareArrowOutUpRight size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 								<span>{ __( 'Export', 'erp' ) }</span>
-							</button>
+							</Button>
 							<span className="h-4 w-px shrink-0 bg-border" aria-hidden="true" />
 							<DropdownMenu>
 								<DropdownMenuTrigger

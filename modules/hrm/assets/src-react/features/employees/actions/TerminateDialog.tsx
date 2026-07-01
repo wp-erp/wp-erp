@@ -108,7 +108,7 @@ export function TerminateDialog( {
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next ? undefined : onClose() ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
-					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Terminate employee', 'erp' ) }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Terminate employee', 'erp' ) }</DialogTitle>
 					<DialogDescription>
 						{ employeeName
 							? sprintf( __( 'Record the termination details for %s.', 'erp' ), employeeName )

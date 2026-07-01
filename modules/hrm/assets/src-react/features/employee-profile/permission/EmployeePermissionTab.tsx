@@ -54,7 +54,7 @@ export function EmployeePermissionTab( { userId }: { readonly userId: number } )
 	return (
 		<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
 			<header className="border-b border-border px-6 py-4">
-				<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Permission Management', 'erp' ) }</h2>
+				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Permission Management', 'erp' ) }</h2>
 				<p className="mt-0.5 text-xs text-muted-foreground">
 					{ __( 'Additional access for this employee beyond their default role.', 'erp' ) }
 				</p>

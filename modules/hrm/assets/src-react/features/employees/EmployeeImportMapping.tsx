@@ -8,8 +8,7 @@
  * design follows the HRM-Redesign-2024 "Map Properties" card.
  */
 
-import { Alert, AlertDescription } from '@wedevs/plugin-ui';
-import { ChevronDown } from 'lucide-react';
+import { Alert, AlertDescription, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@wedevs/plugin-ui';
 import type { JSX } from 'react';
 
 import { __, sprintf } from '@/shared/i18n';
@@ -40,7 +39,7 @@ export function EmployeeImportMapping( {
 
 	return (
 		<div className="overflow-hidden rounded-[10px] border border-border bg-card">
-			<h3 className="m-0 border-b border-border py-4 text-center text-lg font-bold text-foreground">
+			<h3 className="m-0 mb-4 border-b border-border py-4 text-center text-lg font-bold text-foreground">
 				{ __( 'Map Properties', 'erp' ) }
 			</h3>
 
@@ -76,24 +75,23 @@ export function EmployeeImportMapping( {
 								{ required ? <span className="text-destructive">*</span> : null }
 							</span>
 							<div className="relative">
-								<select
+								<Select
+									items={ [ { value: '', label: __( '— Don’t import —', 'erp' ) }, ...IMPORT_FIELD_OPTIONS.map( ( o ) => ( { value: o.value, label: o.label } ) ) ] }
 									value={ selected }
-									onChange={ ( e ) => onChange( idx, e.target.value ) }
-									aria-label={ sprintf( __( 'Map column %s', 'erp' ), header || String( idx + 1 ) ) }
-									className="h-10 w-full appearance-none rounded-md border border-border bg-card px-3 pr-9 text-sm text-foreground"
+									onValueChange={ ( v ) => onChange( idx, v == null ? '' : String( v ) ) }
 								>
-									<option value="">{ __( '— Don’t import —', 'erp' ) }</option>
-									{ IMPORT_FIELD_OPTIONS.map( ( o ) => (
-										<option key={ o.value } value={ o.value } disabled={ taken.has( o.value ) }>
-											{ o.label }
-										</option>
-									) ) }
-								</select>
-								<ChevronDown
-									size={ 16 }
-									aria-hidden="true"
-									className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-								/>
+									<SelectTrigger aria-label={ sprintf( __( 'Map column %s', 'erp' ), header || String( idx + 1 ) ) } className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
+										<SelectValue placeholder={ __( '— Don’t import —', 'erp' ) } />
+									</SelectTrigger>
+									<SelectContent align="start" alignItemWithTrigger={ false }>
+										<SelectItem value="">{ __( '— Don’t import —', 'erp' ) }</SelectItem>
+										{ IMPORT_FIELD_OPTIONS.map( ( o ) => (
+											<SelectItem key={ o.value } value={ o.value } disabled={ taken.has( o.value ) }>
+												{ o.label }
+											</SelectItem>
+										) ) }
+									</SelectContent>
+								</Select>
 							</div>
 						</div>
 					);

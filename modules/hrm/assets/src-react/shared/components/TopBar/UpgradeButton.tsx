@@ -8,6 +8,7 @@
  * via `erp_hr.topbar.right_items`, so this free button stands down.
  */
 
+import { Button } from '@wedevs/plugin-ui';
 import { Crown } from 'lucide-react';
 import type { JSX } from 'react';
 
@@ -18,13 +19,13 @@ export function UpgradeButton(): JSX.Element {
 	const { openUpsell } = useProUpsell();
 
 	return (
-		<button
+		<Button
 			type="button"
 			onClick={ () => openUpsell( 'Pro' ) }
-			className="inline-flex h-9 items-center gap-1.5 rounded-md bg-[#f7941d] px-4 text-sm font-semibold text-[#1a1a1a] transition-colors hover:bg-[#e8870f]"
+			className="h-9 gap-1.5 rounded-md bg-[#f7941d] px-4 text-sm font-semibold text-[#1a1a1a] hover:bg-[#e8870f]"
 		>
 			{ __( 'Upgrade', 'erp' ) }
 			<Crown size={ 15 } strokeWidth={ 2 } aria-hidden="true" />
-		</button>
+		</Button>
 	);
 }

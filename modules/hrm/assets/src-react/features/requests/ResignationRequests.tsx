@@ -24,6 +24,7 @@ import { Check, Plus, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -76,7 +77,7 @@ export function ResignationRequests(): JSX.Element {
 	return (
 		<div>
 			<header className="mb-6 flex items-center justify-between gap-4">
-				<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">{ __( 'Resignation Requests', 'erp' ) }</h1>
+				<h1 className="m-0 mb-4 text-2xl font-bold leading-8 text-foreground">{ __( 'Resignation Requests', 'erp' ) }</h1>
 				<Button className="h-10 gap-1.5" onClick={ () => setCreating( true ) }>
 					<Plus size={ 15 } aria-hidden="true" />{ __( 'New Request', 'erp' ) }
 				</Button>
@@ -92,11 +93,11 @@ export function ResignationRequests(): JSX.Element {
 					<table className="w-full min-w-[40rem] text-left text-sm">
 						<thead className="border-b border-border bg-card">
 							<tr className="h-10">
-								<th className="px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Employee', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Date', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
-								<th className="pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Employee', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Date', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
+								<th className="whitespace-nowrap pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -157,7 +158,7 @@ function NewResignationDialog( { onClose, onSaved }: { readonly onClose: () => v
 		<Dialog open onOpenChange={ ( o ) => ( o || busy ? undefined : onClose() ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'New Resignation Request', 'erp' ) }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'New Resignation Request', 'erp' ) }</DialogTitle>
 					<DialogDescription>{ __( 'File a resignation request on an employee\'s behalf.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
 
@@ -170,8 +171,8 @@ function NewResignationDialog( { onClose, onSaved }: { readonly onClose: () => v
 					<SmartSelect options={ reasons } value={ reason } onValueChange={ ( v ) => setReason( v ?? '' ) } placeholder={ __( 'Select reason', 'erp' ) } searchPlaceholder={ __( 'Search…', 'erp' ) } emptyMessage={ __( 'No reasons.', 'erp' ) } className="h-10 w-full" />
 				</div>
 				<div className="flex flex-col gap-2.5">
-					<label htmlFor="resign_date" className="text-sm font-medium text-foreground">{ __( 'Resignation Date', 'erp' ) }</label>
-					<input id="resign_date" type="date" value={ date } onChange={ ( e ) => setDate( e.target.value ) } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
+					<label className="text-sm font-medium text-foreground">{ __( 'Resignation Date', 'erp' ) }</label>
+					<DateField value={ date } onChange={ setDate } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 				</div>
 
 				<DialogFooter className="gap-3">

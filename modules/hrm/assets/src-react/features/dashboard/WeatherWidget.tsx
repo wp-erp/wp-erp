@@ -7,6 +7,7 @@
  * denied or unavailable — never an error, so it stays out of the way.
  */
 
+import { Button } from '@wedevs/plugin-ui';
 import {
 	Cloud,
 	CloudDrizzle,
@@ -99,14 +100,15 @@ export function WeatherWidget( { embedded = false }: WeatherWidgetProps ): JSX.E
 	// visible if a later refresh fails.
 	if ( ! data ) {
 		return (
-			<button
+			<Button
+				variant="outline"
 				type="button"
 				onClick={ retry }
-				className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-card px-3 text-sm font-medium text-muted-foreground hover:bg-muted"
+				className="h-9 gap-1.5 border-border bg-card px-3 font-medium text-muted-foreground hover:bg-muted"
 			>
 				<CloudSun size={ 16 } aria-hidden="true" />
 				{ __( 'Show weather', 'erp' ) }
-			</button>
+			</Button>
 		);
 	}
 
@@ -150,16 +152,18 @@ export function WeatherWidget( { embedded = false }: WeatherWidgetProps ): JSX.E
 				</span>
 			</div>
 
-			<button
+			<Button
+				variant="ghost"
+				size="icon"
 				type="button"
 				onClick={ retry }
 				disabled={ refreshing }
 				aria-label={ __( 'Refresh weather', 'erp' ) }
 				title={ __( 'Refresh weather', 'erp' ) }
-				className="ml-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-60"
+				className="ml-0.5 size-7 shrink-0 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-60"
 			>
 				<RefreshCw size={ 14 } strokeWidth={ 2 } aria-hidden="true" className={ refreshing ? 'animate-spin' : '' } />
-			</button>
+			</Button>
 		</div>
 	);
 }

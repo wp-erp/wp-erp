@@ -7,7 +7,7 @@
  * already tracks.
  */
 
-import { Badge, Button, Spinner, toast } from '@wedevs/plugin-ui';
+import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Spinner, toast } from '@wedevs/plugin-ui';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
@@ -87,7 +87,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			{ /* Balance per policy */ }
 			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
 				<header className="flex items-center justify-between gap-4 px-6 py-4">
-					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
+					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
 					{ canCreate ? (
 						<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setShowRequest( true ) }>
 							<Plus size={ 14 } aria-hidden="true" />
@@ -149,43 +149,55 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			{ /* Request history */ }
 			<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 				<header className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
-					<h2 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
+					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
 					{ meta ? (
 						<div className="flex flex-wrap items-center gap-2">
-							<select
-								className={ SELECT_CLASS }
-								value={ filters.year ?? meta.current_year }
-								onChange={ ( e ) => setFilters( ( f ) => ( { ...f, year: parseInt( e.target.value, 10 ) } ) ) }
-								aria-label={ __( 'Financial year', 'erp' ) }
+							<Select
+								items={ meta.financial_years.map( ( y ) => ( { value: String( y.id ), label: y.name } ) ) }
+								value={ String( filters.year ?? meta.current_year ) }
+								onValueChange={ ( v ) => setFilters( ( f ) => ( { ...f, year: parseInt( String( v ), 10 ) } ) ) }
 							>
-								{ meta.financial_years.map( ( y ) => (
-									<option key={ y.id } value={ y.id }>{ y.name }</option>
-								) ) }
-							</select>
-							<select
-								className={ SELECT_CLASS }
-								value={ filters.status ?? 'all' }
-								onChange={ ( e ) => setFilters( ( f ) => ( { ...f, status: e.target.value } ) ) }
-								aria-label={ __( 'Status', 'erp' ) }
-							>
-								<option value="all">{ __( 'All Status', 'erp' ) }</option>
-								{ meta.statuses
-									.filter( ( s ) => s.value !== 'all' )
-									.map( ( s ) => (
-										<option key={ s.value } value={ s.value }>{ s.label }</option>
+								<SelectTrigger className={ SELECT_CLASS } aria-label={ __( 'Financial year', 'erp' ) }>
+									<SelectValue placeholder={ __( 'Financial year', 'erp' ) } />
+								</SelectTrigger>
+								<SelectContent align="start" alignItemWithTrigger={ false }>
+									{ meta.financial_years.map( ( y ) => (
+										<SelectItem key={ y.id } value={ String( y.id ) }>{ y.name }</SelectItem>
 									) ) }
-							</select>
-							<select
-								className={ SELECT_CLASS }
-								value={ filters.policy_id ?? 0 }
-								onChange={ ( e ) => setFilters( ( f ) => ( { ...f, policy_id: parseInt( e.target.value, 10 ) } ) ) }
-								aria-label={ __( 'Policy', 'erp' ) }
+								</SelectContent>
+							</Select>
+							<Select
+								items={ [ { value: 'all', label: __( 'All Status', 'erp' ) }, ...meta.statuses.filter( ( s ) => s.value !== 'all' ).map( ( s ) => ( { value: s.value, label: s.label } ) ) ] }
+								value={ filters.status ?? 'all' }
+								onValueChange={ ( v ) => setFilters( ( f ) => ( { ...f, status: v == null ? '' : String( v ) } ) ) }
 							>
-								<option value={ 0 }>{ __( 'All Policies', 'erp' ) }</option>
-								{ meta.policies.map( ( p ) => (
-									<option key={ p.id } value={ p.id }>{ p.name }</option>
-								) ) }
-							</select>
+								<SelectTrigger className={ SELECT_CLASS } aria-label={ __( 'Status', 'erp' ) }>
+									<SelectValue placeholder={ __( 'Status', 'erp' ) } />
+								</SelectTrigger>
+								<SelectContent align="start" alignItemWithTrigger={ false }>
+									<SelectItem value="all">{ __( 'All Status', 'erp' ) }</SelectItem>
+									{ meta.statuses
+										.filter( ( s ) => s.value !== 'all' )
+										.map( ( s ) => (
+											<SelectItem key={ s.value } value={ s.value }>{ s.label }</SelectItem>
+										) ) }
+								</SelectContent>
+							</Select>
+							<Select
+								items={ [ { value: '0', label: __( 'All Policies', 'erp' ) }, ...meta.policies.map( ( p ) => ( { value: String( p.id ), label: p.name } ) ) ] }
+								value={ String( filters.policy_id ?? 0 ) }
+								onValueChange={ ( v ) => setFilters( ( f ) => ( { ...f, policy_id: parseInt( String( v ), 10 ) } ) ) }
+							>
+								<SelectTrigger className={ SELECT_CLASS } aria-label={ __( 'Policy', 'erp' ) }>
+									<SelectValue placeholder={ __( 'Policy', 'erp' ) } />
+								</SelectTrigger>
+								<SelectContent align="start" alignItemWithTrigger={ false }>
+									<SelectItem value="0">{ __( 'All Policies', 'erp' ) }</SelectItem>
+									{ meta.policies.map( ( p ) => (
+										<SelectItem key={ p.id } value={ String( p.id ) }>{ p.name }</SelectItem>
+									) ) }
+								</SelectContent>
+							</Select>
 						</div>
 					) : null }
 				</header>
@@ -206,7 +218,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 							</thead>
 							<tbody>
 								{ data.requests.map( ( row ) => (
-									<tr key={ row.id } className="h-18 border-b border-border last:border-b-0">
+									<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 										<td className="px-4 align-middle text-sm text-foreground">{ dateRange( row.start_date, row.end_date ) }</td>
 										<td className="px-2 align-middle text-sm text-foreground">{ row.policy || '—' }</td>
 										<td className="px-2 align-middle text-sm text-muted-foreground">{ row.reason || '—' }</td>

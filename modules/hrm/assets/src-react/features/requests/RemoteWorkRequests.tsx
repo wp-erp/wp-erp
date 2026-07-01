@@ -18,12 +18,14 @@ import {
 	DialogTitle,
 	SmartSelect,
 	Skeleton,
+	Textarea,
 	toast,
 } from '@wedevs/plugin-ui';
 import { Check, Plus, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -77,7 +79,7 @@ export function RemoteWorkRequests(): JSX.Element {
 	return (
 		<div>
 			<header className="mb-6 flex items-center justify-between gap-4">
-				<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">{ __( 'Remote Work Requests', 'erp' ) }</h1>
+				<h1 className="m-0 mb-4 text-2xl font-bold leading-8 text-foreground">{ __( 'Remote Work Requests', 'erp' ) }</h1>
 				<Button className="h-10 gap-1.5" onClick={ () => setCreating( true ) }>
 					<Plus size={ 15 } aria-hidden="true" />{ __( 'New Request', 'erp' ) }
 				</Button>
@@ -93,13 +95,13 @@ export function RemoteWorkRequests(): JSX.Element {
 					<table className="w-full min-w-[44rem] text-left text-sm">
 						<thead className="border-b border-border bg-card">
 							<tr className="h-10">
-								<th className="px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Employee', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'From', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'To', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Days', 'erp' ) }</th>
-								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
-								<th className="pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Employee', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'From', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'To', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Days', 'erp' ) }</th>
+								<th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
+								<th className="whitespace-nowrap pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -166,7 +168,7 @@ function NewRemoteWorkDialog( { onClose, onSaved }: { readonly onClose: () => vo
 		<Dialog open onOpenChange={ ( o ) => ( o || busy ? undefined : onClose() ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'New Remote Work Request', 'erp' ) }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'New Remote Work Request', 'erp' ) }</DialogTitle>
 					<DialogDescription>{ __( 'File a remote work request on an employee\'s behalf.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
 
@@ -181,17 +183,17 @@ function NewRemoteWorkDialog( { onClose, onSaved }: { readonly onClose: () => vo
 				{ 'other' === reason ? (
 					<div className="flex flex-col gap-2.5">
 						<label htmlFor="rw_other" className="text-sm font-medium text-foreground">{ __( 'Other Reason', 'erp' ) }</label>
-						<textarea id="rw_other" rows={ 2 } value={ other } onChange={ ( e ) => setOther( e.target.value ) } className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
+						<Textarea id="rw_other" rows={ 2 } value={ other } onChange={ ( e ) => setOther( e.target.value ) } className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
 					</div>
 				) : null }
 				<div className="grid grid-cols-2 gap-3">
 					<div className="flex flex-col gap-2.5">
-						<label htmlFor="rw_from" className="text-sm font-medium text-foreground">{ __( 'From', 'erp' ) }</label>
-						<input id="rw_from" type="date" value={ from } onChange={ ( e ) => setFrom( e.target.value ) } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
+						<label className="text-sm font-medium text-foreground">{ __( 'From', 'erp' ) }</label>
+						<DateField value={ from } onChange={ setFrom } max={ to || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 					<div className="flex flex-col gap-2.5">
-						<label htmlFor="rw_to" className="text-sm font-medium text-foreground">{ __( 'To', 'erp' ) }</label>
-						<input id="rw_to" type="date" value={ to } onChange={ ( e ) => setTo( e.target.value ) } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
+						<label className="text-sm font-medium text-foreground">{ __( 'To', 'erp' ) }</label>
+						<DateField value={ to } onChange={ setTo } min={ from || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 				</div>
 

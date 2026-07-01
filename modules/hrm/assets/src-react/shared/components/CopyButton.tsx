@@ -4,7 +4,7 @@
  * email). Renders a <span> button so it is safe inside links/cells.
  */
 
-import { toast } from '@wedevs/plugin-ui';
+import { Button, toast } from '@wedevs/plugin-ui';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
@@ -35,14 +35,16 @@ export function CopyButton( { value, label, size = 13 }: CopyButtonProps ): JSX.
 	}
 
 	return (
-		<button
+		<Button
 			type="button"
+			variant="ghost"
+			size="icon"
 			onClick={ handleCopy }
 			aria-label={ label }
 			title={ label }
-			className="inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-all hover:bg-muted hover:text-foreground focus:opacity-100 group-hover/cell:opacity-100"
+			className="size-6 shrink-0 text-muted-foreground opacity-0 transition-all focus:opacity-100 group-hover/cell:opacity-100"
 		>
 			{ copied ? <Check size={ size } className="text-success" aria-hidden="true" /> : <Copy size={ size } aria-hidden="true" /> }
-		</button>
+		</Button>
 	);
 }

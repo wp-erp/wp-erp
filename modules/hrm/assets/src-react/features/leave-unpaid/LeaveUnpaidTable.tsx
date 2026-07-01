@@ -4,6 +4,7 @@
  * page owns loading/filter state and supplies the rows + amount handler.
  */
 
+import { Input } from '@wedevs/plugin-ui';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -45,7 +46,7 @@ export function LeaveUnpaidTable( { rows, canManage, onAmountChange }: LeaveUnpa
 				</thead>
 				<tbody>
 					{ rows.map( ( r ) => (
-						<tr key={ r.id } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+						<tr key={ r.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 							<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.employee_name }</td>
 							<td className="px-2 align-middle text-sm text-muted-foreground">{ r.policy_name }</td>
 							<td className="px-2 align-middle text-sm text-foreground">{ r.days }</td>
@@ -53,7 +54,7 @@ export function LeaveUnpaidTable( { rows, canManage, onAmountChange }: LeaveUnpa
 							<td className="px-2 align-middle text-sm text-muted-foreground">{ r.start_date }</td>
 							<td className="px-2 align-middle text-sm text-muted-foreground">{ r.end_date }</td>
 							<td className="px-2 align-middle">
-								<input
+								<Input
 									type="number"
 									min="0"
 									step="0.01"

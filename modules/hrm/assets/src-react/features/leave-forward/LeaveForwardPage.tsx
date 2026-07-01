@@ -161,7 +161,7 @@ function LeaveForwardInner(): JSX.Element {
 						<table className="w-full min-w-3xl text-left">
 							<thead className="border-b border-border bg-card">
 								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-									<Th>{ __( 'Employee', 'erp' ) }</Th>
+									<Th className="whitespace-nowrap px-4">{ __( 'Employee', 'erp' ) }</Th>
 									<Th>{ __( 'Policy', 'erp' ) }</Th>
 									{ pending ? <Th>{ __( 'Available', 'erp' ) }</Th> : null }
 									{ pending ? <Th>{ __( 'Max Encash', 'erp' ) }</Th> : null }
@@ -174,7 +174,7 @@ function LeaveForwardInner(): JSX.Element {
 							</thead>
 							<tbody>
 								{ rows.map( ( r, i ) => (
-									<tr key={ `${ r.user_id }-${ i }` } className="h-18 border-b border-border last:border-b-0 hover:bg-muted/40">
+									<tr key={ `${ r.user_id }-${ i }` } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 										<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.employee_name }</td>
 										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.policy_name }</td>
 										{ pending ? <td className="px-2 align-middle text-sm text-foreground">{ r.available ?? 0 }</td> : null }
@@ -195,7 +195,7 @@ function LeaveForwardInner(): JSX.Element {
 			<Dialog open={ confirm } onOpenChange={ ( next ) => ( busy ? undefined : setConfirm( next ) ) }>
 				<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle className="m-0 text-xl font-bold leading-tight tracking-tight text-foreground">
+						<DialogTitle className="m-0 mb-4 text-xl font-bold leading-tight tracking-tight text-foreground">
 							{ __( 'Apply forward leaves?', 'erp' ) }
 						</DialogTitle>
 						<DialogDescription>
@@ -226,8 +226,8 @@ export function LeaveForwardPage(): JSX.Element {
 	);
 }
 
-function Th( { children }: { children: ReactNode } ): JSX.Element {
-	return <th scope="col" className="px-4">{ children }</th>;
+function Th( { children, className = 'whitespace-nowrap px-2' }: { children: ReactNode; className?: string } ): JSX.Element {
+	return <th scope="col" className={ className }>{ children }</th>;
 }
 
 /** Trigger a client-side CSV download. */
