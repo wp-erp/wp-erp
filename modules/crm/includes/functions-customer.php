@@ -643,7 +643,9 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
         'user_id'    => $postdata['user_id'],
         'created_by' => $postdata['created_by'],
-        'message'    => $postdata['message'],
+        // Sanitize the message before persisting to prevent stored XSS. wp_kses_post()
+        // keeps safe formatting markup while stripping <script>, event handlers, etc.
+        'message'    => isset( $postdata['message'] ) ? wp_kses_post( $postdata['message'] ) : '',
         'type'       => 'log_activity',
         'log_type'   => ( isset( $postdata['schedule_type'] ) && ! empty( $postdata['schedule_type'] ) ) ? $postdata['schedule_type'] : '',
         'start_date' => erp_current_datetime()->modify( $postdata['start_date'] . $start_time )->format( 'Y-m-d H:i:s' ),
@@ -953,7 +955,9 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
         }
 
         $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
-        $data['message']          = stripslashes( $data['message'] );
+        // Sanitize on read so legacy rows stored before the save-side fix cannot
+        // execute script in the schedule-details popup (rendered via raw {{{ }}}).
+        $data['message']          = wp_kses_post( stripslashes( $data['message'] ) );
 
         if ( isset( $data['extra']['attachments'] ) ) {
             $data['extra']['attachments'] = erp_crm_process_attachment_data( $data['extra']['attachments'] );
