@@ -115,7 +115,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 			</div>
 
 			{ /* Summary info row — key facts at a glance. */ }
-			<div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border pt-4 text-sm">
+			<div className="-mx-6 mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border px-6 pt-4 text-sm">
 				{ str( record, 'designation_name' ) ? (
 					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Tag size={ 14 } aria-hidden="true" />{ __( 'Job:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'designation_name' ) }</span></span>
 				) : null }
