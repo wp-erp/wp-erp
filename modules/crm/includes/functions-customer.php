@@ -3021,6 +3021,12 @@ function erp_crm_contact_forms() {
 
     new \WeDevs\ERP\CRM\ContactForms\CF7();
     new \WeDevs\ERP\CRM\ContactForms\NinjaForms();
+
+    // Pro form integrations (Fluent Forms, Formidable, Forminator, WPForms,
+    // SureForms, MetForm) are provided by the erp-pro plugin. The free plugin
+    // only advertises them as upsell tabs — see ContactFormsPro.
+    \WeDevs\ERP\CRM\ContactForms\ContactFormsPro::init();
+
     \WeDevs\ERP\CRM\ContactForms\ContactFormsIntegration::init();
 }
 
