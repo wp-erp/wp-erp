@@ -430,11 +430,30 @@ class EmployeesController extends REST_Controller {
             return;
         }
 
+        // This endpoint only accepts employee photos; restrict to image types so
+        // any employee cannot use it to upload arbitrary core-allowed file types.
+        $allowed_mimes = [
+            'jpg|jpeg|jpe' => 'image/jpeg',
+            'gif'          => 'image/gif',
+            'png'          => 'image/png',
+            'webp'         => 'image/webp',
+        ];
+
+        $filetype = wp_check_filetype( $file['name'], $allowed_mimes );
+
+        if ( empty( $filetype['type'] ) ) {
+            return new WP_Error(
+                'invalid_file_type',
+                __( 'Only image files (jpg, jpeg, gif, png, webp) are allowed.', 'erp' ),
+                [ 'status' => 400 ]
+            );
+        }
+
         require_once ABSPATH . 'wp-admin/includes/image.php';
         require_once ABSPATH . 'wp-admin/includes/file.php';
         require_once ABSPATH . 'wp-admin/includes/media.php';
 
-        $attachment_id =  media_handle_upload( 'image', 0 );
+        $attachment_id =  media_handle_upload( 'image', 0, [], [ 'mimes' => $allowed_mimes ] );
 
         $response = [
             'photo_id'  => $attachment_id,

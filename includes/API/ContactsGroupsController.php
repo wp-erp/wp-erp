@@ -160,8 +160,8 @@ class ContactsGroupsController extends REST_Controller {
      */
     public function create_group( $request ) {
         $data = [
-            'name'        => $request['name'],
-            'description' => $request['description'],
+            'name'        => sanitize_text_field( $request['name'] ),
+            'description' => sanitize_textarea_field( $request['description'] ),
         ];
 
         $group = erp_crm_save_contact_group( $data );
@@ -179,13 +179,13 @@ class ContactsGroupsController extends REST_Controller {
     public function update_group( $request ) {
         $data = [
             'id'          => intval( $request['id'] ),
-            'name'        => $request['name'],
-            'description' => $request['description'],
+            'name'        => sanitize_text_field( $request['name'] ),
+            'description' => sanitize_textarea_field( $request['description'] ),
         ];
 
         $group = erp_crm_save_contact_group( $data );
 
-        return new WP_REST_Response( $group_id, 201 );
+        return new WP_REST_Response( $group, 201 );
     }
 
     /**

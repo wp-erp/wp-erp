@@ -410,7 +410,17 @@ class AjaxHandler {
 			$this->send_error( __( 'Cotact does not exists.', 'erp' ) );
 		}
 
-		$this->send_success( $customer->to_array() );
+		$customer_data = $customer->to_array();
+
+		// erp_crm_list_contact is a flat capability, so it does not scope an agent
+		// to their own contacts. Mirror the edit-handler ownership check: a
+		// non-manager agent may only read contacts they own (contact_owner).
+		if ( ! current_user_can( 'erp_crm_edit_contact', $customer_id )
+			&& get_current_user_id() !== (int) $customer_data['contact_owner'] ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		$this->send_success( $customer_data );
 	}
 
 	/**
@@ -1767,10 +1777,23 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filterId'] ) ) : 0;
+		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? intval( wp_unslash( $_POST['filterId'] ) ) : 0;
 
 		if ( ! $id ) {
 			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		// Object-scope the delete: a non-manager agent may only delete saved
+		// searches they own, not other agents' or global segments.
+		$search_item = \WeDevs\ERP\CRM\Models\SaveSearch::find( $id );
+
+		if ( ! $search_item ) {
+			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		if ( ! current_user_can( erp_crm_get_manager_role() )
+			&& get_current_user_id() !== (int) $search_item->user_id ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$result = erp_crm_delete_save_search_item( $id );
@@ -1788,6 +1811,13 @@ class AjaxHandler {
 	public function get_single_schedule_details() {
 		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
 			$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+		}
+
+		// Restrict to CRM staff; the nonce alone let any authenticated user read
+		// arbitrary activity/schedule feeds by id. Matches the capability gate used
+		// by the sibling activity-feed handlers in this file.
+		if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$query_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
