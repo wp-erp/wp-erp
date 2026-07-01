@@ -1,7 +1,7 @@
 /**
  * Shell footer — bottom-of-page meta strip.
  *
- * Houses the "View previous version" engine-switch link (relocated from the
+ * Houses the "View legacy version" engine-switch link (relocated from the
  * top bar) plus a small copyright line.
  */
 

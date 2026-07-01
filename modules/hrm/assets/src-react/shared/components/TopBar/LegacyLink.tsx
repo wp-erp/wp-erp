@@ -1,5 +1,5 @@
 /**
- * "View previous version" link — a plain native anchor (no SPA interception),
+ * "View legacy version" link — a plain native anchor (no SPA interception),
  * exactly like the legacy "View newer version" link rendered by the Vue/PHP
  * side. Clicking does a real top-level navigation to the server switch URL,
  * which saves the engine preference and redirects to the legacy admin.
@@ -24,7 +24,7 @@ export function LegacyLink(): JSX.Element | null {
 			className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 		>
 			<History size={ 14 } strokeWidth={ 1.75 } aria-hidden="true" />
-			{ __( 'View previous version', 'erp' ) }
+			{ __( 'View legacy version', 'erp' ) }
 		</a>
 	);
 }

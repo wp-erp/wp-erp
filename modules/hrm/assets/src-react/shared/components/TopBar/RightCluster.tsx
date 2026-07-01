@@ -2,7 +2,7 @@
  * Right-cluster aggregator.
  *
  * Default order: SearchTrigger → ThemeToggle → UserMenu.
- * The "View previous version" link lives in the shell footer
+ * The "View legacy version" link lives in the shell footer
  * (see `app/AppFooter.tsx`) instead of the top bar.
  * Pro injects items via `wp.hooks.applyFilters('erp_hr.topbar.right_items', items)`.
  */

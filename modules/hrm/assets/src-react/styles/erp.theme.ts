@@ -118,8 +118,8 @@ export const erpDarkTokens: ThemeTokens = {
 	neutralLight:        'oklch(0.2690 0 0)',
 	neutralOnLight:      'oklch(0.7900 0 0)',
 
-	border:              'oklch(0.2750 0 0)',
-	input:               'oklch(0.3250 0 0)',
+	border:              'oklch(0.4000 0 0)',
+	input:               'oklch(0.4800 0 0)',
 	ring:                'oklch(0.6500 0.2050 263.0900)',
 
 	chart1:              'oklch(0.8500 0.0800 263.0900)',
@@ -134,7 +134,7 @@ export const erpDarkTokens: ThemeTokens = {
 	sidebarPrimaryForeground: 'oklch(0.9850 0 0)',
 	sidebarAccent:            'oklch(0.3100 0.0500 263.0900)',
 	sidebarAccentForeground:  'oklch(0.9850 0 0)',
-	sidebarBorder:            'oklch(0.2750 0 0)',
+	sidebarBorder:            'oklch(0.4000 0 0)',
 	sidebarRing:              'oklch(0.6500 0.2050 263.0900)',
 
 	radius:              '0.5rem',
