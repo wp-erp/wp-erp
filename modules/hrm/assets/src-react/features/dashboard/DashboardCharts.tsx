@@ -51,8 +51,8 @@ interface ChartCardProps {
 
 function ChartCard( { icon: Icon, title, subtitle, className, children }: ChartCardProps ): JSX.Element {
 	return (
-		<section className={ `flex flex-col rounded-[10px] bg-card p-6 shadow-sm ${ className ?? '' }` }>
-			<header className="mb-4 flex items-center gap-2.5">
+		<section className={ `flex flex-col rounded-lg bg-card shadow-sm ${ className ?? '' }` }>
+			<header className="flex items-center gap-2.5 border-b border-border px-6 py-4">
 				<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
 					<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 				</span>
@@ -61,7 +61,7 @@ function ChartCard( { icon: Icon, title, subtitle, className, children }: ChartC
 					{ subtitle ? <p className="text-xs text-muted-foreground">{ subtitle }</p> : null }
 				</div>
 			</header>
-			<div className="flex-1">{ children }</div>
+			<div className="flex-1 p-6">{ children }</div>
 		</section>
 	);
 }

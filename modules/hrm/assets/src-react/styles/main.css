@@ -283,7 +283,7 @@ body:has(#erp-hr-app) {
  * light → the panel gray; dark → `--background` (the darkest surface, so cards on
  * `--card` still read one step lighter). */
 #erp-hr-app .erp-hr-panel {
-	background-color: #f1f1f4;
+	background-color: #F0F0F1;
 }
 
 /* Dark mode: a professional near-black canvas (faint cool undertone) with a
@@ -538,3 +538,35 @@ body:has(#erp-hr-app) {
 
 /* Table header titles are not bold — let the th/tr spec (font-normal #828282) win over the UA th{font-weight:bold} default. */
 #erp-hr-app thead th { font-weight: inherit; }
+
+/* ─── Card/section + page titles → #25252D ───
+ * Page headings (<h1>) and card/section headings (<h2>, plugin-ui CardTitle)
+ * use `text-foreground` (#25262B). Pin their color one shade darker per design.
+ * Id-scoped + !important to beat Tailwind's `important` utilities layer. */
+#erp-hr-app h1,
+#erp-hr-app h2,
+#erp-hr-app [data-slot='card-title'],
+.pui-root h1,
+.pui-root h2,
+.pui-root [data-slot='card-title'] {
+	color: #25252D !important;
+}
+
+/* ─── Input placeholder text → #A5A5AA ───
+ * All field placeholders (input/textarea/search, incl. portaled dialogs).
+ * Id-scoped + !important + opacity:1 to beat utilities layer + UA dimming. */
+#erp-hr-app ::placeholder,
+#erp-hr-app ::-webkit-input-placeholder,
+.pui-root ::placeholder,
+.pui-root ::-webkit-input-placeholder {
+	color: #A5A5AA !important;
+	opacity: 1 !important;
+}
+
+/* ─── Select / SmartSelect / Combobox placeholder → #A5A5AA ───
+ * DS selects show their placeholder via a [data-placeholder] element (styled
+ * `text-muted-foreground`), not a native ::placeholder — cover it too. */
+#erp-hr-app [data-placeholder],
+.pui-root [data-placeholder] {
+	color: #A5A5AA !important;
+}

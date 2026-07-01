@@ -75,13 +75,14 @@ export function RemoteWorkRequests(): JSX.Element {
 	}
 
 	return (
-		<div className="rounded-lg border border-border bg-card shadow-sm">
-			<div className="flex items-center justify-between border-b border-border px-4 py-3">
-				<h2 className="m-0 text-sm font-semibold text-foreground">{ __( 'Remote Work Requests', 'erp' ) }</h2>
-				<Button size="sm" className="h-8 gap-1.5" onClick={ () => setCreating( true ) }>
-					<Plus size={ 14 } aria-hidden="true" />{ __( 'New Request', 'erp' ) }
+		<div>
+			<header className="mb-6 flex items-center justify-between gap-4">
+				<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">{ __( 'Remote Work Requests', 'erp' ) }</h1>
+				<Button className="h-10 gap-1.5" onClick={ () => setCreating( true ) }>
+					<Plus size={ 15 } aria-hidden="true" />{ __( 'New Request', 'erp' ) }
 				</Button>
-			</div>
+			</header>
+			<div className="rounded-lg border border-border bg-card shadow-sm">
 
 			{ loading ? (
 				<div className="space-y-2 p-4"><Skeleton className="h-6 w-full" /><Skeleton className="h-6 w-full" /></div>
@@ -98,19 +99,19 @@ export function RemoteWorkRequests(): JSX.Element {
 								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'To', 'erp' ) }</th>
 								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Days', 'erp' ) }</th>
 								<th className="px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
-								<th className="px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
+								<th className="pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Actions', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
 							{ rows.map( ( r ) => (
-								<tr key={ r.id } className="border-b border-border/60 last:border-b-0">
-									<td className="px-4 py-2 font-medium text-foreground">{ r.employee.name || '—' }</td>
-									<td className="px-2 py-2 text-muted-foreground">{ r.reason || '—' }</td>
-									<td className="px-2 py-2 text-muted-foreground">{ r.startDate || '—' }</td>
-									<td className="px-2 py-2 text-muted-foreground">{ r.endDate || '—' }</td>
-									<td className="px-2 py-2 text-muted-foreground">{ r.days || '—' }</td>
-									<td className="px-2 py-2"><Badge variant="secondary" className={ `capitalize ${ statusTone( r.status ) }` }>{ r.status || '—' }</Badge></td>
-									<td className="px-2 py-2 text-right">
+								<tr key={ r.id } className="group h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+									<td className="px-4 align-middle text-sm font-medium text-foreground">{ r.employee.name || '—' }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ r.reason || '—' }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ r.startDate || '—' }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ r.endDate || '—' }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ r.days || '—' }</td>
+									<td className="px-2 align-middle"><Badge variant="secondary" className={ `capitalize ${ statusTone( r.status ) }` }>{ r.status || '—' }</Badge></td>
+									<td className="pl-2 pr-4 text-right align-middle">
 										<div className="inline-flex items-center gap-1">
 											{ 'pending' === r.status ? (
 												<>
@@ -127,6 +128,8 @@ export function RemoteWorkRequests(): JSX.Element {
 					</table>
 				</div>
 			) }
+
+			</div>
 
 			{ creating ? <NewRemoteWorkDialog onClose={ () => setCreating( false ) } onSaved={ () => { setCreating( false ); load(); } } /> : null }
 		</div>

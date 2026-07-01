@@ -14,11 +14,11 @@ export type ThemeTokens = PluginUiTokens;
 
 export const erpLightTokens: ThemeTokens = {
 	background:          'oklch(1 0 0)',
-	foreground:          'oklch(0.1450 0 0)',
+	foreground:          '#25262B',
 	card:                'oklch(1 0 0)',
-	cardForeground:      'oklch(0.1450 0 0)',
+	cardForeground:      '#25262B',
 	popover:             'oklch(1 0 0)',
-	popoverForeground:   'oklch(0.1450 0 0)',
+	popoverForeground:   '#25262B',
 
 	primary:             'oklch(0.6230 0.2140 263.0900)',
 	primaryHover:        'oklch(0.5410 0.2120 263.5400)',
@@ -26,7 +26,7 @@ export const erpLightTokens: ThemeTokens = {
 	primaryForeground:   'oklch(0.9850 0 0)',
 
 	secondary:           'oklch(0.9700 0 0)',
-	secondaryForeground: 'oklch(0.2050 0 0)',
+	secondaryForeground: '#25262B',
 
 	muted:               'oklch(0.9700 0 0)',
 	mutedForeground:     'oklch(0.5560 0 0)',
@@ -65,7 +65,7 @@ export const erpLightTokens: ThemeTokens = {
 	chart5:              'oklch(0.3500 0.1500 265.0000)',
 
 	sidebar:                  'oklch(0.9850 0 0)',
-	sidebarForeground:        'oklch(0.1450 0 0)',
+	sidebarForeground:        '#25262B',
 	sidebarPrimary:           'oklch(0.6230 0.2140 263.0900)',
 	sidebarPrimaryForeground: 'oklch(0.9850 0 0)',
 	sidebarAccent:            'oklch(0.9550 0.0260 263.0900)',
