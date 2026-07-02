@@ -15,7 +15,7 @@ import {
 	toast,
 } from '@wedevs/plugin-ui';
 import { Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
@@ -31,30 +31,34 @@ import { OrgPagination } from '../org/OrgPagination';
 import { EntitlementAssignDialog } from './EntitlementAssignDialog';
 import { LeaveEntitlementsFilters } from './LeaveEntitlementsFilters';
 import { LeaveEntitlementsTable } from './LeaveEntitlementsTable';
-import type { Entitlement, EntitlementAssignInput, IdOption } from './types';
+import type { Entitlement, EntitlementAssignInput, FinancialYearOption, IdOption, StringOption } from './types';
 import { useEntitlements } from './useEntitlements';
 
 function LeaveEntitlementsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
 
-	// Year filter defaults to all years (a FY dropdown can be layered on later).
-	const year = 0;
+	// Financial-year filter (0 = all years). Defaults to the current FY once the
+	// list loads, matching the legacy entitlement list table.
+	const [ year, setYear ]           = useState( 0 );
 	const [ policyId, setPolicyId ]   = useState( 0 );
+	const [ employeeType, setEmployeeType ] = useState( '' );
 	const [ search, setSearch ]       = useState( '' );
 	const [ showFilters, setShowFilters ] = useState( false );
 	const [ page, setPage ]           = useState( 1 );
 	const [ perPage, setPerPage ]     = useState( 20 );
 
-	const { rows, total, loading, error, assign, remove, bulkRemove, loadPolicies, loadEmployees } = useEntitlements( {
+	const { rows, total, loading, error, assign, remove, bulkRemove, loadPolicies, loadEmployees, loadFinancialYears, loadEmployeeTypes } = useEntitlements( {
 		year,
 		policyId,
-		employeeType: '',
+		employeeType,
 		search,
 		page,
 		perPage,
 	} );
 
 	const [ policies, setPolicies ]   = useState< readonly IdOption[] >( [] );
+	const [ financialYears, setFinancialYears ] = useState< readonly FinancialYearOption[] >( [] );
+	const [ employeeTypes, setEmployeeTypes ]   = useState< readonly StringOption[] >( [] );
 	// Assign modal open-state lives in the URL (`?assign=open`) so a browser
 	// refresh re-opens it.
 	const [ assignParam, setAssignParam ] = useModalParam( 'assign' );
@@ -68,7 +72,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 
 	useEffect( () => {
 		setPage( 1 );
-	}, [ year, policyId, search ] );
+	}, [ year, policyId, employeeType, search ] );
 
 	// Prime the policy list (filter dropdown + assign dialog).
 	useEffect( () => {
@@ -82,6 +86,35 @@ function LeaveEntitlementsInner(): JSX.Element {
 			active = false;
 		};
 	}, [ loadPolicies ] );
+
+	// Prime the financial-year + employee-type filter options. Default the year
+	// filter to the FY covering today (legacy list-table default), one-shot.
+	const didDefaultYear = useRef( false );
+	useEffect( () => {
+		let active = true;
+		void loadFinancialYears().then( ( list ) => {
+			if ( ! active ) {
+				return;
+			}
+			setFinancialYears( list );
+			if ( ! didDefaultYear.current ) {
+				didDefaultYear.current = true;
+				const today   = new Date().toISOString().slice( 0, 10 );
+				const current = list.find( ( fy ) => fy.start_date.slice( 0, 10 ) <= today && today <= fy.end_date.slice( 0, 10 ) );
+				if ( current ) {
+					setYear( current.id );
+				}
+			}
+		} );
+		void loadEmployeeTypes().then( ( list ) => {
+			if ( active ) {
+				setEmployeeTypes( list );
+			}
+		} );
+		return () => {
+			active = false;
+		};
+	}, [ loadFinancialYears, loadEmployeeTypes ] );
 
 	async function handleAssign( payload: EntitlementAssignInput ): Promise< void > {
 		setBusy( true );
@@ -185,6 +218,12 @@ function LeaveEntitlementsInner(): JSX.Element {
 					onSearch={ setSearch }
 					policyId={ policyId }
 					onPolicyId={ setPolicyId }
+					year={ year }
+					onYear={ setYear }
+					financialYears={ financialYears }
+					employeeType={ employeeType }
+					onEmployeeType={ setEmployeeType }
+					employeeTypes={ employeeTypes }
 					showFilters={ showFilters }
 					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
 					policies={ policies }
@@ -210,7 +249,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
 					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ search || policyId
+						{ search || policyId || year || employeeType
 							? __( 'No entitlements match these filters.', 'erp' )
 							: __( 'No entitlements assigned yet.', 'erp' ) }
 					</p>
@@ -220,6 +259,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 						canManage={ canManage }
 						selected={ selected }
 						allOnPageSelected={ allOnPageSelected }
+						financialYears={ financialYears }
 						onToggleAll={ toggleAll }
 						onToggleOne={ toggleOne }
 						onDelete={ setDeleting }

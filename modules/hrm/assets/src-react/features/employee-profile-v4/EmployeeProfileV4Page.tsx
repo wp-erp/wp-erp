@@ -18,7 +18,7 @@
  * `profile-format` (pure helpers).
  */
 
-import { Skeleton } from '@wedevs/plugin-ui';
+import { Skeleton, toast } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	ArrowLeft,
@@ -57,6 +57,7 @@ import { str, type Record_ } from './profile-format';
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
 	terminateEmployee:    ( userId: number, payload: EmployeeTerminateInput ) => Promise< void >;
+	reactivateEmployee:   ( userId: number ) => Promise< void >;
 }
 
 export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
@@ -101,7 +102,7 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 	// Permission tab stays manager-only (global cap) and never for self — legacy
 	// single.php removes it for self and shows it only to managers.
 	const canViewPermission = canViewPerfCap && currentUserId !== userId;
-	const { fetchEmployeeForEdit, terminateEmployee } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
+	const { fetchEmployeeForEdit, terminateEmployee, reactivateEmployee } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
@@ -119,8 +120,23 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 			void terminateEmployee( userId, payload )
 				.then( () => {
 					setTermOpen( false );
-					// Reflect the new status in the header without a full reload.
-					setRecord( ( prev ) => ( prev ? { ...prev, status: 'terminated' } : prev ) );
+					// Reflect the new status + termination facts in the header/overview
+					// without a full reload (mirrors what the GET would return).
+					setRecord( ( prev ) => ( prev ? {
+						...prev,
+						status:      'terminated',
+						termination: {
+							terminate_date:            payload.terminate_date,
+							termination_type:          payload.termination_type,
+							termination_reason:        payload.termination_reason,
+							eligible_for_rehire:       payload.eligible_for_rehire,
+							termination_type_label:    '',
+							termination_reason_label:  '',
+							eligible_for_rehire_label: '',
+						},
+					} : prev ) );
+					// Re-fetch so the resolved slug→label termination facts populate.
+					void fetchEmployeeForEdit( userId ).then( ( data ) => setRecord( data ) ).catch( () => undefined );
 				} )
 				.catch( ( raw ) => {
 					const err = raw as { message?: string };
@@ -128,8 +144,20 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 				} )
 				.finally( () => setTermBusy( false ) );
 		},
-		[ terminateEmployee, userId ]
+		[ terminateEmployee, fetchEmployeeForEdit, userId ]
 	);
+
+	const handleReactivate = useCallback( (): void => {
+		void reactivateEmployee( userId )
+			.then( () => {
+				setRecord( ( prev ) => ( prev ? { ...prev, status: 'active', termination: null } : prev ) );
+				toast.success( __( 'Employee reactivated.', 'erp' ) );
+			} )
+			.catch( ( raw ) => {
+				const err = raw as { message?: string };
+				toast.error( err?.message || __( 'Could not reactivate the employee. Please try again.', 'erp' ) );
+			} );
+	}, [ reactivateEmployee, userId ] );
 
 	// Active tab lives in the URL (`?tab=job`) so a refresh / deep-link keeps the
 	// open tab instead of snapping back to Overview. `replace` so tab switches
@@ -230,6 +258,8 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 				onPrint={ () => window.print() }
 				onTerminate={ () => { setTermError( null ); setTermOpen( true ); } }
 				canTerminate={ canTerminateCap && currentUserId !== userId && str( record, 'status' ) !== 'terminated' }
+				onReactivate={ handleReactivate }
+				canReactivate={ canEditCap && currentUserId !== userId && str( record, 'status' ) === 'terminated' }
 			/>
 
 			<TerminateDialog

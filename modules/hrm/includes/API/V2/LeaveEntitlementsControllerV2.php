@@ -73,6 +73,18 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/employee-types',
+			[
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_employee_type_options' ],
+					'permission_callback' => [ $this, 'permission_manage' ],
+				],
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/employees',
 			[
 				[
@@ -383,6 +395,25 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 	}
 
 	/**
+	 * GET /erp/v2/leave-entitlements/employee-types
+	 *
+	 * Employee-type options for the list filter — mirrors the legacy
+	 * `EntitlementListTable::extra_tablenav()` "Employee Types" select, which is
+	 * built from `erp_hr_get_employee_types()`. The filter narrows entitlements by
+	 * `policy.employee_type`.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_employee_type_options(): WP_REST_Response {
+		$options = [];
+		foreach ( (array) erp_hr_get_employee_types() as $value => $label ) {
+			$options[] = [ 'value' => (string) $value, 'label' => (string) $label ];
+		}
+
+		return rest_ensure_response( $options );
+	}
+
+	/**
 	 * GET /erp/v2/leave-entitlements/employees
 	 *
 	 * Employees matching a policy's scope — mirrors `AjaxHandler::get_employees()`.
@@ -463,12 +494,13 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 		// a separate approval-status row), so compute Available + Spent via the same
 		// aggregate helper the legacy list table and the profile Leave tab use.
 		$balance   = erp_hr_leave_get_balance_for_single_entitlement( (int) ( $row->id ?? 0 ) );
-		$available = ( ! empty( $balance ) && ! is_wp_error( $balance ) )
-			? (float) ( $balance['available'] ?? 0 )
-			: 0;
-		$spent     = ( ! empty( $balance ) && ! is_wp_error( $balance ) )
-			? (float) ( $balance['spent'] ?? 0 )
-			: 0;
+		$has_bal   = ! empty( $balance ) && ! is_wp_error( $balance );
+		$available = $has_bal ? (float) ( $balance['available'] ?? 0 ) : 0;
+		$spent     = $has_bal ? (float) ( $balance['spent'] ?? 0 ) : 0;
+		// Extra leave = leave taken beyond the entitled balance (surfaced by the
+		// legacy list table's "Extra Leave" badge). The balance helper already
+		// computes it; the v2 row previously dropped it.
+		$extra     = $has_bal ? (float) ( $balance['extra_leave'] ?? 0 ) : 0;
 
 		return [
 			'id'            => (int) ( $row->id ?? 0 ),
@@ -480,6 +512,7 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 			'days'          => $this->cast_float_or_null( $row->day_in ?? null ) ?? 0,
 			'available'     => $available,
 			'spent'         => $spent,
+			'extra_leave'   => $extra,
 			'f_year'        => $this->cast_int_or_null( $row->f_year ?? null ),
 			'from_date'     => $this->cast_date_iso( $row->from_date ?? null ),
 			'to_date'       => $this->cast_date_iso( $row->to_date ?? null ),

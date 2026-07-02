@@ -727,13 +727,19 @@ function erp_settings_save_leave_years( $post_data = [] ) {
         $year_names[] = $data['fy_name'];
     }
 
-    // Reset table
-    $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_hr_financial_years' );
+    $table = $wpdb->prefix . 'erp_hr_financial_years';
+
+    // ID-stable upsert. TRUNCATE + reinsert renumbered ids on every save, which
+    // silently broke every `f_year` FK (leave policies / entitlements /
+    // encashment / unpaid). Existing rows are UPDATEd in place so ids never
+    // move; only rows omitted from the payload are removed — and only when no
+    // FK still references them.
+    $existing_ids = array_map( 'intval', (array) $wpdb->get_col( "SELECT id FROM {$table}" ) );
+    $kept_ids     = [];
 
     foreach ( $post_data as $data ) {
 
         $tz = wp_timezone();
-
 
         // START DATE → 00:00:00
         $start = ( new DateTimeImmutable( $data['start_date'], $tz ) )
@@ -747,19 +753,89 @@ function erp_settings_save_leave_years( $post_data = [] ) {
             ->setTimezone( new DateTimeZone( 'UTC' ) )
             ->getTimestamp();
 
-        $wpdb->insert(
-            $wpdb->prefix . 'erp_hr_financial_years',
-            [
-                'fy_name'     => sanitize_text_field( $data['fy_name'] ),
-                'start_date'  => $start,
-                'end_date'    => $end,
-                'description' => sanitize_text_field( $data['description'] ?? '' ),
-                'created_by'  => get_current_user_id(),
-                'created_at'  => gmdate( 'Y-m-d H:i:s' ),
-            ],
-            [ '%s', '%d', '%d', '%s', '%d', '%s' ]
-        );
+        $row = [
+            'fy_name'     => sanitize_text_field( $data['fy_name'] ),
+            'start_date'  => $start,
+            'end_date'    => $end,
+            'description' => sanitize_text_field( $data['description'] ?? '' ),
+        ];
+
+        $id = isset( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+        if ( $id && in_array( $id, $existing_ids, true ) ) {
+            $row['updated_by'] = get_current_user_id();
+            $row['updated_at'] = gmdate( 'Y-m-d H:i:s' );
+
+            $wpdb->update(
+                $table,
+                $row,
+                [ 'id' => $id ],
+                [ '%s', '%d', '%d', '%s', '%d', '%s' ],
+                [ '%d' ]
+            );
+
+            $kept_ids[] = $id;
+        } else {
+            $row['created_by'] = get_current_user_id();
+            $row['created_at'] = gmdate( 'Y-m-d H:i:s' );
+
+            $wpdb->insert(
+                $table,
+                $row,
+                [ '%s', '%d', '%d', '%s', '%d', '%s' ]
+            );
+
+            $kept_ids[] = (int) $wpdb->insert_id;
+        }
+    }
+
+    // Delete years dropped from the payload, but never orphan a linked year.
+    foreach ( array_diff( $existing_ids, $kept_ids ) as $del_id ) {
+        if ( erp_hr_financial_year_in_use( $del_id ) ) {
+            continue;
+        }
+
+        $wpdb->delete( $table, [ 'id' => $del_id ], [ '%d' ] );
     }
 
     return true;
+}
+
+/**
+ * Whether a financial year is still referenced by any leave record.
+ *
+ * Guards `erp_settings_save_leave_years()` from deleting a year that leave
+ * policies / entitlements / encashment / unpaid rows point at via `f_year`.
+ *
+ * @param int $f_year Financial year id.
+ *
+ * @return bool
+ */
+function erp_hr_financial_year_in_use( $f_year ) {
+    global $wpdb;
+
+    $f_year = absint( $f_year );
+
+    if ( ! $f_year ) {
+        return false;
+    }
+
+    $tables = [
+        $wpdb->prefix . 'erp_hr_leave_policies',
+        $wpdb->prefix . 'erp_hr_leave_entitlements',
+        $wpdb->prefix . 'erp_hr_leave_encashment_requests',
+        $wpdb->prefix . 'erp_hr_leaves_unpaid',
+    ];
+
+    foreach ( $tables as $table ) {
+        $count = (int) $wpdb->get_var(
+            $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE f_year = %d", $f_year )
+        );
+
+        if ( $count > 0 ) {
+            return true;
+        }
+    }
+
+    return false;
 }

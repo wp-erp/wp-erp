@@ -340,10 +340,20 @@ class LeaveTypesControllerV2 extends RestControllerV2 {
 
 		$leave = (object) ( is_object( $leave ) && method_exists( $leave, 'toArray' ) ? $leave->toArray() : (array) $leave );
 
+		// `created_at` is stored as a Unix timestamp (int) in `erp_hr_leaves`;
+		// surface it as an ISO-8601 string so the React list can show a
+		// Created-At column (legacy `Leave` model carried it but the v2 row
+		// dropped it).
+		$created_raw = $leave->created_at ?? null;
+		$created_at  = ( is_numeric( $created_raw ) && (int) $created_raw > 0 )
+			? gmdate( 'c', (int) $created_raw )
+			: $this->cast_date_iso( $created_raw );
+
 		return [
 			'id'          => (int) ( $leave->id ?? 0 ),
 			'name'        => $this->cast_string_or_null( $leave->name ?? '' ) ?? '',
 			'description' => $this->cast_string_or_null( $leave->description ?? '' ) ?? '',
+			'created_at'  => $created_at,
 		];
 	}
 
@@ -399,6 +409,7 @@ class LeaveTypesControllerV2 extends RestControllerV2 {
 				'id'          => [ 'type' => 'integer' ],
 				'name'        => [ 'type' => 'string' ],
 				'description' => [ 'type' => 'string' ],
+				'created_at'  => [ 'type' => [ 'string', 'null' ] ],
 			],
 		];
 	}

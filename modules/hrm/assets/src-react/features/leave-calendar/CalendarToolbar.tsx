@@ -12,8 +12,12 @@ import { __ } from '@/shared/i18n';
 
 import type { LookupOption } from '../employees/filters/lookups';
 
+export type CalendarView = 'month' | 'week' | 'day';
+
 interface CalendarToolbarProps {
-	readonly monthLabel:           string;
+	readonly label:                string;
+	readonly view:                 CalendarView;
+	readonly onView:               ( view: CalendarView ) => void;
 	readonly departmentId:         number;
 	readonly designationId:        number;
 	readonly departments:          LookupOption[];
@@ -29,7 +33,9 @@ interface CalendarToolbarProps {
 }
 
 export function CalendarToolbar( {
-	monthLabel,
+	label,
+	view,
+	onView,
 	departmentId,
 	designationId,
 	departments,
@@ -41,16 +47,22 @@ export function CalendarToolbar( {
 	onDesignationChange,
 	showFilters = true,
 }: CalendarToolbarProps ): JSX.Element {
+	const views: ReadonlyArray< { value: CalendarView; label: string } > = [
+		{ value: 'month', label: __( 'Month', 'erp' ) },
+		{ value: 'week', label: __( 'Week', 'erp' ) },
+		{ value: 'day', label: __( 'Day', 'erp' ) },
+	];
+
 	return (
 		<>
-			{ /* Month nav */ }
-			<div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+			{ /* Date nav + view switch */ }
+			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
 						onClick={ onPrev }
 						className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted"
-						aria-label={ __( 'Previous month', 'erp' ) }
+						aria-label={ __( 'Previous', 'erp' ) }
 					>
 						<ChevronLeft size={ 16 } aria-hidden="true" />
 					</button>
@@ -58,13 +70,31 @@ export function CalendarToolbar( {
 						type="button"
 						onClick={ onNext }
 						className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted"
-						aria-label={ __( 'Next month', 'erp' ) }
+						aria-label={ __( 'Next', 'erp' ) }
 					>
 						<ChevronRight size={ 16 } aria-hidden="true" />
 					</button>
-					<span className="ml-2 text-base font-semibold text-foreground">{ monthLabel }</span>
+					<span className="ml-2 text-base font-semibold text-foreground">{ label }</span>
 				</div>
 				<div className="flex items-center gap-3">
+					{ /* Month / Week / Day segmented switch (raw buttons — a tab group, not DS Buttons). */ }
+					<div role="tablist" aria-label={ __( 'Calendar view', 'erp' ) } className="inline-flex overflow-hidden rounded-md border border-border">
+						{ views.map( ( v ) => (
+							<button
+								key={ v.value }
+								type="button"
+								role="tab"
+								aria-selected={ view === v.value }
+								onClick={ () => onView( v.value ) }
+								className={ [
+									'h-9 px-3 text-sm font-medium transition-colors',
+									view === v.value ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted hover:text-foreground',
+								].join( ' ' ) }
+							>
+								{ v.label }
+							</button>
+						) ) }
+					</div>
 					<Button variant="outline" className="h-9 px-4 text-sm" onClick={ onToday }>
 						{ __( 'Today', 'erp' ) }
 					</Button>

@@ -15,6 +15,7 @@ import {
 } from '@wedevs/plugin-ui';
 import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
+import { Link } from 'react-router-dom';
 
 import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { __, sprintf } from '@/shared/i18n';
@@ -26,6 +27,8 @@ export type SortKey = 'title' | 'lead_name' | 'parent_title' | 'total_employees'
 interface DepartmentsTableProps {
 	readonly rows:         readonly Department[];
 	readonly canManage:    boolean;
+	/** Tree depth per department id — drives the hierarchical name indentation. */
+	readonly depthOf?:     ( id: number ) => number;
 	readonly selected:     ReadonlySet< number >;
 	readonly allChecked:   boolean;
 	readonly sort:         { key: SortKey; dir: 'asc' | 'desc' };
@@ -39,6 +42,7 @@ interface DepartmentsTableProps {
 export function DepartmentsTable( {
 	rows,
 	canManage,
+	depthOf,
 	selected,
 	allChecked,
 	sort,
@@ -100,10 +104,18 @@ export function DepartmentsTable( {
 							</td>
 						) : null }
 						<td className="px-2 align-middle text-sm">
-							<div className="font-medium text-foreground">{ dept.title }</div>
-							{ dept.description ? (
-								<div className="truncate text-xs text-muted-foreground">{ dept.description }</div>
-							) : null }
+							<div style={ { paddingLeft: `${ ( depthOf?.( dept.id ) ?? 0 ) * 20 }px` } }>
+								<Link
+									to={ `/employees?department_id=${ dept.id }` }
+									className="font-medium text-foreground hover:text-primary hover:underline"
+								>
+									{ ( depthOf?.( dept.id ) ?? 0 ) > 0 ? <span className="mr-1 text-muted-foreground" aria-hidden="true">└</span> : null }
+									{ dept.title }
+								</Link>
+								{ dept.description ? (
+									<div className="truncate text-xs text-muted-foreground">{ dept.description }</div>
+								) : null }
+							</div>
 						</td>
 						<td className="px-2 align-middle text-sm text-foreground">
 							{ dept.lead_name || <span className="text-muted-foreground">—</span> }

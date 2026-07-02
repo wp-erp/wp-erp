@@ -8,11 +8,16 @@
  * first render trigger exactly one rebuild.
  */
 
+import { useSelect } from '@wordpress/data';
 import { applyFilters, didFilter } from '@wordpress/hooks';
 import { useMemo } from 'react';
 
 import { CopyButton } from '@/shared/components/CopyButton';
 import { __ } from '@/shared/i18n';
+import {
+	storeName as employeesStoreName,
+	getFilters,
+} from '@/stores/employees';
 import type {
 	ColumnContext,
 	ColumnsFilter,
@@ -27,10 +32,32 @@ import { EmploymentTypeCell } from './columns/EmploymentTypeCell';
 import { HireDateCell } from './columns/HireDateCell';
 import { NameCell } from './columns/NameCell';
 import { StatusCell } from './columns/StatusCell';
+import { StatusDateCell } from './columns/StatusDateCell';
 import { useColumnContext } from './useColumnContext';
+
+interface EmployeesStoreSelect {
+	getFilters: () => ReturnType< typeof getFilters >;
+}
+
+/** Legacy status-adaptive date-column labels ("Terminated At", "Inactive From", …). */
+const STATUS_DATE_LABELS: Record< string, string > = {
+	inactive:   __( 'Inactive From', 'erp' ),
+	terminated: __( 'Terminated At', 'erp' ),
+	resigned:   __( 'Resigned At', 'erp' ),
+	deceased:   __( 'Deceased From', 'erp' ),
+};
 
 export function useEmployeeColumns(): readonly EmployeeColumn[] {
 	const { ctx, can } = useColumnContext();
+
+	const statusFilter = useSelect(
+		( select ) =>
+			( select( employeesStoreName ) as unknown as EmployeesStoreSelect ).getFilters().status,
+		[]
+	);
+	// On the Inactive / Terminated / Resigned / Deceased tabs the legacy list swaps
+	// the styled Status badge for a status-change date column ("Terminated At"…).
+	const statusDateLabel = statusFilter ? STATUS_DATE_LABELS[ statusFilter ] : undefined;
 
 	const baseColumns = useMemo< EmployeeColumn[] >(
 		() => [
@@ -139,13 +166,13 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 			},
 			{
 				id:             COLUMN_IDS.STATUS,
-				label:          __( 'Status', 'erp' ),
+				label:          statusDateLabel ?? __( 'Status', 'erp' ),
 				priority:       50,
 				defaultVisible: true,
-				sortable:       true,
+				sortable:       ! statusDateLabel,
 				filterable:     true,
-				getValue:       ( row ) => row.status ?? null,
-				render:         ( row ) => <StatusCell row={ row } />,
+				getValue:       ( row ) => ( statusDateLabel ? row.status_date : row.status ) ?? null,
+				render:         ( row ) => ( statusDateLabel ? <StatusDateCell row={ row } /> : <StatusCell row={ row } /> ),
 			},
 			{
 				id:             COLUMN_IDS.HIRE_DATE,
@@ -158,7 +185,7 @@ export function useEmployeeColumns(): readonly EmployeeColumn[] {
 				render:         ( row ) => <HireDateCell row={ row } />,
 			},
 		],
-		[]
+		[ statusDateLabel ]
 	);
 
 	const filterVersion = didFilter( EMPLOYEES_HOOKS.COLUMNS );

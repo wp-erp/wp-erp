@@ -14,6 +14,7 @@ import {
 } from '@wedevs/plugin-ui';
 import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
+import { Link } from 'react-router-dom';
 
 import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
 import { __, sprintf } from '@/shared/i18n';
@@ -89,7 +90,12 @@ export function DesignationsTable( {
 							</td>
 						) : null }
 						<td className="px-2 align-middle text-sm">
-							<div className="font-medium text-foreground">{ desig.title }</div>
+							<Link
+								to={ `/employees?designation_id=${ desig.id }` }
+								className="font-medium text-foreground hover:text-primary hover:underline"
+							>
+								{ desig.title }
+							</Link>
 							{ desig.description ? (
 								<div className="truncate text-xs text-muted-foreground">{ desig.description }</div>
 							) : null }

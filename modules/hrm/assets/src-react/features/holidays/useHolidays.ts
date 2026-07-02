@@ -26,8 +26,13 @@ import type {
 } from './types';
 
 interface UseHolidaysArgs {
-	readonly year:    number;
+	/** Date-range window start (Y-m-d), or '' for open-ended. */
+	readonly from:    string;
+	/** Date-range window end (Y-m-d), or '' for open-ended. */
+	readonly to:      string;
 	readonly search:  string;
+	readonly orderby: string;
+	readonly order:   'asc' | 'desc';
 	readonly page:    number;
 	readonly perPage: number;
 }
@@ -45,7 +50,7 @@ export interface UseHolidaysResult {
 	readonly importRows: ( rows: readonly HolidayPreviewRow[] ) => Promise< HolidayImportResult >;
 }
 
-export function useHolidays( { year, search, page, perPage }: UseHolidaysArgs ): UseHolidaysResult {
+export function useHolidays( { from, to, search, orderby, order, page, perPage }: UseHolidaysArgs ): UseHolidaysResult {
 	const [ rows, setRows ]       = useState< readonly Holiday[] >( [] );
 	const [ total, setTotal ]     = useState( 0 );
 	const [ loading, setLoading ] = useState( true );
@@ -57,12 +62,13 @@ export function useHolidays( { year, search, page, perPage }: UseHolidaysArgs ):
 		try {
 			const { body, headers } = await requestWithHeaders< Holiday[] >(
 				restPath( 'v2', '/holidays', {
-					year,
+					from,
+					to,
 					search,
 					page,
 					per_page: perPage,
-					orderby:  'start',
-					order:    'asc',
+					orderby,
+					order,
 				} )
 			);
 			const list = Array.isArray( body ) ? body : [];
@@ -73,7 +79,7 @@ export function useHolidays( { year, search, page, perPage }: UseHolidaysArgs ):
 		} finally {
 			setLoading( false );
 		}
-	}, [ year, search, page, perPage ] );
+	}, [ from, to, search, orderby, order, page, perPage ] );
 
 	useEffect( () => {
 		void reload();

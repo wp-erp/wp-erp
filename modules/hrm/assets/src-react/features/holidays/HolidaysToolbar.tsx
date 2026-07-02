@@ -4,16 +4,12 @@
  * state lives in the page.
  */
 
-import { Input, SmartSelect } from '@wedevs/plugin-ui';
+import { Input } from '@wedevs/plugin-ui';
 import { Filter, Search } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
-
-interface YearOption {
-	readonly value: string;
-	readonly label: string;
-}
 
 interface HolidaysToolbarProps {
 	readonly total:              number;
@@ -22,9 +18,10 @@ interface HolidaysToolbarProps {
 	readonly onToggleFilters:    () => void;
 	readonly filterButtonActive: boolean;
 	readonly activeFilterCount:  number;
-	readonly year:               number;
-	readonly onYear:             ( value: number ) => void;
-	readonly yearOptions:        readonly YearOption[];
+	readonly from:               string;
+	readonly to:                 string;
+	readonly onFrom:             ( value: string ) => void;
+	readonly onTo:               ( value: string ) => void;
 }
 
 export function HolidaysToolbar( {
@@ -34,9 +31,10 @@ export function HolidaysToolbar( {
 	onToggleFilters,
 	filterButtonActive,
 	activeFilterCount,
-	year,
-	onYear,
-	yearOptions,
+	from,
+	to,
+	onFrom,
+	onTo,
 }: HolidaysToolbarProps ): JSX.Element {
 	return (
 		<>
@@ -87,17 +85,23 @@ export function HolidaysToolbar( {
 			</div>
 
 			{ filterButtonActive ? (
-				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
+				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'Year', 'erp' ) }
-						<SmartSelect
-							options={ [ ...yearOptions ] }
-							value={ String( year || '0' ) }
-							onValueChange={ ( v ) => onYear( Number( v || 0 ) ) }
-							placeholder={ __( 'All Years', 'erp' ) }
-							showClear
-							className="h-9 w-36 bg-background"
-							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+						{ __( 'From', 'erp' ) }
+						<DateField
+							value={ from }
+							onChange={ onFrom }
+							max={ to || undefined }
+							className="h-9 w-44 bg-background"
+						/>
+					</label>
+					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+						{ __( 'To', 'erp' ) }
+						<DateField
+							value={ to }
+							onChange={ onTo }
+							min={ from || undefined }
+							className="h-9 w-44 bg-background"
 						/>
 					</label>
 				</div>

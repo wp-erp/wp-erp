@@ -1,14 +1,16 @@
 /**
- * `/leave/calendar` route — month-view leave + holiday calendar.
+ * `/leave/calendar` route — leave + holiday calendar with Month / Week / Day
+ * views (legacy parity: the FullCalendar admin had all three).
  *
- * Plain Tailwind month grid (no new calendar dependency): weekday header + a
- * 6-week grid. Each day shows holiday chips and leave chips; weekend / holiday
- * cells get a subtle background tint. Data comes from `erp/v2/leave-calendar`,
- * which mirrors the legacy `get_leave_holiday_by_date()` merge.
+ * Plain Tailwind grids (no calendar dependency). Month = 6-week grid, Week = a
+ * single 7-day row, Day = a detailed single-day list. Each day shows holiday
+ * chips and leave chips (leave chips carry an avatar + link through to the
+ * employee profile); weekend / holiday cells get a subtle tint. Data comes from
+ * `erp/v2/leave-calendar`, which accepts any start/end window.
  *
- * Chrome lives alongside: `CalendarToolbar` (nav + filters + legend),
- * `CalendarGrid` (weekday header + day grid), `leave-calendar-format` (pure
- * date helpers + the per-day bucket type).
+ * Chrome lives alongside: `CalendarToolbar` (nav + view switch + filters +
+ * legend), `CalendarGrid` (month/week grid + `LeaveChip`), `leave-calendar-format`
+ * (pure date helpers + the per-day bucket type).
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -21,8 +23,8 @@ import { __ } from '@/shared/i18n';
 import { loadLookup } from '../employees/filters/lookups';
 import type { LookupOption } from '../employees/filters/lookups';
 
-import { CalendarGrid } from './CalendarGrid';
-import { CalendarToolbar } from './CalendarToolbar';
+import { CalendarGrid, LeaveChip } from './CalendarGrid';
+import { CalendarToolbar, type CalendarView } from './CalendarToolbar';
 import { addDays, parseYmd, ymd, type DayEvents } from './leave-calendar-format';
 import { useLeaveCalendar } from './useLeaveCalendar';
 
@@ -33,15 +35,34 @@ function LeaveCalendarInner(): JSX.Element {
 	// just hides the manager-only affordances).
 	const canManage = useCan( 'erp_leave_manage' );
 
-	// `cursor` is the first day of the displayed month.
+	const [ view, setView ]     = useState< CalendarView >( 'month' );
+	// `cursor` is the focus day (any day within the displayed month / week, or the
+	// exact day in Day view).
 	const [ cursor, setCursor ] = useState( () => {
 		const now = new Date();
-		return new Date( now.getFullYear(), now.getMonth(), 1 );
+		return new Date( now.getFullYear(), now.getMonth(), now.getDate() );
 	} );
 
-	// 6-week visible grid (week starts Sunday).
-	const gridStart = useMemo( () => addDays( cursor, -cursor.getDay() ), [ cursor ] );
-	const gridEnd   = useMemo( () => addDays( gridStart, 41 ), [ gridStart ] );
+	// Derive the visible window + grid rows from the active view.
+	const { rangeStart, rangeEnd, weeks, thisMonth } = useMemo( () => {
+		if ( view === 'day' ) {
+			return { rangeStart: cursor, rangeEnd: cursor, weeks: [ [ cursor ] ], thisMonth: cursor.getMonth() };
+		}
+		if ( view === 'week' ) {
+			const weekStart = addDays( cursor, -cursor.getDay() );
+			const days      = Array.from( { length: 7 }, ( _v, i ) => addDays( weekStart, i ) );
+			return { rangeStart: weekStart, rangeEnd: addDays( weekStart, 6 ), weeks: [ days ], thisMonth: cursor.getMonth() };
+		}
+		// Month: a 6-week grid starting on the Sunday on/before the 1st.
+		const monthStart = new Date( cursor.getFullYear(), cursor.getMonth(), 1 );
+		const gridStart  = addDays( monthStart, -monthStart.getDay() );
+		const cells      = Array.from( { length: 42 }, ( _v, i ) => addDays( gridStart, i ) );
+		const rows: Date[][] = [];
+		for ( let i = 0; i < 42; i += 7 ) {
+			rows.push( cells.slice( i, i + 7 ) );
+		}
+		return { rangeStart: gridStart, rangeEnd: addDays( gridStart, 41 ), weeks: rows, thisMonth: cursor.getMonth() };
+	}, [ view, cursor ] );
 
 	// Department / Designation filters — this is the whole-company admin calendar,
 	// so it queries every employee's leave ('all' scope), optionally narrowed.
@@ -59,7 +80,7 @@ function LeaveCalendarInner(): JSX.Element {
 		};
 	}, [] );
 
-	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( gridEnd ), {
+	const { events, loading, error } = useLeaveCalendar( ymd( rangeStart ), ymd( rangeEnd ), {
 		scope: canManage ? 'all' : 'me',
 		departmentId,
 		designationId,
@@ -98,30 +119,41 @@ function LeaveCalendarInner(): JSX.Element {
 		return map;
 	}, [ events ] );
 
-	const weeks = useMemo( () => {
-		const cells: Date[] = [];
-		for ( let i = 0; i < 42; i++ ) {
-			cells.push( addDays( gridStart, i ) );
-		}
-		const rows: Date[][] = [];
-		for ( let i = 0; i < 42; i += 7 ) {
-			rows.push( cells.slice( i, i + 7 ) );
-		}
-		return rows;
-	}, [ gridStart ] );
+	const todayKey = ymd( new Date() );
 
-	const monthLabel = cursor.toLocaleDateString( undefined, { month: 'long', year: 'numeric' } );
-	const todayKey   = ymd( new Date() );
-	const thisMonth  = cursor.getMonth();
+	// View-dependent header label.
+	const label = useMemo( () => {
+		if ( view === 'day' ) {
+			return cursor.toLocaleDateString( undefined, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' } );
+		}
+		if ( view === 'week' ) {
+			const start = addDays( cursor, -cursor.getDay() );
+			const end   = addDays( start, 6 );
+			const a = start.toLocaleDateString( undefined, { month: 'short', day: 'numeric' } );
+			const b = end.toLocaleDateString( undefined, { month: 'short', day: 'numeric', year: 'numeric' } );
+			return `${ a } – ${ b }`;
+		}
+		return cursor.toLocaleDateString( undefined, { month: 'long', year: 'numeric' } );
+	}, [ view, cursor ] );
 
-	function shiftMonth( delta: number ): void {
-		setCursor( ( prev ) => new Date( prev.getFullYear(), prev.getMonth() + delta, 1 ) );
+	function shift( delta: number ): void {
+		setCursor( ( prev ) => {
+			if ( view === 'day' ) {
+				return addDays( prev, delta );
+			}
+			if ( view === 'week' ) {
+				return addDays( prev, delta * 7 );
+			}
+			return new Date( prev.getFullYear(), prev.getMonth() + delta, 1 );
+		} );
 	}
 
 	function goToday(): void {
 		const now = new Date();
-		setCursor( new Date( now.getFullYear(), now.getMonth(), 1 ) );
+		setCursor( new Date( now.getFullYear(), now.getMonth(), now.getDate() ) );
 	}
+
+	const dayBucket = byDay.get( ymd( cursor ) );
 
 	return (
 		<section className="mx-auto w-full max-w-full">
@@ -133,13 +165,15 @@ function LeaveCalendarInner(): JSX.Element {
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<CalendarToolbar
-					monthLabel={ monthLabel }
+					label={ label }
+					view={ view }
+					onView={ setView }
 					departmentId={ departmentId }
 					designationId={ designationId }
 					departments={ departments }
 					designations={ designations }
-					onPrev={ () => shiftMonth( -1 ) }
-					onNext={ () => shiftMonth( 1 ) }
+					onPrev={ () => shift( -1 ) }
+					onNext={ () => shift( 1 ) }
 					onToday={ goToday }
 					onDepartmentChange={ setDepartmentId }
 					onDesignationChange={ setDesignationId }
@@ -148,6 +182,35 @@ function LeaveCalendarInner(): JSX.Element {
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
+				) : view === 'day' ? (
+					<div className="relative p-4">
+						{ loading ? (
+							<div className="absolute inset-0 z-10 flex items-center justify-center bg-card/60 text-sm text-muted-foreground">
+								{ __( 'Loading…', 'erp' ) }
+							</div>
+						) : null }
+						<div className="flex flex-col gap-2">
+							{ ( dayBucket?.holidays ?? [] ).map( ( ev, i ) => (
+								<span
+									key={ `dh-${ ev.id }-${ i }` }
+									className="w-fit rounded px-2 py-1 text-sm font-medium text-white"
+									style={ { backgroundColor: ev.color || '#FF5354' } }
+								>
+									{ ev.title }
+								</span>
+							) ) }
+							{ ( dayBucket?.leaves ?? [] ).map( ( ev, i ) => (
+								<div key={ `dl-${ ev.id }-${ i }` } className="w-fit max-w-full text-sm">
+									<LeaveChip ev={ ev } />
+								</div>
+							) ) }
+							{ ( dayBucket?.holidays?.length ?? 0 ) === 0 && ( dayBucket?.leaves?.length ?? 0 ) === 0 && ! loading ? (
+								<p className="py-8 text-center text-sm text-muted-foreground">
+									{ __( 'No leave or holidays on this day.', 'erp' ) }
+								</p>
+							) : null }
+						</div>
+					</div>
 				) : (
 					<CalendarGrid
 						weeks={ weeks }
@@ -155,6 +218,7 @@ function LeaveCalendarInner(): JSX.Element {
 						thisMonth={ thisMonth }
 						todayKey={ todayKey }
 						loading={ loading }
+						dimOutOfMonth={ view === 'month' }
 					/>
 				) }
 			</div>

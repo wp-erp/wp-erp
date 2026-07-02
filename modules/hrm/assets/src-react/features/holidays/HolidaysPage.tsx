@@ -14,7 +14,7 @@ import {
 	toast,
 } from '@wedevs/plugin-ui';
 import { Plus, Trash2, Upload } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
@@ -38,18 +38,38 @@ function HolidaysInner(): JSX.Element {
 	const thisYear = new Date().getFullYear();
 	const canManage = useCan( 'erp_leave_manage' );
 
-	const [ year, setYear ]       = useState( thisYear );
+	// Default to the current calendar-year window (Jan 1 – Dec 31), matching the
+	// legacy Holidays list which pre-filled the From/To range with this year.
+	const [ from, setFrom ]       = useState( `${ thisYear }-01-01` );
+	const [ to, setTo ]           = useState( `${ thisYear }-12-31` );
 	const [ search, setSearch ]   = useState( '' );
+	const [ orderby, setOrderby ] = useState< 'title' | 'start' >( 'start' );
+	const [ order, setOrder ]     = useState< 'asc' | 'desc' >( 'asc' );
 	const [ showFilters, setShowFilters ] = useState( false );
 	const [ page, setPage ]       = useState( 1 );
 	const [ perPage, setPerPage ] = useState( 20 );
 
 	const { rows, total, loading, error, save, remove, removeMany, parseFile, importRows } = useHolidays( {
-		year,
+		from,
+		to,
 		search,
+		orderby,
+		order,
 		page,
 		perPage,
 	} );
+
+	// Click a sortable header: toggle direction when re-selecting the same
+	// column, else switch column (ascending). Mirrors the legacy list-table sort.
+	function handleSort( column: 'title' | 'start' ): void {
+		if ( orderby === column ) {
+			setOrder( ( prev ) => ( prev === 'asc' ? 'desc' : 'asc' ) );
+		} else {
+			setOrderby( column );
+			setOrder( 'asc' );
+		}
+		setPage( 1 );
+	}
 
 	// Create/edit + import modal open-state lives in the URL (`?form=new` |
 	// `?form=<id>` and `?import=open`) so a browser refresh re-opens them. For
@@ -72,7 +92,7 @@ function HolidaysInner(): JSX.Element {
 	// Reset to the first page whenever the filters change.
 	useEffect( () => {
 		setPage( 1 );
-	}, [ year, search ] );
+	}, [ from, to, search ] );
 
 	// Drop selections that are no longer visible after a list refresh / page change.
 	useEffect( () => {
@@ -113,15 +133,7 @@ function HolidaysInner(): JSX.Element {
 		}
 	}
 
-	const yearOptions = useMemo( () => {
-		const years: Array< { value: string; label: string } > = [ { value: '0', label: __( 'All Years', 'erp' ) } ];
-		for ( let y = thisYear + 1; y >= thisYear - 5; y-- ) {
-			years.push( { value: String( y ), label: String( y ) } );
-		}
-		return years;
-	}, [ thisYear ] );
-
-	const activeFilterCount  = year ? 1 : 0;
+	const activeFilterCount  = ( from ? 1 : 0 ) + ( to ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	function openCreate(): void {
@@ -201,9 +213,10 @@ function HolidaysInner(): JSX.Element {
 					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
 					filterButtonActive={ filterButtonActive }
 					activeFilterCount={ activeFilterCount }
-					year={ year }
-					onYear={ ( v ) => setYear( v ) }
-					yearOptions={ yearOptions }
+					from={ from }
+					to={ to }
+					onFrom={ setFrom }
+					onTo={ setTo }
 				/>
 
 				{ canManage && selectedIds.length > 0 ? (
@@ -253,6 +266,9 @@ function HolidaysInner(): JSX.Element {
 						canManage={ canManage }
 						selectedIds={ selectedIds }
 						allSelected={ allSelected }
+						orderby={ orderby }
+						order={ order }
+						onSort={ handleSort }
 						onToggleAll={ toggleAll }
 						onToggleRow={ toggleRow }
 						onEdit={ openEdit }

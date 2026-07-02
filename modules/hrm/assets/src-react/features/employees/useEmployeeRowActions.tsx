@@ -162,6 +162,27 @@ export function useEmployeeRowActions(
 				isVisible:  ( emp: EmployeeListItem ) => emp.status !== 'terminated',
 			},
 			{
+				// "Switch to" (User Switching) impersonation — mirrors the legacy
+				// EmployeeListTable row action. Only rendered when the backend
+				// exposed a `switch_to_url` on the row (i.e. the User Switching
+				// plugin is active and the current user may edit employees).
+				id:         'switch-to',
+				label:      __( 'Switch to', 'erp' ),
+				priority:   80,
+				icon:       'LogIn',
+				onSelect:   ( emp: EmployeeListItem ) => {
+					const url = emp.extra?.switch_to_url;
+					if ( typeof url === 'string' && url !== '' ) {
+						window.location.href = url;
+					}
+				},
+				capability: 'erp_edit_employee',
+				isVisible:  ( emp: EmployeeListItem ) => {
+					const url = emp.extra?.switch_to_url;
+					return typeof url === 'string' && url !== '';
+				},
+			},
+			{
 				id:         'trash',
 				label:      __( 'Move to trash', 'erp' ),
 				priority:   90,

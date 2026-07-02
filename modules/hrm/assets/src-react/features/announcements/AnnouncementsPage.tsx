@@ -12,8 +12,8 @@
  */
 
 import { Button, toast } from '@wedevs/plugin-ui';
-import { Plus } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
@@ -42,12 +42,52 @@ function AnnouncementsInner(): JSX.Element {
 	const [ page, setPage ]       = useState( 1 );
 	const [ perPage, setPerPage ] = useState( 20 );
 
-	const { rows, total, counts, loading, error, getOne, save, remove, restore, loadOptions } = useAnnouncements( {
+	// Published-date range filter (F11a) + its collapsible panel toggle.
+	const [ showFilters, setShowFilters ] = useState( false );
+	const [ startDate, setStartDate ]     = useState( '' );
+	const [ endDate, setEndDate ]         = useState( '' );
+
+	// Bulk-selection state (F11b) — client-side loop over the single endpoints.
+	const [ selected, setSelected ] = useState< ReadonlySet< number > >( new Set() );
+
+	const { rows, total, counts, loading, error, getOne, save, remove, restore, bulkRemove, bulkRestore, loadOptions } = useAnnouncements( {
 		status,
 		search,
 		page,
 		perPage,
+		startDate,
+		endDate,
 	} );
+
+	const activeFilterCount = ( startDate ? 1 : 0 ) + ( endDate ? 1 : 0 );
+	const filterButtonActive = showFilters || activeFilterCount > 0;
+
+	const pageIds    = useMemo( () => rows.map( ( r ) => r.id ), [ rows ] );
+	const allChecked = pageIds.length > 0 && pageIds.every( ( id ) => selected.has( id ) );
+
+	function toggleAll(): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( allChecked ) {
+				pageIds.forEach( ( id ) => next.delete( id ) );
+			} else {
+				pageIds.forEach( ( id ) => next.add( id ) );
+			}
+			return next;
+		} );
+	}
+
+	function toggleOne( id: number ): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( next.has( id ) ) {
+				next.delete( id );
+			} else {
+				next.add( id );
+			}
+			return next;
+		} );
+	}
 
 	const [ options, setOptions ]     = useState< AnnouncementFormOptions | null >( null );
 	// Create/edit modal open-state lives in the URL (`?form=new` | `?form=<id>`)
@@ -68,7 +108,12 @@ function AnnouncementsInner(): JSX.Element {
 
 	useEffect( () => {
 		setPage( 1 );
-	}, [ status, search ] );
+	}, [ status, search, startDate, endDate ] );
+
+	// Drop the selection whenever the visible cohort changes (tab/search/dates/page).
+	useEffect( () => {
+		setSelected( new Set() );
+	}, [ status, search, startDate, endDate, page ] );
 
 	const ensureOptions = useCallback( async (): Promise< AnnouncementFormOptions > => {
 		if ( options ) {
@@ -166,6 +211,69 @@ function AnnouncementsInner(): JSX.Element {
 		}
 	}
 
+	async function handleBulkTrash(): Promise< void > {
+		const ids = Array.from( selected );
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			const failed = await bulkRemove( ids, false );
+			setSelected( new Set() );
+			if ( failed > 0 ) {
+				toast.error( sprintf( __( '%d announcement(s) could not be trashed.', 'erp' ), failed ) );
+			} else {
+				toast.success( __( 'Announcements moved to trash.', 'erp' ) );
+			}
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not trash the announcements.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	async function handleBulkRestore(): Promise< void > {
+		const ids = Array.from( selected );
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			const failed = await bulkRestore( ids );
+			setSelected( new Set() );
+			if ( failed > 0 ) {
+				toast.error( sprintf( __( '%d announcement(s) could not be restored.', 'erp' ), failed ) );
+			} else {
+				toast.success( __( 'Announcements restored.', 'erp' ) );
+			}
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not restore the announcements.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	async function handleBulkDelete(): Promise< void > {
+		const ids = Array.from( selected );
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			const failed = await bulkRemove( ids, true );
+			setSelected( new Set() );
+			if ( failed > 0 ) {
+				toast.error( sprintf( __( '%d announcement(s) could not be deleted.', 'erp' ), failed ) );
+			} else {
+				toast.success( __( 'Announcements permanently deleted.', 'erp' ) );
+			}
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the announcements.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
+
 	function countFor( value: string ): number {
 		return value === 'draft' ? counts.draft : value === 'trash' ? counts.trash : counts.publish;
 	}
@@ -195,7 +303,36 @@ function AnnouncementsInner(): JSX.Element {
 					searchInput={ searchInput }
 					onSearchInput={ setSearchInput }
 					countFor={ countFor }
+					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
+					filterButtonActive={ filterButtonActive }
+					activeFilterCount={ activeFilterCount }
+					startDate={ startDate }
+					endDate={ endDate }
+					onStartDate={ setStartDate }
+					onEndDate={ setEndDate }
 				/>
+
+				{ canManage && selected.size > 0 ? (
+					<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
+						<div className="flex items-center gap-2">
+							{ status === 'trash' ? (
+								<>
+									<Button variant="outline" className="h-9 gap-1.5" disabled={ busy } onClick={ () => void handleBulkRestore() }>
+										<RotateCcw size={ 14 } aria-hidden="true" /> { __( 'Restore', 'erp' ) }
+									</Button>
+									<Button variant="outline" className="h-9 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkDelete() }>
+										<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete permanently', 'erp' ) }
+									</Button>
+								</>
+							) : (
+								<Button variant="outline" className="h-9 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkTrash() }>
+									<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Trash', 'erp' ) }
+								</Button>
+							) }
+						</div>
+					</div>
+				) : null }
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
@@ -209,6 +346,10 @@ function AnnouncementsInner(): JSX.Element {
 					<AnnouncementsTable
 						rows={ rows }
 						canManage={ canManage }
+						selected={ selected }
+						allChecked={ allChecked }
+						onToggleAll={ toggleAll }
+						onToggleOne={ toggleOne }
 						onEdit={ ( row ) => void openEdit( row ) }
 						onRestore={ ( row ) => void handleRestore( row ) }
 						onDelete={ setDeleting }

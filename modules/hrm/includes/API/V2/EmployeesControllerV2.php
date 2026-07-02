@@ -1013,7 +1013,81 @@ class EmployeesControllerV2 extends RestControllerV2 {
 			'father_name'     => $str( 'father_name' ),
 			'mother_name'     => $str( 'mother_name' ),
 			'spouse_name'     => $str( 'spouse_name' ),
+			// Termination details (mirrors legacy tab-general.php:348 "Termination"
+			// postbox) — null unless the employee is terminated. Read the same
+			// `_erp_hr_termination` meta `Employee::terminate()` writes, with the
+			// slug→label maps resolved server-side so the client renders parity text.
+			'termination'     => $this->build_termination( (int) $employee->get_user_id() ),
 		];
+	}
+
+	/**
+	 * Build the termination-details payload from the `_erp_hr_termination` user
+	 * meta (the exact array `Employee::terminate()` persists). Returns null when
+	 * the employee has never been terminated / was reactivated (meta cleared).
+	 * Labels resolve through the same helper maps the legacy profile view used.
+	 *
+	 * @param int $user_id Employee user ID.
+	 *
+	 * @return array|null
+	 */
+	private function build_termination( int $user_id ): ?array {
+		$meta = get_user_meta( $user_id, '_erp_hr_termination', true );
+
+		if ( empty( $meta ) || ! is_array( $meta ) ) {
+			return null;
+		}
+
+		$type   = (string) ( $meta['termination_type'] ?? '' );
+		$reason = (string) ( $meta['termination_reason'] ?? '' );
+		$rehire = (string) ( $meta['eligible_for_rehire'] ?? '' );
+		$date   = (string) ( $meta['terminate_date'] ?? '' );
+
+		return [
+			'terminate_date'            => $this->cast_date_iso( $date ) ?? $date,
+			'termination_type'          => $type,
+			'termination_type_label'    => '' !== $type ? (string) erp_hr_get_terminate_type( $type ) : '',
+			'termination_reason'        => $reason,
+			'termination_reason_label'  => '' !== $reason ? (string) erp_hr_get_terminate_reason( $reason ) : '',
+			'eligible_for_rehire'       => $rehire,
+			'eligible_for_rehire_label' => '' !== $rehire ? (string) erp_hr_get_terminate_rehire_options( $rehire ) : '',
+		];
+	}
+
+	/**
+	 * Latest status-change date for the employee from the
+	 * `erp_hr_employee_history` table, matching the status slug as the history
+	 * `category` (`inactive` / `terminated` / `deceased` / `resigned`). Mirrors
+	 * the legacy list's `get_employee_status_update_date()` used to render the
+	 * status-adaptive "Terminated At" / "Inactive From" column. `active` (and the
+	 * default) has no history date.
+	 *
+	 * @param int    $user_id Employee user ID.
+	 * @param string $status  Current employee status slug.
+	 *
+	 * @return string|null ISO date or null.
+	 */
+	private function status_update_date( int $user_id, string $status ): ?string {
+		global $wpdb;
+
+		if ( '' === $status || 'active' === $status ) {
+			return null;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$date = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT `date` FROM {$wpdb->prefix}erp_hr_employee_history WHERE user_id = %d AND module = 'employee' AND category = %s ORDER BY `date` DESC LIMIT 1",
+				$user_id,
+				$status
+			)
+		);
+
+		if ( empty( $date ) ) {
+			return null;
+		}
+
+		return $this->cast_date_iso( (string) $date ) ?? (string) $date;
 	}
 
 	/**
@@ -1273,6 +1347,12 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		$location_id    = $this->cast_int_or_null( $employee->location );
 		$reporting_id   = $this->cast_int_or_null( $employee->get_reporting_to() );
 
+		$status_slug = (string) $employee->get_status();
+		// Status-adaptive date (legacy list "Terminated At" / "Inactive From"
+		// column): the latest `erp_hr_employee_history` row whose category matches
+		// the current status. `active` has no such date.
+		$status_date = $this->status_update_date( $user_id, $status_slug );
+
 		$item = [
 			'id'               => $user_id,
 			'user_id'          => $user_id,
@@ -1282,11 +1362,12 @@ class EmployeesControllerV2 extends RestControllerV2 {
 			'last_name'        => $this->cast_string_or_null( $employee->last_name ) ?? '',
 			'email'            => $this->cast_string_or_null( $employee->user_email ) ?? '',
 			'avatar_url'       => $employee->get_avatar_url( 80 ) ?: null,
-			'status'           => $this->cast_enum( (string) $employee->get_status(), $this->allowed_employee_status_keys() ),
+			'status'           => $this->cast_enum( $status_slug, $this->allowed_employee_status_keys() ),
 			'employee_type'    => $this->cast_string_or_null( $employee->get_type() ),
 			'hire_date'        => $this->cast_date_iso( $employee->get_hiring_date() ),
-			'termination_date' => null,
-			'is_active'        => 'active' === $employee->get_status(),
+			'termination_date' => 'terminated' === $status_slug ? $status_date : null,
+			'status_date'      => $status_date,
+			'is_active'        => 'active' === $status_slug,
 			'department'       => $department_id
 				? $this->embed_department( $department_id, (string) $employee->get_department( 'view' ) )
 				: null,
@@ -1301,6 +1382,20 @@ class EmployeesControllerV2 extends RestControllerV2 {
 			'pay_type'         => $this->cast_string_or_null( $employee->pay_type ),
 			'extra'            => [],
 		];
+
+		// "Switch to" (User Switching) impersonation URL — mirrors the legacy
+		// EmployeeListTable row action: only when the User Switching plugin is
+		// active AND the current user may edit employees. The URL is nonce'd and
+		// bound to the CURRENT admin session, so it's computed per request/row.
+		if ( class_exists( 'user_switching' ) && current_user_can( 'erp_edit_employee' ) ) {
+			$wp_user = get_user_by( 'id', $user_id );
+			if ( $wp_user ) {
+				$switch_url = \user_switching::switch_to_url( $wp_user );
+				if ( $switch_url ) {
+					$item['extra']['switch_to_url'] = esc_url_raw( $switch_url );
+				}
+			}
+		}
 
 		/**
 		 * Filter the v2 employee response item.
@@ -1502,6 +1597,7 @@ class EmployeesControllerV2 extends RestControllerV2 {
 				'employee_type'    => [ 'type' => [ 'string', 'null' ] ],
 				'hire_date'        => [ 'type' => [ 'string', 'null' ] ],
 				'termination_date' => [ 'type' => [ 'string', 'null' ] ],
+				'status_date'      => [ 'type' => [ 'string', 'null' ] ],
 				'is_active'        => [ 'type' => 'boolean' ],
 				'department'       => $this->embedded_lookup_schema(),
 				'designation'      => $this->embedded_lookup_schema(),

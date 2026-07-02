@@ -44,7 +44,7 @@ function formatDate( iso: string ): string {
 }
 
 export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX.Element {
-	const { notes, loading, error, addNote, removeNote } = useEmployeeNotes( userId );
+	const { notes, loading, error, hasMore, loadMore, addNote, removeNote } = useEmployeeNotes( userId );
 	const canManage = useCan( 'erp_manage_review' );
 	const canDelete = useCan( 'erp_edit_employee' );
 
@@ -166,6 +166,13 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 							</div>
 						</li>
 					) ) }
+						{ hasMore ? (
+							<li className="flex justify-center pt-1">
+								<Button variant="outline" size="sm" className="h-9 px-4" onClick={ loadMore }>
+									{ __( 'Load more', 'erp' ) }
+								</Button>
+							</li>
+						) : null }
 				</ul>
 			) }
 				</div>

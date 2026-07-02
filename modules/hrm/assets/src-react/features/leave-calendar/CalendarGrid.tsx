@@ -1,14 +1,65 @@
 /**
- * The month day-grid: weekday header + 6-week grid of day cells, each with its
- * holiday/leave chips and weekend / out-of-month / today styling. Loading shows
- * a translucent overlay. Pure presentation — data is pre-bucketed by the page.
+ * The day-grid: weekday header + a grid of day cells (6 weeks for the month
+ * view, 1 week for the week view), each with its holiday/leave chips and
+ * weekend / out-of-month / today styling. Loading shows a translucent overlay.
+ * Pure presentation — data is pre-bucketed by the page.
  */
 
+import { NavLink } from 'react-router-dom';
 import type { JSX } from 'react';
 
+import { makeInitials } from '@/shared/components/PersonCell';
 import { __ } from '@/shared/i18n';
 
+import type { CalendarEvent } from './types';
 import { WEEKDAYS, ymd, type DayEvents } from './leave-calendar-format';
+
+/**
+ * A single leave chip — shows an initials avatar + the employee name and, when
+ * the event carries a `user_id`, links through to that employee's profile.
+ * (F23: event avatar + event→profile link.)
+ */
+export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
+	const label = ev.employee_name || ev.title;
+	const title = [ ev.employee_name, ev.title, ev.reason ].filter( Boolean ).join( ' — ' );
+	const style = { backgroundColor: ev.color ? `${ ev.color }22` : 'var(--muted)' };
+
+	const inner = (
+		<>
+			<span
+				aria-hidden="true"
+				className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[8px] font-semibold uppercase text-primary"
+			>
+				{ makeInitials( ev.employee_name || ev.title ) }
+			</span>
+			<span className="truncate">{ label }</span>
+		</>
+	);
+
+	if ( ev.user_id ) {
+		return (
+			<NavLink
+				to={ `/employees/${ ev.user_id }` }
+				viewTransition
+				className="flex items-center gap-1 truncate rounded px-1.5 py-0.5 text-[11px] text-foreground hover:underline"
+				style={ style }
+				title={ title }
+			>
+				{ inner }
+			</NavLink>
+		);
+	}
+
+	return (
+		<span
+			className="flex items-center gap-1 truncate rounded px-1.5 py-0.5 text-[11px] text-foreground"
+			style={ style }
+			title={ title }
+		>
+			{ inner }
+		</span>
+	);
+}
 
 interface CalendarGridProps {
 	readonly weeks:     Date[][];
@@ -16,9 +67,11 @@ interface CalendarGridProps {
 	readonly thisMonth: number;
 	readonly todayKey:  string;
 	readonly loading:   boolean;
+	/** Grey out days outside `thisMonth` (month view). Off for the week view. */
+	readonly dimOutOfMonth?: boolean;
 }
 
-export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading }: CalendarGridProps ): JSX.Element {
+export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading, dimOutOfMonth = true }: CalendarGridProps ): JSX.Element {
 	return (
 		<div className="relative">
 			{ loading ? (
@@ -43,7 +96,7 @@ export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading }: Ca
 						{ week.map( ( day ) => {
 							const key       = ymd( day );
 							const bucket    = byDay.get( key );
-							const inMonth   = day.getMonth() === thisMonth;
+							const inMonth   = ! dimOutOfMonth || day.getMonth() === thisMonth;
 							const isToday   = key === todayKey;
 							const isWeekend = bucket?.weekend ?? false;
 
@@ -79,15 +132,7 @@ export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading }: Ca
 											</span>
 										) ) }
 										{ ( bucket?.leaves ?? [] ).map( ( ev, i ) => (
-											<span
-												key={ `l-${ ev.id }-${ i }` }
-												className="flex items-center gap-1 truncate rounded px-1.5 py-0.5 text-[11px] text-foreground"
-												style={ { backgroundColor: ev.color ? `${ ev.color }22` : 'var(--muted)' } }
-												title={ [ ev.employee_name, ev.title, ev.reason ].filter( Boolean ).join( ' — ' ) }
-											>
-												<span aria-hidden="true" className="inline-block size-2 shrink-0 rounded-full" style={ { backgroundColor: ev.color || 'var(--primary)' } } />
-												<span className="truncate">{ ev.employee_name || ev.title }</span>
-											</span>
+											<LeaveChip key={ `l-${ ev.id }-${ i }` } ev={ ev } />
 										) ) }
 									</div>
 								</div>

@@ -37,6 +37,16 @@ export const HOOKS = {
 	// ctx = { userId, leavePolicyId }. Returns LeaveExtraField[].
 	LEAVE_REQUEST_FIELDS:    'erp_hr.leave.request_fields',
 
+	// Leave-request row actions — pro appends dropdown actions to a request row
+	// (Advanced Leave multilevel: "Forward"). Applied with `(actions, ctx)`
+	// where ctx = { request }. Returns LeaveRequestRowAction[].
+	LEAVE_REQUEST_ROW_ACTIONS:     'erp_hr.leave.request_row_actions',
+
+	// Leave-request moderate dialog — pro injects extra nodes shown alongside the
+	// approve/reject form (Advanced Leave multilevel: the approval chain).
+	// Applied with `(nodes, ctx)` where ctx = { request }. Returns ReactNode[].
+	LEAVE_REQUEST_MODERATE_EXTRAS: 'erp_hr.leave.moderate_extras',
+
 	// Employee profile — pro injects / replaces profile tabs (e.g. Documents).
 	// Applied lazily at render with `(tabs, ctx)` where ctx = { userId, canEdit }.
 	// Free seeds a `documents` preview tab; the Document Manager pro module swaps

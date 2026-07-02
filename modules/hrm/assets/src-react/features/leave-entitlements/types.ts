@@ -13,6 +13,8 @@ export interface Entitlement {
 	readonly days:          number;
 	readonly available:     number;
 	readonly spent:         number;
+	/** Leave taken beyond the entitled balance (0 when none). */
+	readonly extra_leave:   number;
 	readonly f_year:        number | null;
 	readonly from_date:     string | null;
 	readonly to_date:       string | null;
@@ -24,6 +26,20 @@ export interface Entitlement {
 export interface IdOption {
 	readonly value: number;
 	readonly label: string;
+}
+
+/** `{ value, label }` option for the employee-type filter (value is a string key). */
+export interface StringOption {
+	readonly value: string;
+	readonly label: string;
+}
+
+/** A financial year for the year filter (carries dates for current-FY detection). */
+export interface FinancialYearOption {
+	readonly id:         number;
+	readonly label:      string;
+	readonly start_date: string;
+	readonly end_date:   string;
 }
 
 /** Assign payload for `POST /erp/v2/leave-entitlements`. */

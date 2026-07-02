@@ -10,7 +10,7 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-import type { IdOption } from './types';
+import type { FinancialYearOption, IdOption, StringOption } from './types';
 
 interface LeaveEntitlementsFiltersProps {
 	readonly total:           number;
@@ -18,6 +18,12 @@ interface LeaveEntitlementsFiltersProps {
 	readonly onSearch:        ( value: string ) => void;
 	readonly policyId:        number;
 	readonly onPolicyId:      ( value: number ) => void;
+	readonly year:            number;
+	readonly onYear:          ( value: number ) => void;
+	readonly financialYears:  readonly FinancialYearOption[];
+	readonly employeeType:    string;
+	readonly onEmployeeType:  ( value: string ) => void;
+	readonly employeeTypes:   readonly StringOption[];
 	readonly showFilters:     boolean;
 	readonly onToggleFilters: () => void;
 	readonly policies:        readonly IdOption[];
@@ -29,6 +35,12 @@ export function LeaveEntitlementsFilters( {
 	onSearch,
 	policyId,
 	onPolicyId,
+	year,
+	onYear,
+	financialYears,
+	employeeType,
+	onEmployeeType,
+	employeeTypes,
 	showFilters,
 	onToggleFilters,
 	policies,
@@ -38,7 +50,17 @@ export function LeaveEntitlementsFilters( {
 		...policies.map( ( p ) => ( { value: String( p.value ), label: p.label } ) ),
 	];
 
-	const activeFilterCount  = policyId ? 1 : 0;
+	const yearFilterOpts = [
+		{ value: '', label: __( 'All Years', 'erp' ) },
+		...financialYears.map( ( fy ) => ( { value: String( fy.id ), label: fy.label } ) ),
+	];
+
+	const employeeTypeOpts = [
+		{ value: '', label: __( 'All Employee Types', 'erp' ) },
+		...employeeTypes.map( ( t ) => ( { value: t.value, label: t.label } ) ),
+	];
+
+	const activeFilterCount  = ( policyId ? 1 : 0 ) + ( year ? 1 : 0 ) + ( employeeType ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	return (
@@ -88,7 +110,31 @@ export function LeaveEntitlementsFilters( {
 			</div>
 
 			{ filterButtonActive ? (
-				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
+				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
+					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+						{ __( 'Year', 'erp' ) }
+						<SmartSelect
+							options={ yearFilterOpts }
+							value={ String( year || '' ) }
+							onValueChange={ ( v ) => onYear( Number( v || 0 ) ) }
+							placeholder={ __( 'All Years', 'erp' ) }
+							showClear
+							className="h-9 w-44 bg-background"
+							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+						/>
+					</label>
+					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+						{ __( 'Employee Type', 'erp' ) }
+						<SmartSelect
+							options={ employeeTypeOpts }
+							value={ employeeType || '' }
+							onValueChange={ ( v ) => onEmployeeType( v || '' ) }
+							placeholder={ __( 'All Employee Types', 'erp' ) }
+							showClear
+							className="h-9 w-48 bg-background"
+							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+						/>
+					</label>
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
 						{ __( 'Policy', 'erp' ) }
 						<SmartSelect

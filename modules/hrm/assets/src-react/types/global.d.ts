@@ -28,6 +28,12 @@ export interface BootPayloadAssets {
 	readonly proPopupUrl?: string;
 }
 
+/** Global HR settings surfaced to the React admin. */
+export interface BootPayloadSettings {
+	/** `erp_hrm_hide_pay_rate` — blur pay rate on the employee profile. */
+	readonly hidePayRate: boolean;
+}
+
 export interface BootSelectOption {
 	readonly value: string;
 	readonly label: string;
@@ -67,6 +73,7 @@ export interface BootPayload {
 	readonly switchUrl:     string;
 	readonly pageSlug:      string;
 	readonly assets:        BootPayloadAssets;
+	readonly settings?:     BootPayloadSettings;
 	readonly capabilities:  Record<Capability, boolean>;
 	readonly hrmVersion:    string;
 	readonly legacyTarget?: LegacySwitchTarget;

@@ -82,6 +82,12 @@ class EmployeeJobHistoriesControllerV2 extends RestControllerV2 {
 					],
 				],
 				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'permission_manage' ],
+					'args'                => $this->get_create_params(),
+				],
+				[
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => [ $this, 'delete_item' ],
 					'permission_callback' => [ $this, 'permission_delete' ],
@@ -212,6 +218,62 @@ class EmployeeJobHistoriesControllerV2 extends RestControllerV2 {
 		$response->set_status( 201 );
 
 		return $response;
+	}
+
+	/**
+	 * PUT /erp/v2/employees/{user_id}/job-histories/{history_id}
+	 *
+	 * Edit-in-place for the active history row — mirrors the legacy
+	 * `AjaxHandler::update_job_history()`. Same routing as create, but the
+	 * `history_id` is injected so the model methods UPDATE the existing row
+	 * (they branch on a non-empty `id`) instead of inserting a new one.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function update_item( $request ) {
+		$user_id  = (int) $request['user_id'];
+		$employee = new Employee( $user_id );
+
+		if ( ! $employee->is_employee() ) {
+			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		$module = sanitize_key( (string) ( $request['module'] ?? '' ) );
+
+		if ( ! \in_array( $module, [ 'employee', 'employment', 'compensation', 'job' ], true ) ) {
+			return new \WP_Error( 'rest_invalid_module', __( 'Invalid history module.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$params       = $request->get_params();
+		$params['id'] = (int) $request['history_id'];
+
+		if ( empty( $params['id'] ) ) {
+			return new \WP_Error( 'rest_invalid_history', __( 'No valid history found!', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$old_data = $employee->get_data();
+
+		if ( 'employee' === $module || 'employment' === $module ) {
+			$result = $employee->update_employment_status( $params );
+		} elseif ( 'compensation' === $module ) {
+			$result = $employee->update_compensation( $params );
+		} else {
+			$result = $employee->update_job_info( $params );
+		}
+
+		if ( is_wp_error( $result ) ) {
+			return new \WP_Error(
+				$result->get_error_code() ?: 'rest_job_history_error',
+				$result->get_error_message() ?: __( 'The history could not be saved.', 'erp' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		do_action( 'erp_hr_employee_update', $user_id, $old_data );
+
+		return rest_ensure_response( [ 'updated' => true, 'id' => (int) $params['id'] ] );
 	}
 
 	/**
@@ -413,12 +475,18 @@ class EmployeeJobHistoriesControllerV2 extends RestControllerV2 {
 			}
 
 			$out[] = [
-				'id'           => (int) ( $row['id'] ?? 0 ),
-				'date'         => $this->cast_date_iso( $row['date'] ?? null ),
-				'department'   => $dept_id !== '' && isset( $departments[ $dept_id ] ) ? (string) $departments[ $dept_id ] : $dept_id,
-				'designation'  => $desig_id !== '' && isset( $designations[ $desig_id ] ) ? (string) $designations[ $desig_id ] : $desig_id,
-				'location'     => $location_id !== '' && isset( $locations[ $location_id ] ) ? (string) $locations[ $location_id ] : $location_id,
-				'reporting_to' => $reporting_name,
+				'id'              => (int) ( $row['id'] ?? 0 ),
+				'date'            => $this->cast_date_iso( $row['date'] ?? null ),
+				'department'      => $dept_id !== '' && isset( $departments[ $dept_id ] ) ? (string) $departments[ $dept_id ] : $dept_id,
+				'designation'     => $desig_id !== '' && isset( $designations[ $desig_id ] ) ? (string) $designations[ $desig_id ] : $desig_id,
+				'location'        => $location_id !== '' && isset( $locations[ $location_id ] ) ? (string) $locations[ $location_id ] : $location_id,
+				'reporting_to'    => $reporting_name,
+				// Raw ids so the edit dialog can prefill the pickers directly
+				// (the label→id reverse-map is unreliable for reporting-to names).
+				'department_id'   => $dept_id !== '' ? (int) $dept_id : 0,
+				'designation_id'  => $desig_id !== '' ? (int) $desig_id : 0,
+				'location_id'     => $location_id !== '' ? (int) $location_id : 0,
+				'reporting_to_id' => $reporting ? (int) $reporting : 0,
 			];
 		}
 		return $out;

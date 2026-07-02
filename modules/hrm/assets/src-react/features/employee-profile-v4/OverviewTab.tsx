@@ -36,6 +36,8 @@ import type { JSX } from 'react';
 import { __ } from '@/shared/i18n';
 
 import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
+import { PayRateReveal } from './PayRateReveal';
+import { TerminationCard } from './TerminationCard';
 import {
 	BLOOD_GROUP_OPTIONS,
 	GENDER_OPTIONS,
@@ -68,6 +70,9 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 			/>
 			<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
 
+			{ /* Termination details — self / managers only, when terminated (legacy tab-general.php:348). */ }
+			{ canEdit && status === 'terminated' ? <TerminationCard termination={ record.termination } /> : null }
+
 			<DetailCard title={ __( 'Employment', 'erp' ) }>
 				<Item icon={ IdCard } label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
 				<Item icon={ Briefcase } label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
@@ -82,7 +87,15 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 				{ /* Pay is sensitive — only self / managers (erp_edit_employee), matching legacy tab-job.php. */ }
 				{ canEdit ? (
 					<>
-						<Item icon={ DollarSign } label={ __( 'Pay Rate', 'erp' ) } value={ str( record, 'pay_rate' ) } />
+						<div className="flex items-start gap-2.5">
+							<span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+								<DollarSign size={ 14 } aria-hidden="true" />
+							</span>
+							<div className="flex min-w-0 flex-col gap-0.5">
+								<dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{ __( 'Pay Rate', 'erp' ) }</dt>
+								<dd className="text-sm text-foreground"><PayRateReveal value={ str( record, 'pay_rate' ) } /></dd>
+							</div>
+						</div>
 						<Item icon={ Wallet } label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
 					</>
 				) : null }

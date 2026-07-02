@@ -48,6 +48,7 @@ export function normalizeEmployee( raw: RawEmployeeListItem ): EmployeeListItem 
 		employee_type:    toStrOrNull( raw.employee_type ),
 		hire_date:        toStrOrNull( raw.hire_date ),
 		termination_date: toStrOrNull( raw.termination_date ),
+		status_date:      toStrOrNull( raw.status_date ),
 		is_active:        toBool( raw.is_active ),
 		department:       normalizeLookup( raw.department ),
 		designation:      normalizeLookup( raw.designation ),

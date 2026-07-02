@@ -180,18 +180,26 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 		$status   = $this->cast_enum( (string) ( $request['status'] ?? 'publish' ), [ 'publish', 'draft', 'trash', 'any' ] ) ?? 'publish';
 		$search   = sanitize_text_field( (string) ( $request['search'] ?? '' ) );
 
+		$date_query = $this->build_date_query( $request );
+
 		$args = [
 			'numberposts' => $per_page,
 			'offset'      => ( $page - 1 ) * $per_page,
 			'post_status' => $status,
 			's'           => $search,
 		];
+		if ( ! empty( $date_query ) ) {
+			$args['date_query'] = $date_query;
+		}
 
 		$posts = (array) erp_hr_get_announcements( $args );
 
 		$count_args = [ 'post_status' => $status ];
 		if ( '' !== $search ) {
 			$count_args['s'] = $search;
+		}
+		if ( ! empty( $date_query ) ) {
+			$count_args['date_query'] = $date_query;
 		}
 		$total = (int) erp_hr_get_announcements_count( $count_args );
 
@@ -578,6 +586,47 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 			'sanitize_callback' => 'sanitize_key',
 		];
 
+		$params['start_date'] = [
+			'description'       => __( 'Only announcements published on or after this date (Y-m-d).', 'erp' ),
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		];
+
+		$params['end_date'] = [
+			'description'       => __( 'Only announcements published on or before this date (Y-m-d).', 'erp' ),
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		];
+
 		return $params;
+	}
+
+	/**
+	 * Build a WP `date_query` from the optional start_date / end_date params.
+	 * Inclusive on both ends (mirrors the legacy list's date range filter).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return array Empty when no dates supplied.
+	 */
+	private function build_date_query( $request ): array {
+		$start = sanitize_text_field( (string) ( $request['start_date'] ?? '' ) );
+		$end   = sanitize_text_field( (string) ( $request['end_date'] ?? '' ) );
+
+		if ( '' === $start && '' === $end ) {
+			return [];
+		}
+
+		$range = [ 'inclusive' => true ];
+		if ( '' !== $start ) {
+			$range['after'] = $start;
+		}
+		if ( '' !== $end ) {
+			$range['before'] = $end;
+		}
+
+		return [ $range ];
 	}
 }

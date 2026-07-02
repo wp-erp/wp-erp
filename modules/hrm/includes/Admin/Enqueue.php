@@ -253,6 +253,13 @@ final class Enqueue {
 			],
 			'capabilities'  => $capabilities,
 			'hrmVersion'    => defined( 'WPERP_HRM_VERSION' ) ? (string) WPERP_HRM_VERSION : '',
+			// Global HR settings surfaced to the React admin.
+			'settings'      => [
+				// `erp_hrm_hide_pay_rate` — blur pay rate on the employee profile
+				// (Settings.php "Hide Pay Rate"). Parity with the legacy
+				// tab-job.php compensation blur/reveal.
+				'hidePayRate' => 'yes' === get_option( 'erp_hrm_hide_pay_rate', 'no' ),
+			],
 			// Country / state lookups for the employee-form address selects
 			// (parity with the legacy new-employee.php Countries dropdowns).
 			'countries'     => self::build_countries(),

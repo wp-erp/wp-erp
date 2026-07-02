@@ -17,9 +17,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@wedevs/plugin-ui';
+import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useState } from 'react';
-import type { JSX } from 'react';
+import type { JSX, ReactNode } from 'react';
 
+import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
 
 import { TextareaField } from '../employee-create/fields';
@@ -57,6 +59,11 @@ export function LeaveRequestModerateDialog( {
 	// Legacy hard-rejects an empty reason on reject (functions-leave.php:1695).
 	const reasonMissing = isReject && reason.trim() === '';
 
+	// Pro-injected moderate extras (Advanced Leave multilevel: the approval chain).
+	const moderateExtras = request
+		? ( applyFilters( HOOKS.LEAVE_REQUEST_MODERATE_EXTRAS, [], { request } ) as ReactNode[] )
+		: [];
+
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onCancel() ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
@@ -77,6 +84,15 @@ export function LeaveRequestModerateDialog( {
 					</DialogDescription>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
+
+				{ moderateExtras.length > 0 ? (
+					<div className="flex flex-col gap-3">
+						{ moderateExtras.map( ( node, index ) => (
+							// eslint-disable-next-line react/no-array-index-key
+							<div key={ index }>{ node }</div>
+						) ) }
+					</div>
+				) : null }
 
 				<div>
 					<TextareaField

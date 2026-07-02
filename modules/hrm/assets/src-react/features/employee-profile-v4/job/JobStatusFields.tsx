@@ -20,9 +20,16 @@ import type { FormState } from './job-update-helpers';
 interface JobStatusFieldsProps {
 	readonly form: FormState;
 	readonly set:  ( key: keyof FormState ) => ( value: string ) => void;
+	/**
+	 * Edit-in-place mode: editing the current status row only changes
+	 * category / comment / date — it never re-runs the termination flow (which
+	 * writes the extra termination meta), so the termination sub-fields stay
+	 * hidden even when the status is "Terminated".
+	 */
+	readonly editing?: boolean;
 }
 
-export function JobStatusFields( { form, set }: JobStatusFieldsProps ): JSX.Element {
+export function JobStatusFields( { form, set, editing }: JobStatusFieldsProps ): JSX.Element {
 	return (
 		<>
 			<SelectField
@@ -34,7 +41,7 @@ export function JobStatusFields( { form, set }: JobStatusFieldsProps ): JSX.Elem
 				onChange={ set( 'category' ) }
 				placeholder={ __( '- Select -', 'erp' ) }
 			/>
-			{ form.category === 'terminated' ? (
+			{ ! editing && form.category === 'terminated' ? (
 				<>
 					<SelectField id="job_term_type" label={ __( 'Termination Type', 'erp' ) } required options={ TERMINATION_TYPE_OPTIONS } value={ form.termination_type } onChange={ set( 'termination_type' ) } placeholder={ __( '- Select -', 'erp' ) } />
 					<SelectField id="job_term_reason" label={ __( 'Termination Reason', 'erp' ) } required options={ TERMINATION_REASON_OPTIONS } value={ form.termination_reason } onChange={ set( 'termination_reason' ) } placeholder={ __( '- Select -', 'erp' ) } />

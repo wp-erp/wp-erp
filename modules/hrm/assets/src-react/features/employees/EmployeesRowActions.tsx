@@ -9,7 +9,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { ArchiveRestore, Eye, MoreVertical, Pencil, Trash2, UserCheck, UserX } from 'lucide-react';
+import { ArchiveRestore, Eye, LogIn, MoreVertical, Pencil, Trash2, UserCheck, UserX } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -24,6 +24,7 @@ interface EmployeesRowActionsProps {
 const ICON_MAP: Record< string, typeof Eye > = {
 	ArchiveRestore,
 	Eye,
+	LogIn,
 	Pencil,
 	Trash2,
 	UserCheck,

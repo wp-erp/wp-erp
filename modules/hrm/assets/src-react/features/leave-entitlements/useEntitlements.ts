@@ -19,7 +19,9 @@ import type {
 	Entitlement,
 	EntitlementAssignInput,
 	EntitlementAssignResult,
+	FinancialYearOption,
 	IdOption,
+	StringOption,
 } from './types';
 
 interface UseEntitlementsArgs {
@@ -42,6 +44,8 @@ export interface UseEntitlementsResult {
 	readonly bulkRemove:    ( ids: readonly number[] ) => Promise< void >;
 	readonly loadPolicies:  () => Promise< readonly IdOption[] >;
 	readonly loadEmployees: ( policyId: number ) => Promise< readonly IdOption[] >;
+	readonly loadFinancialYears: () => Promise< readonly FinancialYearOption[] >;
+	readonly loadEmployeeTypes:  () => Promise< readonly StringOption[] >;
 }
 
 export function useEntitlements( {
@@ -126,5 +130,23 @@ export function useEntitlements( {
 		return Array.isArray( res ) ? res : [];
 	}, [] );
 
-	return { rows, total, loading, error, reload, assign, remove, bulkRemove, loadPolicies, loadEmployees };
+	// Financial years for the year filter — sourced from `erp/v2/financial-years`
+	// (the same list the Settings editor drives). The entitlement `year` param
+	// filters by `f_year` id.
+	const loadFinancialYears = useCallback( async (): Promise< readonly FinancialYearOption[] > => {
+		const res = await request< Array< { id: number; fy_name: string; start_date: string; end_date: string } > >(
+			restPath( 'v2', '/financial-years' )
+		);
+		return Array.isArray( res )
+			? res.map( ( r ) => ( { id: Number( r.id ), label: String( r.fy_name ), start_date: String( r.start_date ), end_date: String( r.end_date ) } ) )
+			: [];
+	}, [] );
+
+	// Employee-type options for the list filter (narrows by policy.employee_type).
+	const loadEmployeeTypes = useCallback( async (): Promise< readonly StringOption[] > => {
+		const res = await request< StringOption[] >( restPath( 'v2', '/leave-entitlements/employee-types' ) );
+		return Array.isArray( res ) ? res : [];
+	}, [] );
+
+	return { rows, total, loading, error, reload, assign, remove, bulkRemove, loadPolicies, loadEmployees, loadFinancialYears, loadEmployeeTypes };
 }

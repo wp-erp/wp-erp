@@ -101,7 +101,7 @@ function FinancialYearsInner(): JSX.Element {
 					<>
 						<div className="space-y-3">
 							{ draft.map( ( row, index ) => (
-								<div key={ index } className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
+								<div key={ index } className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1.1fr_1fr_1fr_1.3fr_auto]">
 									<label className="flex flex-col gap-1.5">
 										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Name', 'erp' ) }</span> : null }
 										<Input
@@ -116,6 +116,7 @@ function FinancialYearsInner(): JSX.Element {
 										<DateField
 											value={ row.start_date }
 											onChange={ ( v ) => patch( index, 'start_date', v ) }
+											max={ row.end_date || undefined }
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
@@ -124,6 +125,16 @@ function FinancialYearsInner(): JSX.Element {
 										<DateField
 											value={ row.end_date }
 											onChange={ ( v ) => patch( index, 'end_date', v ) }
+											min={ row.start_date || undefined }
+											className="h-10 bg-background px-4 text-sm"
+										/>
+									</label>
+									<label className="flex flex-col gap-1.5">
+										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Description', 'erp' ) }</span> : null }
+										<Input
+											value={ row.description }
+											onChange={ ( e ) => patch( index, 'description', e.target.value ) }
+											placeholder={ __( 'Optional', 'erp' ) }
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>

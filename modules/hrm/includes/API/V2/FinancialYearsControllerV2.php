@@ -12,8 +12,9 @@
  *
  * Both delegate to the unchanged helpers `erp_get_hr_financial_years()` and
  * `erp_settings_save_leave_years()` — so the same validation (name required,
- * end > start, unique name) and the same truncate-then-insert behaviour the
- * legacy UI relied on keep firing. `erp/v1` stays untouched.
+ * end > start, unique name) keeps firing. Save is an ID-stable upsert: existing
+ * years are updated in place (ids never move, so `f_year` FK links survive) and
+ * only payload-omitted, unreferenced years are deleted. `erp/v1` stays untouched.
  */
 
 namespace WeDevs\ERP\HRM\API\V2;
@@ -92,8 +93,8 @@ class FinancialYearsControllerV2 extends RestControllerV2 {
 	/**
 	 * POST /erp/v2/financial-years
 	 *
-	 * Full-set save (truncate + reinsert), mirroring the legacy "Save" button —
-	 * deleting a year = omitting its row from the payload.
+	 * Full-set save via ID-stable upsert — deleting a year = omitting its row
+	 * from the payload (skipped when the year is still FK-referenced).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
@@ -109,6 +110,7 @@ class FinancialYearsControllerV2 extends RestControllerV2 {
 		$clean = [];
 		foreach ( $years as $year ) {
 			$clean[] = [
+				'id'          => isset( $year['id'] ) ? absint( $year['id'] ) : 0,
 				'fy_name'     => sanitize_text_field( (string) ( $year['fy_name'] ?? '' ) ),
 				'start_date'  => sanitize_text_field( (string) ( $year['start_date'] ?? '' ) ),
 				'end_date'    => sanitize_text_field( (string) ( $year['end_date'] ?? '' ) ),

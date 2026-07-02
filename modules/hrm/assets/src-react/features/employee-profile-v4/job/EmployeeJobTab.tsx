@@ -21,8 +21,16 @@ import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeTerminateInput } from '@/stores/employees';
 
 import { OrgDeleteDialog } from '../../org/OrgDeleteDialog';
+import { PayRateReveal } from '../PayRateReveal';
 import { JobUpdateDialog } from './JobUpdateDialog';
 import type { JobAction } from './JobUpdateDialog';
+import {
+	compensationInitial,
+	jobInitial,
+	statusInitial,
+	typeInitial,
+} from './job-update-helpers';
+import type { FormState } from './job-update-helpers';
 import { useEmployeeJobHistories } from './useEmployeeJobHistories';
 
 interface JobDispatch {
@@ -85,19 +93,35 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 	);
 }
 
-/** Trailing trash cell for a deletable history row. */
-function DeleteCell( { onDelete }: { readonly onDelete: () => void } ): JSX.Element {
+interface RowActionCellProps {
+	readonly isActive: boolean;
+	readonly onEdit:   () => void;
+	readonly onDelete: () => void;
+}
+
+/**
+ * Trailing action cell for a history row. The active record (index 0) is
+ * edited in place — matching legacy, which only edits the current history and
+ * blocks deleting it; older rows (index > 0) can only be deleted.
+ */
+function RowActionCell( { isActive, onEdit, onDelete }: RowActionCellProps ): JSX.Element {
 	return (
 		<td className="px-4 align-middle text-right">
-			<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-				<Trash2 size={ 14 } aria-hidden="true" />
-			</Button>
+			{ isActive ? (
+				<Button variant="ghost" size="icon" className="size-8" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
+					<Pencil size={ 14 } aria-hidden="true" />
+				</Button>
+			) : (
+				<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
+					<Trash2 size={ 14 } aria-hidden="true" />
+				</Button>
+			) }
 		</td>
 	);
 }
 
 export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.Element {
-	const { data, loading, error, createHistory, deleteHistory, refetch } = useEmployeeJobHistories( userId );
+	const { data, loading, error, createHistory, updateHistory, deleteHistory, refetch } = useEmployeeJobHistories( userId );
 	const canManage = useCan( 'erp_manage_jobinfo' );
 	const { terminateEmployee } = useDispatch( employeesStoreName ) as unknown as JobDispatch;
 
@@ -105,6 +129,8 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 	const [ busy, setBusy ]       = useState( false );
 	const [ formError, setError ] = useState< string | null >( null );
 	const [ pendingDelete, setPendingDelete ] = useState< number | null >( null );
+	// Set while editing the active row in place (PUT); null in create mode (POST).
+	const [ editState, setEditState ] = useState< { editId: number; initial: Partial< FormState > } | null >( null );
 
 	async function handleDelete(): Promise< void > {
 		if ( pendingDelete === null ) {
@@ -122,8 +148,20 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 		}
 	}
 
+	function closeDialog(): void {
+		setAction( null );
+		setEditState( null );
+	}
+
 	function openAction( next: JobAction ): void {
 		setError( null );
+		setEditState( null );
+		setAction( next );
+	}
+
+	function openEdit( next: JobAction, editId: number, initial: Partial< FormState > ): void {
+		setError( null );
+		setEditState( { editId, initial } );
 		setAction( next );
 	}
 
@@ -131,7 +169,12 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 		setBusy( true );
 		setError( null );
 		try {
-			if ( payload.terminate === true ) {
+			if ( editState ) {
+				// Edit the active history row in place (PUT). The dialog never emits a
+				// `terminate` payload in edit mode, so this is always a plain update.
+				await updateHistory( editState.editId, payload );
+				toast.success( __( 'History updated.', 'erp' ) );
+			} else if ( payload.terminate === true ) {
 				// Status → Terminated routes to the terminate endpoint (legacy parity),
 				// not a plain status-history row.
 				await terminateEmployee( userId, {
@@ -146,7 +189,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				await createHistory( payload );
 				toast.success( __( 'History updated.', 'erp' ) );
 			}
-			setAction( null );
+			closeDialog();
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Could not save the history.', 'erp' ) );
 		} finally {
@@ -185,12 +228,18 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				canDelete={ canManage }
 				headerAction={ actionButton( 'status', __( 'Update Status', 'erp' ) ) }
 			>
-				{ data.status.map( ( row ) => (
+				{ data.status.map( ( row, index ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.status ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
-						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
+						{ canManage ? (
+							<RowActionCell
+								isActive={ index === 0 }
+								onEdit={ () => openEdit( 'status', row.id, statusInitial( row ) ) }
+								onDelete={ () => setPendingDelete( row.id ) }
+							/>
+						) : null }
 					</tr>
 				) ) }
 			</HistoryCard>
@@ -203,12 +252,18 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				canDelete={ canManage }
 				headerAction={ actionButton( 'type', __( 'Update Type', 'erp' ) ) }
 			>
-				{ data.employment.map( ( row ) => (
+				{ data.employment.map( ( row, index ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.type ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
-						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
+						{ canManage ? (
+							<RowActionCell
+								isActive={ index === 0 }
+								onEdit={ () => openEdit( 'type', row.id, typeInitial( row ) ) }
+								onDelete={ () => setPendingDelete( row.id ) }
+							/>
+						) : null }
 					</tr>
 				) ) }
 			</HistoryCard>
@@ -221,14 +276,20 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				canDelete={ canManage }
 				headerAction={ actionButton( 'compensation', __( 'Update Compensation', 'erp' ) ) }
 			>
-				{ data.compensation.map( ( row ) => (
+				{ data.compensation.map( ( row, index ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_rate ) }</td>
+						<td className="px-2 align-middle text-sm text-foreground"><PayRateReveal value={ row.pay_rate } /></td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_type ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reason ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
-						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
+						{ canManage ? (
+							<RowActionCell
+								isActive={ index === 0 }
+								onEdit={ () => openEdit( 'compensation', row.id, compensationInitial( row ) ) }
+								onDelete={ () => setPendingDelete( row.id ) }
+							/>
+						) : null }
 					</tr>
 				) ) }
 			</HistoryCard>
@@ -241,14 +302,20 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				canDelete={ canManage }
 				headerAction={ actionButton( 'job', __( 'Update Job Information', 'erp' ) ) }
 			>
-				{ data.job.map( ( row ) => (
+				{ data.job.map( ( row, index ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.department ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.designation ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.location ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reporting_to ) }</td>
-						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
+						{ canManage ? (
+							<RowActionCell
+								isActive={ index === 0 }
+								onEdit={ () => openEdit( 'job', row.id, jobInitial( row ) ) }
+								onDelete={ () => setPendingDelete( row.id ) }
+							/>
+						) : null }
 					</tr>
 				) ) }
 			</HistoryCard>
@@ -257,7 +324,9 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				action={ action }
 				busy={ busy }
 				error={ formError }
-				onClose={ () => setAction( null ) }
+				editId={ editState?.editId }
+				initial={ editState?.initial }
+				onClose={ closeDialog }
 				onSubmit={ ( payload ) => void handleSubmit( payload ) }
 			/>
 

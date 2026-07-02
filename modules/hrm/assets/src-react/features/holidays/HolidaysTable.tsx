@@ -5,7 +5,7 @@
  */
 
 import { Button, Checkbox, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronsUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __, sprintf } from '@/shared/i18n';
@@ -13,11 +13,16 @@ import { __, sprintf } from '@/shared/i18n';
 import { fmt } from './holidays-format';
 import type { Holiday } from './types';
 
+type SortColumn = 'title' | 'start';
+
 interface HolidaysTableProps {
 	readonly rows:        readonly Holiday[];
 	readonly canManage:   boolean;
 	readonly selectedIds: readonly number[];
 	readonly allSelected: boolean;
+	readonly orderby:     SortColumn;
+	readonly order:       'asc' | 'desc';
+	readonly onSort:      ( column: SortColumn ) => void;
 	readonly onToggleAll: () => void;
 	readonly onToggleRow: ( id: number ) => void;
 	readonly onEdit:      ( holiday: Holiday ) => void;
@@ -29,11 +34,34 @@ export function HolidaysTable( {
 	canManage,
 	selectedIds,
 	allSelected,
+	orderby,
+	order,
+	onSort,
 	onToggleAll,
 	onToggleRow,
 	onEdit,
 	onDelete,
 }: HolidaysTableProps ): JSX.Element {
+	// Raw sort-header button (DS Button is not used for table sort headers).
+	function SortButton( { column, label }: { column: SortColumn; label: string } ): JSX.Element {
+		const active = orderby === column;
+		const Icon   = ! active ? ChevronsUpDown : order === 'asc' ? ChevronUp : ChevronDown;
+		return (
+			<button
+				type="button"
+				onClick={ () => onSort( column ) }
+				aria-label={ sprintf( __( 'Sort by %s', 'erp' ), label ) }
+				className={ [
+					'inline-flex items-center gap-1 uppercase transition-colors',
+					active ? 'text-foreground' : 'hover:text-foreground',
+				].join( ' ' ) }
+			>
+				{ label }
+				<Icon size={ 13 } strokeWidth={ 2 } aria-hidden="true" className={ active ? 'text-primary' : 'opacity-60' } />
+			</button>
+		);
+	}
+
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-[40rem] text-left">
@@ -48,8 +76,8 @@ export function HolidaysTable( {
 							/>
 						</th>
 					) : null }
-					<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Date', 'erp' ) }</th>
+					<th scope="col" className="px-4"><SortButton column="title" label={ __( 'Title', 'erp' ) } /></th>
+					<th scope="col" className="px-2"><SortButton column="start" label={ __( 'Date', 'erp' ) } /></th>
 					<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">

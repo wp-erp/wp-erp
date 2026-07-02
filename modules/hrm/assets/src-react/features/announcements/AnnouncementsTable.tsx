@@ -6,6 +6,7 @@
 
 import {
 	Button,
+	Checkbox,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -21,19 +22,28 @@ import { fmt } from './announcements-format';
 import type { Announcement } from './types';
 
 interface AnnouncementsTableProps {
-	readonly rows:      ReadonlyArray< Announcement >;
-	readonly canManage: boolean;
-	readonly onEdit:    ( row: Announcement ) => void;
-	readonly onRestore: ( row: Announcement ) => void;
-	readonly onDelete:  ( row: Announcement ) => void;
+	readonly rows:        ReadonlyArray< Announcement >;
+	readonly canManage:   boolean;
+	readonly selected:    ReadonlySet< number >;
+	readonly allChecked:  boolean;
+	readonly onToggleAll: () => void;
+	readonly onToggleOne: ( id: number ) => void;
+	readonly onEdit:      ( row: Announcement ) => void;
+	readonly onRestore:   ( row: Announcement ) => void;
+	readonly onDelete:    ( row: Announcement ) => void;
 }
 
-export function AnnouncementsTable( { rows, canManage, onEdit, onRestore, onDelete }: AnnouncementsTableProps ): JSX.Element {
+export function AnnouncementsTable( { rows, canManage, selected, allChecked, onToggleAll, onToggleOne, onEdit, onRestore, onDelete }: AnnouncementsTableProps ): JSX.Element {
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-[40rem] text-left">
 			<thead className="border-b border-border bg-card">
 				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+					{ canManage ? (
+						<th scope="col" className="w-10 px-4">
+							<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
+						</th>
+					) : null }
 					<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Recipients', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Author', 'erp' ) }</th>
@@ -46,6 +56,11 @@ export function AnnouncementsTable( { rows, canManage, onEdit, onRestore, onDele
 			<tbody>
 				{ rows.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+						{ canManage ? (
+							<td className="px-4 align-middle">
+								<Checkbox checked={ selected.has( row.id ) } onCheckedChange={ () => onToggleOne( row.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), row.title ) } />
+							</td>
+						) : null }
 						<td className="max-w-md px-4 align-middle text-sm">
 							<div className="truncate font-medium text-foreground">{ row.title || __( '(no title)', 'erp' ) }</div>
 							{ row.excerpt ? (

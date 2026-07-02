@@ -45,6 +45,8 @@ import { JobStatusFields } from './JobStatusFields';
 import { JobTypeFields } from './JobTypeFields';
 import {
 	emptyForm,
+	EDIT_TITLES,
+	resolveLabelToValue,
 	TITLES,
 	toOptions,
 } from './job-update-helpers';
@@ -59,6 +61,10 @@ interface JobUpdateDialogProps {
 	readonly error:    string | null;
 	readonly onClose:  () => void;
 	readonly onSubmit: ( payload: Record< string, unknown > ) => void;
+	/** Edit-in-place: the id of the history row being edited (PUT). Omit for create (POST). */
+	readonly editId?:  number | undefined;
+	/** Edit-in-place: form fields to seed when the dialog opens in edit mode. */
+	readonly initial?: Partial< FormState > | undefined;
 }
 
 export function JobUpdateDialog( {
@@ -67,20 +73,26 @@ export function JobUpdateDialog( {
 	error,
 	onClose,
 	onSubmit,
+	editId,
+	initial,
 }: JobUpdateDialogProps ): JSX.Element {
 	const [ form, setForm ] = useState< FormState >( emptyForm );
+	const isEditing = editId != null;
 
 	const [ departments, setDepartments ]   = useState< Option[] >( [] );
 	const [ designations, setDesignations ] = useState< Option[] >( [] );
 	const [ locations, setLocations ]       = useState< Option[] >( [] );
 	const reporting = useEmployeeSearch( action === 'job', undefined, form.reporting_to );
 
-	// Reset the form each time a dialog opens.
+	// Reset the form each time a dialog opens — seeded with `initial` in edit mode.
 	useEffect( () => {
 		if ( action ) {
-			setForm( emptyForm() );
+			setForm( { ...emptyForm(), ...( initial ?? {} ) } );
 		}
-	}, [ action ] );
+		// Re-run only on open (action) / target-row (editId) change; `initial` is a
+		// fresh object each render, so keying on it would reset the form mid-edit.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ action, editId ] );
 
 	// Job-info needs the org lookups; load them lazily when that dialog opens.
 	useEffect( () => {
@@ -95,6 +107,21 @@ export function JobUpdateDialog( {
 			cancelled = true;
 		};
 	}, [ action ] );
+
+	// Edit mode seeds job-info dept/designation/location as labels (that's all the
+	// read model returns); once the lookups load, resolve those labels to the ids
+	// the selects expect. Idempotent — a value already an id is left untouched.
+	useEffect( () => {
+		if ( action !== 'job' || ! isEditing ) {
+			return;
+		}
+		setForm( ( prev ) => ( {
+			...prev,
+			department:  resolveLabelToValue( departments, prev.department ),
+			designation: resolveLabelToValue( designations, prev.designation ),
+			location:    resolveLabelToValue( locations, prev.location ),
+		} ) );
+	}, [ action, isEditing, departments, designations, locations ] );
 
 	const set = ( key: keyof FormState ) => ( value: string ): void =>
 		setForm( ( prev ) => ( { ...prev, [ key ]: value } ) );
@@ -141,8 +168,9 @@ export function JobUpdateDialog( {
 			case 'status':
 				// Selecting "Terminated" mirrors the legacy flow: it is a termination,
 				// not a plain status-history row, so route it to the terminate endpoint
-				// with the four termination fields.
-				if ( form.category === 'terminated' ) {
+				// with the four termination fields. Edit-in-place never re-runs the
+				// termination flow — it just edits the current row's category/comment/date.
+				if ( ! isEditing && form.category === 'terminated' ) {
 					return {
 						module:              'employee',
 						terminate:           true,
@@ -176,7 +204,7 @@ export function JobUpdateDialog( {
 			default:
 				return {};
 		}
-	}, [ action, form ] );
+	}, [ action, form, isEditing ] );
 
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
@@ -190,7 +218,7 @@ export function JobUpdateDialog( {
 				toast.error( __( 'Please fill all required fields.', 'erp' ) );
 				return;
 			}
-			if ( form.category === 'terminated' && ( ! form.termination_type || ! form.termination_reason || ! form.eligible_for_rehire ) ) {
+			if ( ! isEditing && form.category === 'terminated' && ( ! form.termination_type || ! form.termination_reason || ! form.eligible_for_rehire ) ) {
 				toast.error( __( 'Please fill all required fields.', 'erp' ) );
 				return;
 			}
@@ -214,7 +242,7 @@ export function JobUpdateDialog( {
 		<Dialog open={ action !== null } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
-					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ action ? TITLES[ action ] : '' }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ action ? ( isEditing ? EDIT_TITLES[ action ] : TITLES[ action ] ) : '' }</DialogTitle>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
@@ -235,7 +263,7 @@ export function JobUpdateDialog( {
 					/>
 
 					{ action === 'status' ? (
-						<JobStatusFields form={ form } set={ set } />
+						<JobStatusFields form={ form } set={ set } editing={ isEditing } />
 					) : null }
 
 					{ action === 'type' ? (

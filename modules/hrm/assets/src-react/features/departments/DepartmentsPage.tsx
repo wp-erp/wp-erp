@@ -82,16 +82,45 @@ function DepartmentsInner(): JSX.Element {
 		} );
 	}, [ rows, search, parentFilter ] );
 
-	const sorted = useMemo( () => {
-		const arr = [ ...filtered ];
-		arr.sort( ( a, b ) => {
-			const cmp = sort.key === 'total_employees'
+	// On the default Name sort we render a hierarchical, indented tree (parents
+	// then their children); every other sort stays a flat list. `depthMap` drives
+	// the name indentation in the table.
+	const { sorted, depthMap } = useMemo( () => {
+		const cmp = ( a: Department, b: Department ): number => {
+			const c = sort.key === 'total_employees'
 				? ( a.total_employees ?? 0 ) - ( b.total_employees ?? 0 )
 				: String( ( a as unknown as Record< string, unknown > )[ sort.key ] ?? '' )
 					.localeCompare( String( ( b as unknown as Record< string, unknown > )[ sort.key ] ?? '' ) );
-			return sort.dir === 'asc' ? cmp : -cmp;
+			return sort.dir === 'asc' ? c : -c;
+		};
+
+		if ( sort.key !== 'title' ) {
+			return { sorted: [ ...filtered ].sort( cmp ), depthMap: {} as Record< number, number > };
+		}
+
+		// Tree order: DFS from roots (no parent, or a parent filtered out of view).
+		const present  = new Set( filtered.map( ( d ) => d.id ) );
+		const children = new Map< number | null, Department[] >();
+		filtered.forEach( ( d ) => {
+			const key = d.parent && present.has( d.parent ) ? d.parent : null;
+			const list = children.get( key ) ?? [];
+			list.push( d );
+			children.set( key, list );
 		} );
-		return arr;
+		children.forEach( ( list ) => list.sort( cmp ) );
+
+		const ordered: Department[] = [];
+		const depth: Record< number, number > = {};
+		const walk = ( parentId: number | null, level: number ): void => {
+			( children.get( parentId ) ?? [] ).forEach( ( node ) => {
+				depth[ node.id ] = level;
+				ordered.push( node );
+				walk( node.id, level + 1 );
+			} );
+		};
+		walk( null, 0 );
+
+		return { sorted: ordered, depthMap: depth };
 	}, [ filtered, sort ] );
 
 	function toggleSort( key: SortKey ): void {
@@ -255,6 +284,7 @@ function DepartmentsInner(): JSX.Element {
 					<DepartmentsTable
 						rows={ pageRows }
 						canManage={ canManage }
+						depthOf={ ( id ) => depthMap[ id ] ?? 0 }
 						selected={ selected }
 						allChecked={ allChecked }
 						sort={ sort }

@@ -166,7 +166,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 		<>
 			<SectionCard
 				title={ __( 'Work Experience', 'erp' ) }
-				columns={ [ __( 'Company', 'erp' ), __( 'Job Title', 'erp' ), __( 'From', 'erp' ), __( 'To', 'erp' ) ] }
+				columns={ [ __( 'Company', 'erp' ), __( 'Job Title', 'erp' ), __( 'From', 'erp' ), __( 'To', 'erp' ), __( 'Job Description', 'erp' ) ] }
 				empty={ __( 'No work experience added.', 'erp' ) }
 				rowCount={ experiences.length }
 				onAdd={ () => openAdd( 'experiences' ) }
@@ -177,6 +177,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.job_title ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.from ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.to ) }</td>
+						<td className="max-w-xs px-2 align-middle text-sm text-muted-foreground"><span className="line-clamp-2">{ cell( row.description ) }</span></td>
 						<RowActions onEdit={ () => openEdit( 'experiences', row as unknown as Record< string, unknown > ) } onDelete={ () => setPending( { section: 'experiences', id: row.id } ) } />
 					</tr>
 				) ) }
@@ -184,7 +185,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 
 			<SectionCard
 				title={ __( 'Education', 'erp' ) }
-				columns={ [ __( 'School', 'erp' ), __( 'Degree', 'erp' ), __( 'Field', 'erp' ), __( 'Result', 'erp' ), __( 'Year', 'erp' ) ] }
+				columns={ [ __( 'School', 'erp' ), __( 'Degree', 'erp' ), __( 'Field', 'erp' ), __( 'Result', 'erp' ), __( 'Year', 'erp' ), __( 'Notes', 'erp' ), __( 'Interests', 'erp' ), __( 'Expiration', 'erp' ) ] }
 				empty={ __( 'No education added.', 'erp' ) }
 				rowCount={ educations.length }
 				onAdd={ () => openAdd( 'educations' ) }
@@ -196,6 +197,9 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.field ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ resultLabel( row.result ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.finished ) }</td>
+						<td className="max-w-xs px-2 align-middle text-sm text-muted-foreground"><span className="line-clamp-2">{ cell( row.notes ) }</span></td>
+						<td className="max-w-xs px-2 align-middle text-sm text-muted-foreground"><span className="line-clamp-2">{ cell( row.interest ) }</span></td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.expiration_date ) }</td>
 						<RowActions onEdit={ () => openEdit( 'educations', row as unknown as Record< string, unknown > ) } onDelete={ () => setPending( { section: 'educations', id: row.id } ) } />
 					</tr>
 				) ) }

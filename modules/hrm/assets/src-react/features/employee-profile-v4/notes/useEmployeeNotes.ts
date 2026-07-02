@@ -28,29 +28,39 @@ export interface UseEmployeeNotes {
 	readonly total:      number;
 	readonly loading:    boolean;
 	readonly error:      string | null;
+	readonly hasMore:    boolean;
+	readonly loadMore:   () => void;
 	readonly addNote:    ( comment: string ) => Promise< void >;
 	readonly removeNote: ( id: number ) => Promise< void >;
 	readonly reload:     () => void;
 }
 
-// Notes are low-cardinality per employee; fetch the whole set once.
-const PER_PAGE = 100;
+// Page size; the list grows by this on each "Load more" so notes past the first
+// page (legacy fetched ≤100 and lost the rest) stay reachable.
+const PAGE_SIZE = 20;
 
 export function useEmployeeNotes( userId: number ): UseEmployeeNotes {
 	const [ notes, setNotes ]     = useState< readonly EmployeeNote[] >( [] );
 	const [ total, setTotal ]     = useState( 0 );
+	const [ limit, setLimit ]     = useState( PAGE_SIZE );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ]     = useState< string | null >( null );
 	const [ nonce, setNonce ]     = useState( 0 );
 
-	const reload = useCallback( () => setNonce( ( n ) => n + 1 ), [] );
+	const reload   = useCallback( () => { setLimit( PAGE_SIZE ); setNonce( ( n ) => n + 1 ); }, [] );
+	const loadMore = useCallback( () => setLimit( ( l ) => l + PAGE_SIZE ), [] );
+
+	// Reset the window when switching employees.
+	useEffect( () => {
+		setLimit( PAGE_SIZE );
+	}, [ userId ] );
 
 	useEffect( () => {
 		let cancelled = false;
 		setLoading( true );
 		setError( null );
 
-		const path = restPath( 'v2', `/employees/${ userId }/notes`, { per_page: PER_PAGE } );
+		const path = restPath( 'v2', `/employees/${ userId }/notes`, { per_page: limit } );
 		void requestWithHeaders< EmployeeNote[] >( path )
 			.then( ( { body, headers } ) => {
 				if ( cancelled ) {
@@ -75,7 +85,7 @@ export function useEmployeeNotes( userId: number ): UseEmployeeNotes {
 		return () => {
 			cancelled = true;
 		};
-	}, [ userId, nonce ] );
+	}, [ userId, nonce, limit ] );
 
 	const addNote = useCallback(
 		async ( comment: string ): Promise< void > => {
@@ -95,5 +105,7 @@ export function useEmployeeNotes( userId: number ): UseEmployeeNotes {
 		[ userId, reload ]
 	);
 
-	return { notes, total, loading, error, addNote, removeNote, reload };
+	const hasMore = notes.length < total;
+
+	return { notes, total, loading, error, hasMore, loadMore, addNote, removeNote, reload };
 }

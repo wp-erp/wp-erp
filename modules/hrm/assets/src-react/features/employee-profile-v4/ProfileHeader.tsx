@@ -5,7 +5,7 @@
  */
 
 import { Avatar, AvatarFallback, AvatarImage, Badge, Button } from '@wedevs/plugin-ui';
-import { Activity, Building2, IdCard, Pencil, Printer, Tag, UserX } from 'lucide-react';
+import { Activity, Building2, IdCard, Pencil, Phone, Printer, Smartphone, Tag, UserCheck, UserX } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -28,16 +28,22 @@ interface ProfileHeaderProps {
 	readonly onTerminate?:   () => void;
 	/** Whether the current user may terminate this employee (manager, active, not self). */
 	readonly canTerminate?:  boolean;
+	/** Reverse a termination. Rendered only when both this and `canReactivate` are set. */
+	readonly onReactivate?:  () => void;
+	/** Whether the current user may reactivate this (terminated) employee. */
+	readonly canReactivate?: boolean;
 }
 
-export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange, extraActions, onPrint, onTerminate, canTerminate }: ProfileHeaderProps ): JSX.Element {
+export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange, extraActions, onPrint, onTerminate, canTerminate, onReactivate, canReactivate }: ProfileHeaderProps ): JSX.Element {
 	const fullName  = str( record, 'full_name' );
 	const avatarUrl = str( record, 'avatar_url' );
 	const status    = str( record, 'status' );
 	const role      = [ str( record, 'designation_name' ), str( record, 'department_name' ) ]
 		.filter( ( s ) => s.trim() !== '' )
 		.join( ' · ' );
-	const email = str( record, 'email' );
+	const email  = str( record, 'email' );
+	const mobile = str( record, 'mobile' );
+	const phone  = str( record, 'phone' );
 
 	return (
 		<section className="rounded-[10px] border border-border bg-card p-6 shadow-sm">
@@ -74,7 +80,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 					</div>
 				</div>
 
-				{ canEdit || extraActions || onPrint || ( onTerminate && canTerminate ) ? (
+				{ canEdit || extraActions || onPrint || ( onTerminate && canTerminate ) || ( onReactivate && canReactivate ) ? (
 					<div className="flex flex-wrap items-center gap-2">
 						{ extraActions }
 						{ canEdit ? (
@@ -86,6 +92,17 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 							>
 								<Pencil size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
 								{ __( 'Edit', 'erp' ) }
+							</Button>
+						) : null }
+						{ onReactivate && canReactivate ? (
+							<Button
+								variant="outline"
+								size="sm"
+								className="h-9 gap-1.5 px-4"
+								onClick={ onReactivate }
+							>
+								<UserCheck size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+								{ __( 'Reactivate', 'erp' ) }
 							</Button>
 						) : null }
 						{ onTerminate && canTerminate ? (
@@ -127,6 +144,12 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 				) : null }
 				{ str( record, 'employee_id' ) ? (
 					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><IdCard size={ 14 } aria-hidden="true" />{ __( 'Employee ID:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'employee_id' ) }</span></span>
+				) : null }
+				{ mobile ? (
+					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Smartphone size={ 14 } aria-hidden="true" />{ __( 'Mobile:', 'erp' ) } <a href={ `tel:${ mobile }` } className="font-medium text-foreground hover:text-primary hover:underline">{ mobile }</a></span>
+				) : null }
+				{ phone ? (
+					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Phone size={ 14 } aria-hidden="true" />{ __( 'Phone:', 'erp' ) } <a href={ `tel:${ phone }` } className="font-medium text-foreground hover:text-primary hover:underline">{ phone }</a></span>
 				) : null }
 			</div>
 		</section>

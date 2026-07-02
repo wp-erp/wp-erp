@@ -41,6 +41,11 @@ interface UseLeaveRequestsArgs {
 	readonly designationId: number;
 	readonly type:          string;
 	readonly search:        string;
+	/** ISO `YYYY-MM-DD`; the range applies only when BOTH bounds are set. */
+	readonly startDate:     string;
+	readonly endDate:       string;
+	readonly orderby:       string;
+	readonly order:         'asc' | 'desc';
 	readonly page:          number;
 	readonly perPage:       number;
 }
@@ -67,6 +72,10 @@ export function useLeaveRequests( {
 	designationId,
 	type,
 	search,
+	startDate,
+	endDate,
+	orderby,
+	order,
 	page,
 	perPage,
 }: UseLeaveRequestsArgs ): UseLeaveRequestsResult {
@@ -89,6 +98,11 @@ export function useLeaveRequests( {
 					designation_id: designationId || '',
 					type:           type || '',
 					search,
+					// The range only takes effect server-side when BOTH bounds are present.
+					start_date:     startDate && endDate ? startDate : '',
+					end_date:       startDate && endDate ? endDate : '',
+					orderby,
+					order,
 					page,
 					per_page:       perPage,
 				} )
@@ -116,7 +130,7 @@ export function useLeaveRequests( {
 		} finally {
 			setLoading( false );
 		}
-	}, [ status, leaveId, year, departmentId, designationId, type, search, page, perPage ] );
+	}, [ status, leaveId, year, departmentId, designationId, type, search, startDate, endDate, orderby, order, page, perPage ] );
 
 	useEffect( () => {
 		void reload();

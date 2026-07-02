@@ -170,6 +170,12 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 		$page     = max( 1, (int) ( $request['page'] ?? 1 ) );
 		$per_page = max( 1, min( 100, (int) ( $request['per_page'] ?? 20 ) ) );
 
+		// Column sort (F18): whitelist against the same keys the model maps. Any
+		// other value falls through to `created_at` in the model layer.
+		$allowed_orderby = [ 'created_at', 'start_date', 'end_date', 'name', 'days', 'policy', 'last_status', 'available' ];
+		$orderby         = sanitize_key( (string) ( $request['orderby'] ?? 'created_at' ) );
+		$orderby         = \in_array( $orderby, $allowed_orderby, true ) ? $orderby : 'created_at';
+
 		$args = [
 			'number'        => $per_page,
 			'offset'        => ( $page - 1 ) * $per_page,
@@ -181,7 +187,11 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 			'designation_id'=> (int) ( $request['designation_id'] ?? 0 ),
 			'type'          => sanitize_text_field( (string) ( $request['type'] ?? '' ) ),
 			's'             => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
-			'orderby'       => 'created_at',
+			// Date-range filter (F7): the model only applies the range when BOTH
+			// bounds are present, so pass them through as-is (empty string = off).
+			'start_date'    => sanitize_text_field( (string) ( $request['start_date'] ?? '' ) ),
+			'end_date'      => sanitize_text_field( (string) ( $request['end_date'] ?? '' ) ),
+			'orderby'       => $orderby,
 			'order'         => strtoupper( (string) ( $request['order'] ?? 'DESC' ) ) === 'ASC' ? 'ASC' : 'DESC',
 		];
 
@@ -445,9 +455,14 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 
 		$user_id = $this->cast_int_or_null( $row->user_id ?? null );
 		$avatar  = $user_id ? ( ( new \WeDevs\ERP\HRM\Employee( $user_id ) )->get_avatar_url( 40 ) ?: null ) : null;
+		$id      = (int) ( $row->id ?? 0 );
+
+		// Approver / rejecter meta (F8) — latest row from the approval-status log,
+		// exactly as the legacy list-table `approved_by` column resolves it.
+		$approval = $this->approval_meta( $id );
 
 		return [
-			'id'           => (int) ( $row->id ?? 0 ),
+			'id'           => $id,
 			'user_id'      => $user_id,
 			'name'         => (string) ( $row->name ?? $row->display_name ?? '' ),
 			'avatar'       => $avatar,
@@ -457,6 +472,9 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 			'end_date'     => $this->ts_to_iso( $row->end_date ?? null ),
 			'days'         => $this->cast_float_or_null( $row->days ?? null ) ?? 0,
 			'available'    => $this->cast_float_or_null( $row->available ?? null ) ?? 0,
+			// Extra (over-drawn) leave days (F18) — drives the red "Extra Leave"
+			// indicator; mirrors the legacy `available` column's `extra_leaves`.
+			'extra_leaves' => $this->cast_float_or_null( $row->extra_leaves ?? null ) ?? 0,
 			'spent'        => $this->cast_float_or_null( $row->spent ?? null ) ?? 0,
 			'status'       => (int) ( $row->status ?? 0 ),
 			'status_label' => $this->status_label( (int) ( $row->status ?? 0 ) ),
@@ -465,6 +483,99 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 			'color'        => (string) ( $row->color ?? '' ),
 			'f_year'       => $this->cast_int_or_null( $row->f_year ?? null ),
 			'created_at'   => $this->cast_date_iso( $row->created_at ?? null ),
+			// F8 — moderator name + when + note (empty when still pending).
+			'approved_by'  => $approval['name'],
+			'approved_at'  => $approval['date'],
+			'approver_note'=> $approval['message'],
+			// F3 — uploaded supporting documents as viewable/downloadable links.
+			'attachments'  => $this->request_attachments( (int) ( $user_id ?? 0 ), $id ),
+		];
+	}
+
+	/**
+	 * Uploaded leave attachments for a request (F3).
+	 *
+	 * Legacy list-table `reason` column stores each uploaded file's attachment ID
+	 * under user-meta `leave_document_{request_id}` (one meta row per file) and
+	 * renders `wp_get_attachment_url()` links. We surface the same, resolved to
+	 * `{id,url,filename}` so React can render view/download links.
+	 *
+	 * @param int $user_id    Requesting employee's WP user ID.
+	 * @param int $request_id Leave request ID.
+	 *
+	 * @return array<int,array{id:int,url:string,filename:string}>
+	 */
+	private function request_attachments( int $user_id, int $request_id ): array {
+		if ( ! $user_id || ! $request_id ) {
+			return [];
+		}
+
+		$attachment_ids = get_user_meta( $user_id, 'leave_document_' . $request_id );
+		$files          = [];
+
+		foreach ( (array) $attachment_ids as $attachment_id ) {
+			$attachment_id = (int) $attachment_id;
+			$url           = $attachment_id ? wp_get_attachment_url( $attachment_id ) : false;
+
+			if ( ! $url ) {
+				continue;
+			}
+
+			$files[] = [
+				'id'       => $attachment_id,
+				'url'      => $url,
+				'filename' => wp_basename( $url ),
+			];
+		}
+
+		return $files;
+	}
+
+	/**
+	 * Latest approve/reject entry for a request (F8).
+	 *
+	 * Mirrors the legacy `approved_by` column: newest row from
+	 * `erp_hr_leave_approval_status`, with the moderator's display name and the
+	 * (unix-timestamp) `created_at` resolved to an ISO date.
+	 *
+	 * @param int $request_id Leave request ID.
+	 *
+	 * @return array{name:string,date:string|null,message:string}
+	 */
+	private function approval_meta( int $request_id ): array {
+		global $wpdb;
+
+		$empty = [ 'name' => '', 'date' => null, 'message' => '' ];
+
+		if ( ! $request_id ) {
+			return $empty;
+		}
+
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT message, approved_by, created_at
+				 FROM {$wpdb->prefix}erp_hr_leave_approval_status
+				 WHERE leave_request_id = %d
+				 ORDER BY id DESC
+				 LIMIT 1",
+				$request_id
+			)
+		);
+
+		if ( empty( $row ) || null === $row->approved_by ) {
+			return $empty;
+		}
+
+		$user = get_user_by( 'id', (int) $row->approved_by );
+
+		if ( ! $user instanceof \WP_User ) {
+			return $empty;
+		}
+
+		return [
+			'name'    => $user->display_name,
+			'date'    => $this->ts_to_iso( $row->created_at ),
+			'message' => (string) ( $row->message ?? '' ),
 		];
 	}
 
@@ -549,6 +660,13 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 		$params['designation_id'] = [ 'type' => 'integer', 'sanitize_callback' => 'absint' ];
 		$params['type']           = [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ];
 		$params['order']          = [ 'type' => 'string', 'default' => 'desc', 'enum' => [ 'asc', 'desc' ], 'sanitize_callback' => 'sanitize_key' ];
+
+		// Column sort (F18) — whitelist re-checked in get_items() / the model layer.
+		$params['orderby']        = [ 'type' => 'string', 'default' => 'created_at', 'sanitize_callback' => 'sanitize_key' ];
+
+		// Date-range filter (F7) — applied only when BOTH bounds are supplied.
+		$params['start_date']     = [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ];
+		$params['end_date']       = [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ];
 
 		return $params;
 	}

@@ -48,6 +48,54 @@ const STATUS_TABS: ReadonlyArray< { value: number; label: string } > = [
 
 const SEARCH_DEBOUNCE_MS = 350;
 
+/** Local `YYYY-MM-DD` for a Date. */
+function iso( d: Date ): string {
+	const pad = ( n: number ): string => String( n ).padStart( 2, '0' );
+	return `${ d.getFullYear() }-${ pad( d.getMonth() + 1 ) }-${ pad(
+		d.getDate()
+	) }`;
+}
+
+/**
+ * Resolve the active date-range filter to concrete `{ start, end }` ISO bounds,
+ * mirroring the legacy `filter_leave_year` presets: last week, last month, last
+ * 3 months, or a custom From/To range. Empty strings = no range.
+ * @param preset Relative preset id or 'custom'.
+ * @param customStart Custom start (only used when preset === 'custom').
+ * @param customEnd   Custom end (only used when preset === 'custom').
+ */
+function resolveDateRange(
+	preset: string,
+	customStart: string,
+	customEnd: string
+): { start: string; end: string } {
+	const today = new Date();
+
+	if ( preset === '1' ) {
+		const start = new Date( today );
+		start.setDate( start.getDate() - 7 );
+		return { start: iso( start ), end: iso( today ) };
+	}
+	if ( preset === '2' ) {
+		const start = new Date(
+			today.getFullYear(),
+			today.getMonth() - 1,
+			1
+		);
+		const end = new Date( today.getFullYear(), today.getMonth(), 0 );
+		return { start: iso( start ), end: iso( end ) };
+	}
+	if ( preset === '3' ) {
+		const start = new Date( today );
+		start.setMonth( start.getMonth() - 3 );
+		return { start: iso( start ), end: iso( today ) };
+	}
+	if ( preset === 'custom' ) {
+		return { start: customStart, end: customEnd };
+	}
+	return { start: '', end: '' };
+}
+
 function LeaveRequestsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
 
@@ -57,11 +105,21 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ departmentId, setDepartmentId ] = useState( 0 );
 	const [ designationId, setDesignationId ] = useState( 0 );
 	const [ employmentType, setEmploymentType ] = useState( '' );
+	const [ datePreset, setDatePreset ] = useState( '' );
+	const [ startDate, setStartDate ] = useState( '' );
+	const [ endDate, setEndDate ] = useState( '' );
+	const [ orderby, setOrderby ] = useState( 'created_at' );
+	const [ order, setOrder ] = useState< 'asc' | 'desc' >( 'desc' );
 	const [ searchInput, setSearchInput ] = useState( '' );
 	const [ search, setSearch ] = useState( '' );
 	const [ showFilters, setShowFilters ] = useState( false );
 	const [ page, setPage ] = useState( 1 );
 	const [ perPage, setPerPage ] = useState( 20 );
+
+	const { start: rangeStart, end: rangeEnd } = useMemo(
+		() => resolveDateRange( datePreset, startDate, endDate ),
+		[ datePreset, startDate, endDate ]
+	);
 
 	const {
 		rows,
@@ -83,6 +141,10 @@ function LeaveRequestsInner(): JSX.Element {
 		designationId,
 		type: employmentType,
 		search,
+		startDate: rangeStart,
+		endDate: rangeEnd,
+		orderby,
+		order,
 		page,
 		perPage,
 	} );
@@ -133,8 +195,22 @@ function LeaveRequestsInner(): JSX.Element {
 		departmentId,
 		designationId,
 		employmentType,
+		rangeStart,
+		rangeEnd,
+		orderby,
+		order,
 		search,
 	] );
+
+	// Toggle sort: same column flips direction, a new column starts ascending.
+	function handleSort( column: string ): void {
+		if ( orderby === column ) {
+			setOrder( ( prev ) => ( prev === 'asc' ? 'desc' : 'asc' ) );
+		} else {
+			setOrderby( column );
+			setOrder( 'asc' );
+		}
+	}
 
 	useEffect( () => {
 		let active = true;
@@ -222,12 +298,14 @@ function LeaveRequestsInner(): JSX.Element {
 		[]
 	);
 
+	const dateFilterActive = Boolean( rangeStart && rangeEnd );
 	const activeFilterCount =
 		( leaveId ? 1 : 0 ) +
 		( year ? 1 : 0 ) +
 		( departmentId ? 1 : 0 ) +
 		( designationId ? 1 : 0 ) +
-		( employmentType ? 1 : 0 );
+		( employmentType ? 1 : 0 ) +
+		( dateFilterActive ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
 
 	function openModerate(
@@ -462,6 +540,12 @@ function LeaveRequestsInner(): JSX.Element {
 						onDesignationId={ setDesignationId }
 						employmentType={ employmentType }
 						onEmploymentType={ setEmploymentType }
+						datePreset={ datePreset }
+						onDatePreset={ setDatePreset }
+						startDate={ startDate }
+						onStartDate={ setStartDate }
+						endDate={ endDate }
+						onEndDate={ setEndDate }
 						leaveTypeOptions={ leaveTypeFilterOpts }
 						yearOptions={ yearOptions }
 						departmentOptions={ departmentOpts }
@@ -537,6 +621,10 @@ function LeaveRequestsInner(): JSX.Element {
 						canManage={ canManage }
 						selected={ selected }
 						allOnPageSelected={ allOnPageSelected }
+						statusFilter={ status }
+						orderby={ orderby }
+						order={ order }
+						onSort={ handleSort }
 						onToggleAll={ toggleAll }
 						onToggleOne={ toggleOne }
 						onModerate={ openModerate }

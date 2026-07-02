@@ -40,6 +40,8 @@ export interface EmployeeListItem {
 	readonly employee_type:      string | null;
 	readonly hire_date:          string | null;
 	readonly termination_date:   string | null;
+	/** Latest status-change date (Terminated At / Inactive From / …); null for active. */
+	readonly status_date:        string | null;
 	readonly is_active:          boolean;
 	readonly department:         EmployeeLookup | null;
 	readonly designation:        EmployeeLookup | null;

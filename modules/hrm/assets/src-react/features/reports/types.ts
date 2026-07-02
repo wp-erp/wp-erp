@@ -35,8 +35,17 @@ export interface GenderProfileRow {
 	readonly percentage: string;
 }
 
+/** Per-department gender counts (mirrors the legacy "By Department" table + bar). */
+export interface GenderDepartmentRow {
+	readonly department: string;
+	readonly male:       number;
+	readonly female:     number;
+	readonly other:      number;
+}
+
 export interface GenderProfileResponse {
-	readonly rows: readonly GenderProfileRow[];
+	readonly rows:           readonly GenderProfileRow[];
+	readonly by_department?: readonly GenderDepartmentRow[];
 }
 
 /** A single point in the headcount-by-month series. */

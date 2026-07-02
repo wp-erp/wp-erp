@@ -37,12 +37,17 @@ export interface CompensationHistory {
 }
 
 export interface JobInfoHistory {
-	readonly id:           number;
-	readonly date:         string | null;
-	readonly department:   string;
-	readonly designation:  string;
-	readonly location:     string;
-	readonly reporting_to: string;
+	readonly id:              number;
+	readonly date:            string | null;
+	readonly department:      string;
+	readonly designation:     string;
+	readonly location:        string;
+	readonly reporting_to:    string;
+	// Raw ids for edit-prefill (labels above are display-only).
+	readonly department_id?:   number;
+	readonly designation_id?:  number;
+	readonly location_id?:     number;
+	readonly reporting_to_id?: number;
 }
 
 export interface JobHistories {
@@ -57,6 +62,7 @@ export interface UseEmployeeJobHistories {
 	readonly loading:       boolean;
 	readonly error:         string | null;
 	readonly createHistory: ( payload: Record< string, unknown > ) => Promise< void >;
+	readonly updateHistory: ( historyId: number, payload: Record< string, unknown > ) => Promise< void >;
 	readonly deleteHistory: ( id: number ) => Promise< void >;
 	readonly refetch:       () => void;
 }
@@ -104,6 +110,15 @@ export function useEmployeeJobHistories( userId: number ): UseEmployeeJobHistori
 		[ userId ]
 	);
 
+	const updateHistory = useCallback(
+		async ( historyId: number, payload: Record< string, unknown > ): Promise< void > => {
+			const path = restPath( 'v2', `/employees/${ userId }/job-histories/${ historyId }` );
+			await request( path, { method: 'PUT', data: payload } );
+			setNonce( ( n ) => n + 1 );
+		},
+		[ userId ]
+	);
+
 	const deleteHistory = useCallback(
 		async ( id: number ): Promise< void > => {
 			const path = restPath( 'v2', `/employees/${ userId }/job-histories/${ id }` );
@@ -115,5 +130,5 @@ export function useEmployeeJobHistories( userId: number ): UseEmployeeJobHistori
 
 	const refetch = useCallback( () => setNonce( ( n ) => n + 1 ), [] );
 
-	return { data, loading, error, createHistory, deleteHistory, refetch };
+	return { data, loading, error, createHistory, updateHistory, deleteHistory, refetch };
 }

@@ -238,7 +238,33 @@ class ReportsControllerV2 extends RestControllerV2 {
 			];
 		}
 
-		return rest_ensure_response( [ 'rows' => $rows ] );
+		// By-department breakdown (mirrors views/reporting/gender-profile.php's
+		// "Employee Gender Ratio By Department" table + stacked bar). For each
+		// department, `erp_hr_get_gender_count( $dept_id )` returns the active
+		// male / female / other counts. The `other` bucket is labelled
+		// "Unspecified" in the UI. Legacy caps the view at the department query's
+		// default (20); we return all departments for a complete breakdown.
+		$by_department = [];
+
+		if ( function_exists( 'erp_hr_get_departments' ) && function_exists( 'erp_hr_get_gender_count' ) ) {
+			foreach ( (array) erp_hr_get_departments( [ 'number' => -1 ] ) as $department ) {
+				$counts = (array) erp_hr_get_gender_count( (int) ( $department->id ?? 0 ) );
+
+				$by_department[] = [
+					'department' => $this->cast_string_or_null( $department->title ?? '' ) ?? '',
+					'male'       => (int) ( $counts['male'] ?? 0 ),
+					'female'     => (int) ( $counts['female'] ?? 0 ),
+					'other'      => (int) ( $counts['other'] ?? 0 ),
+				];
+			}
+		}
+
+		return rest_ensure_response(
+			[
+				'rows'          => $rows,
+				'by_department' => $by_department,
+			]
+		);
 	}
 
 	// -----------------------------------------------------------------

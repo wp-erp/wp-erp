@@ -15,7 +15,7 @@ import {
 import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
-import { __, sprintf } from '@/shared/i18n';
+import { __, dateI18n, sprintf } from '@/shared/i18n';
 
 import type { LeaveType } from './types';
 
@@ -56,6 +56,7 @@ export function LeaveTypesTable( {
 					) : null }
 					<th scope="col" className="px-4">{ __( 'Leave Type', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
+					<th scope="col" className="px-2">{ __( 'Created', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>
@@ -80,6 +81,9 @@ export function LeaveTypesTable( {
 							) : (
 								<span className="text-muted-foreground">—</span>
 							) }
+						</td>
+						<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">
+							{ type.created_at ? dateI18n( 'M j, Y', type.created_at ) : <span className="text-muted-foreground">—</span> }
 						</td>
 						<td className="px-4 align-middle">
 							{ canManage ? (

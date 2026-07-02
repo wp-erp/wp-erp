@@ -42,8 +42,12 @@ export function LeavePoliciesTable( {
 					<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Designation', 'erp' ) }</th>
+					<th scope="col" className="px-2">{ __( 'Location', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Type', 'erp' ) }</th>
+					<th scope="col" className="px-2">{ __( 'Gender', 'erp' ) }</th>
+					<th scope="col" className="px-2">{ __( 'Marital', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Year', 'erp' ) }</th>
+					<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>
@@ -65,8 +69,14 @@ export function LeavePoliciesTable( {
 						<td className="px-2 align-middle text-sm text-foreground">{ policy.days }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.department }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.designation }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.location }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.employee_type }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.gender }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.marital }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ policy.f_year }</td>
+						<td className="px-2 align-middle text-sm text-muted-foreground">
+							{ policy.description ? <span className="line-clamp-1">{ policy.description }</span> : <span className="text-muted-foreground">—</span> }
+						</td>
 						<td className="px-4 align-middle">
 							{ canManage ? (
 								<div className="flex justify-end">
