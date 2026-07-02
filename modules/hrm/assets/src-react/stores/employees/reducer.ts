@@ -38,7 +38,7 @@ export const INITIAL_STATE: EmployeesState = {
 	byId:        {},
 	byQuery:     {},
 	metaByQuery: {},
-	filters:     { status: 'all' },
+	filters:     { status: 'active' },
 	sort:        { orderby: 'hire_date', order: 'desc' },
 	pagination:  { page: 1, perPage: 20 },
 	selectedIds: [],
