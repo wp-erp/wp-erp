@@ -349,6 +349,15 @@ body:has(#erp-hr-app) {
 	box-shadow: none;
 }
 
+/* Top-bar nav: same keyboard-only focus ring as the sidebar. Mouse-clicking a
+ * top-bar nav item left WP's blue focus box around it; drop the ring for
+ * pointer focus, keep it for keyboard (`:focus-visible`). */
+#erp-hr-app .erp-hr-topbar a:focus:not(:focus-visible),
+#erp-hr-app .erp-hr-topbar button:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
 /* The collapsed-rail submenu flyout is a Popover portaled to <body>, so the
  * `#erp-hr-app .erp-hr-sidebar` rule above can't reach it — a mouse click on a
  * flyout link left WP's blue focus box behind. Suppress it for pointer focus
