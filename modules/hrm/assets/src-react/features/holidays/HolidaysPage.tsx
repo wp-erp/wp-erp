@@ -220,7 +220,7 @@ function HolidaysInner(): JSX.Element {
 				/>
 
 				{ canManage && selectedIds.length > 0 ? (
-					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
 						<span className="text-sm font-medium text-foreground">
 							{ sprintf(
 								/* translators: %d: number of selected holidays */
@@ -230,23 +230,22 @@ function HolidaysInner(): JSX.Element {
 						</span>
 						<div className="flex items-center gap-2">
 							<Button
-								variant="ghost"
 								size="sm"
-								className="h-8 px-3 text-sm"
-								onClick={ () => setSelectedIds( [] ) }
-							>
-								{ __( 'Clear', 'erp' ) }
-							</Button>
-							<Button
-								variant="destructive"
-								size="sm"
-								className="h-8 gap-1.5 px-3 text-sm"
+								variant="outline"
+								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 								onClick={ () => setBulkConfirm( true ) }
 							>
 								<Trash2 size={ 14 } aria-hidden="true" />
 								{ __( 'Delete', 'erp' ) }
 							</Button>
 						</div>
+						<button
+							type="button"
+							className="text-sm text-muted-foreground hover:text-foreground"
+							onClick={ () => setSelectedIds( [] ) }
+						>
+							{ __( 'Clear', 'erp' ) }
+						</button>
 					</div>
 				) : null }
 

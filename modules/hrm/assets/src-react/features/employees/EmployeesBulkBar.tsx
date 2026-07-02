@@ -18,7 +18,7 @@ import {
 	Button,
 } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { X } from 'lucide-react';
+import { ArchiveRestore, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
@@ -27,6 +27,11 @@ import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeBulkAction } from '@/stores/employees';
 
 import { useEmployeeBulkActions } from './useEmployeeBulkActions';
+
+const ICON_MAP: Record< string, typeof Trash2 > = {
+	ArchiveRestore,
+	Trash2,
+};
 
 interface BulkBarSelectors {
 	getSelectedIds: () => readonly number[];
@@ -71,16 +76,6 @@ export function EmployeesBulkBar(): JSX.Element | null {
 
 	return (
 		<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
-			<Button
-				type="button"
-				variant="ghost"
-				size="icon"
-				onClick={ () => setSelectedIds( [] ) }
-				aria-label={ __( 'Clear selection', 'erp' ) }
-				className="size-6 text-muted-foreground hover:bg-muted hover:text-foreground"
-			>
-				<X size={ 14 } aria-hidden="true" />
-			</Button>
 			<span className="text-sm font-medium text-foreground">
 				{ sprintf(
 					/* translators: %d: number of selected employees. */
@@ -89,19 +84,37 @@ export function EmployeesBulkBar(): JSX.Element | null {
 				) }
 			</span>
 
-			<div className="ms-auto flex items-center gap-2">
-				{ actions.map( ( action ) => (
-					<Button
-						key={ action.id }
-						size="sm"
-						variant={ action.variant === 'destructive' ? 'destructive' : 'outline' }
-						disabled={ busy }
-						onClick={ () => trigger( action ) }
-					>
-						{ action.label }
-					</Button>
-				) ) }
+			<div className="flex items-center gap-2">
+				{ actions.map( ( action ) => {
+					const Icon = action.icon ? ICON_MAP[ action.icon ] : undefined;
+					const isDestructive = action.variant === 'destructive';
+					return (
+						<Button
+							key={ action.id }
+							size="sm"
+							variant="outline"
+							disabled={ busy }
+							onClick={ () => trigger( action ) }
+							className={ `h-8 gap-1.5${
+								isDestructive
+									? ' border-destructive text-destructive hover:border-destructive hover:text-destructive'
+									: ''
+							}` }
+						>
+							{ Icon ? <Icon size={ 14 } aria-hidden="true" /> : null }
+							{ action.label }
+						</Button>
+					);
+				} ) }
 			</div>
+
+			<button
+				type="button"
+				className="text-sm text-muted-foreground hover:text-foreground"
+				onClick={ () => setSelectedIds( [] ) }
+			>
+				{ __( 'Clear', 'erp' ) }
+			</button>
 
 			<AlertDialog
 				open={ pending !== null }

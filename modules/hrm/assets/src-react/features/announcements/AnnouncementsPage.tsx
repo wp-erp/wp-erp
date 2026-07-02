@@ -313,24 +313,27 @@ function AnnouncementsInner(): JSX.Element {
 				/>
 
 				{ canManage && selected.size > 0 ? (
-					<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
 						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
 						<div className="flex items-center gap-2">
 							{ status === 'trash' ? (
 								<>
-									<Button variant="outline" className="h-9 gap-1.5" disabled={ busy } onClick={ () => void handleBulkRestore() }>
+									<Button size="sm" variant="outline" className="h-8 gap-1.5" disabled={ busy } onClick={ () => void handleBulkRestore() }>
 										<RotateCcw size={ 14 } aria-hidden="true" /> { __( 'Restore', 'erp' ) }
 									</Button>
-									<Button variant="outline" className="h-9 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkDelete() }>
+									<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkDelete() }>
 										<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete permanently', 'erp' ) }
 									</Button>
 								</>
 							) : (
-								<Button variant="outline" className="h-9 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkTrash() }>
+								<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkTrash() }>
 									<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Trash', 'erp' ) }
 								</Button>
 							) }
 						</div>
+						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
+							{ __( 'Clear', 'erp' ) }
+						</button>
 					</div>
 				) : null }
 

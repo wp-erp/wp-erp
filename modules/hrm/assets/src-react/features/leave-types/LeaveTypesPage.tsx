@@ -198,8 +198,9 @@ function LeaveTypesInner(): JSX.Element {
 					<div className="flex items-center gap-3">
 						{ canManage && selected.size > 0 ? (
 							<Button
+								size="sm"
 								variant="outline"
-								className="inline-flex h-9 items-center gap-2 rounded-md border-destructive px-3 text-sm font-medium text-destructive hover:bg-destructive/10"
+								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 								onClick={ () => setBulkOpen( true ) }
 							>
 								<Trash2 size={ 14 } aria-hidden="true" />

@@ -262,11 +262,16 @@ function DepartmentsInner(): JSX.Element {
 				/>
 
 				{ canManage && selected.size > 0 ? (
-					<div className="flex items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-2.5">
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
 						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
-						<Button variant="outline" className="h-9 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
-							<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
-						</Button>
+						<div className="flex items-center gap-2">
+							<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
+								<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+							</Button>
+						</div>
+						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
+							{ __( 'Clear', 'erp' ) }
+						</button>
 					</div>
 				) : null }
 
