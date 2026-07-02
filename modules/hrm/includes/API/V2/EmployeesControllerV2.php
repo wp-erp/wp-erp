@@ -1393,7 +1393,14 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		if ( class_exists( 'user_switching' ) && current_user_can( 'erp_edit_employee' ) ) {
 			$wp_user = get_user_by( 'id', $user_id );
 			if ( $wp_user ) {
-				$switch_url = \user_switching::switch_to_url( $wp_user );
+				// switch_to_url() returns an esc_html'd URL with `&amp;`
+				// separators (fine for the legacy `<a href>`, where the browser
+				// decodes them on click). React navigates via
+				// `window.location.href`, which does NOT decode entities, so the
+				// `&amp;` would corrupt the query (user_id/_wpnonce lost) → "Could
+				// not switch users." Decode to plain `&` so JS navigation lands on
+				// the same URL the legacy link did.
+				$switch_url = html_entity_decode( \user_switching::switch_to_url( $wp_user ), ENT_QUOTES );
 				if ( $switch_url ) {
 					$item['extra']['switch_to_url'] = esc_url_raw( $switch_url );
 				}
