@@ -1387,15 +1387,13 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		// EmployeeListTable row action: only when the User Switching plugin is
 		// active AND the current user may edit employees. The URL is nonce'd and
 		// bound to the CURRENT admin session, so it's computed per request/row.
+		// Exact legacy parity (EmployeeListTable.php:242-245): guard on
+		// user_switching being active + `erp_edit_employee`, and build the URL
+		// with switch_to_url(). No `switch_to_user` cap check — matches legacy.
 		if ( class_exists( 'user_switching' ) && current_user_can( 'erp_edit_employee' ) ) {
 			$wp_user = get_user_by( 'id', $user_id );
 			if ( $wp_user ) {
-				// maybe_switch_url() gates on the `switch_to_user` cap (and handles
-				// switch-back), so the URL is only emitted when this admin can
-				// actually switch. switch_to_url() skips that check, producing a
-				// nonce'd link that User Switching then rejects with "Could not
-				// switch users." on click.
-				$switch_url = \user_switching::maybe_switch_url( $wp_user );
+				$switch_url = \user_switching::switch_to_url( $wp_user );
 				if ( $switch_url ) {
 					$item['extra']['switch_to_url'] = esc_url_raw( $switch_url );
 				}
