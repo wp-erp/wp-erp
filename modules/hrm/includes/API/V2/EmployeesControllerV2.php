@@ -1390,7 +1390,12 @@ class EmployeesControllerV2 extends RestControllerV2 {
 		if ( class_exists( 'user_switching' ) && current_user_can( 'erp_edit_employee' ) ) {
 			$wp_user = get_user_by( 'id', $user_id );
 			if ( $wp_user ) {
-				$switch_url = \user_switching::switch_to_url( $wp_user );
+				// maybe_switch_url() gates on the `switch_to_user` cap (and handles
+				// switch-back), so the URL is only emitted when this admin can
+				// actually switch. switch_to_url() skips that check, producing a
+				// nonce'd link that User Switching then rejects with "Could not
+				// switch users." on click.
+				$switch_url = \user_switching::maybe_switch_url( $wp_user );
 				if ( $switch_url ) {
 					$item['extra']['switch_to_url'] = esc_url_raw( $switch_url );
 				}
