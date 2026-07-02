@@ -99,7 +99,8 @@ function resolveDateRange(
 function LeaveRequestsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
 
-	const [ status, setStatus ] = useState( 0 );
+	// Default to the Pending tab — the requests needing action.
+	const [ status, setStatus ] = useState( 2 );
 	const [ leaveId, setLeaveId ] = useState( 0 );
 	const [ year, setYear ] = useState( 0 );
 	const [ departmentId, setDepartmentId ] = useState( 0 );
