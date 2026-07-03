@@ -28,9 +28,11 @@ export interface FormState {
 }
 
 export interface PolicyErrors {
-	leave_id?: string | undefined;
-	days?:     string | undefined;
-	f_year?:   string | undefined;
+	leave_id?:     string | undefined;
+	days?:         string | undefined;
+	f_year?:       string | undefined;
+	/** Advanced Leave (pro): segregated day-type allocations exceed the total policy days. */
+	segregation?:  string | undefined;
 }
 
 export const EMPTY: FormState = {

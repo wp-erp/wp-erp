@@ -34,7 +34,9 @@ export const HOOKS = {
 
 	// Leave request (apply-for-leave) form — pro injects extra field definitions
 	// (Advanced Leave: half-day request). Applied with `(fields, ctx)` where
-	// ctx = { userId, leavePolicyId }. Returns LeaveExtraField[].
+	// ctx = { userId, leavePolicyId, halfdayEnabled? } (halfdayEnabled = the
+	// selected policy's per-policy halfday flag, once one is chosen). Returns
+	// LeaveExtraField[].
 	LEAVE_REQUEST_FIELDS:    'erp_hr.leave.request_fields',
 
 	// Leave-request row actions — pro appends dropdown actions to a request row

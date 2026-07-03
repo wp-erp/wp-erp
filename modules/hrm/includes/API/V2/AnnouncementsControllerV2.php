@@ -527,6 +527,8 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 			];
 		}
 
+		$type = (string) get_post_meta( (int) $post->ID, '_announcement_type', true );
+
 		return [
 			'id'                  => (int) $post->ID,
 			'title'               => (string) get_the_title( $post ),
@@ -536,7 +538,29 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 			'author'              => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
 			'recipient_count'     => $recipient_count,
 			'recipients_preview'  => $recipients_preview,
+			'type'                => $type,
+			'type_label'          => $this->assign_type_label( $type ),
 		];
+	}
+
+	/**
+	 * Human-readable label for an `_announcement_type` value — mirrors the
+	 * `assign_types` labels returned by `form_options()` / the legacy
+	 * `AnnouncementListTable::column_default()` "Type" column.
+	 *
+	 * @param string $type Raw `_announcement_type` meta value.
+	 *
+	 * @return string
+	 */
+	private function assign_type_label( string $type ): string {
+		$labels = [
+			'all_employee'      => __( 'All Employees', 'erp' ),
+			'by_department'     => __( 'By Department', 'erp' ),
+			'by_designation'    => __( 'By Designation', 'erp' ),
+			'selected_employee' => __( 'Selected Employees', 'erp' ),
+		];
+
+		return $labels[ $type ] ?? '';
 	}
 
 	/**

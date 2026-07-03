@@ -77,9 +77,15 @@ export interface LeaveFilters {
 }
 
 export interface AssignablePolicy {
-	readonly id:        number;
-	readonly name:      string;
-	readonly available: number;
+	readonly id:             number;
+	readonly name:           string;
+	readonly available:      number;
+	/**
+	 * Advanced Leave (pro): whether this policy allows half-day requests
+	 * (appended server-side via `erp_hr_v2_leave_assignable_item`). Absent when
+	 * the pro module isn't active.
+	 */
+	readonly halfday_enable?: boolean;
 }
 
 export interface UseEmployeeLeave {

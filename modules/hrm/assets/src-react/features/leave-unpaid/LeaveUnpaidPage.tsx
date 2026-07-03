@@ -50,6 +50,12 @@ function LeaveUnpaidInner(): JSX.Element {
 	const [ busy, setBusy ]     = useState( false );
 	const [ error, setError ]   = useState< string | null >( null );
 
+	// Advanced Leave (pro): "Calculate On" options (`erp-pro-hr-leave-pay-type-options`,
+	// filterable — defaults to just Pay Rate). Localized alongside the rest of the
+	// React HR admin, so it's already on `window` by the time this page renders.
+	const salaryTypeOpts = window.erpAdvLeaveBoot?.encashmentOptions ?? [];
+	const [ salaryType, setSalaryType ] = useState( 'pay_rate' );
+
 	// Load financial years once (reuse the leave-policies form-options endpoint).
 	useEffect( () => {
 		let cancelled = false;
@@ -103,7 +109,7 @@ function LeaveUnpaidInner(): JSX.Element {
 		try {
 			await request( restPath( 'v2', '/hrm/advance-leave/unpaid/calculate' ), {
 				method: 'POST',
-				data:   { f_year: fYear, salary_type: 'pay_rate' },
+				data:   { f_year: fYear, salary_type: salaryType },
 			} );
 			await reload();
 			toast.success( __( 'Amounts recalculated.', 'erp' ) );
@@ -158,6 +164,18 @@ function LeaveUnpaidInner(): JSX.Element {
 							<Download size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
 							{ __( 'Export CSV', 'erp' ) }
 						</Button>
+						{ salaryTypeOpts.length > 1 ? (
+							<label className="flex items-center gap-2 text-sm text-muted-foreground">
+								{ __( 'Calculate On', 'erp' ) }
+								<SmartSelect
+									options={ salaryTypeOpts.map( ( o ) => ( { value: o.value, label: o.label } ) ) }
+									value={ salaryType }
+									onValueChange={ setSalaryType }
+									className="h-10 w-40 bg-background"
+									contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+								/>
+							</label>
+						) : null }
 						<Button
 							className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5 shadow-sm"
 							disabled={ busy }

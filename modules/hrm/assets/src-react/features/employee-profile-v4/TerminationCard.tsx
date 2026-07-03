@@ -7,7 +7,7 @@
  * displays; falls back to the raw slug when a label is absent.
  */
 
-import { Calendar, RefreshCcw, ShieldCheck, UserX } from 'lucide-react';
+import { Calendar, FileText, ShieldCheck, UserX } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -76,7 +76,7 @@ export function TerminationCard( { termination }: { readonly termination: unknow
 			<dl className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
 				<Row icon={ Calendar } label={ __( 'Termination Date', 'erp' ) } value={ date } />
 				<Row icon={ UserX } label={ __( 'Termination Type', 'erp' ) } value={ type } />
-				<Row icon={ RefreshCcw } label={ __( 'Termination Reason', 'erp' ) } value={ reason } />
+				<Row icon={ FileText } label={ __( 'Termination Reason', 'erp' ) } value={ reason } />
 				<Row icon={ ShieldCheck } label={ __( 'Eligible for Hire', 'erp' ) } value={ rehire } />
 			</dl>
 		</section>

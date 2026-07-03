@@ -45,6 +45,7 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 						</th>
 					) : null }
 					<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Type', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Recipients', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Author', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Date', 'erp' ) }</th>
@@ -67,6 +68,7 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 								<div className="truncate text-xs text-muted-foreground">{ row.excerpt }</div>
 							) : null }
 						</td>
+						<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ row.type_label || '—' }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">
 							<EmployeeAvatarStack people={ row.recipients_preview } total={ row.recipient_count } />
 						</td>

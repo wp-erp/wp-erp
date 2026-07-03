@@ -14,6 +14,8 @@ export interface Announcement {
 	readonly author:             string;
 	readonly recipient_count:    number;
 	readonly recipients_preview: readonly AvatarPerson[];
+	readonly type:               string;
+	readonly type_label:         string;
 }
 
 /** Single announcement (`GET /announcements/{id}`) — adds body + recipients. */

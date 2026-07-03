@@ -38,7 +38,7 @@ import {
 } from '@/shared/components/LeaveExtraFields';
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
 import { HOOKS } from '@/shared/filters';
-import { __ } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
@@ -206,7 +206,7 @@ export function LeavePolicyFormDialog( {
 	function handleSubmit( e: React.FormEvent ): void {
 		e.preventDefault();
 
-		const next: { leave_id?: string; days?: string; f_year?: string } = {};
+		const next: PolicyErrors = {};
 		if ( ! editing && ! form.leave_id ) {
 			next.leave_id = __( 'Leave type is required.', 'erp' );
 		}
@@ -215,6 +215,21 @@ export function LeavePolicyFormDialog( {
 		}
 		if ( ! editing && ( form.days === '' || Number( form.days ) < 0 ) ) {
 			next.days = __( 'Days is required.', 'erp' );
+		}
+
+		// Advanced Leave (pro): segregated day-type allocations can't exceed the
+		// total policy days (legacy save-time guard on `LeavePoliciesSegregation`).
+		if ( extraFields.some( ( f ) => f.group === 'segre' ) ) {
+			const segre     = ( extra.segre as Record< string, unknown > | undefined ) ?? {};
+			const segreSum  = Object.values( segre ).reduce< number >( ( sum, v ) => sum + ( Number( v ) || 0 ), 0 );
+			const totalDays = Number( form.days || ( editing?.days ?? 0 ) );
+			if ( segreSum > totalDays ) {
+				next.segregation = sprintf(
+					__( 'Segregated days (%1$s) exceed the total policy days (%2$s).', 'erp' ),
+					String( segreSum ),
+					String( totalDays )
+				);
+			}
 		}
 
 		if ( Object.keys( next ).length > 0 ) {
@@ -299,8 +314,19 @@ export function LeavePolicyFormDialog( {
 					<LeaveExtraFields
 						fields={ extraFields }
 						values={ extra }
-						onChange={ ( field, value ) => setExtra( ( p ) => setLeaveFieldValue( p, field, value ) ) }
+						onChange={ ( field, value ) => {
+							setExtra( ( p ) => setLeaveFieldValue( p, field, value ) );
+							if ( field.group === 'segre' ) {
+								setErrors( ( p ) => ( { ...p, segregation: undefined } ) );
+							}
+						} }
 					/>
+
+					{ errors.segregation ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ errors.segregation }</AlertDescription>
+						</Alert>
+					) : null }
 
 					{ error ? (
 						<Alert variant="destructive">

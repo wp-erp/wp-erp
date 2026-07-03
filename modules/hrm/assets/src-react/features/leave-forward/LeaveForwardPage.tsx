@@ -6,8 +6,9 @@
  *  - `pending`: previews the carry-forward / encashment split per eligible
  *    employee for the previous financial year, with an "Apply" action that
  *    persists the encashment + entitlement records.
- *  - `applied`: once applied, lists the encashment requests and offers a CSV
- *    export.
+ *  - `applied`: once applied, lists the encashment requests (filterable by
+ *    financial year — legacy `forward_f_year` request arg — and paginated,
+ *    mirroring the legacy `WP_List_Table`) and offers a CSV export.
  *
  * Consumes the pro `erp/v2/hrm/advance-leave/forward` endpoints; the page only
  * appears in the nav when the Advanced Leave module is active. Layout follows
@@ -23,9 +24,10 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Download } from 'lucide-react';
+import { Download, Filter } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX, ReactNode } from 'react';
@@ -35,7 +37,15 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
-import { request, restPath } from '@/shared/utils/apiFetch';
+import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
+import { toInt } from '@/shared/utils/coerce';
+
+import { OrgPagination } from '../org/OrgPagination';
+
+interface FinancialYear {
+	readonly id:      number;
+	readonly fy_name: string;
+}
 
 interface ForwardRow {
 	readonly user_id:          number;
@@ -65,18 +75,50 @@ function LeaveForwardInner(): JSX.Element {
 	const [ confirm, setConfirm ] = useState( false );
 	const [ busy, setBusy ]       = useState( false );
 
+	// Financial-year filter (legacy `forward_f_year` request arg — only affects
+	// the applied/encashment list, mirrored server-side) + pagination.
+	const [ years, setYears ]     = useState< readonly FinancialYear[] >( [] );
+	const [ fYear, setFYear ]     = useState( 0 );
+	const [ showFilters, setShowFilters ] = useState( false );
+	const [ page, setPage ]       = useState( 1 );
+	const [ perPage, setPerPage ] = useState( 20 );
+	const [ total, setTotal ]     = useState( 0 );
+
+	// Load financial years once (reuse the leave-policies form-options endpoint).
+	useEffect( () => {
+		let cancelled = false;
+		void request< { financial_years?: FinancialYear[] } >( restPath( 'v2', '/leave-policies/form-options' ) )
+			.then( ( opts ) => {
+				if ( ! cancelled ) {
+					setYears( Array.isArray( opts.financial_years ) ? opts.financial_years : [] );
+				}
+			} )
+			.catch( () => undefined );
+		return () => {
+			cancelled = true;
+		};
+	}, [] );
+
 	const reload = useCallback( async (): Promise< void > => {
 		setLoading( true );
 		setError( null );
 		try {
-			const res = await request< ForwardResponse >( restPath( 'v2', '/hrm/advance-leave/forward' ) );
-			setData( { mode: res.mode, f_year: res.f_year, rows: Array.isArray( res.rows ) ? res.rows : [] } );
+			const { body: res, headers } = await requestWithHeaders< ForwardResponse >(
+				restPath( 'v2', '/hrm/advance-leave/forward', {
+					...( fYear ? { f_year: fYear } : {} ),
+					page,
+					per_page: perPage,
+				} )
+			);
+			const rows = Array.isArray( res.rows ) ? res.rows : [];
+			setData( { mode: res.mode, f_year: res.f_year, rows } );
+			setTotal( toInt( headers.get( 'X-WP-Total' ), res.mode === 'applied' ? rows.length : 0 ) );
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Could not load forward leaves.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}
-	}, [] );
+	}, [ fYear, page, perPage ] );
 
 	useEffect( () => {
 		void reload();
@@ -108,9 +150,11 @@ function LeaveForwardInner(): JSX.Element {
 		downloadCsv( [ header.join( ',' ), ...lines ].join( '\n' ), 'encash-requests.csv' );
 	}
 
-	const mode    = data?.mode ?? 'pending';
-	const rows    = data?.rows ?? [];
-	const pending = mode === 'pending';
+	const mode          = data?.mode ?? 'pending';
+	const rows          = data?.rows ?? [];
+	const pending       = mode === 'pending';
+	const yearFilterOpts = years.map( ( fy ) => ( { value: String( fy.id ), label: fy.fy_name } ) );
+	const totalPages    = Math.max( 1, Math.ceil( total / perPage ) );
 
 	return (
 		<section className="mx-auto w-full max-w-full">
@@ -144,11 +188,42 @@ function LeaveForwardInner(): JSX.Element {
 					<div role="tablist" aria-label={ __( 'Forward Leaves', 'erp' ) } className="flex items-stretch">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ pending ? __( 'Pending', 'erp' ) : __( 'Applied', 'erp' ) }</span>
-							<span className="font-normal text-[#a5a5aa]">({ rows.length })</span>
+							<span className="font-normal text-[#a5a5aa]">({ pending ? rows.length : total })</span>
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>
+					{ yearFilterOpts.length > 0 ? (
+						<button
+							type="button"
+							aria-label={ __( 'Toggle filters', 'erp' ) }
+							aria-pressed={ showFilters }
+							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
+							className={ [
+								'relative inline-flex size-5 items-center justify-center transition-colors',
+								showFilters || fYear ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+							].join( ' ' ) }
+						>
+							<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
+						</button>
+					) : null }
 				</div>
+
+				{ showFilters && yearFilterOpts.length > 0 ? (
+					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Year', 'erp' ) }
+							<SmartSelect
+								options={ yearFilterOpts }
+								value={ String( fYear || '' ) }
+								onValueChange={ ( v ) => { setFYear( Number( v || 0 ) ); setPage( 1 ); } }
+								placeholder={ __( 'Previous Financial Year', 'erp' ) }
+								showClear
+								className="h-9 w-56 bg-background"
+								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+							/>
+						</label>
+					</div>
+				) : null }
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
@@ -190,6 +265,17 @@ function LeaveForwardInner(): JSX.Element {
 						</table>
 					</div>
 				) }
+
+				{ ! pending && ! error && ! loading && total > 0 ? (
+					<OrgPagination
+						page={ page }
+						totalPages={ totalPages }
+						total={ total }
+						perPage={ perPage }
+						onPage={ setPage }
+						onPerPage={ ( n ) => { setPerPage( n ); setPage( 1 ); } }
+					/>
+				) : null }
 			</div>
 
 			<Dialog open={ confirm } onOpenChange={ ( next ) => ( busy ? undefined : setConfirm( next ) ) }>

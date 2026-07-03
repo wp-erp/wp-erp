@@ -269,6 +269,9 @@ export function LeaveRequestsTable( {
 							onSort={ onSort }
 						/>
 						<th scope="col" className="whitespace-nowrap px-2">
+							{ __( 'Reason', 'erp' ) }
+						</th>
+						<th scope="col" className="whitespace-nowrap px-2">
 							{ approverHeader }
 						</th>
 						<th scope="col" className="whitespace-nowrap px-2">
@@ -348,6 +351,20 @@ export function LeaveRequestsTable( {
 									status={ req.status }
 									label={ req.status_label }
 								/>
+							</td>
+							<td className="max-w-[12rem] px-2 align-middle text-sm text-muted-foreground">
+								{ req.reason ? (
+									<span
+										className="block truncate"
+										title={ req.reason }
+									>
+										{ req.reason }
+									</span>
+								) : (
+									<span className="text-muted-foreground">
+										—
+									</span>
+								) }
 							</td>
 							<td className="px-2 align-middle text-sm text-muted-foreground">
 								{ req.approved_by ? (

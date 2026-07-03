@@ -174,11 +174,24 @@ class EmployeeLeaveControllerV2 extends RestControllerV2 {
 		$items = [];
 		foreach ( $policies as $entitlement_id => $label ) {
 			$balance   = (array) erp_hr_leave_get_balance_for_single_entitlement( (int) $entitlement_id );
-			$items[]   = [
+			$item      = [
 				'id'        => (int) $entitlement_id,
 				'name'      => (string) $label,
 				'available' => isset( $balance['available'] ) ? (float) $balance['available'] : 0,
 			];
+
+			/**
+			 * Filters a single assignable-policy item before it's returned.
+			 *
+			 * Pro's Advanced Leave module uses this to append `halfday_enable`
+			 * (mirrors the legacy `erp_pro_hr_check_halfday_availability` AJAX
+			 * gate) so the React request form can hide the half-day control per
+			 * policy.
+			 *
+			 * @param array $item           The item, keyed `id`/`name`/`available`.
+			 * @param int   $entitlement_id
+			 */
+			$items[] = apply_filters( 'erp_hr_v2_leave_assignable_item', $item, (int) $entitlement_id );
 		}
 
 		return rest_ensure_response( [ 'policies' => $items ] );

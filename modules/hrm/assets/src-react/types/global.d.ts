@@ -95,11 +95,18 @@ export interface RouteHandle {
 	readonly capabilities?: readonly Capability[];
 }
 
+/** Advanced Leave (pro) boot payload — localized by `Module::react_leave_boot()`. */
+export interface ErpAdvLeaveBoot {
+	/** `erp-pro-hr-leave-pay-type-options` filter, e.g. Unpaid's "Calculate On". */
+	readonly encashmentOptions?: readonly BootSelectOption[];
+}
+
 declare global {
 	interface Window {
 		__ERP_HR_BOOT__?:        BootPayload;
 		__ERP_HR_LEGACY_URL__?:  LegacySwitchTarget;
 		wpApiSettings?:          { root: string; nonce: string };
+		erpAdvLeaveBoot?:        ErpAdvLeaveBoot;
 		wp?: {
 			hooks?: typeof import( '@wordpress/hooks' );
 			data?:  typeof import( '@wordpress/data' );

@@ -87,12 +87,25 @@ export function LeaveRequestDialog( {
 			setValidation( null );
 			setDateError( null );
 			setEntitlementError( null );
-
-			const fields = applyFilters( HOOKS.LEAVE_REQUEST_FIELDS, [], { userId, leavePolicyId: 0 } ) as LeaveExtraField[];
-			setExtraFields( fields );
-			setExtra( initLeaveFieldValues( fields ) );
 		}
 	}, [ open, currentYear, userId ] );
+
+	// Re-derive the pro-injected fields whenever the selected policy changes, so
+	// Advanced Leave's per-policy halfday gate (`ctx.halfdayEnabled`) can hide the
+	// halfday control for policies that don't allow it.
+	useEffect( () => {
+		if ( ! open ) {
+			return;
+		}
+		const selected = policies.find( ( p ) => String( p.id ) === policy );
+		const fields = applyFilters( HOOKS.LEAVE_REQUEST_FIELDS, [], {
+			userId,
+			leavePolicyId:  Number( policy || 0 ),
+			halfdayEnabled: selected?.halfday_enable ?? false,
+		} ) as LeaveExtraField[];
+		setExtraFields( fields );
+		setExtra( initLeaveFieldValues( fields ) );
+	}, [ open, userId, policy, policies ] );
 
 	// Live pre-validation of the date range (mirrors legacy leave_request_dates):
 	// working-day count on success, server message (overlap / balance / FY) on error.

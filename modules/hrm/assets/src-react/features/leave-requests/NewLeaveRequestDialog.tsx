@@ -98,10 +98,6 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 		setValidation( null );
 		setDateError( null );
 
-		const fields = applyFilters( HOOKS.LEAVE_REQUEST_FIELDS, [], { userId: 0, leavePolicyId: 0 } ) as LeaveExtraField[];
-		setExtraFields( fields );
-		setExtra( initLeaveFieldValues( fields ) );
-
 		let cancelled = false;
 		void request< { financial_years?: RawFinancialYear[]; current_f_year?: number } >( restPath( 'v2', '/leave-policies/form-options' ) )
 			.then( ( opts ) => {
@@ -161,6 +157,23 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 			cancelled = true;
 		};
 	}, [ open, userId, year ] );
+
+	// Re-derive the pro-injected fields whenever the selected policy changes, so
+	// Advanced Leave's per-policy halfday gate (`ctx.halfdayEnabled`) can hide the
+	// halfday control for policies that don't allow it.
+	useEffect( () => {
+		if ( ! open ) {
+			return;
+		}
+		const selected = policies.find( ( p ) => String( p.id ) === policy );
+		const fields = applyFilters( HOOKS.LEAVE_REQUEST_FIELDS, [], {
+			userId,
+			leavePolicyId:  Number( policy || 0 ),
+			halfdayEnabled: selected?.halfday_enable ?? false,
+		} ) as LeaveExtraField[];
+		setExtraFields( fields );
+		setExtra( initLeaveFieldValues( fields ) );
+	}, [ open, userId, policy, policies ] );
 
 	// Live pre-validation of the date range (mirrors legacy leave_request_dates).
 	useEffect( () => {
