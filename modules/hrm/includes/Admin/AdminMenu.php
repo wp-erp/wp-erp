@@ -17,7 +17,6 @@ class AdminMenu {
         add_action( 'admin_print_footer_scripts', [ $this, 'highlight_menu' ] );
         add_filter( 'parent_file', [ $this, 'highlight_submenu' ], 100 );
         add_filter( 'admin_footer_text', [ $this, 'hr_admin_footer_text' ], 99 );
-        add_filter( 'update_footer', [ $this, 'hr_admin_footer_version' ], 99 );
     }
 
     /**
@@ -47,22 +46,25 @@ class AdminMenu {
             return $text;
         }
 
+        $resolver = UiEngineResolver::instance();
+
+        // Footer switch lives ONLY on the classic (legacy Vue) HR — inviting the
+        // user to the new React experience. The React side gets a top notice
+        // (WelcomeNotice) instead, so leave its footer untouched.
+        if ( UiEngineResolver::ENGINE_LEGACY !== $resolver->resolve_engine( 'erp-hr' ) ) {
+            return $text;
+        }
+
+        $url = esc_url( $resolver->switch_url( 'erp-hr', UiEngineResolver::ENGINE_REACT ) );
+
         return sprintf(
-            '<span class="erp-hr-footer-note">%s</span>',
-            esc_html__( "We've redesigned the HR experience. Faster, cleaner, and built for your workflow.", 'erp' )
+            '<span class="erp-hr-footer-note">%s <a href="%s" class="erp-hr-footer-switch" style="font-weight:600;text-decoration:underline;">%s</a></span>',
+            esc_html__( "We've redesigned the HR experience. Faster, cleaner, and built for your workflow.", 'erp' ),
+            $url,
+            esc_html__( 'Try the new experience →', 'erp' )
         );
     }
 
-    /**
-     * Clear the right-side version string on HR screens (mirrors the redesign footer).
-     *
-     * @param string $content Default footer version content.
-     *
-     * @return string
-     */
-    public function hr_admin_footer_version( $content ) {
-        return $this->is_hr_screen() ? '' : $content;
-    }
 
     /**
      * Add menu items
@@ -262,8 +264,6 @@ class AdminMenu {
         if ( $sub ) {
             $callback = $menu[ $section ]['submenu'][ $sub ]['callback'];
         }
-
-        $this->print_react_switch_banner();
 
         erp_render_menu( $component );
 

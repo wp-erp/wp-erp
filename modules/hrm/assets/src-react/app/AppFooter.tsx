@@ -21,7 +21,7 @@ export function AppFooter(): JSX.Element {
 			<div className="mx-auto flex w-full max-w-full flex-wrap items-center justify-between gap-3 px-6 py-3 text-xs text-muted-foreground">
 				<span>
 					{ __( '© ', 'erp' ) }{ year }{ ' ' }
-					{ __( 'WP-ERP HR · Built with care', 'erp' ) }
+					{ __( 'WP-ERP HR', 'erp' ) }
 				</span>
 				<LegacyLink />
 			</div>
