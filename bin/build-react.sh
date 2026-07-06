@@ -20,6 +20,9 @@ OUT="$DIR/assets/dist-react"
 
 # Switch to the pinned Node line (the React admin needs >= 24). nvm is the team
 # standard; honour it when present, otherwise validate the active Node and bail.
+# nvm refuses to load when npm_config_prefix is set (Homebrew's npm sets it to
+# /opt/homebrew), which aborts the release. Clear it before sourcing nvm.
+unset npm_config_prefix
 if [ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]; then
 	export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 	# shellcheck disable=SC1091
