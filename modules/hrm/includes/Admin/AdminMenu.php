@@ -16,6 +16,52 @@ class AdminMenu {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'admin_print_footer_scripts', [ $this, 'highlight_menu' ] );
         add_filter( 'parent_file', [ $this, 'highlight_submenu' ], 100 );
+        add_filter( 'admin_footer_text', [ $this, 'hr_admin_footer_text' ], 99 );
+        add_filter( 'update_footer', [ $this, 'hr_admin_footer_version' ], 99 );
+    }
+
+    /**
+     * Whether the current admin screen is an HR (React or legacy Vue) screen.
+     *
+     * @return bool
+     */
+    private function is_hr_screen() {
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            return false;
+        }
+        $screen = get_current_screen();
+
+        return $screen && false !== strpos( (string) $screen->id, 'erp-hr' );
+    }
+
+    /**
+     * Replace the WP admin footer text on HR screens with the redesign note.
+     * Shown on both the React admin and the legacy Vue pages (same screen).
+     *
+     * @param string $text Default footer text.
+     *
+     * @return string
+     */
+    public function hr_admin_footer_text( $text ) {
+        if ( ! $this->is_hr_screen() ) {
+            return $text;
+        }
+
+        return sprintf(
+            '<span class="erp-hr-footer-note">%s</span>',
+            esc_html__( "We've redesigned the HR experience. Faster, cleaner, and built for your workflow.", 'erp' )
+        );
+    }
+
+    /**
+     * Clear the right-side version string on HR screens (mirrors the redesign footer).
+     *
+     * @param string $content Default footer version content.
+     *
+     * @return string
+     */
+    public function hr_admin_footer_version( $content ) {
+        return $this->is_hr_screen() ? '' : $content;
     }
 
     /**
