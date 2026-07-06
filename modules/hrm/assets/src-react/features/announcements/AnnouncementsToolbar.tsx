@@ -9,7 +9,7 @@ import { Input } from '@wedevs/plugin-ui';
 import { Filter, Search } from 'lucide-react';
 import type { JSX } from 'react';
 
-import { DateField } from '@/shared/DateField';
+import { DateRangeField } from '@/shared/DateRangeField';
 import { __ } from '@/shared/i18n';
 
 import { STATUS_TABS } from './announcements-format';
@@ -109,21 +109,14 @@ export function AnnouncementsToolbar( {
 			{ filterButtonActive ? (
 				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'From', 'erp' ) }
-						<DateField
-							value={ startDate }
-							onChange={ onStartDate }
-							max={ endDate || undefined }
-							className="h-9 w-44 border-border bg-background px-3 text-sm"
-						/>
-					</label>
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'To', 'erp' ) }
-						<DateField
-							value={ endDate }
-							onChange={ onEndDate }
-							min={ startDate || undefined }
-							className="h-9 w-44 border-border bg-background px-3 text-sm"
+						{ __( 'Date range', 'erp' ) }
+						<DateRangeField
+							value={ { from: startDate, to: endDate } }
+							onChange={ ( r ) => {
+								onStartDate( r.from );
+								onEndDate( r.to );
+							} }
+							className="w-64 bg-background"
 						/>
 					</label>
 				</div>

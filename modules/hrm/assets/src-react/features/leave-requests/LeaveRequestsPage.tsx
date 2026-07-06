@@ -48,54 +48,6 @@ const STATUS_TABS: ReadonlyArray< { value: number; label: string } > = [
 
 const SEARCH_DEBOUNCE_MS = 350;
 
-/** Local `YYYY-MM-DD` for a Date. */
-function iso( d: Date ): string {
-	const pad = ( n: number ): string => String( n ).padStart( 2, '0' );
-	return `${ d.getFullYear() }-${ pad( d.getMonth() + 1 ) }-${ pad(
-		d.getDate()
-	) }`;
-}
-
-/**
- * Resolve the active date-range filter to concrete `{ start, end }` ISO bounds,
- * mirroring the legacy `filter_leave_year` presets: last week, last month, last
- * 3 months, or a custom From/To range. Empty strings = no range.
- * @param preset Relative preset id or 'custom'.
- * @param customStart Custom start (only used when preset === 'custom').
- * @param customEnd   Custom end (only used when preset === 'custom').
- */
-function resolveDateRange(
-	preset: string,
-	customStart: string,
-	customEnd: string
-): { start: string; end: string } {
-	const today = new Date();
-
-	if ( preset === '1' ) {
-		const start = new Date( today );
-		start.setDate( start.getDate() - 7 );
-		return { start: iso( start ), end: iso( today ) };
-	}
-	if ( preset === '2' ) {
-		const start = new Date(
-			today.getFullYear(),
-			today.getMonth() - 1,
-			1
-		);
-		const end = new Date( today.getFullYear(), today.getMonth(), 0 );
-		return { start: iso( start ), end: iso( end ) };
-	}
-	if ( preset === '3' ) {
-		const start = new Date( today );
-		start.setMonth( start.getMonth() - 3 );
-		return { start: iso( start ), end: iso( today ) };
-	}
-	if ( preset === 'custom' ) {
-		return { start: customStart, end: customEnd };
-	}
-	return { start: '', end: '' };
-}
-
 function LeaveRequestsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
 
@@ -106,7 +58,6 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ departmentId, setDepartmentId ] = useState( 0 );
 	const [ designationId, setDesignationId ] = useState( 0 );
 	const [ employmentType, setEmploymentType ] = useState( '' );
-	const [ datePreset, setDatePreset ] = useState( '' );
 	const [ startDate, setStartDate ] = useState( '' );
 	const [ endDate, setEndDate ] = useState( '' );
 	const [ orderby, setOrderby ] = useState( 'created_at' );
@@ -117,10 +68,8 @@ function LeaveRequestsInner(): JSX.Element {
 	const [ page, setPage ] = useState( 1 );
 	const [ perPage, setPerPage ] = useState( 20 );
 
-	const { start: rangeStart, end: rangeEnd } = useMemo(
-		() => resolveDateRange( datePreset, startDate, endDate ),
-		[ datePreset, startDate, endDate ]
-	);
+	const rangeStart = startDate;
+	const rangeEnd = endDate;
 
 	const {
 		rows,
@@ -541,8 +490,6 @@ function LeaveRequestsInner(): JSX.Element {
 						onDesignationId={ setDesignationId }
 						employmentType={ employmentType }
 						onEmploymentType={ setEmploymentType }
-						datePreset={ datePreset }
-						onDatePreset={ setDatePreset }
 						startDate={ startDate }
 						onStartDate={ setStartDate }
 						endDate={ endDate }

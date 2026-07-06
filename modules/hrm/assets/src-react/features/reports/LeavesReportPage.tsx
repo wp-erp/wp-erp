@@ -13,7 +13,7 @@ import { Filter } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
-import { DateField } from '@/shared/DateField';
+import { DateRangeField } from '@/shared/DateRangeField';
 import { __ } from '@/shared/i18n';
 import { formatNumberI18n } from '@/shared/utils/number';
 
@@ -151,24 +151,17 @@ export function LeavesReportPage(): JSX.Element {
 			{ filterButtonActive ? (
 				<div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-muted/20 p-3">
 					{ year === 'custom' ? (
-						<>
-							<label className="flex items-center gap-2 text-sm text-muted-foreground">
-								{ __( 'From', 'erp' ) }
-								<DateField
-									value={ start }
-									onChange={ ( v ) => setStart( v ) }
-									className="h-10 w-40 border-border px-4 text-sm"
-								/>
-							</label>
-							<label className="flex items-center gap-2 text-sm text-muted-foreground">
-								{ __( 'To', 'erp' ) }
-								<DateField
-									value={ end }
-									onChange={ ( v ) => setEnd( v ) }
-									className="h-10 w-40 border-border px-4 text-sm"
-								/>
-							</label>
-						</>
+						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							{ __( 'Date range', 'erp' ) }
+							<DateRangeField
+								value={ { from: start, to: end } }
+								onChange={ ( r ) => {
+									setStart( r.from );
+									setEnd( r.to );
+								} }
+								className="w-64"
+							/>
+						</label>
 					) : null }
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
 						{ __( 'Designation', 'erp' ) }

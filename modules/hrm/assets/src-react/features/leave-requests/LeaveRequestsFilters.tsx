@@ -7,22 +7,13 @@
 import { SmartSelect } from '@wedevs/plugin-ui';
 import type { JSX } from 'react';
 
-import { DateField } from '@/shared/DateField';
+import { DateRangeField } from '@/shared/DateRangeField';
 import { __ } from '@/shared/i18n';
 
 interface Option {
 	readonly value: string;
 	readonly label: string;
 }
-
-/** Relative date-range presets — mirror the legacy `filter_leave_year` select. */
-export const DATE_PRESET_OPTIONS: Option[] = [
-	{ value: '', label: __( 'Filter by date', 'erp' ) },
-	{ value: '1', label: __( 'Last week', 'erp' ) },
-	{ value: '2', label: __( 'Last month', 'erp' ) },
-	{ value: '3', label: __( 'Last 3 months', 'erp' ) },
-	{ value: 'custom', label: __( 'Custom', 'erp' ) },
-];
 
 interface LeaveRequestsFiltersProps {
 	readonly leaveId: number;
@@ -35,8 +26,6 @@ interface LeaveRequestsFiltersProps {
 	readonly onDesignationId: ( v: number ) => void;
 	readonly employmentType: string;
 	readonly onEmploymentType: ( v: string ) => void;
-	readonly datePreset: string;
-	readonly onDatePreset: ( v: string ) => void;
 	readonly startDate: string;
 	readonly onStartDate: ( v: string ) => void;
 	readonly endDate: string;
@@ -59,8 +48,6 @@ export function LeaveRequestsFilters( {
 	onDesignationId,
 	employmentType,
 	onEmploymentType,
-	datePreset,
-	onDatePreset,
 	startDate,
 	onStartDate,
 	endDate,
@@ -141,38 +128,15 @@ export function LeaveRequestsFilters( {
 			</label>
 			<label className="flex items-center gap-2 text-sm text-muted-foreground">
 				{ __( 'Date range', 'erp' ) }
-				<SmartSelect
-					options={ DATE_PRESET_OPTIONS }
-					value={ datePreset }
-					onValueChange={ ( v ) => onDatePreset( v || '' ) }
-					placeholder={ __( 'Filter by date', 'erp' ) }
-					showClear
-					className="h-9 w-44 bg-background"
-					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+				<DateRangeField
+					value={ { from: startDate, to: endDate } }
+					onChange={ ( r ) => {
+						onStartDate( r.from );
+						onEndDate( r.to );
+					} }
+					className="w-64 bg-background"
 				/>
 			</label>
-			{ datePreset === 'custom' ? (
-				<>
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'From', 'erp' ) }
-						<DateField
-							value={ startDate }
-							onChange={ onStartDate }
-							max={ endDate || undefined }
-							className="h-9 w-40 bg-background"
-						/>
-					</label>
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'To', 'erp' ) }
-						<DateField
-							value={ endDate }
-							onChange={ onEndDate }
-							min={ startDate || undefined }
-							className="h-9 w-40 bg-background"
-						/>
-					</label>
-				</>
-			) : null }
 		</div>
 	);
 }

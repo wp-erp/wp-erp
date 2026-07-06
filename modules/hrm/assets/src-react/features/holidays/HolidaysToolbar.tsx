@@ -8,7 +8,7 @@ import { Input } from '@wedevs/plugin-ui';
 import { Filter, Search } from 'lucide-react';
 import type { JSX } from 'react';
 
-import { DateField } from '@/shared/DateField';
+import { DateRangeField } from '@/shared/DateRangeField';
 import { __ } from '@/shared/i18n';
 
 interface HolidaysToolbarProps {
@@ -87,21 +87,14 @@ export function HolidaysToolbar( {
 			{ filterButtonActive ? (
 				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'From', 'erp' ) }
-						<DateField
-							value={ from }
-							onChange={ onFrom }
-							max={ to || undefined }
-							className="h-9 w-44 bg-background"
-						/>
-					</label>
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
-						{ __( 'To', 'erp' ) }
-						<DateField
-							value={ to }
-							onChange={ onTo }
-							min={ from || undefined }
-							className="h-9 w-44 bg-background"
+						{ __( 'Date range', 'erp' ) }
+						<DateRangeField
+							value={ { from, to } }
+							onChange={ ( r ) => {
+								onFrom( r.from );
+								onTo( r.to );
+							} }
+							className="w-64 bg-background"
 						/>
 					</label>
 				</div>
