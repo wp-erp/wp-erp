@@ -18,9 +18,13 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTitle,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 	Input,
 } from '@wedevs/plugin-ui';
-import { Briefcase, Building2, CornerDownLeft, Search, Users } from 'lucide-react';
+import { Briefcase, Building2, Check, ChevronDown, CornerDownLeft, Search, Users } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -33,6 +37,9 @@ import { useGlobalSearch } from './useGlobalSearch';
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 
 type HitKind = 'employee' | 'department' | 'designation';
+
+/** Scope the palette to one result kind (or all). */
+type Scope = 'all' | HitKind;
 
 interface FlatItem {
 	readonly key:  string;
@@ -70,7 +77,19 @@ export function SearchTrigger(): JSX.Element {
 	const [ open, setOpen ]   = useState( false );
 	const [ query, setQuery ] = useState( '' );
 	const [ active, setActive ] = useState( 0 );
+	const [ scope, setScope ] = useState< Scope >( 'all' );
 	const listRef = useRef< HTMLDivElement >( null );
+
+	const scopeOptions: readonly { value: Scope; label: string }[] = useMemo(
+		() => [
+			{ value: 'all', label: __( 'All', 'erp' ) },
+			{ value: 'employee', label: __( 'Employees', 'erp' ) },
+			{ value: 'department', label: __( 'Departments', 'erp' ) },
+			{ value: 'designation', label: __( 'Designations', 'erp' ) },
+		],
+		[]
+	);
+	const scopeLabel = scopeOptions.find( ( s ) => s.value === scope )?.label ?? '';
 
 	const { results, loading } = useGlobalSearch( query, open );
 
@@ -94,8 +113,8 @@ export function SearchTrigger(): JSX.Element {
 					{ kind: 'department', label: __( 'Departments', 'erp' ), Icon: Building2, hits: results.departments },
 					{ kind: 'designation', label: __( 'Designations', 'erp' ), Icon: Briefcase, hits: results.designations },
 				] as const
-			).filter( ( g ) => g.hits.length > 0 ),
-		[ results ]
+			).filter( ( g ) => g.hits.length > 0 && ( scope === 'all' || g.kind === scope ) ),
+		[ results, scope ]
 	);
 
 	const flat = useMemo< FlatItem[] >(
@@ -114,7 +133,7 @@ export function SearchTrigger(): JSX.Element {
 	// Keep the active index in range as results change.
 	useEffect( () => {
 		setActive( 0 );
-	}, [ query ] );
+	}, [ query, scope ] );
 
 	function close(): void {
 		setOpen( false );
@@ -189,6 +208,38 @@ export function SearchTrigger(): JSX.Element {
 							placeholder={ __( 'Search employees, departments, designations…', 'erp' ) }
 							className="h-12 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
 						/>
+					</div>
+
+					<div className="flex items-center gap-1.5 border-b border-border px-4 py-2 text-xs text-muted-foreground">
+						<span>{ __( 'Filter:', 'erp' ) }</span>
+						<DropdownMenu>
+							<DropdownMenuTrigger
+								render={
+									<button
+										type="button"
+										className="inline-flex items-center gap-1 rounded px-1 py-0.5 font-semibold text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+										aria-label={ __( 'Filter search results', 'erp' ) }
+									>
+										{ scopeLabel }
+										<ChevronDown size={ 13 } strokeWidth={ 2 } aria-hidden="true" />
+									</button>
+								}
+							/>
+							<DropdownMenuContent align="start" className="min-w-40">
+								{ scopeOptions.map( ( s ) => (
+									<DropdownMenuItem
+										key={ s.value }
+										className="justify-between gap-2"
+										onClick={ () => setScope( s.value ) }
+									>
+										{ s.label }
+										{ scope === s.value ? (
+											<Check size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+										) : null }
+									</DropdownMenuItem>
+								) ) }
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 
 					<div ref={ listRef } className="max-h-[22rem] overflow-y-auto p-2">
