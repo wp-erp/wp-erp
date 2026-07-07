@@ -6,6 +6,7 @@
 import type { ComponentType, SVGProps } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { parseServerDate } from '@/shared/utils/date';
 
 export type LucideIcon = ComponentType<
 	SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number }
@@ -25,12 +26,9 @@ export function greeting(): string {
 
 /** Short "Mon D" date label; "—" when empty, raw slice when unparseable. */
 export function fmtDate( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 0, 10 );
+	const d = parseServerDate( value );
+	if ( ! d ) {
+		return value ? value.slice( 0, 10 ) : '—';
 	}
 	return d.toLocaleDateString( undefined, {
 		month: 'short',
@@ -40,12 +38,9 @@ export function fmtDate( value: string | null ): string {
 
 /** Long "Month D" date label (used for birthdays). */
 export function fmtDayMonth( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 5, 10 );
+	const d = parseServerDate( value );
+	if ( ! d ) {
+		return value ? value.slice( 5, 10 ) : '—';
 	}
 	return d.toLocaleDateString( undefined, { month: 'long', day: 'numeric' } );
 }

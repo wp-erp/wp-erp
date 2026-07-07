@@ -153,9 +153,11 @@ abstract class RestControllerV2 extends WP_REST_Controller {
 			return null;
 		}
 
-		// Pure date (YYYY-MM-DD) — preserve as-is, no spurious time component.
+		// Pure date (YYYY-MM-DD) — return the calendar day untouched. Running it
+		// through a timestamp + `gmdate` roundtrip shifts it back a day for
+		// positive-offset site timezones (off-by-one on the client).
 		if ( strpos( $value, ' ' ) === false && strpos( $value, 'T' ) === false ) {
-			return gmdate( 'Y-m-d', $timestamp );
+			return substr( $value, 0, 10 );
 		}
 
 		return gmdate( 'c', $timestamp );

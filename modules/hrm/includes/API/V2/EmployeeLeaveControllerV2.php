@@ -549,9 +549,14 @@ class EmployeeLeaveControllerV2 extends RestControllerV2 {
 		if ( $value === null || $value === '' ) {
 			return null;
 		}
-		// Pure-integer string/number → treat as a Unix timestamp.
+		// Pure-integer string/number → treat as a Unix timestamp. Leave
+		// start/end are calendar dates stored as the instant of *site-local*
+		// midnight, so format the calendar day back in the site timezone
+		// (`wp_date`, not `gmdate`). Using UTC here shifts the date back a day
+		// for any viewer whose browser timezone differs from the site — the
+		// "leave saved one day less" bug.
 		if ( is_numeric( $value ) && (string) (int) $value === (string) $value ) {
-			return gmdate( 'c', (int) $value );
+			return wp_date( 'Y-m-d', (int) $value );
 		}
 		return $this->cast_date_iso( $value );
 	}

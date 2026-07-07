@@ -35,26 +35,17 @@ import type { JSX } from 'react';
 import { PersonCell } from '@/shared/components/PersonCell';
 import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
+import { formatDisplayDate } from '@/shared/utils/date';
 
 import type { LeaveRequest, LeaveRequestRowAction } from './types';
 
 /**
  * Long "Year Mon D" date label; "—" when empty, raw slice when unparseable.
+ * Parses date-only `YYYY-MM-DD` as a local day so it never shifts back one.
  * @param value
  */
 function fmt( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 0, 10 );
-	}
-	return d.toLocaleDateString( undefined, {
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric',
-	} );
+	return formatDisplayDate( value, ( value ?? '' ).slice( 0, 10 ) || '—' );
 }
 
 /**

@@ -4,6 +4,7 @@
  */
 
 import { __ } from '@/shared/i18n';
+import { formatDisplayDate } from '@/shared/utils/date';
 
 export const STATUS_TABS: ReadonlyArray< { value: string; label: string } > = [
 	{ value: 'publish', label: __( 'Published', 'erp' ) },
@@ -14,9 +15,5 @@ export const STATUS_TABS: ReadonlyArray< { value: string; label: string } > = [
 export const SEARCH_DEBOUNCE_MS = 350;
 
 export function fmt( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	return Number.isNaN( d.getTime() ) ? value.slice( 0, 10 ) : d.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
+	return formatDisplayDate( value, ( value ?? '' ).slice( 0, 10 ) || '—' );
 }

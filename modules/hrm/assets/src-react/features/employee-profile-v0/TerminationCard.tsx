@@ -11,13 +11,14 @@ import { Calendar, FileText, ShieldCheck, UserX } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { parseServerDate } from '@/shared/utils/date';
 
 import type { LucideIcon } from './profile-format';
 
 /** Format an ISO date to a locale-friendly display; falls back to the raw string. */
 function formatDate( iso: string ): string {
-	const date = new Date( iso );
-	if ( Number.isNaN( date.getTime() ) ) {
+	const date = parseServerDate( iso );
+	if ( ! date ) {
 		return iso;
 	}
 	return date.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );

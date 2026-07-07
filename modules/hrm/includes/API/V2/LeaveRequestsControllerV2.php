@@ -593,7 +593,11 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 			return null;
 		}
 		if ( is_numeric( $value ) ) {
-			return gmdate( 'Y-m-d', (int) $value );
+			// Leave start/end are calendar dates stored as the instant of
+			// *site-local* midnight. Format the calendar day back in the site
+			// timezone (`wp_date`, not `gmdate`) — UTC here renders the prior
+			// day for positive-offset sites (the "leave one day less" bug).
+			return wp_date( 'Y-m-d', (int) $value );
 		}
 		return $this->cast_date_iso( $value );
 	}

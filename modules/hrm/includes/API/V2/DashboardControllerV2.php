@@ -451,6 +451,9 @@ class DashboardControllerV2 extends RestControllerV2 {
 			// Already a date string — defer to the shared caster.
 			return $this->cast_date_iso( $value );
 		}
-		return gmdate( 'Y-m-d', (int) $value );
+		// Leave/holiday dates are calendar days stored as the instant of
+		// site-local midnight — format in the site timezone (`wp_date`), not
+		// UTC, or the day shifts back one for positive-offset sites.
+		return wp_date( 'Y-m-d', (int) $value );
 	}
 }

@@ -14,20 +14,14 @@ import type { JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { __ } from '@/shared/i18n';
+import { formatDisplayDate } from '@/shared/utils/date';
 
 import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
 import { useHeadcount } from './useReports';
 
 function fmtDate( value: string | null ): string {
-	if ( ! value ) {
-		return '—';
-	}
-	const d = new Date( value );
-	if ( Number.isNaN( d.getTime() ) ) {
-		return value.slice( 0, 10 );
-	}
-	return d.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
+	return formatDisplayDate( value, ( value ?? '' ).slice( 0, 10 ) || '—' );
 }
 
 function monthLabel( ym: string ): string {

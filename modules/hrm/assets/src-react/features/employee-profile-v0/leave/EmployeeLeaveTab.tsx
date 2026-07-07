@@ -14,6 +14,7 @@ import type { JSX } from 'react';
 
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { parseServerDate } from '@/shared/utils/date';
 
 import { LeaveRequestDialog } from './LeaveRequestDialog';
 import { useEmployeeLeave } from './useEmployeeLeave';
@@ -32,11 +33,8 @@ function statusVariant( code: number | null ): 'success' | 'secondary' | 'destru
 }
 
 function formatDate( iso: string | null ): string {
-	if ( ! iso ) {
-		return '—';
-	}
-	const date = new Date( iso );
-	if ( Number.isNaN( date.getTime() ) ) {
+	const date = parseServerDate( iso );
+	if ( ! date ) {
 		return '—';
 	}
 	return date.toLocaleDateString( undefined, { month: 'short', day: 'numeric' } );

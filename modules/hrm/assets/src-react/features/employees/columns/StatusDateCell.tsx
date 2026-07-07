@@ -6,17 +6,11 @@
 
 import type { JSX } from 'react';
 
+import { formatDisplayDate } from '@/shared/utils/date';
 import type { EmployeeListItem } from '@/stores/employees';
 
 function formatDate( iso: string | null ): string {
-	if ( ! iso ) {
-		return '—';
-	}
-	const date = new Date( iso );
-	if ( Number.isNaN( date.getTime() ) ) {
-		return iso;
-	}
-	return date.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
+	return formatDisplayDate( iso, iso ?? '—' );
 }
 
 export function StatusDateCell( { row }: { readonly row: EmployeeListItem } ): JSX.Element {

@@ -17,6 +17,7 @@ import type { JSX, ReactNode } from 'react';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
+import { formatDisplayDate } from '@/shared/utils/date';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeTerminateInput } from '@/stores/employees';
 
@@ -39,14 +40,7 @@ interface JobDispatch {
 }
 
 function formatDate( iso: string | null ): string {
-	if ( ! iso ) {
-		return '—';
-	}
-	const date = new Date( iso );
-	if ( Number.isNaN( date.getTime() ) ) {
-		return '—';
-	}
-	return date.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
+	return formatDisplayDate( iso );
 }
 
 function cell( value: string ): string {
