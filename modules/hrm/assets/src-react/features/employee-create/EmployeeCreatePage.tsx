@@ -9,9 +9,8 @@
  * action, and a sticky action bar.
  */
 
-import { Button, toast } from '@wedevs/plugin-ui';
+import { toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
-import { X } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -60,29 +59,10 @@ function EmployeeCreateInner(): JSX.Element {
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
-				<section className="flex flex-wrap items-start justify-between gap-4 rounded-[10px] bg-card p-6 shadow-sm">
-					<div className="min-w-0">
-						<h1 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
-							{ __( 'Add New Employee', 'erp' ) }
-						</h1>
-						<p className="mt-1 text-sm text-muted-foreground">
-							{ __( 'Create a new member of your team.', 'erp' ) }
-						</p>
-					</div>
-					<Button
-						type="button"
-						variant="outline"
-						size="icon"
-						onClick={ close }
-						aria-label={ __( 'Close', 'erp' ) }
-						className="size-9 shrink-0 border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-					>
-						<X size={ 18 } aria-hidden="true" />
-					</Button>
-				</section>
-
 				<EmployeeForm
 					mode="create"
+					heading={ __( 'Add New Employee', 'erp' ) }
+					subheading={ __( 'Create a new member of your team.', 'erp' ) }
 					initialValues={ { status: 'active' } }
 					submitLabel={ __( 'Create Employee', 'erp' ) }
 					busyLabel={ __( 'Creating…', 'erp' ) }

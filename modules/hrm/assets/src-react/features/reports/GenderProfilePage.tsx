@@ -85,7 +85,7 @@ export function GenderProfilePage(): JSX.Element {
 						</ChartContainer>
 					</div>
 				) : null }
-				<div className="rounded-lg border border-border bg-card shadow-sm">
+				<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
 						<table className="w-full min-w-[40rem] text-left">
 					<thead className="border-b border-border bg-card">
@@ -135,7 +135,7 @@ export function GenderProfilePage(): JSX.Element {
 						</ChartContainer>
 					) : null }
 
-					<div className="rounded-lg border border-border bg-card shadow-sm">
+					<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 						<div className="overflow-x-auto">
 							<table className="w-full min-w-[40rem] text-left">
 								<thead className="border-b border-border bg-card">

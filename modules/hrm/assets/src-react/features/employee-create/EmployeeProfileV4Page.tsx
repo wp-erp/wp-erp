@@ -128,10 +128,12 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 			{ /* HEADER card. */ }
 			<SingleHeader
 				record={ record }
+				userId={ userId }
 				canEdit={ canEdit }
 				canViewNotes={ canViewNotes }
 				onEdit={ goEdit }
 				onSetTab={ setTab }
+				onAvatarChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
 			/>
 
 			{ /* BODY — left nav card + right content card. */ }

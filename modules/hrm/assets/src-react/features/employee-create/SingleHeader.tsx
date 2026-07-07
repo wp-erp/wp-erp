@@ -12,18 +12,21 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
+import { AvatarUpload } from '../employee-profile-v3/AvatarUpload';
 import { STATUS_OPTIONS, TYPE_OPTIONS } from '../employee-profile-v0/options';
 import { initials, labelOf, statusVariant, str, type Record_ } from './single-format';
 
 interface SingleHeaderProps {
-	readonly record:       Record_;
-	readonly canEdit:      boolean;
-	readonly canViewNotes: boolean;
-	readonly onEdit:       () => void;
-	readonly onSetTab:     ( v: string ) => void;
+	readonly record:          Record_;
+	readonly userId:          number;
+	readonly canEdit:         boolean;
+	readonly canViewNotes:    boolean;
+	readonly onEdit:          () => void;
+	readonly onSetTab:        ( v: string ) => void;
+	readonly onAvatarChange:  ( avatarUrl: string ) => void;
 }
 
-export function SingleHeader( { record, canEdit, canViewNotes, onEdit, onSetTab }: SingleHeaderProps ): JSX.Element {
+export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, onSetTab, onAvatarChange }: SingleHeaderProps ): JSX.Element {
 	const fullName    = str( record, 'full_name' );
 	const avatarUrl   = str( record, 'avatar_url' );
 	const status      = str( record, 'status' );
@@ -34,10 +37,20 @@ export function SingleHeader( { record, canEdit, canViewNotes, onEdit, onSetTab 
 	return (
 		<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
 			<div className="flex flex-wrap items-start gap-5">
-				<Avatar className="size-20 shrink-0">
-					{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
-					<AvatarFallback className="text-lg">{ initials( fullName ) }</AvatarFallback>
-				</Avatar>
+				{ canEdit ? (
+					<AvatarUpload
+						userId={ userId }
+						avatarUrl={ avatarUrl }
+						fullName={ fullName }
+						initials={ initials( fullName ) }
+						onChange={ onAvatarChange }
+					/>
+				) : (
+					<Avatar className="size-20 shrink-0">
+						{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
+						<AvatarFallback className="text-lg">{ initials( fullName ) }</AvatarFallback>
+					</Avatar>
+				) }
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
 					<div className="flex items-center gap-2">

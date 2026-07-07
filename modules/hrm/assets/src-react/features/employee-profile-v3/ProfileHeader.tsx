@@ -32,7 +32,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit }: ProfileHeade
 		<div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
 			<div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-3xl bg-amber-100 ring-1 ring-border/60 lg:w-72">
 				{ avatarUrl ? (
-					<img src={ avatarUrl } alt={ fullName } className="size-full object-cover" />
+					<img src={ avatarUrl } alt={ fullName } />
 				) : (
 					<div className="flex size-full items-center justify-center text-6xl font-bold text-amber-700">
 						{ initials( fullName ) }

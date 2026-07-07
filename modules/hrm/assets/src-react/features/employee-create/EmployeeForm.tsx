@@ -14,6 +14,7 @@
  */
 
 import { Button, toast } from '@wedevs/plugin-ui';
+import { X } from 'lucide-react';
 import { useDispatch } from '@wordpress/data';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo, useState } from 'react';
@@ -40,6 +41,7 @@ import type { LookupOption } from '../employees/filters/lookups';
 import { EmployeeBasicSection } from './EmployeeBasicSection';
 import { EmployeeFormAlerts } from './EmployeeFormAlerts';
 import { PhotoUpload } from './PhotoUpload';
+import { AvatarUpload } from '../employee-profile-v3/AvatarUpload';
 import { EmployeeNotificationSection } from './EmployeeNotificationSection';
 import { EmployeePersonalSection } from './EmployeePersonalSection';
 import { EmployeeWorkSection } from './EmployeeWorkSection';
@@ -65,6 +67,9 @@ function toOptions( list: LookupOption[] ): Option[] {
 
 interface EmployeeFormProps {
 	readonly mode: FormMode;
+	/** Profile-header card title + subtitle (rendered beside the avatar). */
+	readonly heading: string;
+	readonly subheading: string;
 	readonly initialValues: FormState;
 	readonly submitLabel: string;
 	readonly busyLabel: string;
@@ -74,10 +79,14 @@ interface EmployeeFormProps {
 	readonly onCancel: () => void;
 	/** Employee id in edit mode — passed to the extra-fields filter for prefill. */
 	readonly employeeId?: number;
+	/** Current avatar URL in edit mode — seeds the photo section preview. */
+	readonly initialAvatarUrl?: string;
 }
 
 export function EmployeeForm( {
 	mode,
+	heading,
+	subheading,
 	initialValues,
 	submitLabel,
 	busyLabel,
@@ -86,6 +95,7 @@ export function EmployeeForm( {
 	onSubmit,
 	onCancel,
 	employeeId,
+	initialAvatarUrl,
 }: EmployeeFormProps ): JSX.Element {
 	const isEdit = mode === 'edit';
 
@@ -99,9 +109,10 @@ export function EmployeeForm( {
 	};
 
 	const [ form, setForm ] = useState< FormState >( initialValues );
-	// Preview URL for the create-mode photo picker (the attachment id lives in
-	// `form.photo_id`, which flows into the create payload).
-	const [ photoUrl, setPhotoUrl ] = useState( '' );
+	// Preview URL for the photo section. In create the attachment id lives in
+	// `form.photo_id` (flows into the create payload); in edit it seeds from the
+	// employee's current avatar and updates via the dedicated avatar endpoint.
+	const [ photoUrl, setPhotoUrl ] = useState( initialAvatarUrl ?? '' );
 	const [ notify, setNotify ] = useState( false );
 	const [ sendLogin, setSendLogin ] = useState( false );
 	const [ errors, setErrors ] = useState< Record< string, string > >( {} );
@@ -379,27 +390,58 @@ export function EmployeeForm( {
 				/>
 
 				<div className="space-y-6">
-					{ ! isEdit && (
-						<section className="rounded-[10px] bg-card p-6 shadow-sm">
-							<PhotoUpload
-								avatarUrl={ photoUrl }
-								fullName={ `${ form.first_name ?? '' } ${ form.last_name ?? '' }`.trim() }
-								initials={
-									(
-										( form.first_name ?? '' ).charAt( 0 ) +
-										( form.last_name ?? '' ).charAt( 0 )
-									).toUpperCase() || 'E'
-								}
-								onChange={ ( photoId, url ) => {
-									setPhotoUrl( url );
-									setForm( ( prev ) => ( {
-										...prev,
-										photo_id: String( photoId ),
-									} ) );
-								} }
-							/>
-						</section>
-					) }
+					{ /* Profile header — page title + the employee photo in one card. */ }
+					<section className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] bg-card p-6 shadow-sm">
+						<div className="flex min-w-0 items-center gap-4">
+							{ isEdit ? (
+								<AvatarUpload
+									userId={ employeeId ?? 0 }
+									avatarUrl={ photoUrl }
+									fullName={ `${ form.first_name ?? '' } ${ form.last_name ?? '' }`.trim() }
+									initials={
+										(
+											( form.first_name ?? '' ).charAt( 0 ) +
+											( form.last_name ?? '' ).charAt( 0 )
+										).toUpperCase() || 'E'
+									}
+									onChange={ ( url ) => setPhotoUrl( url ) }
+								/>
+							) : (
+								<PhotoUpload
+									compact
+									avatarUrl={ photoUrl }
+									fullName={ `${ form.first_name ?? '' } ${ form.last_name ?? '' }`.trim() }
+									initials={
+										(
+											( form.first_name ?? '' ).charAt( 0 ) +
+											( form.last_name ?? '' ).charAt( 0 )
+										).toUpperCase() || 'E'
+									}
+									onChange={ ( photoId, url ) => {
+										setPhotoUrl( url );
+										setForm( ( prev ) => ( {
+											...prev,
+											photo_id: String( photoId ),
+										} ) );
+									} }
+								/>
+							) }
+							<div className="min-w-0">
+								<h1 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ heading }</h1>
+								<p className="mt-1 truncate text-sm text-muted-foreground">{ subheading }</p>
+							</div>
+						</div>
+						<Button
+							type="button"
+							variant="outline"
+							size="icon"
+							onClick={ onCancel }
+							aria-label={ __( 'Close', 'erp' ) }
+							className="size-9 shrink-0 border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
+						>
+							<X size={ 18 } aria-hidden="true" />
+						</Button>
+					</section>
 
 					<ExtraFields
 						fields={ extraBySection( 'top' ) }

@@ -38,7 +38,7 @@ export function SalaryHistoryPage(): JSX.Element {
 				empty={ rows.length === 0 }
 				emptyText={ __( 'No employee found.', 'erp' ) }
 			>
-				<div className="rounded-lg border border-border bg-card shadow-sm">
+				<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
 						<table className="w-full min-w-[40rem] text-left">
 					<thead className="border-b border-border bg-card">

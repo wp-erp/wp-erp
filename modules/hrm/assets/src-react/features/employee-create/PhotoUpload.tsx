@@ -32,9 +32,11 @@ interface PhotoUploadProps {
 	readonly initials:  string;
 	/** Lifts the uploaded attachment id (0 when removed) + its preview URL. */
 	readonly onChange:  ( photoId: number, avatarUrl: string ) => void;
+	/** Circle-only variant for the profile-header card (no label/buttons). */
+	readonly compact?:  boolean;
 }
 
-export function PhotoUpload( { avatarUrl, fullName, initials, onChange }: PhotoUploadProps ): JSX.Element {
+export function PhotoUpload( { avatarUrl, fullName, initials, onChange, compact }: PhotoUploadProps ): JSX.Element {
 	const inputRef = useRef< HTMLInputElement >( null );
 	const [ busy, setBusy ] = useState( false );
 
@@ -60,41 +62,58 @@ export function PhotoUpload( { avatarUrl, fullName, initials, onChange }: PhotoU
 		}
 	}
 
+	const fileInput = (
+		<input
+			ref={ inputRef }
+			type="file"
+			accept="image/*"
+			className="hidden"
+			onChange={ ( e ) => {
+				const file = e.currentTarget.files?.[ 0 ];
+				if ( file ) {
+					void handleFile( file );
+				}
+			} }
+		/>
+	);
+
+	const avatarButton = (
+		<button
+			type="button"
+			onClick={ () => inputRef.current?.click() }
+			disabled={ busy }
+			aria-label={ __( 'Upload photo', 'erp' ) }
+			className="group relative size-20 shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+		>
+			<Avatar className="size-20">
+				{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
+				<AvatarFallback className="text-lg">{ initials }</AvatarFallback>
+			</Avatar>
+			<span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+				{ busy ? (
+					<Spinner className="size-5 text-white" />
+				) : (
+					<Camera size={ 18 } className="text-white" aria-hidden="true" />
+				) }
+			</span>
+		</button>
+	);
+
+	if ( compact ) {
+		return (
+			<div className="shrink-0">
+				{ avatarButton }
+				{ fileInput }
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex items-center gap-5">
 			{ /* Hover-to-upload avatar — mirrors the single-employee AvatarUpload. */ }
-			<button
-				type="button"
-				onClick={ () => inputRef.current?.click() }
-				disabled={ busy }
-				aria-label={ __( 'Upload photo', 'erp' ) }
-				className="group relative size-20 shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-			>
-				<Avatar className="size-20">
-					{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
-					<AvatarFallback className="text-lg">{ initials }</AvatarFallback>
-				</Avatar>
-				<span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-					{ busy ? (
-						<Spinner className="size-5 text-white" />
-					) : (
-						<Camera size={ 18 } className="text-white" aria-hidden="true" />
-					) }
-				</span>
-			</button>
+			{ avatarButton }
 
-			<input
-				ref={ inputRef }
-				type="file"
-				accept="image/*"
-				className="hidden"
-				onChange={ ( e ) => {
-					const file = e.currentTarget.files?.[ 0 ];
-					if ( file ) {
-						void handleFile( file );
-					}
-				} }
-			/>
+			{ fileInput }
 
 			<div className="min-w-0">
 				<h3 className="mt-0 mb-0.5 text-sm font-semibold text-foreground">

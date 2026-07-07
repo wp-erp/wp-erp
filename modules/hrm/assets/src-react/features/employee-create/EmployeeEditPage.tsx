@@ -7,9 +7,8 @@
  * `Employee::update_employee()` model.
  */
 
-import { Button, Skeleton, toast } from '@wedevs/plugin-ui';
+import { Skeleton, toast } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -59,6 +58,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 
 	const [ initial, setInitial ] = useState< FormState | null >( null );
 	const [ fullName, setFullName ] = useState( '' );
+	const [ avatarUrl, setAvatarUrl ] = useState( '' );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
 	const [ submitError, setSubmitError ] = useState< string | null >( null );
 	const [ submitting, setSubmitting ] = useState( false );
@@ -72,6 +72,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 					return;
 				}
 				setFullName( String( record.full_name ?? '' ) );
+				setAvatarUrl( String( record.avatar_url ?? '' ) );
 				setInitial( toFormState( record ) );
 			} )
 			.catch( ( raw ) => {
@@ -111,27 +112,6 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
-			<section className="flex flex-wrap items-start justify-between gap-4 rounded-[10px] bg-card p-6 shadow-sm">
-				<div className="min-w-0">
-					<h1 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
-						{ __( 'Edit Employee', 'erp' ) }
-					</h1>
-					<p className="mt-1 truncate text-sm text-muted-foreground">
-						{ fullName || __( 'Update employee details.', 'erp' ) }
-					</p>
-				</div>
-				<Button
-					type="button"
-					variant="outline"
-					size="icon"
-					onClick={ close }
-					aria-label={ __( 'Close', 'erp' ) }
-					className="size-9 shrink-0 border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-				>
-					<X size={ 18 } aria-hidden="true" />
-				</Button>
-			</section>
-
 			{ loadError ? (
 				<div className="text-center text-sm text-destructive">
 					{ loadError }
@@ -145,8 +125,11 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 			) : (
 				<EmployeeForm
 					mode="edit"
+					heading={ __( 'Edit Employee', 'erp' ) }
+					subheading={ fullName || __( 'Update employee details.', 'erp' ) }
 					initialValues={ initial }
 					employeeId={ userId }
+					initialAvatarUrl={ avatarUrl }
 					submitLabel={ __( 'Save Changes', 'erp' ) }
 					busyLabel={ __( 'Saving…', 'erp' ) }
 					submitting={ submitting }
