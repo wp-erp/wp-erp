@@ -51,32 +51,33 @@ interface SectionCardProps {
 
 function SectionCard( { title, columns, empty, rowCount, onAdd, children }: SectionCardProps ): JSX.Element {
 	return (
-		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-			<header className="flex items-center justify-between gap-4 px-6 py-4">
-				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+		<section className="rounded-[10px] bg-card p-6 shadow-sm">
+			<div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-4">
+				<h2 className="m-0 text-lg font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onAdd }>
 					<Plus size={ 14 } aria-hidden="true" />
 					{ __( 'Add', 'erp' ) }
 				</Button>
-			</header>
-			<div className="mx-6 mb-4 h-px bg-border" />
+			</div>
 			{ rowCount === 0 ? (
-				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
+				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (
-				<div className="overflow-x-auto">
-					<table className="w-full text-left">
-						<thead className="border-b border-border bg-card">
-							<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-4">{ col }</th>
-								) ) }
-								<th scope="col" className="w-20 px-4">
-									<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody>{ children }</tbody>
-					</table>
+				<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+					<div className="overflow-x-auto">
+						<table className="w-full text-left">
+							<thead className="border-b border-border bg-card">
+								<tr className="h-10">
+									{ columns.map( ( col, i ) => (
+										<th key={ col } scope="col" className={ [ 'whitespace-nowrap text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]', i === 0 ? 'px-4' : 'px-2' ].join( ' ' ) }>{ col }</th>
+									) ) }
+									<th scope="col" className="w-20 px-4">
+										<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>{ children }</tbody>
+						</table>
+					</div>
 				</div>
 			) }
 		</section>
@@ -192,7 +193,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 			>
 				{ educations.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
-						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.school ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ cell( row.school ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.degree ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.field ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ resultLabel( row.result ) }</td>
@@ -214,7 +215,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 			>
 				{ dependents.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
-						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.name ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ cell( row.name ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.relation ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.dob ) }</td>
 						<RowActions onEdit={ () => openEdit( 'dependents', row as unknown as Record< string, unknown > ) } onDelete={ () => setPending( { section: 'dependents', id: row.id } ) } />

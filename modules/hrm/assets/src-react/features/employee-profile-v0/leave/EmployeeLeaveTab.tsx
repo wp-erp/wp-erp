@@ -86,7 +86,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 		<div className="space-y-6">
 			{ /* Balance per policy */ }
 			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
-				<header className="flex items-center justify-between gap-4 px-6 py-4">
+				<header className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
 					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
 					{ canCreate ? (
 						<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setShowRequest( true ) }>
@@ -95,7 +95,6 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						</Button>
 					) : null }
 				</header>
-				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.summary.length === 0 ? (
 					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave policies assigned.', 'erp' ) }</p>
 				) : (
@@ -147,9 +146,9 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			</section>
 
 			{ /* Request history */ }
-			<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-				<header className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
-					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
+			<section className="rounded-[10px] bg-card p-6 shadow-sm">
+				<div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+					<h2 className="m-0 text-lg font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
 					{ meta ? (
 						<div className="flex flex-wrap items-center gap-2">
 							<Select
@@ -200,20 +199,20 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 							</Select>
 						</div>
 					) : null }
-				</header>
-				<div className="mx-6 mb-4 h-px bg-border" />
+				</div>
 				{ data.requests.length === 0 ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
+					<p className="py-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
 				) : (
-					<div className="overflow-x-auto">
+					<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+						<div className="overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-card">
-								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-									<th scope="col" className="px-4">{ __( 'Date', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Reason', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Request', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Status', 'erp' ) }</th>
+								<tr className="h-10">
+									<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Date', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Policy', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Request', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -239,6 +238,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 							</tbody>
 						</table>
 					</div>
+				</div>
 				) }
 			</section>
 
