@@ -35,6 +35,7 @@ import { useEmployeeJobHistories } from './useEmployeeJobHistories';
 
 interface JobDispatch {
 	terminateEmployee: ( userId: number, payload: EmployeeTerminateInput ) => Promise< unknown >;
+	invalidate:        () => void;
 }
 
 function formatDate( iso: string | null ): string {
@@ -123,7 +124,7 @@ function RowActionCell( { isActive, onEdit, onDelete }: RowActionCellProps ): JS
 export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.Element {
 	const { data, loading, error, createHistory, updateHistory, deleteHistory, refetch } = useEmployeeJobHistories( userId );
 	const canManage = useCan( 'erp_manage_jobinfo' );
-	const { terminateEmployee } = useDispatch( employeesStoreName ) as unknown as JobDispatch;
+	const { terminateEmployee, invalidate } = useDispatch( employeesStoreName ) as unknown as JobDispatch;
 
 	const [ action, setAction ]   = useState< JobAction | null >( null );
 	const [ busy, setBusy ]       = useState( false );
@@ -173,6 +174,9 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				// Edit the active history row in place (PUT). The dialog never emits a
 				// `terminate` payload in edit mode, so this is always a plain update.
 				await updateHistory( editState.editId, payload );
+				// Designation / department / status / type are list-visible — drop
+				// the People list + counts cache so they don't go stale.
+				invalidate();
 				toast.success( __( 'History updated.', 'erp' ) );
 			} else if ( payload.terminate === true ) {
 				// Status → Terminated routes to the terminate endpoint (legacy parity),
@@ -187,6 +191,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				refetch();
 			} else {
 				await createHistory( payload );
+				invalidate();
 				toast.success( __( 'History updated.', 'erp' ) );
 			}
 			closeDialog();

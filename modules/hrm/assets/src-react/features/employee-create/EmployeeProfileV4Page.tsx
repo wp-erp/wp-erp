@@ -11,7 +11,7 @@
  * Chrome pieces live alongside: `SingleHeader` (header card), `NavMenu`
  * (left nav), `SingleOverview` (personal-tab body), `FieldGrid`/`Field`
  * (cards), `single-format` (pure helpers). Tab bodies are reused from
- * `employee-profile-v4`.
+ * `employee-profile-v0`.
  */
 
 import { Skeleton } from '@wedevs/plugin-ui';
@@ -35,11 +35,11 @@ import { storeName as employeesStoreName } from '@/stores/employees';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
-import { EmployeeJobTab } from '../employee-profile-v4/job/EmployeeJobTab';
-import { EmployeeLeaveTab } from '../employee-profile-v4/leave/EmployeeLeaveTab';
-import { EmployeeNotesTab } from '../employee-profile-v4/notes/EmployeeNotesTab';
-import { EmployeePerformanceTab } from '../employee-profile-v4/performance/EmployeePerformanceTab';
-import { EmployeePermissionTab } from '../employee-profile-v4/permission/EmployeePermissionTab';
+import { EmployeeJobTab } from '../employee-profile-v0/job/EmployeeJobTab';
+import { EmployeeLeaveTab } from '../employee-profile-v0/leave/EmployeeLeaveTab';
+import { EmployeeNotesTab } from '../employee-profile-v0/notes/EmployeeNotesTab';
+import { EmployeePerformanceTab } from '../employee-profile-v0/performance/EmployeePerformanceTab';
+import { EmployeePermissionTab } from '../employee-profile-v0/permission/EmployeePermissionTab';
 import { SingleHeader } from './SingleHeader';
 import { SingleOverview } from './SingleOverview';
 import { NavMenu, type NavItem } from './SingleNavMenu';
@@ -50,7 +50,7 @@ interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
 }
 
-export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Element {
+export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.Element {
 	const navigate     = useNavigate();
 	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotes = useCan( 'erp_manage_review' );
@@ -136,7 +136,7 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 
 			{ /* BODY — left nav card + right content card. */ }
 			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-				<aside className="shrink-0 lg:sticky lg:top-6 lg:w-64">
+				<aside className="shrink-0 lg:sticky lg:top-[88px] lg:w-64">
 					<div className="rounded-2xl bg-card p-3 shadow-sm ring-1 ring-border/60">
 						<NavMenu items={ navItems } current={ tab } onSelect={ setTab } />
 					</div>
@@ -166,14 +166,14 @@ export function EmployeeSingleInner( { userId }: { userId: number } ): JSX.Eleme
 	);
 }
 
-export function EmployeeSinglePage(): JSX.Element {
+export function EmployeeProfileV4Page(): JSX.Element {
 	const { id } = useParams< { id: string } >();
 	const userId = Number( id );
 
 	return (
 		<ErrorBoundary>
 			{ Number.isFinite( userId ) && userId > 0 ? (
-				<EmployeeSingleInner userId={ userId } />
+				<EmployeeProfileV4Inner userId={ userId } />
 			) : (
 				<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
 					{ __( 'Invalid employee.', 'erp' ) }

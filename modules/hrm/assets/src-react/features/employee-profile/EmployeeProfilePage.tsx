@@ -46,6 +46,7 @@ import type { Record_ } from './profile-format';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
+	invalidate:           () => void;
 }
 
 export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Element {
@@ -63,7 +64,7 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 	// Permission tab: same gate as legacy — needs review cap and is hidden when
 	// viewing your own profile (can't change your own role here).
 	const canViewPermission = canViewPerf && currentUserId !== userId;
-	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
+	const { fetchEmployeeForEdit, invalidate } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
@@ -132,7 +133,10 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 					userId={ userId }
 					canEdit={ canEdit }
 					onEdit={ () => navigate( `/employees/${ userId }/edit`, { viewTransition: true } ) }
-					onAvatarChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
+					onAvatarChange={ ( url ) => {
+						setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) );
+						invalidate();
+					} }
 				/>
 
 				<Tabs value={ tab } onValueChange={ ( value ) => setTab( String( value ) ) }>

@@ -14,6 +14,7 @@
  */
 
 import { Button, toast } from '@wedevs/plugin-ui';
+import { useDispatch } from '@wordpress/data';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
@@ -23,6 +24,7 @@ import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
+import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeCreateInput } from '@/stores/employees';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
@@ -37,6 +39,7 @@ import { loadLookup } from '../employees/filters/lookups';
 import type { LookupOption } from '../employees/filters/lookups';
 import { EmployeeBasicSection } from './EmployeeBasicSection';
 import { EmployeeFormAlerts } from './EmployeeFormAlerts';
+import { PhotoUpload } from './PhotoUpload';
 import { EmployeeNotificationSection } from './EmployeeNotificationSection';
 import { EmployeePersonalSection } from './EmployeePersonalSection';
 import { EmployeeWorkSection } from './EmployeeWorkSection';
@@ -91,8 +94,14 @@ export function EmployeeForm( {
 	// form, so hide it from a self-editor — they keep Basic + Personal.
 	const isManager = useCan( 'erp_edit_employee' );
 	const navigate = useNavigate();
+	const { invalidate } = useDispatch( employeesStoreName ) as unknown as {
+		invalidate: () => void;
+	};
 
 	const [ form, setForm ] = useState< FormState >( initialValues );
+	// Preview URL for the create-mode photo picker (the attachment id lives in
+	// `form.photo_id`, which flows into the create payload).
+	const [ photoUrl, setPhotoUrl ] = useState( '' );
 	const [ notify, setNotify ] = useState( false );
 	const [ sendLogin, setSendLogin ] = useState( false );
 	const [ errors, setErrors ] = useState< Record< string, string > >( {} );
@@ -249,6 +258,9 @@ export function EmployeeForm( {
 		setConverting( true );
 		try {
 			const newId = await convertUser( userCheck.user.id );
+			// Raw POST bypasses the store — drop the list/counts cache so the new
+			// employee shows on the People page.
+			invalidate();
 			toast.success( __( 'WP user converted to employee.', 'erp' ) );
 			navigate( `/employees/${ newId }/edit` );
 		} catch {
@@ -367,6 +379,28 @@ export function EmployeeForm( {
 				/>
 
 				<div className="space-y-6">
+					{ ! isEdit && (
+						<section className="rounded-[10px] bg-card p-6 shadow-sm">
+							<PhotoUpload
+								avatarUrl={ photoUrl }
+								fullName={ `${ form.first_name ?? '' } ${ form.last_name ?? '' }`.trim() }
+								initials={
+									(
+										( form.first_name ?? '' ).charAt( 0 ) +
+										( form.last_name ?? '' ).charAt( 0 )
+									).toUpperCase() || 'E'
+								}
+								onChange={ ( photoId, url ) => {
+									setPhotoUrl( url );
+									setForm( ( prev ) => ( {
+										...prev,
+										photo_id: String( photoId ),
+									} ) );
+								} }
+							/>
+						</section>
+					) }
+
 					<ExtraFields
 						fields={ extraBySection( 'top' ) }
 						values={ form }

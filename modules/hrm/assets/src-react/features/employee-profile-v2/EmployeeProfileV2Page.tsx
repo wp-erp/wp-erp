@@ -45,6 +45,7 @@ import type { Record_ } from './profile-format';
 
 interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
+	invalidate:           () => void;
 }
 
 export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.Element {
@@ -60,7 +61,7 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 	// Own profile is self-service: viewable/editable even without the manager cap.
 	const canEdit = canEditCap || currentUserId === userId;
 	const canViewPermission = canViewPerf && currentUserId !== userId;
-	const { fetchEmployeeForEdit } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
+	const { fetchEmployeeForEdit, invalidate } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
@@ -140,7 +141,10 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 					userId={ userId }
 					canEdit={ canEdit }
 					onEdit={ goEdit }
-					onAvatarChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
+					onAvatarChange={ ( url ) => {
+						setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) );
+						invalidate();
+					} }
 				/>
 
 				{ /* RIGHT — tabs + detail cards. */ }

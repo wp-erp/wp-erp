@@ -6,7 +6,7 @@
 
 import type { ComponentType, SVGProps } from 'react';
 
-import type { Option } from '../employee-profile-v4/options';
+import type { Option } from '../employee-profile-v0/options';
 
 export type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 export type Record_ = Record< string, unknown >;

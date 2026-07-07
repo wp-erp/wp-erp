@@ -27,6 +27,7 @@ import { useEmployeeJobHistories } from './useEmployeeJobHistories';
 
 interface JobDispatch {
 	terminateEmployee: ( userId: number, payload: EmployeeTerminateInput ) => Promise< unknown >;
+	invalidate:        () => void;
 }
 
 function formatDate( iso: string | null ): string {
@@ -98,7 +99,7 @@ function DeleteCell( { onDelete }: { readonly onDelete: () => void } ): JSX.Elem
 export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.Element {
 	const { data, loading, error, createHistory, deleteHistory, refetch } = useEmployeeJobHistories( userId );
 	const canManage = useCan( 'erp_manage_jobinfo' );
-	const { terminateEmployee } = useDispatch( employeesStoreName ) as unknown as JobDispatch;
+	const { terminateEmployee, invalidate } = useDispatch( employeesStoreName ) as unknown as JobDispatch;
 
 	const [ action, setAction ]   = useState< JobAction | null >( null );
 	const [ busy, setBusy ]       = useState( false );
@@ -143,6 +144,9 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				refetch();
 			} else {
 				await createHistory( payload );
+				// Designation / department / status / type are list-visible — drop
+				// the People list + counts cache so they don't go stale.
+				invalidate();
 				toast.success( __( 'History updated.', 'erp' ) );
 			}
 			setAction( null );

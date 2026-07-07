@@ -21,6 +21,7 @@ const NUMERIC_FIELDS = new Set( [
 	'designation',
 	'location',
 	'reporting_to',
+	'photo_id',
 ] );
 
 // Hidden in edit mode (the legacy form wrapped these in `<# if ( ! data.id ) #>`).

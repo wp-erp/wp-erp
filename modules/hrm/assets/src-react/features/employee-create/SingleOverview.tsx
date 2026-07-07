@@ -9,7 +9,7 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-import { EmployeeGeneralSections } from '../employee-profile-v4/general/EmployeeGeneralSections';
+import { EmployeeGeneralSections } from '../employee-profile-v0/general/EmployeeGeneralSections';
 import {
 	BLOOD_GROUP_OPTIONS,
 	GENDER_OPTIONS,
@@ -17,7 +17,7 @@ import {
 	PAY_TYPE_OPTIONS,
 	SOURCE_OPTIONS,
 	TYPE_OPTIONS,
-} from '../employee-profile-v4/options';
+} from '../employee-profile-v0/options';
 import { EmployeeExtraFieldsView } from './EmployeeExtraFieldsView';
 import { Field, FieldGrid } from './SingleDetailCard';
 import { labelOf, str, type Record_ } from './single-format';

@@ -55,10 +55,16 @@ const EmployeeProfileV3Page = lazy( () =>
 	import( '@/features/employee-profile-v3' ).then( ( m ) => ( { default: m.EmployeeProfileV3Page } ) )
 );
 
-// The v4 design is the main employee profile page (`/employees/:id`); it is also
-// still reachable at `/employees/:id/profile-v4` while the older previews stay.
+// v0 — the sidebar design (header card + left nav) is the main employee profile
+// page (`/employees/:id`), shown in the menu as "View profile".
+const EmployeeProfileV0Page = lazy( () =>
+	import( '@/features/employee-profile-v0' ).then( ( m ) => ( { default: m.EmployeeProfileV0Page } ) )
+);
+
+// v4 — the candidate-card design (kept in `employee-create`), shown in the menu
+// as "View profile v4" at `/employees/:id/profile-v4`.
 const EmployeeProfileV4Page = lazy( () =>
-	import( '@/features/employee-profile-v4' ).then( ( m ) => ( { default: m.EmployeeProfileV4Page } ) )
+	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeProfileV4Page } ) )
 );
 
 const DepartmentsPage = lazy( () =>
@@ -214,9 +220,9 @@ const baseRoutes: AppRoute[] = [
 	{
 		id:           'employee-single',
 		path:         '/employees/:id',
-		// The main employee page = `EmployeeProfileV4Page` (the sidebar/modern design,
-		// shown in the menu as "View profile v4"). This is the canonical main view.
-		element:      EmployeeProfileV4Page,
+		// The main employee page = `EmployeeProfileV0Page` (the sidebar/modern design,
+		// shown in the menu as "View profile"). This is the canonical main view.
+		element:      EmployeeProfileV0Page,
 		// Legacy parity: viewing a profile needs only the People-list cap (the menu
 		// gate); `erp_view_employee` is a meta cap that would block non-managers.
 		capabilities: [ 'erp_list_employee' ],
@@ -268,7 +274,9 @@ const baseRoutes: AppRoute[] = [
 		},
 	},
 	{
-		// [NEW-PROFILE-V4] Route for the header-card + left-nav layout (also the main page above).
+		// [NEW-PROFILE-V4] "View profile v4" — the candidate-card design
+		// (`EmployeeProfileV4Page` in employee-create). The canonical
+		// `/employees/:id` above renders the v0 sidebar design.
 		id:           'employee-profile-v4',
 		path:         '/employees/:id/profile-v4',
 		capabilities: [ 'erp_list_employee' ],

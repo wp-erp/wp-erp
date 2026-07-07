@@ -86,7 +86,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 	const age         = ageFrom( str( record, 'date_of_birth' ) );
 
 	return (
-		<aside className="shrink-0 lg:sticky lg:top-6 lg:w-80">
+		<aside className="shrink-0 lg:sticky lg:top-[88px] lg:w-80">
 			<section className="overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-border/60">
 				{ /* Soft cover band — flat tint, no gradient. */ }
 				<div className="relative h-28 bg-muted">

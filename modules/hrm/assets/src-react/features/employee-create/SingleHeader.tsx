@@ -12,7 +12,7 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-import { STATUS_OPTIONS, TYPE_OPTIONS } from '../employee-profile-v4/options';
+import { STATUS_OPTIONS, TYPE_OPTIONS } from '../employee-profile-v0/options';
 import { initials, labelOf, statusVariant, str, type Record_ } from './single-format';
 
 interface SingleHeaderProps {
@@ -41,7 +41,7 @@ export function SingleHeader( { record, canEdit, canViewNotes, onEdit, onSetTab 
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<h1 className="m-0 mb-4 text-2xl font-bold tracking-tight text-foreground">
+						<h1 className="m-0 text-2xl font-bold tracking-tight text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						{ canEdit ? (

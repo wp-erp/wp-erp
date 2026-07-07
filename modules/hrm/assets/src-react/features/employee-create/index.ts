@@ -4,4 +4,4 @@
 
 export { EmployeeCreatePage } from './EmployeeCreatePage';
 export { EmployeeEditPage } from './EmployeeEditPage';
-export { EmployeeSinglePage } from './EmployeeSinglePage';
+export { EmployeeProfileV4Page } from './EmployeeProfileV4Page';

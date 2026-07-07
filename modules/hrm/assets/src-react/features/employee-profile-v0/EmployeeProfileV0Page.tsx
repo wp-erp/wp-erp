@@ -58,9 +58,10 @@ interface SingleDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
 	terminateEmployee:    ( userId: number, payload: EmployeeTerminateInput ) => Promise< void >;
 	reactivateEmployee:   ( userId: number ) => Promise< void >;
+	invalidate:           () => void;
 }
 
-export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
+export function EmployeeProfileV0Inner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
 	const navigate     = useNavigate();
 	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotesCap = useCan( 'erp_manage_review' );
@@ -102,7 +103,7 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 	// Permission tab stays manager-only (global cap) and never for self — legacy
 	// single.php removes it for self and shows it only to managers.
 	const canViewPermission = canViewPerfCap && currentUserId !== userId;
-	const { fetchEmployeeForEdit, terminateEmployee, reactivateEmployee } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
+	const { fetchEmployeeForEdit, terminateEmployee, reactivateEmployee, invalidate } = useDispatch( employeesStoreName ) as unknown as SingleDispatch;
 
 	const [ record, setRecord ] = useState< Record_ | null >( null );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
@@ -253,7 +254,12 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 				userId={ userId }
 				canEdit={ canEdit }
 				onEdit={ () => navigate( `/employees/${ userId }/edit`, { viewTransition: true } ) }
-				onAvatarChange={ ( url ) => setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) ) }
+				onAvatarChange={ ( url ) => {
+					setRecord( ( prev ) => ( prev ? { ...prev, avatar_url: url } : prev ) );
+					// Drop the cached list/counts so the People table shows the new
+					// photo (not the stale one) when navigating back.
+					invalidate();
+				} }
 				extraActions={ headerActions }
 				onPrint={ () => window.print() }
 				onTerminate={ () => { setTermError( null ); setTermOpen( true ); } }
@@ -273,7 +279,7 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 
 			{ /* Body — left sidebar nav (white card, blue active) + content. */ }
 			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-				<aside className="shrink-0 lg:sticky lg:top-6 lg:w-60">
+				<aside className="shrink-0 lg:sticky lg:top-[88px] lg:w-60">
 					<div className="rounded-[10px] bg-card p-3 shadow-sm">
 						<nav aria-label={ __( 'Profile sections', 'erp' ) } className="space-y-1">
 							{ tabs.map( ( t ) => (
@@ -300,14 +306,14 @@ export function EmployeeProfileV4Inner( { userId, headerActions }: { userId: num
 	);
 }
 
-export function EmployeeProfileV4Page(): JSX.Element {
+export function EmployeeProfileV0Page(): JSX.Element {
 	const { id } = useParams< { id: string } >();
 	const userId = Number( id );
 
 	return (
 		<ErrorBoundary>
 			{ Number.isFinite( userId ) && userId > 0 ? (
-				<EmployeeProfileV4Inner userId={ userId } />
+				<EmployeeProfileV0Inner userId={ userId } />
 			) : (
 				<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
 					{ __( 'Invalid employee.', 'erp' ) }
