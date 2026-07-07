@@ -5,7 +5,7 @@ Tags:  HR, CRM, Accounting, WooCommerce CRM, Recruitment, Job Listings, Inventor
 Requires at least: 5.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.5
+Stable tag: 1.17.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -327,6 +327,14 @@ We strive to respond to all queries within 12 hours. Our response time may be ju
 It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured of the best service.
 
 == Changelog ==
+= v1.17.6 → Jul 7, 2026
+--------------------------
+* [Fixed] Stored XSS in CRM schedule message and leave attachment exposure [#1613](https://github.com/wp-erp/wp-erp/pull/1613).
+* [Fixed] Added nonce verification and capability check to the check_user AJAX handler, and restricted returned user data to essential fields [#1618](https://github.com/wp-erp/wp-erp/pull/1618).
+* [Fixed] CRM agents could view other agents' contacts due to case-sensitive module active check [#1619](https://github.com/wp-erp/wp-erp/pull/1619).
+* [Fixed] Email sync regex warning and refactored host sanitization [#1571](https://github.com/wp-erp/wp-erp/pull/1571).
+* [Enhancement] CRM subscription form now supports email-only signups and renders HTML confirmation emails correctly when SMTP/Mailgun is not configured [#1620](https://github.com/wp-erp/wp-erp/pull/1620).
+
 = v1.17.5 → Jun 17, 2026
 --------------------------
 * [Fixed] Hardened CRM contact filters against SQL injection by using prepared statements.
