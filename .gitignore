@@ -1,10 +1,15 @@
 # Dependencies
 /node_modules
+node_modules/
 /vendor
 /vendor copy/
 
 # Build artifacts
 build
+
+# React build output / TS cache (generated)
+modules/hrm/assets/dist-react/
+*.tsbuildinfo
 
 # Compiled assets (built + shipped by GitHub Actions, see .github/workflows/deploy-erp.yml)
 /assets/js/erp-settings-bootstrap.js
@@ -41,3 +46,7 @@ phpcs-report.txt
 
 # Local dev scripts
 plugin-deploy.sh
+
+# Internal planning docs — not shipped, not tracked
+/openspec/
+.vscode/sftp.json

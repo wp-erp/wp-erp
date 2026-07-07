@@ -1,0 +1,310 @@
+/**
+ * `/designations` route — designation (job title) directory with inline CRUD.
+ *
+ * Same card + dialog pattern as Departments. Reads + writes `erp/v2/designations`,
+ * which delegates to the unchanged v1 model layer. Delete surfaces the
+ * server-side "contains employees" guard as a toast.
+ */
+
+import {
+	Button,
+	toast,
+} from '@wedevs/plugin-ui';
+import { Plus, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
+import type { JSX } from 'react';
+
+import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { useCan } from '@/shared/hooks/useCan';
+import { __, sprintf } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
+import type { ApiError } from '@/shared/utils/apiFetch';
+
+import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
+import { OrgPagination } from '../org/OrgPagination';
+import { useOrgCrud } from '../org/useOrgCrud';
+import { DesignationFormDialog } from './DesignationFormDialog';
+import { DesignationsTable, type SortKey } from './DesignationsTable';
+import { DesignationsToolbar } from './DesignationsToolbar';
+import type { Designation, DesignationInput } from './types';
+
+function DesignationsInner(): JSX.Element {
+	const { rows, loading, error, save, remove, bulkRemove } = useOrgCrud< Designation >( 'designations' );
+	const canManage = useCan( 'erp_manage_designation' );
+	const [ selected, setSelected ] = useState< ReadonlySet< number > >( new Set() );
+
+	const [ search, setSearch ]       = useState( '' );
+	const [ page, setPage ]           = useState( 1 );
+	const [ perPage, setPerPage ]     = useState( 10 );
+	// Create/edit modal open-state lives in the URL (`?form=new` | `?form=<id>`)
+	// so a browser refresh re-opens it. For edit, resolve the target from the
+	// loaded rows (legacy parity: designation create/edit is a modal, not a route).
+	const [ formParam, setFormParam ] = useModalParam( 'form' );
+	const editing: Designation | null =
+		formParam && formParam !== 'new'
+			? ( rows.find( ( d ) => d.id === Number( formParam ) ) ?? null )
+			: null;
+	const [ deleting, setDeleting ]   = useState< Designation | null >( null );
+	const [ busy, setBusy ]           = useState( false );
+	const [ formError, setFormError ] = useState< string | null >( null );
+
+	const [ sort, setSort ] = useState< { key: SortKey; dir: 'asc' | 'desc' } >( { key: 'title', dir: 'asc' } );
+	const [ showFilters, setShowFilters ] = useState( false );
+	const [ employeesFilter, setEmployeesFilter ] = useState< '' | 'with' | 'without' >( '' );
+
+	const activeFilterCount = employeesFilter ? 1 : 0;
+	const filterButtonActive = showFilters || activeFilterCount > 0;
+
+	const filtered = useMemo( () => {
+		const q = search.trim().toLowerCase();
+		return rows.filter( ( d ) => {
+			if ( q && ! d.title.toLowerCase().includes( q ) ) {
+				return false;
+			}
+			if ( employeesFilter === 'with' && ( d.total_employees ?? 0 ) === 0 ) {
+				return false;
+			}
+			if ( employeesFilter === 'without' && ( d.total_employees ?? 0 ) > 0 ) {
+				return false;
+			}
+			return true;
+		} );
+	}, [ rows, search, employeesFilter ] );
+
+	const sorted = useMemo( () => {
+		const arr = [ ...filtered ];
+		arr.sort( ( a, b ) => {
+			const cmp = sort.key === 'total_employees'
+				? ( a.total_employees ?? 0 ) - ( b.total_employees ?? 0 )
+				: String( a.title ?? '' ).localeCompare( String( b.title ?? '' ) );
+			return sort.dir === 'asc' ? cmp : -cmp;
+		} );
+		return arr;
+	}, [ filtered, sort ] );
+
+	function toggleSort( key: SortKey ): void {
+		setSort( ( prev ) => ( prev.key === key ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' } ) );
+	}
+
+	const totalPages = Math.max( 1, Math.ceil( filtered.length / perPage ) );
+	const safePage   = Math.min( page, totalPages );
+	const pageRows   = sorted.slice( ( safePage - 1 ) * perPage, safePage * perPage );
+
+	const pageIds    = pageRows.map( ( d ) => d.id );
+	const allChecked = pageIds.length > 0 && pageIds.every( ( id ) => selected.has( id ) );
+
+	function toggleAll(): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( allChecked ) {
+				pageIds.forEach( ( id ) => next.delete( id ) );
+			} else {
+				pageIds.forEach( ( id ) => next.add( id ) );
+			}
+			return next;
+		} );
+	}
+
+	function toggleOne( id: number ): void {
+		setSelected( ( prev ) => {
+			const next = new Set( prev );
+			if ( next.has( id ) ) {
+				next.delete( id );
+			} else {
+				next.add( id );
+			}
+			return next;
+		} );
+	}
+
+	async function handleBulkDelete(): Promise< void > {
+		const ids = Array.from( selected );
+		if ( ids.length === 0 ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			const failed = await bulkRemove( ids );
+			setSelected( new Set() );
+			if ( failed > 0 ) {
+				toast.error( sprintf( __( '%d designation(s) could not be deleted (they may have employees).', 'erp' ), failed ) );
+			} else {
+				toast.success( __( 'Designations deleted.', 'erp' ) );
+			}
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the designations.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	// Reset to the first page whenever the search query or filter changes.
+	useEffect( () => {
+		setPage( 1 );
+	}, [ search, employeesFilter ] );
+
+	function openCreate(): void {
+		setFormError( null );
+		setFormParam( 'new' );
+	}
+
+	function openEdit( designation: Designation ): void {
+		setFormError( null );
+		setFormParam( String( designation.id ) );
+	}
+
+	async function handleSubmit( payload: DesignationInput ): Promise< void > {
+		setBusy( true );
+		setFormError( null );
+		try {
+			await save( editing ? editing.id : null, payload as unknown as Record< string, unknown > );
+			toast.success(
+				editing
+					? __( 'Designation updated.', 'erp' )
+					: __( 'Designation created.', 'erp' )
+			);
+			setFormParam( null );
+		} catch ( raw ) {
+			setFormError( ( raw as ApiError )?.message ?? __( 'Could not save the designation.', 'erp' ) );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	async function handleDelete(): Promise< void > {
+		if ( ! deleting ) {
+			return;
+		}
+		setBusy( true );
+		try {
+			await remove( deleting.id );
+			toast.success( __( 'Designation deleted.', 'erp' ) );
+			setDeleting( null );
+		} catch ( raw ) {
+			toast.error( ( raw as ApiError )?.message ?? __( 'Could not delete the designation.', 'erp' ) );
+			setDeleting( null );
+		} finally {
+			setBusy( false );
+		}
+	}
+
+	return (
+		<section className="mx-auto w-full max-w-full">
+			<header className="mb-6 flex items-center justify-between gap-4">
+				<h1 className="text-2xl font-bold leading-8 text-foreground">
+					{ __( 'Designations', 'erp' ) }
+				</h1>
+				{ canManage ? (
+					<Button
+						onClick={ openCreate }
+						variant="default"
+						className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5 shadow-sm"
+					>
+						<Plus size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+						{ __( 'Add Designation', 'erp' ) }
+					</Button>
+				) : null }
+			</header>
+
+			<div className="rounded-lg border border-border bg-card shadow-sm">
+				<DesignationsToolbar
+					total={ rows.length }
+					search={ search }
+					onSearch={ setSearch }
+					filterButtonActive={ filterButtonActive }
+					activeFilterCount={ activeFilterCount }
+					onToggleFilters={ () => setShowFilters( ( prev ) => ! prev ) }
+					employeesFilter={ employeesFilter }
+					onEmployeesFilter={ setEmployeesFilter }
+				/>
+
+				{ canManage && selected.size > 0 ? (
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
+						<div className="flex items-center gap-2">
+							<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
+								<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+							</Button>
+						</div>
+						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
+							{ __( 'Clear', 'erp' ) }
+						</button>
+					</div>
+				) : null }
+
+				{ error ? (
+					<p className="p-6 text-sm text-destructive">{ error }</p>
+				) : loading ? (
+					<TableSkeleton rows={ 6 } />
+				) : filtered.length === 0 ? (
+					<p className="p-10 text-center text-sm text-muted-foreground">
+						{ search
+							? __( 'No designations match your search.', 'erp' )
+							: __( 'No designations yet.', 'erp' ) }
+					</p>
+				) : (
+					<DesignationsTable
+						rows={ pageRows }
+						canManage={ canManage }
+						selected={ selected }
+						allChecked={ allChecked }
+						sort={ sort }
+						onToggleAll={ toggleAll }
+						onToggleOne={ toggleOne }
+						onToggleSort={ toggleSort }
+						onEdit={ openEdit }
+						onDelete={ setDeleting }
+					/>
+				) }
+
+				{ ! error && ! loading && filtered.length > 0 ? (
+					<OrgPagination
+						page={ safePage }
+						totalPages={ totalPages }
+						total={ filtered.length }
+						perPage={ perPage }
+						onPage={ setPage }
+						onPerPage={ ( n ) => { setPerPage( n ); setPage( 1 ); } }
+					/>
+				) : null }
+			</div>
+
+			<DesignationFormDialog
+				open={ formParam !== null }
+				editing={ editing }
+				busy={ busy }
+				error={ formError }
+				onClose={ () => setFormParam( null ) }
+				onSubmit={ handleSubmit }
+			/>
+
+			<OrgDeleteDialog
+				open={ deleting !== null }
+				title={ __( 'Delete designation?', 'erp' ) }
+				description={
+					deleting
+						? sprintf(
+								__( '%s will be permanently deleted. Designations with assigned employees cannot be deleted.', 'erp' ),
+								deleting.title
+						  )
+						: ''
+				}
+				busy={ busy }
+				onConfirm={ () => void handleDelete() }
+				onCancel={ () => setDeleting( null ) }
+			/>
+		</section>
+	);
+}
+
+export function DesignationsPage(): JSX.Element {
+	return (
+		<CapabilityGate caps={ [ 'erp_view_list' ] }>
+			<ErrorBoundary>
+				<DesignationsInner />
+			</ErrorBoundary>
+		</CapabilityGate>
+	);
+}

@@ -57,7 +57,10 @@ class SeedShifts extends AbstractSeeder {
                     $shift['start'],
                     $shift['end'],
                     $shift['name'],
-                    serialize( [ 'fri', 'sat' ] ),
+                    // Pass the RAW array — erp_attendance_insert_shift() serializes it
+                    // internally. Passing serialize(...) here double-serializes the
+                    // holidays and they render as ",,,," in the Shifts list.
+                    [ 'fri', 'sat' ],
                     1
                 );
 

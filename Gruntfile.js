@@ -91,7 +91,7 @@ module.exports = function(grunt) {
             main: {
                 src: [
                     '**',
-                    '!node_modules/**',
+                    '!**/node_modules/**',
                     '!.codekit-cache/**',
                     '!.idea/**',
                     '!build/**',
@@ -127,6 +127,16 @@ module.exports = function(grunt) {
                     '!modules/accounting/assets/less/**',
                     '!modules/accounting/assets/src/**',
                     '!modules/crm/assets/less/**',
+                    // HRM redesign — keep dist-react artifacts, drop sources + tooling.
+                    '!modules/hrm/assets/src-react/**',
+                    '!modules/hrm/assets/dist-react/**/*.map',
+                    '!modules/hrm/package.json',
+                    '!modules/hrm/package-lock.json',
+                    '!modules/hrm/tsconfig.json',
+                    '!modules/hrm/webpack.react.config.js',
+                    '!modules/hrm/postcss.config.js',
+                    '!modules/hrm/.nvmrc',
+                    '!modules/hrm/.npmrc',
                 ],
                 dest: 'build/'
             }
@@ -152,6 +162,16 @@ module.exports = function(grunt) {
             reset: {
                 cmd: 'npm',
                 args: ['run', 'build']
+            },
+
+            buildReact: {
+                cmd: 'npm',
+                args: ['run', 'build:react']
+            },
+
+            buildAssets: {
+                cmd: 'npm',
+                args: ['run', 'build:assets']
             },
 
             makepot: {
@@ -194,7 +214,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('release', [
         'clean',
-        'run:reset',
+        'run:buildAssets',
         'run:makepot',
         'run:removeDev',
         'run:dumpautoload',
@@ -206,7 +226,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('zip', [
         'clean',
-        'run:reset',
+        'run:buildAssets',
         'run:makepot',
         'run:removeDev',
         'run:dumpautoload',

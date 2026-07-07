@@ -1331,6 +1331,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         'end_date'       => '',
         'department_id'  => 0,
         'designation_id' => 0,
+        'type'           => '',
         'lead'           => 0,
         's'              => '',
         'created_at'     => '',
@@ -1453,6 +1454,25 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
 
         }
+    }
+
+    // filter by employment type (permanent, contract, trainee, …); composes
+    // with the department/designation filters above by further narrowing the
+    // matching user set.
+    if ( ! empty( $args['type'] ) ) {
+        $type_users = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+            ->where( 'type', $args['type'] );
+
+        if ( $args['department_id'] ) {
+            $type_users->where( 'department', $args['department_id'] );
+        }
+
+        if ( $args['designation_id'] ) {
+            $type_users->where( 'designation', $args['designation_id'] );
+        }
+
+        $type_user_ids = $type_users->count() ? $type_users->pluck( 'user_id' )->toArray() : [ 0 ];
+        $where        .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $type_user_ids ) );
     }
 
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
@@ -2159,14 +2179,22 @@ function erp_hr_leave_get_entitlements( $args = [] ) {
         $number = absint( $args['number'] );
         $limit  = $args['number'] == '-1' ? '' : $wpdb->prepare(" LIMIT %d, %d", $offset, $number);
 
-        $query = $wpdb->prepare("SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
+        // ORDER BY / LIMIT must NOT go through prepare() %s placeholders — that
+        // quotes them as string literals, which voids the LIMIT entirely (the
+        // query then returns the whole table). Whitelist the column + direction
+        // and append the already-prepared LIMIT verbatim.
+        $allowed_orderby = [ 'en.created_at', 'en.updated_at', 'en.id', 'u.display_name', 'l.name' ];
+        $orderby = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'en.created_at';
+        $order   = strtoupper( (string) $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
+
+        $query = "SELECT SQL_CALC_FOUND_ROWS en.*, u.display_name as employee_name, l.name as policy_name, emp.status as emp_status
             FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
             LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
             LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
             LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id
             LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON en.trn_id = policy.id
             {$where}
-            ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
+            ORDER BY {$orderby} {$order}{$limit}";
 
         $leave_entitlements = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         wp_cache_set( $cache_key, $leave_entitlements, 'erp' );

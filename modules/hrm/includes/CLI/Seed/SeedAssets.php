@@ -108,7 +108,7 @@ class SeedAssets extends AbstractSeeder {
                     'date_reg'      => $reg_date,
                     'date_expiry'   => $exp_date,
                     'date_warranty' => $warr_date,
-                    'allottable'    => 'yes',
+                    'allottable'    => 'on',
                     'status'        => 'stock',
                 ],
                 [ '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%f', '%s', '%s', '%s', '%s', '%s' ]
