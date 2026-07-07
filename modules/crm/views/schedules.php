@@ -150,6 +150,20 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                             'step': 15
                         });
 
+                        // Pre-fill time fields with current time so schedule doesn't default to 12:00 AM
+                        var now = new Date();
+                        var hh  = now.getHours();
+                        var mm  = Math.round( now.getMinutes() / 15 ) * 15;
+                        if ( mm === 60 ) { mm = 0; hh++; }
+                        var ampm   = hh >= 12 ? 'pm' : 'am';
+                        var hour12 = hh % 12 || 12;
+                        var defaultTime = hour12 + ':' + ( mm < 10 ? '0' + mm : mm ) + ' ' + ampm;
+                        jQuery( '.erp-time-field' ).each( function() {
+                            if ( ! jQuery( this ).val() ) {
+                                jQuery( this ).val( defaultTime );
+                            }
+                        } );
+
                         $( 'select.erp-crm-contact-list-dropdown' ).select2({
                             allowClear: true,
                             placeholder: $(this).attr( 'data-placeholder' ),

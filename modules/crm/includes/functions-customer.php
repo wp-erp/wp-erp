@@ -608,11 +608,18 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         }
     }
 
+    $invite_contact = ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? array_map( 'intval', (array) $postdata['invite_contact'] ) : [];
+
+    // Ensure the creator always appears in invite_contact so the schedule shows in their own calendar view.
+    if ( ! empty( $postdata['created_by'] ) && ! in_array( (int) $postdata['created_by'], $invite_contact, true ) ) {
+        $invite_contact[] = (int) $postdata['created_by'];
+    }
+
     $extra_data = [
         'schedule_title'     => ( isset( $postdata['schedule_title'] ) && ! empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
         'all_day'            => isset( $postdata['all_day'] ) ? (string) $postdata['all_day'] : 'false',
         'allow_notification' => isset( $postdata['allow_notification'] ) ? (string) $postdata['allow_notification'] : false,
-        'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : [],
+        'invite_contact'     => $invite_contact,
         'attachments'        => ! empty ( $attachments ) ? $attachments : []
     ];
 
@@ -620,8 +627,8 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
     $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
 
-    $start_time = ( isset( $postdata['start_time'] ) && ( $extra_data['all_day'] === 'false' ) ) ? $postdata['start_time'] : '00:00:00';
-    $end_time   = ( isset( $postdata['end_time'] ) &&  ( $extra_data['all_day'] === 'false' ) ) ? $postdata['end_time'] : '00:00:00';
+    $start_time = ( ! empty( $postdata['start_time'] ) && ( $extra_data['all_day'] === 'false' ) ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( ! empty( $postdata['end_time'] ) &&  ( $extra_data['all_day'] === 'false' ) ) ? $postdata['end_time'] : '00:00:00';
 
     if ( $extra_data['allow_notification'] == 'true' ) {
         $notify_date = new \DateTime( $postdata['start_date'] . $start_time );
@@ -636,7 +643,9 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
         'user_id'    => $postdata['user_id'],
         'created_by' => $postdata['created_by'],
-        'message'    => $postdata['message'],
+        // Sanitize the message before persisting to prevent stored XSS. wp_kses_post()
+        // keeps safe formatting markup while stripping <script>, event handlers, etc.
+        'message'    => isset( $postdata['message'] ) ? wp_kses_post( $postdata['message'] ) : '',
         'type'       => 'log_activity',
         'log_type'   => ( isset( $postdata['schedule_type'] ) && ! empty( $postdata['schedule_type'] ) ) ? $postdata['schedule_type'] : '',
         'start_date' => erp_current_datetime()->modify( $postdata['start_date'] . $start_time )->format( 'Y-m-d H:i:s' ),
@@ -791,8 +800,10 @@ function erp_crm_get_feed_activity( $args = [] ) {
                 }
 
                 $value['extra']['invited_user'] = [
-                    'id'   => $value['created_by']['ID'],
-                    'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] )
+                    [
+                        'id'   => $value['created_by']['ID'],
+                        'name' => get_the_author_meta( 'display_name', $value['created_by']['ID'] ),
+                    ],
                 ];
             }
 
@@ -944,7 +955,9 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
         }
 
         $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
-        $data['message']          = stripslashes( $data['message'] );
+        // Sanitize on read so legacy rows stored before the save-side fix cannot
+        // execute script in the schedule-details popup (rendered via raw {{{ }}}).
+        $data['message']          = wp_kses_post( stripslashes( $data['message'] ) );
 
         if ( isset( $data['extra']['attachments'] ) ) {
             $data['extra']['attachments'] = erp_crm_process_attachment_data( $data['extra']['attachments'] );
@@ -2373,7 +2386,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                 } elseif ( 'if_has' === $search_val ) {
                                     $custom_sql['where'][] = "( $field is not null AND $field != '' ) $add_or";
                                 } else {
-                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $add_or";
+                                    $custom_sql['where'][] = $wpdb->prepare( "$field $search_condition %s $add_or", $search_val );
                                 }
 
                                 $j ++;
@@ -2392,9 +2405,9 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             $add_or                 = ( $j === count( $value ) - 1 ) ? '' : ' OR ';
 
                             if ( count( $key_value ) > 1 ) {
-                                $custom_sql['where'][] = "( country $condition '$key_value[0]' AND state $condition '$key_value[1]')$add_or";
+                                $custom_sql['where'][] = $wpdb->prepare( "( country $condition %s AND state $condition %s )$add_or", $key_value[0], $key_value[1] );
                             } else {
-                                $custom_sql['where'][] = "(country $condition '$key_value[0]')$add_or";
+                                $custom_sql['where'][] = $wpdb->prepare( "(country $condition %s )$add_or", $key_value[0] );
                             }
 
                             $j ++;
@@ -2423,16 +2436,16 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             switch ( $condition ) {
                                 case 'NOT LIKE':
                                     $search       = str_replace( '!~', '', $search );
-                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NOT NULL )";
+                                    $and_clause[] = $wpdb->prepare( "( subscriber.group_id = %d AND subscriber.unsubscribe_at IS NOT NULL )", $search );
                                     break;
 
                                 case '!=':
                                     $search       = str_replace( '!', '', $search );
-                                    $and_clause[] = "subscriber.group_id != {$search}";
+                                    $and_clause[] = $wpdb->prepare( "subscriber.group_id != %d", $search );
                                     break;
 
                                 default:
-                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NULL )";
+                                    $and_clause[] = $wpdb->prepare( "( subscriber.group_id = %d AND subscriber.unsubscribe_at IS NULL )", $search );
                                     break;
                             }
                         }
@@ -2568,7 +2581,7 @@ function erp_crm_is_people_belongs_to_saved_search( $sql, $args ) {
         return $sql;
     }
 
-    $sql['post_where_queries'][] = 'AND people.id = ' . $args['test_user'];
+    $sql['post_where_queries'][] = 'AND people.id = ' . absint( $args['test_user'] );
 
     return $sql;
 }
@@ -2852,7 +2865,7 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
             if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
                 $time = gmdate( 'g:i a', strtotime( $schedule['start_date'] ) );
             } else {
-                if ( gmdate( 'g:i a', strtotime( $schedule['start_date'] ) ) == gmdate( 'g:i a', strtotime( $schedule['end_date'] ) ) || ! $schedule['end_date'] ) {
+                if ( ! $schedule['end_date'] || gmdate( 'g:i a', strtotime( $schedule['start_date'] ) ) == gmdate( 'g:i a', strtotime( $schedule['end_date'] ) ) ) {
                     $time = gmdate( 'g:i a', strtotime( $schedule['start_date'] ) );
                 } else {
                     $time = gmdate( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . gmdate( 'g:i a', strtotime( $schedule['end_date'] ) );

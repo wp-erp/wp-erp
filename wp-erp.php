@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.17.2
+ * Version: 1.17.5
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -42,6 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WeDevs\ERP\Emailer;
 use WeDevs\ERP\Scripts;
+use WeDevs\ERP\Headway\Headway;
 use WeDevs\ERP\Tracker;
 use WeDevs\ERP\Updates;
 use WeDevs\ERP\ERP_i18n;
@@ -60,7 +61,7 @@ use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
 require_once __DIR__ . '/vendor/autoload.php';
-define( 'WPERP_VERSION', '1.17.2' );
+define( 'WPERP_VERSION', '1.17.5' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
 define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
@@ -301,6 +302,7 @@ final class WeDevs_ERP {
         new AdminPage();
         new UserProfile();
         new Scripts();
+        new Headway();
         new Updates();
         new ApiRegistrar();
         new Promotion();
@@ -424,7 +426,7 @@ final class WeDevs_ERP {
         if ( 'erp' === $page ) {
             $text = sprintf(
                 /* translators: %s: review url */
-                __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!', 'erp' ),
+                __( 'If you like WP ERP please <a href="%s" target="_blank" class="erp-review-link">leave us a ★★★★★ rating</a>. Thank you from the WP ERP team!', 'erp' ),
                 'https://wordpress.org/support/plugin/erp/reviews/?filter=5'
             );
         }

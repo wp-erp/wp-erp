@@ -25,7 +25,12 @@ class Contact extends \WeDevs\ERP\People {
         }
 
         parent::__construct( $contact );
-        $this->types = $type ? (array) $type : $this->types;
+
+        if ( $type ) {
+            $this->types = (array) $type;
+        } elseif ( ! empty( $this->data->types ) && is_array( $this->data->types ) ) {
+            $this->types = $this->data->types;
+        }
     }
 
     /**

@@ -43,11 +43,16 @@ if ( is_dir( $seed_dir ) ) {
         }
     }
 
-    // Load all Seed*.php files, except SeedCommand.php which is loaded separately.
+    // Load all Seed*.php files. SeedCommand.php loaded last so sub-commands register first.
     foreach ( glob( $seed_dir . '/Seed*.php' ) as $seed_file ) {
         if ( basename( $seed_file ) === 'SeedCommand.php' ) {
             continue;
         }
         require_once $seed_file;
+    }
+
+    $seed_command = $seed_dir . '/SeedCommand.php';
+    if ( file_exists( $seed_command ) ) {
+        require_once $seed_command;
     }
 }

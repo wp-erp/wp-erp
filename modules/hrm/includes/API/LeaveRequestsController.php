@@ -4,6 +4,7 @@ namespace WeDevs\ERP\HRM\API;
 
 use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
+use WeDevs\ERP\HRM\Models\LeaveEntitlement;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -182,6 +183,149 @@ class LeaveRequestsController extends REST_Controller {
                 },
             ],
         ]);
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/calculate-days', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'calculate_leave_days' ],
+                'args'                => [
+                    'employee_id' => [
+                        'description'       => __( 'Employee (user) id. Defaults to the current user; only leave managers may query others.', 'erp' ),
+                        'type'              => 'integer',
+                        'required'          => false,
+                        'sanitize_callback' => 'absint',
+                    ],
+                    'type' => [
+                        'description'       => __( 'Leave entitlement (policy) id.', 'erp' ),
+                        'type'              => 'integer',
+                        'required'          => true,
+                        'sanitize_callback' => 'absint',
+                    ],
+                    'from' => [
+                        'description'       => __( 'Start date (Y-m-d).', 'erp' ),
+                        'type'              => 'string',
+                        'required'          => true,
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'to' => [
+                        'description'       => __( 'End date (Y-m-d).', 'erp' ),
+                        'type'              => 'string',
+                        'required'          => true,
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'permission_callback' => function ( $request ) {
+                    $employee_id = absint( $request['employee_id'] );
+
+                    if ( $employee_id <= 0 ) {
+                        $employee_id = get_current_user_id();
+                    }
+
+                    // erp_leave_create_request maps to a self-or-HR-manager meta cap
+                    // (see erp_hr_map_meta_caps): the employee passes for themselves,
+                    // an HR manager passes for anyone.
+                    return current_user_can( 'erp_leave_create_request', $employee_id );
+                },
+            ],
+        ]);
+    }
+
+    /**
+     * Calculate the work-day breakdown for a prospective leave request.
+     *
+     * Mirrors the admin-ajax `erp-hr-leave-request-req-date` handler so clients
+     * (e.g. the mobile app) can preview the day-by-day breakdown, with weekends,
+     * holidays and the sandwich rule applied, before submitting a leave request.
+     *
+     * The employee defaults to the current user. An `employee_id` override is
+     * honoured only for users who can manage leave (`erp_leave_manage`), so an
+     * ordinary employee cannot inspect another employee's leave duration.
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function calculate_leave_days( $request ) {
+        $current     = get_current_user_id();
+        $employee_id = absint( $request['employee_id'] );
+
+        if ( $employee_id <= 0 || $employee_id === $current ) {
+            $employee_id = $current;
+        } elseif ( ! current_user_can( 'erp_leave_manage' ) ) {
+            return new WP_Error( 'rest_forbidden_employee', __( 'You are not allowed to view leave duration for another employee.', 'erp' ), [ 'status' => 403 ] );
+        }
+
+        $policy_id  = absint( $request['type'] );
+        $start_date = sanitize_text_field( $request['from'] );
+        $end_date   = sanitize_text_field( $request['to'] );
+
+        if ( $start_date > $end_date ) {
+            return new WP_Error( 'rest_invalid_range', __( 'Invalid date range', 'erp' ), [ 'status' => 422 ] );
+        }
+
+        $entitlement = LeaveEntitlement::find( $policy_id );
+
+        if ( ! $entitlement ) {
+            return new WP_Error( 'rest_invalid_policy', __( 'Invalid leave policy.', 'erp' ), [ 'status' => 422 ] );
+        }
+
+        $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
+        $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
+
+        if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end ) ) {
+            return new WP_Error(
+                'rest_invalid_duration',
+                sprintf(
+                    /* translators: 1: financial year start, 2: financial year end */
+                    __( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ),
+                    erp_format_date( $f_year_start ),
+                    erp_format_date( $f_year_end )
+                ),
+                [ 'status' => 422 ]
+            );
+        }
+
+        $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $employee_id, $entitlement->f_year );
+
+        if ( $leave_record_exist ) {
+            return new WP_Error( 'rest_leave_exists', __( 'Existing Leave Record found within selected range!', 'erp' ), [ 'status' => 422 ] );
+        }
+
+        $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
+
+        if ( 'yes' !== $is_extra_leave_enabled ) {
+            $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $employee_id );
+
+            if ( ! $is_policy_valid ) {
+                return new WP_Error( 'rest_no_leave_left', __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ), [ 'status' => 422 ] );
+            }
+        }
+
+        $days = erp_hr_get_work_days_between_dates( $start_date, $end_date, $employee_id );
+
+        if ( is_wp_error( $days ) ) {
+            return $days;
+        }
+
+        // Human-readable date labels, matching the admin-ajax response.
+        foreach ( $days['days'] as &$date ) {
+            $date['date'] = erp_format_date( $date['date'], 'D, M d' );
+        }
+        unset( $date );
+
+        $leave_count   = $days['total'];
+        $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
+
+        if ( 1 === intval( $days['sandwich'] ) ) {
+            $days['total'] .= ' ' . __( '(Sandwich rule applied)', 'erp' );
+        }
+
+        return rest_ensure_response(
+            [
+                'print'       => $days,
+                'leave_count' => $leave_count,
+            ]
+        );
     }
 
     /**
@@ -663,7 +807,32 @@ class LeaveRequestsController extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $employee = new Employee( $item->user_id );
-error_log(print_r( [$item], true ));
+
+        $attachments = [];
+
+        // Leave documents may contain sensitive HR material. Only expose attachment
+        // URLs to the leave owner or to users who can manage leave, rather than to
+        // anyone holding the broad list/view capability.
+        $can_view_attachments = ( get_current_user_id() === (int) $item->user_id )
+            || current_user_can( 'erp_leave_manage' );
+
+        $leave_attachment = $can_view_attachments
+            ? get_user_meta( $item->user_id, 'leave_document_' . $item->id )
+            : [];
+
+        if ( ! empty( $leave_attachment ) ) {
+            foreach ( $leave_attachment as $attachment_id ) {
+                $file_url = wp_get_attachment_url( $attachment_id );
+
+                if ( $file_url ) {
+                    $attachments[] = [
+                        'id'   => (int) $attachment_id,
+                        'url'  => esc_url_raw( $file_url ),
+                        'name' => basename( $file_url ),
+                    ];
+                }
+            }
+        }
 
         $data = [
             'id'            => (int) $item->id,
@@ -675,6 +844,7 @@ error_log(print_r( [$item], true ));
             'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
             'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
             'reason'        => $item->reason,
+            'attachments'   => $attachments,
             'comments'      => isset( $item->comments ) ? $item->comments : '',
             'applied_on'    => erp_format_date( $item->created_at, 'Y-m-d H:i:s' ),
             'policy_name'   => isset( $item->policy_name ) ? $item->policy_name : '',
@@ -762,6 +932,12 @@ error_log(print_r( [$item], true ));
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                ],
+                'attachments' => [
+                    'description' => __( 'Attachments uploaded with the leave request.', 'erp' ),
+                    'type'        => 'array',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
             ],
         ];
