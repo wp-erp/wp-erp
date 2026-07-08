@@ -13,7 +13,7 @@ import {
 	Button,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Plus, Trash2, Upload } from 'lucide-react';
+import { Plus, SquareArrowOutDownLeft, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -188,9 +188,9 @@ function HolidaysInner(): JSX.Element {
 						<Button
 							onClick={ () => setImportParam( 'open' ) }
 							variant="outline"
-							className="inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium"
+							className="inline-flex h-10 items-center gap-2 rounded-md border-border bg-card px-4 text-sm font-medium text-foreground hover:bg-muted"
 						>
-							<Upload size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+							<SquareArrowOutDownLeft size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 							{ __( 'Import', 'erp' ) }
 						</Button>
 						<Button

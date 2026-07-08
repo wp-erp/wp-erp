@@ -14,7 +14,7 @@
  */
 
 import { Button, SmartSelect, toast } from '@wedevs/plugin-ui';
-import { Calculator, Download, Filter } from 'lucide-react';
+import { Calculator, Filter, SquareArrowOutUpRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -157,11 +157,11 @@ function LeaveUnpaidInner(): JSX.Element {
 					<div className="flex items-center gap-3">
 						<Button
 							variant="outline"
-							className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5"
+							className="inline-flex h-10 items-center gap-2 rounded-md border-border bg-card px-5 text-sm font-medium leading-5 text-foreground hover:bg-muted"
 							disabled={ busy || rows.length === 0 }
 							onClick={ handleExport }
 						>
-							<Download size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
+							<SquareArrowOutUpRight size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 							{ __( 'Export CSV', 'erp' ) }
 						</Button>
 						{ salaryTypeOpts.length > 1 ? (
