@@ -77,8 +77,8 @@ export function CalendarToolbar( {
 					<span className="ml-2 text-base font-semibold text-foreground">{ label }</span>
 				</div>
 				<div className="flex items-center gap-3">
-					{ /* Month / Week / Day segmented switch (raw buttons — a tab group, not DS Buttons). */ }
-					<div role="tablist" aria-label={ __( 'Calendar view', 'erp' ) } className="inline-flex overflow-hidden rounded-md border border-border">
+					{ /* Month / Week / Day view switch — segmented pill group (matches the Requests tab bar). */ }
+					<div role="tablist" aria-label={ __( 'Calendar view', 'erp' ) } className="inline-flex w-fit items-center gap-1 rounded-lg border border-border bg-muted/60 p-1">
 						{ views.map( ( v ) => (
 							<button
 								key={ v.value }
@@ -87,8 +87,8 @@ export function CalendarToolbar( {
 								aria-selected={ view === v.value }
 								onClick={ () => onView( v.value ) }
 								className={ [
-									'h-9 px-3 text-sm font-medium transition-colors',
-									view === v.value ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted hover:text-foreground',
+									'inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
+									view === v.value ? 'bg-card text-primary shadow-sm ring-primary/40' : 'text-muted-foreground hover:text-foreground',
 								].join( ' ' ) }
 							>
 								{ v.label }

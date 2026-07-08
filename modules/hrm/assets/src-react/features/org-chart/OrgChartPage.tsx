@@ -113,7 +113,7 @@ function OrgChartInner(): JSX.Element {
 			</header>
 
 			{ departments.length > 0 ? (
-				<div role="group" aria-label={ __( 'Filter by team', 'erp' ) } className="mb-4 flex flex-wrap items-center gap-1.5">
+				<div role="tablist" aria-label={ __( 'Filter by team', 'erp' ) } className="mb-4 inline-flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-border bg-muted/60 p-1 scrollbar-none">
 					<DeptPill label={ __( 'All Teams', 'erp' ) } active={ deptId === '' } onClick={ () => setDeptId( '' ) } />
 					{ departments.map( ( d ) => (
 						<DeptPill

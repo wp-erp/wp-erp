@@ -11,11 +11,13 @@ export function DeptPill( { label, active, onClick }: { readonly label: string; 
 			type="button"
 			onClick={ onClick }
 			aria-pressed={ active }
+			role="tab"
+			aria-selected={ active }
 			className={ [
-				'max-w-[14rem] shrink-0 truncate rounded-md border px-3 py-1.5 text-left text-xs font-medium transition-colors',
+				'inline-flex max-w-56 shrink-0 flex-none items-center truncate rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
 				active
-					? 'border-primary/30 bg-primary/10 text-primary'
-					: 'border-border bg-card text-foreground hover:bg-muted',
+					? 'bg-card text-primary shadow-sm ring-primary/40'
+					: 'text-muted-foreground hover:text-foreground',
 			].join( ' ' ) }
 		>
 			{ label }
