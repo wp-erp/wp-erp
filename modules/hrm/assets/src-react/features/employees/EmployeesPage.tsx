@@ -30,7 +30,6 @@ import { EmployeesLiveRegion } from './EmployeesLiveRegion';
 import { EmployeesSkeleton } from './EmployeesSkeleton';
 import { EmployeesTable } from './EmployeesTable';
 import { EmployeesToolbar } from './EmployeesToolbar';
-import { EmployeesViewToggle } from './EmployeesViewToggle';
 import type { EmployeesView } from './EmployeesViewToggle';
 import { useEmployeesQuery } from './useEmployeesQuery';
 import { useEmployeesUrlSync } from './useEmployeesUrlSync';
@@ -50,11 +49,7 @@ function EmployeesPageInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<EmployeesToolbar />
-
-			<div className="mb-3 flex items-center justify-end">
-				<EmployeesViewToggle value={ view } onChange={ setView } />
-			</div>
+			<EmployeesToolbar view={ view } onViewChange={ setView } />
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<EmployeesFilters />

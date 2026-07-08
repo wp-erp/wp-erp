@@ -26,9 +26,10 @@ import { useEmployeesQuery } from './useEmployeesQuery';
 
 // Sticky-column helpers — Name pinned left (after the checkbox), Actions pinned
 // right, so they stay visible while the middle columns scroll horizontally
-// (same pattern as the Leave report). Header cells use a solid muted bg; body
-// cells inherit the row bg (card / hover / selected) to stay opaque over scroll.
-const STICKY_HEAD       = 'sticky z-20 bg-muted';
+// (same pattern as the Leave report). Header cells use the same white card bg as
+// the rest of the thead; body cells inherit the row bg (card / hover / selected)
+// to stay opaque over scroll.
+const STICKY_HEAD       = 'sticky z-20 bg-card';
 const STICKY_BODY       = 'sticky z-10 bg-card group-hover:bg-muted/40 group-data-[selected=true]:bg-primary/5';
 const STICKY_LEFT_CHECK = 'left-0';
 const STICKY_LEFT_NAME  = 'left-10';
@@ -96,7 +97,7 @@ export function EmployeesTable(): JSX.Element {
 	return (
 		<div className="bg-card">
 			<div className="overflow-x-auto">
-			<table className="w-full min-w-[72rem] text-left" role="grid" aria-label={ __( 'Employees', 'erp' ) }>
+			<table className="w-full min-w-288 text-left" role="grid" aria-label={ __( 'Employees', 'erp' ) }>
 				<caption className="sr-only">{ __( 'Employee list', 'erp' ) }</caption>
 				<thead className="border-b border-border bg-card">
 					<tr className="h-10">

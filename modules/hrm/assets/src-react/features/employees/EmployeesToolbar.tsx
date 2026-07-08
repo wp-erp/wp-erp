@@ -20,6 +20,8 @@ import { __ } from '@/shared/i18n';
 
 import { EmployeeExportDialog } from './EmployeeExportDialog';
 import { EmployeeImportDialog } from './EmployeeImportDialog';
+import { EmployeesViewToggle } from './EmployeesViewToggle';
+import type { EmployeesView } from './EmployeesViewToggle';
 import { useColumnContext } from './useColumnContext';
 import { useEmployeeToolbarItems } from './useEmployeeToolbarItems';
 
@@ -27,7 +29,12 @@ const ICON_MAP: Record< string, typeof Plus > = {
 	Plus,
 };
 
-export function EmployeesToolbar(): JSX.Element {
+interface EmployeesToolbarProps {
+	readonly view:         EmployeesView;
+	readonly onViewChange: ( view: EmployeesView ) => void;
+}
+
+export function EmployeesToolbar( { view, onViewChange }: EmployeesToolbarProps ): JSX.Element {
 	const items = useEmployeeToolbarItems();
 	const { can } = useColumnContext();
 	const [ importOpen, setImportOpen ] = useState( false );
@@ -106,6 +113,7 @@ export function EmployeesToolbar(): JSX.Element {
 						</Button>
 					);
 				} ) }
+				<EmployeesViewToggle value={ view } onChange={ onViewChange } />
 			</div>
 		</header>
 	);
