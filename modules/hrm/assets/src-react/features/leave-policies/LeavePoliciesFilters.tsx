@@ -4,7 +4,8 @@
  * shared form-options payload; the page owns the values and toggle state.
  */
 
-import { SmartSelect } from '@wedevs/plugin-ui';
+import { Button, SmartSelect } from '@wedevs/plugin-ui';
+import { X } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -42,6 +43,13 @@ export function LeavePoliciesFilters( {
 		{ value: '', label: __( 'All Types', 'erp' ) },
 		...( options?.employeeTypes ?? [] ).map( ( o ) => ( { value: o.value, label: o.label } ) ),
 	];
+
+	const hasActiveFilters = Boolean( fYear || departmentId || employeeType );
+	const clearFilters = (): void => {
+		onFYear( 0 );
+		onDepartment( 0 );
+		onEmployeeType( '' );
+	};
 
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
@@ -81,6 +89,18 @@ export function LeavePoliciesFilters( {
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
 			</label>
+			{ hasActiveFilters ? (
+				<Button
+					type="button"
+					variant="outline"
+					size="sm"
+					onClick={ clearFilters }
+					className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+				>
+					<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+					{ __( 'Clear', 'erp' ) }
+				</Button>
+			) : null }
 		</div>
 	);
 }

@@ -4,8 +4,8 @@
  * this renders the controls and derives the active-filter badge.
  */
 
-import { Input, SmartSelect } from '@wedevs/plugin-ui';
-import { Filter, Search } from 'lucide-react';
+import { Button, Input, SmartSelect } from '@wedevs/plugin-ui';
+import { Filter, Search, X } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -62,6 +62,12 @@ export function LeaveEntitlementsFilters( {
 
 	const activeFilterCount  = ( policyId ? 1 : 0 ) + ( year ? 1 : 0 ) + ( employeeType ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
+
+	const clearFilters = (): void => {
+		onYear( 0 );
+		onEmployeeType( '' );
+		onPolicyId( 0 );
+	};
 
 	return (
 		<>
@@ -147,6 +153,18 @@ export function LeaveEntitlementsFilters( {
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
 					</label>
+					{ activeFilterCount > 0 ? (
+						<Button
+							type="button"
+							variant="outline"
+							size="sm"
+							onClick={ clearFilters }
+							className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+						>
+							<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+							{ __( 'Clear', 'erp' ) }
+						</Button>
+					) : null }
 				</div>
 			) : null }
 		</>

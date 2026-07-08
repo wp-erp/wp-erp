@@ -4,7 +4,8 @@
  * option list is supplied by the page, which owns the query state.
  */
 
-import { SmartSelect } from '@wedevs/plugin-ui';
+import { Button, SmartSelect } from '@wedevs/plugin-ui';
+import { X } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { DateRangeField } from '@/shared/DateRangeField';
@@ -58,6 +59,19 @@ export function LeaveRequestsFilters( {
 	designationOptions,
 	employmentTypeOptions,
 }: LeaveRequestsFiltersProps ): JSX.Element {
+	const hasActiveFilters = Boolean(
+		leaveId || year || departmentId || designationId || employmentType || startDate || endDate
+	);
+	const clearFilters = (): void => {
+		onLeaveId( 0 );
+		onYear( 0 );
+		onDepartmentId( 0 );
+		onDesignationId( 0 );
+		onEmploymentType( '' );
+		onStartDate( '' );
+		onEndDate( '' );
+	};
+
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
 			<label className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -137,6 +151,18 @@ export function LeaveRequestsFilters( {
 					className="w-64 bg-background"
 				/>
 			</label>
+			{ hasActiveFilters ? (
+				<Button
+					type="button"
+					variant="outline"
+					size="sm"
+					onClick={ clearFilters }
+					className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+				>
+					<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+					{ __( 'Clear', 'erp' ) }
+				</Button>
+			) : null }
 		</div>
 	);
 }

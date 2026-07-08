@@ -8,9 +8,9 @@
  * secondary row when revealed.
  */
 
-import { Input } from '@wedevs/plugin-ui';
+import { Button, Input } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { Filter, Search } from 'lucide-react';
+import { Filter, Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -76,6 +76,24 @@ export function EmployeesFilters(): JSX.Element {
 
 	const filterButtonActive = showFilters || hasActiveSecondaryFilters;
 
+	// Reset every secondary filter (department / designation / location / type),
+	// preserving the search term and status tab, then jump back to page 1.
+	const clearFilters = (): void => {
+		const {
+			department_id:  _dept,
+			designation_id: _desig,
+			location_id:    _loc,
+			employee_type:  _type,
+			...rest
+		} = filters;
+		void _dept;
+		void _desig;
+		void _loc;
+		void _type;
+		setFilters( rest );
+		setPagination( { page: 1, perPage: 20 } );
+	};
+
 	return (
 		<div>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
@@ -133,6 +151,18 @@ export function EmployeesFilters(): JSX.Element {
 							} }
 						/>
 					) ) }
+					{ hasActiveSecondaryFilters ? (
+						<Button
+							type="button"
+							variant="outline"
+							size="sm"
+							onClick={ clearFilters }
+							className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+						>
+							<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+							{ __( 'Clear', 'erp' ) }
+						</Button>
+					) : null }
 				</div>
 			) : null }
 		</div>
