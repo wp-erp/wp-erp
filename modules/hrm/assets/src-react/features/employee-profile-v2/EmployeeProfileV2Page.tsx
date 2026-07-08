@@ -100,7 +100,7 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 	if ( ! record ) {
 		return (
 			<div className="mx-auto flex w-full max-w-full flex-col gap-6 lg:flex-row">
-				<Skeleton className="h-[34rem] w-full rounded-2xl lg:w-80" />
+				<Skeleton className="h-136 w-full rounded-2xl lg:w-80" />
 				<div className="flex-1 space-y-6">
 					<Skeleton className="h-12 w-96 rounded-full" />
 					<Skeleton className="h-64 w-full rounded-2xl" />

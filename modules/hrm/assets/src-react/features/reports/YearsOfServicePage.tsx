@@ -63,7 +63,7 @@ export function YearsOfServicePage(): JSX.Element {
 						<div key={ month.month } className="px-4 py-4">
 							<h3 className="mb-2 text-sm font-semibold text-foreground">{ month.month_name }</h3>
 							<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
+						<table className="w-full min-w-160 text-left">
 								<tbody>
 									{ month.days.map( ( day ) => (
 										<tr key={ day.day } className="border-b border-border/60 last:border-b-0">

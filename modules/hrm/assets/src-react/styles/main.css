@@ -370,7 +370,7 @@ body:has(#erp-hr-app) {
 
 /* ─── Horizontal-overflow guard ───
  * Some inner surfaces are intentionally wider than a phone viewport (data
- * tables `min-w-[40rem]`, the line-tab strips) and own a local
+ * tables `min-w-160`, the line-tab strips) and own a local
  * `overflow-x-auto` scroller. Without a clamp on the shell, that width leaks
  * up and gives the whole document a horizontal scroll on mobile — dragging
  * right exposes the bare (light) page behind the app. Clamp the shell to its

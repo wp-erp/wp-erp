@@ -238,7 +238,7 @@ export function SearchTrigger(): JSX.Element {
 						</DropdownMenu>
 					</div>
 
-					<div ref={ listRef } className="max-h-[22rem] overflow-y-auto p-2">
+					<div ref={ listRef } className="max-h-88 overflow-y-auto p-2">
 						{ trimmed.length < 2 ? (
 							<p className="px-3 py-6 text-center text-sm text-muted-foreground">
 								{ __( 'Type at least 2 characters to search.', 'erp' ) }

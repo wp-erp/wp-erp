@@ -41,7 +41,7 @@ export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImpo
 
 			{ result.failed.length > 0 ? (
 				<div className="max-h-56 overflow-auto rounded-md border border-border">
-					<table className="w-full min-w-[22rem] text-left text-sm">
+					<table className="w-full min-w-88 text-left text-sm">
 						<thead className="border-b border-border bg-card">
 							<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 								<th scope="col" className="px-3">{ __( 'Row', 'erp' ) }</th>

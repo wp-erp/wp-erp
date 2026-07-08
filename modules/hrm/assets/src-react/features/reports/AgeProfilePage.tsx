@@ -68,7 +68,7 @@ export function AgeProfilePage(): JSX.Element {
 				) : null }
 				<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
-						<table className="w-full min-w-[40rem] text-left">
+						<table className="w-full min-w-160 text-left">
 					<thead className="border-b border-border bg-card">
 						<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 							<th scope="col" className="px-4">{ __( 'Department', 'erp' ) }</th>
