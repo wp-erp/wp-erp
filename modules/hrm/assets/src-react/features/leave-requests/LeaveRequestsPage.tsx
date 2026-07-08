@@ -15,8 +15,11 @@
 
 import { Button, Input, toast } from '@wedevs/plugin-ui';
 import { Check, Filter, Plus, Search, Trash2, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
+
+import { RequestsActionSlot } from '../requests/RequestsActionSlot';
+import { RequestsTabContext } from '../requests/requests-tab-context';
 
 import { TYPE_OPTIONS } from '@/features/employee-create/options';
 import { loadLookup } from '@/features/employees/filters/lookups';
@@ -52,6 +55,7 @@ function LeaveRequestsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
 
 	// Default to the Pending tab — the requests needing action.
+	const inTabs = useContext( RequestsTabContext );
 	const [ status, setStatus ] = useState( 2 );
 	const [ leaveId, setLeaveId ] = useState( 0 );
 	const [ year, setYear ] = useState( 0 );
@@ -368,20 +372,31 @@ function LeaveRequestsInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
-				<h1 className="text-2xl font-bold leading-8 text-foreground">
-					{ __( 'Leave Requests', 'erp' ) }
-				</h1>
-				{ canManage ? (
-					<Button
-						className="h-10 gap-1.5 px-4"
-						onClick={ () => setFormParam( 'new' ) }
-					>
-						<Plus size={ 16 } aria-hidden="true" />
-						{ __( 'New Request', 'erp' ) }
-					</Button>
-				) : null }
-			</header>
+			{ inTabs ? (
+				canManage ? (
+					<RequestsActionSlot>
+						<Button className="h-10 gap-1.5 px-4" onClick={ () => setFormParam( 'new' ) }>
+							<Plus size={ 16 } aria-hidden="true" />
+							{ __( 'New Request', 'erp' ) }
+						</Button>
+					</RequestsActionSlot>
+				) : null
+			) : (
+				<header className="mb-6 flex items-center justify-between gap-4">
+					<h1 className="text-2xl font-bold leading-8 text-foreground">
+						{ __( 'Leave Requests', 'erp' ) }
+					</h1>
+					{ canManage ? (
+						<Button
+							className="h-10 gap-1.5 px-4"
+							onClick={ () => setFormParam( 'new' ) }
+						>
+							<Plus size={ 16 } aria-hidden="true" />
+							{ __( 'New Request', 'erp' ) }
+						</Button>
+					) : null }
+				</header>
+			) }
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				{ /* Toolbar — status tabs (left) + search + filter funnel (right). */ }

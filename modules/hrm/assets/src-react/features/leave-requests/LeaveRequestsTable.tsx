@@ -19,7 +19,6 @@ import {
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
 import {
-	Check,
 	ChevronDown,
 	ChevronsUpDown,
 	ChevronUp,
@@ -27,10 +26,11 @@ import {
 	Paperclip,
 	RotateCcw,
 	Trash2,
-	X,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import type { JSX } from 'react';
+
+import { ApproveRejectSplit } from '@/features/requests/ApproveRejectSplit';
 
 import { PersonCell } from '@/shared/components/PersonCell';
 import { HOOKS } from '@/shared/filters';
@@ -201,7 +201,7 @@ export function LeaveRequestsTable( {
 
 	return (
 		<div className="overflow-x-auto">
-			<table className="w-full min-w-[60rem] text-left">
+			<table className="w-full min-w-240 text-left">
 				<thead className="border-b border-border bg-card">
 					<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 						{ canManage ? (
@@ -343,7 +343,7 @@ export function LeaveRequestsTable( {
 									label={ req.status_label }
 								/>
 							</td>
-							<td className="max-w-[12rem] px-2 align-middle text-sm text-muted-foreground">
+							<td className="max-w-48 px-2 align-middle text-sm text-muted-foreground">
 								{ req.reason ? (
 									<span
 										className="block truncate"
@@ -370,7 +370,7 @@ export function LeaveRequestsTable( {
 										) : null }
 										{ req.approver_note ? (
 											<span
-												className="max-w-[12rem] truncate text-xs italic"
+												className="max-w-48 truncate text-xs italic"
 												title={ req.approver_note }
 											>
 												{ req.approver_note }
@@ -392,7 +392,7 @@ export function LeaveRequestsTable( {
 												href={ file.url }
 												target="_blank"
 												rel="noreferrer"
-												className="inline-flex max-w-[12rem] items-center gap-1 truncate text-primary hover:underline"
+												className="inline-flex max-w-48 items-center gap-1 truncate text-primary hover:underline"
 												title={ file.filename }
 											>
 												<Paperclip
@@ -416,48 +416,10 @@ export function LeaveRequestsTable( {
 								{ canManage ? (
 									<div className="flex items-center justify-end gap-1">
 										{ req.status === 2 ? (
-											<>
-												<Button
-													variant="ghost"
-													size="icon"
-													aria-label={ __(
-														'Approve',
-														'erp'
-													) }
-													className="text-green-600 hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-900/20"
-													onClick={ () =>
-														onModerate(
-															'approve',
-															req
-														)
-													}
-												>
-													<Check
-														size={ 16 }
-														aria-hidden="true"
-													/>
-												</Button>
-												<Button
-													variant="ghost"
-													size="icon"
-													aria-label={ __(
-														'Reject',
-														'erp'
-													) }
-													className="text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
-													onClick={ () =>
-														onModerate(
-															'reject',
-															req
-														)
-													}
-												>
-													<X
-														size={ 16 }
-														aria-hidden="true"
-													/>
-												</Button>
-											</>
+											<ApproveRejectSplit
+												onApprove={ () => onModerate( 'approve', req ) }
+												onReject={ () => onModerate( 'reject', req ) }
+											/>
 										) : null }
 										<DropdownMenu>
 											<DropdownMenuTrigger

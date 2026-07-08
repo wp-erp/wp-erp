@@ -16,13 +16,19 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DropdownMenuItem,
     SmartSelect,
     Skeleton,
     toast,
 } from "@wedevs/plugin-ui";
-import { Check, Plus, Trash2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
+
+import { ApproveRejectSplit } from "./ApproveRejectSplit";
+import { RequestsActionSlot } from "./RequestsActionSlot";
+import { useContext, useEffect, useState } from "react";
 import type { JSX } from "react";
+
+import { RequestsTabContext } from "./requests-tab-context";
 
 import { DateField } from "@/shared/DateField";
 import { __ } from "@/shared/i18n";
@@ -52,6 +58,7 @@ function statusTone(s: string): string {
 }
 
 export function ResignationRequests(): JSX.Element {
+    const inTabs = useContext(RequestsTabContext);
     const [rows, setRows] = useState<ResignRow[]>([]);
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
@@ -92,18 +99,24 @@ export function ResignationRequests(): JSX.Element {
 
     return (
         <div>
-            <header className="mb-6 flex items-center justify-between gap-4">
-                <h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
-                    {__("Resignation Requests", "erp")}
-                </h1>
-                <Button
-                    className="h-10 gap-1.5"
-                    onClick={() => setCreating(true)}
-                >
-                    <Plus size={15} aria-hidden="true" />
-                    {__("New Request", "erp")}
-                </Button>
-            </header>
+            {inTabs ? (
+                <RequestsActionSlot>
+                    <Button className="h-10 gap-1.5" onClick={() => setCreating(true)}>
+                        <Plus size={15} aria-hidden="true" />
+                        {__("New Request", "erp")}
+                    </Button>
+                </RequestsActionSlot>
+            ) : (
+                <header className="mb-6 flex items-center justify-between gap-4">
+                    <h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
+                        {__("Resignation Requests", "erp")}
+                    </h1>
+                    <Button className="h-10 gap-1.5" onClick={() => setCreating(true)}>
+                        <Plus size={15} aria-hidden="true" />
+                        {__("New Request", "erp")}
+                    </Button>
+                </header>
+            )}
             <div className="rounded-lg border border-border bg-card shadow-sm">
                 {loading ? (
                     <div className="space-y-2 p-4">
@@ -116,7 +129,7 @@ export function ResignationRequests(): JSX.Element {
                     </p>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[40rem] text-left text-sm">
+                        <table className="w-full min-w-160 text-left text-sm">
                             <thead className="border-b border-border bg-card">
                                 <tr className="h-10">
                                     <th className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
@@ -162,62 +175,36 @@ export function ResignationRequests(): JSX.Element {
                                             </Badge>
                                         </td>
                                         <td className="pl-2 pr-4 text-right align-middle">
-                                            <div className="inline-flex items-center gap-1">
+                                            <div className="inline-flex items-center justify-end gap-1">
                                                 {"pending" === r.status ? (
-                                                    <>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8 text-success hover:text-success"
-                                                            disabled={busy}
-                                                            onClick={() =>
-                                                                act(
-                                                                    r.id,
-                                                                    "approve",
-                                                                )
-                                                            }
-                                                            aria-label={__(
-                                                                "Approve",
-                                                                "erp",
-                                                            )}
-                                                        >
-                                                            <Check size={14} />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8 text-warning hover:text-warning"
-                                                            disabled={busy}
-                                                            onClick={() =>
-                                                                act(
-                                                                    r.id,
-                                                                    "reject",
-                                                                )
-                                                            }
-                                                            aria-label={__(
-                                                                "Reject",
-                                                                "erp",
-                                                            )}
-                                                        >
-                                                            <X size={14} />
-                                                        </Button>
-                                                    </>
-                                                ) : null}
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-8 w-8 text-destructive hover:text-destructive"
-                                                    disabled={busy}
-                                                    onClick={() =>
-                                                        act(r.id, "delete")
-                                                    }
-                                                    aria-label={__(
-                                                        "Delete",
-                                                        "erp",
-                                                    )}
-                                                >
-                                                    <Trash2 size={14} />
-                                                </Button>
+                                                    <ApproveRejectSplit
+                                                        disabled={busy}
+                                                        onApprove={() => act(r.id, "approve")}
+                                                        onReject={() => act(r.id, "reject")}
+                                                        extraItems={
+                                                            <DropdownMenuItem
+                                                                className="gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+                                                                onClick={() => act(r.id, "delete")}
+                                                            >
+                                                                <Trash2 size={14} aria-hidden="true" />
+                                                                {__("Delete", "erp")}
+                                                            </DropdownMenuItem>
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className="h-9 gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                                        disabled={busy}
+                                                        onClick={() =>
+                                                            act(r.id, "delete")
+                                                        }
+                                                    >
+                                                        <Trash2 size={14} aria-hidden="true" />
+                                                        {__("Delete", "erp")}
+                                                    </Button>
+                                                )}
                                             </div>
                                         </td>
                                     </tr>

@@ -24,13 +24,15 @@ import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { LeaveRequestsPage } from '../leave-requests';
+import { RequestsActionSlotContext, RequestsTabContext } from './requests-tab-context';
 import { ResignationRequests } from './ResignationRequests';
 import { RemoteWorkRequests } from './RemoteWorkRequests';
 
 export interface RequestTab {
 	readonly id:      string;
 	readonly label:   string;
-	readonly element: ComponentType;
+	/** Rendered inside the Requests tabs; `inTabs` lets a tab hide its own title. */
+	readonly element: ComponentType< { readonly inTabs?: boolean } >;
 	readonly icon?:   LucideIcon;
 }
 
@@ -45,6 +47,7 @@ function RequestsInner(): JSX.Element {
 	const [ active, setActive ] = useState( tabs[ 0 ]?.id ?? 'leave' );
 	const current = tabs.find( ( t ) => t.id === active ) ?? tabs[ 0 ];
 	const ActiveEl = current?.element ?? LeaveRequestsPage;
+	const [ actionSlotEl, setActionSlotEl ] = useState< HTMLDivElement | null >( null );
 
 	// Per-type totals for the tab badges (Leave / Asset / Reimbursement / …),
 	// keyed by tab id. Restores the legacy unified-Requests counts.
@@ -66,8 +69,9 @@ function RequestsInner(): JSX.Element {
 				<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Requests', 'erp' ) }</h1>
 			</header>
 
+			<div className="mb-5 flex flex-wrap items-center justify-between gap-3">
 			{ tabs.length > 1 ? (
-				<nav role="tablist" aria-label={ __( 'Request types', 'erp' ) } className="mb-5 inline-flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-border bg-muted/60 p-1 scrollbar-none">
+				<nav role="tablist" aria-label={ __( 'Request types', 'erp' ) } className="inline-flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-border bg-muted/60 p-1 scrollbar-none">
 					{ tabs.map( ( tab ) => {
 						const selected = tab.id === current?.id;
 						const Icon = tab.icon;
@@ -92,10 +96,16 @@ function RequestsInner(): JSX.Element {
 						);
 					} ) }
 				</nav>
-			) : null }
+			) : <span /> }
+				<div ref={ setActionSlotEl } className="flex items-center gap-2 empty:hidden" />
+			</div>
 
 			<ErrorBoundary>
-				<ActiveEl />
+				<RequestsTabContext.Provider value={ true }>
+					<RequestsActionSlotContext.Provider value={ actionSlotEl }>
+						<ActiveEl inTabs />
+					</RequestsActionSlotContext.Provider>
+				</RequestsTabContext.Provider>
 			</ErrorBoundary>
 		</section>
 	);
