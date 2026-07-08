@@ -1,9 +1,8 @@
 /**
- * 3-state theme toggle (Light / Dark / Auto).
+ * Theme toggle — single icon button flipping Light ↔ Dark.
  *
- * Built from three plugin-ui `Toggle` components grouped visually. Single-
- * select semantics are enforced in the handler — clicking the current mode is
- * a no-op (Toggle's own off-press is suppressed).
+ * Shows the icon of the mode you'd switch *to*: a Moon while light, a Sun
+ * while dark. Clicking sets the opposite of the currently resolved scheme.
  */
 
 import { Toggle } from '@wedevs/plugin-ui';
@@ -12,41 +11,23 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 import { useTheme } from '@/shared/hooks/useTheme';
-import type { ThemeMode } from '@/types/global';
-
-const SEGMENTS: ReadonlyArray< {
-	readonly value: ThemeMode;
-	readonly label: string;
-	readonly Icon:  typeof Sun;
-} > = [
-	{ value: 'light', label: 'Light', Icon: Sun },
-	{ value: 'dark',  label: 'Dark',  Icon: Moon },
-];
 
 export function ThemeToggle(): JSX.Element {
-	const { mode, setMode } = useTheme();
+	const { resolved, setMode } = useTheme();
+	const isDark = resolved === 'dark';
 
 	return (
-		<div
-			role="group"
-			aria-label={ __( 'Theme', 'erp' ) }
-			className="inline-flex items-center gap-0.5 rounded-md border border-border bg-card p-0.5"
+		<Toggle
+			pressed={ isDark }
+			aria-label={ isDark ? __( 'Switch to light mode', 'erp' ) : __( 'Switch to dark mode', 'erp' ) }
+			onPressedChange={ () => setMode( isDark ? 'light' : 'dark' ) }
+			className="size-9 rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 		>
-			{ SEGMENTS.map( ( { value, label, Icon } ) => (
-				<Toggle
-					key={ value }
-					pressed={ mode === value }
-					aria-label={ label }
-					onPressedChange={ ( pressed: boolean ) => {
-						if ( pressed ) {
-							setMode( value );
-						}
-					} }
-					className="size-7 rounded-sm text-muted-foreground data-[state=on]:bg-info-light data-[state=on]:text-info-on-light"
-				>
-					<Icon size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
-				</Toggle>
-			) ) }
-		</div>
+			{ isDark ? (
+				<Sun size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
+			) : (
+				<Moon size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />
+			) }
+		</Toggle>
 	);
 }

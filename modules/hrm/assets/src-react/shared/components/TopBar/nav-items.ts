@@ -343,9 +343,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		pro:           true,
 		children: [
 			{ id: 'recruitment-jobs', label: __( 'Job Openings', 'erp' ), to: '/recruitment', capabilities: [ 'manage_recruitment' ] },
-			{ id: 'recruitment-add-job', label: __( 'Add Opening', 'erp' ), to: '/recruitment/new', capabilities: [ 'manage_recruitment' ] },
 			{ id: 'recruitment-candidates', label: __( 'Candidates', 'erp' ), to: '/recruitment/candidates', capabilities: [ 'manage_recruitment' ] },
-			{ id: 'recruitment-add-candidate', label: __( 'Add candidate', 'erp' ), to: '/recruitment/candidates/new', capabilities: [ 'manage_recruitment' ] },
 			{ id: 'recruitment-question-sets', label: __( 'Question Sets', 'erp' ), to: '/recruitment/question-sets', capabilities: [ 'manage_recruitment' ] },
 			{ id: 'recruitment-stages', label: __( 'Stages', 'erp' ), to: '/recruitment/stages', capabilities: [ 'manage_recruitment' ] },
 			{ id: 'recruitment-calendar', label: __( 'Calendar', 'erp' ), to: '/recruitment/calendar', capabilities: [ 'manage_recruitment' ] },

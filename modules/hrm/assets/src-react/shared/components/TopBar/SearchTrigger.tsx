@@ -182,13 +182,9 @@ export function SearchTrigger(): JSX.Element {
 				type="button"
 				onClick={ () => setOpen( true ) }
 				aria-label={ __( 'Search', 'erp' ) }
-				className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:px-3"
+				className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 			>
 				<Search size={ 16 } strokeWidth={ 1.9 } aria-hidden="true" />
-				<span className="hidden lg:inline">{ __( 'Search', 'erp' ) }</span>
-				<kbd className="ml-1 hidden rounded border border-border bg-muted px-1.5 font-sans text-[11px] leading-5 text-muted-foreground lg:inline">
-					⌘K
-				</kbd>
 			</button>
 
 			<Dialog open={ open } onOpenChange={ ( next ) => ( next ? setOpen( true ) : close() ) }>

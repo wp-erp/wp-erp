@@ -43,16 +43,13 @@ export function UserMenu(): JSX.Element {
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				render={
-					<Button variant="ghost" size="sm" className="gap-2 px-1.5 h-9">
+					<Button variant="ghost" size="sm" className="px-1.5 h-9">
 						<Avatar className="size-8">
 							{ boot.avatarUrl ? (
 								<AvatarImage src={ boot.avatarUrl } alt="" />
 							) : null }
 							<AvatarFallback>{ initials }</AvatarFallback>
 						</Avatar>
-						<span className="text-sm text-foreground hidden md:inline">
-							{ boot.displayName }
-						</span>
 					</Button>
 				}
 			/>
