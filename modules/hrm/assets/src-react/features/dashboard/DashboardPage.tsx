@@ -29,12 +29,10 @@ import {
 	Hourglass,
 	Megaphone,
 	PalmtreeIcon,
-	UserPlus,
 	Users,
 } from 'lucide-react';
 import { useState } from 'react';
 import type { ComponentType, JSX } from 'react';
-import { Link } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { HOOKS } from '@/shared/filters';
@@ -77,7 +75,6 @@ function DashboardInner(): JSX.Element {
 			 ).getUser(),
 		[]
 	);
-	const canCreateEmployee = useCan( 'erp_create_employee' );
 	const canManageLeave = useCan( 'erp_leave_manage' );
 
 	const currentUserId = user?.id ?? 0;
@@ -141,32 +138,6 @@ function DashboardInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			{ /* Quick actions — sit above the greeting card, outside it */ }
-			{ canManageLeave || canCreateEmployee ? (
-				<div className="mb-4 flex flex-wrap items-center justify-end gap-2">
-					{ canManageLeave ? (
-						<Link
-							to="/leave/requests"
-							viewTransition
-							className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground hover:bg-muted"
-						>
-							<CalendarClock size={ 16 } aria-hidden="true" />
-							{ __( 'Leave Requests', 'erp' ) }
-						</Link>
-					) : null }
-					{ canCreateEmployee ? (
-						<Link
-							to="/employees/new"
-							viewTransition
-							className="inline-flex h-9 items-center gap-2 rounded-md bg-gradient-to-r from-primary to-primary/85 px-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:shadow-md hover:brightness-105"
-						>
-							<UserPlus size={ 16 } aria-hidden="true" />
-							{ __( 'Add Employee', 'erp' ) }
-						</Link>
-					) : null }
-				</div>
-			) : null }
-
 			{ /* Greeting hero */ }
 			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-lg bg-card p-6 shadow-sm ring-1 ring-border/50">
 				<div className="relative">
