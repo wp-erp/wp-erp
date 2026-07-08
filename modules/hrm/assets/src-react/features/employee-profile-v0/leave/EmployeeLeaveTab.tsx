@@ -146,7 +146,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 			{ /* Request history */ }
 			<section className="rounded-[10px] bg-card p-6 shadow-sm">
 				<div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
-					<h2 className="m-0 text-lg font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
+					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
 					{ meta ? (
 						<div className="flex flex-wrap items-center gap-2">
 							<Select

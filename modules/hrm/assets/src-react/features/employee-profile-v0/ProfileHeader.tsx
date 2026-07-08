@@ -4,11 +4,13 @@
  * editable in place (for self / managers) via `AvatarUpload`.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, toast } from '@wedevs/plugin-ui';
 import { Activity, Building2, IdCard, Pencil, Phone, Printer, Smartphone, Tag, UserCheck, UserX } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 import { __ } from '@/shared/i18n';
+import type { LucideIcon } from './profile-format';
 
 import { AvatarUpload } from '../employee-profile/AvatarUpload';
 import { STATUS_OPTIONS } from '../employee-profile/options';
@@ -44,6 +46,14 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 	const email  = str( record, 'email' );
 	const mobile = str( record, 'mobile' );
 	const phone  = str( record, 'phone' );
+
+	// Summary-pill facts. designation/department/status link to the employee
+	// list pre-filtered by that value; employee-id copies to the clipboard.
+	const designationName = str( record, 'designation_name' );
+	const departmentName  = str( record, 'department_name' );
+	const employeeId      = str( record, 'employee_id' );
+	const designationId   = Number( str( record, 'designation' ) ) || 0;
+	const departmentId    = Number( str( record, 'department' ) ) || 0;
 
 	return (
 		<section className="rounded-[10px] border border-border bg-card p-6 shadow-sm">
@@ -131,27 +141,98 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 				) : null }
 			</div>
 
-			{ /* Summary info row — key facts at a glance. */ }
-			<div className="-mx-6 mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border px-6 pt-4 text-sm">
-				{ str( record, 'designation_name' ) ? (
-					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Tag size={ 14 } aria-hidden="true" />{ __( 'Job:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'designation_name' ) }</span></span>
+			{ /* Summary info row — key facts as pills. Designation / Department /
+			   Status link to the employee list filtered by that value; Employee
+			   ID copies to the clipboard. */ }
+			<div className="-mx-6 mt-5 flex flex-wrap items-center gap-2 border-t border-border px-6 pt-4">
+				{ designationName ? (
+					<MetaPill
+						icon={ Tag }
+						label={ __( 'Designation:', 'erp' ) }
+						value={ designationName }
+						to={ designationId ? `/employees?designation_id=${ designationId }` : undefined }
+					/>
 				) : null }
-				{ str( record, 'department_name' ) ? (
-					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Building2 size={ 14 } aria-hidden="true" />{ __( 'Department:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'department_name' ) }</span></span>
+				{ departmentName ? (
+					<MetaPill
+						icon={ Building2 }
+						label={ __( 'Department:', 'erp' ) }
+						value={ departmentName }
+						to={ departmentId ? `/employees?department_id=${ departmentId }` : undefined }
+					/>
 				) : null }
 				{ status ? (
-					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Activity size={ 14 } aria-hidden="true" />{ __( 'Status:', 'erp' ) } <span className="font-medium text-foreground">{ labelOf( STATUS_OPTIONS, status ) }</span></span>
+					<MetaPill
+						icon={ Activity }
+						label={ __( 'Status:', 'erp' ) }
+						value={ labelOf( STATUS_OPTIONS, status ) }
+						to={ `/employees?status=${ status }` }
+					/>
 				) : null }
-				{ str( record, 'employee_id' ) ? (
-					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><IdCard size={ 14 } aria-hidden="true" />{ __( 'Employee ID:', 'erp' ) } <span className="font-medium text-foreground">{ str( record, 'employee_id' ) }</span></span>
+				{ employeeId ? (
+					<MetaPill
+						icon={ IdCard }
+						label={ __( 'Employee ID:', 'erp' ) }
+						value={ employeeId }
+						title={ __( 'Copy employee ID', 'erp' ) }
+						onClick={ () => {
+							void navigator.clipboard?.writeText( employeeId );
+							toast.success( __( 'Employee ID copied.', 'erp' ) );
+						} }
+					/>
 				) : null }
 				{ mobile ? (
-					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Smartphone size={ 14 } aria-hidden="true" />{ __( 'Mobile:', 'erp' ) } <a href={ `tel:${ mobile }` } className="font-medium text-foreground hover:text-primary hover:underline">{ mobile }</a></span>
+					<MetaPill icon={ Smartphone } label={ __( 'Mobile:', 'erp' ) } value={ mobile } href={ `tel:${ mobile }` } />
 				) : null }
 				{ phone ? (
-					<span className="inline-flex items-center gap-1.5 text-muted-foreground"><Phone size={ 14 } aria-hidden="true" />{ __( 'Phone:', 'erp' ) } <a href={ `tel:${ phone }` } className="font-medium text-foreground hover:text-primary hover:underline">{ phone }</a></span>
+					<MetaPill icon={ Phone } label={ __( 'Phone:', 'erp' ) } value={ phone } href={ `tel:${ phone }` } />
 				) : null }
 			</div>
 		</section>
 	);
+}
+
+interface MetaPillProps {
+	readonly icon:     LucideIcon;
+	readonly label:    string;
+	readonly value:    string;
+	/** Internal route (react-router) — renders a Link. */
+	readonly to?:      string | undefined;
+	/** External/protocol href (e.g. tel:) — renders an anchor. */
+	readonly href?:    string | undefined;
+	/** Click handler (e.g. copy) — renders a button. */
+	readonly onClick?: ( () => void ) | undefined;
+	readonly title?:   string | undefined;
+}
+
+/**
+ * One key-fact pill in the profile header. Clickable variants (to / href /
+ * onClick) get a hover affordance; a bare pill (no target) is a plain span.
+ */
+function MetaPill( { icon: Icon, label, value, to, href, onClick, title }: MetaPillProps ): JSX.Element {
+	const base =
+		'inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs';
+	const interactive = `${ base } transition-colors hover:border-primary/40 hover:bg-primary/10`;
+	const inner = (
+		<>
+			<Icon size={ 14 } aria-hidden="true" className="text-muted-foreground" />
+			<span className="text-muted-foreground">{ label }</span>
+			<span className="font-medium text-foreground">{ value }</span>
+		</>
+	);
+
+	if ( to ) {
+		return <Link to={ to } className={ interactive } title={ title }>{ inner }</Link>;
+	}
+	if ( href ) {
+		return <a href={ href } className={ interactive } title={ title }>{ inner }</a>;
+	}
+	if ( onClick ) {
+		return (
+			<button type="button" onClick={ onClick } className={ interactive } title={ title }>
+				{ inner }
+			</button>
+		);
+	}
+	return <span className={ base } title={ title }>{ inner }</span>;
 }
