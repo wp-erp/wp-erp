@@ -1,0 +1,1930 @@
+# Copyright (C) 2020 weDevs
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP ERP - Payroll 1.4.0\n"
+"Report-Msgid-Bugs-To: http://wperp.com/support/\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Generator: grunt-wp-i18n 0.4.9\n"
+
+# automatic translation
+#: erp-payroll.php:241
+msgid "Manage Payroll"
+msgstr "Administrar nómina"
+
+# automatic translation
+#: erp-payroll.php:243 includes/class-admin-menu.php:71
+#: includes/class-admin-menu.php:121
+msgid "Settings"
+msgstr "Ajustes"
+
+# automatic translation
+#: erp-payroll.php:262 includes/admin/views/dashboard-payslip-widget.php:28
+#: includes/admin/views/payroll-emp-payslip.php:104
+#: includes/admin/views/tab-templates/payslips-tab.php:48
+#: includes/emails/payslip_template.php:20
+msgid "Payslip"
+msgstr "nómina"
+
+# automatic translation
+#: erp-payroll.php:270 includes/class-admin-menu.php:51
+#: includes/class-admin-menu.php:81 includes/class-admin-menu.php:239
+#: includes/class-settings.php:13
+msgid "Payroll"
+msgstr "Nómina de sueldos"
+
+# automatic translation
+#: erp-payroll.php:453
+msgid "<i class=\"fa fa-money\"></i> Payslip"
+msgstr "<i class=\"fa fa-money\"></i>nómina"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:56
+#: includes/admin/class-setup-wizard.php:252
+msgid "Accounts Setup"
+msgstr "Configuración de cuentas"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:61
+msgid "Payment Method Setup"
+msgstr "Configuración del método de pago"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:66
+msgid "Ready!"
+msgstr "¡Listo!"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:113
+msgid "WP ERP Payroll &rsaquo; Setup Wizard"
+msgstr "Nómina WP ERP &rsaquo; Asistente de configuración"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:131
+msgid "Return to the Payroll Dashboard"
+msgstr "Volver al panel de nómina"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:226
+msgid "Continue"
+msgstr "Continuar"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:227
+msgid "Skip this step"
+msgstr "Saltar este paso"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:238
+msgid "Welcome to ERP Payroll!"
+msgstr "¡Bienvenido a Nómina ERP!"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:239
+msgid ""
+"Thank you for choosing ERP-Payroll. An easier way to manage your employee "
+"salary! This quick setup wizard will help you configure the basic settings. "
+"<strong>It’s completely optional and shouldn’t take longer than two "
+"minutes.</strong>"
+msgstr ""
+"Gracias por elegir ERP-Nómina. ¡Una forma más fácil de administrar el "
+"salario de sus empleados! Este asistente de configuración rápida lo ayudará "
+"a configurar los ajustes básicos. <strong>Es completamente opcional y no "
+"debería tomar más de dos minutos.</strong>"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:240
+msgid ""
+"No time right now? If you don’t want to go through the wizard, you can skip "
+"and return to the WordPress dashboard. Come back anytime if you change your "
+"mind!"
+msgstr ""
+"¿No hay tiempo ahora? Si no desea pasar por el asistente, puede omitir y "
+"volver al panel de control de WordPress. ¡Vuelve cuando quieras si cambias "
+"de opinión!"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:242
+msgid "Let's Go!"
+msgstr "¡Vamos!"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:243
+msgid "Skip"
+msgstr "Saltar"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:261
+#: includes/admin/views/payroll-account-settings.php:8
+msgid "Account head for Assets"
+msgstr "Jefe de cuenta de Activos"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:298
+#: includes/admin/views/payroll-account-settings.php:45
+msgid "Account head for salary reporting"
+msgstr "Jefe de cuenta para el informe de salarios"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:335
+#: includes/admin/views/payroll-account-settings.php:82
+msgid "Account head for tax reporting"
+msgstr "Jefe de cuenta para la declaración de impuestos"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:396
+msgid "Payment Methods Setup"
+msgstr "Configuración de métodos de pago"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:401
+#: includes/admin/views/payroll-payment-settings.php:5
+#: includes/class-settings.php:106
+msgid "Select a method"
+msgstr "Seleccione un método"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:406
+#: includes/admin/class-setup-wizard.php:410
+#: includes/admin/views/payroll-emp-settings.php:239
+#: includes/admin/views/payroll-payment-settings.php:9
+#: includes/admin/views/payroll-payment-settings.php:11
+#: includes/class-settings.php:95
+msgid "Cash"
+msgstr "Dinero"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:415
+#: includes/admin/class-setup-wizard.php:419
+#: includes/admin/views/payroll-emp-settings.php:238
+#: includes/admin/views/payroll-payment-settings.php:14
+#: includes/admin/views/payroll-payment-settings.php:16
+#: includes/class-settings.php:96
+msgid "Cheque"
+msgstr "Controlar"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:424
+#: includes/admin/class-setup-wizard.php:428
+#: includes/admin/views/payroll-emp-settings.php:237
+#: includes/admin/views/payroll-payment-settings.php:19
+#: includes/admin/views/payroll-payment-settings.php:21
+#: includes/class-settings.php:97
+msgid "Bank"
+msgstr "Banco"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:437 includes/class-settings.php:115
+msgid "Select a bank"
+msgstr "Seleccione un banco"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:448
+msgid "Please select a bank for payment."
+msgstr "Seleccione un banco para el pago."
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:483
+msgid "Your payroll system is ready!"
+msgstr "¡Tu sistema de nómina está listo!"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:487
+msgid "Next Steps &rarr;"
+msgstr "Próximos pasos &rarr;"
+
+# automatic translation
+#: includes/admin/class-setup-wizard.php:490
+msgid "Add Pay Calendar to pay!"
+msgstr "¡Agregue Pay Calendar para pagar!"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:17
+msgid "Sorry! There is no available payslip right now."
+msgstr "¡Lo siento! No hay nómina disponible en este momento."
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:30
+#: includes/admin/views/dashboard-payslip-widget.php:34
+#: includes/admin/views/dashboard-payslip-widget.php:39
+#: includes/admin/views/dashboard-payslip-widget.php:43
+#: includes/admin/views/dashboard-payslip-widget.php:54
+#: includes/admin/views/dashboard-payslip-widget.php:55
+#: includes/admin/views/dashboard-payslip-widget.php:56
+#: includes/admin/views/dashboard-payslip-widget.php:67
+#: includes/admin/views/dashboard-payslip-widget.php:68
+#: includes/admin/views/dashboard-payslip-widget.php:69
+#: includes/admin/views/dashboard-payslip-widget.php:70
+#: includes/admin/views/dashboard-payslip-widget.php:83
+#: includes/admin/views/dashboard-payslip-widget.php:86
+#: includes/admin/views/dashboard-payslip-widget.php:87
+#: includes/admin/views/dashboard-payslip-widget.php:98
+#: includes/admin/views/dashboard-payslip-widget.php:99
+#: includes/admin/views/dashboard-payslip-widget.php:103
+#: includes/admin/views/dashboard-payslip-widget.php:113
+#: includes/admin/views/dashboard-payslip-widget.php:121
+#: includes/admin/views/payroll-emp-payslip.php:106
+#: includes/admin/views/payroll-emp-payslip.php:110
+#: includes/admin/views/payroll-emp-payslip.php:115
+#: includes/admin/views/payroll-emp-payslip.php:119
+#: includes/admin/views/payroll-emp-payslip.php:130
+#: includes/admin/views/payroll-emp-payslip.php:131
+#: includes/admin/views/payroll-emp-payslip.php:132
+#: includes/admin/views/payroll-emp-payslip.php:143
+#: includes/admin/views/payroll-emp-payslip.php:144
+#: includes/admin/views/payroll-emp-payslip.php:145
+#: includes/admin/views/payroll-emp-payslip.php:146
+#: includes/admin/views/payroll-emp-payslip.php:159
+#: includes/admin/views/payroll-emp-payslip.php:162
+#: includes/admin/views/payroll-emp-payslip.php:163
+#: includes/admin/views/payroll-emp-payslip.php:174
+#: includes/admin/views/payroll-emp-payslip.php:175
+#: includes/admin/views/payroll-emp-payslip.php:179
+#: includes/admin/views/payroll-emp-payslip.php:189
+#: includes/admin/views/payroll-emp-payslip.php:197
+msgid "Loading..."
+msgstr "Cargando..."
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:37
+#: includes/admin/views/payroll-emp-payslip.php:113
+#: includes/admin/views/tab-templates/payslips-tab.php:57
+#: includes/emails/payslip_template.php:29
+msgid "Employee Name"
+msgstr "Nombre de empleado"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:41
+#: includes/admin/views/payroll-emp-payslip.php:117
+#: includes/admin/views/tab-templates/payslips-tab.php:61
+#: includes/emails/payslip_template.php:33
+msgid "Employee Address"
+msgstr "Dirección del empleado"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:49
+#: includes/admin/views/js-templates/employee-filter-template.php:7
+#: includes/admin/views/js-templates/pay-item-new-template.php:41
+#: includes/admin/views/pay-calendar-creation-form.php:142
+#: includes/admin/views/payroll-emp-payslip.php:125
+#: includes/admin/views/tab-templates/approve-tab.php:38
+#: includes/admin/views/tab-templates/employees-tab.php:42
+#: includes/admin/views/tab-templates/payslips-tab.php:69
+#: includes/emails/payslip_template.php:41
+msgid "Department"
+msgstr "Departamento"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:50
+#: includes/admin/views/js-templates/employee-filter-template.php:8
+#: includes/admin/views/js-templates/pay-item-new-template.php:65
+#: includes/admin/views/pay-calendar-creation-form.php:143
+#: includes/admin/views/payroll-emp-payslip.php:126
+#: includes/admin/views/tab-templates/employees-tab.php:43
+#: includes/admin/views/tab-templates/payslips-tab.php:70
+#: includes/emails/payslip_template.php:42
+msgid "Designation"
+msgstr "Designacion"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:51
+#: includes/admin/views/payroll-emp-payslip.php:127
+#: includes/admin/views/tab-templates/payslips-tab.php:71
+#: includes/emails/payslip_template.php:43
+msgid "Period"
+msgstr "Período"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:61
+#: includes/admin/views/payroll-emp-payslip.php:137
+#: includes/admin/views/payrun-overview.php:126
+#: includes/admin/views/tab-templates/approve-tab.php:20
+#: includes/admin/views/tab-templates/employees-tab.php:28
+#: includes/admin/views/tab-templates/payslips-tab.php:82
+#: includes/class-payrun-list.php:75 includes/emails/payslip_template.php:53
+msgid "Payment Date"
+msgstr "Fecha de pago"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:62
+#: includes/admin/views/payroll-emp-payslip.php:138
+#: includes/admin/views/tab-templates/approve-tab.php:39
+#: includes/admin/views/tab-templates/payslips-tab.php:83
+#: includes/emails/payslip_template.php:54
+msgid "Tax Number"
+msgstr "Número de impuesto"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:63
+#: includes/admin/views/payroll-emp-payslip.php:139
+#: includes/admin/views/payroll-emp-settings.php:82
+#: includes/admin/views/payroll-emp-settings.php:115
+#: includes/admin/views/tab-templates/payslips-tab.php:84
+#: includes/emails/payslip_template.php:55
+msgid "Bank Account Number"
+msgstr "Número de cuenta bancaria"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:64
+#: includes/admin/views/payroll-emp-payslip.php:140
+#: includes/admin/views/payroll-emp-settings.php:233
+#: includes/admin/views/tab-templates/payslips-tab.php:85
+#: includes/emails/payslip_template.php:56
+msgid "Payment Method"
+msgstr "Método de pago"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:79
+#: includes/admin/views/payroll-emp-payslip.php:155
+#: includes/admin/views/tab-templates/payslips-tab.php:100
+#: includes/emails/payslip_template.php:71
+msgid "Payments"
+msgstr "Pagos"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:82
+#: includes/admin/views/payroll-emp-payslip.php:158
+#: includes/admin/views/tab-templates/approve-tab.php:40
+#: includes/admin/views/tab-templates/employees-tab.php:44
+#: includes/admin/views/tab-templates/payslips-tab.php:103
+#: includes/admin/views/tab-templates/variable-input-tab.php:41
+#: includes/emails/payslip_template.php:74
+msgid "Pay Basic"
+msgstr "Pagar Básico"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:95
+#: includes/admin/views/payroll-emp-payslip.php:171
+#: includes/admin/views/reports/summary-report.php:37
+#: includes/admin/views/tab-templates/payslips-tab.php:116
+#: includes/emails/payslip_template.php:94
+msgid "Deductions"
+msgstr "Deducciones"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:102
+#: includes/admin/views/payroll-emp-payslip.php:178
+#: includes/admin/views/tab-templates/payslips-tab.php:123
+#: includes/admin/views/tab-templates/variable-input-tab.php:74
+#: includes/emails/payslip_template.php:108
+msgid "Total Deduction"
+msgstr "Deducción total"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:112
+#: includes/admin/views/payroll-emp-payslip.php:188
+#: includes/admin/views/tab-templates/payslips-tab.php:133
+#: includes/admin/views/tab-templates/variable-input-tab.php:56
+#: includes/emails/payslip_template.php:118
+msgid "Total Payment"
+msgstr "Pago total"
+
+# automatic translation
+#: includes/admin/views/dashboard-payslip-widget.php:120
+#: includes/admin/views/payroll-emp-payslip.php:60
+#: includes/admin/views/payroll-emp-payslip.php:196
+#: includes/admin/views/reports/employee-report.php:37
+#: includes/admin/views/reports/summary-report.php:39
+#: includes/admin/views/tab-templates/approve-tab.php:44
+#: includes/admin/views/tab-templates/employees-tab.php:48
+#: includes/admin/views/tab-templates/payslips-tab.php:141
+#: includes/admin/views/tab-templates/variable-input-tab.php:80
+#: includes/emails/payslip_template.php:126
+msgid "Net Pay"
+msgstr "Salario neto"
+
+# automatic translation
+#: includes/admin/views/js-templates/employee-filter-template.php:5
+msgid "Filter by Department or Designation"
+msgstr "Filtrar por Departamento o Designación"
+
+# automatic translation
+#: includes/admin/views/js-templates/employee-filter-template.php:13
+#: includes/admin/views/pay-calendar-creation-form.php:86
+msgid "Select Department"
+msgstr "Seleccionar Departamento"
+
+# automatic translation
+#: includes/admin/views/js-templates/employee-filter-template.php:29
+#: includes/admin/views/pay-calendar-creation-form.php:105
+msgid "Select Designation"
+msgstr "Seleccionar designación"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-category-new-template.php:7
+msgid "Pay item category"
+msgstr "Categoría de elemento de pago"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-category-new-template.php:11
+msgid "Select Pay item category type"
+msgstr "Seleccione el tipo de categoría de elemento de pago"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-category-new-template.php:14
+#: includes/class-settings.php:160
+msgid "Addition"
+msgstr "Suma"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-category-new-template.php:15
+msgid "Subtract"
+msgstr "Sustraer"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-category-template.php:4
+msgid "Pay item category (required)"
+msgstr "Categoría de elemento de pago (obligatorio)"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:4
+#: includes/admin/views/js-templates/pay-item-template.php:4
+msgid "Pay item (required)"
+msgstr "Elemento de pago (requerido)"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:9
+#: includes/admin/views/js-templates/pay-item-template.php:9
+msgid "Select Pay item category (required)"
+msgstr "Seleccionar categoría de elemento de pago (obligatorio)"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:24
+msgid "Account for Reporting"
+msgstr "Cuenta para informes"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:45
+msgid "Apply to all department"
+msgstr "Aplicar a todos los departamentos"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:69
+msgid "Apply to all designation"
+msgstr "Aplicar a todas las designaciones"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:89
+#: includes/admin/views/pay-calendar-creation-form.php:139
+#: includes/admin/views/reports/summary-report.php:34
+#: includes/admin/views/tab-templates/approve-tab.php:37
+#: includes/admin/views/tab-templates/employees-tab.php:41
+msgid "Employee"
+msgstr "Empleado"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:93
+msgid "Apply to all employee"
+msgstr "Aplicar a todos los empleados"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:99
+msgid "-- All Employee --"
+msgstr "-- Todos los empleados --"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:109
+msgid "Amount"
+msgstr "Monto"
+
+# automatic translation
+#: includes/admin/views/js-templates/pay-item-new-template.php:113
+#: includes/admin/views/js-templates/pay-item-template.php:20
+msgid "Description"
+msgstr "Descripción"
+
+# automatic translation
+#: includes/admin/views/js-templates/payitem-utility-template.php:2
+msgid "Travel Allowance"
+msgstr "Los gastos de viaje"
+
+# automatic translation
+#: includes/admin/views/js-templates/payitem-utility-template.php:3
+msgid "Dearness Allowance"
+msgstr "Subsidio por carestía de vida"
+
+# automatic translation
+#: includes/admin/views/js-templates/payitem-utility-template.php:4
+msgid "Accommodation Allowance"
+msgstr "Gastos de alojamiento"
+
+# automatic translation
+#: includes/admin/views/js-templates/payitem-utility-template.php:5
+msgid "City Compensatory Allowance"
+msgstr "Subsidio compensatorio de la ciudad"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:5
+msgid "Pay Calendar Settings"
+msgstr "Configuración del calendario de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:13
+msgid "Calendar Name"
+msgstr "Nombre del calendario"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:18
+msgid "Calendar Type"
+msgstr "Tipo de calendario"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:20
+msgid "Weekly"
+msgstr "Semanalmente"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:21
+msgid "Bi-Weekly"
+msgstr "Quincenal"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:22
+msgid "Monthly"
+msgstr "Mensual"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:27
+#: includes/admin/views/pay-calendar-creation-form.php:37
+msgid "Normal Pay Day"
+msgstr "Día de pago normal"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:29
+#: includes/admin/views/pay-calendar-creation-form.php:39
+msgid "Select week day"
+msgstr "Seleccionar día de la semana"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:47
+msgid "Pay Day Mode"
+msgstr "Modo de día de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:49
+msgid "Last working day of the month"
+msgstr "Último día hábil del mes"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:50
+msgid "Last day of the week each month"
+msgstr "Último día de la semana de cada mes"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:51
+msgid "Specific day each month"
+msgstr "Día específico cada mes"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:54
+msgid "Select a pay mode"
+msgstr "Seleccione un modo de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:61
+msgid "Pay day (1-31)"
+msgstr "Día de pago (1-31)"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:65
+msgid "Add Employee"
+msgstr "Agregar empleado"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:70
+msgid "Pay Calendar Setup"
+msgstr "Configuración del calendario de pagos"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:71
+msgid "Pay Calendar Modification"
+msgstr "Modificación del calendario de pagos"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:82
+msgid "Select Employee"
+msgstr "Seleccionar empleado"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:125
+msgid "Add employee to list"
+msgstr "Agregar empleado a la lista"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:128
+msgid "Add employee"
+msgstr "Agregar empleado"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:141
+msgid "Email"
+msgstr "Correo electrónico"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:159
+msgid "Create Pay Calendar"
+msgstr "Crear calendario de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar-creation-form.php:162
+msgid "Update Pay Calendar"
+msgstr "Actualizar calendario de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:3
+#: includes/admin/views/payrun-overview.php:31 includes/class-admin-menu.php:59
+#: includes/class-admin-menu.php:97
+msgid "Pay Calendar"
+msgstr "Calendario de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:6
+msgid "Add New Pay Calendar"
+msgstr "Agregar nuevo calendario de pago"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:13
+msgid "No Pay Calendar Found!"
+msgstr "¡No se ha encontrado ningún calendario de pagos!"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:20
+msgid "Calendar Name :"
+msgstr "Nombre del calendario:"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:21
+msgid "Calendar Type :"
+msgstr "Tipo de calendario:"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:22
+msgid "No of Employee :"
+msgstr "Nº de empleado:"
+
+# automatic translation
+#: includes/admin/views/pay-calendar.php:35
+msgid "Start Payrun"
+msgstr "Empezar Payrun"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:14
+msgid "Detail information about payslip"
+msgstr "Información detallada sobre la nómina"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:20
+msgid "Year"
+msgstr "Año"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:35
+#: includes/admin/views/payroll-emp-payslip.php:58
+msgid "Month"
+msgstr "Mes"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:48
+#: includes/admin/views/payrun.php:12
+#: includes/admin/views/reports/employee-report.php:15
+#: includes/admin/views/reports/summary-report.php:14
+msgid "Search"
+msgstr "Búsqueda"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:57
+msgid "SL"
+msgstr "SL"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:59
+msgid "Bank A/C"
+msgstr "Aire acondicionado del banco"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:61
+#: includes/class-payrun-list.php:79 includes/class-settings.php:176
+msgid "Action"
+msgstr "Acción"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:89
+msgid "Sorry! Currently there is no available data right now."
+msgstr "¡Lo siento! Actualmente no hay datos disponibles en este momento."
+
+# automatic translation
+#: includes/admin/views/payroll-emp-payslip.php:226
+msgid "Sorry, you are not allowed to access this page."
+msgstr "Lo sentimos, no tienes permiso para acceder a esta página."
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:10
+msgid "Detail information at a glance"
+msgstr "Información detallada de un vistazo"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:14
+msgid "Fixed Allowance"
+msgstr "Subsidio fijo"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:17
+#: includes/admin/views/payroll-emp-settings.php:31
+#: includes/class-settings.php:154 includes/class-settings.php:174
+msgid "Pay Item"
+msgstr "Artículo de pago"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:18
+#: includes/admin/views/payroll-emp-settings.php:32
+msgid "Pay Item Amount"
+msgstr "Importe del elemento de pago"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:28
+msgid "Fixed Deduction"
+msgstr "Deducción Fija"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:42
+msgid "Fixed Tax"
+msgstr "Impuesto fijo"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:45
+msgid "Tax Caption"
+msgstr "Leyenda de impuestos"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:46
+#: includes/admin/views/reports/employee-report.php:36
+msgid "Tax Amount"
+msgstr "Importe del impuesto"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:65
+msgid "Payroll Basic and Tax Info"
+msgstr "Nómina básica e información fiscal"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:70
+#: includes/admin/views/payroll-emp-settings.php:103
+msgid "Employee Tax Number"
+msgstr "Número de identificación fiscal del empleado"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:75
+#: includes/admin/views/payroll-emp-settings.php:108
+msgid "Basic Pay"
+msgstr "Pago básico"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:87
+#: includes/admin/views/payroll-emp-settings.php:120
+msgid "Bank Account Name"
+msgstr "Nombre de la cuenta bancaria"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:92
+#: includes/admin/views/payroll-emp-settings.php:125
+msgid "Bank Name"
+msgstr "Nombre del banco"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:139
+msgid "Fixed Allowance Payments"
+msgstr "Pagos de asignación fija"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:143
+msgid "Payitem"
+msgstr "elemento de pago"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:154
+msgid "Payitem payment"
+msgstr "pago de elemento de pago"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:161
+#: includes/admin/views/payroll-emp-settings.php:191
+#: includes/admin/views/payroll-emp-settings.php:221
+msgid "Save"
+msgstr "Ahorrar"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:169
+msgid "Fixed Deductions Payments"
+msgstr "Pagos de deducciones fijas"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:173
+msgid "Deduction item"
+msgstr "artículo de deducción"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:184
+msgid "Deduction payment"
+msgstr "Pago de deducción"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:199
+#: includes/admin/views/payroll-emp-settings.php:203
+#: includes/admin/views/tab-templates/approve-tab.php:43
+#: includes/admin/views/tab-templates/employees-tab.php:47
+msgid "Tax"
+msgstr "Impuesto"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:214
+msgid "Tax amount"
+msgstr "Importe del impuesto"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:229
+msgid "Payment Detail"
+msgstr "Detalles de pago"
+
+# automatic translation
+#: includes/admin/views/payroll-emp-settings.php:244
+msgid "Submit Payment Info"
+msgstr "Enviar información de pago"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:2
+msgid "Payroll Overview"
+msgstr "Descripción general de la nómina"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:8
+msgid "Checklist"
+msgstr "Lista de Verificación"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:21
+msgid "Setup Wizard"
+msgstr "Asistente de configuración"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:41
+#: includes/admin/views/payrun-overview.php:125
+#: includes/admin/views/tab-templates/approve-tab.php:11
+#: includes/admin/views/tab-templates/employees-tab.php:13
+#: includes/admin/views/tab-templates/payslips-tab.php:11
+#: includes/admin/views/tab-templates/variable-input-tab.php:11
+#: includes/class-admin-menu.php:63 includes/class-admin-menu.php:105
+#: includes/class-payrun-list.php:74
+msgid "Pay Run"
+msgstr "Ejecución de pago"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:60
+msgid "Total Expenses"
+msgstr "Gastos totales"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:64
+#: includes/admin/views/payrun-overview.php:110
+msgid "View Detail"
+msgstr "Ver Detalle"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:74
+msgid "Total Pay Calendar Created"
+msgstr "Calendario de pago total creado"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:78
+msgid "View Pay Calendar"
+msgstr "Ver calendario de pago"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:87
+msgid "Pay Calendar Approved"
+msgstr "Calendario de pago aprobado"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:91
+msgid "View Pay Run List"
+msgstr "Ver lista de ejecución de pago"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:106
+msgid "Spent on Previous Month"
+msgstr "Gastado en el mes anterior"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:119
+msgid "Latest 5 Pay Run Records"
+msgstr "Últimos 5 registros de ejecución de pagos"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:121
+msgid "No record found."
+msgstr "Ningún record fue encontrado."
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:124
+#: includes/class-payrun-list.php:73
+msgid "Pay Period"
+msgstr "Período de pago"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:127
+#: includes/class-payrun-list.php:76 includes/functions-payroll.php:849
+msgid "Employees"
+msgstr "Empleados"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:128
+#: includes/class-payrun-list.php:77
+msgid "Net Pay + Tax"
+msgstr "Pago Neto + Impuestos"
+
+# automatic translation
+#: includes/admin/views/payrun-overview.php:129
+#: includes/class-payrun-list.php:78
+msgid "Status"
+msgstr "Estado"
+
+# automatic translation
+#: includes/admin/views/payrun.php:2
+msgid "Pay Runs"
+msgstr "Ejecuciones de pago"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:2
+#: includes/admin/views/reports/summary-report.php:2
+msgid "Payroll Report"
+msgstr "Informe de nómina"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:9
+msgid "Employee Reports"
+msgstr "Informes de empleados"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:16
+#: includes/admin/views/reports/summary-report.php:15
+msgid "Clear"
+msgstr "Claro"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:22
+#: includes/admin/views/reports/summary-report.php:27
+msgid "Export to CSV"
+msgstr "Exportar a CSV"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:29
+msgid "Employee / Date"
+msgstr "Empleado / Fecha"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:30
+msgid "Gross Wages"
+msgstr "Salario Bruto"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:31
+msgid "Allowance Section"
+msgstr "Sección de Asignación"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:32
+msgid "Allowance Amount"
+msgstr "Monto de la asignación"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:33
+msgid "Deduction Section"
+msgstr "Sección de deducción"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:34
+msgid "Deduction Amount"
+msgstr "Importe de la deducción"
+
+# automatic translation
+#: includes/admin/views/reports/employee-report.php:35
+msgid "Tax Title"
+msgstr "Título fiscal"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:8
+msgid "Summary Reports"
+msgstr "Informes resumidos"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:21
+msgid "Details to CSV"
+msgstr "Detalles a CSV"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:24
+msgid "Bank report to CSV"
+msgstr "Informe bancario a CSV"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:35
+msgid "Basic"
+msgstr "Básico"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:36
+msgid "Allowances"
+msgstr "asignaciones"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:38
+msgid "Taxes"
+msgstr "Impuestos"
+
+# automatic translation
+#: includes/admin/views/reports/summary-report.php:52
+msgid "Total :"
+msgstr "Total :"
+
+# automatic translation
+#: includes/admin/views/reports.php:2 includes/class-admin-menu.php:67
+#: includes/class-admin-menu.php:113
+msgid "Reports"
+msgstr "Informes"
+
+# automatic translation
+#: includes/admin/views/reports.php:12
+msgid "Pay Run by Employee"
+msgstr "Pago ejecutado por empleado"
+
+# automatic translation
+#: includes/admin/views/reports.php:14
+msgid "Pay Run report detail by employee"
+msgstr "Detalle del informe Pay Run por empleado"
+
+# automatic translation
+#: includes/admin/views/reports.php:15 includes/admin/views/reports.php:29
+msgid "View Report"
+msgstr "Vista del informe"
+
+# automatic translation
+#: includes/admin/views/reports.php:26
+msgid "Pay Run Summary"
+msgstr "Resumen de ejecución de pagos"
+
+# automatic translation
+#: includes/admin/views/reports.php:28
+msgid "Pay Run Summary reports"
+msgstr "Informes de resumen de ejecución de pago"
+
+# automatic translation
+#: includes/admin/views/tab-templates/approve-tab.php:26
+msgid "Ready to approve"
+msgstr "Listo para aprobar"
+
+# automatic translation
+#: includes/admin/views/tab-templates/approve-tab.php:41
+#: includes/admin/views/tab-templates/employees-tab.php:45
+msgid "Payment"
+msgstr "Pago"
+
+# automatic translation
+#: includes/admin/views/tab-templates/approve-tab.php:42
+#: includes/admin/views/tab-templates/employees-tab.php:46
+msgid "Deduction"
+msgstr "Deducción"
+
+# automatic translation
+#: includes/admin/views/tab-templates/approve-tab.php:93
+msgid "Approve"
+msgstr "Aprobar"
+
+# automatic translation
+#: includes/admin/views/tab-templates/approve-tab.php:96
+msgid "Undo Approve"
+msgstr "Deshacer Aprobar"
+
+# automatic translation
+#: includes/admin/views/tab-templates/approve-tab.php:100
+#: includes/admin/views/tab-templates/payslips-tab.php:155
+#: includes/admin/views/tab-templates/variable-input-tab.php:139
+msgid "&larr; Back"
+msgstr "&larr; atrás"
+
+# automatic translation
+#: includes/admin/views/tab-templates/employees-tab.php:22
+msgid "From Date"
+msgstr "Partir de la fecha"
+
+# automatic translation
+#: includes/admin/views/tab-templates/employees-tab.php:24
+msgid "To Date"
+msgstr "Hasta la fecha"
+
+# automatic translation
+#: includes/admin/views/tab-templates/employees-tab.php:35
+msgid "Active Employees"
+msgstr "Empleados Activos"
+
+# automatic translation
+#: includes/admin/views/tab-templates/employees-tab.php:95
+#: includes/admin/views/tab-templates/payslips-tab.php:153
+#: includes/admin/views/tab-templates/variable-input-tab.php:138
+msgid "Next &rarr;"
+msgstr "Siguiente &rarr;"
+
+# automatic translation
+#: includes/admin/views/tab-templates/payslips-tab.php:19
+#: includes/emails/class-email-payslip-custom.php:16
+msgid "Employee Payslip"
+msgstr "Nómina del empleado"
+
+# automatic translation
+#: includes/admin/views/tab-templates/payslips-tab.php:43
+msgid "Print Payslip"
+msgstr "Imprimir recibo de sueldo"
+
+# automatic translation
+#: includes/admin/views/tab-templates/payslips-tab.php:76
+msgid "to"
+msgstr "a"
+
+# automatic translation
+#: includes/admin/views/tab-templates/variable-input-tab.php:22
+msgid "Employee profile information"
+msgstr "Información del perfil del empleado"
+
+# automatic translation
+#: includes/admin/views/tab-templates/variable-input-tab.php:91
+msgid "Additional allowance or deduction for this pay run only"
+msgstr "Asignación o deducción adicional solo para este período de pago"
+
+# automatic translation
+#: includes/admin/views/tab-templates/variable-input-tab.php:99
+msgid "Additional Pay"
+msgstr "Pago Adicional"
+
+# automatic translation
+#: includes/admin/views/tab-templates/variable-input-tab.php:111
+msgid "Payments (Non-Taxable)"
+msgstr "Pagos (No Imponibles)"
+
+# automatic translation
+#: includes/admin/views/tab-templates/variable-input-tab.php:123
+msgid "Additional Deduction"
+msgstr "Deducción Adicional"
+
+# automatic translation
+#: includes/class-admin-menu.php:55
+msgid "Overview"
+msgstr "Visión general"
+
+# automatic translation
+#: includes/class-admin-menu.php:89
+msgid "Dashboard"
+msgstr "Tablero"
+
+# automatic translation
+#: includes/class-admin-menu.php:240
+msgid "HR Management"
+msgstr "Gestión de recursos humanos"
+
+# automatic translation
+#: includes/class-admin-menu.php:241
+msgid "ERP Settings"
+msgstr "Configuración ERP"
+
+# automatic translation
+#: includes/class-admin-menu.php:311 includes/class-admin-menu.php:486
+msgid "Applicable"
+msgstr "Aplicable"
+
+# automatic translation
+#: includes/class-admin-menu.php:312 includes/class-admin-menu.php:487
+msgid "Not Applicable"
+msgstr "No aplica"
+
+# automatic translation
+#: includes/class-admin-menu.php:317 includes/class-admin-menu.php:492
+msgid "Edit pay item category"
+msgstr "Editar categoría de elemento de pago"
+
+# automatic translation
+#: includes/class-admin-menu.php:318 includes/class-admin-menu.php:325
+#: includes/class-admin-menu.php:332 includes/class-admin-menu.php:493
+#: includes/class-admin-menu.php:500 includes/class-admin-menu.php:507
+msgid "Submit"
+msgstr "Enviar"
+
+# automatic translation
+#: includes/class-admin-menu.php:319 includes/class-admin-menu.php:494
+msgid "Are you sure you want to delete this pay item category?"
+msgstr "¿Está seguro de que desea eliminar esta categoría de elemento de pago?"
+
+# automatic translation
+#: includes/class-admin-menu.php:320 includes/class-admin-menu.php:495
+msgid "Please enter pay item category"
+msgstr "Ingrese la categoría del elemento de pago"
+
+# automatic translation
+#: includes/class-admin-menu.php:323 includes/class-admin-menu.php:498
+msgid "Add new pay item"
+msgstr "Agregar nuevo elemento de pago"
+
+# automatic translation
+#: includes/class-admin-menu.php:324 includes/class-admin-menu.php:499
+msgid "Edit pay item"
+msgstr "Editar elemento de pago"
+
+# automatic translation
+#: includes/class-admin-menu.php:326 includes/class-admin-menu.php:501
+msgid "Are you sure you want to delete this pay item?"
+msgstr "¿Está seguro de que desea eliminar esta partida de pago?"
+
+# automatic translation
+#: includes/class-admin-menu.php:327 includes/class-admin-menu.php:502
+msgid "Are you sure you want to change this status?"
+msgstr "¿Está seguro de que desea cambiar este estado?"
+
+# automatic translation
+#: includes/class-admin-menu.php:328 includes/class-admin-menu.php:334
+#: includes/class-admin-menu.php:503 includes/class-admin-menu.php:509
+msgid "Please enter pay item"
+msgstr "Por favor ingrese el elemento de pago"
+
+# automatic translation
+#: includes/class-admin-menu.php:331 includes/class-admin-menu.php:506
+msgid "Edit salary settings"
+msgstr "Editar configuración de salario"
+
+# automatic translation
+#: includes/class-admin-menu.php:333 includes/class-admin-menu.php:508
+msgid "Are you sure you want to delete this salary settings?"
+msgstr "¿Está seguro de que desea eliminar esta configuración de salario?"
+
+# automatic translation
+#: includes/class-admin-menu.php:337 includes/class-admin-menu.php:512
+msgid "Filter employee"
+msgstr "Filtrar empleado"
+
+# automatic translation
+#: includes/class-admin-menu.php:338 includes/class-admin-menu.php:513
+#: includes/class-payrun-list.php:47
+msgid "Filter"
+msgstr "Filtrar"
+
+# automatic translation
+#: includes/class-admin-menu.php:341 includes/class-admin-menu.php:516
+msgid "Applied employee list"
+msgstr "Lista de empleados aplicada"
+
+# automatic translation
+#: includes/class-admin-menu.php:342 includes/class-admin-menu.php:517
+msgid "Close"
+msgstr "Cerca"
+
+# automatic translation
+#: includes/class-admin-menu.php:344 includes/class-admin-menu.php:519
+msgid "Are you sure you want to approve these payments?"
+msgstr "¿Está seguro de que desea aprobar estos pagos?"
+
+# automatic translation
+#: includes/class-admin-menu.php:345 includes/class-admin-menu.php:520
+msgid "Are you sure you want to remove this payrun?"
+msgstr "¿Está seguro de que desea eliminar este payrun?"
+
+# automatic translation
+#: includes/class-admin-menu.php:346 includes/class-admin-menu.php:521
+msgid ""
+"Are you sure you want to remove this employee information from approved "
+"list?"
+msgstr ""
+"¿Está seguro de que desea eliminar la información de este empleado de la "
+"lista aprobada?"
+
+# automatic translation
+#: includes/class-admin-menu.php:347 includes/class-admin-menu.php:522
+#: includes/class-ajax.php:3079
+msgid "Payrun deleted successfully"
+msgstr "Payrun eliminado con éxito"
+
+# automatic translation
+#: includes/class-admin-menu.php:348 includes/class-admin-menu.php:523
+msgid "Are you sure you want to copy this payrun to new payrun?"
+msgstr "¿Está seguro de que desea copiar esta nómina a una nueva nómina?"
+
+# automatic translation
+#: includes/class-admin-menu.php:350 includes/class-admin-menu.php:525
+msgid "Are you sure you want to send this payslip to email?"
+msgstr "¿Estás seguro de que quieres enviar esta nómina al correo electrónico?"
+
+# automatic translation
+#: includes/class-admin-menu.php:351 includes/class-admin-menu.php:356
+#: includes/class-admin-menu.php:526 includes/class-admin-menu.php:531
+#: includes/class-ajax.php:2122
+msgid "Payslip sent successfully"
+msgstr "Nómina enviada con éxito"
+
+# automatic translation
+#: includes/class-admin-menu.php:354 includes/class-admin-menu.php:529
+msgid "Are you sure you want to send email to below employee(s)?"
+msgstr ""
+"¿Está seguro de que desea enviar un correo electrónico a los siguientes "
+"empleados?"
+
+# automatic translation
+#: includes/class-admin-menu.php:355 includes/class-admin-menu.php:530
+msgid "Are you sure you want to proceed batch pay to below employees?"
+msgstr ""
+"¿Está seguro de que desea continuar con el pago por lotes a los siguientes "
+"empleados?"
+
+# automatic translation
+#: includes/class-admin-menu.php:360 includes/class-admin-menu.php:535
+msgid "Please provide pay item category name."
+msgstr "Proporcione el nombre de la categoría del artículo de pago."
+
+# automatic translation
+#: includes/class-admin-menu.php:361 includes/class-admin-menu.php:536
+msgid "Please select pay item category name."
+msgstr "Seleccione el nombre de la categoría del artículo de pago."
+
+# automatic translation
+#: includes/class-admin-menu.php:362 includes/class-admin-menu.php:537
+msgid "Please provide only letters in pay item category name."
+msgstr "Proporcione solo letras en el nombre de la categoría del artículo de pago."
+
+# automatic translation
+#: includes/class-admin-menu.php:363 includes/class-admin-menu.php:538
+msgid "Please provide pay item name."
+msgstr "Proporcione el nombre del elemento de pago."
+
+# automatic translation
+#: includes/class-admin-menu.php:364 includes/class-admin-menu.php:539
+msgid "Please select a department at-least."
+msgstr "Seleccione al menos un departamento."
+
+# automatic translation
+#: includes/class-admin-menu.php:365 includes/class-admin-menu.php:540
+msgid "Please provide only letters in pay item name."
+msgstr "Proporcione solo letras en el nombre del elemento de pago."
+
+# automatic translation
+#: includes/class-admin-menu.php:366 includes/class-admin-menu.php:541
+msgid ""
+"Percentage value and amount value cannot be empty. Please provide "
+"percentage or amount value."
+msgstr ""
+"El valor de porcentaje y el valor de la cantidad no pueden estar vacíos. "
+"Proporcione el porcentaje o el valor de la cantidad."
+
+# automatic translation
+#: includes/class-admin-menu.php:367 includes/class-admin-menu.php:542
+msgid ""
+"You cannot provide percentage and amount value simultaneously. Please "
+"provide percentage or amount value."
+msgstr ""
+"No puede proporcionar el porcentaje y el valor de la cantidad "
+"simultáneamente. Proporcione el porcentaje o el valor de la cantidad."
+
+# automatic translation
+#: includes/class-admin-menu.php:368 includes/class-admin-menu.php:543
+msgid "Please provide number value in percentage value."
+msgstr "Proporcione el valor numérico en valor porcentual."
+
+# automatic translation
+#: includes/class-admin-menu.php:369 includes/class-admin-menu.php:544
+msgid "Please provide number value in ordinary rate."
+msgstr "Proporcione el valor del número en la tarifa ordinaria."
+
+# automatic translation
+#: includes/class-admin-menu.php:370 includes/class-admin-menu.php:545
+msgid "Please provide number value in amount value."
+msgstr "Proporcione el valor del número en el valor de la cantidad."
+
+# automatic translation
+#: includes/class-admin-menu.php:371 includes/class-admin-menu.php:546
+msgid "Please select a department or a designation at-least."
+msgstr "Seleccione al menos un departamento o una designación."
+
+# automatic translation
+#: includes/class-admin-menu.php:372 includes/class-admin-menu.php:547
+msgid "Please select payment method."
+msgstr "Seleccione el método de pago."
+
+# automatic translation
+#: includes/class-admin-menu.php:373 includes/class-admin-menu.php:548
+msgid ""
+"Please select any department or designation to bring employee in the below "
+"list."
+msgstr ""
+"Seleccione cualquier departamento o designación para traer empleados en la "
+"lista a continuación."
+
+# automatic translation
+#: includes/class-admin-menu.php:374 includes/class-admin-menu.php:549
+msgid "Please select calendar type."
+msgstr "Seleccione el tipo de calendario."
+
+# automatic translation
+#: includes/class-admin-menu.php:375 includes/class-admin-menu.php:550
+msgid "Please enter calendar name."
+msgstr "Ingrese el nombre del calendario."
+
+# automatic translation
+#: includes/class-admin-menu.php:376 includes/class-admin-menu.php:551
+msgid "You did not select any employee."
+msgstr "No seleccionó a ningún empleado."
+
+# automatic translation
+#: includes/class-admin-menu.php:378 includes/class-admin-menu.php:553
+msgid "Are you sure you want to remove this pay calendar?"
+msgstr "¿Está seguro de que desea eliminar este calendario de pago?"
+
+# automatic translation
+#: includes/class-admin-menu.php:379 includes/class-admin-menu.php:554
+msgid "Are you sure you want to remove?"
+msgstr "¿Estás seguro de que desea eliminar?"
+
+# automatic translation
+#: includes/class-admin-menu.php:380 includes/class-admin-menu.php:555
+msgid "Are you sure you want to create this pay calendar?"
+msgstr "¿Está seguro de que desea crear este calendario de pago?"
+
+# automatic translation
+#: includes/class-admin-menu.php:381 includes/class-admin-menu.php:556
+msgid "Are you sure you want to update this pay calendar?"
+msgstr "¿Está seguro de que desea actualizar este calendario de pago?"
+
+# automatic translation
+#: includes/class-admin-menu.php:382 includes/class-admin-menu.php:557
+msgid "Are you sure you want to start a new pay run for your selected calendar?"
+msgstr ""
+"¿Está seguro de que desea iniciar una nueva ejecución de pago para su "
+"calendario seleccionado?"
+
+# automatic translation
+#: includes/class-admin-menu.php:383 includes/class-admin-menu.php:558
+msgid "Are you sure you want to approve this pay run?"
+msgstr "¿Está seguro de que desea aprobar esta ejecución de pago?"
+
+# automatic translation
+#: includes/class-admin-menu.php:384 includes/class-admin-menu.php:559
+msgid "Are you sure you want to undo this approved pay run?"
+msgstr "¿Está seguro de que desea deshacer esta ejecución de pago aprobada?"
+
+# automatic translation
+#: includes/class-ajax.php:602
+msgid "Please choos another calendar type, this calendar type already exist!"
+msgstr "Elija otro tipo de calendario, ¡este tipo de calendario ya existe!"
+
+# automatic translation
+#: includes/class-ajax.php:688
+msgid "Pay calendar created successfully"
+msgstr "Calendario de pago creado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:710
+msgid "Cannot Delete. This Pay Calendar have one or more transation"
+msgstr "No se puede borrar. Este calendario de pago tiene una o más transacciones"
+
+# automatic translation
+#: includes/class-ajax.php:739
+msgid "Pay calendar revmoed successfully"
+msgstr "Pagar calendario revmoed con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:906
+msgid "Pay calendar updated successfully"
+msgstr "Calendario de pago actualizado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:950
+msgid "Pay Type is empty!"
+msgstr "¡El tipo de pago está vacío!"
+
+# automatic translation
+#: includes/class-ajax.php:952
+msgid "Pay Item is empty!"
+msgstr "¡El elemento de pago está vacío!"
+
+# automatic translation
+#: includes/class-ajax.php:954
+msgid "Please select amount type!"
+msgstr "¡Seleccione el tipo de cantidad!"
+
+# automatic translation
+#: includes/class-ajax.php:967
+msgid "Pay Item Added Successfully"
+msgstr "Artículo de pago agregado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:986 includes/class-ajax.php:2170
+msgid "Pay item cannot be empty!"
+msgstr "¡La partida de pago no puede estar vacía!"
+
+# automatic translation
+#: includes/class-ajax.php:989
+msgid "Given pay item already exist! Please choose another name."
+msgstr "¡El elemento de pago dado ya existe! Elija otro nombre."
+
+# automatic translation
+#: includes/class-ajax.php:1004
+msgid "Pay item edited successfully"
+msgstr "Elemento de pago editado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1038
+msgid "Cannot Delete. This Pay item already applied to one or more employees"
+msgstr "No se puede borrar. Este elemento de pago ya se aplicó a uno o más empleados"
+
+# automatic translation
+#: includes/class-ajax.php:1048
+msgid "Pay item deleted successfully"
+msgstr "Elemento de pago eliminado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1051
+msgid "Pay item delete operation failed"
+msgstr "Error en la operación de eliminación de elemento de pago"
+
+# automatic translation
+#: includes/class-ajax.php:1088
+msgid "Pay item status changed successfully"
+msgstr "El estado de la partida de pago cambió correctamente"
+
+# automatic translation
+#: includes/class-ajax.php:1090
+msgid "Pay item status change operation failed"
+msgstr "La operación de cambio de estado de elemento de pago falló"
+
+# automatic translation
+#: includes/class-ajax.php:1134 includes/class-ajax.php:1171
+msgid "Pay item category cannot be empty!"
+msgstr "¡La categoría de elemento de pago no puede estar vacía!"
+
+# automatic translation
+#: includes/class-ajax.php:1136
+msgid ""
+"Given pay item category name already exist. Please provide another pay item "
+"category name."
+msgstr ""
+"El nombre de la categoría del artículo de pago dado ya existe. Proporcione "
+"otro nombre de categoría de artículo de pago."
+
+# automatic translation
+#: includes/class-ajax.php:1148
+msgid "Pay item category created successfully"
+msgstr "Categoría de elemento de pago creada con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1175
+msgid "Given pay item category already exist! Please choose another name."
+msgstr "¡La categoría de artículo de pago dada ya existe! Elija otro nombre."
+
+# automatic translation
+#: includes/class-ajax.php:1182
+msgid "Pay item category edited successfully"
+msgstr "Categoría de elemento de pago editada con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1202
+msgid "This Pay item category has one or more pay item, so it cannot be deleted!"
+msgstr ""
+"¡Esta categoría de elementos de pago tiene uno o más elementos de pago, por "
+"lo que no se puede eliminar!"
+
+# automatic translation
+#: includes/class-ajax.php:1212
+msgid "Pay item category deleted successfully"
+msgstr "Categoría de elemento de pago eliminada con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1215
+msgid "Pay item category delete operation failed"
+msgstr "Error en la operación de eliminación de categoría de elemento de pago"
+
+# automatic translation
+#: includes/class-ajax.php:1767 includes/class-ajax.php:1772
+msgid "Employee information removed successfully"
+msgstr "La información del empleado se eliminó con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1811
+msgid "Date period updated successfully"
+msgstr "Período de fecha actualizado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:1845
+msgid "Payment date updated successfully"
+msgstr "Fecha de pago actualizada correctamente"
+
+# automatic translation
+#: includes/class-ajax.php:2148
+msgid "Payslip(s) sent successfully"
+msgstr "Nómina(s) enviada(s) con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:2172
+msgid "Please input amount."
+msgstr "Por favor ingrese la cantidad."
+
+# automatic translation
+#: includes/class-ajax.php:2213
+msgid "Rules added successfully"
+msgstr "Reglas añadidas con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:2271
+msgid "Pay Run Data Saved Successfully."
+msgstr "Datos de ejecución de pago guardados con éxito."
+
+# automatic translation
+#: includes/class-ajax.php:2330
+msgid "Basic info updated successfully"
+msgstr "Información básica actualizada correctamente"
+
+# automatic translation
+#: includes/class-ajax.php:2368
+msgid "Payment Method Inserted Successfully"
+msgstr "Método de pago insertado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3043
+msgid "A new payrun has been created by copied this payrun"
+msgstr "Se ha creado una nueva nómina al copiar esta nómina"
+
+# automatic translation
+#: includes/class-ajax.php:3066
+msgid "Cannot delete, because it is an appoved transaction!"
+msgstr "¡No se puede eliminar porque es una transacción aprobada!"
+
+# automatic translation
+#: includes/class-ajax.php:3202
+msgid "Pay Item Added successfully"
+msgstr "Artículo de pago añadido con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3226 includes/class-ajax.php:3494
+msgid "Removed successfully"
+msgstr "Eliminado con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3246
+msgid "Pay Allowance Added successfully"
+msgstr "Asignación de pago añadida con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3459
+msgid "Additional amount added successfully"
+msgstr "Cantidad adicional añadida con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3544 includes/class-ajax.php:3549
+msgid "Start payrun"
+msgstr "Iniciar nómina"
+
+# automatic translation
+#: includes/class-ajax.php:3611 includes/class-ajax.php:3677
+msgid "You are ready to go to variable input step"
+msgstr "Está listo para ir al paso de entrada de variables"
+
+# automatic translation
+#: includes/class-ajax.php:3744
+msgid "Salary Payment"
+msgstr "Pago de salario"
+
+# automatic translation
+#: includes/class-ajax.php:3839
+msgid "Pay run approved successfully"
+msgstr "Ejecución de pago aprobada con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3889
+msgid "Approved transaction undo successfully"
+msgstr "Transacción aprobada deshacer con éxito"
+
+# automatic translation
+#: includes/class-ajax.php:3902
+msgid "Error: Nonce verification failed"
+msgstr "Error: la verificación de Nonce falló"
+
+# automatic translation
+#: includes/class-ajax.php:4017
+msgid "Transaction copied successfully"
+msgstr "Transacción copiada con éxito"
+
+# automatic translation
+#: includes/class-cli.php:83
+msgid "Tables deleted successfully!"
+msgstr "¡Tablas eliminadas con éxito!"
+
+# automatic translation
+#: includes/class-form-handler.php:640
+msgid "Cheating?"
+msgstr "¿Infiel?"
+
+# automatic translation
+#: includes/class-payrun-list.php:40
+msgid "Filter by Status"
+msgstr "Filtrar por Estado"
+
+# automatic translation
+#: includes/class-payrun-list.php:42
+msgid "- Select All -"
+msgstr "- Seleccionar todo -"
+
+# automatic translation
+#: includes/class-payrun-list.php:61
+msgid "No payrun found."
+msgstr "No se encontró ninguna nómina."
+
+# automatic translation
+#: includes/class-payrun-list.php:124
+msgid "<a class='fa button' href='%s'><span><i class='fa fa-pencil'></i></span></a>"
+msgstr "<a class='fa button' href='%s'><span><i class='fa fa-pencil'></i></span></a>"
+
+# automatic translation
+#: includes/class-payrun-list.php:126
+msgid ""
+"&nbsp;<label class='fa button payrun-rp' "
+"v-on:click='removePayrun(\"%d\")'><span><i class='fa "
+"fa-trash'></i></span></label>"
+msgstr ""
+"&nbsp;<label class='fa button payrun-rp' "
+"v-on:click='removePayrun(\"%d\")'><span><i class='fa "
+"fa-trash'></i></span></label>"
+
+# automatic translation
+#: includes/class-payrun-list.php:129
+msgid ""
+"&nbsp;<label title='Undo Approval' class='fa button payrun-rp' "
+"v-on:click='undoPayrun(\"%d\")'><span><i class='fa "
+"fa-rotate-left'></i></span></label>"
+msgstr ""
+"<label title=\"Deshacer aprobación\" class='fa button payrun-rp' "
+"v-on:click='undoPayrun(\"%d\")'><span><i class='fa "
+"fa-rotate-left'></i></span></label>"
+
+# automatic translation
+#: includes/class-payrun-list.php:132
+msgid ""
+"&nbsp;<label title='Copy Approval' class='fa button payrun-rp' "
+"v-on:click='copyPayrun(\"%d\")'><span><i class='fa "
+"fa-copy'></i></span></label>"
+msgstr ""
+"<label title=\"Copiar aprobación\" class='fa button payrun-rp' "
+"v-on:click='copyPayrun(\"%d\")'><span><i class='fa "
+"fa-copy'></i></span></label>"
+
+# automatic translation
+#: includes/class-settings.php:27
+msgid "Accounting Settings"
+msgstr "Configuración de contabilidad"
+
+# automatic translation
+#: includes/class-settings.php:28
+msgid "Payment Settings"
+msgstr "Configuración de pago"
+
+# automatic translation
+#: includes/class-settings.php:29
+msgid "Pay Item Settings"
+msgstr "Configuración de elementos de pago"
+
+# automatic translation
+#: includes/class-settings.php:102
+msgid "Payment Method Selection"
+msgstr "Selección de método de pago"
+
+# automatic translation
+#: includes/class-settings.php:145 includes/class-settings.php:173
+msgid "Pay Type"
+msgstr "Tipo de pago"
+
+# automatic translation
+#: includes/class-settings.php:158 includes/class-settings.php:175
+msgid "Amount Type"
+msgstr "Tipo de cantidad"
+
+# automatic translation
+#: includes/class-settings.php:161
+msgid "Subtraction"
+msgstr "Sustracción"
+
+# automatic translation
+#: includes/class-settings.php:166
+msgid "Add Pay Item"
+msgstr "Agregar elemento de pago"
+
+# automatic translation
+#: includes/class-updates.php:108
+msgid ""
+"<strong>WP ERP Payroll data update is required</strong> &#8211; We need to "
+"update your install to the latest version"
+msgstr ""
+"<strong>Se requiere actualización de datos de nómina de WP ERP</strong> : "
+"necesitamos actualizar su instalación a la última versión"
+
+# automatic translation
+#: includes/class-updates.php:109
+msgid "Run the updater"
+msgstr "Ejecute el actualizador"
+
+# automatic translation
+#: includes/class-updates.php:114
+msgid ""
+"It is strongly recommended that you backup your database before proceeding. "
+"Are you sure you wish to run the updater now?"
+msgstr ""
+"Se recomienda encarecidamente que haga una copia de seguridad de su base de "
+"datos antes de continuar. ¿Está seguro de que desea ejecutar el "
+"actualizador ahora?"
+
+# automatic translation
+#: includes/emails/class-email-payslip-bulk.php:16
+#: includes/emails/class-email-payslip-single.php:16
+msgid "New Payslip"
+msgstr "Nuevo recibo de sueldo"
+
+# automatic translation
+#: includes/emails/class-email-payslip-bulk.php:17
+#: includes/emails/class-email-payslip-single.php:17
+msgid "New Payslip Notification."
+msgstr "Notificación de nueva nómina."
+
+# automatic translation
+#: includes/emails/class-email-payslip-bulk.php:19
+#: includes/emails/class-email-payslip-single.php:19
+msgid "Payslip notification"
+msgstr "Notificación de nómina"
+
+# automatic translation
+#: includes/emails/class-email-payslip-bulk.php:20
+#: includes/emails/class-email-payslip-single.php:20
+msgid "Payslip Notification heading"
+msgstr "Encabezado de notificación de recibo de sueldo"
+
+# automatic translation
+#: includes/emails/class-email-payslip-custom.php:17
+msgid "Employee Payslip Notification."
+msgstr "Notificación de recibo de sueldo del empleado."
+
+# automatic translation
+#: includes/emails/class-email-payslip-custom.php:19
+msgid "Employee notification"
+msgstr "notificación del empleado"
+
+# automatic translation
+#: includes/emails/class-email-payslip-custom.php:20
+msgid "Employee Notification heading"
+msgstr "Encabezado de notificación del empleado"
+
+# automatic translation
+#: includes/functions-payroll.php:6
+msgid "<i class=\"fa fa-file-text-o\"></i> Payroll History of Current Month"
+msgstr "<i class=\"fa fa-file-text-o\"></i>Historial de nómina del mes actual"
+
+# automatic translation
+#: includes/functions-payroll.php:850
+msgid "Variable Input"
+msgstr "Entrada variable"
+
+# automatic translation
+#: includes/functions-payroll.php:851
+msgid "PaySlips"
+msgstr "Nóminas"
+
+# automatic translation
+#: includes/functions-payroll.php:852
+msgid "Approval"
+msgstr "Aprobación"
+
+# automatic translation
+#. Plugin Name of the plugin/theme
+msgid "WP ERP - Payroll"
+msgstr "WP ERP - Nómina"
+
+# automatic translation
+#. Plugin URI of the plugin/theme
+msgid "http://wperp.com/downloads/payroll/"
+msgstr "http://wperp.com/downloads/nómina/"
+
+# automatic translation
+#. Description of the plugin/theme
+msgid "Manage your employee payroll."
+msgstr "Administre la nómina de sus empleados."
+
+# automatic translation
+#. Author of the plugin/theme
+msgid "weDevs"
+msgstr "weDevs"
+
+# automatic translation
+#. Author URI of the plugin/theme
+msgid "http://wedevs.com"
+msgstr "http://wedevs.com"
