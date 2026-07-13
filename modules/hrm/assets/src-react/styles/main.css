@@ -458,6 +458,17 @@ body:has(#erp-hr-app) {
 		top: 46px;
 		padding: 0 0.75rem;
 		height: 44px;
+		/* Pack tight from the left so the short free-shell nav doesn't leave a
+		 * wide empty gap before the search/theme/avatar controls. */
+		justify-content: flex-start;
+		gap: 0.5rem;
+	}
+
+	/* Let the nav block hug its content instead of stretching (flex-1) — the
+	 * empty tail after the last item is what created the gap. It can still
+	 * shrink + scroll when there are more items than fit. */
+	#erp-hr-app .erp-hr-topbar > div:first-child {
+		flex: 0 1 auto;
 	}
 }
 
