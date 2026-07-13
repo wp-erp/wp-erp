@@ -47,7 +47,7 @@ import {
 	StatCard,
 	WidgetCard,
 } from './DashboardCards';
-import { ChartsSection } from './DashboardCharts';
+import { ChartsSection, HeadcountTrendCard } from './DashboardCharts';
 import {
 	AboutToEndItem,
 	BirthdayItem,
@@ -566,9 +566,12 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
-						{ /* Birthdays — moved to the end (slot after announcements) so it
-						   sits below the Attendance card; swapped with the pro widgets
-						   above per the dashboard layout request. */ }
+					</div>
+
+					{ /* Birthdays + Headcount Trend row so the Headcount chart fills the
+					   space beside Birthdays (layout only — capability gating unchanged). */ }
+					<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
+						{ /* Birthdays */ }
 						<WidgetCard
 							icon={ Cake }
 							title={ __( 'Birthdays', 'erp' ) }
@@ -613,6 +616,14 @@ function DashboardInner(): JSX.Element {
 								</ul>
 							) }
 						</WidgetCard>
+
+						{ /* Headcount trend fills the row beside Birthdays. */ }
+						{ data ? (
+							<HeadcountTrendCard
+								data={ data.charts.headcount_trend }
+								className="xl:col-span-2"
+							/>
+						) : null }
 					</div>
 
 					{ /* Analytics charts — sit below the activity cards. */ }

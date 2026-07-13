@@ -44,7 +44,7 @@ function monthTick( ym: string ): string {
 interface ChartCardProps {
 	readonly icon:      LucideIcon;
 	readonly title:     string;
-	readonly className?: string;
+	readonly className?: string | undefined;
 	readonly children:  React.ReactNode;
 }
 
@@ -83,6 +83,52 @@ const LEAVE_CONFIG = {
 	rejected: { label: __( 'Rejected', 'erp' ), color: '#ef4444' },
 };
 
+/**
+ * Standalone Headcount Trend card — rendered beside the Birthdays widget on the
+ * dashboard (so it fills the row next to Birthdays) rather than in the charts
+ * section below.
+ */
+export function HeadcountTrendCard( {
+	data,
+	className,
+}: {
+	readonly data:      DashboardCharts[ 'headcount_trend' ];
+	readonly className?: string;
+} ): JSX.Element {
+	return (
+		<ChartCard icon={ TrendingUp } title={ __( 'Headcount Trend', 'erp' ) } className={ className }>
+			<ChartContainer config={ HEADCOUNT_CONFIG } className="h-[240px] w-full">
+				<AreaChart data={ [ ...data ] } margin={ { left: 4, right: 12, top: 8 } }>
+					<defs>
+						<linearGradient id="fillHeadcount" x1="0" y1="0" x2="0" y2="1">
+							<stop offset="5%" stopColor="var(--color-count)" stopOpacity={ 0.35 } />
+							<stop offset="95%" stopColor="var(--color-count)" stopOpacity={ 0.03 } />
+						</linearGradient>
+					</defs>
+					<CartesianGrid vertical={ false } strokeDasharray="3 3" className="stroke-border" />
+					<XAxis
+						dataKey="month"
+						tickLine={ false }
+						axisLine={ false }
+						tickMargin={ 8 }
+						tickFormatter={ monthTick }
+						className="text-xs"
+					/>
+					<YAxis tickLine={ false } axisLine={ false } width={ 28 } allowDecimals={ false } className="text-xs" />
+					<ChartTooltip content={ <ChartTooltipContent labelFormatter={ ( v ) => monthTick( String( v ) ) } /> } />
+					<Area
+						type="monotone"
+						dataKey="count"
+						stroke="var(--color-count)"
+						strokeWidth={ 2 }
+						fill="url(#fillHeadcount)"
+					/>
+				</AreaChart>
+			</ChartContainer>
+		</ChartCard>
+	);
+}
+
 interface ChartsSectionProps {
 	readonly charts:    DashboardCharts;
 	readonly isManager: boolean;
@@ -105,42 +151,6 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 
 	return (
 		<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-			{ /* Headcount trend — spans 2 cols */ }
-			<ChartCard
-				icon={ TrendingUp }
-				title={ __( 'Headcount Trend', 'erp' ) }
-				className="lg:col-span-2"
-			>
-				<ChartContainer config={ HEADCOUNT_CONFIG } className="h-[240px] w-full">
-					<AreaChart data={ [ ...charts.headcount_trend ] } margin={ { left: 4, right: 12, top: 8 } }>
-						<defs>
-							<linearGradient id="fillHeadcount" x1="0" y1="0" x2="0" y2="1">
-								<stop offset="5%" stopColor="var(--color-count)" stopOpacity={ 0.35 } />
-								<stop offset="95%" stopColor="var(--color-count)" stopOpacity={ 0.03 } />
-							</linearGradient>
-						</defs>
-						<CartesianGrid vertical={ false } strokeDasharray="3 3" className="stroke-border" />
-						<XAxis
-							dataKey="month"
-							tickLine={ false }
-							axisLine={ false }
-							tickMargin={ 8 }
-							tickFormatter={ monthTick }
-							className="text-xs"
-						/>
-						<YAxis tickLine={ false } axisLine={ false } width={ 28 } allowDecimals={ false } className="text-xs" />
-						<ChartTooltip content={ <ChartTooltipContent labelFormatter={ ( v ) => monthTick( String( v ) ) } /> } />
-						<Area
-							type="monotone"
-							dataKey="count"
-							stroke="var(--color-count)"
-							strokeWidth={ 2 }
-							fill="url(#fillHeadcount)"
-						/>
-					</AreaChart>
-				</ChartContainer>
-			</ChartCard>
-
 			{ /* Gender donut */ }
 			<ChartCard icon={ Users } title={ __( 'Gender Distribution', 'erp' ) }>
 				{ genderData.length === 0 ? (
@@ -162,7 +172,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 			<ChartCard
 				icon={ Building2 }
 				title={ __( 'Employees by Department', 'erp' ) }
-				className={ isManager ? 'lg:col-span-2' : 'lg:col-span-3' }
+				className={ isManager ? 'lg:col-span-1' : 'lg:col-span-2' }
 			>
 				{ deptData.length === 0 ? (
 					<EmptyChart text={ __( 'No department data.', 'erp' ) } />
