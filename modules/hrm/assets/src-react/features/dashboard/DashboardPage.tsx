@@ -259,8 +259,12 @@ function DashboardInner(): JSX.Element {
 						) }
 					</div>
 
-							{ /* Team Calendar sits below the stat cards in the left column. */ }
-							<MiniCalendarWidget />
+							{ /* Team Calendar sits below the stat cards and grows to fill the
+							   left column height so it matches the attendance rail on the
+							   right — no leftover gap on either side. */ }
+							<div className="flex-1">
+								<MiniCalendarWidget />
+							</div>
 						</div>
 
 						{ /* Right rail (Figma): self-service My Attendance + Attendance

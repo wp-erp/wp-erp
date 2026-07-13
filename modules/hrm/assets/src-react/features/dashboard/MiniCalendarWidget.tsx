@@ -150,7 +150,7 @@ export function MiniCalendarWidget(): JSX.Element {
 
 	return (
 		<>
-		<section className="flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
+		<section className="flex h-full w-full flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
 			{ /* Header: title + Today / month nav (Figma) + View shortcut. */ }
 			<header className="flex flex-wrap items-center justify-between gap-3 px-6 pt-6 pb-4">
 				<h2 className="m-0 text-base font-semibold leading-none tracking-normal text-foreground">
@@ -211,7 +211,7 @@ export function MiniCalendarWidget(): JSX.Element {
 				</div>
 			</header>
 
-			<div className="relative px-6 pb-6">
+			<div className="relative flex flex-1 flex-col px-6 pb-6">
 				{ loading ? (
 					<div className="absolute inset-0 z-10 flex items-center justify-center bg-card/60 text-xs text-muted-foreground">
 						{ __( 'Loading…', 'erp' ) }
@@ -226,7 +226,10 @@ export function MiniCalendarWidget(): JSX.Element {
 						   cells, weekend columns hatched, today a filled blue circle.
 						   Days with leaves/holidays keep the event dots + hover tooltip. */ }
 						<TooltipProvider>
-							<div className="grid grid-cols-7 overflow-hidden rounded-lg border-l border-t border-border">
+							<div
+								className="grid flex-1 grid-cols-7 overflow-hidden rounded-lg border-l border-t border-border"
+								style={ { gridTemplateRows: `auto repeat(${ weekCount }, minmax(6rem, 1fr))` } }
+							>
 								{ WEEKDAYS.map( ( wd, i ) => (
 									<div
 										key={ wd }
