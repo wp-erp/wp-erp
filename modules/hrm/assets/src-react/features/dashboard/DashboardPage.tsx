@@ -367,7 +367,10 @@ function DashboardInner(): JSX.Element {
 					</div>
 
 					{ /* Activity widgets below the top section. */ }
-					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+					{ /* Flexible card row: 3 per row on desktop, but the last row's
+					   cards grow to fill the width so there is never a ragged gap —
+					   works for any number of cards (pro modules, About-to-End, etc.). */ }
+					<div className="mt-8 flex flex-wrap gap-6 *:flex-[1_1_100%] md:*:flex-[1_1_calc(50%-0.75rem)] xl:*:flex-[1_1_calc(33.333%-1rem)]">
 						{ /* Who's out */ }
 						<WidgetCard
 							icon={ CalendarClock }
@@ -527,7 +530,6 @@ function DashboardInner(): JSX.Element {
 									  }
 									: undefined
 							}
-							className={ isManager ? 'xl:col-span-2' : undefined }
 						>
 							{ ( data?.announcements.length ?? 0 ) === 0 ? (
 								<EmptyRow
@@ -597,13 +599,10 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
-						{ /* Employees: Headcount Trend fills the row beside Latest
-						   Announcements (managers show it in the analytics section). */ }
+						{ /* Employees: Headcount Trend joins the flexible card row
+						   (managers show it in the analytics section instead). */ }
 						{ ! isManager && data ? (
-							<HeadcountTrendCard
-								data={ data.charts.headcount_trend }
-								className="xl:col-span-2"
-							/>
+							<HeadcountTrendCard data={ data.charts.headcount_trend } />
 						) : null }
 					</div>
 
