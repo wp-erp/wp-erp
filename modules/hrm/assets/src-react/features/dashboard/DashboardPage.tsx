@@ -99,6 +99,9 @@ function DashboardInner(): JSX.Element {
 		[]
 	);
 	const canManageLeave = useCan( 'erp_leave_manage' );
+	const canViewAnnouncements = useCan( 'erp_view_announcement' );
+	const canListEmployees = useCan( 'erp_list_employee' );
+	const canViewList = useCan( 'erp_view_list' );
 
 	const currentUserId = user?.id ?? 0;
 	const name = user?.displayName ? user.displayName.split( ' ' )[ 0 ] : '';
@@ -213,14 +216,14 @@ function DashboardInner(): JSX.Element {
 							label={ __( 'Active Employees', 'erp' ) }
 							value={ summary?.total_employees ?? 0 }
 							tint="bg-primary/10 text-primary"
-							to="/employees"
+							to={ canListEmployees ? '/employees' : undefined }
 						/>
 						<StatCard
 							icon={ Building2 }
 							label={ __( 'Departments', 'erp' ) }
 							value={ summary?.total_departments ?? 0 }
 							tint="bg-sky-500/10 text-sky-600 dark:text-sky-400"
-							to="/departments"
+							to={ canViewList ? '/departments' : undefined }
 						/>
 						<StatCard
 							icon={ Briefcase }
@@ -476,10 +479,14 @@ function DashboardInner(): JSX.Element {
 						<WidgetCard
 							icon={ Megaphone }
 							title={ __( 'Latest Announcements', 'erp' ) }
-							action={ {
-								label: __( 'All', 'erp' ),
-								to: '/announcements',
-							} }
+							action={
+								canViewAnnouncements
+									? {
+											label: __( 'All', 'erp' ),
+											to: '/announcements',
+									  }
+									: undefined
+							}
 						>
 							{ ( data?.announcements.length ?? 0 ) === 0 ? (
 								<EmptyRow
@@ -576,6 +583,7 @@ function DashboardInner(): JSX.Element {
 											person={ p }
 											today
 											canWish={
+												isManager &&
 												p.user_id !== currentUserId
 											}
 											wished={ wished.has( p.user_id ) }

@@ -52,7 +52,7 @@ class DashboardControllerV2 extends RestControllerV2 {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'birthday_wish' ],
-					'permission_callback' => [ $this, 'permission_logged_in' ],
+					'permission_callback' => [ $this, 'permission_wish' ],
 					'args'                => [
 						'employee_user_id' => [
 							'type'              => 'integer',
@@ -75,6 +75,16 @@ class DashboardControllerV2 extends RestControllerV2 {
 	 *
 	 * @return WP_REST_Response|\WP_Error
 	 */
+	/**
+	 * Sending a birthday wish is an admin/HR-manager action (the Wish button is
+	 * only shown to managers on the dashboard).
+	 *
+	 * @return bool
+	 */
+	public function permission_wish(): bool {
+		return current_user_can( erp_hr_get_manager_role() );
+	}
+
 	public function birthday_wish( WP_REST_Request $request ) {
 		$employee_user_id = (int) $request['employee_user_id'];
 

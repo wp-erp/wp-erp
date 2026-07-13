@@ -111,7 +111,7 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'mark_read' ],
-					'permission_callback' => [ $this, 'permission_view' ],
+					'permission_callback' => [ $this, 'permission_view_single' ],
 				],
 			]
 		);
@@ -124,7 +124,7 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_item' ],
-					'permission_callback' => [ $this, 'permission_view' ],
+					'permission_callback' => [ $this, 'permission_view_single' ],
 				],
 				[
 					'methods'             => WP_REST_Server::EDITABLE,
@@ -155,6 +155,37 @@ class AnnouncementsControllerV2 extends RestControllerV2 {
 	 */
 	public function permission_view(): bool {
 		return $this->permission_cap( 'erp_view_announcement' );
+	}
+
+	/**
+	 * Viewing / marking-read a single announcement.
+	 *
+	 * Managers with the view cap may open any announcement (parity with the
+	 * list). A regular employee may open + mark-read an announcement that was
+	 * delivered to them — mirrors the legacy AJAX `view_announcement` /
+	 * `mark_read_announcement` flow (which surfaced the announcement on the
+	 * employee dashboard), scoped to their own recipient row so it never leaks
+	 * announcements assigned to someone else.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return bool
+	 */
+	public function permission_view_single( $request ): bool {
+		if ( $this->permission_cap( 'erp_view_announcement' ) ) {
+			return true;
+		}
+
+		$post_id = (int) $request['id'];
+		$user_id = get_current_user_id();
+
+		if ( ! $post_id || ! $user_id ) {
+			return false;
+		}
+
+		return Announcement::where( 'post_id', $post_id )
+			->where( 'user_id', $user_id )
+			->exists();
 	}
 
 	/**
