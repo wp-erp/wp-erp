@@ -47,12 +47,17 @@ export function OnLeaveItem( {
 						</span>
 					) : null }
 				</p>
-				<p className="text-xs text-muted-foreground">
-					{ `${ fmtDate( person.start_date ) } – ${ fmtDate(
-						person.end_date
-					) }` }
-				</p>
+				{ person.designation ? (
+					<p className="truncate text-xs text-muted-foreground">
+						{ person.designation }
+					</p>
+				) : null }
 			</div>
+			<span className="shrink-0 text-xs text-muted-foreground">
+				{ `${ fmtDate( person.start_date ) } – ${ fmtDate(
+					person.end_date
+				) }` }
+			</span>
 		</li>
 	);
 }
@@ -94,22 +99,27 @@ export function BirthdayItem( {
 				<p className="truncate text-sm font-medium text-foreground">
 					{ person.name }
 				</p>
-				<p className="text-xs text-muted-foreground">
-					{ today
-						? __( 'Today 🎉', 'erp' )
-						: fmtDayMonth( person.date_of_birth ) }
-				</p>
+				{ person.designation ? (
+					<p className="truncate text-xs text-muted-foreground">
+						{ person.designation }
+					</p>
+				) : null }
 			</div>
+			<span className="shrink-0 text-xs text-muted-foreground">
+				{ today
+					? __( 'Today 🎉', 'erp' )
+					: fmtDayMonth( person.date_of_birth ) }
+			</span>
 			{ canWish ? (
 				<Button
 					variant="ghost"
 					size="sm"
 					className="h-8 gap-1.5 text-primary hover:text-primary"
-					disabled={ wished }
+					disabled={ wished || person.wished }
 					onClick={ () => onWish( person.user_id ) }
 				>
 					<Gift size={ 14 } aria-hidden="true" />
-					{ wished ? __( 'Sent', 'erp' ) : __( 'Wish', 'erp' ) }
+					{ wished || person.wished ? __( 'Sent', 'erp' ) : __( 'Wish', 'erp' ) }
 				</Button>
 			) : null }
 		</li>

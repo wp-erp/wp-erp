@@ -54,6 +54,7 @@ import {
 	OnLeaveItem,
 	ProWidget,
 } from './DashboardWidgets';
+import { parseServerDate } from '@/shared/utils/date';
 import { fmtDate, greeting } from './format';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
@@ -64,6 +65,29 @@ import {
 	useDashboard,
 } from './useDashboard';
 import type { AnnouncementContent } from './useDashboard';
+
+/** Rotating tints for the holiday date badges (Figma colored day/month box). */
+const HOLIDAY_TINTS = [
+	'bg-primary/10 text-primary',
+	'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+	'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+	'bg-rose-500/10 text-rose-600 dark:text-rose-400',
+	'bg-violet-500/10 text-violet-600 dark:text-violet-400',
+];
+
+/** Day + short month for the holiday badge, parsed via the shared
+ * `parseServerDate` so it matches `fmtDate`/`fmtDayMonth` exactly (no UTC
+ * off-by-one on date-only values). */
+function holidayBadge( iso: string | null ): { day: string; mon: string } {
+	const date = parseServerDate( iso );
+	if ( ! date ) {
+		return { day: '', mon: '' };
+	}
+	return {
+		day: String( date.getDate() ),
+		mon: date.toLocaleDateString( undefined, { month: 'short' } ),
+	};
+}
 
 function DashboardInner(): JSX.Element {
 	const { data, loading, error } = useDashboard();
@@ -407,25 +431,43 @@ function DashboardInner(): JSX.Element {
 								/>
 							) : (
 								<ul>
-									{ data?.holidays_upcoming.map( ( h ) => (
-										<li
-											key={ h.id }
-											className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
-										>
-											<span className="min-w-0 truncate text-sm font-medium text-foreground">
-												{ h.title }
-											</span>
-											<span className="shrink-0 text-xs text-muted-foreground">
-												{ h.start === h.end || ! h.end
-													? fmtDate( h.start )
-													: `${ fmtDate(
-															h.start
-													  ) } – ${ fmtDate(
-															h.end
-													  ) }` }
-											</span>
-										</li>
-									) ) }
+									{ data?.holidays_upcoming.map( ( h, i ) => {
+										const badge = holidayBadge( h.start );
+										return (
+											<li
+												key={ h.id }
+												className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
+											>
+												<span
+													className={ `inline-flex size-11 shrink-0 flex-col items-center justify-center rounded-lg ${ HOLIDAY_TINTS[ i % HOLIDAY_TINTS.length ] }` }
+												>
+													<span className="text-sm font-bold leading-none">
+														{ badge.day }
+													</span>
+													<span className="mt-0.5 text-[10px] font-medium uppercase leading-none">
+														{ badge.mon }
+													</span>
+												</span>
+												<div className="min-w-0 flex-1">
+													<p className="truncate text-sm font-medium text-foreground">
+														{ h.title }
+													</p>
+													<p className="truncate text-xs text-muted-foreground">
+														{ __( 'Public Holiday', 'erp' ) }
+													</p>
+												</div>
+												<span className="shrink-0 text-xs text-muted-foreground">
+													{ h.start === h.end || ! h.end
+														? fmtDate( h.start )
+														: `${ fmtDate(
+																h.start
+														  ) } – ${ fmtDate(
+																h.end
+														  ) }` }
+												</span>
+											</li>
+										);
+									} ) }
 								</ul>
 							) }
 						</WidgetCard>
@@ -453,36 +495,46 @@ function DashboardInner(): JSX.Element {
 											! a.read &&
 											! readAnnouncements.has( a.id );
 										return (
-											<li key={ a.id }>
+											<li
+												key={ a.id }
+												className="border-b border-border last:border-b-0"
+											>
 												<button
 													type="button"
 													onClick={ () =>
 														openAnnouncement( a.id )
 													}
-													className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/50"
+													className="flex w-full items-start justify-between gap-3 px-3 py-3 text-left hover:bg-muted/50"
 												>
-													<span className="flex min-w-0 items-center gap-2">
-														{ unread ? (
+													<span className="min-w-0 flex-1">
+														<span className="flex items-center gap-2">
+															{ unread ? (
+																<span
+																	aria-hidden="true"
+																	className="size-2 shrink-0 rounded-full bg-primary"
+																/>
+															) : null }
 															<span
-																aria-hidden="true"
-																className="size-2 shrink-0 rounded-full bg-primary"
-															/>
-														) : null }
-														<span
-															className={ `min-w-0 truncate text-sm ${
-																unread
-																	? 'font-semibold text-foreground'
-																	: 'font-medium text-muted-foreground'
-															}` }
-														>
-															{ a.title }
+																className={ `min-w-0 truncate text-sm ${
+																	unread
+																		? 'font-semibold text-foreground'
+																		: 'font-medium text-foreground'
+																}` }
+															>
+																{ a.title }
+															</span>
+															{ unread ? (
+																<span className="sr-only">
+																	{ __(
+																		'(unread)',
+																		'erp'
+																	) }
+																</span>
+															) : null }
 														</span>
-														{ unread ? (
-															<span className="sr-only">
-																{ __(
-																	'(unread)',
-																	'erp'
-																) }
+														{ a.excerpt ? (
+															<span className="mt-0.5 block truncate text-xs text-muted-foreground">
+																{ a.excerpt }
 															</span>
 														) : null }
 													</span>

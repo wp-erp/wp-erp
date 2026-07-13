@@ -13,9 +13,11 @@ export interface DashboardSummary {
 }
 
 export interface DashboardPerson {
-	readonly user_id:    number;
-	readonly name:       string;
-	readonly avatar_url: string;
+	readonly user_id:     number;
+	readonly name:        string;
+	readonly avatar_url:  string;
+	/** Employee designation title (shown under the name on dashboard cards). */
+	readonly designation: string;
 }
 
 export interface OnLeavePerson extends DashboardPerson {
@@ -31,6 +33,8 @@ export interface OnLeavePerson extends DashboardPerson {
 
 export interface BirthdayPerson extends DashboardPerson {
 	readonly date_of_birth: string | null;
+	/** True when the current user already sent a wish this year (persisted). */
+	readonly wished: boolean;
 }
 
 export interface DashboardHoliday {
@@ -44,6 +48,8 @@ export interface DashboardHoliday {
 export interface DashboardAnnouncement {
 	readonly id:    number;
 	readonly title: string;
+	/** One-line cropped description shown under the title (Figma). */
+	readonly excerpt: string;
 	readonly date:  string | null;
 	/** Per-user read state (managers always see `true`). */
 	readonly read:  boolean;

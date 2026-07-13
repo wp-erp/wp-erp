@@ -88,6 +88,16 @@ class DashboardControllerV2 extends RestControllerV2 {
 			$emailer->trigger( $employee_user_id );
 		}
 
+		// Persist the "sent" state so the Wish button stays disabled after a
+		// refresh (this calendar year). Stored on the wisher, per recipient.
+		$key  = $this->birthday_wish_meta_key();
+		$sent = array_map( 'intval', (array) get_user_meta( get_current_user_id(), $key, true ) );
+
+		if ( ! in_array( $employee_user_id, $sent, true ) ) {
+			$sent[] = $employee_user_id;
+			update_user_meta( get_current_user_id(), $key, $sent );
+		}
+
 		return rest_ensure_response( [ 'sent' => true, 'employee_user_id' => $employee_user_id ] );
 	}
 
@@ -175,20 +185,22 @@ class DashboardControllerV2 extends RestControllerV2 {
 			$posts = erp_hr_get_announcements( [ 'numberposts' => 5, 'post_status' => 'publish' ] );
 			foreach ( (array) $posts as $post ) {
 				$announcements[] = [
-					'id'    => (int) $post->ID,
-					'title' => $this->cast_string_or_null( $post->post_title ) ?? __( '(no title)', 'erp' ),
-					'date'  => $this->cast_date_iso( $post->post_date ),
-					'read'  => true,
+					'id'      => (int) $post->ID,
+					'title'   => $this->cast_string_or_null( $post->post_title ) ?? __( '(no title)', 'erp' ),
+					'excerpt' => $this->announcement_excerpt( (int) $post->ID ),
+					'date'    => $this->cast_date_iso( $post->post_date ),
+					'read'    => true,
 				];
 			}
 		} else {
 			$assigned = erp_hr_employee_dashboard_announcement( get_current_user_id() );
 			foreach ( (array) $assigned as $row ) {
 				$announcements[] = [
-					'id'    => (int) ( $row->post_id ?? $row->ID ?? 0 ),
-					'title' => $this->cast_string_or_null( $row->post_title ?? '' ) ?? __( '(no title)', 'erp' ),
-					'date'  => $this->cast_date_iso( $row->post_date ?? null ),
-					'read'  => ( $row->status ?? 'unread' ) === 'read',
+					'id'      => (int) ( $row->post_id ?? $row->ID ?? 0 ),
+					'title'   => $this->cast_string_or_null( $row->post_title ?? '' ) ?? __( '(no title)', 'erp' ),
+					'excerpt' => $this->announcement_excerpt( (int) ( $row->post_id ?? $row->ID ?? 0 ) ),
+					'date'    => $this->cast_date_iso( $row->post_date ?? null ),
+					'read'    => ( $row->status ?? 'unread' ) === 'read',
 				];
 			}
 		}
@@ -332,6 +344,10 @@ class DashboardControllerV2 extends RestControllerV2 {
 	private function birthday_people( $collection ): array {
 		$people = [];
 
+		// Recipients the current user has already wished this year (persisted
+		// "sent" state so the button stays disabled after a refresh).
+		$wished = array_map( 'intval', (array) get_user_meta( get_current_user_id(), $this->birthday_wish_meta_key(), true ) );
+
 		foreach ( (array) $collection as $row ) {
 			$user_id = (int) ( $row->user_id ?? 0 );
 			if ( ! $user_id ) {
@@ -344,11 +360,23 @@ class DashboardControllerV2 extends RestControllerV2 {
 				'user_id'       => $user_id,
 				'name'          => $user instanceof \WP_User ? ( $this->cast_string_or_null( $user->display_name ) ?? '' ) : '',
 				'avatar_url'    => get_avatar_url( $user_id, [ 'size' => 40 ] ) ?: '',
+				'designation'   => $this->designation_title( $user_id ),
 				'date_of_birth' => $this->cast_date_iso( $row->date_of_birth ?? null ),
+				'wished'        => in_array( $user_id, $wished, true ),
 			];
 		}
 
 		return $people;
+	}
+
+	/**
+	 * Per-user, per-year meta key holding the recipients this user has already
+	 * sent a birthday wish to (so the "Sent" state survives a page refresh).
+	 *
+	 * @return string
+	 */
+	private function birthday_wish_meta_key(): string {
+		return '_erp_hr_birthday_wishes_' . wp_date( 'Y' );
 	}
 
 	/**
@@ -366,6 +394,7 @@ class DashboardControllerV2 extends RestControllerV2 {
 			'user_id'       => (int) ( $leave->user_id ?? 0 ),
 			'name'          => $this->cast_string_or_null( $leave->display_name ?? '' ) ?? '',
 			'avatar_url'    => get_avatar_url( (int) ( $leave->user_id ?? 0 ), [ 'size' => 40 ] ) ?: '',
+			'designation'   => $this->designation_title( (int) ( $leave->user_id ?? 0 ) ),
 			'start_date'    => $this->ts_to_iso( $leave->start_date ?? null ),
 			'end_date'      => $this->ts_to_iso( $leave->end_date ?? null ),
 			'period'        => $period,
@@ -375,6 +404,41 @@ class DashboardControllerV2 extends RestControllerV2 {
 				? ( $this->cast_string_or_null( erp_hr_leave_request_get_day_statuses( $day_status_id ) ) ?? '' )
 				: '',
 		];
+	}
+
+	/**
+	 * Resolve an employee's designation title for the who-is-out / birthday rows.
+	 *
+	 * @param int $user_id Employee WP user id.
+	 *
+	 * @return string Designation title, or '' when none.
+	 */
+	private function designation_title( int $user_id ): string {
+		if ( ! $user_id ) {
+			return '';
+		}
+
+		$employee = new \WeDevs\ERP\HRM\Employee( $user_id );
+
+		return $this->cast_string_or_null( $employee->get_designation( 'view' ) ) ?? '';
+	}
+
+	/**
+	 * One-line plain-text excerpt for an announcement row (Figma: cropped
+	 * description under the title).
+	 *
+	 * @param int $post_id Announcement post id.
+	 *
+	 * @return string Trimmed excerpt, or '' when empty.
+	 */
+	private function announcement_excerpt( int $post_id ): string {
+		if ( ! $post_id ) {
+			return '';
+		}
+
+		$content = wp_strip_all_tags( (string) get_post_field( 'post_content', $post_id ) );
+
+		return $this->cast_string_or_null( wp_trim_words( $content, 14, '…' ) ) ?? '';
 	}
 
 	/**
