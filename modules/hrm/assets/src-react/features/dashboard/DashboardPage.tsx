@@ -209,6 +209,12 @@ function DashboardInner(): JSX.Element {
 				</div>
 			) : (
 				<>
+					{ /* Top section (Figma dashboard): stat cards + Team Calendar on
+					   the left, the self-service My Attendance / Attendance Status rail
+					   on the right — the rail sits at the top, level with the stat
+					   cards (not pushed below a full-width stat row). */ }
+					<div className={ `grid grid-cols-1 gap-6 ${ proSelfWidgets.length > 0 ? 'xl:grid-cols-3' : '' }` }>
+						<div className={ `flex flex-col gap-6 ${ proSelfWidgets.length > 0 ? 'xl:col-span-2' : '' }` }>
 					{ /* Summary stat cards */ }
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 						<StatCard
@@ -253,19 +259,23 @@ function DashboardInner(): JSX.Element {
 						) }
 					</div>
 
-					{ /* Dashboard widget grid — the medium Team Calendar spans two
-					   columns AND two rows so the pro attendance cards stretch to fill
-					   beside it, and the remaining activity cards flow around it with
-					   no empty gap (matters most on the employee view, which shows
-					   fewer cards). */ }
-					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-						<div className="md:col-span-2 xl:col-span-2 xl:row-span-2">
+							{ /* Team Calendar sits below the stat cards in the left column. */ }
 							<MiniCalendarWidget />
 						</div>
-						{ proSelfWidgets.map( ( Widget, i ) => (
-							<Widget key={ `self-${ i }` } />
-						) ) }
 
+						{ /* Right rail (Figma): self-service My Attendance + Attendance
+						   Status, aligned to the top of the section. */ }
+						{ proSelfWidgets.length > 0 ? (
+							<div className="flex flex-col gap-6">
+								{ proSelfWidgets.map( ( Widget, i ) => (
+									<Widget key={ `self-${ i }` } />
+								) ) }
+							</div>
+						) : null }
+					</div>
+
+					{ /* Activity widgets below the top section. */ }
+					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 						{ /* Who's out */ }
 						<WidgetCard
 							icon={ CalendarClock }
