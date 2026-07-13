@@ -1,9 +1,9 @@
 /**
- * Compact dashboard "Calendar" card — a small month grid with a colored event
- * dot under each day that has a leave / holiday (Figma HRM-Redesign-2024
- * dashboard calendar). It reads the same `erp/v2/leave-calendar` data as the
- * full `/leave/calendar` page (own scope) but stays glanceable: just the day
- * number + up to three dots, no name chips. "View" opens the full calendar.
+ * Dashboard "Calendar" card — a medium month grid with named leave / holiday
+ * chips inside each day cell (Figma HRM-Redesign-2024 dashboard calendar). It
+ * reads the same `erp/v2/leave-calendar` data as the full `/leave/calendar`
+ * page (own scope); each day shows up to two event chips + a "+N more" overflow
+ * that the hover tooltip expands. "View" opens the full calendar.
  */
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@wedevs/plugin-ui';
@@ -13,13 +13,21 @@ import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useCan } from '@/shared/hooks/useCan';
-import { __ } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
 import type { CalendarEvent } from '@/features/leave-calendar/types';
+import { LeaveChip } from '@/features/leave-calendar/CalendarGrid';
 import { useLeaveCalendar } from '@/features/leave-calendar/useLeaveCalendar';
 
 const WEEKDAYS = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
 
 const HOLIDAY_COLOR = '#FF5354';
+
+/** Diagonal hatch for weekend columns (Figma) — drawn off the border token so
+ * it adapts to light/dark instead of a hardcoded gray. */
+const WEEKEND_HATCH = {
+	backgroundImage:
+		'repeating-linear-gradient(-45deg, color-mix(in srgb, var(--border) 65%, transparent) 0, color-mix(in srgb, var(--border) 65%, transparent) 1px, transparent 1px, transparent 7px)',
+} as const;
 
 function ymd( date: Date ): string {
 	const y = date.getFullYear();
@@ -74,9 +82,13 @@ export function MiniCalendarWidget(): JSX.Element {
 	const canManageLeave = useCan( 'erp_leave_manage' );
 	const scope: 'me' | 'all' = canManageLeave ? 'all' : 'me';
 
-	// Monday-first 6-week window covering the visible month.
+	// Monday-first window covering the visible month. The row count is dynamic
+	// (5 or 6 weeks) so a month that fits in 5 rows shows no empty trailing week
+	// — matching the Figma calendar.
 	const gridStart = useMemo( () => addDays( cursor, -mondayOffset( cursor.getDay() ) ), [ cursor ] );
-	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( addDays( gridStart, 41 ) ), { scope } );
+	const daysInMonth = useMemo( () => new Date( cursor.getFullYear(), cursor.getMonth() + 1, 0 ).getDate(), [ cursor ] );
+	const weekCount = useMemo( () => Math.ceil( ( mondayOffset( cursor.getDay() ) + daysInMonth ) / 7 ), [ cursor, daysInMonth ] );
+	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( addDays( gridStart, weekCount * 7 - 1 ) ), { scope } );
 
 	const byDay = useMemo( () => {
 		const map = new Map< string, DayBucket >();
@@ -109,8 +121,8 @@ export function MiniCalendarWidget(): JSX.Element {
 	}, [ events ] );
 
 	const days = useMemo(
-		() => Array.from( { length: 42 }, ( _, i ) => addDays( gridStart, i ) ),
-		[ gridStart ],
+		() => Array.from( { length: weekCount * 7 }, ( _, i ) => addDays( gridStart, i ) ),
+		[ gridStart, weekCount ],
 	);
 
 	const monthLabel = cursor.toLocaleDateString( undefined, { month: 'long', year: 'numeric' } );
@@ -122,23 +134,56 @@ export function MiniCalendarWidget(): JSX.Element {
 	}
 
 	return (
-		<section className="flex flex-col rounded-[10px] bg-card shadow-sm">
-			{ /* Header: title + "View" link */ }
-			<header className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
-				<h2 className="m-0 text-base font-bold leading-tight tracking-tight text-foreground">
+		<section className="flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
+			{ /* Header: title + Today / month nav (Figma) + View shortcut. */ }
+			<header className="flex flex-wrap items-center justify-between gap-3 px-6 pt-6 pb-4">
+				<h2 className="m-0 text-base font-semibold leading-none tracking-normal text-foreground">
 					{ canManageLeave ? __( 'Team Calendar', 'erp' ) : __( 'My Calendar', 'erp' ) }
 				</h2>
-				<Link
-					to="/leave/calendar"
-					viewTransition
-					className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-				>
-					{ __( 'View', 'erp' ) }
-					<ArrowUpRight size={ 13 } aria-hidden="true" />
-				</Link>
+				<div className="flex items-center gap-2">
+					<Link
+						to="/leave/calendar"
+						viewTransition
+						className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+					>
+						{ __( 'View', 'erp' ) }
+						<ArrowUpRight size={ 13 } aria-hidden="true" />
+					</Link>
+					<button
+						type="button"
+						onClick={ () =>
+							setCursor( () => {
+								const n = new Date();
+								return new Date( n.getFullYear(), n.getMonth(), 1 );
+							} )
+						}
+						className="inline-flex h-8 items-center rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+					>
+						{ __( 'Today', 'erp' ) }
+					</button>
+					<div className="inline-flex items-center rounded-md border border-border">
+						<button
+							type="button"
+							onClick={ () => shiftMonth( -1 ) }
+							className="inline-flex size-8 items-center justify-center rounded-l-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+							aria-label={ __( 'Previous month', 'erp' ) }
+						>
+							<ChevronLeft size={ 16 } aria-hidden="true" />
+						</button>
+						<span className="px-2 text-center text-sm font-medium whitespace-nowrap text-foreground">{ monthLabel }</span>
+						<button
+							type="button"
+							onClick={ () => shiftMonth( 1 ) }
+							className="inline-flex size-8 items-center justify-center rounded-r-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+							aria-label={ __( 'Next month', 'erp' ) }
+						>
+							<ChevronRight size={ 16 } aria-hidden="true" />
+						</button>
+					</div>
+				</div>
 			</header>
 
-			<div className="relative px-4 py-3">
+			<div className="relative px-6 pb-6">
 				{ loading ? (
 					<div className="absolute inset-0 z-10 flex items-center justify-center bg-card/60 text-xs text-muted-foreground">
 						{ __( 'Loading…', 'erp' ) }
@@ -149,58 +194,46 @@ export function MiniCalendarWidget(): JSX.Element {
 					<p className="py-6 text-center text-sm text-destructive">{ error }</p>
 				) : (
 					<>
-						{ /* Month nav */ }
-						<div className="mb-2 flex items-center justify-between px-1">
-							<button
-								type="button"
-								onClick={ () => shiftMonth( -1 ) }
-								className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-								aria-label={ __( 'Previous month', 'erp' ) }
-							>
-								<ChevronLeft size={ 16 } aria-hidden="true" />
-							</button>
-							<span className="text-sm font-semibold text-foreground">{ monthLabel }</span>
-							<button
-								type="button"
-								onClick={ () => shiftMonth( 1 ) }
-								className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-								aria-label={ __( 'Next month', 'erp' ) }
-							>
-								<ChevronRight size={ 16 } aria-hidden="true" />
-							</button>
-						</div>
-
-						{ /* Weekday header */ }
-						<div className="grid grid-cols-7">
-							{ WEEKDAYS.map( ( wd ) => (
-								<div key={ wd } className="py-1 text-center text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-									{ wd }
-								</div>
-							) ) }
-						</div>
-
-						{ /* Day grid: number + up to 3 event dots beneath. Days with
-						   leaves/holidays get a hover tooltip listing them. */ }
+						{ /* Bordered month grid (Figma): weekday header row + tall day
+						   cells, weekend columns hatched, today a filled blue circle.
+						   Days with leaves/holidays keep the event dots + hover tooltip. */ }
 						<TooltipProvider>
-							<div className="grid grid-cols-7">
+							<div className="grid grid-cols-7 overflow-hidden rounded-lg border-l border-t border-border">
+								{ WEEKDAYS.map( ( wd, i ) => (
+									<div
+										key={ wd }
+										className={ [
+											'border-b border-r border-border py-2 text-center text-xs font-medium text-muted-foreground',
+											i >= 5 ? 'bg-muted/40' : '',
+										].join( ' ' ) }
+									>
+										{ wd }
+									</div>
+								) ) }
 								{ days.map( ( day ) => {
 									const key      = ymd( day );
 									const bucket   = byDay.get( key );
 									const inMonth  = day.getMonth() === thisMonth;
 									const isToday  = key === todayKey;
+									const dow      = day.getDay();
+									const weekend  = dow === 0 || dow === 6;
 									const leaves   = bucket?.leaves ?? [];
 									const holidays = bucket?.holidays ?? [];
 									const hasEvents = leaves.length > 0 || holidays.length > 0;
-									const dots: string[] = [];
-									if ( leaves.length ) {
-										dots.push( 'var(--primary)' );
-									}
-									if ( holidays.length ) {
-										dots.push( HOLIDAY_COLOR );
-									}
+									// Named events as chips inside the cell (Figma medium
+									// calendar): holidays first, then leaves; up to two, with
+									// a "+N more" overflow that the hover tooltip expands.
+									const chips = [
+										...holidays.map( ( ev ) => ( { ev, holiday: true } ) ),
+										...leaves.map( ( ev ) => ( { ev, holiday: false } ) ),
+									];
+									const extra = chips.length - 2;
 
 									const cell = (
-										<div className="flex flex-col items-center justify-start py-1">
+										<div
+											className="flex min-h-24 flex-col items-center gap-1 border-b border-r border-border p-2"
+											style={ weekend ? WEEKEND_HATCH : undefined }
+										>
 											<span
 												className={ [
 													'inline-flex size-8 items-center justify-center rounded-full text-sm',
@@ -208,22 +241,35 @@ export function MiniCalendarWidget(): JSX.Element {
 														? 'bg-primary font-semibold text-primary-foreground'
 														: inMonth
 															? 'text-foreground'
-															: 'text-muted-foreground/50',
+															: 'text-muted-foreground/60',
 													hasEvents && ! isToday ? 'cursor-default font-medium' : '',
 												].join( ' ' ) }
 											>
 												{ day.getDate() }
 											</span>
-											<span className="mt-0.5 flex h-1.5 items-center gap-0.5">
-												{ dots.map( ( color, i ) => (
-													<span
-														key={ i }
-														aria-hidden="true"
-														className="inline-block size-1.5 rounded-full"
-														style={ { backgroundColor: color } }
-													/>
-												) ) }
-											</span>
+											{ chips.length ? (
+												<span className="flex w-full flex-col gap-0.5 text-left">
+													{ chips.slice( 0, 2 ).map( ( { ev, holiday }, i ) =>
+														holiday ? (
+															<span
+																key={ i }
+																className="truncate rounded px-1.5 py-0.5 text-[11px] font-medium text-white"
+																style={ { backgroundColor: ev.color || HOLIDAY_COLOR } }
+																title={ ev.title }
+															>
+																{ ev.title }
+															</span>
+														) : (
+															<LeaveChip key={ i } ev={ ev } />
+														)
+													) }
+													{ extra > 0 ? (
+														<span className="px-1 text-[11px] font-medium text-muted-foreground">
+															{ sprintf( __( '+%d more', 'erp' ), extra ) }
+														</span>
+													) : null }
+												</span>
+											) : null }
 										</div>
 									);
 
@@ -261,8 +307,8 @@ export function MiniCalendarWidget(): JSX.Element {
 							</div>
 						</TooltipProvider>
 
-						{ /* Legend */ }
-						<div className="mt-2 flex items-center justify-center gap-4 border-t border-border pt-2 text-[11px] text-muted-foreground">
+						{ /* Legend for the event dots. */ }
+						<div className="mt-3 flex items-center justify-center gap-4 text-[11px] text-muted-foreground">
 							<span className="inline-flex items-center gap-1.5">
 								<span aria-hidden="true" className="inline-block size-2 rounded-full bg-primary" />
 								{ __( 'Leave', 'erp' ) }

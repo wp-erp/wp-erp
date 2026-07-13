@@ -44,7 +44,6 @@ import type { MeUser } from '@/stores/me/types';
 import {
 	EmptyRow,
 	LiveTime,
-	SectionLabel,
 	StatCard,
 	WidgetCard,
 } from './DashboardCards';
@@ -138,8 +137,8 @@ function DashboardInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			{ /* Greeting hero */ }
-			<header className="relative mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 overflow-hidden rounded-lg bg-card p-6 shadow-sm ring-1 ring-border/50">
+			{ /* Greeting hero — plain on the page panel (Figma), no card. */ }
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 px-1">
 				<div className="relative">
 					<h1 className="text-3xl font-bold leading-9 tracking-tight text-foreground">
 						{ name
@@ -184,7 +183,6 @@ function DashboardInner(): JSX.Element {
 			) : (
 				<>
 					{ /* Summary stat cards */ }
-					<SectionLabel>{ __( 'Overview', 'erp' ) }</SectionLabel>
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 						<StatCard
 							icon={ Users }
@@ -228,16 +226,23 @@ function DashboardInner(): JSX.Element {
 						) }
 					</div>
 
-					{ /* Widget grid — a robust multi-card layout (Figma dashboard):
-					   compact calendar leads, then the activity cards + any pro
-					   module / self-service widgets, all on one responsive grid. */ }
-					<SectionLabel className="mt-8">
-						{ __( 'Activity', 'erp' ) }
-					</SectionLabel>
-					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-						{ /* Compact calendar */ }
-						<MiniCalendarWidget />
+					{ /* Top row — medium Team Calendar (spans two columns) with the pro
+					   self-service attendance cards stacked beside it (Figma). */ }
+					<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
+						<div className="xl:col-span-2">
+							<MiniCalendarWidget />
+						</div>
+						{ proSelfWidgets.length ? (
+							<div className="flex flex-col gap-6">
+								{ proSelfWidgets.map( ( Widget, i ) => (
+									<Widget key={ `self-${ i }` } />
+								) ) }
+							</div>
+						) : null }
+					</div>
 
+					{ /* Activity cards grid — the remaining widgets. */ }
+					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 						{ /* Who's out */ }
 						<WidgetCard
 							icon={ CalendarClock }
@@ -373,15 +378,6 @@ function DashboardInner(): JSX.Element {
 								) : null }
 							</WidgetCard>
 						) : null }
-
-						{ /* Pro self-service widgets (e.g. Attendance punch card) first,
-						   so the Attendance card lands top-right (row 1, col 3) for every
-						   role — admins get extra `pro_widgets` below it that would
-						   otherwise push the punch card out of that slot. Swapped with
-						   Birthdays per the dashboard layout request. */ }
-						{ proSelfWidgets.map( ( Widget, i ) => (
-							<Widget key={ `self-${ i }` } />
-						) ) }
 
 						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
 						   PHP filter; render only the ones active modules contributed. */ }
@@ -552,9 +548,6 @@ function DashboardInner(): JSX.Element {
 					{ /* Analytics charts — sit below the activity cards. */ }
 					{ data ? (
 						<div className="mt-8">
-							<SectionLabel>
-								{ __( 'Analytics', 'erp' ) }
-							</SectionLabel>
 							<ChartsSection
 								charts={ data.charts }
 								isManager={ isManager }
