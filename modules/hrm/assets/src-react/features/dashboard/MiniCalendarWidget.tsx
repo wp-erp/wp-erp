@@ -262,7 +262,7 @@ export function MiniCalendarWidget(): JSX.Element {
 
 									const cell = (
 										<div
-											className="flex min-h-24 flex-col items-center gap-1 border-b border-r border-border p-2"
+											className="flex h-full min-h-24 flex-col items-center gap-1 border-b border-r border-border p-2"
 											style={ weekend ? WEEKEND_HATCH : undefined }
 										>
 											<span
@@ -305,7 +305,11 @@ export function MiniCalendarWidget(): JSX.Element {
 									);
 
 									if ( ! hasEvents ) {
-										return <div key={ key }>{ cell }</div>;
+										// `contents` so the cell itself is the grid item and
+										// stretches to the row height (like the event-day cells)
+										// — otherwise the wrapper stretches but the cell floats
+										// short and the borders break.
+										return <div key={ key } className="contents">{ cell }</div>;
 									}
 
 									return (
