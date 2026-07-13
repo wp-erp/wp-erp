@@ -5,6 +5,7 @@
  * Pure presentation — data is pre-bucketed by the page.
  */
 
+import { Avatar, AvatarFallback, AvatarImage } from '@wedevs/plugin-ui';
 import { NavLink } from 'react-router-dom';
 import type { JSX } from 'react';
 
@@ -26,12 +27,12 @@ export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
 
 	const inner = (
 		<>
-			<span
-				aria-hidden="true"
-				className="inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[8px] font-semibold uppercase text-primary"
-			>
-				{ makeInitials( ev.employee_name || ev.title ) }
-			</span>
+			<Avatar className="size-4 shrink-0">
+				{ ev.avatar_url ? <AvatarImage src={ ev.avatar_url } alt={ ev.employee_name || ev.title } /> : null }
+				<AvatarFallback className="bg-primary/15 text-[8px] font-semibold uppercase text-primary">
+					{ makeInitials( ev.employee_name || ev.title ) }
+				</AvatarFallback>
+			</Avatar>
 			<span className="truncate">{ label }</span>
 		</>
 	);

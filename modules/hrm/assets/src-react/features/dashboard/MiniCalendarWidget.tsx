@@ -7,16 +7,21 @@
  */
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@wedevs/plugin-ui';
-import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowUpRight, Plus } from 'lucide-react';
+import { useSelect } from '@wordpress/data';
 import { useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useCan } from '@/shared/hooks/useCan';
+import { useModalParam } from '@/shared/useModalParam';
 import { __, sprintf } from '@/shared/i18n';
+import { storeName as meStoreName } from '@/stores/me';
+import type { MeUser } from '@/stores/me/types';
 import type { CalendarEvent } from '@/features/leave-calendar/types';
 import { LeaveChip } from '@/features/leave-calendar/CalendarGrid';
 import { useLeaveCalendar } from '@/features/leave-calendar/useLeaveCalendar';
+import { NewLeaveRequestDialog } from '@/features/leave-requests/NewLeaveRequestDialog';
 
 const WEEKDAYS = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
 
@@ -82,6 +87,16 @@ export function MiniCalendarWidget(): JSX.Element {
 	const canManageLeave = useCan( 'erp_leave_manage' );
 	const scope: 'me' | 'all' = canManageLeave ? 'all' : 'me';
 
+	// Self-service "Take a Leave" (mirrors the legacy dashboard button): shown to
+	// everyone — the form is locked to the current user and the create endpoint
+	// enforces the self-only `erp_leave_create_request` meta-cap (employees can
+	// request their own leave even though they lack the primitive manager cap).
+	const [ takeLeave, setTakeLeave ] = useModalParam( 'take-leave' );
+	const currentUserId = useSelect(
+		( select ) => ( select( meStoreName ) as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
+		[],
+	);
+
 	// Monday-first window covering the visible month. The row count is dynamic
 	// (5 or 6 weeks) so a month that fits in 5 rows shows no empty trailing week
 	// — matching the Figma calendar.
@@ -134,6 +149,7 @@ export function MiniCalendarWidget(): JSX.Element {
 	}
 
 	return (
+		<>
 		<section className="flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
 			{ /* Header: title + Today / month nav (Figma) + View shortcut. */ }
 			<header className="flex flex-wrap items-center justify-between gap-3 px-6 pt-6 pb-4">
@@ -141,14 +157,17 @@ export function MiniCalendarWidget(): JSX.Element {
 					{ canManageLeave ? __( 'Team Calendar', 'erp' ) : __( 'My Calendar', 'erp' ) }
 				</h2>
 				<div className="flex items-center gap-2">
-					<Link
-						to="/leave/calendar"
-						viewTransition
-						className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+					{ /* Take a Leave — self-service leave request (legacy dashboard
+					   leave-calendar had this button); opens the form locked to the
+					   current user. */ }
+					<button
+						type="button"
+						onClick={ () => setTakeLeave( 'new' ) }
+						className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
 					>
-						{ __( 'View', 'erp' ) }
-						<ArrowUpRight size={ 13 } aria-hidden="true" />
-					</Link>
+						<Plus size={ 15 } aria-hidden="true" />
+						{ __( 'Take a Leave', 'erp' ) }
+					</button>
 					<button
 						type="button"
 						onClick={ () =>
@@ -180,6 +199,15 @@ export function MiniCalendarWidget(): JSX.Element {
 							<ChevronRight size={ 16 } aria-hidden="true" />
 						</button>
 					</div>
+					{ /* View shortcut — pushed to the far right end of the header. */ }
+					<Link
+						to="/leave/calendar"
+						viewTransition
+						className="ml-1 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+					>
+						{ __( 'View', 'erp' ) }
+						<ArrowUpRight size={ 13 } aria-hidden="true" />
+					</Link>
 				</div>
 			</header>
 
@@ -322,5 +350,12 @@ export function MiniCalendarWidget(): JSX.Element {
 				) }
 			</div>
 		</section>
+		<NewLeaveRequestDialog
+			open={ takeLeave !== null }
+			onClose={ () => setTakeLeave( null ) }
+			onSubmitted={ () => setTakeLeave( null ) }
+			lockEmployeeId={ currentUserId }
+		/>
+		</>
 	);
 }

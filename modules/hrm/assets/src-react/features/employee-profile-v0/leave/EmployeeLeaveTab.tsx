@@ -8,12 +8,15 @@
  */
 
 import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Spinner, toast } from '@wedevs/plugin-ui';
+import { useSelect } from '@wordpress/data';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { storeName as meStoreName } from '@/stores/me';
+import type { MeUser } from '@/stores/me/types';
 import { parseServerDate } from '@/shared/utils/date';
 
 import { LeaveRequestDialog } from './LeaveRequestDialog';
@@ -64,7 +67,13 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 	const [ filters, setFilters ] = useState< LeaveFilters >( {} );
 	const { data, loading, error, refetch } = useEmployeeLeave( userId, filters );
 	const meta = data?.meta;
-	const canCreate = useCan( 'erp_leave_create_request' );
+	const currentUserId = useSelect(
+		( select ) => ( select( meStoreName ) as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
+		[],
+	);
+	// Managers can file for anyone (primitive cap); an employee can file for
+	// their OWN profile (self meta-cap) even without the primitive cap.
+	const canCreate = useCan( 'erp_leave_create_request' ) || userId === currentUserId;
 	const [ showRequest, setShowRequest ] = useState( false );
 
 	if ( error ) {

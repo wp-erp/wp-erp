@@ -10,6 +10,8 @@ export interface CalendarEvent {
 	readonly title:          string;
 	/** Employee whose leave this is (present on leave events in the "all" scope). */
 	readonly employee_name?: string;
+	/** Employee photo (from the shared avatar filter) for the calendar chip. */
+	readonly avatar_url?:    string;
 	readonly start:          string | null;
 	readonly end:            string | null;
 	readonly color:          string;

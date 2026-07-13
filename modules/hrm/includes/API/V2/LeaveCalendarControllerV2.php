@@ -242,16 +242,22 @@ class LeaveCalendarControllerV2 extends RestControllerV2 {
 				$label .= '(' . erp_hr_leave_request_get_day_statuses( $leave_request->day_status_id ) . ')';
 			}
 
+			$event_user_id = $this->cast_int_or_null( $leave_request->user_id ?? null );
+
 			$events[] = [
 				'id'            => (int) $leave_request->id,
 				'type'          => 'leave',
 				'title'         => $label,
 				'employee_name' => (string) ( $leave_request->display_name ?? $leave_request->name ?? '' ),
+				// Employee photo via the shared avatar filter (same source the
+				// employee list / dashboard cards use — seeded randomuser photos
+				// in this data), so the calendar chip shows the real face.
+				'avatar_url'    => $event_user_id ? ( get_avatar_url( $event_user_id, [ 'size' => 48 ] ) ?: '' ) : '',
 				'start'         => wp_date( 'Y-m-d', (int) $leave_request->start_date ),
 				'end'           => wp_date( 'Y-m-d', (int) $leave_request->end_date ),
 				'color'         => $this->cast_string_or_null( $leave_request->color ?? '' ) ?? '',
 				'reason'        => (string) ( $leave_request->reason ?? '' ),
-				'user_id'       => $this->cast_int_or_null( $leave_request->user_id ?? null ),
+				'user_id'       => $event_user_id,
 				'status'        => (int) $leave_request->status,
 			];
 		}

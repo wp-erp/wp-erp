@@ -70,7 +70,7 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'form_options' ],
-					'permission_callback' => [ $this, 'permission_manage' ],
+					'permission_callback' => [ $this, 'permission_form_options' ],
 				],
 			]
 		);
@@ -117,6 +117,18 @@ class LeavePoliciesControllerV2 extends RestControllerV2 {
 	 */
 	public function permission_manage(): bool {
 		return $this->permission_cap( 'erp_leave_manage' );
+	}
+
+	/**
+	 * The create-form dropdown data (financial years) is also needed by the
+	 * self-service "Take a Leave" flow, so allow anyone who can file a leave
+	 * request for themselves — not just managers. The FY list is non-sensitive.
+	 *
+	 * @return bool
+	 */
+	public function permission_form_options(): bool {
+		return current_user_can( 'erp_leave_manage' )
+			|| current_user_can( 'erp_leave_create_request', get_current_user_id() );
 	}
 
 	/**

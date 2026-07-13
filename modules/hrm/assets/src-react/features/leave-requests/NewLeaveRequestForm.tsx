@@ -30,6 +30,10 @@ import type { LeaveDateValidation } from '../employee-create/leave/useEmployeeLe
 
 interface NewLeaveRequestFormProps {
 	readonly error:            string | null;
+	/** Hide the employee picker (self-service "Take a Leave" — locked to self). */
+	readonly hideEmployeePicker?: boolean;
+	/** Hide the Financial Year picker (self-service — auto-uses the current FY). */
+	readonly hideFinancialYear?: boolean;
 	readonly employee:         ReturnType< typeof useEmployeeSearch >;
 	readonly employeeId:       string;
 	readonly setEmployeeId:    ( value: string ) => void;
@@ -63,6 +67,8 @@ interface NewLeaveRequestFormProps {
 
 export function NewLeaveRequestForm( {
 	error,
+	hideEmployeePicker,
+	hideFinancialYear,
 	employee,
 	employeeId,
 	setEmployeeId,
@@ -101,28 +107,32 @@ export function NewLeaveRequestForm( {
 				</Alert>
 			) : null }
 
-			<SmartSelectField
-				id="leave_employee"
-				label={ __( 'Employee', 'erp' ) }
-				required
-				options={ employee.options }
-				value={ employeeId }
-				onChange={ ( v ) => { setEmployeeId( v ); setPolicy( '' ); } }
-				onSearch={ employee.onSearch }
-				loading={ employee.loading }
-				placeholder={ __( '- Select -', 'erp' ) }
-				searchPlaceholder={ __( 'Search employees…', 'erp' ) }
-				emptyMessage={ __( 'No employees found.', 'erp' ) }
-			/>
-			<SelectField
-				id="leave_year"
-				label={ __( 'Financial Year', 'erp' ) }
-				required
-				options={ yearOptions }
-				value={ year }
-				onChange={ ( v ) => { setYear( v ); setPolicy( '' ); } }
-				placeholder={ __( '- Select -', 'erp' ) }
-			/>
+			{ hideEmployeePicker ? null : (
+				<SmartSelectField
+					id="leave_employee"
+					label={ __( 'Employee', 'erp' ) }
+					required
+					options={ employee.options }
+					value={ employeeId }
+					onChange={ ( v ) => { setEmployeeId( v ); setPolicy( '' ); } }
+					onSearch={ employee.onSearch }
+					loading={ employee.loading }
+					placeholder={ __( '- Select -', 'erp' ) }
+					searchPlaceholder={ __( 'Search employees…', 'erp' ) }
+					emptyMessage={ __( 'No employees found.', 'erp' ) }
+				/>
+			) }
+			{ hideFinancialYear ? null : (
+				<SelectField
+					id="leave_year"
+					label={ __( 'Financial Year', 'erp' ) }
+					required
+					options={ yearOptions }
+					value={ year }
+					onChange={ ( v ) => { setYear( v ); setPolicy( '' ); } }
+					placeholder={ __( '- Select -', 'erp' ) }
+				/>
+			) }
 			{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
 			<SelectField
 				id="leave_policy"

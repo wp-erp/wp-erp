@@ -50,12 +50,15 @@ interface NewLeaveRequestDialogProps {
 	readonly open:        boolean;
 	readonly onClose:     () => void;
 	readonly onSubmitted: () => void;
+	/** Lock the request to this employee (self-service "Take a Leave"): the
+	 * employee picker is hidden and pre-set to this user. */
+	readonly lockEmployeeId?: number;
 }
 
-export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveRequestDialogProps ): JSX.Element {
+export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmployeeId }: NewLeaveRequestDialogProps ): JSX.Element {
 	const [ years, setYears ]         = useState< readonly RawFinancialYear[] >( [] );
 
-	const [ employeeId, setEmployeeId ] = useState( '' );
+	const [ employeeId, setEmployeeId ] = useState( lockEmployeeId ? String( lockEmployeeId ) : '' );
 	const employee                      = useEmployeeSearch( open, undefined, employeeId );
 	const [ year, setYear ]             = useState( '' );
 	const [ policies, setPolicies ]     = useState< readonly AssignablePolicy[] >( [] );
@@ -85,7 +88,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 		if ( ! open ) {
 			return;
 		}
-		setEmployeeId( '' );
+		setEmployeeId( lockEmployeeId ? String( lockEmployeeId ) : '' );
 		setYear( '' );
 		setPolicies( [] );
 		setPolicy( '' );
@@ -248,13 +251,15 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted }: NewLeaveR
 						{ __( 'New Leave Request', 'erp' ) }
 					</DialogTitle>
 					<DialogDescription>
-						{ __( 'Apply for leave on behalf of an employee.', 'erp' ) }
+						{ lockEmployeeId ? __( 'Apply for your leave.', 'erp' ) : __( 'Apply for leave on behalf of an employee.', 'erp' ) }
 					</DialogDescription>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
 				<NewLeaveRequestForm
 					error={ error }
+					hideEmployeePicker={ Boolean( lockEmployeeId ) }
+					hideFinancialYear={ Boolean( lockEmployeeId ) }
 					employee={ employee }
 					employeeId={ employeeId }
 					setEmployeeId={ setEmployeeId }
