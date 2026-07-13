@@ -484,6 +484,7 @@ function DashboardInner(): JSX.Element {
 										0 ) +
 									( data?.about_to_end?.trainee.length ?? 0 )
 								}
+								className="xl:basis-full!"
 							>
 								{ ( data?.about_to_end?.contract.length ?? 0 ) >
 								0 ? (

@@ -100,14 +100,24 @@ export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading, dimO
 							const inMonth   = ! dimOutOfMonth || day.getMonth() === thisMonth;
 							const isToday   = key === todayKey;
 							const isWeekend = bucket?.weekend ?? false;
+								const holidays  = bucket?.holidays ?? [];
+								const isHoliday = holidays.length > 0;
+								// Holiday cells get a diagonal striped fill in the holiday
+								// colour (matches the frontend calendar), so the whole day
+								// reads as a holiday — not just the chip.
+								const holidayColor = holidays[ 0 ]?.color || '#FF5354';
+								const holidayStyle = isHoliday
+									? { backgroundImage: `repeating-linear-gradient(-45deg, ${ holidayColor }20, ${ holidayColor }20 5px, transparent 5px, transparent 11px)` }
+									: undefined;
 
 							return (
 								<div
 									key={ key }
+										style={ holidayStyle }
 									className={ [
 										'min-h-24 border-b border-r border-border p-1.5 last:border-r-0',
 										inMonth ? '' : 'bg-muted/20',
-										isWeekend ? 'bg-muted/30' : '',
+										isWeekend && ! isHoliday ? 'bg-muted/30' : '',
 									].join( ' ' ) }
 								>
 									<div className="mb-1 flex items-center justify-between">
