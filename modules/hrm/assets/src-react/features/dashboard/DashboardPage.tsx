@@ -204,6 +204,52 @@ function DashboardInner(): JSX.Element {
 		</WidgetCard>
 	);
 
+	// Upcoming Holidays card — first activity row alongside Who's Out and
+	// Birthdays (Figma). Defined here so it can sit in that row for every role.
+	const holidaysCard = (
+		<WidgetCard
+			icon={ PalmtreeIcon }
+			title={ __( 'Upcoming Holidays', 'erp' ) }
+			action={
+				canManageLeave
+					? { label: __( 'All', 'erp' ), to: '/leave/holidays' }
+					: undefined
+			}
+		>
+			{ ( data?.holidays_upcoming.length ?? 0 ) === 0 ? (
+				<EmptyRow text={ __( 'No holidays in the next 30 days.', 'erp' ) } />
+			) : (
+				<ul>
+					{ data?.holidays_upcoming.map( ( h, i ) => {
+						const badge = holidayBadge( h.start );
+						return (
+							<li
+								key={ h.id }
+								className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
+							>
+								<span
+									className={ `inline-flex size-11 shrink-0 flex-col items-center justify-center rounded-lg ${ HOLIDAY_TINTS[ i % HOLIDAY_TINTS.length ] }` }
+								>
+									<span className="text-sm font-bold leading-none">{ badge.day }</span>
+									<span className="mt-0.5 text-[10px] font-medium uppercase leading-none">{ badge.mon }</span>
+								</span>
+								<div className="min-w-0 flex-1">
+									<p className="truncate text-sm font-medium text-foreground">{ h.title }</p>
+									<p className="truncate text-xs text-muted-foreground">{ __( 'Public Holiday', 'erp' ) }</p>
+								</div>
+								<span className="shrink-0 text-xs text-muted-foreground">
+									{ h.start === h.end || ! h.end
+										? fmtDate( h.start )
+										: `${ fmtDate( h.start ) } – ${ fmtDate( h.end ) }` }
+								</span>
+							</li>
+						);
+					} ) }
+				</ul>
+			) }
+		</WidgetCard>
+	);
+
 	return (
 		<section className="mx-auto w-full max-w-full">
 			{ /* Greeting hero — plain on the page panel (Figma), no card. */ }
@@ -401,6 +447,11 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
+						{ /* Birthdays + Upcoming Holidays complete the first row with
+						   Who's Out (Figma card order) — same for admin and employee. */ }
+						{ birthdaysCard }
+						{ holidaysCard }
+
 						{ /* About to End — contractual & trainee employees whose job
 						   period ends within 21 days. Manager-only (legacy gate). */ }
 						{ isManager &&
@@ -463,69 +514,6 @@ function DashboardInner(): JSX.Element {
 						{ data?.pro_widgets?.map( ( w ) => (
 							<ProWidget key={ w.id } widget={ w } />
 						) ) }
-
-						{ /* Upcoming holidays */ }
-						<WidgetCard
-							icon={ PalmtreeIcon }
-							title={ __( 'Upcoming Holidays', 'erp' ) }
-							action={
-								canManageLeave
-									? {
-											label: __( 'All', 'erp' ),
-											to: '/leave/holidays',
-									  }
-									: undefined
-							}
-						>
-							{ ( data?.holidays_upcoming.length ?? 0 ) === 0 ? (
-								<EmptyRow
-									text={ __(
-										'No holidays in the next 30 days.',
-										'erp'
-									) }
-								/>
-							) : (
-								<ul>
-									{ data?.holidays_upcoming.map( ( h, i ) => {
-										const badge = holidayBadge( h.start );
-										return (
-											<li
-												key={ h.id }
-												className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
-											>
-												<span
-													className={ `inline-flex size-11 shrink-0 flex-col items-center justify-center rounded-lg ${ HOLIDAY_TINTS[ i % HOLIDAY_TINTS.length ] }` }
-												>
-													<span className="text-sm font-bold leading-none">
-														{ badge.day }
-													</span>
-													<span className="mt-0.5 text-[10px] font-medium uppercase leading-none">
-														{ badge.mon }
-													</span>
-												</span>
-												<div className="min-w-0 flex-1">
-													<p className="truncate text-sm font-medium text-foreground">
-														{ h.title }
-													</p>
-													<p className="truncate text-xs text-muted-foreground">
-														{ __( 'Public Holiday', 'erp' ) }
-													</p>
-												</div>
-												<span className="shrink-0 text-xs text-muted-foreground">
-													{ h.start === h.end || ! h.end
-														? fmtDate( h.start )
-														: `${ fmtDate(
-																h.start
-														  ) } – ${ fmtDate(
-																h.end
-														  ) }` }
-												</span>
-											</li>
-										);
-									} ) }
-								</ul>
-							) }
-						</WidgetCard>
 
 						{ /* Latest announcements */ }
 						<WidgetCard
@@ -609,24 +597,15 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
-						{ /* Managers: Birthdays sits in the card grid (pairs with the
-						   2-col announcements card so the row tiles). Employees get it
-						   beside the Headcount chart below instead. */ }
-						{ isManager ? birthdaysCard : null }
-					</div>
-
-					{ /* Employees: Birthdays + Headcount Trend row (fills the space
-					   beside Birthdays). Managers show Headcount in the analytics
-					   section below instead. */ }
-					{ ! isManager && data ? (
-						<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
-							{ birthdaysCard }
+						{ /* Employees: Headcount Trend fills the row beside Latest
+						   Announcements (managers show it in the analytics section). */ }
+						{ ! isManager && data ? (
 							<HeadcountTrendCard
 								data={ data.charts.headcount_trend }
 								className="xl:col-span-2"
 							/>
-						</div>
-					) : null }
+						) : null }
+					</div>
 
 					{ /* Analytics charts — sit below the activity cards. */ }
 					{ data ? (
