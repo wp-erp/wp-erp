@@ -15,6 +15,13 @@ import { __ } from '@/shared/i18n';
 import type { CalendarEvent } from './types';
 import { WEEKDAYS, ymd, type DayEvents } from './leave-calendar-format';
 
+/** Gray diagonal hatch for weekend cells (same as the dashboard mini calendar) —
+ * drawn off the border token so it adapts to light/dark. */
+const WEEKEND_HATCH = {
+	backgroundImage:
+		'repeating-linear-gradient(-45deg, color-mix(in srgb, var(--border) 65%, transparent) 0, color-mix(in srgb, var(--border) 65%, transparent) 1px, transparent 1px, transparent 7px)',
+} as const;
+
 /**
  * A single leave chip — shows an initials avatar + the employee name and, when
  * the event carries a `user_id`, links through to that employee's profile.
@@ -116,18 +123,18 @@ export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading, dimO
 								// colour (matches the frontend calendar), so the whole day
 								// reads as a holiday — not just the chip.
 								const holidayColor = holidays[ 0 ]?.color || '#FF5354';
-								const holidayStyle = isHoliday
+								const cellStyle = isHoliday
 									? { backgroundImage: `repeating-linear-gradient(-45deg, ${ holidayColor }20, ${ holidayColor }20 5px, transparent 5px, transparent 11px)` }
-									: undefined;
+									: isWeekend ? WEEKEND_HATCH : undefined;
 
 							return (
 								<div
 									key={ key }
-										style={ holidayStyle }
+										style={ cellStyle }
 									className={ [
 										'min-h-24 border-b border-r border-border p-1.5 last:border-r-0',
 										inMonth ? '' : 'bg-muted/20',
-										isWeekend && ! isHoliday ? 'bg-muted/30' : '',
+										'',
 									].join( ' ' ) }
 								>
 									<div className="mb-1 flex items-center justify-between">
