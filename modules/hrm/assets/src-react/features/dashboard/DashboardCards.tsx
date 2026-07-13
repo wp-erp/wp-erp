@@ -56,7 +56,7 @@ interface StatCardProps {
 	readonly label: string;
 	readonly value: number;
 	readonly tint: string;
-	readonly to?: string;
+	readonly to?: string | undefined;
 }
 
 export function StatCard( {

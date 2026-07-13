@@ -253,23 +253,19 @@ function DashboardInner(): JSX.Element {
 						) }
 					</div>
 
-					{ /* Top row — medium Team Calendar (spans two columns) with the pro
-					   self-service attendance cards stacked beside it (Figma). */ }
-					<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
-						<div className="xl:col-span-2">
+					{ /* Dashboard widget grid — the medium Team Calendar spans two
+					   columns AND two rows so the pro attendance cards stretch to fill
+					   beside it, and the remaining activity cards flow around it with
+					   no empty gap (matters most on the employee view, which shows
+					   fewer cards). */ }
+					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+						<div className="md:col-span-2 xl:col-span-2 xl:row-span-2">
 							<MiniCalendarWidget />
 						</div>
-						{ proSelfWidgets.length ? (
-							<div className="flex flex-col gap-6">
-								{ proSelfWidgets.map( ( Widget, i ) => (
-									<Widget key={ `self-${ i }` } />
-								) ) }
-							</div>
-						) : null }
-					</div>
+						{ proSelfWidgets.map( ( Widget, i ) => (
+							<Widget key={ `self-${ i }` } />
+						) ) }
 
-					{ /* Activity cards grid — the remaining widgets. */ }
-					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 						{ /* Who's out */ }
 						<WidgetCard
 							icon={ CalendarClock }
