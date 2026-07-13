@@ -151,6 +151,11 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 
 	return (
 		<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+			{ /* Headcount trend (managers only — employees see it beside Birthdays). */ }
+			{ isManager ? (
+				<HeadcountTrendCard data={ charts.headcount_trend } className="lg:col-span-2" />
+			) : null }
+
 			{ /* Gender donut */ }
 			<ChartCard icon={ Users } title={ __( 'Gender Distribution', 'erp' ) }>
 				{ genderData.length === 0 ? (
@@ -172,7 +177,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 			<ChartCard
 				icon={ Building2 }
 				title={ __( 'Employees by Department', 'erp' ) }
-				className={ isManager ? 'lg:col-span-1' : 'lg:col-span-2' }
+				className="lg:col-span-2"
 			>
 				{ deptData.length === 0 ? (
 					<EmptyChart text={ __( 'No department data.', 'erp' ) } />

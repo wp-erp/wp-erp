@@ -101,6 +101,7 @@ interface WidgetCardProps {
 	readonly title: string;
 	readonly count?: number | undefined;
 	readonly action?: { label: string; to: string } | undefined;
+	readonly className?: string | undefined;
 	readonly children: React.ReactNode;
 }
 
@@ -108,10 +109,11 @@ export function WidgetCard( {
 	title,
 	count,
 	action,
+	className,
 	children,
 }: WidgetCardProps ): JSX.Element {
 	return (
-		<section className="flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
+		<section className={ `flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40 ${ className ?? '' }` }>
 			<header className="flex items-center justify-between gap-3 px-6 pt-6 pb-3">
 				<h2 className="flex items-center gap-2 text-base font-semibold leading-none tracking-normal text-foreground">
 					{ title }

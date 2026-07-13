@@ -162,6 +162,48 @@ function DashboardInner(): JSX.Element {
 		[]
 	) as ComponentType[];
 
+	// Birthdays card — placed either in the manager card grid (pairs with the
+	// 2-col announcements card so the row tiles) or beside the Headcount chart on
+	// the employee view. Defined once so both placements stay in sync.
+	const birthdaysCard = (
+		<WidgetCard
+			icon={ Cake }
+			title={ __( 'Birthdays', 'erp' ) }
+			count={
+				( data?.birthdays_today.length ?? 0 ) +
+				( data?.birthdays_upcoming.length ?? 0 )
+			}
+		>
+			{ ( data?.birthdays_today.length ?? 0 ) === 0 &&
+			( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
+				<EmptyRow text={ __( 'No birthdays in the next 7 days.', 'erp' ) } />
+			) : (
+				<ul>
+					{ data?.birthdays_today.map( ( p ) => (
+						<BirthdayItem
+							key={ `t-${ p.user_id }` }
+							person={ p }
+							today
+							canWish={ isManager && p.user_id !== currentUserId }
+							wished={ wished.has( p.user_id ) }
+							onWish={ handleWish }
+						/>
+					) ) }
+					{ data?.birthdays_upcoming.map( ( p ) => (
+						<BirthdayItem
+							key={ `u-${ p.user_id }` }
+							person={ p }
+							today={ false }
+							canWish={ false }
+							wished={ wished.has( p.user_id ) }
+							onWish={ handleWish }
+						/>
+					) ) }
+				</ul>
+			) }
+		</WidgetCard>
+	);
+
 	return (
 		<section className="mx-auto w-full max-w-full">
 			{ /* Greeting hero — plain on the page panel (Figma), no card. */ }
@@ -497,6 +539,7 @@ function DashboardInner(): JSX.Element {
 									  }
 									: undefined
 							}
+							className={ isManager ? 'xl:col-span-2' : undefined }
 						>
 							{ ( data?.announcements.length ?? 0 ) === 0 ? (
 								<EmptyRow
@@ -566,65 +609,24 @@ function DashboardInner(): JSX.Element {
 							) }
 						</WidgetCard>
 
+						{ /* Managers: Birthdays sits in the card grid (pairs with the
+						   2-col announcements card so the row tiles). Employees get it
+						   beside the Headcount chart below instead. */ }
+						{ isManager ? birthdaysCard : null }
 					</div>
 
-					{ /* Birthdays + Headcount Trend row so the Headcount chart fills the
-					   space beside Birthdays (layout only — capability gating unchanged). */ }
-					<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
-						{ /* Birthdays */ }
-						<WidgetCard
-							icon={ Cake }
-							title={ __( 'Birthdays', 'erp' ) }
-							count={
-								( data?.birthdays_today.length ?? 0 ) +
-								( data?.birthdays_upcoming.length ?? 0 )
-							}
-						>
-							{ ( data?.birthdays_today.length ?? 0 ) === 0 &&
-							( data?.birthdays_upcoming.length ?? 0 ) === 0 ? (
-								<EmptyRow
-									text={ __(
-										'No birthdays in the next 7 days.',
-										'erp'
-									) }
-								/>
-							) : (
-								<ul>
-									{ data?.birthdays_today.map( ( p ) => (
-										<BirthdayItem
-											key={ `t-${ p.user_id }` }
-											person={ p }
-											today
-											canWish={
-												isManager &&
-												p.user_id !== currentUserId
-											}
-											wished={ wished.has( p.user_id ) }
-											onWish={ handleWish }
-										/>
-									) ) }
-									{ data?.birthdays_upcoming.map( ( p ) => (
-										<BirthdayItem
-											key={ `u-${ p.user_id }` }
-											person={ p }
-											today={ false }
-											canWish={ false }
-											wished={ wished.has( p.user_id ) }
-											onWish={ handleWish }
-										/>
-									) ) }
-								</ul>
-							) }
-						</WidgetCard>
-
-						{ /* Headcount trend fills the row beside Birthdays. */ }
-						{ data ? (
+					{ /* Employees: Birthdays + Headcount Trend row (fills the space
+					   beside Birthdays). Managers show Headcount in the analytics
+					   section below instead. */ }
+					{ ! isManager && data ? (
+						<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
+							{ birthdaysCard }
 							<HeadcountTrendCard
 								data={ data.charts.headcount_trend }
 								className="xl:col-span-2"
 							/>
-						) : null }
-					</div>
+						</div>
+					) : null }
 
 					{ /* Analytics charts — sit below the activity cards. */ }
 					{ data ? (
