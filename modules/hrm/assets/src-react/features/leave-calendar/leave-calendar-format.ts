@@ -5,7 +5,13 @@
 
 import type { CalendarEvent } from './types';
 
-export const WEEKDAYS = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+// Monday-first so the weekend (Sat/Sun) sits at the end, matching the dashboard.
+export const WEEKDAYS = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
+
+/** Monday-first grid offset for a weekday index (0 = Sun). */
+export function mondayOffset( day: number ): number {
+	return ( day + 6 ) % 7;
+}
 
 /** Local-midnight Date from a `Y-m-d` string. */
 export function parseYmd( value: string ): Date {

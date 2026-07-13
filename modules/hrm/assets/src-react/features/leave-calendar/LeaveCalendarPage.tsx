@@ -25,7 +25,7 @@ import type { LookupOption } from '../employees/filters/lookups';
 
 import { CalendarGrid, LeaveChip } from './CalendarGrid';
 import { CalendarToolbar, type CalendarView } from './CalendarToolbar';
-import { addDays, parseYmd, ymd, type DayEvents } from './leave-calendar-format';
+import { addDays, mondayOffset, parseYmd, ymd, type DayEvents } from './leave-calendar-format';
 import { useLeaveCalendar } from './useLeaveCalendar';
 
 function LeaveCalendarInner(): JSX.Element {
@@ -49,13 +49,13 @@ function LeaveCalendarInner(): JSX.Element {
 			return { rangeStart: cursor, rangeEnd: cursor, weeks: [ [ cursor ] ], thisMonth: cursor.getMonth() };
 		}
 		if ( view === 'week' ) {
-			const weekStart = addDays( cursor, -cursor.getDay() );
+			const weekStart = addDays( cursor, -mondayOffset( cursor.getDay() ) );
 			const days      = Array.from( { length: 7 }, ( _v, i ) => addDays( weekStart, i ) );
 			return { rangeStart: weekStart, rangeEnd: addDays( weekStart, 6 ), weeks: [ days ], thisMonth: cursor.getMonth() };
 		}
-		// Month: a 6-week grid starting on the Sunday on/before the 1st.
+		// Month: a 6-week grid starting on the Monday on/before the 1st.
 		const monthStart = new Date( cursor.getFullYear(), cursor.getMonth(), 1 );
-		const gridStart  = addDays( monthStart, -monthStart.getDay() );
+		const gridStart  = addDays( monthStart, -mondayOffset( monthStart.getDay() ) );
 		const cells      = Array.from( { length: 42 }, ( _v, i ) => addDays( gridStart, i ) );
 		const rows: Date[][] = [];
 		for ( let i = 0; i < 42; i += 7 ) {
@@ -127,7 +127,7 @@ function LeaveCalendarInner(): JSX.Element {
 			return cursor.toLocaleDateString( undefined, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' } );
 		}
 		if ( view === 'week' ) {
-			const start = addDays( cursor, -cursor.getDay() );
+			const start = addDays( cursor, -mondayOffset( cursor.getDay() ) );
 			const end   = addDays( start, 6 );
 			const a = start.toLocaleDateString( undefined, { month: 'short', day: 'numeric' } );
 			const b = end.toLocaleDateString( undefined, { month: 'short', day: 'numeric', year: 'numeric' } );
