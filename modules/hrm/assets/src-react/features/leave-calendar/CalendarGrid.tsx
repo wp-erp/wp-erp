@@ -21,9 +21,14 @@ import { WEEKDAYS, ymd, type DayEvents } from './leave-calendar-format';
  * (F23: event avatar + event→profile link.)
  */
 export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
-	const label = ev.employee_name || ev.title;
-	const title = [ ev.employee_name, ev.title, ev.reason ].filter( Boolean ).join( ' — ' );
-	const style = { backgroundColor: ev.color ? `${ ev.color }22` : 'var(--muted)' };
+	// status 2 = pending (matches the v2 controller). Show a pending pill like the
+	// employee leave list, and drop the redundant "( Pending )" the API appends to
+	// the policy title so it is not shown twice.
+	const isPending = ev.status === 2;
+	const rawLabel  = ev.employee_name || ev.title;
+	const label     = isPending ? rawLabel.replace( /\s*\(\s*Pending\s*\)\s*/i, ' ' ).trim() : rawLabel;
+	const title     = [ ev.employee_name, ev.title, ev.reason ].filter( Boolean ).join( ' — ' );
+	const style     = { backgroundColor: ev.color ? `${ ev.color }22` : 'var(--muted)' };
 
 	const inner = (
 		<>
@@ -33,7 +38,12 @@ export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
 					{ makeInitials( ev.employee_name || ev.title ) }
 				</AvatarFallback>
 			</Avatar>
-			<span className="truncate">{ label }</span>
+			<span className="min-w-0 truncate">{ label }</span>
+			{ isPending ? (
+				<span className="ml-auto shrink-0 rounded-full bg-amber-100 px-1.5 py-px text-[9px] font-semibold uppercase leading-tight text-amber-700 dark:bg-amber-500/25 dark:text-amber-300">
+					{ __( 'Pending', 'erp' ) }
+				</span>
+			) : null }
 		</>
 	);
 
