@@ -67,27 +67,20 @@ export function StatCard( {
 	to,
 }: StatCardProps ): JSX.Element {
 	const body = (
-		<div className="group relative flex items-center gap-4 overflow-hidden rounded-lg bg-card p-5 shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
+		<div className="group relative flex flex-col gap-4 overflow-hidden rounded-lg bg-card p-5 shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:ring-primary/30">
 			<span
-				className={ `inline-flex size-12 shrink-0 items-center justify-center rounded-lg shadow-sm transition-transform duration-200 group-hover:scale-105 ${ tint }` }
+				className={ `inline-flex size-11 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-105 ${ tint }` }
 			>
 				<Icon size={ 22 } strokeWidth={ 1.9 } aria-hidden="true" />
 			</span>
 			<div className="min-w-0">
-				<p className="text-3xl font-bold leading-8 text-foreground">
-					{ value }
-				</p>
-				<p className="truncate text-sm text-muted-foreground">
+				<p className="truncate text-sm font-medium text-muted-foreground">
 					{ label }
 				</p>
+				<p className="mt-1 text-3xl font-bold leading-8 text-primary">
+					{ value }
+				</p>
 			</div>
-			{ to ? (
-				<ArrowRight
-					size={ 16 }
-					className="ml-auto shrink-0 text-muted-foreground/40 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-primary"
-					aria-hidden="true"
-				/>
-			) : null }
 		</div>
 	);
 	return to ? (
@@ -112,23 +105,15 @@ interface WidgetCardProps {
 }
 
 export function WidgetCard( {
-	icon: Icon,
 	title,
 	count,
 	action,
 	children,
 }: WidgetCardProps ): JSX.Element {
 	return (
-		<section className="flex flex-col rounded-lg bg-card shadow-sm">
-			<header className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
-				<h2 className="flex items-center gap-2 text-base font-bold leading-tight tracking-tight text-foreground">
-					<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-						<Icon
-							size={ 16 }
-							strokeWidth={ 2 }
-							aria-hidden="true"
-						/>
-					</span>
+		<section className="flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
+			<header className="flex items-center justify-between gap-3 px-6 pt-6 pb-3">
+				<h2 className="flex items-center gap-2 text-base font-semibold leading-none tracking-normal text-foreground">
 					{ title }
 					{ count && count > 0 ? (
 						<span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium text-muted-foreground">
@@ -148,7 +133,7 @@ export function WidgetCard( {
 				) : null }
 			</header>
 			{ /* Scroll long lists inside the card instead of stretching the page. */ }
-			<div className="max-h-80 flex-1 overflow-y-auto p-2">
+			<div className="max-h-80 flex-1 overflow-y-auto p-3 pt-0">
 				{ children }
 			</div>
 		</section>

@@ -13,6 +13,7 @@ import {
 	Package,
 	Wallet,
 } from 'lucide-react';
+import { Fragment } from 'react';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -129,6 +130,14 @@ const PRO_WIDGET_ICONS: Readonly< Record< string, LucideIcon > > = {
  * `erp_hr_v2_dashboard` PHP filter; the free dashboard knows nothing about the
  * module — it just paints the stats row and/or item list it was handed.
  */
+/** Colored status pill for item rows (Approved / Pending / Rejected …). */
+const TONE_PILL: Readonly< Record< string, string > > = {
+	success: 'bg-success/10 text-success',
+	warning: 'bg-warning-light text-warning-on-light',
+	destructive: 'bg-destructive/10 text-destructive',
+	muted: 'bg-muted text-muted-foreground',
+};
+
 export function ProWidget( {
 	widget,
 }: {
@@ -136,6 +145,8 @@ export function ProWidget( {
 } ): JSX.Element {
 	const Icon =
 		( widget.icon && PRO_WIDGET_ICONS[ widget.icon ] ) || Briefcase;
+	const featured = widget.stats?.filter( ( s ) => s.featured ) ?? [];
+	const stats = widget.stats?.filter( ( s ) => ! s.featured ) ?? [];
 	const hasStats = ( widget.stats?.length ?? 0 ) > 0;
 	const hasItems = ( widget.items?.length ?? 0 ) > 0;
 
@@ -149,14 +160,31 @@ export function ProWidget( {
 					: undefined
 			}
 		>
-			{ hasStats ? (
-				<div className="grid grid-cols-2 gap-2 p-2">
-					{ widget.stats?.map( ( s, i ) => (
+			{ /* Featured stat — a full-width highlighted box (e.g. Open Openings). */ }
+			{ featured.map( ( s, i ) => (
+				<div
+					key={ `f-${ i }` }
+					className="mx-2 mb-3 flex items-baseline gap-3 rounded-lg border border-border bg-card px-4 py-3.5"
+				>
+					<span className="text-2xl font-bold leading-7 text-primary">
+						{ s.value }
+					</span>
+					<span className="text-sm text-muted-foreground">
+						{ s.label }
+					</span>
+				</div>
+			) ) }
+
+			{ /* Regular stats. A small set (≤4) is ONE bordered box with an inset
+			   divider between cells (Figma); a funnel (≥5) is separate tiles. */ }
+			{ stats.length >= 5 ? (
+				<div className="grid grid-cols-5 gap-3 p-2">
+					{ stats.map( ( s, i ) => (
 						<div
 							key={ i }
-							className="rounded-lg bg-muted/40 px-3 py-2.5"
+							className="rounded-lg border border-border bg-card px-4 py-3.5 text-center"
 						>
-							<p className="text-2xl font-bold leading-7 text-foreground">
+							<p className="text-2xl font-bold leading-7 text-primary">
 								{ s.value }
 							</p>
 							<p className="truncate text-xs text-muted-foreground">
@@ -165,16 +193,67 @@ export function ProWidget( {
 						</div>
 					) ) }
 				</div>
+			) : stats.length ? (
+				<div className="mx-2 mb-2 flex items-stretch rounded-lg border border-border bg-card">
+					{ stats.map( ( s, i ) => (
+						<Fragment key={ i }>
+							{ i > 0 ? (
+								<div
+									aria-hidden="true"
+									className="my-3 w-px shrink-0 bg-border"
+								/>
+							) : null }
+							<div className="min-w-0 flex-1 px-4 py-3.5">
+								<p className="text-2xl font-bold leading-7 text-primary">
+									{ s.value }
+								</p>
+								<p className="truncate text-xs text-muted-foreground">
+									{ s.label }
+								</p>
+							</div>
+						</Fragment>
+					) ) }
+				</div>
+			) : null }
+
+			{ /* Optional sub-heading above the list (e.g. "Recent Requests"). */ }
+			{ hasItems && widget.itemsTitle ? (
+				<p className="px-3 pt-2 pb-1 text-sm font-bold text-foreground">
+					{ widget.itemsTitle }
+				</p>
 			) : null }
 
 			{ hasItems ? (
 				<ul>
 					{ widget.items?.map( ( it, i ) => {
+						const pillCls =
+							( it.tone ? TONE_PILL[ it.tone ] : undefined ) ??
+							'bg-muted text-muted-foreground';
 						const row = (
 							<>
-								<span className="min-w-0 truncate text-sm font-medium text-foreground">
-									{ it.label }
-								</span>
+								{ it.avatar_url !== undefined ? (
+									<PersonAvatar
+										name={ it.label }
+										src={ it.avatar_url }
+									/>
+								) : null }
+								<div className="min-w-0 flex-1">
+									<p className="truncate text-sm font-medium text-foreground">
+										{ it.label }
+									</p>
+									{ it.sub ? (
+										<p className="truncate text-xs text-muted-foreground">
+											{ it.sub }
+										</p>
+									) : null }
+								</div>
+								{ it.status ? (
+									<span
+										className={ `shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${ pillCls }` }
+									>
+										{ it.status }
+									</span>
+								) : null }
 								{ it.meta ? (
 									<span className="shrink-0 text-xs text-muted-foreground">
 										{ it.meta }
@@ -188,12 +267,12 @@ export function ProWidget( {
 									<Link
 										to={ it.to }
 										viewTransition
-										className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
+										className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
 									>
 										{ row }
 									</Link>
 								) : (
-									<div className="flex items-center justify-between gap-3 rounded-lg px-3 py-2">
+									<div className="flex items-center gap-3 rounded-lg px-3 py-2">
 										{ row }
 									</div>
 								) }

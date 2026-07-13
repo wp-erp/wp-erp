@@ -82,13 +82,22 @@ export interface DashboardCharts {
 export interface DashboardProStat {
 	readonly label: string;
 	readonly value: number | string;
+	/** Render as a full-width highlighted box (e.g. recruitment "Open Openings"). */
+	readonly featured?: boolean;
 }
 
 /** A list row inside a pro widget (e.g. a recent candidate). */
 export interface DashboardProItem {
-	readonly label: string;
-	readonly meta?: string;
-	readonly to?:   string;
+	readonly label:       string;
+	readonly meta?:       string;
+	readonly to?:         string;
+	/** Optional secondary line under the label (e.g. a designation). */
+	readonly sub?:        string;
+	/** Optional avatar for people rows. */
+	readonly avatar_url?: string;
+	/** Optional status pill text + tone (e.g. Approved / Pending / Rejected). */
+	readonly status?:     string;
+	readonly tone?:       'success' | 'warning' | 'destructive' | 'muted';
 }
 
 /**
@@ -105,6 +114,8 @@ export interface DashboardProWidget {
 	readonly to?:    string;
 	readonly stats?: readonly DashboardProStat[];
 	readonly items?: readonly DashboardProItem[];
+	/** Optional sub-heading above the item list (e.g. "Recent Requests"). */
+	readonly itemsTitle?: string;
 	/** Empty-state text when there is nothing to show. */
 	readonly empty?: string;
 }

@@ -44,24 +44,17 @@ function monthTick( ym: string ): string {
 interface ChartCardProps {
 	readonly icon:      LucideIcon;
 	readonly title:     string;
-	readonly subtitle?: string;
 	readonly className?: string;
 	readonly children:  React.ReactNode;
 }
 
-function ChartCard( { icon: Icon, title, subtitle, className, children }: ChartCardProps ): JSX.Element {
+function ChartCard( { title, className, children }: ChartCardProps ): JSX.Element {
 	return (
-		<section className={ `flex flex-col rounded-lg bg-card shadow-sm ${ className ?? '' }` }>
-			<header className="flex items-center gap-2.5 border-b border-border px-6 py-4">
-				<span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-					<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
-				</span>
-				<div>
-					<h2 className="text-base font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
-					{ subtitle ? <p className="text-xs text-muted-foreground">{ subtitle }</p> : null }
-				</div>
+		<section className={ `flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40 ${ className ?? '' }` }>
+			<header className="flex items-center gap-2.5 px-6 pt-6 pb-3">
+				<h2 className="text-base font-semibold leading-none tracking-normal text-foreground">{ title }</h2>
 			</header>
-			<div className="flex-1 p-6">{ children }</div>
+			<div className="flex-1 p-6 pt-2">{ children }</div>
 		</section>
 	);
 }
@@ -116,7 +109,6 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 			<ChartCard
 				icon={ TrendingUp }
 				title={ __( 'Headcount Trend', 'erp' ) }
-				subtitle={ __( 'Active employees, last 12 months', 'erp' ) }
 				className="lg:col-span-2"
 			>
 				<ChartContainer config={ HEADCOUNT_CONFIG } className="h-[240px] w-full">
@@ -198,7 +190,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 
 			{ /* Leave status donut — managers only */ }
 			{ isManager ? (
-				<ChartCard icon={ CalendarClock } title={ __( 'Leave Requests', 'erp' ) } subtitle={ __( 'This financial year', 'erp' ) }>
+				<ChartCard icon={ CalendarClock } title={ __( 'Leave Requests', 'erp' ) }>
 					{ leaveData.length === 0 ? (
 						<EmptyChart text={ __( 'No leave requests yet.', 'erp' ) } />
 					) : (
