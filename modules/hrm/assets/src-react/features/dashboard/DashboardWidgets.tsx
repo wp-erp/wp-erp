@@ -150,8 +150,10 @@ const TONE_PILL: Readonly< Record< string, string > > = {
 
 export function ProWidget( {
 	widget,
+	className,
 }: {
 	widget: DashboardProWidget;
+	className?: string;
 } ): JSX.Element {
 	const Icon =
 		( widget.icon && PRO_WIDGET_ICONS[ widget.icon ] ) || Briefcase;
@@ -169,6 +171,7 @@ export function ProWidget( {
 					? { label: __( 'View', 'erp' ), to: widget.to }
 					: undefined
 			}
+			className={ className }
 		>
 			{ /* Featured stat — a full-width highlighted box (e.g. Open Openings). */ }
 			{ featured.map( ( s, i ) => (

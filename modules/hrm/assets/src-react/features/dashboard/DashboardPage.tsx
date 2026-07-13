@@ -250,6 +250,21 @@ function DashboardInner(): JSX.Element {
 		</WidgetCard>
 	);
 
+	// Figma module row: the Recruitment card pairs half-and-half with Latest
+	// Announcements, and the remaining module cards (Reimbursement, Asset,
+	// Payroll) share the next row. Split the pro widgets accordingly.
+	const PAIR_BASIS = 'xl:!basis-[calc(50%-0.75rem)]';
+	const PRO_TAIL_ORDER = [ 'reimbursement', 'asset', 'payroll' ];
+	const proWidgetsList = data?.pro_widgets ?? [];
+	const recruitmentWidget = proWidgetsList.find( ( w ) => w.id === 'recruitment' );
+	const otherProWidgets = proWidgetsList
+		.filter( ( w ) => w.id !== 'recruitment' )
+		.sort( ( a, b ) => {
+			const ai = PRO_TAIL_ORDER.indexOf( a.id );
+			const bi = PRO_TAIL_ORDER.indexOf( b.id );
+			return ( ai === -1 ? 99 : ai ) - ( bi === -1 ? 99 : bi );
+		} );
+
 	return (
 		<section className="mx-auto w-full max-w-full">
 			{ /* Greeting hero — plain on the page panel (Figma), no card. */ }
@@ -512,13 +527,17 @@ function DashboardInner(): JSX.Element {
 							</WidgetCard>
 						) : null }
 
-						{ /* Pro-module widgets — appended via the `erp_hr_v2_dashboard`
-						   PHP filter; render only the ones active modules contributed. */ }
-						{ data?.pro_widgets?.map( ( w ) => (
-							<ProWidget key={ w.id } widget={ w } />
-						) ) }
+						{ /* Recruitment card — pairs half-and-half with Latest
+						   Announcements in the module row (Figma). */ }
+						{ recruitmentWidget ? (
+							<ProWidget
+								key={ recruitmentWidget.id }
+								widget={ recruitmentWidget }
+								className={ PAIR_BASIS }
+							/>
+						) : null }
 
-						{ /* Latest announcements */ }
+						{ /* Latest announcements — half width beside Recruitment. */ }
 						<WidgetCard
 							icon={ Megaphone }
 							title={ __( 'Latest Announcements', 'erp' ) }
@@ -530,6 +549,7 @@ function DashboardInner(): JSX.Element {
 									  }
 									: undefined
 							}
+							className={ isManager ? PAIR_BASIS : undefined }
 						>
 							{ ( data?.announcements.length ?? 0 ) === 0 ? (
 								<EmptyRow
@@ -598,6 +618,12 @@ function DashboardInner(): JSX.Element {
 								</ul>
 							) }
 						</WidgetCard>
+
+						{ /* Remaining module cards (Reimbursement, Asset, Payroll)
+						   share the next row (Figma). */ }
+						{ otherProWidgets.map( ( w ) => (
+							<ProWidget key={ w.id } widget={ w } />
+						) ) }
 
 						{ /* Employees: Headcount Trend joins the flexible card row
 						   (managers show it in the analytics section instead). */ }
