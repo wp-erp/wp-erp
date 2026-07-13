@@ -25,10 +25,20 @@ export interface TopBarRightItem {
 	readonly render:   () => ReactNode;
 }
 
+/** Search + theme toggle joined in one bordered group with a full-height divider. */
+function SearchThemeSegment(): JSX.Element {
+	return (
+		<div className="inline-flex items-center rounded-md border border-border bg-card">
+			<SearchTrigger />
+			<span aria-hidden="true" className="self-stretch w-px bg-border" />
+			<ThemeToggle />
+		</div>
+	);
+}
+
 const DEFAULTS: readonly TopBarRightItem[] = [
-	{ id: 'erp-hr/search-trigger', weight: 10, render: () => <SearchTrigger /> },
-	{ id: 'erp-hr/theme-toggle',   weight: 20, render: () => <ThemeToggle /> },
-	{ id: 'erp-hr/user-menu',      weight: 99, render: () => <UserMenu /> },
+	{ id: 'erp-hr/search-theme', weight: 10, render: () => <SearchThemeSegment /> },
+	{ id: 'erp-hr/user-menu',    weight: 99, render: () => <UserMenu /> },
 ];
 
 export function RightCluster(): JSX.Element {

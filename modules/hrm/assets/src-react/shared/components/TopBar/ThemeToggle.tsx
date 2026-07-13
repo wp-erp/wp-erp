@@ -21,7 +21,7 @@ export function ThemeToggle(): JSX.Element {
 			pressed={ isDark }
 			aria-label={ isDark ? __( 'Switch to light mode', 'erp' ) : __( 'Switch to dark mode', 'erp' ) }
 			onPressedChange={ () => setMode( isDark ? 'light' : 'dark' ) }
-			className="size-9 rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+			className="size-9 rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 		>
 			{ isDark ? (
 				<Sun size={ 16 } strokeWidth={ 1.75 } aria-hidden="true" />

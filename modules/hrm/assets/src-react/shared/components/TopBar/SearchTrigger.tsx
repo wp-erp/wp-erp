@@ -182,7 +182,7 @@ export function SearchTrigger(): JSX.Element {
 				type="button"
 				onClick={ () => setOpen( true ) }
 				aria-label={ __( 'Search', 'erp' ) }
-				className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+				className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 			>
 				<Search size={ 16 } strokeWidth={ 1.9 } aria-hidden="true" />
 			</button>
