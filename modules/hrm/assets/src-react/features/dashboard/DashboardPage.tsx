@@ -154,6 +154,17 @@ function DashboardInner(): JSX.Element {
 	const summary = data?.summary;
 	const isManager = data?.is_hr_manager ?? false;
 
+	// Per-card flex classes (applied to every card individually — NOT via a `*:`
+	// blanket on the container). A blanket `*:flex-[33%]` is `!important` under
+	// the `.pui-root` scope and, being a later-emitted child-variant utility,
+	// always beat any per-card override → the half/half pair collapsed to 3-across
+	// on wide screens. One rule per element removes that fight entirely. `min-w-0`
+	// stops a card's intrinsic content width (e.g. the recruitment funnel) from
+	// forcing an early wrap, so the grid is pure-% and identical on every screen.
+	const CARD_BASE = 'min-w-0 flex-[1_1_100%] md:flex-[1_1_calc(50%-0.75rem)] xl:flex-[1_1_calc(33.333%-1rem)]';
+	const PAIR_BASIS = 'min-w-0 flex-[1_1_100%] md:flex-[1_1_calc(50%-0.75rem)] xl:flex-[1_1_calc(50%-0.75rem)]';
+	const FULL_BASIS = 'min-w-0 flex-[1_1_100%]';
+
 	// Pro self-service widgets (e.g. Attendance punch card) appended via the
 	// `erp_hr.dashboard.widgets` filter; applied lazily so pro bundles that load
 	// after the free app are included. They drop straight into the card grid.
@@ -169,6 +180,7 @@ function DashboardInner(): JSX.Element {
 		<WidgetCard
 			icon={ Cake }
 			title={ __( 'Birthdays', 'erp' ) }
+			className={ CARD_BASE }
 			count={
 				( data?.birthdays_today.length ?? 0 ) +
 				( data?.birthdays_upcoming.length ?? 0 )
@@ -210,6 +222,7 @@ function DashboardInner(): JSX.Element {
 		<WidgetCard
 			icon={ PalmtreeIcon }
 			title={ __( 'Upcoming Holidays', 'erp' ) }
+			className={ CARD_BASE }
 			action={
 				canManageLeave
 					? { label: __( 'All', 'erp' ), to: '/leave/holidays' }
@@ -253,7 +266,6 @@ function DashboardInner(): JSX.Element {
 	// Figma module row: the Recruitment card pairs half-and-half with Latest
 	// Announcements, and the remaining module cards (Reimbursement, Asset,
 	// Payroll) share the next row. Split the pro widgets accordingly.
-	const PAIR_BASIS = 'xl:!basis-[calc(50%-0.75rem)]';
 	const PRO_TAIL_ORDER = [ 'reimbursement', 'asset', 'payroll' ];
 	const proWidgetsList = data?.pro_widgets ?? [];
 	const recruitmentWidget = proWidgetsList.find( ( w ) => w.id === 'recruitment' );
@@ -385,12 +397,12 @@ function DashboardInner(): JSX.Element {
 					{ /* Flexible card row: 3 per row on desktop, but the last row's
 					   cards grow to fill the width so there is never a ragged gap —
 					   works for any number of cards (pro modules, About-to-End, etc.). */ }
-					<div className="mt-8 flex flex-wrap gap-6 *:flex-[1_1_100%] md:*:flex-[1_1_calc(50%-0.75rem)] xl:*:flex-[1_1_calc(33.333%-1rem)]">
+					<div className="mt-8 flex flex-wrap gap-6">
 						{ /* Who's out */ }
 						<WidgetCard
 							icon={ CalendarClock }
 							title={ __( 'Who’s Out', 'erp' ) }
-							count={ data?.on_leave.length }
+							count={ data?.on_leave.length } className={ CARD_BASE }
 							action={
 								canManageLeave
 									? {
@@ -484,7 +496,7 @@ function DashboardInner(): JSX.Element {
 										0 ) +
 									( data?.about_to_end?.trainee.length ?? 0 )
 								}
-								className="xl:basis-full!"
+								className={ FULL_BASIS }
 							>
 								{ ( data?.about_to_end?.contract.length ?? 0 ) >
 								0 ? (
@@ -550,7 +562,7 @@ function DashboardInner(): JSX.Element {
 									  }
 									: undefined
 							}
-							className={ isManager ? PAIR_BASIS : undefined }
+							className={ recruitmentWidget ? PAIR_BASIS : CARD_BASE }
 						>
 							{ ( data?.announcements.length ?? 0 ) === 0 ? (
 								<EmptyRow
@@ -623,13 +635,13 @@ function DashboardInner(): JSX.Element {
 						{ /* Remaining module cards (Reimbursement, Asset, Payroll)
 						   share the next row (Figma). */ }
 						{ otherProWidgets.map( ( w ) => (
-							<ProWidget key={ w.id } widget={ w } />
+							<ProWidget key={ w.id } widget={ w } className={ CARD_BASE } />
 						) ) }
 
 						{ /* Employees: Headcount Trend joins the flexible card row
 						   (managers show it in the analytics section instead). */ }
 						{ ! isManager && data ? (
-							<HeadcountTrendCard data={ data.charts.headcount_trend } />
+							<HeadcountTrendCard data={ data.charts.headcount_trend } className={ CARD_BASE } />
 						) : null }
 					</div>
 
