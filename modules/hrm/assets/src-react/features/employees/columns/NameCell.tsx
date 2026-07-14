@@ -23,12 +23,12 @@ export function NameCell( { row }: NameCellProps ): JSX.Element {
 				{ row.avatar_url ? <AvatarImage src={ row.avatar_url } alt="" /> : null }
 				<AvatarFallback>{ initials }</AvatarFallback>
 			</Avatar>
-			<div className="flex flex-col leading-tight">
-				<span className="text-sm font-semibold text-foreground">
+			<div className="flex min-w-0 flex-col leading-tight">
+				<span className="whitespace-nowrap text-sm font-semibold text-foreground">
 					{ row.full_name || row.email }
 				</span>
 				{ subtitle ? (
-					<span className="text-xs text-muted-foreground">{ subtitle }</span>
+					<span className="whitespace-nowrap text-xs text-muted-foreground">{ subtitle }</span>
 				) : null }
 			</div>
 		</div>

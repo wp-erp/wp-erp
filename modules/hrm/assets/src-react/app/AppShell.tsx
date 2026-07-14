@@ -44,11 +44,17 @@ export function AppShell(): JSX.Element {
 		? 'flex-1'
 		: 'erp-hr-panel flex-1 px-6 py-4 lg:px-12 lg:py-6';
 
+	// Keep the gray canvas full-bleed (bg lives on <main>) but cap the actual
+	// content column at 1400px, centered, so wide screens don't stretch pages.
+	const innerClass = chromeless ? undefined : 'mx-auto w-full max-w-[1400px]';
+
 	const content = (
 		<main className={ mainClass }>
 			<ErrorBoundary>
 				<EmployeeActionsProvider>
-					<Outlet />
+					<div className={ innerClass }>
+						<Outlet />
+					</div>
 				</EmployeeActionsProvider>
 			</ErrorBoundary>
 		</main>

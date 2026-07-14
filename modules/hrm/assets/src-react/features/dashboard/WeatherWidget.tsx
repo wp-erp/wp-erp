@@ -16,12 +16,9 @@ import {
 	CloudRain,
 	CloudSnow,
 	CloudSun,
-	Droplets,
 	MapPin,
 	Moon,
-	RefreshCw,
 	Sun,
-	Thermometer,
 } from 'lucide-react';
 import type { ComponentType, JSX, SVGProps } from 'react';
 
@@ -113,7 +110,6 @@ export function WeatherWidget( { embedded = false }: WeatherWidgetProps ): JSX.E
 	}
 
 	const { label, Icon, tint } = describe( data.code, data.isDay );
-	const refreshing = status === 'loading';
 
 	return (
 		<div className={ shell }>
@@ -141,29 +137,6 @@ export function WeatherWidget( { embedded = false }: WeatherWidgetProps ): JSX.E
 				</div>
 			</div>
 
-			<div className="ml-1.5 hidden flex-col gap-1.5 border-l border-border pl-4 text-xs leading-none text-muted-foreground sm:flex">
-				<span className="inline-flex items-center gap-1.5 whitespace-nowrap" title={ __( 'Feels like', 'erp' ) }>
-					<Thermometer size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
-					{ Math.round( data.feelsC ) }°
-				</span>
-				<span className="inline-flex items-center gap-1.5 whitespace-nowrap" title={ __( 'Humidity', 'erp' ) }>
-					<Droplets size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
-					{ Math.round( data.humidity ) }%
-				</span>
-			</div>
-
-			<Button
-				variant="ghost"
-				size="icon"
-				type="button"
-				onClick={ retry }
-				disabled={ refreshing }
-				aria-label={ __( 'Refresh weather', 'erp' ) }
-				title={ __( 'Refresh weather', 'erp' ) }
-				className="ml-0.5 size-7 shrink-0 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-60"
-			>
-				<RefreshCw size={ 14 } strokeWidth={ 2 } aria-hidden="true" className={ refreshing ? 'animate-spin' : '' } />
-			</Button>
 		</div>
 	);
 }

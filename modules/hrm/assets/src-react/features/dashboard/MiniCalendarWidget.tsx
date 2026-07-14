@@ -7,11 +7,10 @@
  */
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@wedevs/plugin-ui';
-import { ChevronLeft, ChevronRight, ArrowUpRight, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useSelect } from '@wordpress/data';
 import { useMemo, useState } from 'react';
 import type { JSX } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useCan } from '@/shared/hooks/useCan';
 import { useModalParam } from '@/shared/useModalParam';
@@ -150,16 +149,15 @@ export function MiniCalendarWidget(): JSX.Element {
 
 	return (
 		<>
-		<section className="flex h-full w-full flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40">
+		<section className="flex h-full w-full flex-col rounded-[10px] border border-border bg-card shadow-sm">
 			{ /* Header: title + Today / month nav (Figma) + View shortcut. */ }
 			<header className="flex flex-wrap items-center justify-between gap-3 px-6 pt-6 pb-4">
-				<h2 className="m-0 text-base font-semibold leading-none tracking-normal text-foreground">
-					{ canManageLeave ? __( 'Team Calendar', 'erp' ) : __( 'My Calendar', 'erp' ) }
-				</h2>
-				<div className="flex items-center gap-2">
-					{ /* Take a Leave — self-service leave request (legacy dashboard
-					   leave-calendar had this button); opens the form locked to the
-					   current user. */ }
+				<div className="flex items-center gap-3">
+					<h2 className="m-0 text-base font-semibold leading-none tracking-normal text-foreground">
+						{ canManageLeave ? __( 'Team Calendar', 'erp' ) : __( 'My Calendar', 'erp' ) }
+					</h2>
+					{ /* Take a Leave — self-service leave request; opens the form
+					   locked to the current user. Sits beside the title (left). */ }
 					<button
 						type="button"
 						onClick={ () => setTakeLeave( 'new' ) }
@@ -168,6 +166,8 @@ export function MiniCalendarWidget(): JSX.Element {
 						<Plus size={ 15 } aria-hidden="true" />
 						{ __( 'Take a Leave', 'erp' ) }
 					</button>
+				</div>
+				<div className="flex items-center gap-2">
 					<button
 						type="button"
 						onClick={ () =>
@@ -199,15 +199,6 @@ export function MiniCalendarWidget(): JSX.Element {
 							<ChevronRight size={ 16 } aria-hidden="true" />
 						</button>
 					</div>
-					{ /* View shortcut — pushed to the far right end of the header. */ }
-					<Link
-						to="/leave/calendar"
-						viewTransition
-						className="ml-1 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-					>
-						{ __( 'View', 'erp' ) }
-						<ArrowUpRight size={ 13 } aria-hidden="true" />
-					</Link>
 				</div>
 			</header>
 

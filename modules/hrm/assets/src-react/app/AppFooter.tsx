@@ -18,7 +18,7 @@ export function AppFooter(): JSX.Element {
 			role="contentinfo"
 			className="border-t border-border bg-card"
 		>
-			<div className="mx-auto flex w-full max-w-full flex-wrap items-center justify-between gap-3 px-6 py-3 text-xs text-muted-foreground">
+			<div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center justify-between gap-3 px-6 py-3 text-xs text-muted-foreground">
 				<span>
 					{ __( '© ', 'erp' ) }{ year }{ ' ' }
 					{ __( 'WP-ERP HR', 'erp' ) }

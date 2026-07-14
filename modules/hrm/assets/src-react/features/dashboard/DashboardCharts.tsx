@@ -50,7 +50,7 @@ interface ChartCardProps {
 
 function ChartCard( { title, className, children }: ChartCardProps ): JSX.Element {
 	return (
-		<section className={ `flex flex-col rounded-lg bg-card shadow-sm ring-1 ring-border/40 ${ className ?? '' }` }>
+		<section className={ `flex flex-col rounded-[10px] border border-border bg-card shadow-sm ${ className ?? '' }` }>
 			<header className="flex items-center gap-2.5 px-6 pt-6 pb-3">
 				<h2 className="text-base font-semibold leading-none tracking-normal text-foreground">{ title }</h2>
 			</header>

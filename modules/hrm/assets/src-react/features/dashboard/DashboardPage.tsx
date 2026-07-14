@@ -29,6 +29,8 @@ import {
 	Hourglass,
 	Megaphone,
 	PalmtreeIcon,
+	RefreshCw,
+	UserCheck,
 	Users,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -43,11 +45,11 @@ import type { MeUser } from '@/stores/me/types';
 
 import {
 	EmptyRow,
-	LiveTime,
 	StatCard,
 	WidgetCard,
 } from './DashboardCards';
 import { ChartsSection, HeadcountTrendCard } from './DashboardCharts';
+import { WeatherWidget } from './WeatherWidget';
 import {
 	AboutToEndItem,
 	BirthdayItem,
@@ -57,7 +59,6 @@ import {
 import { parseServerDate } from '@/shared/utils/date';
 import { fmtDate, greeting } from './format';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
-import { WeatherWidget } from './WeatherWidget';
 import {
 	fetchAnnouncement,
 	markAnnouncementRead,
@@ -90,7 +91,7 @@ function holidayBadge( iso: string | null ): { day: string; mon: string } {
 }
 
 function DashboardInner(): JSX.Element {
-	const { data, loading, error } = useDashboard();
+	const { data, loading, error, reload } = useDashboard();
 	const user = useSelect(
 		( select ) =>
 			(
@@ -304,12 +305,20 @@ function DashboardInner(): JSX.Element {
 							month: 'long',
 							day: 'numeric',
 						} ) }
-						<span aria-hidden="true">·</span>
-						<LiveTime />
 					</p>
 				</div>
-				<div className="relative">
+				<div className="flex items-center gap-3">
 					<WeatherWidget embedded />
+					<button
+						type="button"
+						onClick={ () => void reload() }
+						disabled={ loading }
+						aria-label={ __( 'Refresh dashboard', 'erp' ) }
+						title={ __( 'Refresh dashboard', 'erp' ) }
+						className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+					>
+						<RefreshCw className={ `size-4 ${ loading ? 'animate-spin' : '' }` } />
+					</button>
 				</div>
 			</header>
 
@@ -328,16 +337,25 @@ function DashboardInner(): JSX.Element {
 					   the left, the self-service My Attendance / Attendance Status rail
 					   on the right — the rail sits at the top, level with the stat
 					   cards (not pushed below a full-width stat row). */ }
-					<div className={ `grid grid-cols-1 gap-6 ${ proSelfWidgets.length > 0 ? 'xl:grid-cols-3' : '' }` }>
-						<div className={ `flex flex-col gap-6 ${ proSelfWidgets.length > 0 ? 'xl:col-span-2' : '' }` }>
+					<div className="flex flex-col gap-6 xl:flex-row">
+						<div className="flex min-w-0 flex-1 flex-col gap-6">
 					{ /* Summary stat cards */ }
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 						<StatCard
 							icon={ Users }
-							label={ __( 'Active Employees', 'erp' ) }
+							label={ __( 'Employees', 'erp' ) }
 							value={ summary?.total_employees ?? 0 }
 							tint="bg-primary/10 text-primary"
 							to={ canListEmployees ? '/employees' : undefined }
+						/>
+						<StatCard
+							icon={ UserCheck }
+							label={ __( 'Present Today', 'erp' ) }
+							value={ Math.max(
+								0,
+								( summary?.total_employees ?? 0 ) - ( data?.on_leave.length ?? 0 )
+							) }
+							tint="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
 						/>
 						<StatCard
 							icon={ Building2 }
@@ -356,7 +374,7 @@ function DashboardInner(): JSX.Element {
 						{ isManager ? (
 							<StatCard
 								icon={ Clock4 }
-								label={ __( 'Pending Approvals', 'erp' ) }
+								label={ __( 'Request', 'erp' ) }
 								value={ summary?.pending_requests ?? 0 }
 								tint="bg-warning-light text-warning-on-light"
 								to="/leave/requests"
@@ -385,7 +403,7 @@ function DashboardInner(): JSX.Element {
 						{ /* Right rail (Figma): self-service My Attendance + Attendance
 						   Status, aligned to the top of the section. */ }
 						{ proSelfWidgets.length > 0 ? (
-							<div className="flex flex-col gap-6">
+							<div className="flex flex-col gap-6 xl:w-[300px] xl:shrink-0">
 								{ proSelfWidgets.map( ( Widget, i ) => (
 									<Widget key={ `self-${ i }` } />
 								) ) }
