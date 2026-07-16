@@ -55,7 +55,8 @@ export function ApproveRejectSplit( { onApprove, onReject, disabled, extraItems 
 				/>
 				<DropdownMenuContent align="end" className="min-w-40">
 					<DropdownMenuItem
-						className="gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+						variant="destructive"
+						className="gap-2"
 						onClick={ onReject }
 					>
 						<X size={ 14 } aria-hidden="true" />

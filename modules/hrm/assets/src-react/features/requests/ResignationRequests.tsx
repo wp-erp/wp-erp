@@ -183,7 +183,8 @@ export function ResignationRequests(): JSX.Element {
                                                         onReject={() => act(r.id, "reject")}
                                                         extraItems={
                                                             <DropdownMenuItem
-                                                                className="gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+                                                                variant="destructive"
+                            className="gap-2"
                                                                 onClick={() => act(r.id, "delete")}
                                                             >
                                                                 <Trash2 size={14} aria-hidden="true" />

@@ -449,6 +449,7 @@ export function LeaveRequestsTable( {
 												{ /* Reverse moderation — reject an approved request, or approve a rejected one (legacy list-table behaviour). */ }
 												{ req.status === 1 ? (
 													<DropdownMenuItem
+														variant="destructive"
 														className="gap-2"
 														onClick={ () =>
 															onModerate(
