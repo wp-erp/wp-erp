@@ -31,11 +31,17 @@ export const tables = {
     acctProducts: t('erp_acct_products'),
     acctLedger: t('erp_acct_ledger'),
     acctJournals: t('erp_acct_journals'),
+    acctProductCategories: t('erp_acct_product_categories'),
+
+    // Security-suite oracles
+    hrEmployeePerformance: t('erp_hr_employee_performance'),
+    crmSaveSearch: t('erp_crm_save_search'),
 
     // WP core
     users: t('users'),
     userMeta: t('usermeta'),
     options: t('options'),
+    posts: t('posts'),
 } as const;
 
 /** WP ERP options (mostly php-serialized arrays). */

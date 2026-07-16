@@ -87,6 +87,16 @@ final class Accounting {
             $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
             $pdf_install = new PDFInstall();
 
+            // Installing/activating a plugin is a state-changing action; require a
+            // valid nonce so it cannot be triggered via a CSRF GET link.
+            if ( $action === 'install' || $action === 'active' ) {
+                $nonce = isset( $_GET['_wpnonce'] ) ? sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+                if ( ! wp_verify_nonce( $nonce, 'erp-pdf-action' ) ) {
+                    wp_die( esc_html__( 'Security check failed.', 'erp' ) );
+                }
+            }
+
             if ( $action === 'install' ) {
                 $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.zip' );
             } elseif ( $action === 'active' ) {
@@ -117,13 +127,18 @@ final class Accounting {
 
         $actual_link = "{$host}{$uri}";
 
+        // Build the action link with a nonce so the install/activate handler
+        // (which now requires it) accepts the click but rejects CSRF requests.
+        $action_link = esc_url(
+            wp_nonce_url( "{$actual_link}{$sign}erp-pdf={$type}", 'erp-pdf-action' )
+        );
+
         echo '<div class="updated notice is-dismissible notice-pdf"><p>';
         echo wp_kses_post( sprintf(
-            // translators: %1$s: 'install' or 'active', %2$s: link, %3$s: type
-            __( 'Please %1$s <a href="%2$serp-pdf=%3$s">WP ERP PDF</a> extension to get PDF export feature.', 'erp' ),
+            // translators: %1$s: 'install' or 'active', %2$s: link.
+            __( 'Please %1$s <a href="%2$s">WP ERP PDF</a> extension to get PDF export feature.', 'erp' ),
             $type === 'install' ? __( 'install', 'erp' ) : __( 'active', 'erp' ),
-            $actual_link . $sign,
-            $type
+            $action_link
         ) );
         echo '</p></div>';
     }

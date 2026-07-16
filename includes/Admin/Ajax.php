@@ -583,13 +583,24 @@ class Ajax {
             return;
         }
 
+        // Audit-log entries span HR/CRM/accounting changes and are an admin-only
+        // view; the shared 'erp-nonce' is not an authorization control.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $log_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
         if ( ! $log_id ) {
             $this->send_error();
         }
 
-        $log       = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
+        $log = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
+
+        if ( ! $log ) {
+            $this->send_error( __( 'Audit log entry does not exist.', 'erp' ) );
+        }
+
         $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
         $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
         ob_start(); ?>
@@ -815,7 +826,11 @@ class Ajax {
             return;
         }
 
-        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+        // Bulk-importing every WP user as a CRM contact is a CRM-manager operation.
+        // The previous condition (! manager && agent) was inverted: it let any
+        // user who was NOT a CRM agent (e.g. no CRM role at all) pass. Block
+        // everyone who is not a CRM manager.
+        if ( ! erp_crm_is_current_user_manager() ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -937,10 +952,21 @@ class Ajax {
             return;
         }
 
+        // Creating/updating REST API credentials (and binding them to an arbitrary
+        // user_id) is an administrator-only operation; the nonce alone is not an
+        // authorization control.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
             $api_key = \WeDevs\ERP\Framework\Models\APIKey::find( $id );
+
+            if ( ! $api_key ) {
+                $this->send_error( __( 'API key does not exist.', 'erp' ) );
+            }
 
             $api_key->update( [
                 'name'    => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
@@ -973,10 +999,20 @@ class Ajax {
             return;
         }
 
+        // Deleting REST API credentials is administrator-only; the shared
+        // 'erp-nonce' is localized on every admin page and is not authorization.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
-            APIKey::find( $id )->delete();
+            $api_key = APIKey::find( $id );
+
+            if ( $api_key ) {
+                $api_key->delete();
+            }
         }
 
         $this->send_success();
