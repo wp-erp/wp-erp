@@ -358,7 +358,10 @@ final class WeDevs_ERP {
     public function plugin_action_links( $links ) {
         $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp' ) . '</a>';
         $links[] = '<a target="_blank" href="https://wperp.com/documentation/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">' . __( 'Docs', 'erp' ) . '</a>';
-        $links[] = '<a target="_blank" href="https://wperp.com/pricing/?nocache=&utm_source=plugindashboard&utm_medium=upgradetopro&utm_campaign=pluginlist" style="font-weight:bold; color:#17b517;">' . __( 'Upgrade to Pro', 'erp' ) . '</a>';
+
+        if ( ! defined( 'ERP_PRO_PLUGIN_VERSION' ) ) {
+            $links[] = '<a target="_blank" href="https://wperp.com/pricing/?nocache=&utm_source=plugindashboard&utm_medium=upgradetopro&utm_campaign=pluginlist" style="font-weight:bold; color:#17b517;">' . __( 'Upgrade to Pro', 'erp' ) . '</a>';
+        }
         $links[] = '<a target="_blank" href="https://wperp.com/contact/">' . __( 'Get Support', 'erp' ) . '</a>';
 
         return $links;
