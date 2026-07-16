@@ -21,6 +21,7 @@ import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
+import { useModalParam } from '@/shared/useModalParam';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { LeaveRequestsPage } from '../leave-requests';
@@ -44,8 +45,12 @@ function RequestsInner(): JSX.Element {
 	];
 	const tabs = applyFilters( HOOKS.REQUEST_TABS, baseTabs ) as RequestTab[];
 
-	const [ active, setActive ] = useState( tabs[ 0 ]?.id ?? 'leave' );
-	const current = tabs.find( ( t ) => t.id === active ) ?? tabs[ 0 ];
+	// The active tab lives in the hash query (`?tab=<id>`) so a refresh keeps it
+	// and the tab is deep-linkable. Resolved at render rather than mirrored into
+	// state: a pro tab id in the URL then settles once its bundle registers the
+	// tab, instead of being stuck on the fallback.
+	const [ tabParam, setTabParam ] = useModalParam( 'tab' );
+	const current = tabs.find( ( t ) => t.id === tabParam ) ?? tabs[ 0 ];
 	const ActiveEl = current?.element ?? LeaveRequestsPage;
 	const [ actionSlotEl, setActionSlotEl ] = useState< HTMLDivElement | null >( null );
 
@@ -81,7 +86,7 @@ function RequestsInner(): JSX.Element {
 								role="tab"
 								type="button"
 								aria-selected={ selected }
-								onClick={ () => setActive( tab.id ) }
+								onClick={ () => setTabParam( tab.id ) }
 								className={ [
 									'inline-flex shrink-0 flex-none items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
 									selected ? 'bg-card text-primary shadow-sm ring-primary/40' : 'text-muted-foreground hover:text-foreground',
