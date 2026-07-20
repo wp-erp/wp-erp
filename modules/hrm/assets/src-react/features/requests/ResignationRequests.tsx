@@ -35,6 +35,7 @@ import { __ } from "@/shared/i18n";
 import { request, restPath } from "@/shared/utils/apiFetch";
 import type { ApiError } from "@/shared/utils/apiFetch";
 import { useEmployeeSearch } from "@/features/employees/hooks/useEmployeeSearch";
+import { todayLocalYmd } from '@/shared/utils/date';
 
 interface ResignRow {
     readonly id: number;
@@ -240,7 +241,7 @@ function NewResignationDialog({
     const employee = useEmployeeSearch(true, undefined, employeeId);
     const [reasons, setReasons] = useState<ReasonOption[]>([]);
     const [reason, setReason] = useState("");
-    const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+    const [date, setDate] = useState(todayLocalYmd());
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {

@@ -30,11 +30,12 @@ import { DateField } from '@/shared/DateField';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
+import { todayLocalYmd } from '@/shared/utils/date';
 
 interface ReasonOption { readonly value: string; readonly label: string }
 type Kind = 'resignation' | 'remote_work' | null;
 
-const today = (): string => new Date().toISOString().slice( 0, 10 );
+const today = (): string => todayLocalYmd();
 
 /**
  * The two self-service request buttons, sized to sit beside the profile "Edit"

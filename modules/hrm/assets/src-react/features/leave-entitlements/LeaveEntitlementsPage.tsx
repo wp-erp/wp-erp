@@ -33,6 +33,7 @@ import { LeaveEntitlementsFilters } from './LeaveEntitlementsFilters';
 import { LeaveEntitlementsTable } from './LeaveEntitlementsTable';
 import type { Entitlement, EntitlementAssignInput, FinancialYearOption, IdOption, StringOption } from './types';
 import { useEntitlements } from './useEntitlements';
+import { todayLocalYmd } from '@/shared/utils/date';
 
 function LeaveEntitlementsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
@@ -99,7 +100,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 			setFinancialYears( list );
 			if ( ! didDefaultYear.current ) {
 				didDefaultYear.current = true;
-				const today   = new Date().toISOString().slice( 0, 10 );
+				const today   = todayLocalYmd();
 				const current = list.find( ( fy ) => fy.start_date.slice( 0, 10 ) <= today && today <= fy.end_date.slice( 0, 10 ) );
 				if ( current ) {
 					setYear( current.id );

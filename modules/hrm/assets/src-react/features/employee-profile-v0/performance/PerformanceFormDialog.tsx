@@ -27,6 +27,7 @@ import { __ } from '@/shared/i18n';
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
 import { RATING_OPTIONS } from '../options';
+import { toLocalYmd } from '@/shared/utils/date';
 
 export type PerformanceType = 'reviews' | 'comments' | 'goals';
 
@@ -57,7 +58,7 @@ interface FormState {
 
 function todayISO(): string {
 	const d = new Date();
-	return Number.isNaN( d.getTime() ) ? '' : d.toISOString().slice( 0, 10 );
+	return Number.isNaN( d.getTime() ) ? '' : toLocalYmd( d );
 }
 
 function emptyForm(): FormState {

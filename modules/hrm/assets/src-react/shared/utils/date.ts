@@ -78,3 +78,29 @@ export function formatCalendarDate( value: string | null | undefined, fallback =
 	}
 	return dateI18n( 'M j, Y', `${ match[ 0 ] }T12:00:00Z`, true );
 }
+
+/**
+ * Format a Date as `YYYY-MM-DD` using its **local** calendar fields.
+ *
+ * The mirror of `parseServerDate`, and the reason it exists: `toISOString()`
+ * converts to UTC first, so at 20:00 in Dhaka it reports tomorrow's date and at
+ * 19:00 in Los Angeles it reports yesterday's. Both directions are wrong, just
+ * at different hours. Reading the local fields is always the day the user sees.
+ * @param date
+ */
+export function toLocalYmd( date: Date ): string {
+	if ( Number.isNaN( date.getTime() ) ) {
+		return '';
+	}
+	const pad = ( n: number ): string => String( n ).padStart( 2, '0' );
+	const month = pad( date.getMonth() + 1 );
+	const day = pad( date.getDate() );
+	return `${ date.getFullYear() }-${ month }-${ day }`;
+}
+
+/**
+ * Today as `YYYY-MM-DD` in the browser's own timezone.
+ */
+export function todayLocalYmd(): string {
+	return toLocalYmd( new Date() );
+}

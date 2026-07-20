@@ -35,6 +35,7 @@ import { __ } from "@/shared/i18n";
 import { request, restPath } from "@/shared/utils/apiFetch";
 import type { ApiError } from "@/shared/utils/apiFetch";
 import { useEmployeeSearch } from "@/features/employees/hooks/useEmployeeSearch";
+import { todayLocalYmd } from '@/shared/utils/date';
 
 interface RemoteRow {
     readonly id: number;
@@ -254,8 +255,8 @@ function NewRemoteWorkDialog({
     const [reasons, setReasons] = useState<ReasonOption[]>([]);
     const [reason, setReason] = useState("");
     const [other, setOther] = useState("");
-    const [from, setFrom] = useState(new Date().toISOString().slice(0, 10));
-    const [to, setTo] = useState(new Date().toISOString().slice(0, 10));
+    const [from, setFrom] = useState(todayLocalYmd());
+    const [to, setTo] = useState(todayLocalYmd());
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {

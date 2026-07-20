@@ -9,6 +9,7 @@ import { __ } from '@/shared/i18n';
 import type { LookupOption } from '../../employees/filters/lookups';
 import type { Option } from '../options';
 import { PAY_CHANGE_REASON_OPTIONS, PAY_TYPE_OPTIONS, STATUS_OPTIONS, TYPE_OPTIONS } from '../options';
+import { toLocalYmd } from '@/shared/utils/date';
 import type {
 	CompensationHistory,
 	EmploymentHistory,
@@ -42,7 +43,7 @@ export function todayISO(): string {
 	if ( Number.isNaN( d.getTime() ) ) {
 		return '';
 	}
-	return d.toISOString().slice( 0, 10 );
+	return toLocalYmd( d );
 }
 
 export function emptyForm(): FormState {
