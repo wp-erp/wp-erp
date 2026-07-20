@@ -129,6 +129,10 @@ export function DateRangeField( {
 		return from || to ? { from, to } : undefined;
 	} )();
 
+	const shownRange = value.from && value.to
+		? `${ value.from } → ${ value.to }`
+		: value.from || value.to;
+
 	const picker = (
 		<DateRangePicker
 			mode="range"
@@ -142,13 +146,18 @@ export function DateRangeField( {
 			}
 			{ ...( rangeValue ? { value: rangeValue } : {} ) }
 			{ ...( wpLocale ? { wpLocale } : {} ) }
-			trigger={ ( { value: shown } ) => (
+			// Render our own strings rather than the picker's formatted label —
+			// see the note in `DateField`: it formats through `dateI18n` (site
+			// timezone) a Date we built at browser-local midnight, so the label
+			// slips a day whenever the two zones straddle midnight. `→` matches
+			// the picker's own range separator.
+			trigger={ () => (
 				<div className="relative">
 					<Input
 						type="text"
 						readOnly
 						disabled={ disabled }
-						value={ shown ?? '' }
+						value={ shownRange }
 						placeholder={ placeholder }
 						className={ `cursor-pointer pe-9 ${ className ?? '' }` }
 					/>

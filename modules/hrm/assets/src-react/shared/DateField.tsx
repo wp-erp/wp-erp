@@ -76,13 +76,20 @@ export function DateField( {
 			{ ...( dateVal ? { value: dateVal } : {} ) }
 			{ ...( wpLocale ? { wpLocale } : {} ) }
 			{ ...( calendarProps ? { calendarProps } : {} ) }
-			trigger={ ( { value: shown } ) => (
+			// Render our own `value`, not the picker's formatted string. The
+			// picker formats via `dateI18n`, which converts the instant into the
+			// *site* timezone — but `toDate()` built that Date at *browser*-local
+			// midnight. When the two zones straddle midnight the label lands a day
+			// off (site UTC + browser UTC+6 showed 2026-01-01 as "2025-12-31").
+			// These are calendar dates, not instants, so no conversion is correct.
+			// Same class of bug as the leave-year one fixed in #1540.
+			trigger={ () => (
 				<div className="relative">
 					<Input
 						type="text"
 						readOnly
 						disabled={ disabled }
-						value={ shown ?? '' }
+						value={ value }
 						placeholder={ placeholder }
 						className={ `cursor-pointer pe-9 ${ className ?? '' }` }
 					/>

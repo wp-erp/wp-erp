@@ -15,7 +15,8 @@ import { NavLink } from 'react-router-dom';
 
 import { makeInitials } from '@/shared/components/PersonCell';
 import { useCan } from '@/shared/hooks/useCan';
-import { __, dateI18n, sprintf } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
+import { formatCalendarDate } from '@/shared/utils/date';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeListItem, EmployeesState } from '@/stores/employees';
 
@@ -124,7 +125,7 @@ export function EmployeesGrid(): JSX.Element {
 							<div className="flex items-center justify-between gap-2 border-t border-border pt-3 text-sm">
 								<span className="truncate text-xs text-muted-foreground">
 									{ row.hire_date
-										? sprintf( __( 'Joined %s', 'erp' ), dateI18n( 'M j, Y', row.hire_date ) )
+										? sprintf( __( 'Joined %s', 'erp' ), formatCalendarDate( row.hire_date ) )
 										: ' ' }
 								</span>
 								{ canView ? (

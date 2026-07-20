@@ -15,7 +15,8 @@ import {
 import { MoreVertical, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
-import { __, dateI18n, sprintf } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
+import { formatCalendarDate } from '@/shared/utils/date';
 
 import type { Entitlement, FinancialYearOption } from './types';
 
@@ -51,8 +52,8 @@ export function LeaveEntitlementsTable( {
 		if ( ! fy || ( ! fy.start_date && ! fy.end_date ) ) {
 			return '';
 		}
-		const a = fy.start_date ? dateI18n( 'M j, Y', fy.start_date ) : '…';
-		const b = fy.end_date ? dateI18n( 'M j, Y', fy.end_date ) : '…';
+		const a = fy.start_date ? formatCalendarDate( fy.start_date ) : '…';
+		const b = fy.end_date ? formatCalendarDate( fy.end_date ) : '…';
 		return `${ a } – ${ b }`;
 	}
 

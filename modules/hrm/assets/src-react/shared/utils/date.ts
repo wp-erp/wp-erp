@@ -9,6 +9,8 @@
  * constructor assume UTC. Full ISO datetimes (with time/offset) are left alone.
  */
 
+import { dateI18n } from '@/shared/i18n';
+
 const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 /**
@@ -44,4 +46,35 @@ export function formatDisplayDate( value: string | null | undefined, fallback = 
 		return fallback;
 	}
 	return date.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
+}
+
+/**
+ * Human "Mon D, YYYY" label for a **calendar date** (`YYYY-MM-DD`), in the
+ * WordPress locale.
+ *
+ * `dateI18n( 'M j, Y', '2026-01-01' )` is wrong for this: it treats the string
+ * as an instant at browser-local midnight, then re-renders it in the *site*
+ * timezone, so the label lands a day off whenever the two zones straddle
+ * midnight (site UTC + browser UTC+6 showed Jan 1 as "Dec 31, 2025"). A
+ * calendar date has no timezone, so the conversion is meaningless either way —
+ * the same class of bug as the leave-year one fixed in #1540.
+ *
+ * Pinning to UTC noon and forcing UTC rendering removes the conversion: no real
+ * offset (+14 to -12) can push noon across a day boundary. Use this for stored
+ * dates like hire dates and leave-year bounds; keep `dateI18n` for genuine
+ * instants such as `created_at`, where the timezone shift is the correct
+ * behaviour.
+ * @param value
+ * @param fallback
+ */
+export function formatCalendarDate( value: string | null | undefined, fallback = '—' ): string {
+	if ( ! value ) {
+		return fallback;
+	}
+	const match = DATE_ONLY.exec( value.trim() );
+	if ( ! match ) {
+		// Not a bare calendar date — an instant, so let dateI18n localise it.
+		return dateI18n( 'M j, Y', value );
+	}
+	return dateI18n( 'M j, Y', `${ match[ 0 ] }T12:00:00Z`, true );
 }
