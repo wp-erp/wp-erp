@@ -6,7 +6,9 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@wedevs/plugin-ui';
 import type { JSX } from 'react';
+import { NavLink } from 'react-router-dom';
 
+import { useCan } from '@/shared/hooks/useCan';
 import type { EmployeeListItem } from '@/stores/employees';
 
 interface NameCellProps {
@@ -14,8 +16,12 @@ interface NameCellProps {
 }
 
 export function NameCell( { row }: NameCellProps ): JSX.Element {
+	// Same gate the grid's "View details" link and the row's "View profile"
+	// action use, so the link never renders where the route would reject it.
+	const canView  = useCan( 'erp_list_employee' );
 	const initials = makeInitials( row.full_name || row.email );
 	const subtitle = row.designation?.name ?? row.department?.name ?? '';
+	const name     = row.full_name || row.email;
 
 	return (
 		<div className="flex items-center gap-3">
@@ -24,9 +30,19 @@ export function NameCell( { row }: NameCellProps ): JSX.Element {
 				<AvatarFallback>{ initials }</AvatarFallback>
 			</Avatar>
 			<div className="flex min-w-0 flex-col leading-tight">
-				<span className="whitespace-nowrap text-sm font-semibold text-foreground">
-					{ row.full_name || row.email }
-				</span>
+				{ canView ? (
+					<NavLink
+						to={ `/employees/${ row.user_id }` }
+						viewTransition
+						className="whitespace-nowrap text-sm font-semibold text-foreground hover:text-primary hover:underline"
+					>
+						{ name }
+					</NavLink>
+				) : (
+					<span className="whitespace-nowrap text-sm font-semibold text-foreground">
+						{ name }
+					</span>
+				) }
 				{ subtitle ? (
 					<span className="whitespace-nowrap text-xs text-muted-foreground">{ subtitle }</span>
 				) : null }

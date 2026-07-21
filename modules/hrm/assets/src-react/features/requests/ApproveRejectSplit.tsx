@@ -26,8 +26,12 @@ interface ApproveRejectSplitProps {
 }
 
 export function ApproveRejectSplit( { onApprove, onReject, disabled, extraItems }: ApproveRejectSplitProps ): JSX.Element {
+	// `overflow-hidden` on the group is load-bearing: the segments are ghost
+	// Buttons whose hover/open background is a square box, and the chevron's
+	// `size="icon"` can win over `h-full`. Without clipping, that grey paints
+	// over the 1px border and past the rounded corners instead of inside them.
 	return (
-		<div className="inline-flex h-9 items-center rounded-md border border-border bg-background shadow-sm">
+		<div className="inline-flex h-9 items-center overflow-hidden rounded-md border border-border bg-background shadow-sm">
 			<Button
 				type="button"
 				variant="ghost"
@@ -53,7 +57,13 @@ export function ApproveRejectSplit( { onApprove, onReject, disabled, extraItems 
 						</Button>
 					}
 				/>
-				<DropdownMenuContent align="end" className="min-w-40">
+				{ /*
+				  * The menu anchors to the chevron alone (plugin-ui sets
+				  * `w-(--anchor-width)`), so `align="end"` grows it leftwards from
+				  * the group's right edge. Keep min-width under the ~139px group
+				  * width or the overhang renders outside the split button's border.
+				  */ }
+				<DropdownMenuContent align="end" className="min-w-32">
 					<DropdownMenuItem
 						variant="destructive"
 						className="gap-2"

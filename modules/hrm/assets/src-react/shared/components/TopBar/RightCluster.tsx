@@ -28,7 +28,7 @@ export interface TopBarRightItem {
 /** Search + theme toggle joined in one bordered group with a full-height divider. */
 function SearchThemeSegment(): JSX.Element {
 	return (
-		<div className="inline-flex items-center rounded-md border border-border bg-card">
+		<div className="inline-flex items-center overflow-hidden rounded-md border border-border bg-card">
 			<SearchTrigger />
 			<span aria-hidden="true" className="self-stretch w-px bg-border" />
 			<ThemeToggle />

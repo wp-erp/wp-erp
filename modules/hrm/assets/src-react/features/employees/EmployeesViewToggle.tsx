@@ -20,7 +20,7 @@ interface EmployeesViewToggleProps {
 
 export function EmployeesViewToggle( { value, onChange }: EmployeesViewToggleProps ): JSX.Element {
 	return (
-		<div role="group" aria-label={ __( 'View', 'erp' ) } className="inline-flex h-10 items-center gap-0.5 rounded-md border border-border bg-card p-0.5">
+		<div role="group" aria-label={ __( 'View', 'erp' ) } className="inline-flex h-10 items-center gap-0.5 overflow-hidden rounded-md border border-border bg-card p-0.5">
 			<ToggleButton
 				active={ value === 'list' }
 				label={ __( 'List view', 'erp' ) }
