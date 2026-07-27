@@ -5,7 +5,7 @@
  * so a TopBar crash doesn't kill the route content (and vice versa).
  */
 
-import { Outlet, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import type { JSX } from 'react';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -17,6 +17,7 @@ import { useNavLayout } from '@/shared/hooks/useNavLayout';
 import { EmployeeActionsProvider } from '@/features/employees/actions/EmployeeActionsContext';
 
 import { AppFooter } from './AppFooter';
+import { PageTransition } from './PageTransition';
 
 /**
  * Routes that own their own full-bleed background (no shell padding, no gray
@@ -53,7 +54,7 @@ export function AppShell(): JSX.Element {
 			<ErrorBoundary>
 				<EmployeeActionsProvider>
 					<div className={ innerClass }>
-						<Outlet />
+						<PageTransition />
 					</div>
 				</EmployeeActionsProvider>
 			</ErrorBoundary>

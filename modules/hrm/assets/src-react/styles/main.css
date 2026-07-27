@@ -514,6 +514,64 @@ body:has(#erp-hr-app) {
 	}
 }
 
+/* ── Page transitions ─────────────────────────────────────────────────
+ * Each page fades in and its top-level sections cascade, so a route change
+ * arrives rather than snaps. Ported from WP Project Manager; the class is
+ * applied by `app/PageTransition.tsx`, which re-keys on pathname so React
+ * remounts the subtree and the animation replays.
+ *
+ * `> * > *` reaches the page's own sections: the wrapper div, then the
+ * children a page renders. Delays are capped at the sixth — past that the
+ * reader is waiting on chrome.
+ *
+ * The `:has()` rule is the important one. Dashboard cards and list tables
+ * already stagger themselves via `.erp-card-in`; without this a section
+ * containing them would slide as a block AND its cards would stagger inside
+ * it, which reads as two competing animations. A section that animates its
+ * own children sits this one out.
+ *
+ * Overlays portal out of the page and must never inherit page motion —
+ * guarded in case one ever renders inline. */
+.erp-page-transition > * > * {
+	animation: erp-page-in 380ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+
+.erp-page-transition > * > *:nth-child( 1 ) { animation-delay: 30ms; }
+.erp-page-transition > * > *:nth-child( 2 ) { animation-delay: 75ms; }
+.erp-page-transition > * > *:nth-child( 3 ) { animation-delay: 120ms; }
+.erp-page-transition > * > *:nth-child( 4 ) { animation-delay: 165ms; }
+.erp-page-transition > * > *:nth-child( 5 ) { animation-delay: 210ms; }
+.erp-page-transition > * > *:nth-child( n + 6 ) { animation-delay: 240ms; }
+
+/* A section that already cascades its own cards does not also slide. */
+.erp-page-transition > * > *:has( .erp-card-in ) {
+	animation: none;
+}
+
+.erp-page-transition [role="dialog"],
+.erp-page-transition [data-radix-popper-content-wrapper],
+.erp-page-transition [data-sonner-toaster] {
+	animation: none !important;
+}
+
+@keyframes erp-page-in {
+	from {
+		opacity: 0;
+		transform: translateY( 10px );
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	.erp-page-transition > * > * {
+		animation: none;
+	}
+}
+
 /* ── Toast body drain ─────────────────────────────────────────────────
  * The whole toast body is the timer: a tinted layer that scales away over
  * the toast's own duration, so time-remaining is readable at a glance
