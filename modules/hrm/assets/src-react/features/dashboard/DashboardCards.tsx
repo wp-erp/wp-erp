@@ -68,7 +68,7 @@ export function StatCard( {
 	to,
 }: StatCardProps ): JSX.Element {
 	const body = (
-		<div className="group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/30">
+		<div className="erp-card-in group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/30">
 			<span
 				className={ `inline-flex size-8 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-105 ${ tint }` }
 			>
@@ -114,7 +114,7 @@ export function WidgetCard( {
 	children,
 }: WidgetCardProps ): JSX.Element {
 	return (
-		<section className={ `flex flex-col rounded-[10px] border border-border bg-card shadow-sm ${ className ?? '' }` }>
+		<section className={ `erp-card-in flex flex-col rounded-[10px] border border-border bg-card shadow-sm transition-shadow duration-200 hover:shadow-md ${ className ?? '' }` }>
 			<header className="flex items-center justify-between gap-3 px-6 pt-6 pb-4">
 				<h2 className="flex items-center gap-2 text-base font-semibold leading-none tracking-normal text-foreground">
 					{ title }

@@ -514,6 +514,47 @@ body:has(#erp-hr-app) {
 	}
 }
 
+/* ── Dashboard card entrance ──────────────────────────────────────────
+ * Cards fade up as the dashboard paints, staggered by their position in the
+ * grid so the eye is led across the layout instead of everything snapping in
+ * at once. The delay comes from `nth-child` rather than a prop, so a card only
+ * has to carry the class — no index plumbing through every call site.
+ *
+ * `both` matters: it holds the from-frame during the delay. Without it a card
+ * with a 250ms delay paints fully opaque first and then jumps back to 0 to
+ * start animating, which reads as a flicker.
+ *
+ * The whole block sits inside `prefers-reduced-motion: no-preference`, so a
+ * reader who has asked for less motion just gets the cards, already in place. */
+@media ( prefers-reduced-motion: no-preference ) {
+	@keyframes erp-card-in {
+		from {
+			opacity: 0;
+			transform: translateY( 10px );
+		}
+
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	.erp-card-in {
+		/* Decelerating curve — quick to leave, slow to settle. */
+		animation: erp-card-in 380ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+	}
+
+	.erp-card-in:nth-child( 2 ) { animation-delay: 45ms; }
+	.erp-card-in:nth-child( 3 ) { animation-delay: 90ms; }
+	.erp-card-in:nth-child( 4 ) { animation-delay: 135ms; }
+	.erp-card-in:nth-child( 5 ) { animation-delay: 180ms; }
+	.erp-card-in:nth-child( 6 ) { animation-delay: 225ms; }
+	.erp-card-in:nth-child( 7 ) { animation-delay: 270ms; }
+
+	/* Cap the stagger: past this the wait outweighs the effect. */
+	.erp-card-in:nth-child( n + 8 ) { animation-delay: 300ms; }
+}
+
 /* ─── react-day-picker month-transition keyframes (plugin-ui DatePicker) ───
  * plugin-ui enables react-day-picker's month-change slide in JS, but the
  * @keyframes + animation rules ship only in plugin-ui's own index.css — which

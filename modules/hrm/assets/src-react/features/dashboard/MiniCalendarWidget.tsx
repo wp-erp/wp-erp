@@ -150,7 +150,7 @@ export function MiniCalendarWidget(): JSX.Element {
 
 	return (
 		<>
-		<section className="flex h-full w-full flex-col rounded-[10px] border border-border bg-card shadow-sm">
+		<section className="erp-card-in flex h-full w-full flex-col rounded-[10px] border border-border bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
 			{ /* Header: title + Today / month nav (Figma) + View shortcut. */ }
 			<header className="flex flex-wrap items-center justify-between gap-3 px-6 pt-6 pb-4">
 				<div className="flex items-center gap-3">
