@@ -315,7 +315,16 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 	const policyPlaceholder = buildPolicyPlaceholder( employeeId, year, policiesLoading, policyOptions.length );
 
 	return (
-		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
+		<Dialog
+			open={ open }
+			// A part-filled leave request should not vanish on a stray click, and
+			// opening the Financial Year / Leave Policy quick-add reads to Base UI as
+			// exactly that — an outside press (it dismisses on pointer-DOWN, before
+			// any state or click handler runs, so no guard in here can see it coming).
+			// Close stays on Cancel, the X, and Escape.
+			disablePointerDismissal
+			onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }
+		>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
@@ -364,22 +373,25 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 					onClose={ onClose }
 					onSubmit={ ( e ) => void handleSubmit( e ) }
 				/>
-			</DialogContent>
 
-			<FinancialYearQuickAddDialog
-				open={ yearFormOpen }
-				onClose={ () => setYearFormOpen( false ) }
-				onCreated={ handleYearCreated }
-			/>
-			<LeavePolicyFormDialog
-				open={ policyFormOpen }
-				editing={ null }
-				options={ policyOptions_ }
-				busy={ policyBusy }
-				error={ policyError }
-				onClose={ () => setPolicyFormOpen( false ) }
-				onSubmit={ handlePolicySubmit }
-			/>
+				{ /* Rendered INSIDE the popup on purpose: Base UI treats a dialog
+				     nested in the parent popup as a child, so opening it no longer
+				     reads as an outside press and the request dialog stays put. */ }
+				<FinancialYearQuickAddDialog
+					open={ yearFormOpen }
+					onClose={ () => setYearFormOpen( false ) }
+					onCreated={ handleYearCreated }
+				/>
+				<LeavePolicyFormDialog
+					open={ policyFormOpen }
+					editing={ null }
+					options={ policyOptions_ }
+					busy={ policyBusy }
+					error={ policyError }
+					onClose={ () => setPolicyFormOpen( false ) }
+					onSubmit={ handlePolicySubmit }
+				/>
+			</DialogContent>
 		</Dialog>
 	);
 }
