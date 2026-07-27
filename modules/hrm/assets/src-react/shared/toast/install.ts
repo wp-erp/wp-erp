@@ -80,7 +80,12 @@ function cardFor( type: ToastType ): ToastFn {
 	return ( message, data = {} ) => {
 		const patchable = toast as unknown as PatchableToast;
 		const duration = data.duration ?? DURATION[ type ] ?? 4000;
-		const description = data.description ?? FALLBACK_DESCRIPTION[ type ]?.();
+		// The fallback line exists so a bare "Saved" is not the whole toast. A
+		// toast carrying a person already says who and what — "Lisa Miller was
+		// terminated." over "Your changes were saved." is just filler — so the
+		// fallback stands down there. An explicit description still wins.
+		const description =
+			data.description ?? ( data.user ? undefined : FALLBACK_DESCRIPTION[ type ]?.() );
 
 		return patchable.custom(
 			( id ) =>

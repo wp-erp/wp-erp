@@ -182,7 +182,8 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 			void run(
 				() => dispatch.terminateEmployee( employee.user_id, payload ),
 				sprintf( __( '%s was terminated.', 'erp' ), employee.full_name ),
-				__( 'Could not terminate the employee. Please try again.', 'erp' )
+				__( 'Could not terminate the employee. Please try again.', 'erp' ),
+				employee
 			);
 		},
 		[ pending, run, dispatch ]
