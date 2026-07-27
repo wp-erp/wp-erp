@@ -75,6 +75,15 @@ export function readLookup( key: LookupKey ): LookupOption[] | null {
 	return cache[ key ] ?? null;
 }
 
+/**
+ * Drop a cached lookup so the next `loadLookup()` refetches it — used after an
+ * inline "+ Add new" creates a department / designation / location, so every
+ * other select on the page picks the new row up too.
+ */
+export function invalidateLookup( key: LookupKey ): void {
+	delete cache[ key ];
+}
+
 interface RawEmployeeRow {
 	user_id?:     unknown;
 	id?:          unknown;

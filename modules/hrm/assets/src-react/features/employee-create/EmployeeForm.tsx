@@ -38,7 +38,9 @@ import { DepartmentFormDialog } from '../departments/DepartmentFormDialog';
 import type { Department, DepartmentInput } from '../departments/types';
 import { DesignationFormDialog } from '../designations/DesignationFormDialog';
 import type { Designation, DesignationInput } from '../designations/types';
-import { loadLookup } from '../employees/filters/lookups';
+import { invalidateLookup, loadLookup } from '../employees/filters/lookups';
+import { LocationFormDialog } from '../company-locations';
+import type { CreatedLocation } from '../company-locations';
 import type { LookupOption } from '../employees/filters/lookups';
 import { EmployeeBasicSection } from './EmployeeBasicSection';
 import { EmployeeFormAlerts } from './EmployeeFormAlerts';
@@ -165,6 +167,9 @@ export function EmployeeForm( {
 	const [ quickDesigErr, setQuickDesigErr ] = useState< string | null >(
 		null
 	);
+	// Locations have no HR screen of their own — the dialog posts straight to
+	// `POST /erp/v2/company-locations` and reports its own errors.
+	const [ quickLocationOpen, setQuickLocationOpen ] = useState( false );
 
 	// Pro-injected custom fields (Custom Field Builder). Empty when pro is absent.
 	const [ extraFields, setExtraFields ] = useState< ExtraField[] >( [] );
@@ -354,6 +359,16 @@ export function EmployeeForm( {
 			.finally( () => setQuickDesigBusy( false ) );
 	}
 
+	function handleQuickLocation( created: CreatedLocation ): void {
+		const opt: Option = { value: String( created.id ), label: created.title };
+		setLocations( ( prev ) => [ ...prev, opt ] );
+		set( 'location' )( opt.value );
+		// Every other Location select (filters, job dialogs) reads the shared
+		// lookup cache, so drop it rather than let them show a stale list.
+		invalidateLookup( 'locations' );
+		setQuickLocationOpen( false );
+	}
+
 	function validate(): boolean {
 		const next = validateEmployeeForm( form, mode, { userCheck } );
 		setErrors( next );
@@ -482,6 +497,8 @@ export function EmployeeForm( {
 							errors={ errors }
 							locations={ locations }
 							reporting={ reporting }
+							onAddLocation={ () => setQuickLocationOpen( true ) }
+							submitting={ submitting }
 							extra={
 								<ExtraFields
 									inline
@@ -563,6 +580,11 @@ export function EmployeeForm( {
 				error={ quickDesigErr }
 				onClose={ () => setQuickDesigOpen( false ) }
 				onSubmit={ handleQuickDesig }
+			/>
+			<LocationFormDialog
+				open={ quickLocationOpen }
+				onClose={ () => setQuickLocationOpen( false ) }
+				onCreated={ handleQuickLocation }
 			/>
 		</>
 	);

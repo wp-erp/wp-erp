@@ -64,6 +64,26 @@ function toLookups( rows: RawLookup[] | undefined, labelKey: 'name' | 'title' | 
 	return ( rows ?? [] ).map( ( r ) => ( { id: Number( r.id ), label: String( r[ labelKey ] ?? '' ) } ) );
 }
 
+/**
+ * Dropdown data for the policy create/edit form. Exported standalone so any
+ * host of `LeavePolicyFormDialog` (the policies page, the inline "+ Add New" in
+ * the leave-request dialog) fills it the same way.
+ */
+export async function loadPolicyFormOptions(): Promise< PolicyFormOptions > {
+	const raw = await request< RawFormOptions >( restPath( 'v2', '/leave-policies/form-options' ) );
+	return {
+		leaveTypes:      toLookups( raw.leave_types, 'name' ),
+		financialYears:  toLookups( raw.financial_years, 'fy_name' ),
+		currentFYear:    Number( raw.current_f_year ?? 0 ),
+		departments:     toLookups( raw.departments, 'title' ),
+		designations:    toLookups( raw.designations, 'title' ),
+		locations:       toLookups( raw.locations, 'title' ),
+		employeeTypes:   raw.employee_types ?? [],
+		genders:         raw.genders ?? [],
+		maritalStatuses: raw.marital_statuses ?? [],
+	};
+}
+
 export function useLeavePolicies( {
 	fYear,
 	departmentId,
@@ -127,20 +147,7 @@ export function useLeavePolicies( {
 		[ reload ]
 	);
 
-	const loadOptions = useCallback( async (): Promise< PolicyFormOptions > => {
-		const raw = await request< RawFormOptions >( restPath( 'v2', '/leave-policies/form-options' ) );
-		return {
-			leaveTypes:      toLookups( raw.leave_types, 'name' ),
-			financialYears:  toLookups( raw.financial_years, 'fy_name' ),
-			currentFYear:    Number( raw.current_f_year ?? 0 ),
-			departments:     toLookups( raw.departments, 'title' ),
-			designations:    toLookups( raw.designations, 'title' ),
-			locations:       toLookups( raw.locations, 'title' ),
-			employeeTypes:   raw.employee_types ?? [],
-			genders:         raw.genders ?? [],
-			maritalStatuses: raw.marital_statuses ?? [],
-		};
-	}, [] );
+	const loadOptions = useCallback( (): Promise< PolicyFormOptions > => loadPolicyFormOptions(), [] );
 
 	return { rows, total, loading, error, reload, getOne, save, remove, loadOptions };
 }

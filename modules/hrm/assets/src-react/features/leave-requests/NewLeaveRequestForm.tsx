@@ -22,6 +22,8 @@ import {
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
 import { __, sprintf } from '@/shared/i18n';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
+import { QuickAddButton } from '@/shared/components/QuickAddButton';
+import { useCan } from '@/shared/hooks/useCan';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 
@@ -41,6 +43,11 @@ interface NewLeaveRequestFormProps {
 	readonly year:             string;
 	readonly setYear:          ( value: string ) => void;
 	readonly yearOptions:      Option[];
+	readonly yearPlaceholder:  string;
+	/** Opens the inline "New Financial Year" dialog. */
+	readonly onAddYear:        () => void;
+	/** Opens the inline "New Leave Policy" dialog. */
+	readonly onAddPolicy:      () => void;
 	readonly entitlementError: string | null;
 	readonly entitled:         boolean;
 	readonly policy:           string;
@@ -76,6 +83,9 @@ export function NewLeaveRequestForm( {
 	year,
 	setYear,
 	yearOptions,
+	yearPlaceholder,
+	onAddYear,
+	onAddPolicy,
 	entitlementError,
 	entitled,
 	policy,
@@ -100,6 +110,12 @@ export function NewLeaveRequestForm( {
 	onClose,
 	onSubmit,
 }: NewLeaveRequestFormProps ): JSX.Element {
+	// Inline create needs the same gate the endpoints enforce: financial years
+	// are `erp_hr_manager`, leave policies `erp_leave_manage`. Anyone else keeps
+	// the read-only link to the setup screen.
+	const canManageYears    = useCan( 'erp_hr_manager' );
+	const canManagePolicies = useCan( 'erp_leave_manage' );
+
 	return (
 		<form onSubmit={ onSubmit } className="flex min-w-0 flex-col gap-4">
 			{ error ? (
@@ -126,19 +142,39 @@ export function NewLeaveRequestForm( {
 			{ hideFinancialYear ? null : (
 				<SelectField
 					id="leave_year"
-					labelAction={ <FieldSourceAction source="financialYears" /> }
+					labelAction={
+						canManageYears ? (
+							<QuickAddButton
+								label={ __( 'Add New', 'erp' ) }
+								onClick={ onAddYear }
+								disabled={ busy }
+							/>
+						) : (
+							<FieldSourceAction source="financialYears" />
+						)
+					}
 					label={ __( 'Financial Year', 'erp' ) }
 					required
 					options={ yearOptions }
 					value={ year }
 					onChange={ ( v ) => { setYear( v ); setPolicy( '' ); } }
-					placeholder={ __( '- Select -', 'erp' ) }
+					placeholder={ yearPlaceholder }
 				/>
 			) }
 			{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
 			<SelectField
 				id="leave_policy"
-				labelAction={ <FieldSourceAction source="leavePolicies" /> }
+				labelAction={
+					canManagePolicies ? (
+						<QuickAddButton
+							label={ __( 'Add New', 'erp' ) }
+							onClick={ onAddPolicy }
+							disabled={ busy }
+						/>
+					) : (
+						<FieldSourceAction source="leavePolicies" />
+					)
+				}
 				label={ __( 'Leave Policy', 'erp' ) }
 				required
 				disabled={ ! entitled }

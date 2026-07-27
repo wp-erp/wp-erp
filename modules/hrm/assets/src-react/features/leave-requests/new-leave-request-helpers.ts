@@ -28,12 +28,26 @@ export function toPolicyOptions( policies: readonly AssignablePolicy[] ): Option
 	} ) );
 }
 
-export function policyPlaceholder( employeeId: string, year: string, policiesLoading: boolean ): string {
+export function policyPlaceholder(
+	employeeId: string,
+	year: string,
+	policiesLoading: boolean,
+	policyCount = -1
+): string {
 	return ! employeeId
 		? __( 'Select an employee first', 'erp' )
 		: ! year
 		? __( 'Select a financial year first', 'erp' )
 		: policiesLoading
 		? __( 'Loading…', 'erp' )
+		: policyCount === 0
+		? __( 'No leave policy for this year — add one', 'erp' )
+		: __( '- Select -', 'erp' );
+}
+
+/** Empty financial-year list is a dead end, so say so rather than show a bare select. */
+export function yearPlaceholder( yearCount: number ): string {
+	return yearCount === 0
+		? __( 'No financial year yet — add one', 'erp' )
 		: __( '- Select -', 'erp' );
 }

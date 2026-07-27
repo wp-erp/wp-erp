@@ -30,6 +30,11 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
+import { FinancialYearQuickAddDialog } from '@/features/financial-years/FinancialYearQuickAddDialog';
+import type { FinancialYear } from '@/features/financial-years/types';
+import { LeavePolicyFormDialog } from '@/features/leave-policies/LeavePolicyFormDialog';
+import type { LeavePolicyInput, PolicyFormOptions } from '@/features/leave-policies/types';
+import { loadPolicyFormOptions } from '@/features/leave-policies/useLeavePolicies';
 
 import {
 	fetchAssignablePolicies,
@@ -43,6 +48,7 @@ import {
 	policyPlaceholder as buildPolicyPlaceholder,
 	toPolicyOptions,
 	toYearOptions,
+	yearPlaceholder as buildYearPlaceholder,
 } from './new-leave-request-helpers';
 import type { RawFinancialYear } from './new-leave-request-helpers';
 
@@ -76,6 +82,14 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 	const [ validating, setValidating ] = useState( false );
 	const [ validation, setValidation ] = useState< LeaveDateValidation | null >( null );
 	const [ dateError, setDateError ]   = useState< string | null >( null );
+
+	// Inline "+ Add New" for the two prerequisites this form dead-ends on when a
+	// site has neither: a financial year, and a policy the employee is entitled to.
+	const [ yearFormOpen, setYearFormOpen ]     = useState( false );
+	const [ policyFormOpen, setPolicyFormOpen ] = useState( false );
+	const [ policyOptions_, setPolicyFormOptions ] = useState< PolicyFormOptions | null >( null );
+	const [ policyBusy, setPolicyBusy ]         = useState( false );
+	const [ policyError, setPolicyError ]       = useState< string | null >( null );
 
 	// Pro-injected request fields (Advanced Leave half-day).
 	const [ extraFields, setExtraFields ] = useState< LeaveExtraField[] >( [] );
@@ -208,6 +222,63 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 	const yearOptions   = toYearOptions( years );
 	const policyOptions = toPolicyOptions( policies );
 
+	/** New year created inline — add it to the list and select it. */
+	function handleYearCreated( created: FinancialYear ): void {
+		setYears( ( prev ) => [
+			...prev.filter( ( y ) => Number( y.id ) !== Number( created.id ) ),
+			{ id: Number( created.id ), fy_name: created.fy_name },
+		] );
+		setYear( String( created.id ) );
+		setPolicy( '' );
+		setYearFormOpen( false );
+	}
+
+	/** Open the policy dialog, loading its dropdown data on first use. */
+	function openPolicyForm(): void {
+		setPolicyError( null );
+		setPolicyFormOpen( true );
+		if ( policyOptions_ ) {
+			return;
+		}
+		void loadPolicyFormOptions()
+			.then( ( opts ) => setPolicyFormOptions( opts ) )
+			.catch( ( raw ) =>
+				setPolicyError( ( raw as ApiError )?.message ?? __( 'Could not load the policy form.', 'erp' ) )
+			);
+	}
+
+	/**
+	 * Create the policy, then re-read the employee's assignable list. A policy
+	 * only shows up here once the employee is entitled to it, which is what
+	 * `apply_for_existing` on the payload takes care of for matching employees.
+	 */
+	function handlePolicySubmit( payload: LeavePolicyInput ): void {
+		setPolicyBusy( true );
+		setPolicyError( null );
+		void request< { id?: number } >( restPath( 'v2', '/leave-policies' ), { method: 'POST', data: payload } )
+			.then( async ( created ) => {
+				setPolicyFormOpen( false );
+				if ( ! userId || ! year ) {
+					return;
+				}
+				const list = await fetchAssignablePolicies( userId, Number( year ) );
+				setPolicies( list );
+				setEntitlementError(
+					list.length === 0
+						? __( 'Employee is not entitled to any leave policy. Set leave entitlement to apply for leave.', 'erp' )
+						: null
+				);
+				const match = list.find( ( p ) => Number( p.id ) === Number( created?.id ) );
+				if ( match ) {
+					setPolicy( String( match.id ) );
+				}
+			} )
+			.catch( ( raw ) =>
+				setPolicyError( ( raw as ApiError )?.message ?? __( 'Could not create the leave policy.', 'erp' ) )
+			)
+			.finally( () => setPolicyBusy( false ) );
+	}
+
 	async function handleSubmit( e: FormEvent ): Promise< void > {
 		e.preventDefault();
 		if ( ! userId || ! policy || ! from || ! to ) {
@@ -241,7 +312,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 	// matching the legacy Vue form.
 	const entitled = policies.length > 0;
 
-	const policyPlaceholder = buildPolicyPlaceholder( employeeId, year, policiesLoading );
+	const policyPlaceholder = buildPolicyPlaceholder( employeeId, year, policiesLoading, policyOptions.length );
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
@@ -266,6 +337,9 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 					year={ year }
 					setYear={ setYear }
 					yearOptions={ yearOptions }
+					yearPlaceholder={ buildYearPlaceholder( yearOptions.length ) }
+					onAddYear={ () => setYearFormOpen( true ) }
+					onAddPolicy={ openPolicyForm }
 					entitlementError={ entitlementError }
 					entitled={ entitled }
 					policy={ policy }
@@ -291,6 +365,21 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 					onSubmit={ ( e ) => void handleSubmit( e ) }
 				/>
 			</DialogContent>
+
+			<FinancialYearQuickAddDialog
+				open={ yearFormOpen }
+				onClose={ () => setYearFormOpen( false ) }
+				onCreated={ handleYearCreated }
+			/>
+			<LeavePolicyFormDialog
+				open={ policyFormOpen }
+				editing={ null }
+				options={ policyOptions_ }
+				busy={ policyBusy }
+				error={ policyError }
+				onClose={ () => setPolicyFormOpen( false ) }
+				onSubmit={ handlePolicySubmit }
+			/>
 		</Dialog>
 	);
 }

@@ -12,6 +12,8 @@ import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
+import { QuickAddButton } from '@/shared/components/QuickAddButton';
+import { useCan } from '@/shared/hooks/useCan';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 
@@ -31,6 +33,9 @@ interface EmployeeWorkSectionProps {
 	readonly errors:    Record< string, string >;
 	readonly locations: Option[];
 	readonly reporting: ReturnType< typeof useEmployeeSearch >;
+	/** Opens the inline "New Location" dialog. */
+	readonly onAddLocation: () => void;
+	readonly submitting:    boolean;
 	/** Pro custom fields for this section — rendered inside this card, legacy-style. */
 	readonly extra?:    JSX.Element | null;
 }
@@ -41,8 +46,14 @@ export function EmployeeWorkSection( {
 	errors,
 	locations,
 	reporting,
+	onAddLocation,
+	submitting,
 	extra,
 }: EmployeeWorkSectionProps ): JSX.Element {
+	// Work locations live on the company record, which the legacy Company page
+	// gates on `manage_options` — the same gate the create endpoint enforces.
+	const canAddLocation = useCan( 'manage_options' );
+
 	return (
 		<FormSection title={ __( 'Work', 'erp' ) }>
 			<SmartSelectField
@@ -56,7 +67,17 @@ export function EmployeeWorkSection( {
 					'Search locations…',
 					'erp'
 				) }
-				labelAction={ <FieldSourceAction source="locations" /> }
+				labelAction={
+					canAddLocation ? (
+						<QuickAddButton
+							label={ __( 'Add new', 'erp' ) }
+							onClick={ onAddLocation }
+							disabled={ submitting }
+						/>
+					) : (
+						<FieldSourceAction source="locations" />
+					)
+				}
 			/>
 			<SmartSelectField
 				id="reporting_to"
