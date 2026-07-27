@@ -482,7 +482,10 @@ class LeaveRequestsControllerV2 extends RestControllerV2 {
 			'message'      => (string) ( $row->message ?? '' ),
 			'color'        => (string) ( $row->color ?? '' ),
 			'f_year'       => $this->cast_int_or_null( $row->f_year ?? null ),
-			'created_at'   => $this->cast_date_iso( $row->created_at ?? null ),
+			// `erp_hr_leave_requests.created_at` is a unix timestamp, not a date
+			// string — `cast_date_iso()` bails on it (strtotime fails) and the
+			// "Requested On" column rendered an em dash. `ts_to_iso()` handles both.
+			'created_at'   => $this->ts_to_iso( $row->created_at ?? null ),
 			// F8 — moderator name + when + note (empty when still pending).
 			'approved_by'  => $approval['name'],
 			'approved_at'  => $approval['date'],
