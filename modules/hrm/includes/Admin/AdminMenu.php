@@ -265,6 +265,8 @@ class AdminMenu {
             $callback = $menu[ $section ]['submenu'][ $sub ]['callback'];
         }
 
+        $this->print_react_switch_banner();
+
         erp_render_menu( $component );
 
         call_user_func( $callback );
@@ -282,6 +284,13 @@ class AdminMenu {
     private function print_react_switch_banner() {
         $asset_path = WPERP_HRM_PATH . '/assets/dist-react/employees.asset.php';
         if ( ! file_exists( $asset_path ) ) {
+            return;
+        }
+
+        // router() also falls through to the legacy chrome when React *is* the
+        // resolved engine but its build artifact is unusable — offering a switch
+        // there would be a no-op round trip.
+        if ( UiEngineResolver::ENGINE_LEGACY !== UiEngineResolver::instance()->resolve_engine( 'erp-hr' ) ) {
             return;
         }
 

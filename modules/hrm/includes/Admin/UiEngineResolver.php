@@ -3,10 +3,14 @@
  * WP-ERP HR — UI engine resolver.
  *
  * Decides whether each redesigned HR admin page is served by the new React
- * engine or the legacy Vue/jQuery engine. Default = React. Users can opt into
- * legacy per page via a nonce-verified switch action; the preference is stored
- * in user-meta. Operators can force a site-wide engine via the `erp_hr_ui_engine`
- * site option.
+ * engine or the legacy Vue/jQuery engine.
+ *
+ * The site-wide default is install-aware: a brand-new install starts on React,
+ * while a site that upgraded into the redesign stays on the UI it already knows
+ * until someone opts in (stamped once as `erp_hr_ui_default_engine`). Users then
+ * switch either way per page via a nonce-verified switch action; the preference
+ * is stored in user-meta. Operators can force one engine for everybody via the
+ * `erp_hr_ui_engine` site option.
  *
  * Contract verified at openspec/changes/redesign-hr-free/ui-coexistence.md
  * (Resolution flow, Server-side wiring).
@@ -18,10 +22,11 @@ defined( 'ABSPATH' ) || exit;
 
 final class UiEngineResolver {
 
-	public const SWITCH_ACTION = 'switch_ui';
-	public const NONCE_NAME    = 'erp_switch_ui';
-	public const USERMETA_KEY  = 'erp_hr_ui_pref';
-	public const SITE_OPTION   = 'erp_hr_ui_engine';
+	public const SWITCH_ACTION  = 'switch_ui';
+	public const NONCE_NAME     = 'erp_switch_ui';
+	public const USERMETA_KEY   = 'erp_hr_ui_pref';
+	public const SITE_OPTION    = 'erp_hr_ui_engine';
+	public const DEFAULT_OPTION = 'erp_hr_ui_default_engine';
 
 	public const ENGINE_REACT  = 'react';
 	public const ENGINE_LEGACY = 'vue';
@@ -65,12 +70,35 @@ final class UiEngineResolver {
 	}
 
 	/**
+	 * Site-wide default engine for users who never touched the switch.
+	 *
+	 * `erp_hr_ui_default_engine` is stamped once, at install time
+	 * (WeDevsERPInstaller::activate()): 'react' for a brand-new install, 'vue'
+	 * for a site that already had ERP. When the stamp is missing the plugin was
+	 * updated in place without re-activation, which by definition means an
+	 * existing site — keep it on the UI it knows and persist that decision so
+	 * the derivation runs only once.
+	 */
+	public function default_engine(): string {
+		$default = (string) get_option( self::DEFAULT_OPTION, '' );
+		if ( in_array( $default, [ self::ENGINE_REACT, self::ENGINE_LEGACY ], true ) ) {
+			return $default;
+		}
+
+		$default = get_option( 'wp_erp_version' ) ? self::ENGINE_LEGACY : self::ENGINE_REACT;
+
+		update_option( self::DEFAULT_OPTION, $default );
+
+		return $default;
+	}
+
+	/**
 	 * Resolve which engine should render the given HR admin page slug.
 	 *
 	 * Resolution order (highest priority first):
 	 *   1. Site option `erp_hr_ui_engine` if forced to 'react' or 'vue'.
-	 *   2. User-meta `erp_hr_ui_pref[$key] === 'legacy'` → return 'vue'.
-	 *   3. Default → return 'react'.
+	 *   2. User-meta `erp_hr_ui_pref[$key]` — 'legacy' → 'vue', 'react' → 'react'.
+	 *   3. Install-aware site default (see default_engine()).
 	 *
 	 * The URL switch action is handled separately in handle_switch() and
 	 * performs a redirect; it does not return here.
@@ -81,17 +109,26 @@ final class UiEngineResolver {
 			return $forced;
 		}
 
+		$default = $this->default_engine();
+
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
-			return self::ENGINE_REACT;
+			return $default;
 		}
 
 		$prefs = (array) get_user_meta( $user_id, self::USERMETA_KEY, true );
 		$key   = $this->legacy_key_for_page( $page_slug );
+		$pref  = (string) ( $prefs[ $key ] ?? '' );
 
-		return ( ( $prefs[ $key ] ?? '' ) === 'legacy' )
-			? self::ENGINE_LEGACY
-			: self::ENGINE_REACT;
+		if ( 'legacy' === $pref ) {
+			return self::ENGINE_LEGACY;
+		}
+
+		if ( self::ENGINE_REACT === $pref ) {
+			return self::ENGINE_REACT;
+		}
+
+		return $default;
 	}
 
 	/**
@@ -134,11 +171,10 @@ final class UiEngineResolver {
 		$prefs = (array) get_user_meta( $user_id, self::USERMETA_KEY, true );
 		$key   = $this->legacy_key_for_page( $page );
 
-		if ( 'legacy' === $target ) {
-			$prefs[ $key ] = 'legacy';
-		} else {
-			unset( $prefs[ $key ] );
-		}
+		// Both directions are stored explicitly. An opt-in must survive on sites
+		// whose default is legacy — unsetting the key would silently bounce the
+		// user back to the old UI on the next request.
+		$prefs[ $key ] = ( 'legacy' === $target ) ? 'legacy' : self::ENGINE_REACT;
 
 		update_user_meta( $user_id, self::USERMETA_KEY, $prefs );
 
