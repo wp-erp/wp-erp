@@ -13,12 +13,13 @@ import { Link } from 'react-router-dom';
 
 import { initials } from './format';
 import type { LucideIcon } from './format';
+import { siteNow } from '@/shared/utils/date';
 
-/** Live wall-clock that re-renders every second. */
+/** Live wall-clock that re-renders every second, on the site's clock. */
 export function LiveTime(): JSX.Element {
-	const [ now, setNow ] = useState( () => new Date() );
+	const [ now, setNow ] = useState( () => siteNow() );
 	useEffect( () => {
-		const id = window.setInterval( () => setNow( new Date() ), 1000 );
+		const id = window.setInterval( () => setNow( siteNow() ), 1000 );
 		return () => window.clearInterval( id );
 	}, [] );
 	return (

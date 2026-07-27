@@ -27,7 +27,7 @@ import { __ } from '@/shared/i18n';
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
 import { RATING_OPTIONS } from '../options';
-import { toLocalYmd } from '@/shared/utils/date';
+import { siteToday, toLocalYmd } from '@/shared/utils/date';
 
 export type PerformanceType = 'reviews' | 'comments' | 'goals';
 
@@ -57,7 +57,7 @@ interface FormState {
 }
 
 function todayISO(): string {
-	const d = new Date();
+	const d = siteToday();
 	return Number.isNaN( d.getTime() ) ? '' : toLocalYmd( d );
 }
 

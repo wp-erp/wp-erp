@@ -9,6 +9,8 @@
  * constructor assume UTC. Full ISO datetimes (with time/offset) are left alone.
  */
 
+import { getSettings } from '@wordpress/date';
+
 import { dateI18n } from '@/shared/i18n';
 
 const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -103,4 +105,105 @@ export function toLocalYmd( date: Date ): string {
  */
 export function todayLocalYmd(): string {
 	return toLocalYmd( new Date() );
+}
+
+/**
+ * Today as **the site** sees it, as a calendar Date.
+ *
+ * ERP dates are company dates: a leave filed on the 27th is the 27th for the
+ * whole org, whatever zone the person filing it happens to sit in. So "today"
+ * — the ringed day in a calendar, the default month it opens on — must come
+ * from the WordPress site timezone, not the laptop's. An HR manager travelling
+ * through Los Angeles should still see the Dhaka office's today.
+ *
+ * The returned Date carries the site's Y/M/D in *local* fields, matching how
+ * every other calendar date in the app is built (`parseServerDate`) and read
+ * back (`toLocalYmd`). It is a calendar date, not an instant.
+ *
+ * Falls back to the browser's date when WP reports no usable timezone.
+ */
+/**
+ * The site's wall clock, as a Date carrying those fields **locally**.
+ *
+ * The company's clock, not the laptop's: the server stamps a punch, a payrun,
+ * an audit row in the WordPress timezone, so anything shown beside those must
+ * read from the same clock. An employee punching in from Lisbon on a Dhaka
+ * install should see Dhaka's 15:00, which is the time that lands in the row —
+ * not their own 09:00.
+ *
+ * Falls back to the browser clock when WP reports no usable timezone.
+ */
+export function siteNow(): Date {
+	const now = new Date();
+
+	try {
+		const timezone = getSettings().timezone;
+		const zone = timezone?.string ?? '';
+
+		if ( zone ) {
+			const parts = new Intl.DateTimeFormat( 'en-CA', {
+				timeZone: zone,
+				year:     'numeric',
+				month:    '2-digit',
+				day:      '2-digit',
+				hour:     '2-digit',
+				minute:   '2-digit',
+				second:   '2-digit',
+				hour12:   false,
+			} ).formatToParts( now );
+
+			const at = ( type: string ): number =>
+				Number( parts.find( ( p ) => p.type === type )?.value ?? NaN );
+
+			const year = at( 'year' );
+			const hour = at( 'hour' );
+			if ( ! Number.isNaN( year ) ) {
+				return new Date(
+					year,
+					at( 'month' ) - 1,
+					at( 'day' ),
+					// Some engines render midnight as "24" under hour12:false.
+					hour === 24 ? 0 : hour,
+					at( 'minute' ),
+					at( 'second' )
+				);
+			}
+		}
+
+		// Sites configured with a bare UTC offset ("UTC+6") report no IANA
+		// string — WP gives the offset in hours instead. Shift the instant by
+		// it and read the UTC fields to get that zone's wall clock.
+		const offset = Number( timezone?.offset );
+		if ( Number.isFinite( offset ) ) {
+			const shifted = new Date( now.getTime() + offset * 60 * 60 * 1000 );
+			return new Date(
+				shifted.getUTCFullYear(),
+				shifted.getUTCMonth(),
+				shifted.getUTCDate(),
+				shifted.getUTCHours(),
+				shifted.getUTCMinutes(),
+				shifted.getUTCSeconds()
+			);
+		}
+	} catch {
+		// Date settings unavailable — fall through.
+	}
+
+	return now;
+}
+
+export function siteToday(): Date {
+	const now = siteNow();
+	return new Date( now.getFullYear(), now.getMonth(), now.getDate() );
+}
+
+/**
+ * Today as `YYYY-MM-DD` in the **site's** timezone — the company's today.
+ *
+ * The default for any date field that means "now": a resignation filed today,
+ * a payrun dated today, a deadline that may not be in the past. Prefer this
+ * over `todayLocalYmd()`, which follows whatever zone the laptop is set to.
+ */
+export function todaySiteYmd(): string {
+	return toLocalYmd( siteToday() );
 }

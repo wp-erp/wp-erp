@@ -7,6 +7,7 @@
 import type { ComponentType, SVGProps } from 'react';
 
 import type { Option } from './options';
+import { siteToday } from '@/shared/utils/date';
 
 export type LucideIcon = ComponentType<
 	SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number }
@@ -59,7 +60,7 @@ export function ageFrom( dob: string ): string {
 	if ( Number.isNaN( d.getTime() ) ) {
 		return '';
 	}
-	const now = new Date();
+	const now = siteToday();
 	let years = now.getFullYear() - d.getFullYear();
 	const m = now.getMonth() - d.getMonth();
 	if ( m < 0 || ( m === 0 && now.getDate() < d.getDate() ) ) {

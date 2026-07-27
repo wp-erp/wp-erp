@@ -41,6 +41,7 @@ import { NewLeaveRequestDialog } from './NewLeaveRequestDialog';
 import type { LeaveRequest } from './types';
 import type { LeaveTypeOption } from './useLeaveRequests';
 import { useLeaveRequests } from './useLeaveRequests';
+import { siteToday } from '@/shared/utils/date';
 
 const STATUS_TABS: ReadonlyArray< { value: number; label: string } > = [
 	{ value: 0, label: __( 'All', 'erp' ) },
@@ -198,7 +199,7 @@ function LeaveRequestsInner(): JSX.Element {
 	}, [] );
 
 	const yearOptions = useMemo( () => {
-		const now = new Date().getFullYear();
+		const now = siteToday().getFullYear();
 		const years: Array< { value: string; label: string } > = [
 			{ value: '', label: __( 'All Years', 'erp' ) },
 		];

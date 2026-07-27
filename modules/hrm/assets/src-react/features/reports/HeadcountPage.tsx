@@ -14,7 +14,7 @@ import type { JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { __ } from '@/shared/i18n';
-import { formatDisplayDate } from '@/shared/utils/date';
+import { formatDisplayDate, siteToday } from '@/shared/utils/date';
 
 import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
@@ -37,7 +37,7 @@ const HEADCOUNT_CONFIG = {
 };
 
 export function HeadcountPage(): JSX.Element {
-	const now = new Date().getFullYear();
+	const now = siteToday().getFullYear();
 	const [ year, setYear ]             = useState( String( now ) );
 	const [ department, setDepartment ] = useState( 0 );
 	const [ showFilters, setShowFilters ] = useState( false );

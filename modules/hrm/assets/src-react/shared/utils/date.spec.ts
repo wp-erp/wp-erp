@@ -12,7 +12,7 @@
 import { setSettings } from '@wordpress/date';
 import { afterAll, describe, expect, it } from 'vitest';
 
-import { formatCalendarDate, parseServerDate } from './date';
+import { formatCalendarDate, parseServerDate, siteToday } from './date';
 
 /** Local-field `YYYY-MM-DD`, the inverse of `parseServerDate`. */
 function localYmd( date: Date ): string {
@@ -101,5 +101,52 @@ describe( 'parseServerDate', () => {
 	it( 'returns null for junk instead of an Invalid Date', () => {
 		expect( parseServerDate( '' ) ).toBeNull();
 		expect( parseServerDate( 'not-a-date' ) ).toBeNull();
+	} );
+} );
+
+describe( 'siteToday', () => {
+	/** The calendar day it is *right now* in the given IANA zone. */
+	function actualDayIn( zone: string ): string {
+		return new Intl.DateTimeFormat( 'en-CA', {
+			timeZone: zone,
+			year:     'numeric',
+			month:    '2-digit',
+			day:      '2-digit',
+		} ).format( new Date() );
+	}
+
+	it( 'reports the site\'s day, not the browser\'s', () => {
+		for ( const [ name, offset ] of SITE_ZONES ) {
+			setSiteTimezone( name, offset );
+			expect( localYmd( siteToday() ), `site ${ name }` ).toBe( actualDayIn( name ) );
+		}
+	} );
+
+	it( 'disagrees with the browser when the zones straddle midnight', () => {
+		// Kiritimati (+14) and Etc/GMT+12 (-12) are 26 hours apart, so for most
+		// of any given day they are on different dates. Whatever the machine's
+		// own zone, these two must not both equal it.
+		setSiteTimezone( 'Pacific/Kiritimati', 14 );
+		const east = localYmd( siteToday() );
+		setSiteTimezone( 'Etc/GMT+12', -12 );
+		const west = localYmd( siteToday() );
+
+		expect( east ).toBe( actualDayIn( 'Pacific/Kiritimati' ) );
+		expect( west ).toBe( actualDayIn( 'Etc/GMT+12' ) );
+	} );
+
+	it( 'falls back to an offset when the site has no IANA name', () => {
+		// Sites set to a raw "UTC+6" report an empty timezone string.
+		setSiteTimezone( '', 6 );
+		const shifted = new Date( Date.now() + 6 * 60 * 60 * 1000 );
+		const expected = `${ shifted.getUTCFullYear() }-${ String( shifted.getUTCMonth() + 1 ).padStart( 2, '0' ) }-${ String( shifted.getUTCDate() ).padStart( 2, '0' ) }`;
+		expect( localYmd( siteToday() ) ).toBe( expected );
+	} );
+
+	it( 'returns a local-field date, so toLocalYmd round-trips it', () => {
+		setSiteTimezone( 'Asia/Dhaka', 6 );
+		const today = siteToday();
+		expect( today.getHours() ).toBe( 0 );
+		expect( localYmd( today ) ).toBe( actualDayIn( 'Asia/Dhaka' ) );
 	} );
 } );

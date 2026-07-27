@@ -33,9 +33,10 @@ import { HolidaysTable } from './HolidaysTable';
 import { HolidaysToolbar } from './HolidaysToolbar';
 import type { Holiday, HolidayInput } from './types';
 import { useHolidays } from './useHolidays';
+import { siteToday } from '@/shared/utils/date';
 
 function HolidaysInner(): JSX.Element {
-	const thisYear = new Date().getFullYear();
+	const thisYear = siteToday().getFullYear();
 	const canManage = useCan( 'erp_leave_manage' );
 
 	// Default to the current calendar-year window (Jan 1 – Dec 31), matching the

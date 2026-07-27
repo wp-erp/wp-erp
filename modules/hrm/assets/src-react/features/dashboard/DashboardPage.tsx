@@ -56,7 +56,7 @@ import {
 	OnLeaveItem,
 	ProWidget,
 } from './DashboardWidgets';
-import { parseServerDate } from '@/shared/utils/date';
+import { parseServerDate, siteToday } from '@/shared/utils/date';
 import { fmtDate, greeting } from './format';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
 import {
@@ -299,7 +299,7 @@ function DashboardInner(): JSX.Element {
 						</span>
 					</h1>
 					<p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground">
-						{ new Date().toLocaleDateString( undefined, {
+						{ siteToday().toLocaleDateString( undefined, {
 							weekday: 'long',
 							year: 'numeric',
 							month: 'long',

@@ -10,6 +10,7 @@ import type { ComponentType, JSX, SVGProps } from 'react';
 import { __ } from '@/shared/i18n';
 
 import { useEmployeeLeave } from '../leave/useEmployeeLeave';
+import { siteToday } from '@/shared/utils/date';
 
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 
@@ -34,7 +35,7 @@ function elapsed( from: Date | null ): string {
 	if ( ! from ) {
 		return '—';
 	}
-	const now = new Date();
+	const now = siteToday();
 	let months = ( now.getFullYear() - from.getFullYear() ) * 12 + ( now.getMonth() - from.getMonth() );
 	if ( now.getDate() < from.getDate() ) {
 		months -= 1;
@@ -63,7 +64,7 @@ function ageYears( dob: Date | null ): string {
 	if ( ! dob ) {
 		return '—';
 	}
-	const now = new Date();
+	const now = siteToday();
 	let age = now.getFullYear() - dob.getFullYear();
 	const beforeBirthday =
 		now.getMonth() < dob.getMonth() || ( now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate() );

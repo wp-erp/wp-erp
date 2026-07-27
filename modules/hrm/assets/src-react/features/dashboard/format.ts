@@ -12,7 +12,13 @@ export type LucideIcon = ComponentType<
 	SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number }
 >;
 
-/** Time-of-day greeting ("Good morning" / "afternoon" / "evening"). */
+/**
+ * Time-of-day greeting ("Good morning" / "afternoon" / "evening").
+ *
+ * Deliberately the *reader's* clock, not `siteNow()`: this greets the person
+ * looking at the screen, so it should match their morning — unlike a punch
+ * time or a filing date, which are company facts.
+ */
 export function greeting(): string {
 	const h = new Date().getHours();
 	if ( h < 12 ) {

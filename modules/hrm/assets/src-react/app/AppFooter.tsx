@@ -11,6 +11,8 @@ import { LegacyLink } from '@/shared/components/TopBar/LegacyLink';
 import { __ } from '@/shared/i18n';
 
 export function AppFooter(): JSX.Element {
+	// Copyright year — a cosmetic label, not a company date, so the reader's
+	// clock is fine here (see `siteToday()` for the ones that matter).
 	const year = new Date().getFullYear();
 
 	return (

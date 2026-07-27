@@ -21,6 +21,7 @@ import type { CalendarEvent } from '@/features/leave-calendar/types';
 import { LeaveChip } from '@/features/leave-calendar/CalendarGrid';
 import { useLeaveCalendar } from '@/features/leave-calendar/useLeaveCalendar';
 import { NewLeaveRequestDialog } from '@/features/leave-requests/NewLeaveRequestDialog';
+import { siteToday } from '@/shared/utils/date';
 
 const WEEKDAYS = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
 
@@ -77,7 +78,7 @@ function mondayOffset( day: number ): number {
 
 export function MiniCalendarWidget(): JSX.Element {
 	const [ cursor, setCursor ] = useState( () => {
-		const now = new Date();
+		const now = siteToday();
 		return new Date( now.getFullYear(), now.getMonth(), 1 );
 	} );
 
@@ -140,7 +141,7 @@ export function MiniCalendarWidget(): JSX.Element {
 	);
 
 	const monthLabel = cursor.toLocaleDateString( undefined, { month: 'long', year: 'numeric' } );
-	const todayKey   = ymd( new Date() );
+	const todayKey   = ymd( siteToday() );
 	const thisMonth  = cursor.getMonth();
 
 	function shiftMonth( delta: number ): void {
@@ -172,7 +173,7 @@ export function MiniCalendarWidget(): JSX.Element {
 						type="button"
 						onClick={ () =>
 							setCursor( () => {
-								const n = new Date();
+								const n = siteToday();
 								return new Date( n.getFullYear(), n.getMonth(), 1 );
 							} )
 						}

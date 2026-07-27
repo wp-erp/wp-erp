@@ -21,6 +21,8 @@ import { useState } from 'react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { captionDropdownProps } from '@/shared/DateField';
+import { siteToday } from '@/shared/utils/date';
 
 export interface DateRangeValue {
 	readonly from: string;
@@ -62,7 +64,7 @@ const wpLocale =
 
 /** Resolve a preset key to concrete `{ from, to }` ISO bounds. */
 function resolvePreset( key: string ): DateRangeValue {
-	const t = new Date();
+	const t = siteToday();
 	const y = t.getFullYear();
 	const m = t.getMonth();
 	switch ( key ) {
@@ -144,6 +146,11 @@ export function DateRangeField( {
 					to:   range?.to ? iso( range.to ) : '',
 				} )
 			}
+			// Month + year dropdowns in the caption, and no timezone conversion —
+			// see `DateField`, which builds and reads these Dates with local
+			// getters. Both pickers must treat them as plain calendar dates.
+			wpTimezone={ false }
+			calendarProps={ captionDropdownProps() }
 			{ ...( rangeValue ? { value: rangeValue } : {} ) }
 			{ ...( wpLocale ? { wpLocale } : {} ) }
 			// Render our own strings rather than the picker's formatted label —

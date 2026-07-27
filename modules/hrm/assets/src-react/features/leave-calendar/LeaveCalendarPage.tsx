@@ -27,6 +27,7 @@ import { CalendarGrid, LeaveChip } from './CalendarGrid';
 import { CalendarToolbar, type CalendarView } from './CalendarToolbar';
 import { addDays, mondayOffset, parseYmd, ymd, type DayEvents } from './leave-calendar-format';
 import { useLeaveCalendar } from './useLeaveCalendar';
+import { siteToday } from '@/shared/utils/date';
 
 function LeaveCalendarInner(): JSX.Element {
 	// Managers see the whole-company calendar ('all' scope) with dept/designation
@@ -39,7 +40,7 @@ function LeaveCalendarInner(): JSX.Element {
 	// `cursor` is the focus day (any day within the displayed month / week, or the
 	// exact day in Day view).
 	const [ cursor, setCursor ] = useState( () => {
-		const now = new Date();
+		const now = siteToday();
 		return new Date( now.getFullYear(), now.getMonth(), now.getDate() );
 	} );
 
@@ -119,7 +120,7 @@ function LeaveCalendarInner(): JSX.Element {
 		return map;
 	}, [ events ] );
 
-	const todayKey = ymd( new Date() );
+	const todayKey = ymd( siteToday() );
 
 	// View-dependent header label.
 	const label = useMemo( () => {
@@ -149,7 +150,7 @@ function LeaveCalendarInner(): JSX.Element {
 	}
 
 	function goToday(): void {
-		const now = new Date();
+		const now = siteToday();
 		setCursor( new Date( now.getFullYear(), now.getMonth(), now.getDate() ) );
 	}
 

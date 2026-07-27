@@ -35,7 +35,7 @@ import {
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
 import type { Option } from '../options';
 import { PAY_CHANGE_REASON_OPTIONS, PAY_TYPE_OPTIONS, STATUS_OPTIONS, TYPE_OPTIONS } from '../options';
-import { toLocalYmd } from '@/shared/utils/date';
+import { siteToday, toLocalYmd } from '@/shared/utils/date';
 
 export type JobAction = 'status' | 'type' | 'compensation' | 'job';
 
@@ -67,7 +67,7 @@ interface FormState {
 }
 
 function todayISO(): string {
-	const d = new Date();
+	const d = siteToday();
 	if ( Number.isNaN( d.getTime() ) ) {
 		return '';
 	}

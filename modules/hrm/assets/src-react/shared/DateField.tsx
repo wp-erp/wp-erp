@@ -12,6 +12,8 @@ import { DatePicker, Input } from '@wedevs/plugin-ui';
 import { CalendarDays } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { siteToday } from '@/shared/utils/date';
+
 interface DateFieldProps {
 	readonly value:        string;
 	readonly onChange:     ( value: string ) => void;
@@ -47,6 +49,39 @@ const wpLocale =
 		? ( document.documentElement.lang || '' ).replace( '-', '_' )
 		: undefined;
 
+/** Years offered in the caption's year dropdown, relative to the current one. */
+const YEARS_BACK  = 100;
+const YEARS_AHEAD = 10;
+
+/**
+ * Month + year dropdowns in the calendar caption (react-day-picker's
+ * `captionLayout="dropdown"`, the same shape shadcn/ui ships) instead of the
+ * default static label. Reaching a birth date or a contract end is then one
+ * pick rather than dozens of arrow clicks.
+ *
+ * The dropdown needs explicit bounds: left to itself react-day-picker spans
+ * today − 100 years → end of the current year, so no future year is reachable.
+ * Bounds honour `min`/`max` when the call site sets them, so the year list
+ * never offers a year whose days are all disabled.
+ */
+export const captionDropdownProps = (
+	min?: Date,
+	max?: Date
+): Record< string, unknown > => {
+	// The org's today, not the laptop's — see `siteToday()`. It anchors both the
+	// ringed day and the year range, so a company in Dhaka never sees a calendar
+	// centred on the previous day because someone opened it from Los Angeles.
+	const today = siteToday();
+	const year  = today.getFullYear();
+
+	return {
+		today,
+		captionLayout: 'dropdown',
+		startMonth:    min ?? new Date( year - YEARS_BACK, 0, 1 ),
+		endMonth:      max ?? new Date( year + YEARS_AHEAD, 11, 31 ),
+	};
+};
+
 export function DateField( {
 	value,
 	onChange,
@@ -57,15 +92,19 @@ export function DateField( {
 	max,
 }: DateFieldProps ): JSX.Element {
 	const dateVal = toDate( value );
-	const calendarProps =
-		min || max
+	const minDate = toDate( min );
+	const maxDate = toDate( max );
+	const calendarProps = {
+		...captionDropdownProps( minDate, maxDate ),
+		...( min || max
 			? {
 				disabled: {
-					...( min ? { before: toDate( min ) } : {} ),
-					...( max ? { after: toDate( max ) } : {} ),
+					...( minDate ? { before: minDate } : {} ),
+					...( maxDate ? { after: maxDate } : {} ),
 				},
 			}
-			: undefined;
+			: {} ),
+	};
 
 	// Conditional-spread the optional props: `exactOptionalPropertyTypes` forbids
 	// passing an explicit `undefined` to an optional prop, so omit when empty.
@@ -73,9 +112,16 @@ export function DateField( {
 		<DatePicker
 			onChange={ ( d ) => onChange( toStr( d ) ) }
 			displayFormat="Y-m-d"
+			// These are calendar dates, not instants. `toDate()` builds them at
+			// browser-local midnight and `toStr()` reads them back with local
+			// getters, so the calendar must agree — left at its default the
+			// picker resolves days in the *site* timezone and the grid lands a
+			// day off whenever the two zones straddle midnight (site UTC +
+			// browser UTC+6 selected the 26th when you clicked the 27th).
+			wpTimezone={ false }
 			{ ...( dateVal ? { value: dateVal } : {} ) }
 			{ ...( wpLocale ? { wpLocale } : {} ) }
-			{ ...( calendarProps ? { calendarProps } : {} ) }
+			calendarProps={ calendarProps }
 			// Render our own `value`, not the picker's formatted string. The
 			// picker formats via `dateI18n`, which converts the instant into the
 			// *site* timezone — but `toDate()` built that Date at *browser*-local

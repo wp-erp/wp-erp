@@ -25,7 +25,7 @@ import { __, sprintf } from '@/shared/i18n';
 import type { EmployeeTerminateInput } from '@/stores/employees';
 
 import { SelectField, TextField } from '../../employee-create/fields';
-import { todayLocalYmd } from '@/shared/utils/date';
+import { todaySiteYmd } from '@/shared/utils/date';
 import {
 	REHIRE_OPTIONS,
 	TERMINATION_REASON_OPTIONS,
@@ -43,7 +43,7 @@ interface TerminateDialogProps {
 
 /** Today as `YYYY-MM-DD`, the default termination date. */
 function today(): string {
-	return todayLocalYmd();
+	return todaySiteYmd();
 }
 
 const EMPTY_FORM: EmployeeTerminateInput = {

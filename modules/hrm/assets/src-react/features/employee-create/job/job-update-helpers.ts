@@ -7,7 +7,7 @@ import { __ } from '@/shared/i18n';
 
 import type { LookupOption } from '../../employees/filters/lookups';
 import type { Option } from '../options';
-import { toLocalYmd } from '@/shared/utils/date';
+import { siteToday, toLocalYmd } from '@/shared/utils/date';
 
 export type JobAction = 'status' | 'type' | 'compensation' | 'job';
 
@@ -31,7 +31,7 @@ export interface FormState {
 }
 
 export function todayISO(): string {
-	const d = new Date();
+	const d = siteToday();
 	if ( Number.isNaN( d.getTime() ) ) {
 		return '';
 	}
