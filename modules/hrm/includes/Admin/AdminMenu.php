@@ -17,6 +17,7 @@ class AdminMenu {
         add_action( 'admin_print_footer_scripts', [ $this, 'highlight_menu' ] );
         add_filter( 'parent_file', [ $this, 'highlight_submenu' ], 100 );
         add_filter( 'admin_footer_text', [ $this, 'hr_admin_footer_text' ], 99 );
+        add_action( 'admin_notices', [ $this, 'print_react_switch_banner' ] );
     }
 
     /**
@@ -265,8 +266,6 @@ class AdminMenu {
             $callback = $menu[ $section ]['submenu'][ $sub ]['callback'];
         }
 
-        $this->print_react_switch_banner();
-
         erp_render_menu( $component );
 
         call_user_func( $callback );
@@ -279,9 +278,19 @@ class AdminMenu {
      * jump back to the redesigned admin from the legacy view. Hidden when the
      * React build artifact is missing — there is nothing to switch to.
      *
+     * Runs on `admin_notices` rather than inside router() so WP places it below
+     * the Screen Options / Help tabs; printed from the page callback it lands in
+     * the screen-meta strip and collides with them.
+     *
      * @return void
      */
-    private function print_react_switch_banner() {
+    public function print_react_switch_banner() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        if ( 'erp-hr' !== $page || ! current_user_can( 'erp_list_employee' ) ) {
+            return;
+        }
+
         $asset_path = WPERP_HRM_PATH . '/assets/dist-react/employees.asset.php';
         if ( ! file_exists( $asset_path ) ) {
             return;
@@ -304,7 +313,7 @@ class AdminMenu {
                 align-items: center;
                 justify-content: space-between;
                 gap: 12px;
-                margin: 12px 20px 0 2px;
+                margin: 12px 20px 12px 2px;
                 padding: 10px 16px;
                 background: #f0f6fc;
                 border: 1px solid #c3d4e6;
