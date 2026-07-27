@@ -9,7 +9,6 @@
  * action, and a sticky action bar.
  */
 
-import { toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
 import { useState } from 'react';
 import type { JSX } from 'react';
@@ -17,11 +16,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
-import { __ } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeCreateInput, EmployeeListItem } from '@/stores/employees';
 
 import { EmployeeForm } from './EmployeeForm';
+import { erpToast } from '@/shared/toast';
 
 interface CreateDispatch {
 	createEmployee: ( payload: EmployeeCreateInput ) => Promise< EmployeeListItem >;
@@ -47,7 +47,12 @@ function EmployeeCreateInner(): JSX.Element {
 		setSubmitting( true );
 		try {
 			await createEmployee( payload );
-			toast.success( __( 'Employee created.', 'erp' ) );
+			// Name them: the toast is about a person, and an initials avatar with
+			// no name beside it reads as decoration. No photo yet — the form
+			// stages a `photo_id`, and the URL never reaches this payload.
+			erpToast.success( sprintf( __( '%s was added.', 'erp' ), employeeName( payload ) ), {
+				user: { name: employeeName( payload ) },
+			} );
 			close();
 		} catch ( raw ) {
 			const err = raw as { message?: string };
@@ -73,6 +78,13 @@ function EmployeeCreateInner(): JSX.Element {
 				/>
 		</div>
 	);
+}
+
+/** Display name from a submitted payload, for the toast's avatar + title. */
+function employeeName( payload: EmployeeCreateInput ): string {
+	const first = String( payload.first_name ?? '' ).trim();
+	const last  = String( payload.last_name ?? '' ).trim();
+	return `${ first } ${ last }`.trim();
 }
 
 export function EmployeeCreatePage(): JSX.Element {

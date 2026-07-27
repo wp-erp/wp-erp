@@ -7,7 +7,7 @@
  * `Employee::update_employee()` model.
  */
 
-import { Skeleton, toast } from '@wedevs/plugin-ui';
+import { Skeleton } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
@@ -16,7 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { Forbidden } from '@/shared/components/Forbidden';
 import { useCan } from '@/shared/hooks/useCan';
-import { __ } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeCreateInput } from '@/stores/employees';
 import { storeName as meStoreName } from '@/stores/me';
@@ -24,6 +24,7 @@ import type { MeUser } from '@/stores/me/types';
 
 import { EmployeeForm } from './EmployeeForm';
 import type { FormState } from './EmployeeForm';
+import { erpToast } from '@/shared/toast';
 
 interface EditDispatch {
 	fetchEmployeeForEdit: ( userId: number ) => Promise< Record< string, unknown > >;
@@ -100,7 +101,9 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 		setSubmitting( true );
 		try {
 			await updateEmployee( userId, payload );
-			toast.success( __( 'Employee updated.', 'erp' ) );
+			erpToast.success( sprintf( __( '%s was updated.', 'erp' ), employeeName( payload ) ), {
+				user: { name: employeeName( payload ) },
+			} );
 			close();
 		} catch ( raw ) {
 			const err = raw as { message?: string };
@@ -140,6 +143,13 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 			) }
 		</div>
 	);
+}
+
+/** Display name from a submitted payload, for the toast's avatar + title. */
+function employeeName( payload: EmployeeCreateInput ): string {
+	const first = String( payload.first_name ?? '' ).trim();
+	const last  = String( payload.last_name ?? '' ).trim();
+	return `${ first } ${ last }`.trim();
 }
 
 export function EmployeeEditPage(): JSX.Element {
