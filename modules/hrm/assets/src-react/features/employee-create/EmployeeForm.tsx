@@ -1,15 +1,17 @@
 /**
  * Shared employee form body — used by both the create and edit pages.
  *
- * Field parity with the legacy Vue template (`views/js-templates/new-employee.php`).
- * In `edit` mode the create-only fields are hidden exactly as the old form did
- * (it wrapped them in `<# if ( ! data.id ) { #>`): Employee Type, Employee
- * Status, Location, Reporting To, Pay Rate, Pay Type — those are edited from the
- * single-employee Job/Compensation tabs instead. The Notification section is
- * also create-only.
+ * Field parity with the legacy Vue template (`views/js-templates/new-employee.php`),
+ * including its field order. Create and edit render the SAME fields — the legacy
+ * template hid Employee Type/Status, Location, Reporting To, Pay Rate and Pay
+ * Type behind `<# if ( ! data.id ) { #>`, which forced a trip to the Job tab to
+ * change them; both modes now show and submit them. The Notification section
+ * stays create-only (it is a one-time "welcome the new user" action, not a
+ * stored field), and a self-editor still sees the manager-only fields disabled —
+ * `PUT /erp/v2/employees/{id}` strips those keys server-side anyway.
  *
- * Validation mirrors the server: required First/Last/Email (+ Type/Status/Hire
- * date/Department/Designation on create), email format, and the
+ * Validation mirrors the server: required First/Last/Email/Type/Status/Hire
+ * date/Department/Designation, email format, and the
  * erp_is_valid_employee_id() pattern for Employee ID.
  */
 
@@ -125,7 +127,7 @@ export function EmployeeForm( {
 	const [ designations, setDesignations ] = useState< Option[] >( [] );
 	const [ locations, setLocations ] = useState< Option[] >( [] );
 	const reporting = useEmployeeSearch(
-		! isEdit,
+		true,
 		undefined,
 		form.reporting_to ?? ''
 	);
@@ -177,15 +179,13 @@ export function EmployeeForm( {
 				( l ) => ! cancelled && setDesignations( toOptions( l ) )
 			),
 		] ).finally( () => ! cancelled && setLookupsLoaded( true ) );
-		if ( ! isEdit ) {
-			void loadLookup( 'locations' ).then(
-				( l ) => ! cancelled && setLocations( toOptions( l ) )
-			);
-		}
+		void loadLookup( 'locations' ).then(
+			( l ) => ! cancelled && setLocations( toOptions( l ) )
+		);
 		return () => {
 			cancelled = true;
 		};
-	}, [ isEdit ] );
+	}, [] );
 
 	// Load pro-injected custom field definitions (and saved values in edit mode)
 	// via the wp.hooks filter. Pro returns an array (or a Promise of one); when
@@ -457,6 +457,14 @@ export function EmployeeForm( {
 						departments={ departments }
 						designations={ designations }
 						submitting={ submitting }
+						extra={
+							<ExtraFields
+								inline
+								fields={ extraBySection( 'basic' ) }
+								values={ form }
+								onChange={ set }
+							/>
+						}
 						onAddDept={ () => {
 							setQuickDeptErr( null );
 							setQuickDeptOpen( true );
@@ -467,40 +475,39 @@ export function EmployeeForm( {
 						} }
 					/>
 
-					<ExtraFields
-						fields={ extraBySection( 'basic' ) }
-						values={ form }
-						onChange={ set }
-					/>
-
 					{ ( ! isEdit || isManager ) && (
 						<EmployeeWorkSection
 							form={ form }
 							set={ set }
-							isEdit={ isEdit }
+							errors={ errors }
 							locations={ locations }
 							reporting={ reporting }
+							extra={
+								<ExtraFields
+									inline
+									fields={ extraBySection( 'work' ) }
+									values={ form }
+									onChange={ set }
+								/>
+							}
 						/>
 					) }
-
-					<ExtraFields
-						fields={ extraBySection( 'work' ) }
-						values={ form }
-						onChange={ set }
-					/>
 
 					<EmployeePersonalSection
 						form={ form }
 						set={ set }
+						errors={ errors }
 						countryOptions={ countryOptions }
 						stateOptions={ stateOptions }
 						onCountryChange={ setCountry }
-					/>
-
-					<ExtraFields
-						fields={ extraBySection( 'personal' ) }
-						values={ form }
-						onChange={ set }
+						extra={
+							<ExtraFields
+								inline
+								fields={ extraBySection( 'personal' ) }
+								values={ form }
+								onChange={ set }
+							/>
+						}
 					/>
 
 					<ExtraFields

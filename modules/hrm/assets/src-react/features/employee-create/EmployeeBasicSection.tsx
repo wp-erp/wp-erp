@@ -1,8 +1,9 @@
 /**
  * "Basic Information" section of the employee create/edit form: name/email/ID,
- * the create-only Type/Status selects, hire/end dates, and the required
- * Department + Job Title selects (each with an inline "+ Add new" quick-add).
- * Presentational — the form owns state and the quick-add handlers.
+ * Type/Status, hire/end dates, and the required Department + Job Title selects
+ * (each with an inline "+ Add new" quick-add). Create and edit render the same
+ * fields in the same order; edit only disables the manager-only ones for a
+ * self-editor. Presentational — the form owns state and the quick-add handlers.
  */
 
 import type { JSX } from 'react';
@@ -31,6 +32,8 @@ interface EmployeeBasicSectionProps {
 	readonly submitting:   boolean;
 	readonly onAddDept:    () => void;
 	readonly onAddDesig:   () => void;
+	/** Pro custom fields for this section — rendered inside this card, legacy-style. */
+	readonly extra?:       JSX.Element | null;
 }
 
 export function EmployeeBasicSection( {
@@ -43,6 +46,7 @@ export function EmployeeBasicSection( {
 	submitting,
 	onAddDept,
 	onAddDesig,
+	extra,
 }: EmployeeBasicSectionProps ): JSX.Element {
 	// The inline "+ Add new" quick-creates department/designation rows, so only
 	// surface them to users who hold the matching manage capability (same cap the
@@ -108,30 +112,38 @@ export function EmployeeBasicSection( {
 				onChange={ set( 'email' ) }
 				error={ errors.email }
 			/>
-			{ ! isEdit ? (
-				<>
-					<SelectField
-						id="type"
-						label={ __( 'Employee Type', 'erp' ) }
-						required
-						options={ TYPE_OPTIONS }
-						value={ form.type ?? '' }
-						onChange={ set( 'type' ) }
-						error={ errors.type }
-						placeholder={ __( '- Select -', 'erp' ) }
-					/>
-					<SelectField
-						id="status"
-						label={ __( 'Employee Status', 'erp' ) }
-						required
-						options={ STATUS_OPTIONS }
-						value={ form.status ?? '' }
-						onChange={ set( 'status' ) }
-						error={ errors.status }
-						placeholder={ __( '- Select -', 'erp' ) }
-					/>
-				</>
-			) : null }
+			<SelectField
+				id="type"
+				label={ __( 'Employee Type', 'erp' ) }
+				required
+				options={ TYPE_OPTIONS }
+				value={ form.type ?? '' }
+				onChange={ set( 'type' ) }
+				error={ errors.type }
+				placeholder={ __( '- Select -', 'erp' ) }
+				disabled={ lockManager }
+			/>
+			<SelectField
+				id="status"
+				label={ __( 'Employee Status', 'erp' ) }
+				required
+				options={ STATUS_OPTIONS }
+				value={ form.status ?? '' }
+				onChange={ set( 'status' ) }
+				error={ errors.status }
+				placeholder={ __( '- Select -', 'erp' ) }
+				disabled={ lockManager }
+			/>
+			{ /* Legacy order (new-employee.php): End Date sits before Date of Hire. */ }
+			<TextField
+				id="end_date"
+				label={ __( 'Employee End Date', 'erp' ) }
+				type="date"
+				value={ form.end_date ?? '' }
+				onChange={ set( 'end_date' ) }
+				error={ errors.end_date }
+				disabled={ lockManager }
+			/>
 			<TextField
 				id="hiring_date"
 				label={ __( 'Date of Hire', 'erp' ) }
@@ -140,14 +152,6 @@ export function EmployeeBasicSection( {
 				value={ form.hiring_date ?? '' }
 				onChange={ set( 'hiring_date' ) }
 				error={ errors.hiring_date }
-				disabled={ lockManager }
-			/>
-			<TextField
-				id="end_date"
-				label={ __( 'Employee End Date', 'erp' ) }
-				type="date"
-				value={ form.end_date ?? '' }
-				onChange={ set( 'end_date' ) }
 				disabled={ lockManager }
 			/>
 			<SmartSelectField
@@ -198,6 +202,7 @@ export function EmployeeBasicSection( {
 					) : undefined
 				}
 			/>
+			{ extra }
 		</FormSection>
 	);
 }

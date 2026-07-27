@@ -17,6 +17,7 @@ import { DependencyHint } from '@/shared/components/DependencyHint';
 import { __ } from '@/shared/i18n';
 
 import type { UserCheckResult } from './useUserCheck';
+import { FIELD_LABELS } from './validation';
 
 interface EmployeeFormAlertsProps {
 	readonly submitError:     string | null;
@@ -121,10 +122,14 @@ export function EmployeeFormAlerts( {
 					</AlertTitle>
 					<AlertDescription>
 						<ul className="list-disc pl-5">
-							{ Array.from(
-								new Set( Object.values( errors ) )
-							).map( ( msg ) => (
-								<li key={ msg }>{ msg }</li>
+							{ Object.entries( errors ).map( ( [ key, msg ] ) => (
+								<li key={ key }>
+									<span className="font-medium">
+										{ FIELD_LABELS[ key ] ?? key }
+									</span>
+									{ ': ' }
+									{ msg }
+								</li>
 							) ) }
 						</ul>
 					</AlertDescription>

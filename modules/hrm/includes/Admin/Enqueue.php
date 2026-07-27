@@ -435,6 +435,11 @@ final class Enqueue {
 		$keys[] = 'manage_recruitment';
 		$keys[] = 'employee';
 
+		// Work locations live on the legacy Company page (`erp-company`), which
+		// gates on `manage_options`. The React forms link there from the Location
+		// select, so the shell needs to resolve that gate.
+		$keys[] = 'manage_options';
+
 		return array_values( array_unique( array_map( 'strval', $keys ) ) );
 	}
 

@@ -8,6 +8,7 @@
 import type { Dispatch, JSX, SetStateAction } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 
 import { SelectField, SmartSelectField, TextField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
@@ -46,6 +47,7 @@ export function LeavePolicyScopeFields( {
 				/>
 				<SmartSelectField
 					id="policy_department"
+					labelAction={ <FieldSourceAction source="departments" /> }
 					label={ __( 'Department', 'erp' ) }
 					options={ deptOpts }
 					value={ form.department_id }
@@ -59,6 +61,7 @@ export function LeavePolicyScopeFields( {
 			<div className="grid grid-cols-2 gap-4">
 				<SmartSelectField
 					id="policy_designation"
+					labelAction={ <FieldSourceAction source="designations" /> }
 					label={ __( 'Designation', 'erp' ) }
 					options={ desigOpts }
 					value={ form.designation_id }
@@ -89,6 +92,7 @@ export function LeavePolicyScopeFields( {
 			<div className="grid grid-cols-2 gap-4">
 				<SmartSelectField
 					id="policy_location"
+					labelAction={ <FieldSourceAction source="locations" /> }
 					label={ __( 'Location', 'erp' ) }
 					options={ locationOpts }
 					value={ form.location_id }

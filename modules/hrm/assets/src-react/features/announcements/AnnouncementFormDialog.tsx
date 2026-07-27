@@ -22,6 +22,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 import { __ } from '@/shared/i18n';
 
 import { SelectField, TextField, TextareaField } from '../employee-create/fields';
@@ -204,7 +205,10 @@ export function AnnouncementFormDialog( {
 
 					{ form.assignType === 'by_department' ? (
 						<div className="flex flex-col gap-2.5">
+							<div className="flex min-h-[1.25rem] items-center justify-between gap-2">
 							<span className="text-sm font-medium text-foreground">{ __( 'Departments', 'erp' ) }</span>
+							<FieldSourceAction source="departments" />
+						</div>
 							<SmartMultiSelect
 								options={ deptMulti }
 								value={ form.departments }
@@ -217,7 +221,10 @@ export function AnnouncementFormDialog( {
 
 					{ form.assignType === 'by_designation' ? (
 						<div className="flex flex-col gap-2.5">
+							<div className="flex min-h-[1.25rem] items-center justify-between gap-2">
 							<span className="text-sm font-medium text-foreground">{ __( 'Designations', 'erp' ) }</span>
+							<FieldSourceAction source="designations" />
+						</div>
 							<SmartMultiSelect
 								options={ desigMulti }
 								value={ form.designations }

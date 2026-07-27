@@ -9,6 +9,7 @@ import type { Dispatch, JSX, SetStateAction } from 'react';
 
 import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { __ } from '@/shared/i18n';
+import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 
 import { SmartSelectField, TextField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
@@ -67,6 +68,7 @@ export function LeavePolicyPrimaryFields( {
 				/>
 				<SmartSelectField
 					id="policy_f_year"
+					labelAction={ <FieldSourceAction source="financialYears" /> }
 					label={ __( 'Financial Year', 'erp' ) }
 					required
 					options={ fYearOpts }

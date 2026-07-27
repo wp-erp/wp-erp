@@ -244,6 +244,11 @@ class MeControllerV2 extends RestControllerV2 {
 		$all[] = 'manage_recruitment';
 		$all[] = 'employee';
 
+		// Work locations live on the legacy Company page (`erp-company`), which
+		// gates on `manage_options`. The React forms link there from the Location
+		// select, so the shell needs to resolve that gate.
+		$all[] = 'manage_options';
+
 		/**
 		 * Filter the capability keys returned to the React shell.
 		 *

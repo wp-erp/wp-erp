@@ -27,6 +27,7 @@ import type { JSX } from 'react';
 
 import { DependencyHint } from '@/shared/components/DependencyHint';
 import { __ } from '@/shared/i18n';
+import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 
 import { SmartSelectField, TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
@@ -155,6 +156,7 @@ export function EntitlementAssignDialog( {
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
 					<SmartSelectField
 						id="entitlement_policy"
+						labelAction={ <FieldSourceAction source="leavePolicies" /> }
 						label={ __( 'Leave Policy', 'erp' ) }
 						required
 						options={ policyOpts }

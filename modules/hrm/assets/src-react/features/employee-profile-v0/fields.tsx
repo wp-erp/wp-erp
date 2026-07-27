@@ -135,6 +135,7 @@ interface SelectFieldProps {
 	readonly error?:      string | undefined;
 	readonly disabled?:   boolean | undefined;
 	readonly className?:  string | undefined;
+	readonly labelAction?: ReactNode;
 }
 
 export function SelectField( {
@@ -148,9 +149,10 @@ export function SelectField( {
 	error,
 	disabled,
 	className,
+	labelAction,
 }: SelectFieldProps ): JSX.Element {
 	return (
-		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
+		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className } labelAction={ labelAction }>
 			<Select
 				items={ options as { value: string; label: string }[] }
 				value={ value === '' ? undefined : value }

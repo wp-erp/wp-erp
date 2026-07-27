@@ -65,7 +65,7 @@ function GroupShell( {
 	children: JSX.Element;
 } ): JSX.Element {
 	return (
-		<div className="space-y-2 sm:col-span-2 lg:col-span-3">
+		<div className="flex min-w-0 flex-col gap-2.5">
 			<span className="text-sm font-medium text-foreground">
 				{ label }
 				{ required ? <span className="text-destructive"> *</span> : null }
@@ -180,11 +180,32 @@ interface ExtraFieldsProps {
 	readonly fields:   readonly ExtraField[];
 	readonly values:   Record< string, string >;
 	readonly onChange: ( key: string ) => ( value: string ) => void;
+	/**
+	 * Render the raw fields only, for hosting inside an existing section card
+	 * (Basic Information / Work / Personal Details) — the legacy form fired its
+	 * `erp-hr-employee-form-*` hooks inside those grids, not in a card of their
+	 * own. Standalone (`top`/`bottom`) groups keep the default card.
+	 */
+	readonly inline?:  boolean;
 }
 
-export function ExtraFields( { fields, values, onChange }: ExtraFieldsProps ): JSX.Element | null {
+export function ExtraFields( { fields, values, onChange, inline }: ExtraFieldsProps ): JSX.Element | null {
 	if ( fields.length === 0 ) {
 		return null;
+	}
+
+	if ( inline ) {
+		return (
+			<>
+				<div className="mt-2 flex items-center gap-3 sm:col-span-2 lg:col-span-3">
+					<span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+						{ __( 'Custom Fields', 'erp' ) }
+					</span>
+					<span className="h-px flex-1 bg-border" />
+				</div>
+				{ fields.map( ( f ) => renderField( f, values[ f.key ] ?? '', onChange( f.key ) ) ) }
+			</>
+		);
 	}
 
 	// Group fields by their section label, preserving first-seen order.

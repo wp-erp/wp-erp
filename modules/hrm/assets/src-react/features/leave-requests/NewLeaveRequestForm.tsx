@@ -21,6 +21,7 @@ import {
 } from '@/shared/components/LeaveExtraFields';
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
 import { __, sprintf } from '@/shared/i18n';
+import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 
@@ -125,6 +126,7 @@ export function NewLeaveRequestForm( {
 			{ hideFinancialYear ? null : (
 				<SelectField
 					id="leave_year"
+					labelAction={ <FieldSourceAction source="financialYears" /> }
 					label={ __( 'Financial Year', 'erp' ) }
 					required
 					options={ yearOptions }
@@ -136,6 +138,7 @@ export function NewLeaveRequestForm( {
 			{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
 			<SelectField
 				id="leave_policy"
+				labelAction={ <FieldSourceAction source="leavePolicies" /> }
 				label={ __( 'Leave Policy', 'erp' ) }
 				required
 				disabled={ ! entitled }

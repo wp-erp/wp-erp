@@ -24,26 +24,32 @@ const NUMERIC_FIELDS = new Set( [
 	'photo_id',
 ] );
 
-// Hidden in edit mode (the legacy form wrapped these in `<# if ( ! data.id ) #>`).
-const CREATE_ONLY_FIELDS = new Set( [
-	'type',
-	'status',
-	'location',
-	'reporting_to',
-	'pay_rate',
-	'pay_type',
-] );
+// Create and edit now render the same fields in the same order, so nothing is
+// stripped from the edit payload any more. `PUT /erp/v2/employees/{id}` still
+// drops the manager-only keys server-side when a self-editor submits.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Mirrors the server's erp_is_valid_employee_id(): start alphanumeric, then
 // only letters, digits and hyphens (no spaces or symbols).
 const EMPLOYEE_ID_RE = /^[A-Za-z0-9][-A-Za-z0-9]*$/;
 // Client mirrors of the server-side validators in `Employee::create_employee()`
-// (the server stays the source of truth; these just give inline feedback).
-const NAME_RE = /^[\p{L}\s.'-]+$/u; // erp_is_valid_name: letters/space/.'-
-const CONTACT_RE = /^[0-9+\-()\s]{6,20}$/; // erp_is_valid_contact_no
-const ZIP_RE = /^[A-Za-z0-9\s-]{2,12}$/; // erp_is_valid_zip_code
-const CURRENCY_RE = /^\d+(\.\d{1,2})?$/; // erp_is_valid_currency_amount (non-negative)
+// — character-for-character copies of the PHP patterns so the form never accepts
+// a value the server rejects, nor rejects one it accepts. The server stays the
+// source of truth; these only give inline feedback.
+// erp_is_valid_name(): invalid when ANY of these appear (digits included).
+const NAME_DISALLOWED_RE = /[_@!%#&:;"=<>/*+?$^{}[\]0-9]/;
+// erp_contains_disallowed_chars(): the narrower set applied to City.
+const DISALLOWED_CHARS_RE = /[%;"=<>/*+?$^{}[\]]/;
+// erp_is_valid_contact_no(): optional +, then 4 digit groups (1-3 then 3x1-5)
+// separated by an optional space, dot or hyphen. Parentheses are NOT allowed.
+const CONTACT_RE = /^\+?[0-9]{1,3}([\s.-]?[0-9]{1,5}){3}$/;
+// erp_is_valid_zip_code(): uppercase letters/digits only (the PHP pattern has no
+// /i flag), 4-13 chars, spaces and hyphens allowed after the first character.
+const ZIP_RE = /^[A-Z0-9][ \-A-Z0-9]{3,12}$/;
+// erp_is_valid_currency_amount(): non-negative, up to 4 decimals.
+const CURRENCY_RE = /^[0-9]+(\.[0-9]{1,4})?$/;
+// erp_is_valid_url(): scheme optional, must carry a dotted host.
+const URL_RE = /^(?:(?:https?|ftp):\/\/)?(?:[a-z0-9-]+\.)*(?:[a-z0-9-]+\.)[a-z]+/i;
 
 // Name fields validated when non-empty (first/last also required below).
 const NAME_FIELDS = [
@@ -70,21 +76,57 @@ function isValidDate( value: string ): boolean {
 }
 
 /**
- * Fields that must be non-empty to submit (Type/Status only required on create).
- * @param mode
+ * Fields that must be non-empty to submit — the same set in both modes, since
+ * create and edit render the same fields.
+ *
+ * @param _mode Kept for call-site symmetry (both modes share one rule set).
  */
-export function requiredFields( mode: FormMode ): readonly string[] {
-	const base = [
+export function requiredFields( _mode: FormMode ): readonly string[] {
+	return [
 		'first_name',
 		'last_name',
 		'email',
+		'type',
+		'status',
 		'hiring_date',
 		'department',
 		'designation',
 	];
-	// Employee Type + Status are only shown (and required) when creating.
-	return mode === 'create' ? [ ...base, 'type', 'status' ] : base;
 }
+
+/**
+ * Field → human label, so the validation summary at the top of the form can name
+ * the offending field instead of listing bare messages.
+ */
+export const FIELD_LABELS: Record< string, string > = {
+	first_name:    __( 'First Name', 'erp' ),
+	middle_name:   __( 'Middle Name', 'erp' ),
+	last_name:     __( 'Last Name', 'erp' ),
+	employee_id:   __( 'Employee ID', 'erp' ),
+	email:         __( 'Email', 'erp' ),
+	type:          __( 'Employee Type', 'erp' ),
+	status:        __( 'Employee Status', 'erp' ),
+	end_date:      __( 'Employee End Date', 'erp' ),
+	hiring_date:   __( 'Date of Hire', 'erp' ),
+	department:    __( 'Department', 'erp' ),
+	designation:   __( 'Job Title', 'erp' ),
+	location:      __( 'Location', 'erp' ),
+	reporting_to:  __( 'Reporting To', 'erp' ),
+	hiring_source: __( 'Source of Hire', 'erp' ),
+	pay_rate:      __( 'Pay Rate', 'erp' ),
+	pay_type:      __( 'Pay Type', 'erp' ),
+	work_phone:    __( 'Work Phone', 'erp' ),
+	spouse_name:   __( "Spouse's name", 'erp' ),
+	father_name:   __( "Father's name", 'erp' ),
+	mother_name:   __( "Mother's name", 'erp' ),
+	mobile:        __( 'Mobile', 'erp' ),
+	phone:         __( 'Phone', 'erp' ),
+	other_email:   __( 'Other Email', 'erp' ),
+	date_of_birth: __( 'Date of Birth', 'erp' ),
+	user_url:      __( 'Website', 'erp' ),
+	city:          __( 'City', 'erp' ),
+	postal_code:   __( 'Post Code / Zip Code', 'erp' ),
+};
 
 /** Extra context the validator needs beyond the raw form values. */
 interface ValidateContext {
@@ -133,10 +175,10 @@ export function validateEmployeeForm(
 		);
 	}
 
-	// Name fields — letters, spaces and . ' - only (mirrors erp_is_valid_name).
+	// Name fields — mirrors erp_is_valid_name(): no digits, no _@!%#&:;"=<>/*+?$^{}[].
 	for ( const key of NAME_FIELDS ) {
 		const v = ( form[ key ] ?? '' ).trim();
-		if ( v && ! NAME_RE.test( v ) ) {
+		if ( v && NAME_DISALLOWED_RE.test( v ) ) {
 			next[ key ] = __(
 				'Use letters only (no digits or symbols).',
 				'erp'
@@ -156,7 +198,10 @@ export function validateEmployeeForm(
 	for ( const key of CONTACT_FIELDS ) {
 		const v = ( form[ key ] ?? '' ).trim();
 		if ( v && ! CONTACT_RE.test( v ) ) {
-			next[ key ] = __( 'Enter a valid phone number.', 'erp' );
+			next[ key ] = __(
+				'Enter a valid phone number, e.g. +880 1711 123 456.',
+				'erp'
+			);
 		}
 	}
 
@@ -170,7 +215,21 @@ export function validateEmployeeForm(
 	}
 	const postalCode = ( form.postal_code ?? '' ).trim();
 	if ( postalCode && ! ZIP_RE.test( postalCode ) ) {
-		next.postal_code = __( 'Enter a valid postal code.', 'erp' );
+		next.postal_code = __(
+			'Use 4-13 uppercase letters, numbers, spaces or hyphens.',
+			'erp'
+		);
+	}
+	// Website — mirrors erp_is_valid_url() (the server also trims the URL down to
+	// scheme + host before saving).
+	const userUrl = ( form.user_url ?? '' ).trim();
+	if ( userUrl && ! URL_RE.test( userUrl ) ) {
+		next.user_url = __( 'Enter a valid website URL.', 'erp' );
+	}
+	// City — mirrors erp_contains_disallowed_chars().
+	const city = ( form.city ?? '' ).trim();
+	if ( city && DISALLOWED_CHARS_RE.test( city ) ) {
+		next.city = __( 'Remove the special characters from the city name.', 'erp' );
 	}
 
 	return next;
@@ -186,7 +245,7 @@ interface PayloadContext {
 /**
  * Assemble the REST payload from the form values: trims, drops empties, coerces
  * numeric fields, buckets pro custom fields under `additional`, and (on create)
- * attaches the notification flags. Create-only fields are skipped in edit mode.
+ * attaches the notification flags. Both modes submit the same field set.
  *
  * @param form The current form values.
  * @param mode 'create' | 'edit'.
@@ -203,10 +262,6 @@ export function buildEmployeePayload(
 	const additional: Record< string, string > = {};
 
 	for ( const [ key, raw ] of Object.entries( form ) ) {
-		// Never submit the create-only fields from the edit form.
-		if ( isEdit && CREATE_ONLY_FIELDS.has( key ) ) {
-			continue;
-		}
 		// Custom (pro) fields go in the `additional` bucket — always sent (even
 		// when blank) so clearing a value persists on edit.
 		if ( extraKeys.has( key ) ) {

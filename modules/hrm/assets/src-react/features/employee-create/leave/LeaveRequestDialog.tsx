@@ -31,6 +31,7 @@ import {
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
 import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
+import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { SelectField, TextField, TextareaField } from '../fields';
@@ -225,6 +226,7 @@ export function LeaveRequestDialog( {
 
 					<SelectField
 						id="leave_year"
+						labelAction={ <FieldSourceAction source="financialYears" /> }
 						label={ __( 'Financial Year', 'erp' ) }
 						required
 						options={ yearOptions }
@@ -234,6 +236,7 @@ export function LeaveRequestDialog( {
 					{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
 					<SelectField
 						id="leave_policy"
+						labelAction={ <FieldSourceAction source="leavePolicies" /> }
 						label={ __( 'Leave Policy', 'erp' ) }
 						required
 						disabled={ ! entitled }

@@ -24,17 +24,22 @@ import type { FormState } from './validation';
 interface EmployeePersonalSectionProps {
 	readonly form:            FormState;
 	readonly set:             ( key: string ) => ( value: string ) => void;
+	readonly errors:          Record< string, string >;
 	readonly countryOptions:  Option[];
 	readonly stateOptions:    Option[];
 	readonly onCountryChange: ( value: string ) => void;
+	/** Pro custom fields for this section — rendered inside this card, legacy-style. */
+	readonly extra?:          JSX.Element | null;
 }
 
 export function EmployeePersonalSection( {
 	form,
 	set,
+	errors,
 	countryOptions,
 	stateOptions,
 	onCountryChange,
+	extra,
 }: EmployeePersonalSectionProps ): JSX.Element {
 	return (
 		<FormSection title={ __( 'Personal Details', 'erp' ) }>
@@ -51,18 +56,21 @@ export function EmployeePersonalSection( {
 				label={ __( "Spouse's name", 'erp' ) }
 				value={ form.spouse_name ?? '' }
 				onChange={ set( 'spouse_name' ) }
+				error={ errors.spouse_name }
 			/>
 			<TextField
 				id="father_name"
 				label={ __( "Father's name", 'erp' ) }
 				value={ form.father_name ?? '' }
 				onChange={ set( 'father_name' ) }
+				error={ errors.father_name }
 			/>
 			<TextField
 				id="mother_name"
 				label={ __( "Mother's name", 'erp' ) }
 				value={ form.mother_name ?? '' }
 				onChange={ set( 'mother_name' ) }
+				error={ errors.mother_name }
 			/>
 			<TextField
 				id="mobile"
@@ -70,6 +78,7 @@ export function EmployeePersonalSection( {
 				type="tel"
 				value={ form.mobile ?? '' }
 				onChange={ set( 'mobile' ) }
+				error={ errors.mobile }
 			/>
 			<TextField
 				id="phone"
@@ -77,6 +86,7 @@ export function EmployeePersonalSection( {
 				type="tel"
 				value={ form.phone ?? '' }
 				onChange={ set( 'phone' ) }
+				error={ errors.phone }
 			/>
 			<TextField
 				id="other_email"
@@ -84,6 +94,7 @@ export function EmployeePersonalSection( {
 				type="email"
 				value={ form.other_email ?? '' }
 				onChange={ set( 'other_email' ) }
+				error={ errors.other_email }
 			/>
 			<TextField
 				id="date_of_birth"
@@ -91,6 +102,7 @@ export function EmployeePersonalSection( {
 				type="date"
 				value={ form.date_of_birth ?? '' }
 				onChange={ set( 'date_of_birth' ) }
+				error={ errors.date_of_birth }
 			/>
 			{ countryOptions.length > 0 ? (
 				<SmartSelectField
@@ -147,6 +159,7 @@ export function EmployeePersonalSection( {
 				type="url"
 				value={ form.user_url ?? '' }
 				onChange={ set( 'user_url' ) }
+				error={ errors.user_url }
 			/>
 			<TextField
 				id="street_1"
@@ -165,6 +178,7 @@ export function EmployeePersonalSection( {
 				label={ __( 'City', 'erp' ) }
 				value={ form.city ?? '' }
 				onChange={ set( 'city' ) }
+				error={ errors.city }
 			/>
 			{ countryOptions.length > 0 ? (
 				<SmartSelectField
@@ -214,6 +228,7 @@ export function EmployeePersonalSection( {
 				label={ __( 'Post Code / Zip Code', 'erp' ) }
 				value={ form.postal_code ?? '' }
 				onChange={ set( 'postal_code' ) }
+				error={ errors.postal_code }
 			/>
 			<TextareaField
 				id="description"
@@ -222,6 +237,7 @@ export function EmployeePersonalSection( {
 				onChange={ set( 'description' ) }
 				className="sm:col-span-2 lg:col-span-3"
 			/>
+			{ extra }
 		</FormSection>
 	);
 }
