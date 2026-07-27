@@ -12,19 +12,7 @@
  */
 
 import { useDispatch } from '@wordpress/data';
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	Alert,
-	AlertDescription,
-	toast,
-} from '@wedevs/plugin-ui';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Alert, AlertDescription } from '@wedevs/plugin-ui';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
@@ -33,6 +21,7 @@ import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeListItem, EmployeeTerminateInput } from '@/stores/employees';
 
 import { TerminateDialog } from './TerminateDialog';
+import { erpToast } from '@/shared/toast';
 
 interface EmployeeActionsApi {
 	readonly requestDelete:     ( employee: EmployeeListItem, force?: boolean ) => void;
@@ -112,12 +101,26 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 	}, [ busy ] );
 
 	const run = useCallback(
-		async ( fn: () => Promise< void >, successMsg: string, fallbackErr: string ): Promise< void > => {
+		async (
+			fn: () => Promise< void >,
+			successMsg: string,
+			fallbackErr: string,
+			// The employee the action was about. Passing them puts their photo on
+			// the toast, so "Ayesha was moved to trash" arrives with her face
+			// rather than a generic tick — worth it when the list rows all look
+			// alike and the action is destructive.
+			employee?: { readonly full_name: string; readonly avatar_url: string | null }
+		): Promise< void > => {
 			setBusy( true );
 			setError( null );
 			try {
 				await fn();
-				toast.success( successMsg );
+				erpToast.success(
+					successMsg,
+					employee
+						? { user: { name: employee.full_name, avatar: employee.avatar_url ?? undefined } }
+						: undefined
+				);
 				setPending( null );
 			} catch ( raw ) {
 				const message = ( raw as { message?: string } )?.message || fallbackErr;
@@ -139,7 +142,8 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 			force
 				? sprintf( __( '%s was permanently deleted.', 'erp' ), employee.full_name )
 				: sprintf( __( '%s was moved to trash.', 'erp' ), employee.full_name ),
-			__( 'Could not delete the employee. Please try again.', 'erp' )
+			__( 'Could not delete the employee. Please try again.', 'erp' ),
+			employee
 		);
 	}, [ pending, run, dispatch ] );
 
@@ -151,7 +155,8 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 		void run(
 			() => dispatch.restoreEmployee( employee.user_id ),
 			sprintf( __( '%s was restored.', 'erp' ), employee.full_name ),
-			__( 'Could not restore the employee. Please try again.', 'erp' )
+			__( 'Could not restore the employee. Please try again.', 'erp' ),
+			employee
 		);
 	}, [ pending, run, dispatch ] );
 
@@ -163,7 +168,8 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 		void run(
 			() => dispatch.reactivateEmployee( employee.user_id ),
 			sprintf( __( '%s was reactivated.', 'erp' ), employee.full_name ),
-			__( 'Could not reactivate the employee. Please try again.', 'erp' )
+			__( 'Could not reactivate the employee. Please try again.', 'erp' ),
+			employee
 		);
 	}, [ pending, run, dispatch ] );
 

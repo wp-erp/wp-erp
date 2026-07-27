@@ -17,6 +17,7 @@ import type { JSX, ReactNode } from 'react';
 import { useColorScheme } from '@/shared/hooks/useColorScheme';
 import { useDir } from '@/shared/hooks/useDir';
 import { erpDarkTokens, erpLightTokens } from '@/styles/erp.theme';
+import '@/shared/toast/install';
 
 const PLUGIN_ID = 'erp-hr-admin';
 

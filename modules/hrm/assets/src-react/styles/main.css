@@ -514,6 +514,22 @@ body:has(#erp-hr-app) {
 	}
 }
 
+/* ── Toast body drain ─────────────────────────────────────────────────
+ * The whole toast body is the timer: a tinted layer that scales away over
+ * the toast's own duration, so time-remaining is readable at a glance
+ * instead of hidden in a hairline bar. Ported from WP Project Manager,
+ * which uses the same card.
+ *
+ * `transform` (not `width`) so it runs on the compositor — a toast often
+ * animates while the page behind it is still settling.
+ *
+ * Deliberately NOT wrapped in a reduced-motion guard: this is a countdown,
+ * not decoration. Removing it would take the information with it. */
+@keyframes erp-toast-progress {
+	from { transform: scaleX( 1 ); }
+	to   { transform: scaleX( 0 ); }
+}
+
 /* ── Dashboard card entrance ──────────────────────────────────────────
  * Cards fade up as the dashboard paints, staggered by their position in the
  * grid so the eye is led across the layout instead of everything snapping in

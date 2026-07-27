@@ -21,6 +21,7 @@ import { restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
+import { erpToast } from '@/shared/toast';
 
 interface AvatarResponse {
 	readonly photo_id:   number | null;
@@ -63,7 +64,10 @@ export function AvatarUpload( {
 				body:   form,
 			} );
 			onChange( body.avatar_url ?? '' );
-			toast.success( __( 'Photo updated.', 'erp' ) );
+			// Show the photo that just landed — the confirmation is the picture.
+			erpToast.success( __( 'Photo updated.', 'erp' ), {
+				user: { name: fullName, avatar: body.avatar_url ?? undefined },
+			} );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not upload the photo.', 'erp' ) );
 		} finally {
