@@ -56,7 +56,7 @@ interface HistoryCardProps {
 
 function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction, children }: HistoryCardProps ): JSX.Element {
 	return (
-		<section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+		<section className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
 				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }

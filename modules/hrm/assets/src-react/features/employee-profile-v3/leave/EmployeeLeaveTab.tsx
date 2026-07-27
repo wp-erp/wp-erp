@@ -203,7 +203,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 				{ data.requests.length === 0 ? (
 					<p className="py-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
 				) : (
-					<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+					<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 						<div className="overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-card">

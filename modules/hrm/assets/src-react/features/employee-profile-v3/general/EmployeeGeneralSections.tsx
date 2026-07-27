@@ -62,7 +62,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 			{ rowCount === 0 ? (
 				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (
-				<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+				<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-card">

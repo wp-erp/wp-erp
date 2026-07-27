@@ -161,7 +161,7 @@ export function HeadcountPage(): JSX.Element {
 						{ __( 'No employees match these filters.', 'erp' ) }
 					</p>
 				) : (
-					<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+					<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 						<div className="overflow-x-auto">
 						<table className="w-full min-w-160 text-left">
 						<thead className="border-b border-border bg-card">
