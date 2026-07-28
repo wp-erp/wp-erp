@@ -173,7 +173,7 @@ export function PerformanceFormDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 					{ error ? (
 						<Alert variant="destructive">
 							<AlertDescription>{ error }</AlertDescription>

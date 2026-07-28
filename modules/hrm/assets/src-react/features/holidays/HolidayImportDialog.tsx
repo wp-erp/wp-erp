@@ -5,6 +5,10 @@
  * → `POST /holidays/parse` returns current-year preview rows (duplicates already
  * skipped server-side); (2) review + uncheck any rows, then `POST
  * /holidays/import` bulk-inserts the selected ones.
+ *
+ * The parse step also returns a `message` describing what it skipped. Showing it
+ * is the difference between "nothing importable here, and here is why" and the
+ * bare "No new holidays found" that used to swallow the reason.
  */
 
 import {
@@ -19,20 +23,43 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@wedevs/plugin-ui';
-import { Upload } from 'lucide-react';
+import { Download, Upload } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
-import { __, sprintf } from '@/shared/i18n';
+import { __, _n, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
-import type { HolidayImportResult, HolidayPreviewRow } from './types';
+import type { HolidayImportResult, HolidayParseResult, HolidayPreviewRow } from './types';
 
 interface HolidayImportDialogProps {
 	readonly open:      boolean;
 	readonly onClose:   () => void;
-	readonly onParse:   ( file: File ) => Promise< readonly HolidayPreviewRow[] >;
+	readonly onParse:   ( file: File ) => Promise< HolidayParseResult >;
 	readonly onImport:  ( rows: readonly HolidayPreviewRow[] ) => Promise< HolidayImportResult >;
+}
+
+/**
+ * Hand the user a correctly-shaped CSV to edit rather than making them infer the
+ * columns from a hint line. Built in the browser (no server round-trip, no bundled
+ * asset) and dated to the current year, since the importer only accepts this year.
+ */
+function downloadSampleCsv(): void {
+	const year = new Date().getFullYear();
+	const csv  = [
+		'title,start,end,description',
+		`New Year's Day,${ year }-01-01,${ year }-01-01,Single-day holiday`,
+		`Winter Break,${ year }-12-24,${ year }-12-26,Multi-day holiday (inclusive)`,
+	].join( '\n' );
+
+	const url  = URL.createObjectURL( new Blob( [ csv ], { type: 'text/csv;charset=utf-8' } ) );
+	const link = document.createElement( 'a' );
+	link.href     = url;
+	link.download = `erp-holidays-sample-${ year }.csv`;
+	document.body.appendChild( link );
+	link.click();
+	link.remove();
+	URL.revokeObjectURL( url );
 }
 
 export function HolidayImportDialog( {
@@ -46,6 +73,7 @@ export function HolidayImportDialog( {
 	const [ parsing, setParsing ] = useState( false );
 	const [ importing, setImporting ] = useState( false );
 	const [ error, setError ]     = useState< string | null >( null );
+	const [ notice, setNotice ]   = useState( '' );
 	const [ parsed, setParsed ]   = useState( false );
 
 	function reset(): void {
@@ -54,6 +82,7 @@ export function HolidayImportDialog( {
 		setParsing( false );
 		setImporting( false );
 		setError( null );
+		setNotice( '' );
 		setParsed( false );
 	}
 
@@ -69,10 +98,12 @@ export function HolidayImportDialog( {
 		}
 		setParsing( true );
 		setError( null );
+		setNotice( '' );
 		try {
 			const preview = await onParse( file );
-			setRows( preview );
-			setChecked( new Set( preview.map( ( _, i ) => i ) ) );
+			setRows( preview.rows );
+			setChecked( new Set( preview.rows.map( ( _, i ) => i ) ) );
+			setNotice( preview.message );
 			setParsed( true );
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Could not read the file.', 'erp' ) );
@@ -145,7 +176,7 @@ export function HolidayImportDialog( {
 					</label>
 				) : rows.length === 0 ? (
 					<p className="p-6 text-center text-sm text-muted-foreground">
-						{ __( 'No new holidays found in that file.', 'erp' ) }
+						{ notice || __( 'No new holidays found in that file.', 'erp' ) }
 					</p>
 				) : (
 					<div className="max-h-80 overflow-auto rounded-lg border border-border">
@@ -174,6 +205,23 @@ export function HolidayImportDialog( {
 					</div>
 				) }
 
+				{ ! parsed ? (
+					<button
+						type="button"
+						className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-primary hover:underline"
+						onClick={ downloadSampleCsv }
+					>
+						<Download size={ 14 } aria-hidden="true" />
+						{ __( 'Download a sample CSV', 'erp' ) }
+					</button>
+				) : null }
+
+				{ notice && rows.length > 0 ? (
+					<Alert>
+						<AlertDescription>{ notice }</AlertDescription>
+					</Alert>
+				) : null }
+
 				{ error ? (
 					<Alert variant="destructive">
 						<AlertDescription>{ error }</AlertDescription>
@@ -188,7 +236,10 @@ export function HolidayImportDialog( {
 						<Button type="button" className="h-10 px-6" disabled={ busy || checked.size === 0 } onClick={ () => void handleImport() }>
 							{ importing
 								? __( 'Importing…', 'erp' )
-								: sprintf( __( 'Import %d holidays', 'erp' ), checked.size ) }
+								: sprintf(
+										_n( 'Import %d holiday', 'Import %d holidays', checked.size, 'erp' ),
+										checked.size
+								  ) }
 						</Button>
 					) : null }
 				</DialogFooter>

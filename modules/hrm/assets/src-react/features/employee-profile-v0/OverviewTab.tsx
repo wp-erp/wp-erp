@@ -34,6 +34,7 @@ import {
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { formatCalendarDate } from '@/shared/utils/date';
 
 import { EmployeeExtraFieldsView } from '../employee-create/EmployeeExtraFieldsView';
 import { PayRateReveal } from './PayRateReveal';
@@ -77,8 +78,10 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 				<Item icon={ IdCard } label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
 				<Item icon={ Briefcase } label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
 				<Item icon={ Activity } label={ __( 'Employee Status', 'erp' ) } value={ labelOf( STATUS_OPTIONS, status ) } />
-				<Item icon={ Calendar } label={ __( 'Date of Hire', 'erp' ) } value={ str( record, 'hiring_date' ) } />
-				<Item icon={ CalendarOff } label={ __( 'Employee End Date', 'erp' ) } value={ str( record, 'end_date' ) } />
+				{ /* Stored calendar dates — rendered in the site date format like every
+				     table in the app, not as the raw `YYYY-MM-DD` the server sends. */ }
+				<Item icon={ Calendar } label={ __( 'Date of Hire', 'erp' ) } value={ formatCalendarDate( str( record, 'hiring_date' ), '' ) } />
+				<Item icon={ CalendarOff } label={ __( 'Employee End Date', 'erp' ) } value={ formatCalendarDate( str( record, 'end_date' ), '' ) } />
 				<Item icon={ Building2 } label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
 				<Item icon={ Tag } label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
 				<Item icon={ MapPin } label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
@@ -113,7 +116,7 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 			{ /* Personal details are sensitive — self / managers only (legacy tab-general.php:26). */ }
 			{ canEdit ? (
 			<DetailCard title={ __( 'Personal Details', 'erp' ) }>
-				<Item icon={ Calendar } label={ __( 'Date of Birth', 'erp' ) } value={ str( record, 'date_of_birth' ) } />
+				<Item icon={ Calendar } label={ __( 'Date of Birth', 'erp' ) } value={ formatCalendarDate( str( record, 'date_of_birth' ), '' ) } />
 				<Item icon={ User } label={ __( 'Gender', 'erp' ) } value={ labelOf( GENDER_OPTIONS, str( record, 'gender' ) ) } />
 				<Item icon={ Heart } label={ __( 'Marital Status', 'erp' ) } value={ labelOf( MARITAL_OPTIONS, str( record, 'marital_status' ) ) } />
 				<Item icon={ Droplets } label={ __( 'Blood Group', 'erp' ) } value={ labelOf( BLOOD_GROUP_OPTIONS, str( record, 'blood_group' ) ) } />

@@ -158,7 +158,7 @@ export function LocationFormDialog( { open, onClose, onCreated }: LocationFormDi
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 					<TextField
 						id="location_name"
 						label={ __( 'Location Name', 'erp' ) }

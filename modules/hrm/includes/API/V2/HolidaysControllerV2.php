@@ -371,15 +371,9 @@ class HolidaysControllerV2 extends RestControllerV2 {
 		$type  = isset( $_FILES['file']['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES['file']['type'] ) ) : '';
 
 		if ( \in_array( $type, $mimes, true ) ) {
-			$parsed = import_holidays_csv( $temp_name );
-
-			// import_holidays_csv() returns either a string error message or a
-			// rows array; normalise to the v2 preview shape.
-			if ( \is_array( $parsed ) ) {
-				return rest_ensure_response( [ 'rows' => array_values( $parsed ) ] );
-			}
-
-			return rest_ensure_response( [ 'rows' => [], 'message' => (string) $parsed ] );
+			return rest_ensure_response(
+				$this->parse_csv_preview( $temp_name, $first_day_of_year, $last_day_of_year )
+			);
 		}
 
 		// ICS branch.
@@ -422,6 +416,114 @@ class HolidaysControllerV2 extends RestControllerV2 {
 		}
 
 		return rest_ensure_response( [ 'rows' => $rows ] );
+	}
+
+	/**
+	 * Build preview rows from an uploaded CSV, on the same terms as the ICS branch.
+	 *
+	 * The shared `import_holidays_csv()` aborts the **whole file** and returns an
+	 * HTML error string as soon as one row is a duplicate or malformed, which the
+	 * v2 preview then had no way to explain — the dialog just said "No new holidays
+	 * found in that file" and dropped every valid row with it. It also applies no
+	 * year window, so a next-year row was previewed and imported despite the
+	 * dialog's "only this year's entries" promise.
+	 *
+	 * Preview writes nothing, so it can be forgiving: skip what cannot be imported,
+	 * keep what can, and report both. Validation matches the legacy function
+	 * (title present + ≤200 chars, `Y-m-d` bounds) so nothing gets through here that
+	 * `import_items()` would later reject. The legacy AJAX screen keeps using
+	 * `import_holidays_csv()` untouched.
+	 *
+	 * @param string $file       Uploaded temp file path.
+	 * @param int    $year_start First second of the current year.
+	 * @param int    $year_end   Last second of the current year.
+	 *
+	 * @return array{rows: array<int, array<string, string>>, message: string}
+	 */
+	private function parse_csv_preview( string $file, int $year_start, int $year_end ): array {
+		if ( ! class_exists( '\ParseCsv\Csv' ) ) {
+			return [ 'rows' => [], 'message' => __( 'CSV parser unavailable.', 'erp' ) ];
+		}
+
+		$csv = new \ParseCsv\Csv();
+		$csv->encoding( null, 'UTF-8' );
+		$csv->parse( $file );
+
+		$holiday_model = new LeaveHoliday();
+		$rows          = [];
+		$invalid       = [];
+		$duplicates    = 0;
+		$off_year      = 0;
+
+		foreach ( (array) $csv->data as $index => $data ) {
+			$title       = isset( $data['title'] ) ? sanitize_text_field( (string) $data['title'] ) : '';
+			$start       = isset( $data['start'] ) ? trim( (string) $data['start'] ) : '';
+			$end         = isset( $data['end'] ) ? trim( (string) $data['end'] ) : '';
+			$description = isset( $data['description'] ) ? sanitize_text_field( (string) $data['description'] ) : '';
+			$row_no      = (int) $index + 1;
+
+			if ( '' === $title || mb_strlen( $title ) > 200 ) {
+				/* translators: %d: CSV row number. */
+				$invalid[] = \sprintf( __( 'row %d: the title is missing or longer than 200 characters', 'erp' ), $row_no );
+				continue;
+			}
+
+			if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $start ) || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $end ) ) {
+				/* translators: %d: CSV row number. */
+				$invalid[] = \sprintf( __( 'row %d: the start or end date is not YYYY-MM-DD', 'erp' ), $row_no );
+				continue;
+			}
+
+			$start_ts = strtotime( $start . ' 00:00:00' );
+			$end_ts   = strtotime( $end . ' 23:59:59' );
+
+			if ( false === $start_ts || false === $end_ts || $end_ts < $start_ts ) {
+				/* translators: %d: CSV row number. */
+				$invalid[] = \sprintf( __( 'row %d: the end date is before the start date', 'erp' ), $row_no );
+				continue;
+			}
+
+			// Same window the ICS branch applies, and the one the dialog promises.
+			if ( $start_ts < $year_start || $end_ts > $year_end ) {
+				++$off_year;
+				continue;
+			}
+
+			$start = gmdate( 'Y-m-d 00:00:00', $start_ts );
+			$end   = gmdate( 'Y-m-d 23:59:59', $end_ts );
+
+			$dup = $holiday_model->where( 'title', '=', $title )->where( 'start', '=', $start );
+			if ( $dup->count() ) {
+				++$duplicates;
+				continue;
+			}
+
+			$days = erp_date_duration( $start, $end );
+
+			$rows[] = [
+				'title'       => $title,
+				'start'       => $start,
+				'end'         => $end,
+				'description' => $description,
+				'duration'    => $days . ' ' . _n( 'day', 'days', $days, 'erp' ),
+			];
+		}
+
+		$notes = [];
+		if ( $duplicates > 0 ) {
+			/* translators: %d: number of rows. */
+			$notes[] = \sprintf( _n( '%d row already exists and was skipped.', '%d rows already exist and were skipped.', $duplicates, 'erp' ), $duplicates );
+		}
+		if ( $off_year > 0 ) {
+			/* translators: %d: number of rows. */
+			$notes[] = \sprintf( _n( '%d row falls outside this year and was skipped.', '%d rows fall outside this year and were skipped.', $off_year, 'erp' ), $off_year );
+		}
+		if ( ! empty( $invalid ) ) {
+			/* translators: %s: comma-separated list of row problems. */
+			$notes[] = \sprintf( __( 'Skipped invalid rows — %s.', 'erp' ), implode( '; ', $invalid ) );
+		}
+
+		return [ 'rows' => $rows, 'message' => implode( ' ', $notes ) ];
 	}
 
 	/**

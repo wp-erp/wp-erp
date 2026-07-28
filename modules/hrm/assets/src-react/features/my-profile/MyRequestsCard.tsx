@@ -27,6 +27,7 @@ import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
 import { DateField } from '@/shared/DateField';
+import { useBoot } from '@/shared/hooks/useBoot';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -41,8 +42,15 @@ const today = (): string => todaySiteYmd();
  * The two self-service request buttons, sized to sit beside the profile "Edit"
  * button in the header. Rendered only on `/my-profile` (self context).
  */
-export function MyRequestActions(): JSX.Element {
+export function MyRequestActions(): JSX.Element | null {
 	const [ open, setOpen ] = useState< Kind >( null );
+	const { isPro } = useBoot();
+
+	// Both flows are pro-only: without ERP Pro the create/reason routes do not
+	// exist, so offering the buttons only leads to a 404 toast.
+	if ( ! isPro ) {
+		return null;
+	}
 
 	return (
 		<>

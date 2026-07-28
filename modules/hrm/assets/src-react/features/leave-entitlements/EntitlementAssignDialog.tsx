@@ -154,7 +154,7 @@ export function EntitlementAssignDialog( {
 						</DialogFooter>
 					</div>
 				) : (
-				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 					<SmartSelectField
 						id="entitlement_policy"
 						labelAction={ <FieldSourceAction source="leavePolicies" /> }

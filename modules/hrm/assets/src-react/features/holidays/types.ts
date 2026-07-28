@@ -29,6 +29,16 @@ export interface HolidayPreviewRow {
 	readonly duration?:   string;
 }
 
+/**
+ * Result of `POST /erp/v2/holidays/parse`. `message` is the server's account of
+ * what it skipped — duplicates, rows outside this year, malformed rows — and is
+ * empty when the whole file was usable.
+ */
+export interface HolidayParseResult {
+	readonly rows:    readonly HolidayPreviewRow[];
+	readonly message: string;
+}
+
 /** Result of `POST /erp/v2/holidays/import`. */
 export interface HolidayImportResult {
 	readonly imported: number;

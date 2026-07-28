@@ -86,7 +86,7 @@ export function DesignationFormDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 					<TextField
 						id="desig_title"
 						label={ __( 'Designation Name', 'erp' ) }

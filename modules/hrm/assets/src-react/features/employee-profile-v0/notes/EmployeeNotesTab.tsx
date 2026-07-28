@@ -15,7 +15,7 @@ import type { FormEvent, JSX } from 'react';
 
 import { OrgDeleteDialog } from '@/features/org/OrgDeleteDialog';
 import { useCan } from '@/shared/hooks/useCan';
-import { __ } from '@/shared/i18n';
+import { __, dateI18n } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { useEmployeeNotes } from './useEmployeeNotes';
@@ -31,16 +31,17 @@ function initials( name: string ): string {
 	return ( first + last ).toUpperCase();
 }
 
+/**
+ * A note's `created_at` is a genuine instant, so it must render in the **site**
+ * timezone like every other WP admin timestamp. `toLocaleString()` would use the
+ * viewer's browser zone instead — on a UTC site a 05:42 note showed as 11:42 to
+ * a reader at UTC+6.
+ */
 function formatDate( iso: string ): string {
-	const date = new Date( iso );
-	if ( Number.isNaN( date.getTime() ) ) {
+	if ( ! iso || Number.isNaN( new Date( iso ).getTime() ) ) {
 		return '';
 	}
-	return (
-		date.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } ) +
-		' · ' +
-		date.toLocaleTimeString( undefined, { hour: '2-digit', minute: '2-digit' } )
-	);
+	return dateI18n( 'M j, Y · g:i a', iso );
 }
 
 export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX.Element {

@@ -22,6 +22,7 @@ import type {
 	Holiday,
 	HolidayImportResult,
 	HolidayInput,
+	HolidayParseResult,
 	HolidayPreviewRow,
 } from './types';
 
@@ -46,7 +47,7 @@ export interface UseHolidaysResult {
 	readonly save:    ( id: number | null, payload: HolidayInput ) => Promise< void >;
 	readonly remove:  ( id: number ) => Promise< void >;
 	readonly removeMany: ( ids: readonly number[] ) => Promise< void >;
-	readonly parseFile: ( file: File ) => Promise< readonly HolidayPreviewRow[] >;
+	readonly parseFile: ( file: File ) => Promise< HolidayParseResult >;
 	readonly importRows: ( rows: readonly HolidayPreviewRow[] ) => Promise< HolidayImportResult >;
 }
 
@@ -123,15 +124,20 @@ export function useHolidays( { from, to, search, orderby, order, page, perPage }
 	// File upload needs a raw multipart body — apiFetch JSON-stringifies the
 	// `data` option, so the FormData goes through `body` directly (same pattern
 	// as AvatarUpload). The shared root-URL + nonce middlewares still apply.
-	const parseFile = useCallback( async ( file: File ): Promise< readonly HolidayPreviewRow[] > => {
+	const parseFile = useCallback( async ( file: File ): Promise< HolidayParseResult > => {
 		const fd = new FormData();
 		fd.append( 'file', file );
-		const res = await apiFetch< { rows: HolidayPreviewRow[] } >( {
+		const res = await apiFetch< { rows: HolidayPreviewRow[]; message?: string } >( {
 			path:   restPath( 'v2', '/holidays/parse' ),
 			method: 'POST',
 			body:   fd,
 		} );
-		return Array.isArray( res?.rows ) ? res.rows : [];
+		// `message` explains what the server skipped (duplicates, off-year, invalid
+		// rows). Dropping it was why a file with one bad row looked like an empty one.
+		return {
+			rows:    Array.isArray( res?.rows ) ? res.rows : [],
+			message: 'string' === typeof res?.message ? res.message : '',
+		};
 	}, [] );
 
 	const importRows = useCallback(

@@ -122,7 +122,17 @@ class EmployeePermissionControllerV2 extends RestControllerV2 {
 
 		// CRM Manager + Agent — only when the CRM module is active and the acting
 		// user is a CRM manager (same gate as `erp_crm_permission_management_field`).
-		if ( function_exists( 'erp_crm_is_current_user_manager' ) && erp_crm_is_current_user_manager() ) {
+		//
+		// `function_exists()` alone is NOT that gate: `wp-erp.php` loads the CRM
+		// capability helpers unconditionally, so on an HRM-only install the check
+		// passed and an admin was offered CRM roles for a module that is not even
+		// running. Legacy got this right for free — its field is hooked from
+		// `CRM.php`, which only loads when the module is active.
+		if (
+			erp_is_module_active( 'crm' )
+			&& function_exists( 'erp_crm_is_current_user_manager' )
+			&& erp_crm_is_current_user_manager()
+		) {
 			$roles[] = [
 				'key'         => 'crm_manager',
 				'label'       => __( 'CRM Manager', 'erp' ),
@@ -138,7 +148,13 @@ class EmployeePermissionControllerV2 extends RestControllerV2 {
 		}
 
 		// Accounting Manager — same gate as `Admin::permission_management_field`.
-		if ( function_exists( 'erp_ac_is_current_user_manager' ) && erp_ac_is_current_user_manager() ) {
+		// The module check is belt-and-braces here (accounting's helpers load with
+		// the module today) so this branch cannot drift into the CRM trap above.
+		if (
+			erp_is_module_active( 'accounting' )
+			&& function_exists( 'erp_ac_is_current_user_manager' )
+			&& erp_ac_is_current_user_manager()
+		) {
 			$roles[] = [
 				'key'         => 'acct_manager',
 				'label'       => __( 'Accounting Manager', 'erp' ),

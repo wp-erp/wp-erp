@@ -217,7 +217,7 @@ export function LeaveRequestDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<form onSubmit={ ( e ) => void handleSubmit( e ) } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ ( e ) => void handleSubmit( e ) } className="flex min-w-0 flex-col gap-4" noValidate>
 					{ error ? (
 						<Alert variant="destructive">
 							<AlertDescription>{ error }</AlertDescription>

@@ -146,12 +146,19 @@ function AnnouncementsInner(): JSX.Element {
 	// Deep-link / refresh: when `?form=<id>` is present but the detail isn't
 	// loaded yet (e.g. opened the dialog, then refreshed), fetch it.
 	useEffect( () => {
-		const id = formParam && formParam !== 'new' ? Number( formParam ) : 0;
+		if ( formParam === null ) {
+			return;
+		}
+		// The dialog needs its option lists whichever way it was opened. On a cold
+		// `?form=new` nothing has called `openCreate()`, so without this the selects
+		// render their raw stored codes (`all_employee`) and offer no choices.
+		void ensureOptions();
+
+		const id = formParam !== 'new' ? Number( formParam ) : 0;
 		if ( ! id || editing?.id === id ) {
 			return;
 		}
 		let active = true;
-		void ensureOptions();
 		void getOne( id )
 			.then( ( full ) => {
 				if ( active ) {

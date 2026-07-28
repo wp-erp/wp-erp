@@ -118,7 +118,7 @@ export function TerminateDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 					<TextField
 						id="terminate_date"
 						label={ __( 'Termination Date', 'erp' ) }

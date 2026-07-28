@@ -286,6 +286,13 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 			setError( __( 'Please select an employee, policy and date range.', 'erp' ) );
 			return;
 		}
+		// Mirrors the server (`rest_leave_reason_required`) — the field is marked
+		// required in the markup, and with native validation off this guard is
+		// what actually enforces it.
+		if ( ! reason.trim() ) {
+			setError( __( 'Leave reason field can not be blank.', 'erp' ) );
+			return;
+		}
 		if ( to < from ) {
 			setError( __( 'The end date must be on or after the start date.', 'erp' ) );
 			return;

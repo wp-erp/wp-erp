@@ -117,7 +117,7 @@ export function NewLeaveRequestForm( {
 	const canManagePolicies = useCan( 'erp_leave_manage' );
 
 	return (
-		<form onSubmit={ onSubmit } className="flex min-w-0 flex-col gap-4">
+		<form onSubmit={ onSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 			{ error ? (
 				<Alert variant="destructive">
 					<AlertDescription>{ error }</AlertDescription>
