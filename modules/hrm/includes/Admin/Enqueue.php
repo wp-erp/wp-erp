@@ -228,7 +228,24 @@ final class Enqueue {
 			'displayName'   => (string) ( $user->display_name ?? '' ),
 			'email'         => (string) ( $user->user_email ?? '' ),
 			'avatarUrl'     => get_avatar_url( $user_id, [ 'size' => 80 ] ) ?: '',
-			'isPro'         => class_exists( 'WP_ERP_Pro' ),
+			/**
+			 * Whether the pro feature set is actually **usable**, which drives every
+			 * "Pro" badge and upsell in the React admin.
+			 *
+			 * The plugin merely being installed is not enough: without a valid licence
+			 * `Module::load_active_modules()` bails, so no pro module loads. Anything
+			 * gated on this must therefore ask the pro plugin, not just look for its
+			 * class — otherwise an unlicensed site sees pro affordances (the Requests
+			 * hub's Resignation / Remote Work tabs, for one) that it cannot use.
+			 *
+			 * ERP Pro answers this filter with its licence check; the `class_exists`
+			 * default keeps free-only sites and older pro builds behaving as before.
+			 *
+			 * @since 1.18.1
+			 *
+			 * @param bool $is_pro Whether pro is present and licensed.
+			 */
+			'isPro'         => (bool) apply_filters( 'erp_hr_is_pro_active', class_exists( 'WP_ERP_Pro' ) ),
 			'isHrManager'   => function_exists( 'erp_hr_get_manager_role' )
 				? in_array( erp_hr_get_manager_role(), (array) $user->roles, true )
 				: false,

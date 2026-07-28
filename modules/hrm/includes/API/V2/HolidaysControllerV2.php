@@ -447,7 +447,13 @@ class HolidaysControllerV2 extends RestControllerV2 {
 
 		$csv = new \ParseCsv\Csv();
 		$csv->encoding( null, 'UTF-8' );
-		$csv->parse( $file );
+		// `parse()` with a path is deprecated in ParseCsv and emits a notice on every
+		// import; `parseFile()` is the supported call for a file.
+		if ( method_exists( $csv, 'parseFile' ) ) {
+			$csv->parseFile( $file );
+		} else {
+			$csv->parse( $file );
+		}
 
 		$holiday_model = new LeaveHoliday();
 		$rows          = [];
