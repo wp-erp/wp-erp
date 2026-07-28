@@ -164,6 +164,35 @@ abstract class RestControllerV2 extends WP_REST_Controller {
 	}
 
 	/**
+	 * Cast a stored date boundary to its bare calendar day (`Y-m-d`).
+	 *
+	 * Holiday rows are stored as `Y-m-d 00:00:00` / `Y-m-d 23:59:59` in site
+	 * time. Anything carrying a time component travels as an instant and gets
+	 * re-interpreted in the viewer's timezone, so an end-of-day boundary lands
+	 * on the following date (a 17–19 Aug holiday listed as "Aug 17 – Aug 20").
+	 * A calendar day has no timezone; send it as one.
+	 *
+	 * @param mixed $value Stored datetime.
+	 *
+	 * @return string|null
+	 */
+	protected function cast_calendar_day( $value ): ?string {
+		if ( ! \is_string( $value ) ) {
+			return null;
+		}
+
+		$value = trim( $value );
+
+		if ( $value === '' || strpos( $value, '0000-00-00' ) === 0 ) {
+			return null;
+		}
+
+		$timestamp = strtotime( $value );
+
+		return $timestamp === false ? null : gmdate( 'Y-m-d', $timestamp );
+	}
+
+	/**
 	 * Cast a value to a non-empty string, or null when empty.
 	 *
 	 * @param mixed $value Raw value.

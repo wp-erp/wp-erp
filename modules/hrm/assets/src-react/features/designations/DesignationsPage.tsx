@@ -18,6 +18,7 @@ import type { JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
+import { useListUrlSync } from '@/shared/hooks/useListUrlSync';
 import { __, sprintf } from '@/shared/i18n';
 import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -56,6 +57,22 @@ function DesignationsInner(): JSX.Element {
 
 	const activeFilterCount = employeesFilter ? 1 : 0;
 	const filterButtonActive = showFilters || activeFilterCount > 0;
+
+	// Keep the view in the URL, like the Employees list: a refresh or a shared
+	// link reproduces the same search, sort, page and filter.
+	useListUrlSync( [
+		{ key: 'search',    value: search,          initial: '',      apply: setSearch },
+		{ key: 'page',      value: page,            initial: 1,       apply: ( v ) => setPage( Number( v ) || 1 ) },
+		{ key: 'per_page',  value: perPage,         initial: 10,      apply: ( v ) => setPerPage( Number( v ) || 10 ) },
+		{ key: 'orderby',   value: sort.key,        initial: 'title', apply: ( v ) => setSort( ( p ) => ( { ...p, key: v as SortKey } ) ) },
+		{ key: 'order',     value: sort.dir,        initial: 'asc',   apply: ( v ) => setSort( ( p ) => ( { ...p, dir: v === 'desc' ? 'desc' : 'asc' } ) ) },
+		{ key: 'employees', value: employeesFilter, initial: '',      apply: ( v ) => {
+			if ( v === 'with' || v === 'without' ) {
+				setEmployeesFilter( v );
+				setShowFilters( true );
+			}
+		} },
+	] );
 
 	const filtered = useMemo( () => {
 		const q = search.trim().toLowerCase();

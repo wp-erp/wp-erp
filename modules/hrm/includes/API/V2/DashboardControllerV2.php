@@ -180,8 +180,12 @@ class DashboardControllerV2 extends RestControllerV2 {
 			$holidays[] = [
 				'id'          => (int) ( $holiday->id ?? 0 ),
 				'title'       => $this->cast_string_or_null( $holiday->title ?? '' ) ?? '',
-				'start'       => $this->cast_date_iso( $holiday->start ?? null ),
-				'end'         => $this->cast_date_iso( $holiday->end ?? null ),
+				// Bare calendar days, not instants: the rows end at `23:59:59`, and
+				// an ISO datetime rendered in the viewer's timezone tips that onto
+				// the next date — the widget listed a single-day holiday as
+				// "Aug 10 – Aug 11". Same fix as `HolidaysControllerV2`.
+				'start'       => $this->cast_calendar_day( $holiday->start ?? null ),
+				'end'         => $this->cast_calendar_day( $holiday->end ?? null ),
 				'description' => $this->cast_string_or_null( $holiday->description ?? '' ),
 			];
 		}

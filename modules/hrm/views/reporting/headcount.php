@@ -166,9 +166,10 @@
                     <td><?php
                         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         echo erp_format_date( esc_attr( $employee->hiring_date ) ); ?></td>
-                    <td><?php echo esc_attr( $employee->designation_title ); ?></td>
+                    <?php // `designation_title` / `location_name` have no `get_*()` accessor, so they always resolved to null and printed empty cells. ?>
+                    <td><?php echo esc_attr( $employee->job_title ); ?></td>
                     <td><?php echo esc_attr( $employee->department_title ); ?></td>
-                    <td><?php echo esc_attr( $employee->location_name ); ?></td>
+                    <td><?php echo esc_attr( $employee->work_location ); ?></td>
                     <td><?php echo esc_attr( $employee->status ); ?></td>
                 </tr>
             <?php endforeach; ?>

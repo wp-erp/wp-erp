@@ -763,26 +763,30 @@ function erp_settings_save_leave_years( $post_data = [] ) {
         $id = isset( $data['id'] ) ? absint( $data['id'] ) : 0;
 
         if ( $id && in_array( $id, $existing_ids, true ) ) {
+            // `created_at` / `updated_at` are INT columns (unix timestamps) on this
+            // table. A 'Y-m-d H:i:s' string written with %s was truncated by MySQL
+            // to its leading digits, so every row recorded the useless value 2026.
             $row['updated_by'] = get_current_user_id();
-            $row['updated_at'] = gmdate( 'Y-m-d H:i:s' );
+            $row['updated_at'] = erp_current_datetime()->getTimestamp();
 
             $wpdb->update(
                 $table,
                 $row,
                 [ 'id' => $id ],
-                [ '%s', '%d', '%d', '%s', '%d', '%s' ],
+                [ '%s', '%d', '%d', '%s', '%d', '%d' ],
                 [ '%d' ]
             );
 
             $kept_ids[] = $id;
         } else {
+            // Unix timestamp into an INT column — see the update branch above.
             $row['created_by'] = get_current_user_id();
-            $row['created_at'] = gmdate( 'Y-m-d H:i:s' );
+            $row['created_at'] = erp_current_datetime()->getTimestamp();
 
             $wpdb->insert(
                 $table,
                 $row,
-                [ '%s', '%d', '%d', '%s', '%d', '%s' ]
+                [ '%s', '%d', '%d', '%s', '%d', '%d' ]
             );
 
             $kept_ids[] = (int) $wpdb->insert_id;

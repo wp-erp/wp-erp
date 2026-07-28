@@ -310,7 +310,11 @@ final class Enqueue {
 		foreach ( (array) $countries as $code => $name ) {
 			$options[] = [
 				'value' => (string) $code,
-				'label' => (string) $name,
+				// The source list is HTML-encoded (`&#197;land Islands`), which the
+				// legacy PHP `<select>` got for free — the browser decoded it. React
+				// escapes text, so the entity rendered literally. Decode once here so
+				// every consumer of the boot payload gets a real string.
+				'label' => html_entity_decode( (string) $name, ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 			];
 		}
 
@@ -342,7 +346,8 @@ final class Enqueue {
 			foreach ( $states as $state_code => $state_name ) {
 				$options[] = [
 					'value' => (string) $state_code,
-					'label' => (string) $state_name,
+					// Same HTML-entity decoding as the country labels above.
+					'label' => html_entity_decode( (string) $state_name, ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 				];
 			}
 

@@ -8,7 +8,7 @@
 
 import { applyFilters } from '@wordpress/hooks';
 import { Suspense, lazy } from 'react';
-import { createHashRouter } from 'react-router-dom';
+import { Navigate, createHashRouter } from 'react-router-dom';
 import type { RouteObject } from 'react-router-dom';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -632,6 +632,11 @@ export function buildHashRouter(): ReturnType< typeof createHashRouter > {
 						</CapabilityGate>
 					),
 				},
+				// The dashboard is the index route, so its URL is `#/`. `#/dashboard`
+				// is the path everyone guesses (bookmarks, docs, a hand-typed link),
+				// and without this alias the catch-all below answered it with
+				// "Page not found".
+				{ path: 'dashboard', element: <Navigate to="/" replace /> },
 				...wrapRoutes(),
 				{ path: '*', element: <NotFound /> },
 			],

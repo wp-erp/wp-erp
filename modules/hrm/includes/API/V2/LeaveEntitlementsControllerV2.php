@@ -22,6 +22,7 @@
 
 namespace WeDevs\ERP\HRM\API\V2;
 
+use WeDevs\ERP\HRM\Models\LeaveEntitlement;
 use WeDevs\ERP\HRM\Models\LeavePolicy;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -281,9 +282,26 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 		}
 
 		$affected = 0;
+		$skipped  = 0;
 		$errors   = [];
 
 		foreach ( $employees as $employee ) {
+			// `erp_hr_leave_insert_entitlement()` answers an already-entitled
+			// employee with the *existing* row id — a truthy, non-WP_Error value —
+			// so counting its return as an insert reported "1 entitlement(s)
+			// assigned" for a no-op. Ask first, and count those separately.
+			$already = LeaveEntitlement::where( 'user_id', '=', (int) $employee->user_id )
+				->where( 'leave_id', '=', (int) $policy->leave_id )
+				->where( 'trn_id', '=', (int) $policy->id )
+				->where( 'trn_type', '=', 'leave_policies' )
+				->where( 'f_year', '=', (int) $policy->f_year )
+				->count();
+
+			if ( $already ) {
+				++$skipped;
+				continue;
+			}
+
 			$inserted = erp_hr_leave_insert_entitlement(
 				[
 					'user_id'     => $employee->user_id,
@@ -318,6 +336,10 @@ class LeaveEntitlementsControllerV2 extends RestControllerV2 {
 		$response = rest_ensure_response(
 			[
 				'affected' => $affected,
+				// Employees that already held this policy for the year. Nothing was
+				// written for them, and the caller needs to say so rather than
+				// claim a successful assignment.
+				'skipped'  => $skipped,
 				'errors'   => array_values( array_unique( $errors ) ),
 			]
 		);

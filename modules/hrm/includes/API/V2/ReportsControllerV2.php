@@ -347,9 +347,16 @@ class ReportsControllerV2 extends RestControllerV2 {
 				'name'             => $this->cast_string_or_null( $employee->display_name ) ?? '',
 				'avatar'           => $employee->get_avatar_url( 60 ) ?: null,
 				'hire_date'        => $this->cast_date_iso( $employee->hiring_date ),
-				'designation'      => $this->cast_string_or_null( $employee->designation_title ),
+				// `Employee::__get()` resolves `foo` through `get_foo()`. There is no
+				// `get_designation_title()` and no `get_location_name()`, so those two
+				// names fell through every branch and returned null — both columns
+				// rendered as em dashes for employees that had a job title and a work
+				// location. `job_title` and `work_location` are the accessors that
+				// exist. (`department_title` works only because a deprecated
+				// `get_department_title()` happens to be there.)
+				'designation'      => $this->cast_string_or_null( $employee->job_title ),
 				'department'       => $this->cast_string_or_null( $employee->department_title ),
-				'location'         => $this->cast_string_or_null( $employee->location_name ),
+				'location'         => $this->cast_string_or_null( $employee->work_location ),
 				'status'           => $this->cast_string_or_null( $employee->status ),
 			];
 		}

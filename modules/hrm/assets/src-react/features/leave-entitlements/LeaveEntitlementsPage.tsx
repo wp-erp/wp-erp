@@ -122,6 +122,20 @@ function LeaveEntitlementsInner(): JSX.Element {
 		setFormError( null );
 		try {
 			const res = await assign( payload );
+
+			// Employees who already hold the policy are reported as `skipped`, not
+			// assigned. Without this the dialog just closed on a no-op, with no way
+			// to tell "saved" from "already had it".
+			if ( res.affected === 0 && res.errors.length === 0 ) {
+				setFormError(
+					__(
+						'Nothing to assign — everyone in this policy’s scope is already entitled to it for this financial year.',
+						'erp'
+					)
+				);
+				return;
+			}
+
 			if ( res.affected > 0 ) {
 				toast.success( sprintf( __( '%d entitlement(s) assigned.', 'erp' ), res.affected ) );
 			}

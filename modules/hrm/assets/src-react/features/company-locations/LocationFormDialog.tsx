@@ -27,6 +27,7 @@ import type { FormEvent, JSX } from 'react';
 
 import { useBoot } from '@/shared/hooks/useBoot';
 import { __ } from '@/shared/i18n';
+import { dismissGuard } from '@/shared/utils/dialog';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
@@ -145,7 +146,7 @@ export function LocationFormDialog( { open, onClose, onCreated }: LocationFormDi
 	}
 
 	return (
-		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
+		<Dialog open={ open } onOpenChange={ dismissGuard( onClose, busy ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">

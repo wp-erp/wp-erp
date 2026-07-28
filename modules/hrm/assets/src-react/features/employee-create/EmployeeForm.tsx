@@ -393,7 +393,14 @@ export function EmployeeForm( {
 
 	return (
 		<>
-			<form onSubmit={ handleSubmit } className="w-full">
+			{ /*
+			  * `noValidate` — the browser's own constraint validation would abort
+			  * submit on the first empty `required` field and show an unstyled
+			  * native bubble, so `validate()` (which reports *every* missing field
+			  * in the summary card, labelled) never got to run for First/Last
+			  * name and Email. One validator, one presentation.
+			  */ }
+			<form onSubmit={ handleSubmit } className="w-full" noValidate>
 				<EmployeeFormAlerts
 					submitError={ submitError }
 					missingOrgSteps={ missingOrgSteps }

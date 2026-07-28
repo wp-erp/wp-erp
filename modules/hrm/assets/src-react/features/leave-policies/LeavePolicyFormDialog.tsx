@@ -41,6 +41,7 @@ import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
+import { dismissGuard } from '@/shared/utils/dialog';
 
 import { TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
@@ -257,7 +258,7 @@ export function LeavePolicyFormDialog( {
 	}
 
 	return (
-		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
+		<Dialog open={ open } onOpenChange={ dismissGuard( onClose, busy ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-2xl">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">

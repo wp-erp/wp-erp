@@ -42,11 +42,24 @@ const FORM_KEYS: readonly string[] = [
 	'city', 'country', 'state', 'postal_code', 'father_name', 'mother_name', 'spouse_name',
 ];
 
+// Keys whose value is a row id. The API sends `0` for "none", and `String(0)`
+// is `'0'` — a non-empty value the selects then render literally ("Reporting To"
+// showed a bare `0` instead of the placeholder). Only these keys collapse zero
+// to empty; `pay_rate` of 0 is a real number and must survive.
+const ID_KEYS: ReadonlySet< string > = new Set( [
+	'reporting_to', 'department', 'designation', 'location',
+] );
+
 function toFormState( record: Record< string, unknown > ): FormState {
 	const out: FormState = {};
 	for ( const key of FORM_KEYS ) {
 		const value = record[ key ];
-		out[ key ] = value === null || value === undefined ? '' : String( value );
+		if ( value === null || value === undefined ) {
+			out[ key ] = '';
+			continue;
+		}
+		const asString = String( value );
+		out[ key ] = ID_KEYS.has( key ) && ( asString === '0' || asString === '' ) ? '' : asString;
 	}
 	return out;
 }
@@ -88,12 +101,20 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 		};
 	}, [ userId, fetchEmployeeForEdit ] );
 
+	// Cancel means "undo the detour" — go back where the user came from.
 	function close(): void {
 		if ( window.history.length > 1 ) {
 			navigate( -1 );
 		} else {
 			navigate( '/employees' );
 		}
+	}
+
+	// Saving is not a detour: `navigate( -1 )` dropped the user on whatever page
+	// preceded the form (a report, a filtered list) with no sight of the record
+	// they just changed. Always land on the employee.
+	function closeAfterSave(): void {
+		navigate( `/employees/${ userId }` );
 	}
 
 	async function handleSubmit( payload: EmployeeCreateInput ): Promise< void > {
@@ -104,7 +125,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 			erpToast.success( sprintf( __( '%s was updated.', 'erp' ), employeeName( payload ) ), {
 				user: { name: employeeName( payload ) },
 			} );
-			close();
+			closeAfterSave();
 		} catch ( raw ) {
 			const err = raw as { message?: string };
 			setSubmitError( err?.message || __( 'Could not save the changes. Please try again.', 'erp' ) );

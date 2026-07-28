@@ -545,8 +545,14 @@ class HolidaysControllerV2 extends RestControllerV2 {
 
 		$holiday = (object) $holiday;
 
-		$start = $this->cast_date_iso( $holiday->start ?? null );
-		$end   = $this->cast_date_iso( $holiday->end ?? null );
+		// A holiday is a calendar day, not an instant. The rows are stored as
+		// `Y-m-d 00:00:00` / `Y-m-d 23:59:59`, and `cast_date_iso()` turns those
+		// into full ISO datetimes — so the client, rendering them in local time,
+		// pushed a 23:59:59 end date onto the *next* day (a 17–19 Aug holiday
+		// listed as "Aug 17 – Aug 20"). Send the bare calendar day instead; the
+		// list, the calendar and `duration` then all agree.
+		$start = $this->cast_calendar_day( $holiday->start ?? null );
+		$end   = $this->cast_calendar_day( $holiday->end ?? null );
 
 		$duration = 0;
 		if ( ! empty( $holiday->start ) && ! empty( $holiday->end ) ) {

@@ -53,5 +53,7 @@ export interface EntitlementAssignInput {
 /** Result of an assign call. */
 export interface EntitlementAssignResult {
 	readonly affected: number;
+	/** Employees that already held the policy for that year — nothing written. */
+	readonly skipped?: number;
 	readonly errors:   readonly string[];
 }

@@ -21,6 +21,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
+import { dismissGuard } from '@/shared/utils/dialog';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 
@@ -111,7 +112,7 @@ export function DepartmentFormDialog( {
 	}
 
 	return (
-		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
+		<Dialog open={ open } onOpenChange={ dismissGuard( onClose, busy ) }>
 			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">

@@ -28,6 +28,7 @@ import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
+import { dismissGuard } from '@/shared/utils/dialog';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { FinancialYearQuickAddDialog } from '@/features/financial-years/FinancialYearQuickAddDialog';
@@ -323,7 +324,11 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 			// any state or click handler runs, so no guard in here can see it coming).
 			// Close stays on Cancel, the X, and Escape.
 			disablePointerDismissal
-			onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }
+			// …and Escape belongs to the topmost layer: with an Employee / Financial
+			// Year / Leave Policy popup open, one Escape used to close the popup AND
+			// this form, discarding everything typed. `dismissGuard` ignores that
+			// first Escape; a second one (no popup open) closes the dialog.
+			onOpenChange={ dismissGuard( onClose, busy ) }
 		>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
