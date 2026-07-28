@@ -15,7 +15,10 @@ export default {
 
     computed: {
         desc() {
-            return this.input.desc.replace(/\\"/g, '"');
+            // Descriptions arrive slash-escaped. Only double quotes were being
+            // unescaped, so any description containing an apostrophe rendered the
+            // backslash — "every user\'s own choice" on the HR settings screen.
+            return this.input.desc.replace(/\\(["'])/g, '$1');
         }
     },
 
