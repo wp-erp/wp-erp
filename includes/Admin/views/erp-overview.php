@@ -27,10 +27,10 @@
                 </span>
                 <span class="erp-cta-label"><?php esc_html_e( 'Book a Call', 'erp' ); ?></span>
             </a>
-            <!-- <a class="erp-cta-hover-btn erp-cta-feedback" href="https://wperp.canny.io/ideas" target="_blank" rel="noopener noreferrer" title="<?php esc_attr_e( 'Submit Feedback', 'erp' ); ?>">
+            <a class="erp-cta-hover-btn erp-cta-feedback" href="https://feedback.wedevs.com/b/erp" target="_blank" rel="noopener noreferrer" title="<?php esc_attr_e( 'Submit Feedback', 'erp' ); ?>">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" fill="currentColor"/></svg>
                 <span class="erp-cta-hover-label"><?php esc_html_e( 'Feedback', 'erp' ); ?></span>
-            </a> -->
+            </a>
             <a class="erp-cta-hover-btn erp-cta-support" href="https://wperp.com/contact/?utm_source=PluginDashboard&utm_medium=Button&utm_campaign=ContactSupport" target="_blank" rel="noopener noreferrer" title="<?php esc_attr_e( 'Contact Support', 'erp' ); ?>">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" fill="currentColor"/></svg>
                 <span class="erp-cta-hover-label"><?php esc_html_e( 'Contact Support', 'erp' ); ?></span>
