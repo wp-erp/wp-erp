@@ -276,6 +276,11 @@ final class Enqueue {
 				// (Settings.php "Hide Pay Rate"). Parity with the legacy
 				// tab-job.php compensation blur/reveal.
 				'hidePayRate' => 'yes' === get_option( 'erp_hrm_hide_pay_rate', 'no' ),
+				// ERP keeps its OWN date format (Settings → General), separate from
+				// WordPress's. `erp_format_date()` renders every legacy screen and
+				// every PHP-rendered value with it, so the React apps have to read
+				// the same setting or the two halves of a table disagree.
+				'dateFormat'  => function_exists( 'erp_get_date_format' ) ? erp_get_date_format() : 'd-m-Y',
 			],
 			// Country / state lookups for the employee-form address selects
 			// (parity with the legacy new-employee.php Countries dropdowns).
