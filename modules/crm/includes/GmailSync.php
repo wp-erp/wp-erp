@@ -217,17 +217,40 @@ class GmailSync {
 
         do_action( 'erp_crm_after_create_save_attachment_directory', $deal_id );
 
+        $real_dir = realpath( $dir );
+
+        if ( false === $real_dir ) {
+            return [];
+        }
+
+        $real_dir = trailingslashit( wp_normalize_path( $real_dir ) );
+
         foreach ( $attachments as $key => $item ) {
-            $name = $item['name'];
-            $file = wp_check_filetype( $item['name'] );
+            $name = $this->sanitize_attachment_filename( isset( $item['name'] ) ? $item['name'] : '' );
+
+            if ( empty( $name ) ) {
+                unset( $attachments[$key] );
+                continue;
+            }
+
+            $file = wp_check_filetype( $name );
 
             if ( file_exists( $dir . $name ) ) {
                 $name = uniqid() . '.' . $file['ext'];
             }
 
-            $saved = $wp_filesystem->put_contents( $dir . $name, $item['data'] );
+            // Make sure the resolved destination stays inside the CRM attachment directory.
+            $destination = wp_normalize_path( $dir . $name );
+
+            if ( 0 !== strpos( $destination, $real_dir ) ) {
+                unset( $attachments[$key] );
+                continue;
+            }
+
+            $saved = $wp_filesystem->put_contents( $destination, $item['data'] );
 
             if ( $saved ) {
+                $attachments[$key]['name'] = $name;
                 $attachments[$key]['slug'] = $name;
                 $attachments[$key]['path'] = $dir . $name;
                 //remove image data
@@ -240,6 +263,64 @@ class GmailSync {
         }
 
         return $attachments;
+    }
+
+    /**
+     * Sanitize an inbound email attachment file name.
+     *
+     * Strips any directory component, rejects control characters and encoded
+     * separators, and only allows extensions that WordPress considers safe.
+     * Server executable extensions are always rejected.
+     *
+     * @since 1.17.8
+     *
+     * @param string $filename
+     *
+     * @return string Empty string when the file name is not safe to store.
+     */
+    protected function sanitize_attachment_filename( $filename ) {
+        if ( ! is_string( $filename ) || '' === $filename ) {
+            return '';
+        }
+
+        // Decode so that encoded separators (%2f, %5c, ..) cannot slip through.
+        $filename = rawurldecode( $filename );
+
+        // Reject control characters and null bytes.
+        if ( preg_match( '/[\x00-\x1F\x7F]/', $filename ) ) {
+            return '';
+        }
+
+        // Drop any directory component from both separator styles.
+        $filename = str_replace( '\\', '/', $filename );
+        $filename = basename( $filename );
+        $filename = sanitize_file_name( $filename );
+
+        if ( '' === $filename || '.' === $filename || '..' === $filename ) {
+            return '';
+        }
+
+        if ( false !== strpos( $filename, '/' ) || false !== strpos( $filename, '\\' ) ) {
+            return '';
+        }
+
+        $file = wp_check_filetype( $filename, get_allowed_mime_types() );
+
+        if ( empty( $file['ext'] ) || empty( $file['type'] ) ) {
+            return '';
+        }
+
+        $blocked = apply_filters( 'erp_crm_blocked_attachment_extensions', [
+            'php', 'php3', 'php4', 'php5', 'php7', 'php8', 'phps', 'pht', 'phtml', 'phar',
+            'shtml', 'cgi', 'pl', 'py', 'rb', 'sh', 'bash', 'exe', 'com', 'bat', 'cmd',
+            'jsp', 'asp', 'aspx', 'htaccess', 'htpasswd',
+        ] );
+
+        if ( in_array( strtolower( $file['ext'] ), $blocked, true ) ) {
+            return '';
+        }
+
+        return $filename;
     }
 
     public function format_header( $headers, $item ) {
