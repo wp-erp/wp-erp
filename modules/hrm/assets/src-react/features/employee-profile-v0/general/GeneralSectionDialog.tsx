@@ -32,8 +32,14 @@ interface GeneralSectionDialogProps {
 	readonly onSubmit: ( data: Record< string, unknown > ) => void;
 }
 
+/**
+ * `erp_hr_education.result_type` is an `enum('grade','percentage')` column, and
+ * the legacy `company/education-result-types` endpoint serves exactly those two
+ * keys. A value outside the enum (`gpa`) is silently coerced to `''` by MySQL in
+ * non-strict mode, so the type was lost on every save that used it.
+ */
 const RESULT_TYPE_OPTIONS = [
-	{ value: 'gpa', label: __( 'GPA', 'erp' ) },
+	{ value: 'percentage', label: __( 'Percentage', 'erp' ) },
 	{ value: 'grade', label: __( 'Grade', 'erp' ) },
 ];
 
@@ -76,7 +82,7 @@ export function GeneralSectionDialog( {
 			school:          str( initial, 'school' ),
 			degree:          str( initial, 'degree' ),
 			field:           str( initial, 'field' ),
-			result_type:     str( initial, 'result_type' ) || 'gpa',
+			result_type:     str( initial, 'result_type' ) || 'percentage',
 			gpa:             str( initial, 'gpa' ),
 			scale:           str( initial, 'scale' ),
 			finished:        str( initial, 'finished' ),
@@ -194,8 +200,8 @@ export function GeneralSectionDialog( {
 							<TextField id="edu_school" label={ __( 'School / Institution', 'erp' ) } required value={ form.school ?? '' } onChange={ set( 'school' ) } />
 							<TextField id="edu_degree" label={ __( 'Degree', 'erp' ) } required value={ form.degree ?? '' } onChange={ set( 'degree' ) } />
 							<TextField id="edu_field" label={ __( 'Field of Study', 'erp' ) } required value={ form.field ?? '' } onChange={ set( 'field' ) } />
-							<SelectField id="edu_result_type" label={ __( 'Result Type', 'erp' ) } options={ RESULT_TYPE_OPTIONS } value={ form.result_type ?? 'gpa' } onChange={ set( 'result_type' ) } required />
-							<TextField id="edu_gpa" label={ form.result_type === 'grade' ? __( 'Grade', 'erp' ) : __( 'GPA', 'erp' ) } required value={ form.gpa ?? '' } onChange={ set( 'gpa' ) } />
+							<SelectField id="edu_result_type" label={ __( 'Result Type', 'erp' ) } options={ RESULT_TYPE_OPTIONS } value={ form.result_type ?? 'percentage' } onChange={ set( 'result_type' ) } required />
+							<TextField id="edu_gpa" label={ form.result_type === 'grade' ? __( 'Grade', 'erp' ) : __( 'Percentage', 'erp' ) } required value={ form.gpa ?? '' } onChange={ set( 'gpa' ) } />
 							{ form.result_type === 'grade' ? (
 								<TextField id="edu_scale" label={ __( 'Scale', 'erp' ) } required value={ form.scale ?? '' } onChange={ set( 'scale' ) } />
 							) : null }
