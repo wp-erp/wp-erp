@@ -16,6 +16,18 @@ import { dateI18n } from '@/shared/i18n';
 const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 /**
+ * ERP's own display format (Settings → General), not WordPress's `date_format`.
+ *
+ * `erp_format_date()` renders every legacy screen and every PHP-formatted value
+ * with this one, so the React admin has to use it too — otherwise a profile
+ * shows `Jul 1, 2026` while the legacy tab beside it shows `01-07-2026`, and a
+ * table whose columns come from both layers disagrees with itself.
+ */
+function erpDateFormat(): string {
+	return window.__ERP_HR_BOOT__?.settings?.dateFormat || 'M j, Y';
+}
+
+/**
  * Parse a server date string to a Date without the UTC off-by-one.
  *
  * Bare `YYYY-MM-DD` → local midnight of that calendar day. Anything else is
@@ -47,7 +59,8 @@ export function formatDisplayDate( value: string | null | undefined, fallback = 
 	if ( ! date ) {
 		return fallback;
 	}
-	return date.toLocaleDateString( undefined, { year: 'numeric', month: 'short', day: 'numeric' } );
+	// Same format as `formatCalendarDate`, so the two never disagree on one screen.
+	return dateI18n( erpDateFormat(), date );
 }
 
 /**
@@ -73,12 +86,13 @@ export function formatCalendarDate( value: string | null | undefined, fallback =
 	if ( ! value ) {
 		return fallback;
 	}
-	const match = DATE_ONLY.exec( value.trim() );
+	const format = erpDateFormat();
+	const match  = DATE_ONLY.exec( value.trim() );
 	if ( ! match ) {
 		// Not a bare calendar date — an instant, so let dateI18n localise it.
-		return dateI18n( 'M j, Y', value );
+		return dateI18n( format, value );
 	}
-	return dateI18n( 'M j, Y', `${ match[ 0 ] }T12:00:00Z`, true );
+	return dateI18n( format, `${ match[ 0 ] }T12:00:00Z`, true );
 }
 
 /**

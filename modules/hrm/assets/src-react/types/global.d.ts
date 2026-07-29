@@ -32,6 +32,12 @@ export interface BootPayloadAssets {
 export interface BootPayloadSettings {
 	/** `erp_hrm_hide_pay_rate` — blur pay rate on the employee profile. */
 	readonly hidePayRate: boolean;
+	/**
+	 * ERP's own date format (Settings → General), which `erp_format_date()` uses
+	 * for every legacy screen and every PHP-formatted value. Separate from
+	 * WordPress's `date_format`.
+	 */
+	readonly dateFormat?: string;
 }
 
 export interface BootSelectOption {
