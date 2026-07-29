@@ -281,6 +281,9 @@ final class Enqueue {
 				// every PHP-rendered value with it, so the React apps have to read
 				// the same setting or the two halves of a table disagree.
 				'dateFormat'  => function_exists( 'erp_get_date_format' ) ? erp_get_date_format() : 'd-m-Y',
+				// ERP has no time-format setting of its own — its General settings
+				// offer date formats only — so times follow WordPress's.
+				'timeFormat'  => (string) get_option( 'time_format', 'g:i a' ),
 			],
 			// Country / state lookups for the employee-form address selects
 			// (parity with the legacy new-employee.php Countries dropdowns).

@@ -38,6 +38,11 @@ export interface BootPayloadSettings {
 	 * WordPress's `date_format`.
 	 */
 	readonly dateFormat?: string;
+	/**
+	 * WordPress's `time_format`. ERP has no time setting of its own, so times
+	 * follow WP while dates follow ERP.
+	 */
+	readonly timeFormat?: string;
 }
 
 export interface BootSelectOption {
