@@ -13,9 +13,10 @@ import {
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
 import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { formatCalendarDate } from '@/shared/utils/date';
 import type { JSX } from 'react';
 
-import { __, dateI18n, sprintf } from '@/shared/i18n';
+import { __, sprintf } from '@/shared/i18n';
 
 import type { LeaveType } from './types';
 
@@ -83,7 +84,7 @@ export function LeaveTypesTable( {
 							) }
 						</td>
 						<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">
-							{ type.created_at ? dateI18n( 'M j, Y', type.created_at ) : <span className="text-muted-foreground">—</span> }
+							{ type.created_at ? formatCalendarDate( type.created_at ) : <span className="text-muted-foreground">—</span> }
 						</td>
 						<td className="px-4 align-middle">
 							{ canManage ? (
