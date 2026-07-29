@@ -1368,6 +1368,12 @@ class AjaxHandler {
 	 * @return json
 	 */
 	public function check_user() {
+		$this->verify_hrm_nonce();
+
+		if ( ! current_user_can( 'erp_create_employee' ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$email = isset( $_REQUEST['email'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['email'] ) ) : false;
 
 		if ( ! $email ) {
@@ -1391,11 +1397,17 @@ class AjaxHandler {
 			);
 		}
 
-		// seems like we found one
+		// seems like we found one; only expose the minimal fields the UI needs,
+		// never the raw WP_User object (which contains user_pass and user_activation_key)
 		$this->send_error(
 			array(
 				'type' => 'wp_user',
-				'data' => $user,
+				'data' => array(
+					'ID'           => $user->ID,
+					'user_login'   => $user->user_login,
+					'user_email'   => $user->user_email,
+					'display_name' => $user->display_name,
+				),
 			)
 		);
 	}

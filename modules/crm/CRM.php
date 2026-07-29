@@ -9,6 +9,7 @@ use WeDevs\ERP\CRM\Emailer;
 use WeDevs\ERP\CRM\FormHandler;
 use WeDevs\ERP\CRM\Log;
 use WeDevs\ERP\CRM\Subscription;
+use WeDevs\ERP\CRM\SubscriptionBlock;
 use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\CRM\Admin\UserProfile;
 use WeDevs\ERP\CRM\Admin\AdminDashboard;
@@ -143,6 +144,8 @@ class CRM {
         }
 
         Subscription::instance();
+
+        new SubscriptionBlock();
     }
 
     /**

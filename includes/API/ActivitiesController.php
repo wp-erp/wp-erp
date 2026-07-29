@@ -23,6 +23,13 @@ class ActivitiesController extends REST_Controller {
      */
     protected $rest_base = 'crm/activities';
 
+    /**
+     * Activity types map.
+     *
+     * @var array
+     */
+    protected $activity_types = [];
+
     public function __construct() {
         $this->activity_types = [
             'note'     => 'new_note',

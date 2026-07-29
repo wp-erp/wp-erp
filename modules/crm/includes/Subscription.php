@@ -250,12 +250,12 @@ class Subscription {
      */
     public function save_form_data() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-subscription-form' ) ) {
-            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            $this->send_error( [ 'msg' => __( 'Error: Nonce verification failed', 'erp' ) ] );
         }
 
         // Check permission
         if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
-            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+            $this->send_error( [ 'msg' => __( 'You do not have sufficient permissions to do this action', 'erp' ) ] );
         }
 
         // validations
@@ -277,7 +277,7 @@ class Subscription {
         $success = $this->create_subsciber( $form_data );
 
         if ( is_wp_error( $success ) ) {
-            $this->send_error( $success->get_error_message() );
+            $this->send_error( [ 'msg' => $success->get_error_message() ] );
         } elseif ( 'already-subscribed' === $success ) {
             $this->send_success( [ 'msg' => __( 'You are already subscribed. Thank you!', 'erp' ) ] );
         }
@@ -334,6 +334,21 @@ class Subscription {
         } elseif ( ! empty( $args['contact']['first_name'] ) ) {
             $contact['first_name'] = $args['contact']['first_name'];
             $contact['last_name']  = isset( $args['contact']['last_name'] ) ? $args['contact']['last_name'] : '';
+        }
+
+        // Subscription forms may collect only an email address, but
+        // erp_insert_people() requires a first name for contacts. Derive a
+        // sensible first name from the email local-part so email-only sign-ups
+        // succeed. erp_is_valid_name() disallows digits and special chars, so
+        // strip those; fall back to a generic label if nothing usable remains.
+        if ( empty( $contact['first_name'] ) ) {
+            $local_part = strstr( $contact['email'], '@', true );
+            $derived    = preg_replace( '/[^a-zA-Z ]/', ' ', (string) $local_part );
+            $derived    = trim( preg_replace( '/\s+/', ' ', $derived ) );
+
+            $contact['first_name'] = ( '' !== $derived && erp_is_valid_name( $derived ) )
+                ? $derived
+                : __( 'Subscriber', 'erp' );
         }
 
         $contact = apply_filters( 'erp_subscription_form_save_form_data_args', $contact, $args );
@@ -781,7 +796,7 @@ class Subscription {
      */
     public function save_edit_form_data() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'erp-subscription-edit' ) ) {
-            $this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+            $this->send_error( [ 'msg' => __( 'Error: Nonce verification failed', 'erp' ) ] );
         }
 
         // validations

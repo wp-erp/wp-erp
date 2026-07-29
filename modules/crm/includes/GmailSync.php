@@ -24,7 +24,7 @@ class GmailSync {
     public function __construct() {
         $this->client = wperp()->google_auth;
 
-        if ( !$this->client->get_client() ) {
+        if ( ! $this->client->get_client() ) {
             return;
         }
         $this->gmail = new Google_Service_Gmail( $this->client->get_client() );
@@ -39,7 +39,7 @@ class GmailSync {
     public static function init() {
         static $instance = false;
 
-        if ( !$instance ) {
+        if ( ! $instance ) {
             $instance = new self();
         }
 
@@ -67,7 +67,7 @@ class GmailSync {
     private function get_inbound_email() {
         $email = get_option( 'erp_gmail_authenticated_email', '' );
 
-        if ( !empty( $email ) ) {
+        if ( ! empty( $email ) ) {
             return $email;
         }
 
@@ -273,11 +273,8 @@ class GmailSync {
     public function process_emails( $emails ) {
         do_action( 'erp_crm_new_inbound_emails', $emails );
 
-        $http_host = apply_filters(
-            'erp_crm_activity_server_host',
-            isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''
-        );
-        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $http_host;
+        $http_host    = apply_filters( 'erp_crm_activity_server_host', \erp_crm_get_server_host() );
+        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . preg_quote( $http_host, '/' );
 
         foreach ( $emails as $email ) {
             if ( !isset( $email['headers']['References'] ) ) {

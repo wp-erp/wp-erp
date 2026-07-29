@@ -1836,7 +1836,18 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = array(
 			$mailgun->send_email( $data );
 		}
 	} else {
+		// No SMTP/Mailgun configured — plain wp_mail() defaults to text/plain,
+		// which shows ERP's HTML emails as raw markup. Force text/html to match
+		// the SMTP/Mailgun branches above.
+		$content_type = apply_filters( 'erp_mail_content_type', 'text/html' );
+
+		$set_html_content_type = function () use ( $content_type ) {
+			return $content_type;
+		};
+
+		add_filter( 'wp_mail_content_type', $set_html_content_type );
 		$is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
+		remove_filter( 'wp_mail_content_type', $set_html_content_type );
 	}
 
 	return $is_mail_sent;
