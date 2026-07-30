@@ -360,11 +360,12 @@ class LeaveRequestsController extends RestController {
 
 			return rest_ensure_response(
 				[
-					'all'      => $counts['all'],
-					'approved' => $counts['1'],
-					'pending'  => $counts['2'],
-					'rejected' => $counts['3'],
-					'year'     => $year,
+					'all'       => $counts['all'],
+					'approved'  => $counts['1'],
+					'pending'   => $counts['2'],
+					'rejected'  => $counts['3'],
+					'forwarded' => $counts['4'],
+					'year'      => $year,
 				]
 			);
 		}
@@ -385,11 +386,12 @@ class LeaveRequestsController extends RestController {
 
 		return rest_ensure_response(
 			[
-				'all'      => $pick( 'all' ),
-				'approved' => $pick( '1' ),
-				'pending'  => $pick( '2' ),
-				'rejected' => $pick( '3' ),
-				'f_year'   => $f_year,
+				'all'       => $pick( 'all' ),
+				'approved'  => $pick( '1' ),
+				'pending'   => $pick( '2' ),
+				'rejected'  => $pick( '3' ),
+				'forwarded' => $pick( '4' ),
+				'f_year'    => $f_year,
 			]
 		);
 	}
@@ -424,7 +426,10 @@ class LeaveRequestsController extends RestController {
 			ARRAY_A
 		);
 
-		$counts = [ 'all' => 0, '1' => 0, '2' => 0, '3' => 0 ];
+		// `4` is Advanced Leave's Forwarded state. It has to be a bucket of its own:
+		// leaving it out made `all` disagree with the sum of the tabs, and the row
+		// belonged to no tab at all.
+		$counts = [ 'all' => 0, '1' => 0, '2' => 0, '3' => 0, '4' => 0 ];
 
 		foreach ( (array) $rows as $row ) {
 			$status = (string) ( $row['status'] ?? '' );
@@ -619,8 +624,17 @@ class LeaveRequestsController extends RestController {
 			case 3:
 				return __( 'Rejected', 'erp' );
 			case 2:
-			default:
 				return __( 'Pending', 'erp' );
+			default:
+				// A pro module may register further statuses on
+				// `erp_hr_leave_approval_statuses` — Advanced Leave's multilevel
+				// approval adds 4 = Forwarded. Ask the filtered map rather than
+				// hardcoding them here, and only fall back to Pending when the
+				// code is genuinely unknown (the map returns the whole array for
+				// a miss, so guard on the type).
+				$label = erp_hr_leave_request_get_statuses( $status );
+
+				return is_string( $label ) && '' !== $label ? $label : __( 'Pending', 'erp' );
 		}
 	}
 

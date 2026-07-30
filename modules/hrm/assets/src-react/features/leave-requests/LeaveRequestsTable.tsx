@@ -68,6 +68,10 @@ function StatusPill( {
 			? 'bg-success-light text-success-on-light'
 			: status === 3
 			? 'bg-destructive-light text-destructive-on-light'
+			: status === 4
+			// Forwarded (Advanced Leave multilevel) — still open, but not the same
+			// thing as Pending, and it used to render with Pending's own label.
+			? 'bg-info-light text-info-on-light'
 			: 'bg-warning-light text-warning-on-light';
 	return <Badge className={ `${ className } rounded-md` }>{ label }</Badge>;
 }
@@ -415,7 +419,13 @@ export function LeaveRequestsTable( {
 							<td className="px-4 align-middle">
 								{ canManage ? (
 									<div className="flex items-center justify-end gap-1">
-										{ req.status === 2 ? (
+										{ /* 2 = Pending, 4 = Forwarded (Advanced Leave multilevel).
+										     Both are open requests still awaiting a decision, and the
+										     legacy list table offers Approve/Reject on both
+										     (`LeaveRequestsListTable::column_name()`). Gating on 2
+										     alone left a forwarded request with Delete as its only
+										     action — the approver it was forwarded to could not act. */ }
+										{ req.status === 2 || req.status === 4 ? (
 											<ApproveRejectSplit
 												onApprove={ () => onModerate( 'approve', req ) }
 												onReject={ () => onModerate( 'reject', req ) }

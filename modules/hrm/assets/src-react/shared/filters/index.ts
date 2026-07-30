@@ -70,6 +70,13 @@ export const ACTIONS = {
 	EMPLOYEES_ROW_SELECTED:          'erp_hr.employees.row_selected',
 	EMPLOYEES_BULK_SELECTION:        'erp_hr.employees.bulk_selection_changed',
 	EMPLOYEES_REFRESH_REQUESTED:     'erp_hr.employees.refresh_requested',
+	/**
+	 * Ask the leave-requests list to refetch. Fired by a pro module that changed
+	 * a request outside the free app's own mutations — Advanced Leave's Forward
+	 * dialog is one: it moves the request to Forwarded through its own endpoint,
+	 * and without this the row kept rendering its old status until a page reload.
+	 */
+	LEAVE_REQUESTS_REFRESH_REQUESTED: 'erp_hr.leave.refresh_requested',
 } as const;
 
 export type HookName   = ( typeof HOOKS )[ keyof typeof HOOKS ];

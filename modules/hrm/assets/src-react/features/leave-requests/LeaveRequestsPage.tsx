@@ -13,6 +13,7 @@
  * stay.
  */
 
+import { addAction, removeAction } from '@wordpress/hooks';
 import { Button, Input, toast } from '@wedevs/plugin-ui';
 import { Check, Filter, Plus, Search, Trash2, X } from 'lucide-react';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -27,8 +28,10 @@ import type { LookupOption } from '@/features/employees/filters/lookups';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
+import { useBoot } from '@/shared/hooks/useBoot';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
+import { ACTIONS } from '@/shared/filters';
 import { useModalParam } from '@/shared/useModalParam';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -43,9 +46,16 @@ import type { LeaveTypeOption } from './useLeaveRequests';
 import { useLeaveRequests } from './useLeaveRequests';
 import { siteToday } from '@/shared/utils/date';
 
-const STATUS_TABS: ReadonlyArray< { value: number; label: string } > = [
+/**
+ * Status tabs. `4` (Forwarded) only exists when ERP Pro's Advanced Leave
+ * multilevel approval is on — without a tab of its own a forwarded request
+ * belonged to no tab at all, so `All` disagreed with the sum of the others and
+ * the request fell out of the approver's queue entirely.
+ */
+const STATUS_TABS: ReadonlyArray< { value: number; label: string; module?: string } > = [
 	{ value: 0, label: __( 'All', 'erp' ) },
 	{ value: 2, label: __( 'Pending', 'erp' ) },
+	{ value: 4, label: __( 'Forwarded', 'erp' ), module: 'advanced_leave' },
 	{ value: 1, label: __( 'Approved', 'erp' ) },
 	{ value: 3, label: __( 'Rejected', 'erp' ) },
 ];
@@ -54,6 +64,8 @@ const SEARCH_DEBOUNCE_MS = 350;
 
 function LeaveRequestsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
+	// Which pro sub-modules are on — decides whether the Forwarded tab exists.
+	const activeModules = useBoot().modules ?? [];
 
 	// Default to the Pending tab — the requests needing action.
 	const inTabs = useContext( RequestsTabContext );
@@ -321,6 +333,22 @@ function LeaveRequestsInner(): JSX.Element {
 		setSelected( new Set() );
 	}, [ rows ] );
 
+	// A pro module can move a request through its own endpoint — Advanced Leave's
+	// Forward dialog does. Listen for its refresh request so the row stops showing
+	// a status it no longer has.
+	useEffect( () => {
+		addAction(
+			ACTIONS.LEAVE_REQUESTS_REFRESH_REQUESTED,
+			'erp-hr/leave-requests',
+			() => {
+				void reload();
+			}
+		);
+		return () => {
+			removeAction( ACTIONS.LEAVE_REQUESTS_REFRESH_REQUESTED, 'erp-hr/leave-requests' );
+		};
+	}, [ reload ] );
+
 	const allOnPageSelected =
 		rows.length > 0 && rows.every( ( r ) => selected.has( r.id ) );
 
@@ -407,7 +435,9 @@ function LeaveRequestsInner(): JSX.Element {
 						aria-label={ __( 'Leave request status', 'erp' ) }
 						className="flex items-stretch"
 					>
-						{ STATUS_TABS.map( ( tab ) => {
+						{ STATUS_TABS.filter(
+							( tab ) => ! tab.module || activeModules.includes( tab.module )
+						).map( ( tab ) => {
 							const isSelected = status === tab.value;
 							const count =
 								tab.value === 0
@@ -416,6 +446,8 @@ function LeaveRequestsInner(): JSX.Element {
 									? counts.approved
 									: tab.value === 2
 									? counts.pending
+									: tab.value === 4
+									? counts.forwarded
 									: counts.rejected;
 							return (
 								<button

@@ -236,7 +236,10 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/leave/unpaid',
 				capabilities: [ 'erp_leave_manage' ],
 				description:  __( 'Calculate and encash extra unpaid leaves', 'erp' ),
-				module:       'advanced_leave',
+				// Gated on the sub-feature, not the module: legacy registers this
+				// menu only when `enable_extra_leave` is on, so keying it to
+				// `advanced_leave` showed a page for a feature that was switched off.
+				module:       'advanced_leave_unpaid',
 				pro:          true,
 			},
 			{
@@ -245,7 +248,8 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/leave/forward',
 				capabilities: [ 'erp_leave_manage' ],
 				description:  __( 'Carry-forward and encashment requests', 'erp' ),
-				module:       'advanced_leave',
+				// Same: legacy registers this menu only when `erp_pro_carry_encash_leave` is on.
+				module:       'advanced_leave_forward',
 				pro:          true,
 			},
 		],

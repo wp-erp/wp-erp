@@ -29,9 +29,11 @@ export interface LeaveRequestCounts {
 	readonly approved: number;
 	readonly pending:  number;
 	readonly rejected: number;
+	/** Status 4 — Advanced Leave's Forwarded state; 0 without the pro module. */
+	readonly forwarded: number;
 }
 
-const EMPTY_COUNTS: LeaveRequestCounts = { all: 0, approved: 0, pending: 0, rejected: 0 };
+const EMPTY_COUNTS: LeaveRequestCounts = { all: 0, approved: 0, pending: 0, rejected: 0, forwarded: 0 };
 
 interface UseLeaveRequestsArgs {
 	readonly status:        number;
