@@ -119,10 +119,11 @@ export function useLeaveRequests( {
 			try {
 				const c = await request< LeaveRequestCounts >( restPath( 'v2', '/leave-requests/counts', { year } ) );
 				setCounts( {
-					all:      Number( c?.all ?? 0 ),
-					approved: Number( c?.approved ?? 0 ),
-					pending:  Number( c?.pending ?? 0 ),
-					rejected: Number( c?.rejected ?? 0 ),
+					all:       Number( c?.all ?? 0 ),
+					approved:  Number( c?.approved ?? 0 ),
+					pending:   Number( c?.pending ?? 0 ),
+					rejected:  Number( c?.rejected ?? 0 ),
+					forwarded: Number( c?.forwarded ?? 0 ),
 				} );
 			} catch {
 				setCounts( EMPTY_COUNTS );
