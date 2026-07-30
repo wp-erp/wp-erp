@@ -51,11 +51,16 @@ import { siteToday } from '@/shared/utils/date';
  * multilevel approval is on — without a tab of its own a forwarded request
  * belonged to no tab at all, so `All` disagreed with the sum of the others and
  * the request fell out of the approver's queue entirely.
+ *
+ * The flag is the sub-feature, not the module: free drops the `4` bucket from its
+ * own counts unless `erp_pro_multilevel_approval` is on, so the tab has to come
+ * and go on the same condition. Requests already at status 4 stay under "All",
+ * named and approvable, when it is off.
  */
 const STATUS_TABS: ReadonlyArray< { value: number; label: string; module?: string } > = [
 	{ value: 0, label: __( 'All', 'erp' ) },
 	{ value: 2, label: __( 'Pending', 'erp' ) },
-	{ value: 4, label: __( 'Forwarded', 'erp' ), module: 'advanced_leave' },
+	{ value: 4, label: __( 'Forwarded', 'erp' ), module: 'advanced_leave_multilevel' },
 	{ value: 1, label: __( 'Approved', 'erp' ) },
 	{ value: 3, label: __( 'Rejected', 'erp' ) },
 ];
