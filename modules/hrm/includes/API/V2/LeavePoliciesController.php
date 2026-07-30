@@ -32,7 +32,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class LeavePoliciesControllerV2 extends RestControllerV2 {
+class LeavePoliciesController extends RestController {
 
 	/**
 	 * @var string

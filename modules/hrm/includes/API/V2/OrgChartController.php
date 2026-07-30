@@ -22,7 +22,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class OrgChartControllerV2 extends RestControllerV2 {
+class OrgChartController extends RestController {
 
 	/**
 	 * @var string

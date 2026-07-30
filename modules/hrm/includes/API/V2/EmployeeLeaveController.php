@@ -24,7 +24,7 @@ use WP_REST_Server;
 
 defined( 'ABSPATH' ) || exit;
 
-class EmployeeLeaveControllerV2 extends RestControllerV2 {
+class EmployeeLeaveController extends RestController {
 
 	/**
 	 * @var string

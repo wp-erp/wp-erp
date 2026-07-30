@@ -32,7 +32,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class AnnouncementsControllerV2 extends RestControllerV2 {
+class AnnouncementsController extends RestController {
 
 	/**
 	 * @var string

@@ -455,13 +455,13 @@ final class Enqueue {
 		// (AdminMenu.php uses `'capability' => 'erp_hr_manager'`). It is a role,
 		// not one of the per-role cap keys, so add it explicitly — otherwise the
 		// React Reports nav can never resolve its gate from the boot payload.
-		// Mirrors MeControllerV2::hr_capability_keys().
+		// Mirrors MeController::hr_capability_keys().
 		$keys[] = erp_hr_get_manager_role();
 
 		// Legacy-menu gates the React nav follows but which are NOT per-role HR cap
 		// keys: Recruitment menu gates on `manage_recruitment`, Reimbursement on the
 		// `employee` cap. Add them so the nav can resolve those gates from the boot
-		// payload (mirrors MeControllerV2::hr_capability_keys()).
+		// payload (mirrors MeController::hr_capability_keys()).
 		$keys[] = 'manage_recruitment';
 		$keys[] = 'employee';
 

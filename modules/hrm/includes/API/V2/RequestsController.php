@@ -22,7 +22,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class RequestsControllerV2 extends RestControllerV2 {
+class RequestsController extends RestController {
 
 	/**
 	 * @var string

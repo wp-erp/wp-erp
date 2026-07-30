@@ -23,7 +23,7 @@ use WP_REST_Server;
 
 defined( 'ABSPATH' ) || exit;
 
-class EmployeePerformanceControllerV2 extends RestControllerV2 {
+class EmployeePerformanceController extends RestController {
 
 	/**
 	 * @var string

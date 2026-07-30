@@ -65,38 +65,38 @@ class Manager {
 		}
 
 		$controllers = [
-			MeControllerV2::class,
-			EmployeesControllerV2::class,
-			EmployeeUserControllerV2::class,
-			EmployeeNotesControllerV2::class,
-			EmployeeProfileControllerV2::class,
-			EmployeeJobHistoriesControllerV2::class,
-			EmployeeLeaveControllerV2::class,
-			EmployeePerformanceControllerV2::class,
-			EmployeePermissionControllerV2::class,
-			DepartmentsControllerV2::class,
-			DesignationsControllerV2::class,
-			CompanyLocationsControllerV2::class,
-			HolidaysControllerV2::class,
-			LeaveTypesControllerV2::class,
-			LeavePoliciesControllerV2::class,
-			LeaveEntitlementsControllerV2::class,
-			LeaveRequestsControllerV2::class,
-			LeaveCalendarControllerV2::class,
-			FinancialYearsControllerV2::class,
-			AnnouncementsControllerV2::class,
-			ReportsControllerV2::class,
-			DashboardControllerV2::class,
-			SearchControllerV2::class,
-			OrgChartControllerV2::class,
-			RequestsControllerV2::class,
+			MeController::class,
+			EmployeesController::class,
+			EmployeeUserController::class,
+			EmployeeNotesController::class,
+			EmployeeProfileController::class,
+			EmployeeJobHistoriesController::class,
+			EmployeeLeaveController::class,
+			EmployeePerformanceController::class,
+			EmployeePermissionController::class,
+			DepartmentsController::class,
+			DesignationsController::class,
+			CompanyLocationsController::class,
+			HolidaysController::class,
+			LeaveTypesController::class,
+			LeavePoliciesController::class,
+			LeaveEntitlementsController::class,
+			LeaveRequestsController::class,
+			LeaveCalendarController::class,
+			FinancialYearsController::class,
+			AnnouncementsController::class,
+			ReportsController::class,
+			DashboardController::class,
+			SearchController::class,
+			OrgChartController::class,
+			RequestsController::class,
 		];
 
 		/**
 		 * Filter the list of `erp/v2` REST controllers.
 		 *
 		 * Pro plugins add fully-qualified class names that extend
-		 * `WeDevs\ERP\HRM\API\V2\RestControllerV2` and implement
+		 * `WeDevs\ERP\HRM\API\V2\RestController` and implement
 		 * `register_routes()`.
 		 *
 		 * @since 1.13.5

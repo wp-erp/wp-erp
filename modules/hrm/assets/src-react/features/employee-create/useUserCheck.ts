@@ -2,7 +2,7 @@
  * Create-flow helpers — "does this email already belong to a WP user /
  * employee?" and "convert that WP user into an employee". Mirror the legacy
  * `check_user` + `employee_create_from_wp_user` AJAX handlers via their v2
- * routes (`EmployeeUserControllerV2`).
+ * routes (`EmployeeUserController`).
  */
 
 import { request, restPath } from '@/shared/utils/apiFetch';

@@ -24,7 +24,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class CompanyLocationsControllerV2 extends RestControllerV2 {
+class CompanyLocationsController extends RestController {
 
 	/**
 	 * @var string

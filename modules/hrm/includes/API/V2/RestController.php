@@ -18,7 +18,7 @@ use WP_REST_Response;
 
 \defined( 'ABSPATH' ) || exit;
 
-abstract class RestControllerV2 extends WP_REST_Controller {
+abstract class RestController extends WP_REST_Controller {
 
 	/**
 	 * Namespace shared by every v2 controller.

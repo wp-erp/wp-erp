@@ -19,7 +19,7 @@ use WP_REST_Server;
 
 defined( 'ABSPATH' ) || exit;
 
-class SearchControllerV2 extends RestControllerV2 {
+class SearchController extends RestController {
 
 	/**
 	 * Rest base.

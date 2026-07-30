@@ -24,7 +24,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class LeaveCalendarControllerV2 extends RestControllerV2 {
+class LeaveCalendarController extends RestController {
 
 	/**
 	 * @var string

@@ -30,7 +30,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class HolidaysControllerV2 extends RestControllerV2 {
+class HolidaysController extends RestController {
 
 	/**
 	 * @var string

@@ -25,7 +25,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class DesignationsControllerV2 extends RestControllerV2 {
+class DesignationsController extends RestController {
 
 	/**
 	 * @var string

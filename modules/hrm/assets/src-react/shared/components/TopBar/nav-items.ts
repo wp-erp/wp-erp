@@ -414,7 +414,7 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		hasDropdown:   true,
 		// Legacy AdminMenu gates the Reports page (and every submenu) on the
 		// HR-manager role `erp_hr_manager` — not a per-role cap key. The v2
-		// `/me/capabilities` map now exposes it (MeControllerV2::hr_capability_keys).
+		// `/me/capabilities` map now exposes it (MeController::hr_capability_keys).
 		capabilities:  [ 'erp_hr_manager' ],
 		activeMatches: [ '/reports' ],
 		children: [

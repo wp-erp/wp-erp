@@ -22,7 +22,7 @@ use WP_REST_Server;
 
 \defined( 'ABSPATH' ) || exit;
 
-class DashboardControllerV2 extends RestControllerV2 {
+class DashboardController extends RestController {
 
 	/**
 	 * @var string
@@ -183,7 +183,7 @@ class DashboardControllerV2 extends RestControllerV2 {
 				// Bare calendar days, not instants: the rows end at `23:59:59`, and
 				// an ISO datetime rendered in the viewer's timezone tips that onto
 				// the next date — the widget listed a single-day holiday as
-				// "Aug 10 – Aug 11". Same fix as `HolidaysControllerV2`.
+				// "Aug 10 – Aug 11". Same fix as `HolidaysController`.
 				'start'       => $this->cast_calendar_day( $holiday->start ?? null ),
 				'end'         => $this->cast_calendar_day( $holiday->end ?? null ),
 				'description' => $this->cast_string_or_null( $holiday->description ?? '' ),
