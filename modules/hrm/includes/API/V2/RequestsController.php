@@ -74,11 +74,16 @@ class RequestsController extends RestController {
 		// Nav badge = total pending across every type (mirrors the legacy badge).
 		$pending_total = array_sum( $pending );
 
-		// The reimbursement module keys its pending count as `reimburse`; the React
-		// tab id is `reimbursement`. Alias it so the frontend can key by tab id.
-		if ( isset( $pending['reimburse'] ) ) {
-			$pending['reimbursement'] = $pending['reimburse'];
-		}
+		// The reimbursement module is inconsistent with itself: its pending count
+		// is keyed `reimburse`, its total is keyed `reimbursement`, and the React
+		// tab it registers has the id `reimburse`. The tab strip keys by tab id
+		// against `totals`, so it read an undefined key and rendered "(0)" over
+		// two requests that were waiting to be paid.
+		//
+		// Mirror the two spellings in both branches rather than aliasing one of
+		// them, so the badge is right whichever id the module registers and no
+		// deep link (`?tab=reimburse`) has to change.
+		$pending = $this->mirror_reimbursement_key( $pending );
 
 		// Per-type TOTALS (all statuses) for the tab badges. Free seeds Leave; pro
 		// modules add their own via `erp_hr_request_total_count`.
@@ -97,6 +102,7 @@ class RequestsController extends RestController {
 		 */
 		$totals = (array) apply_filters( 'erp_hr_request_total_count', [ 'leave' => $leave_total ] );
 		$totals = array_map( 'intval', $totals );
+		$totals = $this->mirror_reimbursement_key( $totals );
 
 		return rest_ensure_response(
 			[
@@ -105,5 +111,25 @@ class RequestsController extends RestController {
 				'pending_total' => (int) $pending_total,
 			]
 		);
+	}
+
+	/**
+	 * Make `reimburse` and `reimbursement` resolve to the same number, whichever
+	 * one a caller happens to hold.
+	 *
+	 * @param array $counts Count map keyed by request type / tab id.
+	 *
+	 * @return array
+	 */
+	private function mirror_reimbursement_key( array $counts ): array {
+		if ( isset( $counts['reimburse'] ) && ! isset( $counts['reimbursement'] ) ) {
+			$counts['reimbursement'] = (int) $counts['reimburse'];
+		}
+
+		if ( isset( $counts['reimbursement'] ) && ! isset( $counts['reimburse'] ) ) {
+			$counts['reimburse'] = (int) $counts['reimbursement'];
+		}
+
+		return $counts;
 	}
 }

@@ -637,6 +637,11 @@ export function buildHashRouter(): ReturnType< typeof createHashRouter > {
 				// and without this alias the catch-all below answered it with
 				// "Page not found".
 				{ path: 'dashboard', element: <Navigate to="/" replace /> },
+				// Same story for `#/reports`: the reports are sub-routes and the
+				// legacy UI had a section landing page, so the bare path is what a
+				// user reaches for. Send it to the first report, which renders the
+				// full report tab strip.
+				{ path: 'reports', element: <Navigate to="/reports/age-profile" replace /> },
 				...wrapRoutes(),
 				{ path: '*', element: <NotFound /> },
 			],
