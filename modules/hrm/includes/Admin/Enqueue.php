@@ -260,7 +260,12 @@ final class Enqueue {
 			'colorScheme'   => $color_scheme,
 			'themeMode'     => $theme_mode,
 			'navLayout'     => $nav_layout,
-			'switchUrl'     => UiEngineResolver::instance()->switch_url( $page_slug, 'legacy' ),
+			// Empty while an administrator has forced the engine: the React footer
+			// hides its "View legacy version" link rather than offering a switch
+			// that resolve_engine() would ignore.
+			'switchUrl'     => UiEngineResolver::instance()->is_engine_forced()
+				? ''
+				: UiEngineResolver::instance()->switch_url( $page_slug, 'legacy' ),
 			'pageSlug'      => $page_slug,
 			'assets'        => [
 				'logoUrl'      => WPERP_HRM_ASSETS . '/images/logo.svg',

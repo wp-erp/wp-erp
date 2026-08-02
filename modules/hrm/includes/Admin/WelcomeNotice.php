@@ -96,6 +96,12 @@ final class WelcomeNotice {
 			return;
 		}
 
+		// The notice promises the user can switch back at any time. Under a
+		// site-wide force that is not true, so say nothing rather than mislead.
+		if ( $resolver->is_engine_forced() ) {
+			return;
+		}
+
 		$legacy_url  = $resolver->switch_url( $page, 'legacy' );
 		$dismiss_url = wp_nonce_url(
 			add_query_arg(

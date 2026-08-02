@@ -56,6 +56,12 @@ class AdminMenu {
             return $text;
         }
 
+        // An administrator has pinned the engine for everyone: the switch cannot
+        // change what this user sees, so do not offer it.
+        if ( $resolver->is_engine_forced() ) {
+            return $text;
+        }
+
         $url = esc_url( $resolver->switch_url( 'erp-hr', UiEngineResolver::ENGINE_REACT ) );
 
         return sprintf(
@@ -300,6 +306,12 @@ class AdminMenu {
         // resolved engine but its build artifact is unusable — offering a switch
         // there would be a no-op round trip.
         if ( UiEngineResolver::ENGINE_LEGACY !== UiEngineResolver::instance()->resolve_engine( 'erp-hr' ) ) {
+            return;
+        }
+
+        // Same reasoning as the footer link: under a site-wide force the banner
+        // would invite a switch that cannot happen.
+        if ( UiEngineResolver::instance()->is_engine_forced() ) {
             return;
         }
 

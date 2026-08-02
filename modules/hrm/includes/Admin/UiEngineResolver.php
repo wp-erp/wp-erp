@@ -104,8 +104,8 @@ final class UiEngineResolver {
 	 * performs a redirect; it does not return here.
 	 */
 	public function resolve_engine( string $page_slug ): string {
-		$forced = (string) get_option( self::SITE_OPTION, 'auto' );
-		if ( in_array( $forced, [ self::ENGINE_REACT, self::ENGINE_LEGACY ], true ) ) {
+		$forced = $this->forced_engine();
+		if ( '' !== $forced ) {
 			return $forced;
 		}
 
@@ -132,6 +132,28 @@ final class UiEngineResolver {
 	}
 
 	/**
+	 * The engine an administrator has forced for everyone, or '' when the site
+	 * option is left at `auto` and the per-user preference decides.
+	 *
+	 * @return string 'react', 'vue', or ''.
+	 */
+	public function forced_engine(): string {
+		$forced = (string) get_option( self::SITE_OPTION, 'auto' );
+
+		return in_array( $forced, [ self::ENGINE_REACT, self::ENGINE_LEGACY ], true ) ? $forced : '';
+	}
+
+	/**
+	 * Whether a site-wide force is in effect, i.e. the per-user switch cannot
+	 * change what anyone sees.
+	 *
+	 * @return bool
+	 */
+	public function is_engine_forced(): bool {
+		return '' !== $this->forced_engine();
+	}
+
+	/**
 	 * Handle the `?erp_action=switch_ui` URL.
 	 *
 	 * Validates nonce + capability + page slug + target value, writes user-meta,
@@ -146,6 +168,14 @@ final class UiEngineResolver {
 
 		$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_NAME ) ) {
+			return;
+		}
+
+		// A site-wide force makes the preference unreachable in resolve_engine(),
+		// but the write used to happen anyway: every click during a forced period
+		// quietly changed the stored preference, and those changes then took
+		// effect the moment an administrator set the option back to `auto`.
+		if ( $this->is_engine_forced() ) {
 			return;
 		}
 
@@ -265,6 +295,16 @@ final class UiEngineResolver {
 	 * forward-compatibility when future HR slugs are added.
 	 */
 	private function legacy_key_for_page( string $page_slug ): string {
+		// Only HR's own slugs carry a per-page key. Anything else — a pro module
+		// asking about its own page, say — maps to `dashboard`, the key the HR
+		// switch actually writes. Deriving a key from an unrecognised slug
+		// produced one that can never exist in the preference array, so the
+		// lookup missed, the install default (react) applied, and a user who had
+		// explicitly opted out of the redesign got it anyway on those pages.
+		if ( ! $this->is_hr_page( $page_slug ) ) {
+			return 'dashboard';
+		}
+
 		$key = preg_replace( '/^erp-hr-?/', '', $page_slug );
 		return ( is_string( $key ) && $key !== '' ) ? $key : 'dashboard';
 	}
