@@ -23,6 +23,12 @@ interface LeavePolicyScopeFieldsProps {
 	readonly genderOpts:   Option[];
 	readonly maritalOpts:  Option[];
 	readonly locationOpts: Option[];
+	/**
+	 * Edit mode: the API keeps a policy's scope fixed once it exists (a PUT that
+	 * changes them returns 200 and stores nothing), so they render disabled
+	 * rather than accepting input that is silently dropped. Matches legacy.
+	 */
+	readonly locked?:      boolean;
 }
 
 export function LeavePolicyScopeFields( {
@@ -34,6 +40,7 @@ export function LeavePolicyScopeFields( {
 	genderOpts,
 	maritalOpts,
 	locationOpts,
+	locked = false,
 }: LeavePolicyScopeFieldsProps ): JSX.Element {
 	return (
 		<>
@@ -44,6 +51,7 @@ export function LeavePolicyScopeFields( {
 					options={ empTypeOpts }
 					value={ form.employee_type }
 					onChange={ ( v ) => setForm( ( p ) => ( { ...p, employee_type: v } ) ) }
+					disabled={ locked }
 				/>
 				<SmartSelectField
 					id="policy_department"
@@ -55,6 +63,7 @@ export function LeavePolicyScopeFields( {
 					placeholder={ __( 'All', 'erp' ) }
 					searchPlaceholder={ __( 'Search departments…', 'erp' ) }
 					emptyMessage={ __( 'No departments found.', 'erp' ) }
+					disabled={ locked }
 				/>
 			</div>
 
@@ -69,6 +78,7 @@ export function LeavePolicyScopeFields( {
 					placeholder={ __( 'All', 'erp' ) }
 					searchPlaceholder={ __( 'Search designations…', 'erp' ) }
 					emptyMessage={ __( 'No designations found.', 'erp' ) }
+					disabled={ locked }
 				/>
 				<SelectField
 					id="policy_gender"
@@ -76,6 +86,7 @@ export function LeavePolicyScopeFields( {
 					options={ genderOpts }
 					value={ form.gender }
 					onChange={ ( v ) => setForm( ( p ) => ( { ...p, gender: v } ) ) }
+					disabled={ locked }
 				/>
 			</div>
 
@@ -86,6 +97,7 @@ export function LeavePolicyScopeFields( {
 					options={ maritalOpts }
 					value={ form.marital }
 					onChange={ ( v ) => setForm( ( p ) => ( { ...p, marital: v } ) ) }
+					disabled={ locked }
 				/>
 			</div>
 
@@ -100,6 +112,7 @@ export function LeavePolicyScopeFields( {
 					placeholder={ __( 'All', 'erp' ) }
 					searchPlaceholder={ __( 'Search locations…', 'erp' ) }
 					emptyMessage={ __( 'No locations found.', 'erp' ) }
+					disabled={ locked }
 				/>
 				<TextField
 					id="policy_applicable_from"

@@ -56,6 +56,7 @@ export function LeavePolicyPrimaryFields( {
 					placeholder={ __( '- Select -', 'erp' ) }
 					searchPlaceholder={ __( 'Search leave types…', 'erp' ) }
 					emptyMessage={ __( 'No leave types found.', 'erp' ) }
+					disabled={ !! editing }
 					labelAction={
 						! editing ? (
 							<QuickAddButton
@@ -81,6 +82,7 @@ export function LeavePolicyPrimaryFields( {
 					placeholder={ __( '- Select -', 'erp' ) }
 					searchPlaceholder={ __( 'Search…', 'erp' ) }
 					emptyMessage={ __( 'No financial years found.', 'erp' ) }
+					disabled={ !! editing }
 				/>
 			</div>
 
@@ -96,6 +98,7 @@ export function LeavePolicyPrimaryFields( {
 						setErrors( ( p ) => ( { ...p, days: undefined } ) );
 					} }
 					error={ errors.days }
+					disabled={ !! editing }
 					className={ editing ? 'opacity-60' : undefined }
 				/>
 				<div className="flex min-w-0 flex-col gap-2.5">
@@ -118,7 +121,7 @@ export function LeavePolicyPrimaryFields( {
 
 			{ editing ? (
 				<p className="-mt-2 text-xs text-muted-foreground">
-					{ __( 'The number of days cannot be changed after a policy is created.', 'erp' ) }
+					{ __( 'Leave type, financial year, days and the scope filters are fixed once a policy is created.', 'erp' ) }
 				</p>
 			) : null }
 		</>

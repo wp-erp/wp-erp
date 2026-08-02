@@ -300,6 +300,7 @@ export function LeavePolicyFormDialog( {
 						genderOpts={ genderOpts }
 						maritalOpts={ maritalOpts }
 						locationOpts={ locationOpts }
+						locked={ !! editing }
 					/>
 
 					<TextareaField
