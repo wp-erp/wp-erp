@@ -868,7 +868,29 @@ class Employee {
             $name[] = $this->last_name;
         }
 
-        return implode( ' ', $name );
+        $full_name = implode( ' ', $name );
+
+        if ( '' !== $full_name ) {
+            return $full_name;
+        }
+
+        // An employee imported or created without first/last name meta has only a
+        // `display_name`. Returning '' for them made the record invisible in every
+        // consumer that labels a row by `full_name` — the legacy screens read
+        // `display_name` straight from the users table and so never showed the gap.
+        $user = $this->user_id ? get_userdata( $this->user_id ) : null;
+
+        if ( ! $user ) {
+            return '';
+        }
+
+        foreach ( [ $user->display_name, $user->user_login, $user->user_email ] as $fallback ) {
+            if ( '' !== (string) $fallback ) {
+                return (string) $fallback;
+            }
+        }
+
+        return '';
     }
 
     /**

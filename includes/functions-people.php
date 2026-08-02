@@ -934,9 +934,19 @@ function erp_convert_to_people( $args = [] ) {
     if ( $args['is_wp_user'] && $args['wp_user_id'] ) {
         $wp_user = \get_user_by( 'id', $args['wp_user_id'] );
 
+        // A WP account with no name meta produced a people row carrying only an
+        // e-mail, which renders as a blank payee everywhere the people list is
+        // shown. Fall back the same way the HR employee record does.
+        $first_name = (string) $wp_user->first_name;
+        $last_name  = (string) $wp_user->last_name;
+
+        if ( '' === $first_name && '' === $last_name ) {
+            $first_name = (string) ( $wp_user->display_name ? $wp_user->display_name : $wp_user->user_login );
+        }
+
         $params = [
-            'first_name'  => $wp_user->first_name,
-            'last_name'   => $wp_user->last_name,
+            'first_name'  => $first_name,
+            'last_name'   => $last_name,
             'email'       => $wp_user->user_email,
             'company'     => 'contact' === $type ? get_user_meta( $wp_user->ID, 'company', true ) : $wp_user->first_name,
             'phone'       => get_user_meta( $wp_user->ID, 'phone', true ),
