@@ -305,7 +305,7 @@ const baseRoutes: AppRoute[] = [
 		id:           'departments',
 		path:         '/departments',
 		element:      DepartmentsPage,
-		capabilities: [ 'erp_view_list' ],
+		capabilities: [ 'erp_manage_department' ],
 		handle: {
 			id:        'departments',
 			title:     __( 'Departments', 'erp' ),
@@ -317,7 +317,7 @@ const baseRoutes: AppRoute[] = [
 		id:           'designations',
 		path:         '/designations',
 		element:      DesignationsPage,
-		capabilities: [ 'erp_view_list' ],
+		capabilities: [ 'erp_manage_designation' ],
 		handle: {
 			id:        'designations',
 			title:     __( 'Designations', 'erp' ),

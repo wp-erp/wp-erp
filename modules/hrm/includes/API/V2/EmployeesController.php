@@ -673,12 +673,20 @@ class EmployeesController extends RestController {
 				'driving_license', 'hobbies', 'father_name', 'mother_name', 'spouse_name',
 				'street_1', 'street_2', 'city', 'state', 'country', 'postal_code',
 				'description',
+				// Contact details: the legacy peer view exposes name / employee id /
+				// work e-mail only, so the phone numbers and secondary addresses
+				// must not travel to a peer either.
+				'work_phone', 'phone', 'mobile', 'other_email', 'user_url',
 			];
 			foreach ( $private_fields as $field ) {
 				if ( array_key_exists( $field, $data ) ) {
 					$data[ $field ] = '';
 				}
 			}
+
+			// Termination reason / rehire eligibility is HR-only, and its shape is
+			// an array|null rather than a string.
+			$data['termination'] = null;
 		}
 
 		return rest_ensure_response( $data );
@@ -1382,6 +1390,16 @@ class EmployeesController extends RestController {
 			'pay_type'         => $this->cast_string_or_null( $employee->pay_type ),
 			'extra'            => [],
 		];
+
+		// The list route only requires `erp_list_employee`, which every employee
+		// holds, so a peer row must carry the same basic-info-only shape
+		// `get_item()` returns. Managers and the employee's own row are unaffected.
+		if ( $user_id !== get_current_user_id()
+			&& ! current_user_can( 'erp_view_employee' )
+			&& ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+			$item['phone']    = null;
+			$item['pay_type'] = null;
+		}
 
 		// "Switch to" (User Switching) impersonation URL — mirrors the legacy
 		// EmployeeListTable row action: only when the User Switching plugin is
