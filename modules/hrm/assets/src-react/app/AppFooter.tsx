@@ -13,7 +13,10 @@ import { __ } from '@/shared/i18n';
 export function AppFooter(): JSX.Element {
 	// Copyright year — a cosmetic label, not a company date, so the reader's
 	// clock is fine here (see `siteToday()` for the ones that matter).
-	const year = new Date().getFullYear();
+	const year    = new Date().getFullYear();
+	// Legacy parity: the old admin footer carried the plugin version, which is
+	// the first thing a support conversation asks for.
+	const version = window.__ERP_HR_BOOT__?.pluginVersion ?? '';
 
 	return (
 		<footer
@@ -24,6 +27,7 @@ export function AppFooter(): JSX.Element {
 				<span>
 					{ __( '© ', 'erp' ) }{ year }{ ' ' }
 					{ __( 'WP-ERP HR', 'erp' ) }
+					{ version ? ` · v${ version }` : '' }
 				</span>
 				<LegacyLink />
 			</div>

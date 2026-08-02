@@ -224,6 +224,10 @@ final class Enqueue {
 		$nav_layout = self::resolve_nav_layout( $user_id );
 
 		$payload = [
+			// Plugin version, so the shell footer can show it the way the legacy
+			// admin footer did — a support question ("which version are you on?")
+			// that the redesign had no answer for on screen.
+			'pluginVersion' => defined( 'WPERP_VERSION' ) ? (string) WPERP_VERSION : '',
 			'currentUserId' => $user_id,
 			'displayName'   => (string) ( $user->display_name ?? '' ),
 			'email'         => (string) ( $user->user_email ?? '' ),

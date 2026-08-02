@@ -83,6 +83,8 @@ export interface BootPayload {
 	readonly navLayout:     NavLayout;
 	readonly switchUrl:     string;
 	readonly pageSlug:      string;
+	/** Plugin version, shown in the shell footer (legacy parity). */
+	readonly pluginVersion?: string;
 	readonly assets:        BootPayloadAssets;
 	readonly settings?:     BootPayloadSettings;
 	readonly capabilities:  Record<Capability, boolean>;
