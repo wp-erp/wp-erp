@@ -459,10 +459,22 @@ class ReportsController extends RestController {
 				continue;
 			}
 
-			$years = (int) gmdate( 'Y', time() ) - (int) gmdate( 'Y', strtotime( $employee->hiring_date ) );
+			// Completed years of service, from the full date rather than by
+			// subtracting calendar years (which called someone hired in December
+			// "1 year" on 1 January). Anyone still in their first year keeps a
+			// row with `years = 0`: this is an anniversary report, and the cohort
+			// whose first anniversary is coming up is precisely the one that must
+			// not be dropped — v1 lists them too.
+			$years     = 0;
+			$hired_ts  = strtotime( (string) $employee->hiring_date );
 
-			if ( $years <= 0 ) {
-				continue;
+			if ( $hired_ts ) {
+				$hired = date_create( gmdate( 'Y-m-d', $hired_ts ) );
+				$today = date_create( wp_date( 'Y-m-d' ) );
+
+				if ( $hired && $today && $hired <= $today ) {
+					$years = (int) $hired->diff( $today )->y;
+				}
 			}
 
 			$hire_data[ $month ][ $day ][] = [
