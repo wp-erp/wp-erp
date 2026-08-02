@@ -76,22 +76,33 @@ function isValidDate( value: string ): boolean {
 }
 
 /**
- * Fields that must be non-empty to submit — the same set in both modes, since
- * create and edit render the same fields.
+ * Fields that must be non-empty to submit.
  *
- * @param _mode Kept for call-site symmetry (both modes share one rule set).
+ * Department and Job Title are manager-only on edit: `EmployeeBasicSection`
+ * renders them disabled for an employee editing their own profile. Requiring
+ * them regardless made that form impossible to submit — validation runs before
+ * the request, so the employee saw two errors on fields they are forbidden to
+ * touch and nothing ever reached the server. The condition here is the same one
+ * that disables them, so the two cannot drift apart again.
+ *
+ * @param mode      'create' | 'edit'.
+ * @param isManager Whether the current user may edit employees (not just self).
  */
-export function requiredFields( _mode: FormMode ): readonly string[] {
-	return [
+export function requiredFields( mode: FormMode, isManager = true ): readonly string[] {
+	const base = [
 		'first_name',
 		'last_name',
 		'email',
 		'type',
 		'status',
 		'hiring_date',
-		'department',
-		'designation',
 	];
+
+	if ( mode === 'edit' && ! isManager ) {
+		return base;
+	}
+
+	return [ ...base, 'department', 'designation' ];
 }
 
 /**
@@ -131,6 +142,10 @@ export const FIELD_LABELS: Record< string, string > = {
 /** Extra context the validator needs beyond the raw form values. */
 interface ValidateContext {
 	readonly userCheck: UserCheckResult | null;
+	/** Whether the user may edit employees; self-editors are not managers. */
+	readonly isManager?: boolean;
+	/** Pro custom fields, so the ones marked required are actually enforced. */
+	readonly extraFields?: readonly ExtraField[];
 }
 
 /**
@@ -149,11 +164,21 @@ export function validateEmployeeForm(
 	const isEdit = mode === 'edit';
 	const next: Record< string, string > = {};
 
-	for ( const key of requiredFields( mode ) ) {
+	for ( const key of requiredFields( mode, ctx.isManager ?? true ) ) {
 		if ( ! ( form[ key ] ?? '' ).trim() ) {
 			next[ key ] = __( 'This field is required.', 'erp' );
 		}
 	}
+	// Custom fields carry their own `required` flag, set in the Custom Field
+	// Builder. It was rendered as an asterisk and never enforced, so the form
+	// submitted and the API accepted an employee with a required field empty —
+	// the legacy form blocks that save.
+	for ( const field of ctx.extraFields ?? [] ) {
+		if ( field.required && ! ( form[ field.key ] ?? '' ).trim() ) {
+			next[ field.key ] = __( 'This field is required.', 'erp' );
+		}
+	}
+
 	if ( form.email && ! EMAIL_RE.test( form.email ) ) {
 		next.email = __( 'Enter a valid email address.', 'erp' );
 	}

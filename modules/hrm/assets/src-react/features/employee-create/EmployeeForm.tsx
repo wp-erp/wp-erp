@@ -370,7 +370,7 @@ export function EmployeeForm( {
 	}
 
 	function validate(): boolean {
-		const next = validateEmployeeForm( form, mode, { userCheck } );
+		const next = validateEmployeeForm( form, mode, { userCheck, isManager, extraFields } );
 		setErrors( next );
 		return Object.keys( next ).length === 0;
 	}
@@ -469,6 +469,7 @@ export function EmployeeForm( {
 						fields={ extraBySection( 'top' ) }
 						values={ form }
 						onChange={ set }
+						errors={ errors }
 					/>
 
 					<EmployeeBasicSection
@@ -485,6 +486,7 @@ export function EmployeeForm( {
 								fields={ extraBySection( 'basic' ) }
 								values={ form }
 								onChange={ set }
+								errors={ errors }
 							/>
 						}
 						onAddDept={ () => {
@@ -530,6 +532,7 @@ export function EmployeeForm( {
 								fields={ extraBySection( 'personal' ) }
 								values={ form }
 								onChange={ set }
+								errors={ errors }
 							/>
 						}
 					/>
@@ -538,6 +541,7 @@ export function EmployeeForm( {
 						fields={ extraBySection( 'bottom' ) }
 						values={ form }
 						onChange={ set }
+						errors={ errors }
 					/>
 
 					{ ! isEdit ? (

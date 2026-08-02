@@ -110,6 +110,11 @@ export function NewLeaveRequestForm( {
 	onClose,
 	onSubmit,
 }: NewLeaveRequestFormProps ): JSX.Element {
+	// Advanced Leave injects `halfday` as a checkbox into `extra`. A half day is a
+	// single day, so the To date follows From while it is on — the legacy form
+	// removed the To control from the DOM for the same reason.
+	const isHalfday = extra.halfday === true || extra.halfday === '1' || extra.halfday === 'on';
+
 	// Inline create needs the same gate the endpoints enforce: financial years
 	// are `erp_hr_manager`, leave policies `erp_leave_manage`. Anyone else keeps
 	// the read-only link to the setup screen.
@@ -190,8 +195,38 @@ export function NewLeaveRequestForm( {
 					onChange={ ( field, value ) => setExtra( ( p ) => setLeaveFieldValue( p, field, value ) ) }
 				/>
 			) : null }
-			<TextField id="leave_from" label={ __( 'From', 'erp' ) } type="date" required disabled={ ! entitled } value={ from } onChange={ setFrom } />
-			<TextField id="leave_to" label={ __( 'To', 'erp' ) } type="date" required disabled={ ! entitled } value={ to } onChange={ setTo } />
+			<TextField
+				id="leave_from"
+				label={ __( 'From', 'erp' ) }
+				type="date"
+				required
+				disabled={ ! entitled }
+				value={ from }
+				onChange={ ( v ) => {
+					setFrom( v );
+					// A half day is one day. Legacy removed the To control entirely
+					// while the switch was on; leaving it free let a three-day range
+					// be booked and charged as 0.5 days, so the calendar and the
+					// entitlement ledger disagreed.
+					if ( isHalfday ) {
+						setTo( v );
+					}
+				} }
+			/>
+			<TextField
+				id="leave_to"
+				label={ __( 'To', 'erp' ) }
+				type="date"
+				required
+				disabled={ ! entitled || isHalfday }
+				value={ isHalfday ? from : to }
+				onChange={ setTo }
+			/>
+			{ isHalfday ? (
+				<p className="-mt-2 text-xs text-muted-foreground">
+					{ __( 'A half-day request covers the From date only.', 'erp' ) }
+				</p>
+			) : null }
 			{ validating ? (
 				<p className="text-sm text-muted-foreground">{ __( 'Checking dates…', 'erp' ) }</p>
 			) : dateError ? (

@@ -511,6 +511,11 @@ class EmployeesController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function create_item( $request ) {
+		$invalid = $this->validate_extension_fields( $request, 'create' );
+		if ( is_wp_error( $invalid ) ) {
+			return $invalid;
+		}
+
 		$item_data = $this->prepare_item_for_database( $request );
 
 		$employee = new Employee( null );
@@ -709,6 +714,11 @@ class EmployeesController extends RestController {
 
 		if ( ! $employee->is_employee() ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		$invalid = $this->validate_extension_fields( $request, 'edit' );
+		if ( is_wp_error( $invalid ) ) {
+			return $invalid;
 		}
 
 		$data = $this->prepare_item_for_database( $request );
@@ -972,6 +982,33 @@ class EmployeesController extends RestController {
 	 *
 	 * @return array
 	 */
+	/**
+	 * Let extensions reject a create/update before anything is written.
+	 *
+	 * The `additional` bucket is owned by pro (the Custom Field Builder), so the
+	 * rules that apply to it live there too — this is the hook that lets them run
+	 * server-side instead of trusting the client to have checked.
+	 *
+	 * @param WP_REST_Request $request The create/update request.
+	 * @param string          $mode    'create' or 'edit'.
+	 *
+	 * @return \WP_Error|null WP_Error to reject, null to proceed.
+	 */
+	private function validate_extension_fields( $request, string $mode ) {
+		/**
+		 * Filter to validate extension-owned fields on a v2 employee write.
+		 *
+		 * @since 1.18.1
+		 *
+		 * @param \WP_Error|null  $error   Error to return, or null to allow.
+		 * @param WP_REST_Request $request The request being validated.
+		 * @param string          $mode    'create' or 'edit'.
+		 */
+		$error = apply_filters( 'erp_hr_v2_employee_validate', null, $request, $mode );
+
+		return is_wp_error( $error ) ? $error : null;
+	}
+
 	private function get_edit_data( Employee $employee ): array {
 		$flat = (array) $employee->get_data( [], true );
 

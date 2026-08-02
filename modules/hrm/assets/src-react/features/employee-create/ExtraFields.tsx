@@ -121,7 +121,8 @@ function CheckboxGroupField( { field, value, onChange }: GroupRadioProps ): JSX.
 function renderField(
 	field: ExtraField,
 	value: string,
-	onChange: ( value: string ) => void
+	onChange: ( value: string ) => void,
+	error?: string
 ): JSX.Element {
 	const id = `cfb-${ field.key }`;
 
@@ -134,6 +135,7 @@ function renderField(
 				value={ value }
 				onChange={ onChange }
 				required={ field.required }
+				error={ error }
 				className="sm:col-span-2 lg:col-span-3"
 			/>
 		);
@@ -150,6 +152,7 @@ function renderField(
 				onChange={ onChange }
 				placeholder={ __( '- Select -', 'erp' ) }
 				required={ field.required }
+				error={ error }
 			/>
 		);
 	}
@@ -172,6 +175,7 @@ function renderField(
 			onChange={ onChange }
 			placeholder={ field.placeholder }
 			required={ field.required }
+			error={ error }
 		/>
 	);
 }
@@ -187,9 +191,11 @@ interface ExtraFieldsProps {
 	 * own. Standalone (`top`/`bottom`) groups keep the default card.
 	 */
 	readonly inline?:  boolean;
+	/** field key → message, so a required custom field can report itself. */
+	readonly errors?:  Record< string, string >;
 }
 
-export function ExtraFields( { fields, values, onChange, inline }: ExtraFieldsProps ): JSX.Element | null {
+export function ExtraFields( { fields, values, onChange, inline, errors }: ExtraFieldsProps ): JSX.Element | null {
 	if ( fields.length === 0 ) {
 		return null;
 	}
@@ -203,7 +209,7 @@ export function ExtraFields( { fields, values, onChange, inline }: ExtraFieldsPr
 					</span>
 					<span className="h-px flex-1 bg-border" />
 				</div>
-				{ fields.map( ( f ) => renderField( f, values[ f.key ] ?? '', onChange( f.key ) ) ) }
+				{ fields.map( ( f ) => renderField( f, values[ f.key ] ?? '', onChange( f.key ), errors?.[ f.key ] ) ) }
 			</>
 		);
 	}
@@ -223,7 +229,7 @@ export function ExtraFields( { fields, values, onChange, inline }: ExtraFieldsPr
 		<>
 			{ groups.map( ( group ) => (
 				<FormSection key={ group.section } title={ group.section }>
-					{ group.items.map( ( f ) => renderField( f, values[ f.key ] ?? '', onChange( f.key ) ) ) }
+					{ group.items.map( ( f ) => renderField( f, values[ f.key ] ?? '', onChange( f.key ), errors?.[ f.key ] ) ) }
 				</FormSection>
 			) ) }
 		</>

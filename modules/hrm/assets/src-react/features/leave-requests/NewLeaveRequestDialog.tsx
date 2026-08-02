@@ -297,13 +297,18 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 			setError( __( 'The end date must be on or after the start date.', 'erp' ) );
 			return;
 		}
+		// A half-day request covers one day. The form pins To to From while the
+		// switch is on; clamp here as well so a range chosen *before* the switch
+		// was turned on cannot be submitted and then charged as 0.5 days.
+		const isHalfday = extra.halfday === true || extra.halfday === '1' || extra.halfday === 'on';
+		const leaveTo   = isHalfday ? from : to;
 		setBusy( true );
 		setError( null );
 		try {
 			await submitLeaveRequest( userId, {
 				leave_policy: Number( policy ),
 				leave_from:   from,
-				leave_to:     to,
+				leave_to:     leaveTo,
 				leave_reason: reason,
 				...( extraFields.length > 0 ? { extra } : {} ),
 			}, files );
