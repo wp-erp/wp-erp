@@ -563,17 +563,7 @@ class AnnouncementsController extends RestController {
 		return [
 			'id'                  => (int) $post->ID,
 			'title'               => (string) get_the_title( $post ),
-			// Decode after stripping tags: the body is rich text now, so a stripped
-			// `&nbsp;` or `&amp;` would otherwise reach the list as literal entity
-			// text. The client renders this as a plain string, not HTML.
-			'excerpt'             => wp_trim_words(
-				html_entity_decode(
-					wp_strip_all_tags( (string) $post->post_content ),
-					ENT_QUOTES,
-					get_bloginfo( 'charset' )
-				),
-				30
-			),
+			'excerpt'             => $this->build_excerpt( (string) $post->post_content ),
 			'status'              => (string) $post->post_status,
 			'date'                => $this->cast_date_iso( $post->post_date ),
 			'author'              => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
@@ -694,4 +684,28 @@ class AnnouncementsController extends RestController {
 
 		return [ $range ];
 	}
+
+	/**
+	 * Plain-text excerpt for the list row.
+	 *
+	 * The body is rich text, so two things bite a naive strip: tags removed with
+	 * no separator run the surrounding words together (`ITALICWORDhttps://…`),
+	 * and stripped entities survive as literal `&nbsp;` / `&amp;`. Replace tags
+	 * with a space, decode, collapse the whitespace that leaves, then trim.
+	 *
+	 * The client renders this as a plain string, not HTML, so there is no sink
+	 * to escape for here.
+	 *
+	 * @param string $content Raw post content.
+	 *
+	 * @return string
+	 */
+	private function build_excerpt( string $content ): string {
+		$text = preg_replace( '/<[^>]+>/', ' ', $content );
+		$text = html_entity_decode( (string) $text, ENT_QUOTES, get_bloginfo( 'charset' ) );
+		$text = trim( (string) preg_replace( '/\s+/u', ' ', $text ) );
+
+		return wp_trim_words( $text, 30 );
+	}
+
 }

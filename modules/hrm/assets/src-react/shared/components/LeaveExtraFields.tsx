@@ -142,16 +142,25 @@ function renderField(
 		);
 	}
 
+	// Help goes on its own line, the way the checkbox and radio branches already
+	// render it. It used to be appended to the label in parentheses, which reads
+	// fine for a unit ("days per month") but turns a real explanation into an
+	// unreadable label — "January (Entitlement for an employee who becomes
+	// eligible in that month. …)".
 	return (
-		<TextField
+		<div
 			key={ id }
-			id={ id }
-			label={ field.help ? `${ field.label } (${ field.help })` : field.label }
-			type={ field.type === 'number' ? 'number' : 'text' }
-			value={ value == null ? '' : String( value ) }
-			onChange={ onChange }
-			className={ field.colSpan === 2 ? 'sm:col-span-2' : undefined }
-		/>
+			className={ [ 'flex min-w-0 flex-col gap-1', field.colSpan === 2 ? 'sm:col-span-2' : '' ].join( ' ' ).trim() }
+		>
+			<TextField
+				id={ id }
+				label={ field.label }
+				type={ field.type === 'number' ? 'number' : 'text' }
+				value={ value == null ? '' : String( value ) }
+				onChange={ onChange }
+			/>
+			{ field.help ? <p className="text-xs text-muted-foreground">{ field.help }</p> : null }
+		</div>
 	);
 }
 
