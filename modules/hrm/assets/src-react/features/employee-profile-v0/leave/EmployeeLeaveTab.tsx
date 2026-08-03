@@ -93,8 +93,11 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 		<div className="space-y-6">
 			{ /* Balance per policy */ }
 			<section className="overflow-hidden rounded-[10px] bg-card shadow-sm">
-				<header className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
-					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
+				{ /* Rule inset to the card padding, like every other card. As a
+				     border-b on this header it ran edge to edge, which read as a
+				     different component next to Employment. */ }
+				<header className="flex items-center justify-between gap-4 px-6 py-4">
+					<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
 					{ canCreate ? (
 						<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setShowRequest( true ) }>
 							<Plus size={ 14 } aria-hidden="true" />
@@ -102,6 +105,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						</Button>
 					) : null }
 				</header>
+				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.summary.length === 0 ? (
 					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave policies assigned.', 'erp' ) }</p>
 				) : (
@@ -161,8 +165,8 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 
 			{ /* Request history */ }
 			<section className="rounded-[10px] bg-card p-6 shadow-sm">
-				<div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
-					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
+				<div className="flex flex-wrap items-center justify-between gap-3">
+					<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave History', 'erp' ) }</h2>
 					{ meta ? (
 						<div className="flex flex-wrap items-center gap-2">
 							<Select
@@ -214,6 +218,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 						</div>
 					) : null }
 				</div>
+				<div className="mb-4 mt-4 h-px w-full bg-border" />
 				{ data.requests.length === 0 ? (
 					<p className="py-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
 				) : (
