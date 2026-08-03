@@ -13,8 +13,8 @@ import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-import { __ } from '@/shared/i18n';
-import { formatDisplayDate, siteToday } from '@/shared/utils/date';
+import { __, sprintf } from '@/shared/i18n';
+import { formatDisplayDate, siteToday, todaySiteYmd } from '@/shared/utils/date';
 
 import { ReportNameCell } from './ReportNameCell';
 import { ReportShell, ReportState } from './ReportShell';
@@ -37,7 +37,10 @@ const HEADCOUNT_CONFIG = {
 };
 
 export function HeadcountPage(): JSX.Element {
-	const now = siteToday().getFullYear();
+	const today = siteToday();
+	const now   = today.getFullYear();
+	// The figures are read live, so the report is "as of" today on the site clock.
+	const asOf  = formatDisplayDate( todaySiteYmd() );
 	const [ year, setYear ]             = useState( String( now ) );
 	const [ department, setDepartment ] = useState( 0 );
 	const [ showFilters, setShowFilters ] = useState( false );
@@ -78,6 +81,15 @@ export function HeadcountPage(): JSX.Element {
 					<span className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
 						<Users size={ 16 } aria-hidden="true" />
 						{ __( 'Total Employees', 'erp' ) }: { data?.total ?? 0 }
+					</span>
+					{ /* Legacy parity: the report stated the day its headcount was
+					     taken. Without it the total reads as timeless. */ }
+					<span className="text-sm text-muted-foreground">
+						{ sprintf(
+							/* translators: %s: the date the figures were read. */
+							__( 'as of %s', 'erp' ),
+							asOf
+						) }
 					</span>
 				</div>
 				<div className="flex items-center gap-3">
