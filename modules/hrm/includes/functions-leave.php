@@ -779,9 +779,16 @@ function erp_hr_leave_get_policies( $args = [] ) {
         ->skip( $args['offset'] )
         ->take( $args['number'] );
 
-        // If filtered by name, Get the ID of this leave type by name and do ordering
+        // Ordering by name means joining the leave-types table, which carries its
+        // own `id`, `name` and `description` columns. With a bare `SELECT *` those
+        // overwrite the policy's — so the rows came back carrying the LEAVE TYPE's
+        // id, and two policies sharing a type reported the same id. Anything keyed
+        // on that id (edit, duplicate, delete) would act on the wrong policy.
+        // Scope the star to the policies table; the join stays for the ORDER BY.
         if ( $args['orderby'] === 'name' ) {
-            $policies = $policies->join( "{$wpdb->prefix}erp_hr_leaves as leave", 'leave.id', '=', "{$wpdb->prefix}erp_hr_leave_policies.leave_id" )
+            $policies = $policies
+                        ->select( \WeDevs\ORM\Eloquent\Facades\DB::raw( "SQL_CALC_FOUND_ROWS {$wpdb->prefix}erp_hr_leave_policies.*" ) )
+                        ->join( "{$wpdb->prefix}erp_hr_leaves as leave", 'leave.id', '=', "{$wpdb->prefix}erp_hr_leave_policies.leave_id" )
                         ->orderBy( 'leave.name', $args['order'] );
         } else {
             $policies = $policies->orderBy( $args['orderby'], $args['order'] );

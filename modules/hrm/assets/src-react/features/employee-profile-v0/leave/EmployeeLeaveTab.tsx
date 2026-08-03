@@ -17,7 +17,7 @@ import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
-import { parseServerDate } from '@/shared/utils/date';
+import { formatCalendarDate, parseServerDate } from '@/shared/utils/date';
 
 import { LeaveRequestDialog } from './LeaveRequestDialog';
 import { useEmployeeLeave } from './useEmployeeLeave';
@@ -145,6 +145,13 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 										<span>{ sprintf( __( 'Entitled %s', 'erp' ), num( row.entitlement ) ) }</span>
 										<span>{ sprintf( __( 'Spent %s', 'erp' ), num( row.spent ) ) }</span>
 									</div>
+									{ /* Entitlement period — the window this balance belongs to, the
+									     same validity the entitlements list shows. */ }
+									{ row.from_date || row.to_date ? (
+										<div className="mt-1 text-xs text-muted-foreground">
+											{ `${ formatCalendarDate( row.from_date ) } – ${ formatCalendarDate( row.to_date ) }` }
+										</div>
+									) : null }
 								</div>
 							);
 						} ) }
