@@ -38,7 +38,7 @@ import {
 } from '@/shared/components/LeaveExtraFields';
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
 import { HOOKS } from '@/shared/filters';
-import { __, sprintf } from '@/shared/i18n';
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import { dismissGuard } from '@/shared/utils/dialog';
@@ -218,20 +218,14 @@ export function LeavePolicyFormDialog( {
 			next.days = __( 'Days is required.', 'erp' );
 		}
 
-		// Advanced Leave (pro): segregated day-type allocations can't exceed the
-		// total policy days (legacy save-time guard on `LeavePoliciesSegregation`).
-		if ( extraFields.some( ( f ) => f.group === 'segre' ) ) {
-			const segre     = ( extra.segre as Record< string, unknown > | undefined ) ?? {};
-			const segreSum  = Object.values( segre ).reduce< number >( ( sum, v ) => sum + ( Number( v ) || 0 ), 0 );
-			const totalDays = Number( form.days || ( editing?.days ?? 0 ) );
-			if ( segreSum > totalDays ) {
-				next.segregation = sprintf(
-					__( 'Segregated days (%1$s) exceed the total policy days (%2$s).', 'erp' ),
-					String( segreSum ),
-					String( totalDays )
-				);
-			}
-		}
+		// No sum-vs-total rule for segregation, deliberately. Each month is the
+		// entitlement an employee receives when they become eligible in THAT month
+		// (`Segregation::apply_segregation()` sets `day_in` from the joining
+		// month) — an alternative total, not a slice of one. A normal pro-rated
+		// table like Jan 12 … Dec 1 sums far above the policy's days, so summing
+		// the twelve and comparing to `days` rejected valid configurations and
+		// made a policy created in the legacy UI impossible to re-save here.
+		// Legacy has no such guard for the same reason.
 
 		if ( Object.keys( next ).length > 0 ) {
 			setErrors( next );
@@ -316,19 +310,8 @@ export function LeavePolicyFormDialog( {
 					<LeaveExtraFields
 						fields={ extraFields }
 						values={ extra }
-						onChange={ ( field, value ) => {
-							setExtra( ( p ) => setLeaveFieldValue( p, field, value ) );
-							if ( field.group === 'segre' ) {
-								setErrors( ( p ) => ( { ...p, segregation: undefined } ) );
-							}
-						} }
+						onChange={ ( field, value ) => setExtra( ( p ) => setLeaveFieldValue( p, field, value ) ) }
 					/>
-
-					{ errors.segregation ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ errors.segregation }</AlertDescription>
-						</Alert>
-					) : null }
 
 					{ error ? (
 						<Alert variant="destructive">
