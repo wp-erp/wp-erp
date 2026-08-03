@@ -54,6 +54,7 @@ interface FormState {
 	employees:    string[];
 	departments:  string[];
 	designations: string[];
+	publishDate:  string;
 	sendPush:     boolean;
 	sendSms:      boolean;
 	smsContent:   string;
@@ -67,6 +68,7 @@ const EMPTY: FormState = {
 	employees:    [],
 	departments:  [],
 	designations: [],
+	publishDate:  '',
 	sendPush:     false,
 	sendSms:      false,
 	smsContent:   '',
@@ -105,6 +107,8 @@ export function AnnouncementFormDialog( {
 						employees:    ( editing.recipients?.employees ?? [] ).map( String ),
 						departments:  ( editing.recipients?.departments ?? [] ).map( String ),
 						designations: ( editing.recipients?.designations ?? [] ).map( String ),
+						// `Y-m-d H:i:s` → the `datetime-local` the input wants.
+						publishDate:  ( editing.publish_date ?? '' ).slice( 0, 16 ).replace( ' ', 'T' ),
 						sendPush:     editing.send_push === true,
 						sendSms:      editing.send_sms === true,
 						smsContent:   editing.sms_content ?? '',
@@ -161,6 +165,7 @@ export function AnnouncementFormDialog( {
 			employees:    form.employees.map( Number ),
 			departments:  form.departments.map( Number ),
 			designations: form.designations.map( Number ),
+			publish_date: form.publishDate ? `${ form.publishDate.replace( 'T', ' ' ) }:00` : '',
 			send_push:    form.sendPush,
 			send_sms:     form.sendSms,
 			sms_content:  form.smsContent,
@@ -276,6 +281,28 @@ export function AnnouncementFormDialog( {
 						<Alert variant="destructive">
 							<AlertDescription>{ error }</AlertDescription>
 						</Alert>
+					) : null }
+
+					{ /* Scheduling. WordPress parks a future-dated post under `future` and
+					     publishes it on cron, which fires the same assignment hook the
+					     e-mail and push run off — so this needs no queue of its own.
+					     Hidden for a draft, which ignores the date exactly as legacy did. */ }
+					{ form.status === 'publish' ? (
+						<div className="flex flex-col gap-2.5">
+							<label htmlFor="announcement_publish_date" className="text-sm font-medium text-foreground">
+								{ __( 'Publish date', 'erp' ) }
+							</label>
+							<input
+								id="announcement_publish_date"
+								type="datetime-local"
+								value={ form.publishDate }
+								onChange={ ( e ) => setForm( ( p ) => ( { ...p, publishDate: e.target.value } ) ) }
+								className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
+							/>
+							<p className="text-xs text-muted-foreground">
+								{ __( 'Leave empty to publish now. A future date schedules the announcement.', 'erp' ) }
+							</p>
+						</div>
 					) : null }
 
 					{ /* Delivery channels. Both were legacy-metabox-only until now, so a

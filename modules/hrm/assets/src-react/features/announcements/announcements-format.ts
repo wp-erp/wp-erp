@@ -9,6 +9,9 @@ import { formatDisplayDate } from '@/shared/utils/date';
 export const STATUS_TABS: ReadonlyArray< { value: string; label: string } > = [
 	{ value: 'publish', label: __( 'Published', 'erp' ) },
 	{ value: 'draft', label: __( 'Draft', 'erp' ) },
+	// WordPress parks a future-dated post under its own `future` status; without
+	// this tab a scheduled announcement would vanish from the list until it went out.
+	{ value: 'future', label: __( 'Scheduled', 'erp' ) },
 	{ value: 'trash', label: __( 'Trash', 'erp' ) },
 ];
 

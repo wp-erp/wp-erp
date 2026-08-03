@@ -58,7 +58,7 @@ export interface UseAnnouncementsResult {
 	readonly loadOptions:  () => Promise< AnnouncementFormOptions >;
 }
 
-const EMPTY_COUNTS: AnnouncementStatusCounts = { publish: 0, draft: 0, trash: 0 };
+const EMPTY_COUNTS: AnnouncementStatusCounts = { publish: 0, draft: 0, future: 0, trash: 0 };
 
 export function useAnnouncements( { status, search, page, perPage, startDate, endDate }: UseAnnouncementsArgs ): UseAnnouncementsResult {
 	const [ rows, setRows ]       = useState< readonly Announcement[] >( [] );
@@ -90,6 +90,7 @@ export function useAnnouncements( { status, search, page, perPage, startDate, en
 				setCounts( {
 					publish: Number( c?.publish ?? 0 ),
 					draft:   Number( c?.draft ?? 0 ),
+					future:  Number( c?.future ?? 0 ),
 					trash:   Number( c?.trash ?? 0 ),
 				} );
 			} catch {

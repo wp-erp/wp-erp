@@ -26,6 +26,8 @@ export interface AnnouncementDetail extends Announcement {
 	readonly html_content: string;
 	readonly type:       string;
 	/** Delivery channels the legacy metabox owns; both default off. */
+	/** Post date, `Y-m-d H:i:s` site time — a future value means Scheduled. */
+	readonly publish_date: string;
 	readonly send_push:    boolean;
 	readonly send_sms:     boolean;
 	readonly sms_content:  string;
@@ -54,11 +56,13 @@ export interface AnnouncementInput {
 	readonly send_push?:    boolean;
 	readonly send_sms?:     boolean;
 	readonly sms_content?:  string;
+	readonly publish_date?: string;
 }
 
 export interface AnnouncementStatusCounts {
 	readonly publish: number;
 	readonly draft:   number;
+	readonly future:  number;
 	readonly trash:   number;
 }
 

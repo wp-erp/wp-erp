@@ -309,7 +309,16 @@ function AnnouncementsInner(): JSX.Element {
 	}
 
 	function countFor( value: string ): number {
-		return value === 'draft' ? counts.draft : value === 'trash' ? counts.trash : counts.publish;
+		if ( 'draft' === value ) {
+			return counts.draft;
+		}
+		if ( 'future' === value ) {
+			return counts.future;
+		}
+		if ( 'trash' === value ) {
+			return counts.trash;
+		}
+		return counts.publish;
 	}
 
 	return (

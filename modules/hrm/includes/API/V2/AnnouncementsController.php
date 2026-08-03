@@ -208,7 +208,7 @@ class AnnouncementsController extends RestController {
 	public function get_items( $request ): WP_REST_Response {
 		$page     = max( 1, (int) ( $request['page'] ?? 1 ) );
 		$per_page = max( 1, min( 100, (int) ( $request['per_page'] ?? 20 ) ) );
-		$status   = $this->cast_enum( (string) ( $request['status'] ?? 'publish' ), [ 'publish', 'draft', 'trash', 'any' ] ) ?? 'publish';
+		$status   = $this->cast_enum( (string) ( $request['status'] ?? 'publish' ), [ 'publish', 'draft', 'future', 'trash', 'any' ] ) ?? 'publish';
 		$search   = sanitize_text_field( (string) ( $request['search'] ?? '' ) );
 
 		$date_query = $this->build_date_query( $request );
@@ -261,6 +261,7 @@ class AnnouncementsController extends RestController {
 		$row['content']      = (string) $post->post_content; // raw — the editor binds to this.
 		$row['html_content'] = (string) wp_kses_post( wpautop( (string) $post->post_content ) ); // display-ready (view modal); KSES'd next to the React dangerouslySetInnerHTML sink.
 		$row['type']         = (string) get_post_meta( $post->ID, '_announcement_type', true );
+		$row['publish_date'] = (string) $post->post_date;
 		$row['send_push']    = 'on' === get_post_meta( $post->ID, '_announcement_send_push', true );
 		$row['send_sms']     = 'on' === get_post_meta( $post->ID, '_announcement_send_sms', true );
 		$row['sms_content']  = (string) get_post_meta( $post->ID, '_announcement_sms_content', true );
@@ -289,15 +290,20 @@ class AnnouncementsController extends RestController {
 
 		$status = $this->cast_enum( (string) ( $request['status'] ?? 'publish' ), [ 'publish', 'draft' ] ) ?? 'publish';
 
-		$post_id = wp_insert_post(
-			[
-				'post_type'    => self::POST_TYPE,
-				'post_title'   => $title,
-				'post_content' => (string) ( $request['content'] ?? '' ),
-				'post_status'  => $status,
-			],
-			true
-		);
+		$postarr = [
+			'post_type'    => self::POST_TYPE,
+			'post_title'   => $title,
+			'post_content' => (string) ( $request['content'] ?? '' ),
+			'post_status'  => $status,
+		];
+
+		$schedule = $this->resolve_schedule( (string) ( $request['publish_date'] ?? '' ), $status );
+
+		if ( $schedule ) {
+			$postarr = array_merge( $postarr, $schedule );
+		}
+
+		$post_id = wp_insert_post( $postarr, true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_Error( 'rest_announcement_create_failed', $post_id->get_error_message(), [ 'status' => 400 ] );
@@ -345,6 +351,17 @@ class AnnouncementsController extends RestController {
 		}
 		if ( isset( $request['status'] ) ) {
 			$data['post_status'] = $this->cast_enum( (string) $request['status'], [ 'publish', 'draft' ] ) ?? $post->post_status;
+		}
+
+		if ( isset( $request['publish_date'] ) ) {
+			$schedule = $this->resolve_schedule(
+				(string) $request['publish_date'],
+				(string) ( $data['post_status'] ?? $post->post_status )
+			);
+
+			if ( $schedule ) {
+				$data = array_merge( $data, $schedule );
+			}
 		}
 
 		$result = wp_update_post( $data, true );
@@ -441,6 +458,9 @@ class AnnouncementsController extends RestController {
 			[
 				'publish' => (int) ( $counts['publish'] ?? 0 ),
 				'draft'   => (int) ( $counts['draft'] ?? 0 ),
+				// Scheduled posts are their own WP status; without this the list's
+				// Scheduled tab could never show a count.
+				'future'  => (int) ( wp_count_posts( self::POST_TYPE )->future ?? 0 ),
 				'trash'   => (int) ( $counts['trash'] ?? 0 ),
 			]
 		);
@@ -501,6 +521,46 @@ class AnnouncementsController extends RestController {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Resolve `post_date` + `post_status` from a requested publish date.
+	 *
+	 * WordPress schedules a post by storing a future `post_date` with status
+	 * `future`; cron flips it to `publish` when the time comes. The announcement
+	 * e-mail and every delivery hook run off
+	 * `erp_hr_assign_announcements_to_employees()`, which the transition calls, so
+	 * scheduling needs no separate queue here.
+	 *
+	 * A draft stays a draft whatever date is set — legacy behaved the same way.
+	 *
+	 * @param string $requested Requested date, `Y-m-d H:i(:s)` in site time.
+	 * @param string $status    Requested status (publish|draft).
+	 *
+	 * @return array{post_date: string, post_date_gmt: string, post_status: string}|null
+	 */
+	private function resolve_schedule( string $requested, string $status ): ?array {
+		$requested = trim( $requested );
+
+		if ( '' === $requested || 'draft' === $status ) {
+			return null;
+		}
+
+		$timestamp = strtotime( $requested );
+
+		if ( ! $timestamp ) {
+			return null;
+		}
+
+		$local = gmdate( 'Y-m-d H:i:s', $timestamp );
+
+		return [
+			'post_date'     => $local,
+			'post_date_gmt' => get_gmt_from_date( $local ),
+			// `current_time( 'timestamp' )` is site time, which is what the author
+			// typed — comparing against time() would be an hour or twelve out.
+			'post_status'   => $timestamp > current_time( 'timestamp' ) ? 'future' : 'publish',
+		];
 	}
 
 	/**
@@ -674,6 +734,7 @@ class AnnouncementsController extends RestController {
 			'send_push'    => [ 'description' => __( 'Also deliver as a push notification.', 'erp' ), 'type' => 'boolean' ],
 			'send_sms'     => [ 'description' => __( 'Also deliver as an SMS (requires the pro SMS module).', 'erp' ), 'type' => 'boolean' ],
 			'sms_content'  => [ 'description' => __( 'SMS body. Plain text; the announcement body is not used.', 'erp' ), 'type' => 'string', 'sanitize_callback' => 'sanitize_textarea_field' ],
+			'publish_date' => [ 'description' => __( 'Publish date/time (Y-m-d H:i:s, site time). A future value schedules the announcement.', 'erp' ), 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
 		];
 	}
 
@@ -689,7 +750,7 @@ class AnnouncementsController extends RestController {
 			'description'       => __( 'Post status filter.', 'erp' ),
 			'type'              => 'string',
 			'default'           => 'publish',
-			'enum'              => [ 'publish', 'draft', 'trash', 'any' ],
+			'enum'              => [ 'publish', 'draft', 'future', 'trash', 'any' ],
 			'sanitize_callback' => 'sanitize_key',
 		];
 
