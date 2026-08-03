@@ -563,7 +563,17 @@ class AnnouncementsController extends RestController {
 		return [
 			'id'                  => (int) $post->ID,
 			'title'               => (string) get_the_title( $post ),
-			'excerpt'             => wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 30 ),
+			// Decode after stripping tags: the body is rich text now, so a stripped
+			// `&nbsp;` or `&amp;` would otherwise reach the list as literal entity
+			// text. The client renders this as a plain string, not HTML.
+			'excerpt'             => wp_trim_words(
+				html_entity_decode(
+					wp_strip_all_tags( (string) $post->post_content ),
+					ENT_QUOTES,
+					get_bloginfo( 'charset' )
+				),
+				30
+			),
 			'status'              => (string) $post->post_status,
 			'date'                => $this->cast_date_iso( $post->post_date ),
 			'author'              => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
