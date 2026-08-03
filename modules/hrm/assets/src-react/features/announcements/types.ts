@@ -25,6 +25,10 @@ export interface AnnouncementDetail extends Announcement {
 	/** Server-side `wp_kses_post( wpautop() )` output — the only string the view dialog renders as HTML. */
 	readonly html_content: string;
 	readonly type:       string;
+	/** Delivery channels the legacy metabox owns; both default off. */
+	readonly send_push:    boolean;
+	readonly send_sms:     boolean;
+	readonly sms_content:  string;
 	readonly recipients: {
 		readonly employees:    readonly number[];
 		readonly departments:  readonly number[];
@@ -47,6 +51,9 @@ export interface AnnouncementInput {
 	readonly employees?:    readonly number[];
 	readonly departments?:  readonly number[];
 	readonly designations?: readonly number[];
+	readonly send_push?:    boolean;
+	readonly send_sms?:     boolean;
+	readonly sms_content?:  string;
 }
 
 export interface AnnouncementStatusCounts {
@@ -66,4 +73,6 @@ export interface AnnouncementFormOptions {
 	readonly departments:  readonly IdName[];
 	readonly designations: readonly IdName[];
 	readonly employees:    readonly IdName[];
+	/** Which delivery channels this install has — SMS is a pro module. */
+	readonly channels:     { readonly push: boolean; readonly sms: boolean };
 }

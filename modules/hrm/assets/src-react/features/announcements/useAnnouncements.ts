@@ -28,6 +28,7 @@ interface RawFormOptions {
 	departments?:  IdName[];
 	designations?: IdName[];
 	employees?:    IdName[];
+	channels?:     { push?: boolean; sms?: boolean };
 }
 
 interface UseAnnouncementsArgs {
@@ -166,6 +167,7 @@ export function useAnnouncements( { status, search, page, perPage, startDate, en
 			departments:  raw.departments ?? [],
 			designations: raw.designations ?? [],
 			employees:    raw.employees ?? [],
+			channels:     { push: raw.channels?.push ?? true, sms: raw.channels?.sms ?? false },
 		};
 	}, [] );
 

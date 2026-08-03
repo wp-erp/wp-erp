@@ -11,6 +11,7 @@ import {
 	Alert,
 	AlertDescription,
 	Button,
+	Checkbox,
 	Dialog,
 	DialogContent,
 	DialogDescription,
@@ -53,6 +54,9 @@ interface FormState {
 	employees:    string[];
 	departments:  string[];
 	designations: string[];
+	sendPush:     boolean;
+	sendSms:      boolean;
+	smsContent:   string;
 }
 
 const EMPTY: FormState = {
@@ -63,6 +67,9 @@ const EMPTY: FormState = {
 	employees:    [],
 	departments:  [],
 	designations: [],
+	sendPush:     false,
+	sendSms:      false,
+	smsContent:   '',
 };
 
 const STATUS_OPTS: Option[] = [
@@ -98,6 +105,9 @@ export function AnnouncementFormDialog( {
 						employees:    ( editing.recipients?.employees ?? [] ).map( String ),
 						departments:  ( editing.recipients?.departments ?? [] ).map( String ),
 						designations: ( editing.recipients?.designations ?? [] ).map( String ),
+						sendPush:     editing.send_push === true,
+						sendSms:      editing.send_sms === true,
+						smsContent:   editing.sms_content ?? '',
 				  }
 				: EMPTY
 		);
@@ -151,6 +161,9 @@ export function AnnouncementFormDialog( {
 			employees:    form.employees.map( Number ),
 			departments:  form.departments.map( Number ),
 			designations: form.designations.map( Number ),
+			send_push:    form.sendPush,
+			send_sms:     form.sendSms,
+			sms_content:  form.smsContent,
 		} );
 	}
 
@@ -263,6 +276,55 @@ export function AnnouncementFormDialog( {
 						<Alert variant="destructive">
 							<AlertDescription>{ error }</AlertDescription>
 						</Alert>
+					) : null }
+
+					{ /* Delivery channels. Both were legacy-metabox-only until now, so a
+					     React save could not turn either on — the announcement went out
+					     by e-mail alone. The senders run off the same meta the server
+					     writes from these fields. SMS only renders where the pro module
+					     says the channel exists. */ }
+					{ options?.channels?.push || options?.channels?.sms ? (
+						<div className="flex flex-col gap-2.5 rounded-md border border-border bg-muted/20 px-4 py-3">
+							<span className="text-sm font-medium text-foreground">{ __( 'Also deliver as', 'erp' ) }</span>
+
+							{ options?.channels?.push ? (
+								<label className="flex items-center gap-2 text-sm text-foreground">
+									<Checkbox
+										checked={ form.sendPush }
+										onCheckedChange={ ( v: boolean ) => setForm( ( p ) => ( { ...p, sendPush: v === true } ) ) }
+									/>
+									{ __( 'Push notification', 'erp' ) }
+								</label>
+							) : null }
+
+							{ options?.channels?.sms ? (
+								<label className="flex items-center gap-2 text-sm text-foreground">
+									<Checkbox
+										checked={ form.sendSms }
+										onCheckedChange={ ( v: boolean ) => setForm( ( p ) => ( { ...p, sendSms: v === true } ) ) }
+									/>
+									{ __( 'SMS', 'erp' ) }
+								</label>
+							) : null }
+
+							{ options?.channels?.sms && form.sendSms ? (
+								<div className="flex flex-col gap-2.5">
+									<label htmlFor="announcement_sms_content" className="text-sm font-medium text-foreground">
+										{ __( 'SMS body', 'erp' ) }
+									</label>
+									<textarea
+										id="announcement_sms_content"
+										rows={ 3 }
+										value={ form.smsContent }
+										onChange={ ( e ) => setForm( ( p ) => ( { ...p, smsContent: e.target.value } ) ) }
+										className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+									/>
+									<p className="text-xs text-muted-foreground">
+										{ __( 'Sent as plain text — the announcement body is not used.', 'erp' ) }
+									</p>
+								</div>
+							) : null }
+						</div>
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">

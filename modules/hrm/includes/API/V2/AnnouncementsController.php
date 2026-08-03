@@ -261,6 +261,9 @@ class AnnouncementsController extends RestController {
 		$row['content']      = (string) $post->post_content; // raw — the editor binds to this.
 		$row['html_content'] = (string) wp_kses_post( wpautop( (string) $post->post_content ) ); // display-ready (view modal); KSES'd next to the React dangerouslySetInnerHTML sink.
 		$row['type']         = (string) get_post_meta( $post->ID, '_announcement_type', true );
+		$row['send_push']    = 'on' === get_post_meta( $post->ID, '_announcement_send_push', true );
+		$row['send_sms']     = 'on' === get_post_meta( $post->ID, '_announcement_send_sms', true );
+		$row['sms_content']  = (string) get_post_meta( $post->ID, '_announcement_sms_content', true );
 		$row['recipients'] = [
 			'employees'    => array_map( 'intval', (array) get_post_meta( $post->ID, '_announcement_selected_user', true ) ),
 			'departments'  => array_map( 'intval', (array) get_post_meta( $post->ID, '_announcement_department', true ) ),
@@ -300,6 +303,10 @@ class AnnouncementsController extends RestController {
 			return new \WP_Error( 'rest_announcement_create_failed', $post_id->get_error_message(), [ 'status' => 400 ] );
 		}
 
+		// Before assign_recipients(): the push and SMS senders both run off
+		// `hr_announcement_insert_assignment`, which that call fires, and both
+		// read these meta keys to decide whether to send.
+		$this->save_delivery_meta( (int) $post_id, $request );
 		$this->assign_recipients( (int) $post_id, $request );
 
 		$response = rest_ensure_response( $this->get_item_payload( (int) $post_id ) );
@@ -345,6 +352,8 @@ class AnnouncementsController extends RestController {
 		if ( is_wp_error( $result ) ) {
 			return new \WP_Error( 'rest_announcement_update_failed', $result->get_error_message(), [ 'status' => 400 ] );
 		}
+
+		$this->save_delivery_meta( $id, $request );
 
 		if ( null !== $request['assign_type'] ) {
 			$this->assign_recipients( $id, $request );
@@ -483,8 +492,47 @@ class AnnouncementsController extends RestController {
 				'departments'  => $departments,
 				'designations' => $designations,
 				'employees'    => $employees,
+				// Which delivery channels this install actually has. Push ships with
+				// free; SMS is a pro module, so it announces itself on the filter
+				// rather than free guessing at whether pro is present.
+				'channels'     => [
+					'push' => (bool) apply_filters( 'erp_hr_v2_announcement_push_channel', true ),
+					'sms'  => (bool) apply_filters( 'erp_hr_v2_announcement_sms_channel', false ),
+				],
 			]
 		);
+	}
+
+	/**
+	 * Persist the delivery-channel flags the legacy metabox owns.
+	 *
+	 * Legacy stores these as `'on'` from a `$_POST` checkbox
+	 * (`PushNotification\Module::save()`, SMS-Notification `announcement_save_option()`),
+	 * and both senders compare with `'on' !==`. A REST request carries no such
+	 * field, so React could not set either channel — the point of B7/A23. Written
+	 * here in the same format so the legacy metabox, the senders and React all
+	 * agree on one value.
+	 *
+	 * Absent fields are left alone: a PUT that does not mention a channel must not
+	 * silently switch it off (the A3 class of bug).
+	 *
+	 * @param int             $post_id Announcement post ID.
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return void
+	 */
+	private function save_delivery_meta( int $post_id, $request ): void {
+		if ( null !== $request['send_push'] ) {
+			update_post_meta( $post_id, '_announcement_send_push', rest_sanitize_boolean( $request['send_push'] ) ? 'on' : '' );
+		}
+
+		if ( null !== $request['send_sms'] ) {
+			update_post_meta( $post_id, '_announcement_send_sms', rest_sanitize_boolean( $request['send_sms'] ) ? 'on' : '' );
+		}
+
+		if ( null !== $request['sms_content'] ) {
+			update_post_meta( $post_id, '_announcement_sms_content', sanitize_textarea_field( (string) $request['sms_content'] ) );
+		}
 	}
 
 	/**
@@ -623,6 +671,9 @@ class AnnouncementsController extends RestController {
 			'employees'    => [ 'description' => __( 'Employee user IDs (selected_employee).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],
 			'departments'  => [ 'description' => __( 'Department IDs (by_department).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],
 			'designations' => [ 'description' => __( 'Designation IDs (by_designation).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],
+			'send_push'    => [ 'description' => __( 'Also deliver as a push notification.', 'erp' ), 'type' => 'boolean' ],
+			'send_sms'     => [ 'description' => __( 'Also deliver as an SMS (requires the pro SMS module).', 'erp' ), 'type' => 'boolean' ],
+			'sms_content'  => [ 'description' => __( 'SMS body. Plain text; the announcement body is not used.', 'erp' ), 'type' => 'string', 'sanitize_callback' => 'sanitize_textarea_field' ],
 		];
 	}
 
