@@ -446,6 +446,25 @@ class LeaveRequestsController extends RestController {
 	}
 
 	/**
+	 * Human label for a day-status id, or '' for an ordinary full day.
+	 *
+	 * Full Day is the overwhelming majority, and labelling every row "Full Day"
+	 * would bury the halves — legacy printed the label only when the status was
+	 * not 1, and this returns '' in that case so the client can do the same.
+	 *
+	 * @param int $status_id Day status id.
+	 *
+	 * @return string
+	 */
+	private function day_status_label( int $status_id ): string {
+		if ( $status_id <= 1 || ! function_exists( 'erp_hr_leave_request_get_day_statuses' ) ) {
+			return '';
+		}
+
+		return (string) erp_hr_leave_request_get_day_statuses( (string) $status_id );
+	}
+
+	/**
 	 * Reshape a formatted leave-request row from `erp_hr_get_leave_requests()`.
 	 *
 	 * @param mixed           $row     stdClass row.
@@ -476,6 +495,13 @@ class LeaveRequestsController extends RestController {
 			'start_date'   => $this->ts_to_iso( $row->start_date ?? null ),
 			'end_date'     => $this->ts_to_iso( $row->end_date ?? null ),
 			'days'         => $this->cast_float_or_null( $row->days ?? null ) ?? 0,
+			// Half-day period. `erp_hr_get_leave_requests()` already carries
+			// `day_status_id` (1 Full Day / 2 Morning / 3 Afternoon) — it was simply
+			// never forwarded, so the list could not tell a morning half-day from a
+			// full day. The label comes from the same filtered map the legacy list
+			// printed, so a pro override of `erp_hr_leave_day_statuses` still wins.
+			'day_status_id'    => $this->cast_int_or_null( $row->day_status_id ?? null ) ?? 1,
+			'day_status_label' => $this->day_status_label( (int) ( $row->day_status_id ?? 1 ) ),
 			'available'    => $this->cast_float_or_null( $row->available ?? null ) ?? 0,
 			// Extra (over-drawn) leave days (F18) — drives the red "Extra Leave"
 			// indicator; mirrors the legacy `available` column's `extra_leaves`.

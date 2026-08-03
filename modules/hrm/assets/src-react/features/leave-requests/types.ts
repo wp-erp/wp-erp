@@ -35,6 +35,10 @@ export interface LeaveRequest {
 	readonly start_date:    string | null;
 	readonly end_date:      string | null;
 	readonly days:          number;
+	/** 1 Full Day / 2 Morning / 3 Afternoon. */
+	readonly day_status_id:    number;
+	/** Period label, empty for a full day (legacy printed it only for halves). */
+	readonly day_status_label: string;
 	readonly available:     number;
 	readonly extra_leaves:  number;
 	readonly spent:         number;

@@ -331,6 +331,15 @@ export function LeaveRequestsTable( {
 							</td>
 							<td className="px-2 align-middle text-sm text-foreground">
 								{ req.days }
+								{ /* A half day says WHICH half — legacy printed Morning /
+								     Afternoon in place of the day count. Kept alongside the
+								     0.5 rather than replacing it, so the ledger figure stays
+								     visible. */ }
+								{ req.day_status_label ? (
+									<span className="ml-1 text-xs text-muted-foreground">
+										{ `(${ req.day_status_label })` }
+									</span>
+								) : null }
 							</td>
 							<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">
 								{ fmt( req.created_at ) }
