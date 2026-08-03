@@ -22,6 +22,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	Input,
 } from '@wedevs/plugin-ui';
 import { Download, Upload } from 'lucide-react';
 import { useState } from 'react';
@@ -113,6 +114,11 @@ export function HolidayImportDialog( {
 		}
 	}
 
+	/** Edit one preview row in place; the import sends whatever is on screen. */
+	function patchRow( index: number, patch: Partial< HolidayPreviewRow > ): void {
+		setRows( ( prev ) => prev.map( ( r, i ) => ( i === index ? { ...r, ...patch } : r ) ) );
+	}
+
 	function toggle( index: number ): void {
 		setChecked( ( prev ) => {
 			const next = new Set( prev );
@@ -195,9 +201,36 @@ export function HolidayImportDialog( {
 										<td className="px-3 align-middle">
 											<Checkbox checked={ checked.has( i ) } onCheckedChange={ () => toggle( i ) } />
 										</td>
-										<td className="px-3 align-middle font-medium text-foreground">{ row.title }</td>
-										<td className="px-3 align-middle text-muted-foreground">{ row.start.slice( 0, 10 ) }</td>
-										<td className="px-3 align-middle text-muted-foreground">{ row.end.slice( 0, 10 ) }</td>
+										{ /* Legacy rendered these as inputs so a bad title or date
+										     could be corrected before importing (leave.js:1150, made
+										     editable on double-click). Same capability, without the
+										     hidden gesture — the fields are simply editable. */ }
+										<td className="px-3 align-middle">
+											<Input
+												value={ row.title }
+												onChange={ ( e ) => patchRow( i, { title: e.target.value } ) }
+												aria-label={ sprintf( __( 'Title for row %d', 'erp' ), i + 1 ) }
+												className="h-9 text-sm font-medium"
+											/>
+										</td>
+										<td className="px-3 align-middle">
+											<Input
+												type="date"
+												value={ row.start.slice( 0, 10 ) }
+												onChange={ ( e ) => patchRow( i, { start: e.target.value } ) }
+												aria-label={ sprintf( __( 'Start date for row %d', 'erp' ), i + 1 ) }
+												className="h-9 text-sm"
+											/>
+										</td>
+										<td className="px-3 align-middle">
+											<Input
+												type="date"
+												value={ row.end.slice( 0, 10 ) }
+												onChange={ ( e ) => patchRow( i, { end: e.target.value } ) }
+												aria-label={ sprintf( __( 'End date for row %d', 'erp' ), i + 1 ) }
+												className="h-9 text-sm"
+											/>
+										</td>
 									</tr>
 								) ) }
 							</tbody>
