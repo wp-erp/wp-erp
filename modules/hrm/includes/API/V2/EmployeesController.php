@@ -1115,6 +1115,23 @@ class EmployeesController extends RestController {
 	private function status_update_date( int $user_id, string $status ): ?string {
 		global $wpdb;
 
+		// Trashing does not write an employee-history row and does not change the
+		// employee's own `status` — it only stamps `erp_hr_employees.deleted_at`,
+		// which is what the legacy list printed under "Trashed At", and what the
+		// trash tab itself filters on. So look at that column before anything else:
+		// a row carrying it IS trashed, whatever `status` still says.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$deleted_at = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT deleted_at FROM {$wpdb->prefix}erp_hr_employees WHERE user_id = %d LIMIT 1",
+				$user_id
+			)
+		);
+
+		if ( ! empty( $deleted_at ) ) {
+			return $this->cast_date_iso( (string) $deleted_at ) ?? (string) $deleted_at;
+		}
+
 		if ( '' === $status || 'active' === $status ) {
 			return null;
 		}

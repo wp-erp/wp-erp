@@ -45,6 +45,7 @@ const STATUS_DATE_LABELS: Record< string, string > = {
 	terminated: __( 'Terminated At', 'erp' ),
 	resigned:   __( 'Resigned At', 'erp' ),
 	deceased:   __( 'Deceased From', 'erp' ),
+	trash:      __( 'Trashed At', 'erp' ),
 };
 
 export function useEmployeeColumns(): readonly EmployeeColumn[] {
