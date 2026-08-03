@@ -68,6 +68,16 @@ function resolvePreset( key: string ): DateRangeValue {
 	const y = t.getFullYear();
 	const m = t.getMonth();
 	switch ( key ) {
+		case 'last_week': {
+			// The previous calendar week, Monday–Sunday — the span legacy offered.
+			const day        = t.getDay();
+			const daysSinceMonday = ( day + 6 ) % 7;
+			const from       = new Date( t );
+			from.setDate( t.getDate() - daysSinceMonday - 7 );
+			const to         = new Date( from );
+			to.setDate( from.getDate() + 6 );
+			return { from: iso( from ), to: iso( to ) };
+		}
 		case 'this_month':
 			return { from: iso( new Date( y, m, 1 ) ), to: iso( new Date( y, m + 1, 0 ) ) };
 		case 'last_month':
@@ -93,6 +103,7 @@ function resolvePreset( key: string ): DateRangeValue {
 
 const PRESET_OPTIONS: ReadonlyArray< { value: string; label: string } > = [
 	{ value: '', label: __( 'Filter by date', 'erp' ) },
+	{ value: 'last_week', label: __( 'Last Week', 'erp' ) },
 	{ value: 'this_month', label: __( 'This Month', 'erp' ) },
 	{ value: 'last_month', label: __( 'Last Month', 'erp' ) },
 	{ value: 'last_3_months', label: __( 'Last 3 Months', 'erp' ) },

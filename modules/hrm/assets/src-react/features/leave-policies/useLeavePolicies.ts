@@ -46,6 +46,9 @@ interface UseLeavePoliciesArgs {
 	readonly employeeType: string;
 	readonly page:         number;
 	readonly perPage:      number;
+	/** Server-side sort — the v2 endpoint already accepts both. */
+	readonly orderBy?:     string;
+	readonly order?:       'asc' | 'desc';
 }
 
 export interface UseLeavePoliciesResult {
@@ -90,6 +93,8 @@ export function useLeavePolicies( {
 	employeeType,
 	page,
 	perPage,
+	orderBy = 'id',
+	order = 'asc',
 }: UseLeavePoliciesArgs ): UseLeavePoliciesResult {
 	const [ rows, setRows ]       = useState< readonly LeavePolicyListRow[] >( [] );
 	const [ total, setTotal ]     = useState( 0 );
@@ -107,6 +112,8 @@ export function useLeavePolicies( {
 					employee_type: employeeType,
 					page,
 					per_page:      perPage,
+					orderby:       orderBy,
+					order,
 				} )
 			);
 			const list = Array.isArray( body ) ? body : [];
@@ -117,7 +124,7 @@ export function useLeavePolicies( {
 		} finally {
 			setLoading( false );
 		}
-	}, [ fYear, departmentId, employeeType, page, perPage ] );
+	}, [ fYear, departmentId, employeeType, page, perPage, orderBy, order ] );
 
 	useEffect( () => {
 		void reload();

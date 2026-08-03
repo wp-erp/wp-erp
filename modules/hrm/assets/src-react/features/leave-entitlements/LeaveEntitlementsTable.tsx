@@ -15,6 +15,8 @@ import {
 import { MoreVertical, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { __, sprintf } from '@/shared/i18n';
 import { formatCalendarDate } from '@/shared/utils/date';
 
@@ -87,7 +89,11 @@ export function LeaveEntitlementsTable( {
 							</td>
 						) : null }
 						<td className="px-4 align-middle text-sm font-medium text-foreground">
-							{ ent.employee_name || <span className="text-muted-foreground">—</span> }
+							{ ent.employee_name ? (
+								<Link to={ `/employees/${ ent.user_id }` } className="text-foreground hover:text-primary hover:underline">
+									{ ent.employee_name }
+								</Link>
+							) : <span className="text-muted-foreground">—</span> }
 						</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ ent.policy_name }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ ent.days }</td>

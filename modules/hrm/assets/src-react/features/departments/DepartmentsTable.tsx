@@ -118,7 +118,13 @@ export function DepartmentsTable( {
 							</div>
 						</td>
 						<td className="px-2 align-middle text-sm text-foreground">
-							{ dept.lead_name || <span className="text-muted-foreground">—</span> }
+							{ dept.lead_name && dept.lead
+								? (
+									<Link to={ `/employees/${ dept.lead }` } className="text-foreground hover:text-primary hover:underline">
+										{ dept.lead_name }
+									</Link>
+								)
+								: ( dept.lead_name || <span className="text-muted-foreground">—</span> ) }
 						</td>
 						<td className="px-2 align-middle text-sm text-foreground">
 							{ dept.parent_title || <span className="text-muted-foreground">—</span> }

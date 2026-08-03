@@ -11,16 +11,21 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { Copy, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Copy, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { __, sprintf } from '@/shared/i18n';
 
 import type { LeavePolicyListRow } from './types';
 
+/** Columns the v2 endpoint can sort on. */
+export type PolicySortKey = 'name' | 'days';
+
 interface LeavePoliciesTableProps {
 	readonly rows:        readonly LeavePolicyListRow[];
 	readonly canManage:   boolean;
+	readonly sort:        { key: PolicySortKey; dir: 'asc' | 'desc' };
+	readonly onToggleSort: ( key: PolicySortKey ) => void;
 	readonly onEdit:      ( row: LeavePolicyListRow ) => void;
 	readonly onDuplicate: ( row: LeavePolicyListRow ) => void;
 	readonly onDelete:    ( row: LeavePolicyListRow ) => void;
@@ -29,17 +34,38 @@ interface LeavePoliciesTableProps {
 export function LeavePoliciesTable( {
 	rows,
 	canManage,
+	sort,
+	onToggleSort,
 	onEdit,
 	onDuplicate,
 	onDelete,
 }: LeavePoliciesTableProps ): JSX.Element {
+	// Same affordance the Departments table uses — a plain button in the `th`,
+	// not a DS Button (sort headers are one of the documented raw-element cases).
+	function sortIcon( key: PolicySortKey ): JSX.Element {
+		if ( sort.key !== key ) {
+			return <ArrowUpDown size={ 12 } aria-hidden="true" />;
+		}
+		return sort.dir === 'asc'
+			? <ArrowUp size={ 12 } aria-hidden="true" />
+			: <ArrowDown size={ 12 } aria-hidden="true" />;
+	}
+
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
 			<thead className="border-b border-border bg-card">
 				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-					<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Days', 'erp' ) }</th>
+					<th scope="col" className="px-4">
+						<button type="button" onClick={ () => onToggleSort( 'name' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
+							{ __( 'Name', 'erp' ) }{ sortIcon( 'name' ) }
+						</button>
+					</th>
+					<th scope="col" className="px-2">
+						<button type="button" onClick={ () => onToggleSort( 'days' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
+							{ __( 'Days', 'erp' ) }{ sortIcon( 'days' ) }
+						</button>
+					</th>
 					<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Designation', 'erp' ) }</th>
 					<th scope="col" className="px-2">{ __( 'Location', 'erp' ) }</th>

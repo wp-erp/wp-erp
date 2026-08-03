@@ -28,6 +28,7 @@ import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { LeavePoliciesFilters } from './LeavePoliciesFilters';
 import { LeavePoliciesTable } from './LeavePoliciesTable';
+import type { PolicySortKey } from './LeavePoliciesTable';
 import { LeavePolicyFormDialog } from './LeavePolicyFormDialog';
 import type { LeavePolicy, LeavePolicyInput, LeavePolicyListRow, PolicyFormOptions } from './types';
 import { useLeavePolicies } from './useLeavePolicies';
@@ -35,6 +36,7 @@ import { useLeavePolicies } from './useLeavePolicies';
 function LeavePoliciesInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
 
+	const [ sort, setSort ]                 = useState< { key: PolicySortKey; dir: 'asc' | 'desc' } >( { key: 'name', dir: 'asc' } );
 	const [ fYear, setFYear ]               = useState( 0 );
 	const [ departmentId, setDepartmentId ] = useState( 0 );
 	const [ employeeType, setEmployeeType ] = useState( '' );
@@ -48,6 +50,8 @@ function LeavePoliciesInner(): JSX.Element {
 		employeeType,
 		page,
 		perPage,
+		orderBy: sort.key,
+		order:   sort.dir,
 	} );
 
 	const [ options, setOptions ]     = useState< PolicyFormOptions | null >( null );
@@ -272,6 +276,12 @@ function LeavePoliciesInner(): JSX.Element {
 					<LeavePoliciesTable
 						rows={ rows }
 						canManage={ canManage }
+						sort={ sort }
+						onToggleSort={ ( key ) => setSort( ( p ) => (
+							p.key === key
+								? { key, dir: p.dir === 'asc' ? 'desc' : 'asc' }
+								: { key, dir: 'asc' }
+						) ) }
 						onEdit={ ( policy ) => void openEdit( policy ) }
 						onDuplicate={ ( policy ) => void openDuplicate( policy ) }
 						onDelete={ setDeleting }

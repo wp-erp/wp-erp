@@ -492,12 +492,39 @@ class EmployeeLeaveController extends RestController {
 				'total'       => $this->cast_float_or_null( $row['total'] ?? null ) ?? 0,
 				'available'   => $this->cast_float_or_null( $row['available'] ?? null ) ?? 0,
 				'spent'       => $this->cast_float_or_null( $row['spent'] ?? null ) ?? 0,
-				'from_date'   => $this->cast_date_iso( $row['from_date'] ?? null ),
-				'to_date'     => $this->cast_date_iso( $row['to_date'] ?? null ),
+				'from_date'   => $this->cast_entitlement_date( $row['from_date'] ?? null ),
+				'to_date'     => $this->cast_entitlement_date( $row['to_date'] ?? null ),
 			];
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Cast an entitlement validity bound to a calendar day.
+	 *
+	 * `erp_hr_leave_get_balance()` stores these two as unix timestamps, not dates
+	 * (`from_date = "1782842400"`). `cast_date_iso()` reads a string with no space
+	 * or `T` as an already-formatted date and truncates it to ten characters, so
+	 * the payload carried `"1782842400"` — which is why the client could not show
+	 * an entitlement period. Site clock, per the v2 date contract.
+	 *
+	 * @param mixed $value Stored bound: unix timestamp, date string, or null.
+	 *
+	 * @return string|null `Y-m-d`, or null when unset.
+	 */
+	private function cast_entitlement_date( $value ): ?string {
+		if ( $value === null || $value === '' ) {
+			return null;
+		}
+
+		if ( is_numeric( $value ) ) {
+			$timestamp = (int) $value;
+
+			return $timestamp > 0 ? wp_date( 'Y-m-d', $timestamp ) : null;
+		}
+
+		return $this->cast_date_iso( $value );
 	}
 
 	/**

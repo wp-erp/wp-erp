@@ -31,6 +31,7 @@ import type { JSX } from "react";
 import { RequestsTabContext } from "./requests-tab-context";
 
 import { DateField } from "@/shared/DateField";
+import { formatCalendarDate } from "@/shared/utils/date";
 import { __ } from "@/shared/i18n";
 import { request, restPath } from "@/shared/utils/apiFetch";
 import type { ApiError } from "@/shared/utils/apiFetch";
@@ -44,6 +45,8 @@ interface ResignRow {
     readonly date: string;
     readonly status: string;
     readonly updatedBy: string;
+    /** When the request was filed — legacy listed this as "Request Date". */
+    readonly created?: string;
 }
 interface ReasonOption {
     readonly value: string;
@@ -143,6 +146,9 @@ export function ResignationRequests(): JSX.Element {
                                         {__("Date", "erp")}
                                     </th>
                                     <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                        {__("Request Date", "erp")}
+                                    </th>
+                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
                                         {__("Status", "erp")}
                                     </th>
                                     <th className="whitespace-nowrap pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
@@ -164,6 +170,13 @@ export function ResignationRequests(): JSX.Element {
                                         </td>
                                         <td className="px-2 align-middle text-sm text-muted-foreground">
                                             {r.date || "—"}
+                                        </td>
+                                        <td className="px-2 align-middle text-sm text-muted-foreground">
+                                            {formatCalendarDate(
+                                                r.created
+                                                    ? r.created.slice(0, 10)
+                                                    : null,
+                                            )}
                                         </td>
                                         <td className="px-2 align-middle">
                                             <Badge
