@@ -374,13 +374,8 @@ final class UiEngineResolver {
 			[
 				''              => [ 'section' => 'dashboard' ],
 				'dashboard'     => [ 'section' => 'dashboard' ],
-				// My Profile and Reimbursement are registered only for users who
-				// hold the `employee` role (AdminMenu.php + reimbursement Admin.php).
-				// Mapping them for anyone else sends the user to a section that does
-				// not exist, and the legacy page silently falls back to its shell —
-				// worse than the plain page, because it looks like the switch broke.
-				'my-profile'    => current_user_can( 'employee' ) ? [ 'section' => 'my-profile' ] : null,
-				'reimbursement' => current_user_can( 'employee' ) ? [ 'section' => 'reimbursement' ] : null,
+				'my-profile'    => [ 'section' => 'my-profile' ],
+				'reimbursement' => [ 'section' => 'reimbursement' ],
 				'employees'     => [ 'section' => 'people', 'sub-section' => 'employee' ],
 				'departments'   => [ 'section' => 'people', 'sub-section' => 'department' ],
 				'designations'  => [ 'section' => 'people', 'sub-section' => 'designation' ],
@@ -441,14 +436,19 @@ final class UiEngineResolver {
 			$hash_path
 		);
 
-		// `null` marks a route whose legacy section is not available to this user.
-		if ( ! isset( $map[ $head ] ) || null === $map[ $head ] ) {
+		if ( ! isset( $map[ $head ] ) ) {
 			return '';
 		}
 
 		$target = $map[ $head ];
 
-		return is_string( $target ) ? $target : $this->hr_section_url( (array) $target );
+		// An absolute URL (Training's CPT list) bypasses the section check — it is
+		// not an HR section at all.
+		if ( is_string( $target ) ) {
+			return $target;
+		}
+
+		return $this->hr_section_url( $this->available_target( (array) $target ) );
 	}
 
 	/**
@@ -515,6 +515,68 @@ final class UiEngineResolver {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Drop parts of a target the current user's legacy menu does not actually have.
+	 *
+	 * Sections are registered conditionally — My Profile and Reimbursement only
+	 * for holders of the `employee` role, pro sections only when their module is
+	 * active — and legacy answers an unknown section by silently rendering its
+	 * shell, which reads as a broken switch. Rather than hard-coding who can see
+	 * what (a list that goes stale the moment a module changes), ask the menu the
+	 * legacy UI itself renders from.
+	 *
+	 * Returns an empty array when the section is unavailable, which makes
+	 * `hr_section_url()` produce the plain HR page — the safe fallback.
+	 *
+	 * A section with NO registered submenus (People routes its own sub-sections
+	 * inside the page callback) keeps whatever sub-section it was given.
+	 *
+	 * @param array $target Query args, expected to carry `section`.
+	 *
+	 * @return array
+	 */
+	private function available_target( array $target ): array {
+		$section = (string) ( $target['section'] ?? '' );
+
+		if ( '' === $section ) {
+			return $target;
+		}
+
+		$menu = $this->hr_menu();
+
+		// No menu resolvable (too early, or the filter is unhooked) — do not
+		// second-guess the map.
+		if ( [] === $menu ) {
+			return $target;
+		}
+
+		if ( ! isset( $menu[ $section ] ) ) {
+			return [];
+		}
+
+		$subs = array_keys( (array) ( $menu[ $section ]['submenu'] ?? [] ) );
+		$sub  = (string) ( $target['sub-section'] ?? '' );
+
+		if ( '' !== $sub && [] !== $subs && ! in_array( $sub, $subs, true ) ) {
+			// The section is real but this sub-screen is not — land on the section
+			// rather than a URL legacy will quietly ignore.
+			unset( $target['sub-section'] );
+		}
+
+		return $target;
+	}
+
+	/**
+	 * The HR menu tree the legacy UI renders from, keyed by section slug.
+	 *
+	 * @return array
+	 */
+	private function hr_menu(): array {
+		$menu = apply_filters( 'erp_menu', [] );
+
+		return (array) ( $menu['hr'] ?? [] );
 	}
 
 	/**
