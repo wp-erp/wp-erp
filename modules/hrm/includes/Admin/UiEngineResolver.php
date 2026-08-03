@@ -374,12 +374,18 @@ final class UiEngineResolver {
 			[
 				''              => [ 'section' => 'dashboard' ],
 				'dashboard'     => [ 'section' => 'dashboard' ],
+				// My Profile and Reimbursement are registered only for users who
+				// hold the `employee` role (AdminMenu.php + reimbursement Admin.php).
+				// Mapping them for anyone else sends the user to a section that does
+				// not exist, and the legacy page silently falls back to its shell —
+				// worse than the plain page, because it looks like the switch broke.
+				'my-profile'    => current_user_can( 'employee' ) ? [ 'section' => 'my-profile' ] : null,
+				'reimbursement' => current_user_can( 'employee' ) ? [ 'section' => 'reimbursement' ] : null,
 				'employees'     => [ 'section' => 'people', 'sub-section' => 'employee' ],
-				'my-profile'    => [ 'section' => 'my-profile' ],
-				'departments'   => [ 'section' => 'people', 'sub-section' => 'employee' ],
-				'designations'  => [ 'section' => 'people', 'sub-section' => 'employee' ],
+				'departments'   => [ 'section' => 'people', 'sub-section' => 'department' ],
+				'designations'  => [ 'section' => 'people', 'sub-section' => 'designation' ],
 				'announcements' => [ 'section' => 'people', 'sub-section' => 'announcement' ],
-				'requests'      => [ 'section' => 'people', 'sub-section' => 'employee' ],
+				'requests'      => [ 'section' => 'people', 'sub-section' => 'requests' ],
 				// Sections whose sub-screens exist one-for-one in legacy keep them;
 				// the rest land on the section head, which is still the right place.
 				'leave'         => $this->leave_target( $segments[1] ?? '' ),
@@ -388,7 +394,9 @@ final class UiEngineResolver {
 					$segments[1] ?? '',
 					[
 						''           => 'job-opening',
-						'candidates' => 'applicant',
+						'candidates' => 'jobseeker_list',
+						'stages'     => 'stages',
+						'calendar'   => 'todo-calendar',
 						'reports'    => 'reports',
 					]
 				),
@@ -405,25 +413,36 @@ final class UiEngineResolver {
 					'payroll',
 					$segments[1] ?? '',
 					[
-						''         => 'payrun',
-						'payruns'  => 'payrun',
-						'settings' => 'calendar',
+						''          => 'payrun',
+						'payruns'   => 'payrun',
+						'components'=> 'bulk-pay-item-edit',
+						'reports'   => 'reports',
+						'settings'  => 'settings',
 					]
 				),
 				'reports'       => $this->report_target( $segments[1] ?? '' ),
 				// Pro sections. Harmless when the module is inactive — the legacy
 				// page simply reports an unknown section, exactly as a hand-typed
 				// URL would, and the link is only shown on screens that exist.
-				'attendance'    => [ 'section' => 'attendance' ],
+				'attendance'    => $this->sub_target(
+					'attendance',
+					$segments[1] ?? '',
+					[
+						''         => 'attendance',
+						'shifts'   => 'shifts',
+						'settings' => 'settings',
+						'import'   => 'exim',
+					]
+				),
 				'documents'     => [ 'section' => 'documents' ],
-				'reimbursement' => [ 'section' => 'reimbursement' ],
 				// Training is a CPT screen, not an HR section — an absolute URL.
 				'training'      => admin_url( 'edit.php?post_type=erp_hr_training' ),
 			],
 			$hash_path
 		);
 
-		if ( ! isset( $map[ $head ] ) ) {
+		// `null` marks a route whose legacy section is not available to this user.
+		if ( ! isset( $map[ $head ] ) || null === $map[ $head ] ) {
 			return '';
 		}
 
@@ -533,6 +552,8 @@ final class UiEngineResolver {
 			'leave-requests'     => '/leave/requests',
 			'leave-entitlements' => '/leave/entitlements',
 			'leave-calendar'     => '/leave/calendar',
+			'forward-leave'      => '/leave/requests',
+			'unpaid-leave'       => '/leave/requests',
 			'policies'           => '/leave/policies',
 			'holidays'           => '/leave/holidays',
 		];
@@ -542,11 +563,31 @@ final class UiEngineResolver {
 		}
 
 		if ( 'people' === $section ) {
-			return 'announcement' === $sub_section ? '/announcements' : '/employees';
+			$subs = [
+				'announcement' => '/announcements',
+				'requests'     => '/requests',
+				'department'   => '/departments',
+				'designation'  => '/designations',
+			];
+
+			return $subs[ $sub_section ] ?? '/employees';
+		}
+
+		if ( 'attendance' === $section ) {
+			$subs = [ 'shifts' => '/attendance/shifts', 'settings' => '/attendance/settings', 'exim' => '/attendance/import' ];
+
+			return $subs[ $sub_section ] ?? '/attendance';
 		}
 
 		if ( 'recruitment' === $section ) {
-			$subs = [ 'applicant' => '/recruitment/candidates', 'reports' => '/recruitment/reports' ];
+			$subs = [
+				'jobseeker_list' => '/recruitment/candidates',
+				'add_candidate'  => '/recruitment/candidates/new',
+				'add-opening'    => '/recruitment/new',
+				'stages'         => '/recruitment/stages',
+				'todo-calendar'  => '/recruitment/calendar',
+				'reports'        => '/recruitment/reports',
+			];
 
 			return $subs[ $sub_section ] ?? '/recruitment';
 		}
@@ -558,7 +599,13 @@ final class UiEngineResolver {
 		}
 
 		if ( 'payroll' === $section ) {
-			return 'calendar' === $sub_section ? '/payroll/settings' : '/payroll';
+			$subs = [
+				'settings'           => '/payroll/settings',
+				'bulk-pay-item-edit' => '/payroll/components',
+				'reports'            => '/payroll/reports',
+			];
+
+			return $subs[ $sub_section ] ?? '/payroll';
 		}
 
 		if ( 'report' === $section ) {
@@ -585,8 +632,8 @@ final class UiEngineResolver {
 			[
 				'dashboard'     => '/',
 				'my-profile'    => '/my-profile',
-				'report'        => '/reports',
-				'attendance'    => '/attendance',
+				// Harmless in reverse: React renders these routes for whoever can
+				// reach them, and an employee is exactly who arrives from there.
 				'asset'         => '/assets',
 				'documents'     => '/documents',
 				'payroll'       => '/payroll',
