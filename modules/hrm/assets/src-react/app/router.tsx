@@ -642,6 +642,10 @@ export function buildHashRouter(): ReturnType< typeof createHashRouter > {
 				// user reaches for. Send it to the first report, which renders the
 				// full report tab strip.
 				{ path: 'reports', element: <Navigate to="/reports/age-profile" replace /> },
+				// And for `#/holidays`: holidays live under the Leave section, but the
+				// nav label reads "Holidays" on its own, so the bare path is the one
+				// people type. Alias it rather than answer "Page not found".
+				{ path: 'holidays', element: <Navigate to="/leave/holidays" replace /> },
 				...wrapRoutes(),
 				{ path: '*', element: <NotFound /> },
 			],

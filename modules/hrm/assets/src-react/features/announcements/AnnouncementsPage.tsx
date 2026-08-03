@@ -394,8 +394,8 @@ function AnnouncementsInner(): JSX.Element {
 				description={
 					deleting
 						? deleting.status === 'trash'
-							? sprintf( __( '“%s” will be permanently deleted. This cannot be undone.', 'erp' ), deleting.title )
-							: sprintf( __( '“%s” will be moved to trash.', 'erp' ), deleting.title )
+							? sprintf( __( '“%s” will be permanently deleted. This cannot be undone.', 'erp' ), deleting.title || __( '(no title)', 'erp' ) )
+							: sprintf( __( '“%s” will be moved to trash.', 'erp' ), deleting.title || __( '(no title)', 'erp' ) )
 						: ''
 				}
 				busy={ busy }

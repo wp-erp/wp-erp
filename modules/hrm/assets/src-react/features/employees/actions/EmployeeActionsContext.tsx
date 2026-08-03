@@ -193,7 +193,9 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 	const isRestore    = pending?.kind === 'restore';
 	const isReactivate = pending?.kind === 'reactivate';
 	const isTerminate  = pending?.kind === 'terminate';
-	const name         = pending?.employee.full_name ?? '';
+	// A record with no name would leave the confirmation reading "will be moved to
+	// trash." with nothing in front of it, so name the kind of thing instead.
+	const name         = pending?.employee.full_name || __( 'This employee', 'erp' );
 
 	return (
 		<EmployeeActionsContext.Provider value={ api }>

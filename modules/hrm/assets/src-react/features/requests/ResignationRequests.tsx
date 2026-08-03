@@ -169,7 +169,7 @@ export function ResignationRequests(): JSX.Element {
                                             {r.reason || "—"}
                                         </td>
                                         <td className="px-2 align-middle text-sm text-muted-foreground">
-                                            {r.date || "—"}
+                                            {formatCalendarDate(r.date)}
                                         </td>
                                         <td className="px-2 align-middle text-sm text-muted-foreground">
                                             {formatCalendarDate(

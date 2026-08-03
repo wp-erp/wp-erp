@@ -66,6 +66,15 @@ const DURATION: Record< string, number > = {
 	loading: Number.POSITIVE_INFINITY,
 };
 
+/**
+ * Does this message already read as a finished sentence? Terminal punctuation is
+ * the signal — every specific message this app raises carries it, and the bare
+ * labels that need a supporting line ("Saved", "Deleted") do not.
+ */
+function isSentence( message: string ): boolean {
+	return /[.!?…]$/.test( message.trim() );
+}
+
 type ToastFn = ( message: string, data?: ErpToastOptions ) => string | number;
 
 /** Loosened view of the sonner singleton — its methods are replaced in place. */
@@ -84,8 +93,14 @@ function cardFor( type: ToastType ): ToastFn {
 		// toast carrying a person already says who and what — "Lisa Miller was
 		// terminated." over "Your changes were saved." is just filler — so the
 		// fallback stands down there. An explicit description still wins.
+		//
+		// It stands down for a complete sentence too. Errors mostly arrive as one
+		// — "Policy already exists.", "Please correct the highlighted fields." —
+		// and pasting "Something went wrong. Please try again." underneath both
+		// repeats the point and walks back the specific thing just said.
+		const selfExplanatory = data.user !== undefined || isSentence( message );
 		const description =
-			data.description ?? ( data.user ? undefined : FALLBACK_DESCRIPTION[ type ]?.() );
+			data.description ?? ( selfExplanatory ? undefined : FALLBACK_DESCRIPTION[ type ]?.() );
 
 		return patchable.custom(
 			( id ) =>

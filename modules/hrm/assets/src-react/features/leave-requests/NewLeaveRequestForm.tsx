@@ -235,11 +235,17 @@ export function NewLeaveRequestForm( {
 				</Alert>
 			) : validation ? (
 				<div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
-					{ sprintf(
-						validation.total === 1 ? __( '%d working day', 'erp' ) : __( '%d working days', 'erp' ),
-						validation.total
-					) }
-					{ validation.sandwich ? ` ${ __( '(Sandwich rule applied)', 'erp' ) }` : '' }
+					{ /* A half day is 0.5 by definition. The validator still answers for
+					     the last From-To range it was handed, so its total announced
+					     "4 working days" over a request that books one half day. The
+					     stored request was always right; the preview was not. */ }
+					{ isHalfday
+						? __( '0.5 working day', 'erp' )
+						: sprintf(
+								validation.total === 1 ? __( '%d working day', 'erp' ) : __( '%d working days', 'erp' ),
+								validation.total
+						  ) }
+					{ ! isHalfday && validation.sandwich ? ` ${ __( '(Sandwich rule applied)', 'erp' ) }` : '' }
 				</div>
 			) : null }
 
