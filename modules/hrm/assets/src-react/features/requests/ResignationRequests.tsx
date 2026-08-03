@@ -255,6 +255,11 @@ function NewResignationDialog({
     const [reasons, setReasons] = useState<ReasonOption[]>([]);
     const [reason, setReason] = useState("");
     const [date, setDate] = useState(todaySiteYmd());
+    // Legacy called this "Reason Details" and used it as the body of the HR
+    // notification e-mail; it is not stored on the request row. The v2 controller
+    // already accepts `details` and forwards it as `description` to the same
+    // `erp_hr_employee_after_resign_request` hook, so only the field was missing.
+    const [details, setDetails] = useState("");
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {
@@ -271,7 +276,7 @@ function NewResignationDialog({
         setBusy(true);
         request(restPath("v2", BASE), {
             method: "POST",
-            data: { user_id: Number(employeeId), reason, date },
+            data: { user_id: Number(employeeId), reason, date, details },
         })
             .then(() => {
                 toast.success(__("Resignation request submitted.", "erp"));
@@ -335,6 +340,26 @@ function NewResignationDialog({
                         value={date}
                         onChange={setDate}
                         className="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2.5">
+                    <label
+                        htmlFor="resign_details"
+                        className="text-sm font-medium text-foreground"
+                    >
+                        {__("Reason Details", "erp")}
+                    </label>
+                    <textarea
+                        id="resign_details"
+                        rows={4}
+                        value={details}
+                        onChange={(e) => setDetails(e.target.value)}
+                        placeholder={__(
+                            "It will be the body of email. Leave it blank to send default texts.",
+                            "erp",
+                        )}
+                        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
                     />
                 </div>
 
