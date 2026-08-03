@@ -257,9 +257,10 @@ class AnnouncementsController extends RestController {
 			return new \WP_Error( 'rest_announcement_invalid_id', __( 'Invalid announcement id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
-		$row            = $this->prepare_item_for_response( $post, $request );
-		$row['content'] = (string) $post->post_content;
-		$row['type']    = (string) get_post_meta( $post->ID, '_announcement_type', true );
+		$row                 = $this->prepare_item_for_response( $post, $request );
+		$row['content']      = (string) $post->post_content; // raw — the editor binds to this.
+		$row['html_content'] = (string) wp_kses_post( wpautop( (string) $post->post_content ) ); // display-ready (view modal); KSES'd next to the React dangerouslySetInnerHTML sink.
+		$row['type']         = (string) get_post_meta( $post->ID, '_announcement_type', true );
 		$row['recipients'] = [
 			'employees'    => array_map( 'intval', (array) get_post_meta( $post->ID, '_announcement_selected_user', true ) ),
 			'departments'  => array_map( 'intval', (array) get_post_meta( $post->ID, '_announcement_department', true ) ),

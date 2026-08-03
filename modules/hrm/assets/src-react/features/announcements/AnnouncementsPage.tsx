@@ -27,6 +27,7 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 import { OrgDeleteDialog } from '../org/OrgDeleteDialog';
 import { OrgPagination } from '../org/OrgPagination';
 import { AnnouncementFormDialog } from './AnnouncementFormDialog';
+import { AnnouncementViewDialog } from './AnnouncementViewDialog';
 import { AnnouncementsTable } from './AnnouncementsTable';
 import { AnnouncementsToolbar } from './AnnouncementsToolbar';
 import { SEARCH_DEBOUNCE_MS } from './announcements-format';
@@ -94,6 +95,9 @@ function AnnouncementsInner(): JSX.Element {
 	// so a browser refresh re-opens it. The edit dialog needs the full detail
 	// (not in the list), so it's fetched and cached in `editing`.
 	const [ formParam, setFormParam ] = useModalParam( 'form' );
+	// Read-only view lives in the URL too (`?view=<id>`), same reason.
+	const [ viewParam, setViewParam ] = useModalParam( 'view' );
+	const [ viewing, setViewing ]     = useState< AnnouncementDetail | null >( null );
 	const [ editing, setEditing ]     = useState< AnnouncementDetail | null >( null );
 	const [ deleting, setDeleting ]   = useState< Announcement | null >( null );
 	const [ busy, setBusy ]           = useState( false );
@@ -130,6 +134,29 @@ function AnnouncementsInner(): JSX.Element {
 		setFormError( null );
 		setFormParam( 'new' );
 	}
+
+	function openView( row: Announcement ): void {
+		setViewing( null );
+		setViewParam( String( row.id ) );
+	}
+
+	// `?view=<id>` — on click and on a cold refresh alike.
+	useEffect( () => {
+		const id = Number( viewParam );
+		if ( ! id || viewing?.id === id ) {
+			return;
+		}
+		let active = true;
+		void getOne( id )
+			.then( ( full ) => { if ( active ) { setViewing( full ); } } )
+			.catch( ( raw ) => {
+				if ( active ) {
+					toast.error( ( raw as ApiError )?.message ?? __( 'Could not load the announcement.', 'erp' ) );
+					setViewParam( null );
+				}
+			} );
+		return () => { active = false; };
+	}, [ viewParam, viewing, getOne, setViewParam ] );
 
 	async function openEdit( row: Announcement ): Promise< void > {
 		await ensureOptions();
@@ -360,6 +387,7 @@ function AnnouncementsInner(): JSX.Element {
 						allChecked={ allChecked }
 						onToggleAll={ toggleAll }
 						onToggleOne={ toggleOne }
+						onView={ openView }
 						onEdit={ ( row ) => void openEdit( row ) }
 						onRestore={ ( row ) => void handleRestore( row ) }
 						onDelete={ setDeleting }
@@ -386,6 +414,22 @@ function AnnouncementsInner(): JSX.Element {
 				error={ formError }
 				onClose={ () => { setFormParam( null ); setEditing( null ); } }
 				onSubmit={ ( payload ) => void handleSubmit( payload ) }
+			/>
+
+			<AnnouncementViewDialog
+				open={ viewParam !== null }
+				loading={ viewing === null }
+				item={ viewing }
+				canManage={ canManage }
+				onEdit={ () => {
+					const row = viewing;
+					setViewParam( null );
+					setViewing( null );
+					if ( row ) {
+						void openEdit( row );
+					}
+				} }
+				onClose={ () => { setViewParam( null ); setViewing( null ); } }
 			/>
 
 			<OrgDeleteDialog

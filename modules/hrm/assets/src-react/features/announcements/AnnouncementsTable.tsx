@@ -12,7 +12,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, RotateCcw, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, Pencil, RotateCcw, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
@@ -28,12 +28,13 @@ interface AnnouncementsTableProps {
 	readonly allChecked:  boolean;
 	readonly onToggleAll: () => void;
 	readonly onToggleOne: ( id: number ) => void;
+	readonly onView:      ( row: Announcement ) => void;
 	readonly onEdit:      ( row: Announcement ) => void;
 	readonly onRestore:   ( row: Announcement ) => void;
 	readonly onDelete:    ( row: Announcement ) => void;
 }
 
-export function AnnouncementsTable( { rows, canManage, selected, allChecked, onToggleAll, onToggleOne, onEdit, onRestore, onDelete }: AnnouncementsTableProps ): JSX.Element {
+export function AnnouncementsTable( { rows, canManage, selected, allChecked, onToggleAll, onToggleOne, onView, onEdit, onRestore, onDelete }: AnnouncementsTableProps ): JSX.Element {
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
@@ -75,17 +76,25 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 						<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ row.author || '—' }</td>
 						<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmt( row.date ) }</td>
 						<td className="px-4 align-middle">
-							{ canManage ? (
-								<div className="flex justify-end">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), row.title ) }>
-													<MoreVertical size={ 16 } aria-hidden="true" />
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end" className="min-w-44">
+						{ /* View is offered to anyone who can see the list — reading an
+						     announcement used to mean opening the editor, which a viewer
+						     without the manage cap cannot do. Edit and Trash stay gated. */ }
+						<div className="flex justify-end">
+							<DropdownMenu>
+								<DropdownMenuTrigger
+									render={
+										<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), row.title ) }>
+											<MoreVertical size={ 16 } aria-hidden="true" />
+										</Button>
+									}
+								/>
+								<DropdownMenuContent align="end" className="min-w-44">
+									<DropdownMenuItem className="gap-2" onClick={ () => onView( row ) }>
+										<Eye size={ 14 } aria-hidden="true" />
+										{ __( 'View', 'erp' ) }
+									</DropdownMenuItem>
+									{ canManage ? (
+										<>
 											{ row.status === 'trash' ? (
 												<DropdownMenuItem className="gap-2" onClick={ () => onRestore( row ) }>
 													<RotateCcw size={ 14 } aria-hidden="true" />
@@ -105,10 +114,11 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 												<Trash2 size={ 14 } aria-hidden="true" />
 												{ row.status === 'trash' ? __( 'Delete permanently', 'erp' ) : __( 'Trash', 'erp' ) }
 											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
-								</div>
-							) : null }
+										</>
+									) : null }
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
 						</td>
 					</tr>
 				) ) }

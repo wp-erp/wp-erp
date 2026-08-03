@@ -20,7 +20,10 @@ export interface Announcement {
 
 /** Single announcement (`GET /announcements/{id}`) — adds body + recipients. */
 export interface AnnouncementDetail extends Announcement {
-	readonly content:    string;
+	/** Raw post content — the editor binds to this. */
+	readonly content:      string;
+	/** Server-side `wp_kses_post( wpautop() )` output — the only string the view dialog renders as HTML. */
+	readonly html_content: string;
 	readonly type:       string;
 	readonly recipients: {
 		readonly employees:    readonly number[];
