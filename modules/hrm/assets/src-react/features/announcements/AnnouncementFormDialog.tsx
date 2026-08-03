@@ -17,6 +17,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	RichTextEditor,
 	SmartMultiSelect,
 } from '@wedevs/plugin-ui';
 import { useEffect, useMemo, useState } from 'react';
@@ -25,7 +26,7 @@ import type { JSX } from 'react';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 import { __ } from '@/shared/i18n';
 
-import { SelectField, TextField, TextareaField } from '../employee-create/fields';
+import { SelectField, TextField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
 import type {
 	AnnouncementAssignType,
@@ -178,13 +179,23 @@ export function AnnouncementFormDialog( {
 						} }
 						error={ titleErr }
 					/>
-					<TextareaField
-						id="announcement_content"
-						label={ __( 'Content', 'erp' ) }
-						value={ form.content }
-						onChange={ ( v ) => setForm( ( p ) => ( { ...p, content: v } ) ) }
-						rows={ 6 }
-					/>
+					{ /* Legacy used the WP editor here; React shipped a plain textarea,
+					     so an announcement could not carry any formatting. The design
+					     system's own editor is already used by recruitment and
+					     workflow, and the controller was built for it — it returns
+					     `content` raw for the editor to bind to and a separate
+					     KSES'd `html_content` for display. */ }
+					<div className="flex min-w-0 flex-col gap-2.5">
+						<label className="text-sm font-medium text-foreground" htmlFor="announcement_content">
+							{ __( 'Content', 'erp' ) }
+						</label>
+						<RichTextEditor
+							variant="full"
+							value={ form.content }
+							onChange={ ( v ) => setForm( ( p ) => ( { ...p, content: v } ) ) }
+							placeholder={ __( 'Write your announcement…', 'erp' ) }
+						/>
+					</div>
 
 					<div className="grid grid-cols-2 gap-4">
 						<SelectField
