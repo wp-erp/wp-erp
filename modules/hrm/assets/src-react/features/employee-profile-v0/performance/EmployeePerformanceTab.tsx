@@ -43,10 +43,16 @@ interface SectionProps {
 function Section( { title, columns, empty, rowCount, hasActions, headerAction, children }: SectionProps ): JSX.Element {
 	return (
 		<section className="rounded-[10px] bg-card p-6 shadow-sm">
-			<div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-4">
-				<h2 className="m-0 text-lg font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+			{ /* Same title + rule as the Overview cards (Employment, Contact,
+			     Address), so a heading reads at one level everywhere on the
+			     profile. The rule stays its own element rather than a border on
+			     the flex row, or the action button's height would push the line
+			     away from the heading. */ }
+			<div className="flex items-center justify-between gap-4">
+				<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
 			</div>
+			<div className="mb-4 mt-4 h-px w-full bg-border" />
 			{ rowCount === 0 ? (
 				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (

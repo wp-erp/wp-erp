@@ -52,13 +52,19 @@ interface SectionCardProps {
 function SectionCard( { title, columns, empty, rowCount, onAdd, children }: SectionCardProps ): JSX.Element {
 	return (
 		<section className="rounded-[10px] bg-card p-6 shadow-sm">
-			<div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-4">
-				<h2 className="m-0 text-lg font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+			{ /* Same title + rule as `DetailCard` (Employment, Contact, Address) and
+			     the custom-field sections, so every card on Overview reads at one
+			     level. The Add button rides on the title row; the rule stays a
+			     separate element rather than a border on it, or the button's height
+			     would push the line away from the heading. */ }
+			<div className="flex items-center justify-between gap-4">
+				<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onAdd }>
 					<Plus size={ 14 } aria-hidden="true" />
 					{ __( 'Add', 'erp' ) }
 				</Button>
 			</div>
+			<div className="mb-4 mt-4 h-px w-full bg-border" />
 			{ rowCount === 0 ? (
 				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
 			) : (
