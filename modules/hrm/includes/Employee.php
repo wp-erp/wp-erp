@@ -719,11 +719,16 @@ class Employee {
             return true;
         }
 
-        if ( $this->erp_user ) {
-            return true;
-        }
-
-        return false;
+        // `$this->erp_user` is *always* an Employee model instance — the
+        // constructor seeds an empty one before any lookup runs — so a bare
+        // truthiness check was true for every id, including ids with no row in
+        // `erp_hr_employees` at all. That made this method, and therefore the
+        // ~40 `if ( ! $employee->is_employee() )` guards built on it, answer
+        // "yes" unconditionally. `exists` is set by Eloquent only once the
+        // model has been hydrated from the table, which is what being an
+        // employee actually means. `withTrashed()` in the loader keeps
+        // soft-deleted employees hydrated, so they still count, as before.
+        return (bool) ( $this->erp_user && $this->erp_user->exists );
     }
 
     /**
