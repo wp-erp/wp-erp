@@ -196,17 +196,6 @@ function LeaveTypesInner(): JSX.Element {
 						</span>
 					</div>
 					<div className="flex items-center gap-3">
-						{ canManage && selected.size > 0 ? (
-							<Button
-								size="sm"
-								variant="outline"
-								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
-								onClick={ () => setBulkOpen( true ) }
-							>
-								<Trash2 size={ 14 } aria-hidden="true" />
-								{ sprintf( __( 'Delete (%d)', 'erp' ), selected.size ) }
-							</Button>
-						) : null }
 						<div className="relative">
 							<Search
 								size={ 16 }
@@ -224,6 +213,41 @@ function LeaveTypesInner(): JSX.Element {
 						</div>
 					</div>
 				</div>
+
+				{ /* Bulk bar — same tinted row, same count → actions → Clear order as
+				   the Employees table (EmployeesBulkBar), rather than a "Delete (2)"
+				   button tucked in beside the search box. */ }
+				{ canManage && selected.size > 0 ? (
+					<div className="flex flex-wrap items-center gap-3 border-b border-border bg-primary/5 px-4 py-2.5">
+						<span className="text-sm font-medium text-foreground">
+							{ sprintf(
+								/* translators: %d: number of selected leave types. */
+								__( '%d selected', 'erp' ),
+								selected.size
+							) }
+						</span>
+
+						<div className="flex items-center gap-2">
+							<Button
+								size="sm"
+								variant="outline"
+								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
+								onClick={ () => setBulkOpen( true ) }
+							>
+								<Trash2 size={ 14 } aria-hidden="true" />
+								{ __( 'Delete', 'erp' ) }
+							</Button>
+						</div>
+
+						<button
+							type="button"
+							className="text-sm text-muted-foreground hover:text-foreground"
+							onClick={ () => setSelected( new Set() ) }
+						>
+							{ __( 'Clear', 'erp' ) }
+						</button>
+					</div>
+				) : null }
 
 				{ error ? (
 					<p className="p-6 text-sm text-destructive">{ error }</p>
