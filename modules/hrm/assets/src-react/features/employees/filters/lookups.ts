@@ -9,8 +9,11 @@ import { request } from '@/shared/utils/apiFetch';
 import { toInt, toStr } from '@/shared/utils/coerce';
 
 export interface LookupOption {
-	readonly id:    number;
-	readonly title: string;
+	readonly id:     number;
+	readonly title:  string;
+	/** Employee avatar; `/erp/v2/employees` already returns it, so pickers can
+	 *  show the same face the Employees table does. */
+	readonly avatar?: string | undefined;
 }
 
 type LookupKey = 'departments' | 'designations' | 'locations';
@@ -89,6 +92,7 @@ interface RawEmployeeRow {
 	id?:          unknown;
 	full_name?:   unknown;
 	employee_id?: unknown;
+	avatar_url?:  unknown;
 }
 
 /**
@@ -114,7 +118,7 @@ export async function searchEmployees( query = '', perPage = 20 ): Promise< Look
 				const empId = toStr( obj.employee_id ?? '', '' );
 				// Label shows the HR Employee ID (not the DB user id) + name.
 				const title = empId ? `${ empId } - ${ name }` : name;
-				return { id, title };
+				return { id, title, avatar: toStr( obj.avatar_url ?? '', '' ) };
 			} )
 			.filter( ( opt ) => opt.id > 0 && opt.title !== '' );
 	} catch {

@@ -21,6 +21,7 @@ import {
 import type { JSX, ReactNode } from 'react';
 
 import { DateField } from '@/shared/DateField';
+import { employeeOptionRenderer } from '@/shared/components/EmployeeOption';
 import { __ } from '@/shared/i18n';
 
 import type { Option } from './options';
@@ -224,10 +225,16 @@ export function SmartSelectField( {
 	disabled,
 	labelAction,
 }: SmartSelectFieldProps ): JSX.Element {
+	// Employee options carry an avatar; department / designation / enum options
+	// do not. Detecting it here means every employee picker in the app shows the
+	// same face the Employees table does, without each caller opting in.
+	const hasAvatars = options.some( ( o ) => Boolean( o.avatar ) );
+
 	return (
 		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className } labelAction={ labelAction }>
 			<SmartSelect
 				options={ options as { value: string; label: string }[] }
+				{ ...( hasAvatars ? { renderOption: employeeOptionRenderer( options ) } : {} ) }
 				value={ value }
 				onValueChange={ onChange }
 				placeholder={ placeholder ?? __( '- Select -', 'erp' ) }

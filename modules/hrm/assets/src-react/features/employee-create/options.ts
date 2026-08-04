@@ -15,8 +15,10 @@
 import { __ } from '@/shared/i18n';
 
 export interface Option {
-	readonly value: string;
-	readonly label: string;
+	readonly value:   string;
+	readonly label:   string;
+	/** Optional avatar URL — employee pickers render it beside the label. */
+	readonly avatar?: string | undefined;
 }
 
 export const TYPE_OPTIONS: readonly Option[] = [

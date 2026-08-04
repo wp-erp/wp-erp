@@ -15,14 +15,16 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { JSX } from 'react';
 
+import { employeeOptionRenderer } from '@/shared/components/EmployeeOption';
 import { searchEmployees, type LookupOption } from '@/features/employees/filters/lookups';
 import type { Option } from '@/features/employee-create/options';
 
 // `o.title` already carries "<employee_id> - <name>" (the HR Employee ID, not
 // the DB user id); the value stays the user id the API expects.
 function toOption( o: LookupOption ): Option {
-	return { value: String( o.id ), label: o.title };
+	return { value: String( o.id ), label: o.title, avatar: o.avatar };
 }
 
 function normalizeKeep( keep?: Option | readonly Option[] | null ): Option[] {
@@ -36,6 +38,8 @@ export interface UseEmployeeSearch {
 	readonly options:  Option[];
 	readonly loading:  boolean;
 	readonly onSearch: ( query: string ) => Promise< void >;
+	/** Pass to `SmartSelect`'s `renderOption` so the list shows employee avatars. */
+	readonly renderOption: ( option: { value: string; label: string } ) => JSX.Element;
 }
 
 /**
@@ -100,5 +104,5 @@ export function useEmployeeSearch(
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ results, selectedValue, keepKey ] );
 
-	return { options, loading, onSearch };
+	return { options, loading, onSearch, renderOption: employeeOptionRenderer( options ) };
 }
