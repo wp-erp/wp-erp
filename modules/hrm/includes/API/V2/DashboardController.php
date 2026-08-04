@@ -460,7 +460,9 @@ class DashboardController extends RestController {
 	 *
 	 * Mirrors `erp_hr_dashboard_widget_about_to_end()`: reads each employee's
 	 * `end_date` user-meta, keeps those 1–20 days out, splits by type and sorts
-	 * ascending by end date.
+	 * ascending by end date. Legacy bounded only the *distance*, never the
+	 * direction, so it listed already-expired periods too; both now keep
+	 * strictly future dates.
 	 *
 	 * @return array{contract:array,trainee:array}
 	 */
@@ -485,8 +487,12 @@ class DashboardController extends RestController {
 
 			$diff = date_diff( $today, $end );
 
-			// Legacy keeps strictly future end dates within 21 days.
-			if ( $diff->invert !== 1 || $diff->days <= 0 || $diff->days >= 21 ) {
+			// "About to end" means the period is still running: keep strictly
+			// future end dates inside the 21-day window. `invert` is 1 when
+			// `$end` sits *behind* today, so the previous `!== 1` kept exactly
+			// the contracts that had already expired and dropped every one HR
+			// could still act on.
+			if ( 0 !== $diff->invert || $diff->days <= 0 || $diff->days >= 21 ) {
 				continue;
 			}
 
