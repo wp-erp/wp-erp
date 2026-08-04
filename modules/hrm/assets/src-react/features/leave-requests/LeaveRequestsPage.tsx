@@ -579,7 +579,7 @@ function LeaveRequestsInner(): JSX.Element {
 								variant="outline"
 								disabled={ busy }
 								onClick={ () => void runBulk( 'reject' ) }
-								className="h-8 gap-1.5"
+								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 							>
 								<X size={ 14 } aria-hidden="true" />{ ' ' }
 								{ __( 'Reject', 'erp' ) }
