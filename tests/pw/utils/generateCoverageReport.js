@@ -50,6 +50,20 @@ if (fs.existsSync(summaryPath)) {
     console.warn(`no summary at ${summaryPath} — every feature will score as uncovered`);
 }
 
+// A summary that ran tests but carries no titles means the plumbing is broken, not
+// that coverage is 0. That exact bug shipped once: mergeSummaryReport.js summed the
+// counts and dropped the title arrays, so a fully green CI run reported 0%.
+if (executed.size === 0 && fs.existsSync(summaryPath)) {
+    const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+    if (Number(summary.total_tests) > 0) {
+        console.error(
+            `::error::${summaryPath} reports ${summary.total_tests} tests but no passed_tests/failed_tests titles — ` +
+                `coverage cannot be scored. Check mergeSummaryReport.js, not the feature map.`,
+        );
+        process.exit(1);
+    }
+}
+
 const pages = yaml.load(fs.readFileSync(featureMapPath, 'utf8')) || [];
 const covered = [];
 const uncovered = [];

@@ -99,6 +99,12 @@ function mergeReports(reportPaths) {
         suite_duration: 0,
         suite_duration_formatted: '',
         shards: 0,
+        // Concatenated across shards. generateCoverageReport.js matches feature-map
+        // entries against these titles, so dropping them (as this merger did before)
+        // reports 0% coverage for a fully green run.
+        passed_tests: [],
+        failed_tests: [],
+        skipped_tests: [],
     };
 
     for (const reportPath of reportPaths) {
@@ -121,6 +127,11 @@ function mergeReports(reportPaths) {
         merged.failed += Number(report.failed) || 0;
         merged.skipped += Number(report.skipped) || 0;
         merged.flaky += Number(report.flaky) || 0;
+
+        // CONCAT the per-shard test titles — each shard ran a disjoint set of specs.
+        for (const key of ['passed_tests', 'failed_tests', 'skipped_tests']) {
+            if (Array.isArray(report[key])) merged[key].push(...report[key].map(String));
+        }
 
         // MAX the suite duration — shards run in parallel, so the wall-clock
         // duration is approximated by the longest-running shard.
