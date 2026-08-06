@@ -63,6 +63,42 @@ env:
     ERP_PRO_SUBSCRIPTION: yearly
 
 jobs:
+    # ── Static checks on the suite itself. ─────────────────────────────────────
+    # eslint + tsc + prettier over tests/pw. Needs no Docker and no plugin build, so
+    # it finishes in ~1 minute and catches the class of breakage (bad import after a
+    # move, untyped env key, unformatted file) that would otherwise cost a 6-minute
+    # sharded run to discover. Runs alongside the builds, does not gate them.
+    lint:
+        name: lint & types
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Checkout wp-erp (free)
+              uses: actions/checkout@v4
+
+            - name: Use Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Install test dependencies
+              working-directory: tests/pw
+              run: npm ci --prefer-offline --no-audit --no-fund
+
+            - name: eslint
+              working-directory: tests/pw
+              run: npm run lint
+
+            - name: tsc --noEmit
+              working-directory: tests/pw
+              run: npm run type:check
+
+            - name: prettier --check
+              working-directory: tests/pw
+              run: npm run format
+
     # ── Build wp-erp (free) ONCE. ──────────────────────────────────────────────
     # `composer install` produces vendor/ (the runtime autoloader) and `npm run build`
     # produces the JS/CSS bundles that are NOT in the repo: .gitignore excludes
@@ -309,14 +345,31 @@ jobs:
               working-directory: tests/pw
               run: npm run docker:setup
 
+            # Balanced shards: bin-pack the specs by their measured duration
+            # (utils/shard-durations.json) instead of Playwright's alphabetical --shard,
+            # which had one shard doing several times the work of another. Prints nothing
+            # when the baseline is missing, and the run step then falls back to --shard.
+            - name: Resolve balanced shard spec list
+              if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
+              working-directory: tests/pw
+              run: |
+                  node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} > /tmp/shard-specs.txt
+                  echo "shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}: $(wc -l < /tmp/shard-specs.txt) specs"
+
             # No --reporter override here: playwright.config.ts already resolves to
-            # [['list'], ['blob'], [summary]] on CI — 'list' prints per-test progress
-            # (✓/✗ with names, like Dokan) while 'blob' still feeds merge-reports.
+            # [['list'], ['blob'], [summary], [durations]] on CI — 'list' prints per-test
+            # progress (✓/✗ with names, like Dokan) while 'blob' still feeds merge-reports.
             - name: 🧪 Run e2e tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
               if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
               timeout-minutes: 20
               working-directory: tests/pw
-              run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+              run: |
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      xargs -a /tmp/shard-specs.txt -d '\n' npm run test:e2e --
+                  else
+                      echo "no duration baseline — falling back to alphabetical --shard"
+                      npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+                  fi
 
             - name: Upload blob report
               if: always()
@@ -337,6 +390,18 @@ jobs:
                   path: tests/pw/summary-report
                   if-no-files-found: ignore
                   retention-days: 1
+
+            # Real CI timings for this shard. merge-reports aggregates them into a
+            # refreshed baseline so utils/shard-durations.json can be updated from CI
+            # rather than from one developer's laptop.
+            - name: Upload spec durations
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: durations-e2e-${{ matrix.shardIndex }}
+                  path: tests/pw/playwright/spec-durations.json
+                  if-no-files-found: ignore
+                  retention-days: 7
 
     # ── REST/API suite (single runner). ────────────────────────────────────────
     api_tests:
@@ -596,5 +661,54 @@ jobs:
                   path: |
                       tests/pw/all-summaries/quality-report.html
                       tests/pw/all-summaries/quality-report.md
+                  if-no-files-found: ignore
+                  retention-days: 30
+
+            # ── Feature coverage ───────────────────────────────────────────────────
+            # Scores the merged run against feature-map/feature-map.yml. Runs here, once,
+            # because a per-shard score would count the other shards' features as gaps.
+            # ERP_PRO mirrors the shards: pro when build_pro produced an artifact.
+            - name: Generate feature coverage report
+              if: always()
+              working-directory: tests/pw
+              env:
+                  SUMMARY_FILE: ./all-summaries/merged-summary.json
+                  OUTPUT_FILE: ./all-summaries/coverage.json
+                  SUMMARY_MD: ./all-summaries/coverage.md
+                  ERP_PRO: ${{ needs.build_pro.result == 'success' }}
+              run: node ./utils/generateCoverageReport.js || true
+
+            - name: Append coverage to job summary
+              if: always()
+              run: |
+                  if [ -f tests/pw/all-summaries/coverage.md ]; then
+                      cat tests/pw/all-summaries/coverage.md >> "$GITHUB_STEP_SUMMARY"
+                  fi
+
+            # ── Refreshed shard baseline ───────────────────────────────────────────
+            # Merges the per-shard spec-durations.json files into one baseline and
+            # uploads it. Committing it to utils/shard-durations.json is a deliberate
+            # human step — the balance should change when someone decides it should.
+            - name: Download shard durations
+              if: always()
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-durations
+                  pattern: durations-e2e-*
+
+            - name: Aggregate shard durations
+              if: always()
+              working-directory: tests/pw
+              run: node ./utils/aggregateSpecDurations.js ./all-durations ./all-durations/shard-durations.json || true
+
+            - name: Upload coverage + refreshed duration baseline
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage-and-durations
+                  path: |
+                      tests/pw/all-summaries/coverage.json
+                      tests/pw/all-summaries/coverage.md
+                      tests/pw/all-durations/shard-durations.json
                   if-no-files-found: ignore
                   retention-days: 30

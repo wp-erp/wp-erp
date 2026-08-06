@@ -1,4 +1,6 @@
 {
+  "generatedAt": "2026-08-06T06:29:34.386Z",
+  "shards": 1,
   "specs": [
     {
       "file": "crm/crm.validation.spec.ts",
