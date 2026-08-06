@@ -112,13 +112,22 @@ test.describe('HRM REST — departments / designations / employees', () => {
     });
 
     // ── Negative: invalid id read-back ───────────────────────────────────────
-    test('GET a non-existent employee returns a blank record (lenient API)', { tag: ['@lite', '@hrm'] }, async () => {
-        // QA finding: WP ERP responds 200 with an EMPTY employee object (user_id="")
-        // for an unknown id instead of a 404 — a validation gap worth flagging.
+    test('GET a non-existent employee never returns employee data', { tag: ['@lite', '@hrm'] }, async () => {
+        // Two builds answer this differently and BOTH are acceptable; what must hold is
+        // that an unknown id yields no employee record.
+        //   develop   200 + an EMPTY employee object (user_id="") — the lenient
+        //             validation gap this spec was originally written to document
+        //   PR #1589  404 — the redesign fixes that gap
+        // Measured: run 31084220696 (redesign branch) returned 404 where develop returns
+        // 200. Asserting either literal alone turns one branch red for no defect, so
+        // assert the contract and let the status be either.
         const [response, body] = await api.get(endPoints.employee(99999999), undefined, false);
-        expect(response.status()).toBe(200);
-        expect(String(body?.user_id ?? '')).toBe('');
-        expect(String(body?.first_name ?? '')).toBe('');
+
+        expect([200, 404], `unknown id must answer 200-with-blank or 404, got ${response.status()}`).toContain(response.status());
+        if (response.status() === 200) {
+            expect(String(body?.user_id ?? ''), 'a 200 for an unknown id must carry NO employee').toBe('');
+            expect(String(body?.first_name ?? '')).toBe('');
+        }
     });
 
     // ── Negative: invalid create payload ─────────────────────────────────────
