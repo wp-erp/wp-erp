@@ -117,7 +117,7 @@ test.describe('CORE happy paths — Admin (page-load smoke + DB)', () => {
         // the save is not bounced to &error-country=1. The select2-wrapped <select>
         // still holds the real value; pick the first non-placeholder country option.
         await page.locator(CORE.companyName).fill(newName);
-        await page.evaluate((sel) => {
+        await page.evaluate(sel => {
             const el = document.querySelector<HTMLSelectElement>(sel);
             if (!el) return;
             const real = Array.from(el.options).find(o => o.value && o.value !== '-1' && o.value !== '-' && o.value !== '');
@@ -125,10 +125,7 @@ test.describe('CORE happy paths — Admin (page-load smoke + DB)', () => {
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }, CORE.companyCountry);
 
-        await Promise.all([
-            page.waitForLoadState('load'),
-            page.locator(CORE.companyPublish).click(),
-        ]);
+        await Promise.all([page.waitForLoadState('load'), page.locator(CORE.companyPublish).click()]);
         await expect(page.locator('body')).not.toContainText(CORE.criticalError);
 
         // The meaningful assertion: the persisted option reflects the new name

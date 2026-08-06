@@ -99,6 +99,12 @@ function mergeReports(reportPaths) {
         suite_duration: 0,
         suite_duration_formatted: '',
         shards: 0,
+        // Concatenated across shards. generateCoverageReport.js matches feature-map
+        // entries against these titles, so dropping them (as this merger did before)
+        // reports 0% coverage for a fully green run.
+        passed_tests: [],
+        failed_tests: [],
+        skipped_tests: [],
     };
 
     for (const reportPath of reportPaths) {
@@ -122,6 +128,11 @@ function mergeReports(reportPaths) {
         merged.skipped += Number(report.skipped) || 0;
         merged.flaky += Number(report.flaky) || 0;
 
+        // CONCAT the per-shard test titles — each shard ran a disjoint set of specs.
+        for (const key of ['passed_tests', 'failed_tests', 'skipped_tests']) {
+            if (Array.isArray(report[key])) merged[key].push(...report[key].map(String));
+        }
+
         // MAX the suite duration — shards run in parallel, so the wall-clock
         // duration is approximated by the longest-running shard.
         merged.suite_duration = Math.max(merged.suite_duration, Number(report.suite_duration) || 0);
@@ -143,9 +154,7 @@ function main() {
     const reportPaths = findResults(ARTIFACTS_DIR, []);
 
     if (reportPaths.length === 0) {
-        console.warn(
-            `Warning: no results.json found under '${ARTIFACTS_DIR}' matching '${REPORT_MATCH}'. Nothing to merge.`
-        );
+        console.warn(`Warning: no results.json found under '${ARTIFACTS_DIR}' matching '${REPORT_MATCH}'. Nothing to merge.`);
         process.exit(0);
     }
 
@@ -166,7 +175,7 @@ function main() {
     console.log(
         `Merged ${merged.shards} shard(s) -> ${MERGED_OUTPUT} | status=${merged.status} ` +
             `total=${merged.total_tests} passed=${merged.passed} failed=${merged.failed} ` +
-            `skipped=${merged.skipped} flaky=${merged.flaky} duration=${merged.suite_duration_formatted}`
+            `skipped=${merged.skipped} flaky=${merged.flaky} duration=${merged.suite_duration_formatted}`,
     );
 }
 

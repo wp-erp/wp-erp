@@ -1,0 +1,501 @@
+# WP ERP feature map — the denominator for e2e coverage.
+#
+# Each entry is a FEATURE, keyed by the exact Playwright test title that proves it.
+# 'true' means an automated test exists; 'false' means the feature is known and
+# deliberately NOT automated yet — those are what the coverage report reports as
+# uncovered. A feature with no entry at all is invisible to coverage, so add the
+# entry (false) BEFORE the test exists, not after.
+#
+# '[lite]' marks a feature that exists in free wp-erp. On a lite run (ERP_PRO=false)
+# only [lite] entries count toward the denominator, mirroring the @lite/@pro grep in
+# playwright.config.ts.
+#
+# Generated 2026-08-06 from the suite's own test list (388 e2e tests, ERP_PRO=true),
+# then extended by hand with the not-yet-automated areas from the manual suite.
+# Keep it in sync when a test title changes — a renamed title silently drops a
+# feature to uncovered, which is the intended failure mode (loud, not silent).
+
+- page: 'accounting'
+  features:
+      automated:
+          'ACCOUNTING-EC-10 invoice total renders with the configured currency symbol [lite]': true
+          'ACCOUNTING-HP-27 customers list renders ("Add New Customer") [lite]': true
+          'ACCOUNTING-HP-28 chart of accounts route renders [lite]': true
+          'ACCOUNTING-HP-28b banks route mounts [lite]': true
+          'ACCOUNTING-HP-29 reports route mounts without a console fatal [lite]': true
+          'admin can open the Journals route [lite]': true
+          'admin can open the New Expense route [lite]': true
+          'admin can open the New Invoice route [lite]': true
+          'admin can open the accounting SPA [lite]': true
+          'customers list loads [lite]': true
+          'dashboard mounts without a critical error [lite]': true
+          'employee is blocked from the accounting page [lite]': true
+          'employee is bounced from the accounting dashboard [lite]': true
+          'employee is bounced from the new-invoice route [lite]': true
+          inventory area mounts when pro inventory is active: true
+          'manager can open the New Invoice route [lite]': true
+          'manager can open the charts (chart of accounts) route [lite]': true
+          'products & services list loads [lite]': true
+          'reports area loads [lite]': true
+          'sales (invoices) list loads [lite]': true
+          'unknown hash route does not crash the SPA [lite]': true
+          'vendors list loads [lite]': true
+
+- page: 'advancedLeave'
+  features:
+      automated:
+          Add-policy form mounts with the free fields + erp-action: true
+          HR manager can reach the Leave Policies list: true
+          Leave Policies list boots with no critical error: true
+          Leave Policies list shows Add New / View Leave Types controls: true
+          Leave settings tab boots and exposes the pro leave toggles: true
+          accrual policy fields render when the accrual setting is enabled: true
+          carry-forward / encashment fields render when the setting is enabled: true
+          employee cannot reach the Leave Policies management screen: true
+          half-day checkbox renders when the half-day setting is enabled: true
+          leave policy + segregation tables carry the pro columns: true
+          segregation policy fields render when the segregation setting is enabled: true
+
+- page: 'asset'
+  features:
+      automated:
+          Asset Requests page boots into .wrap.erp-asset-requests with no critical error: true
+          Assets list page boots into .wrap.erp-hr-assets with no critical error: true
+          'Assets page shows the "New Entry" control and the list-table container': true
+          HR manager can reach the Assets list and the New Entry control: true
+          all four asset tables exist with the expected columns: true
+          'alt step 4b: reject a pending request → wp_erp_hr_assets_request status rejected': true
+          asset modal exposes the Add-Category (+) control wired to the category popup: true
+          category created via the UI popup persists in wp_erp_hr_assets_category: true
+          'clicking "New Entry" opens the asset modal with required category/item fields': true
+          employee asset-request surface renders without a PHP fatal: true
+          employee cannot reach the Assets management screen: true
+          'negative: a write with a bad nonce dies "You are not allowed!" and inserts nothing': true
+          'seed-or-assert: a category row round-trips through the storage layer': true
+          'step 1: create an asset category → INSERT wp_erp_hr_assets_category': true
+          'step 2: create a single allottable asset in that category → INSERT wp_erp_hr_assets': true
+          'step 3: raise an asset request → INSERT wp_erp_hr_assets_request (pending)': true
+          'step 4: approve the request → INSERT _history + request approved + asset allotted': true
+          'step 5: return the allotted asset → history returned + asset back to stock': true
+
+- page: 'attendance'
+  features:
+      automated:
+          'ATT-UI-01 attendance base route mounts the Vue app, no fatal': true
+          ATT-UI-02 shifts route renders without a critical error: true
+          ATT-UI-03 shifts screen exposes a list/add affordance: true
+          'ATT-UI-04 assign-shift-bulk route mounts, no fatal': true
+          'ATT-UI-05 import/export (exim) route mounts, no fatal': true
+          ATT-UI-06 HR manager reaches the shifts screen without a fatal: true
+
+- page: 'core'
+  features:
+      automated:
+          'BUG-02 company address stores zip (not postcode) key [lite]': true
+          'BUG-07 modules page renders without layout fatal [lite]': true
+          'BUG-10 danger zone confirmation gate is present and empty (no execute) [lite]': true
+          'EC-01 empty company name redirects with error-company=1 [lite]': true
+          'EC-02 empty company country redirects with error-country=1 [lite]': true
+          'EC-04 unicode/emoji company name round-trips [lite]': true
+          'EC-05 special chars/HTML are sanitized on save [lite]': true
+          'EC-06/BUG-04 Company::update full-option overwrite drops untouched keys [lite]': true
+          'EC-07 date_format boundary values persist [lite]': true
+          'EC-08 erp_currency default is 1 and round-trips [lite]': true
+          'EC-09 erp_debug_mode on/off toggle round-trips [lite]': true
+          'EC-10 erp_modules shape is read defensively [lite]': true
+          'EC-11 unknown settings section falls back gracefully [lite]': true
+          'EC-12 unknown tools tab falls back gracefully [lite]': true
+          'EC-14/BUG-14 loading the setup wizard page force-sets setup_wizard_ran=1 [lite]': true
+          'HP-01 erp_modules option exists and is non-empty [lite]': true
+          'HP-02 dashboard loads (.wrap.erp-overview) [lite]': true
+          'HP-03 company list loads [lite]': true
+          'HP-04 company editor renders required fields [lite]': true
+          'HP-05 company name persists round-trip [lite]': true
+          'HP-06 tools general loads (do not submit) [lite]': true
+          'HP-07 tools status report renders environment rows [lite]': true
+          'HP-08 tools misc test-email form present (do not send) [lite]': true
+          'HP-09 tools audit log list loads [lite]': true
+          'HP-10 danger zone renders read-only [lite]': true
+          'HP-11 modules page lists the core modules [lite]': true
+          'HP-12 add-ons grid loads [lite]': true
+          'HP-13 settings general mounts without a fatal [lite]': true
+          'HP-14 general setting persists via erp_settings_general round-trip [lite]': true
+          'HP-15 active module DB state matches menu visibility [lite]': true
+          'NC-08 employee cannot reach the setup wizard [lite]': true
+          'NC-15 logged-out user is redirected to wp-login.php [lite]': true
+          'NC/BUG-12 accManager is blocked from company-editor [lite]': true
+          'NC/BUG-12 accManager is blocked from danger-zone [lite]': true
+          'NC/BUG-12 accManager is blocked from modules [lite]': true
+          'NC/BUG-12 accManager is blocked from settings [lite]': true
+          'NC/BUG-12 accManager is blocked from tools [lite]': true
+          'NC/BUG-12 crmManager is blocked from company-editor [lite]': true
+          'NC/BUG-12 crmManager is blocked from danger-zone [lite]': true
+          'NC/BUG-12 crmManager is blocked from modules [lite]': true
+          'NC/BUG-12 crmManager is blocked from settings [lite]': true
+          'NC/BUG-12 crmManager is blocked from tools [lite]': true
+          'NC/BUG-12 employee is blocked from company-editor [lite]': true
+          'NC/BUG-12 employee is blocked from danger-zone [lite]': true
+          'NC/BUG-12 employee is blocked from modules [lite]': true
+          'NC/BUG-12 employee is blocked from settings [lite]': true
+          'NC/BUG-12 employee is blocked from tools [lite]': true
+          'NC/BUG-12 hrManager is blocked from company-editor [lite]': true
+          'NC/BUG-12 hrManager is blocked from danger-zone [lite]': true
+          'NC/BUG-12 hrManager is blocked from modules [lite]': true
+          'NC/BUG-12 hrManager is blocked from settings [lite]': true
+          'NC/BUG-12 hrManager is blocked from tools [lite]': true
+
+- page: 'crm'
+  features:
+      automated:
+          'activities global feed loads [lite]': true
+          'add-contact modal blocks empty required fields [lite]': true
+          'companies list page loads with Add New Company [lite]': true
+          'company requires name + email [lite]': true
+          'contact groups page loads with Add control [lite]': true
+          'contacts list loads with Add control [lite]': true
+          'contacts list page loads with Add New control [lite]': true
+          'create a company via the modal (DB-verified) [lite]': true
+          'create a company via the modal [lite]': true
+          'create a contact group (DB-verified) [lite]': true
+          'create a contact group [lite]': true
+          'create a contact via the modal (DB-verified) + meta persists [lite]': true
+          'create a contact via the modal [lite]': true
+          'created contact appears in the list table [lite]': true
+          deals overview page boots and mounts the pipeline app: true
+          'email is stored trimmed and resolvable (case handling) [lite]': true
+          'employee cannot manage contact groups [lite]': true
+          'employee cannot use the Add New Contact action [lite]': true
+          'employee has no Add Contact control [lite]': true
+          'employee sees no management controls on contacts [lite]': true
+          'employee single-contact URL exposes no add/edit controls [lite]': true
+          'empty group name is rejected [lite]': true
+          'empty required fields keep the modal open (no row) [lite]': true
+          'first name at max length (30 chars) saves [lite]': true
+          'first name over max length is capped at 30 [lite]': true
+          'invalid email format is rejected (type=email) [lite]': true
+          'manager can create a contact (DB-verified) [lite]': true
+          'manager can reach the contacts list [lite]': true
+          'manager reaches the contacts list [lite]': true
+          'manager sees the Add New Contact button [lite]': true
+          'missing email is rejected (required) [lite]': true
+          'missing first name is rejected (required) [lite]': true
+          'modal cancel discards (no row created) [lite]': true
+          'open a seeded single-company view [lite]': true
+          'open a seeded single-contact view [lite]': true
+          'optional last name omitted is empty, not an error [lite]': true
+          'phone with +, spaces, parentheses stored verbatim [lite]': true
+          'reports hub loads [lite]': true
+          'schedules calendar loads [lite]': true
+          'soft-delete leaves the row and flips the relation [lite]': true
+          'special chars in name stored faithfully + view does not break [lite]': true
+          'unauthenticated single-contact access redirects to login [lite]': true
+          'unicode names persist (UTF-8 round-trip) [lite]': true
+          'very long phone is column-truncated without error [lite]': true
+          'whitespace-only first name does not create a typed contact [lite]': true
+
+- page: 'customField'
+  features:
+      automated:
+          'CFB-UI-01 page loads with the heading + metabox root, no fatal': true
+          CFB-UI-02 the people-type tab bar renders: true
+          CFB-UI-03 a tab is marked active and its href points back to the page: true
+          CFB-UI-04 the Employee tab mounts the Vue field collection container: true
+          CFB-UI-05 the Add New Field button is present: true
+          CFB-UI-06 the Save Fields postbox + Save Changes button are present: true
+          CFB-UI-07 the single-field Vue template is printed into the page: true
+          CFB-UI-08 the success notice element exists (hidden until a save): true
+          CFB-UI-09 clicking Add New Field adds a field row to the collection: true
+          CFB-UI-10 every confirmed people-type tab loads without a fatal: true
+          CFB-UI-11 HR manager (no manage_options) is blocked from the builder: true
+          CFB-UI-12 employee (no manage_options) is blocked from the builder: true
+
+- page: 'deals'
+  features:
+      automated:
+          'Activities sub-section mounts the activity list, no fatal': true
+          'All Deals sub-section mounts the pipeline view, no fatal': true
+          CRM manager can boot the deals SPA: true
+          CRM manager reaches the Dashboard sub-section: true
+          'Dashboard sub-section renders the overview shell, no fatal': true
+          Deals Settings tab loads under erp-settings with no fatal: true
+          add an activity to the deal: true
+          create a deal in the default pipeline: true
+          create inserts exactly one open stage-history row for the start stage: true
+          create omitting owner_id fails gracefully (DEALS-OWNER-NULL quirk): true
+          'deals page (section=deals) mounts #erp-deals with no PHP fatal': true
+          delete the activity: true
+          delete_activity with no id is rejected: true
+          delete_deal with an invalid action is rejected: true
+          employee cannot mount the deals SPA: true
+          helper expectMountedNoFatal passes on the deals page: true
+          mark the deal lost with a free-text reason: true
+          mark the deal won: true
+          mark-lost with a non-existent lost_reason_id is rejected: true
+          'move rebuilds stage history (old stage closed, intervening stages opened)': true
+          move the deal to a later stage: true
+          reopen the deal clears won/lost state: true
+          save_activity without a start date is rejected: true
+          save_deal with a bad nonce fails nonce verification: true
+          save_deal with an invalid stage is rejected: true
+          save_deal with neither contact nor company is rejected: true
+          save_deal without a title is rejected: true
+          'seed pipeline stages, contact and activity type exist': true
+          trash the deal (soft delete): true
+
+- page: 'document'
+  features:
+      automated:
+          HR manager can reach the documents file browser: true
+          breadcrumb and folder-list containers are present: true
+          documents page boots and mounts the file browser: true
+          file-operation toolbar and source/search controls render: true
+          typing in the search box does not crash the app: true
+
+- page: 'hrFrontend'
+  features:
+      automated:
+          HRFE-FE-01 admin renders the dashboard (manage_options passes the gate): true
+          HRFE-FE-02 admin sub-routes render the same template (React-Router catch-all): true
+          'HRFE-FE-03 the React bundle is served (200, non-trivial size)': true
+          HRFE-FE-04 unauthenticated visit is redirected to the login page: true
+          HRFE-FE-05 HR manager renders the dashboard (erp_hr_manager passes the gate): true
+          HRFE-FE-06 employee WITH an ERP employee row renders the dashboard (userId localized): true
+          HRFE-FE-07 removing the ERP employee row gates the employee out to /wp-admin/: true
+          HRFE-FE-08 REST slug change returns success but the new slug is NOT immediately reachable (HRFE-BUG-01): true
+          HRFE-FE-09 wp-cli slug change registers the rule and the new slug renders the dashboard: true
+          HRFE-FE-10 afterAll-style restore returns the default slug to a rendering state: true
+
+- page: 'hrm'
+  features:
+      automated:
+          'HR dashboard loads without a critical error [lite]': true
+          'HR manager can create a department [lite]': true
+          'HR manager can create a department via UI [lite]': true
+          'HR manager can reach the employees list [lite]': true
+          'HR manager reaches the employees list [lite]': true
+          'HRM-BUG-03 duplicate department name handling at the UI [lite]': true
+          'HRM-EC-05 whitespace-only department title at the UI [lite]': true
+          'HRM-HP-09 add-employee modal renders required fields (smoke) [lite]': true
+          'HRM-HP-10 employees list loads without a fatal [lite]': true
+          'HRM-HP-12 create a department via the UI modal [lite]': true
+          'HRM-HP-18 departments list loads with Add New [lite]': true
+          'HRM-HP-20 create a designation via the UI modal [lite]': true
+          'HRM-HP-31 holidays admin page loads [lite]': true
+          'HRM-HP-36 announcements admin page loads [lite]': true
+          'HRM-HP-43 headcount report page loads [lite]': true
+          'HRM-NC-30 employee is denied the HR reports page [lite]': true
+          'add-employee modal opens with required fields (smoke) [lite]': true
+          'create a department (happy path) [lite]': true
+          'create a designation (happy path) [lite]': true
+          'duplicate department name is rejected (edge/negative) [lite]': true
+          'employee is blocked from the HR reports page (permission) [lite]': true
+          'employee is denied the headcount report directly [lite]': true
+          'employee modal blocks submit with no required fields [lite]': true
+          'headcount report loads (smoke) [lite]': true
+          'submitting an employee with no required fields shows validation (negative) [lite]': true
+
+- page: 'integrations'
+  features:
+      automated:
+          'BUG-INTG-01: unknown module value fatals the save endpoint (HTTP 500)': true
+          'Help Scout: re-save overwrites the prior option (idempotent update)': true
+          'Help Scout: save settings persists to wp_options[helpscout]': true
+          'HubSpot: invalid api_key returns the validation error and writes NO option': true
+          'HubSpot: valid api_key persists (success branch)': true
+          'Mailchimp: empty api_key still hits validation (Invalid API key)': true
+          'Mailchimp: invalid api_key returns the validation error and writes NO option': true
+          'Mailchimp: valid api_key persists (success branch)': true
+          'Salesforce: complete external OAuth connect': true
+          'Salesforce: settings section renders (no local save — OAuth redirect)': true
+          'Zendesk: malformed email still persists (no _filter validation — lenient)': true
+          'Zendesk: save settings persists all three fields to wp_options[zendesk]': true
+          awesome_support sub-section mounts without a fatal (no handler): true
+          employee does not reach the integration settings: true
+          help_scout sub-section renders a provider settings surface: true
+          hubspot sub-section renders a provider settings surface: true
+          integration section mounts with no fatal (default sub-section): true
+          mailchimp sub-section renders a provider settings surface: true
+          manager can mount the integration section: true
+          manager can open the mailchimp sub-section: true
+          provider nav (ul.erp-nav) renders all active integration tabs: true
+          salesforce sub-section renders a provider settings surface: true
+          save without _wpnonce is rejected (nonce verification) and writes nothing: true
+          unknown sub-section is handled without a fatal: true
+
+- page: 'payroll'
+  features:
+      automated:
+          "'Payroll' nav and 'Pay Calendar' / 'Pay Run List' sub-nav are present": true
+          HR manager can reach the pay calendar list: true
+          HR manager can reach the pay run list: true
+          HR manager can reach the payroll dashboard: true
+          HR manager reaches payroll and either gets employees or a clean permission message: true
+          'a known seeded allowance payitem is present with add_or_deduct = 1': true
+          'a seeded Tax payitem carries add_or_deduct = 2': true
+          a seeded pay calendar surfaces on the calendar list: true
+          add pay calendar form mounts with name/type inputs and employee picker: true
+          'bootstrap: page renders, localizes wpErpPayroll.nonce, slate is clean': true
+          deleting a calendar removes it and its child rows: true
+          employee is blocked from the pay calendar list: true
+          employee is blocked from the payroll dashboard: true
+          employee is blocked from the payroll page and gets no localized nonce: true
+          employee posting the generate-payrun write is refused without a fatal: true
+          'explicit sub-section=dashboard resolves to the overview': true
+          insert a pay calendar (+ type-settings child) and read it back: true
+          mapping an employee onto a calendar lands a join row: true
+          pay calendar list mounts with the Add New Pay Calendar control: true
+          pay run list mounts with its WP_List_Table and dispatch inputs: true
+          pay_calendar table has the expected columns: true
+          payitem table has the expected columns: true
+          payitem table is seeded with the 21 default rows per type: true
+          payroll dashboard mounts with KPI cards and no critical error: true
+          reports and bulk-pay-item-edit sub-sections load without a fatal: true
+          'step 1 guard: a bad nonce is rejected on get_available_employees': true
+          'step 1: get_available_employees offers an active monthly employee': true
+          'step 2 guard: a duplicate calendar type is rejected': true
+          'step 2: create_pay_calendar inserts calendar + type-settings + employee-join': true
+          'step 3: get_employee_list_by_calid exposes pay_basic for the pay-run': true
+          'step 4 guard: add_payitem rejects an empty pay type': true
+          'step 4: add_payitem creates an Allowance config row (add_or_deduct = 1)': true
+          'step 5: start_variable_input writes the computed basic-pay payrun_detail row': true
+          'step 6 effect: the pay-run sums to basic + allowance in payrun_detail': true
+          'step 6: add_additional_allowance_deduction writes the computed allowance (+ mirror)': true
+          'step 7: calendar appears in get_pay_calendar; payrun list empty (missing-table bug)': true
+          the core payroll tables exist: true
+
+- page: 'proIntegrations'
+  features:
+      automated:
+          APS-01 settings page mounts and exposes the localized save nonce (no fatal): true
+          APS-02 saving the Stripe sub-section persists each field as its own option: true
+          APS-03 saving the PayPal sub-section persists title/email/sandbox: true
+          APS-04 saving the General sub-section persists the payment-account head: true
+          'APS-05 re-saving Stripe without the enable key normalizes the checkbox to "no"': true
+          APS-06 a save with an invalid nonce is rejected and writes nothing: true
+          'APS-07 an anonymous save does not persist (admin-ajax dies "0" / rejects)': true
+          APS-08 accounting manager cannot obtain the settings nonce; its save is rejected: true
+          APS-09 employee cannot load the settings nonce and its save is rejected: true
+          APS-10 WooCommerce sync settings save (needs WooCommerce; see BUG-ACCSET-1): true
+          'PIA-01 settings SPA shell mounts at #erp-settings without a critical error': true
+          PIA-02 WooCommerce tab mounts and renders the WC container or the Connect notice: true
+          PIA-03 WooCommerce tab shows Synchronization/Subscription nav OR the connect CTA: true
+          PIA-04 Accounting settings tab mounts and exposes the pro Payment section label: true
+          'PIA-05 legacy Payment section URL (&tab=erp-ac&section=payment) mounts without fatal': true
+          'PIA-06 Payment > PayPal sub-section renders its enable/title/email fields when reachable': true
+          'PIA-07 Payment > Stripe sub-section renders its enable + key fields when reachable': true
+          'PIA-08 Payment > General sub-section payment-account field is reachable': true
+          PIA-09 WooCommerce settings render exactly one valid state and never a fatal: true
+          PIA-10 account manager reaches the Settings SPA shell without a critical error: true
+          'PIA-11 employee cannot reach the pro Payment settings (boundary, no fatal)': true
+
+- page: 'recruitment'
+  features:
+      automated:
+          REC-UI-01 recruitment section mounts without a fatal error: true
+          REC-UI-02 Job Openings heading and Add Opening action are visible: true
+          REC-UI-03 the recruitment list form and WP list table render: true
+          REC-UI-04 the recruitment list shell renders (search box optional): true
+          REC-UI-05 HR manager can reach the Job Openings list: true
+          REC-UI-06 employee does not get the Add Opening management action: true
+
+- page: 'sms'
+  features:
+      automated:
+          an HR manager is denied the settings page (no save nonce): true
+          an HR manager save is rejected at the AJAX layer (session-bound nonce): true
+          save Twilio gateway settings: true
+          save with a bad nonce is rejected and persists nothing: true
+          save with a missing nonce is rejected and persists nothing: true
+          saving an empty gateway is accepted (no save-time validation) — SMS-BUG-01: true
+          settings page localizes erp_settings_var with the save nonce + action: true
+          'switch the active gateway to Nexmo (prior creds are merged, not wiped)': true
+          unknown module param does not save cleanly (SMS-BUG-02 — known fatal): true
+
+- page: 'training'
+  features:
+      automated:
+          Assign To select offers the documented options: true
+          HR manager can open the new-training editor with the metabox: true
+          HR manager can reach the Training list with the Add New control: true
+          Training CPT list page loads with the Add New control and no PHP fatal: true
+          auto-assign checkbox persists when checked: true
+          create a training via the WP post editor and assert it appears in the list: true
+          created training meta persists in wp_postmeta (subject + frequency): true
+          created training row exists in wp_posts with the correct post_type/status: true
+          employee cannot open the new-training editor: true
+          employee cannot reach the Training list screen: true
+          empty-title save is blocked by client-side required validation: true
+          list table shows the pro custom columns and drops the default Date column: true
+          'new-training editor mounts with title field, HR Training Options metabox and nonce': true
+          "selecting 'By Department' reveals the departments select and hides the others": true
+          "selecting 'Selected Employee' reveals the employees select and hides the others": true
+          'set Assign To = All Employees and save without error; training_type meta persists': true
+          the wp_posts and wp_postmeta tables backing the CPT exist: true
+
+- page: 'workflow'
+  features:
+      automated:
+          Add New screen mounts the workflow Vue app: true
+          Add New screen shows the Save controls and Trigger section: true
+          Edit screen boots the Vue app for a seeded workflow: true
+          HR manager can reach the Add New screen: true
+          HR manager can reach the workflow list: true
+          WFX-ACT-01 add_user_role action persists with serialized role param: true
+          WFX-ACT-02 multiple actions persist as multiple rows keyed by workflow_id: true
+          'WFX-CON-01 non-matching email condition does not fire (run stays 0, no logs)': true
+          'WFX-CON-02 matching email condition fires on user_register (run=1, 1 log)': true
+          WFX-CON-03 condition row persists with name/operator/value/workflow_id: true
+          WFX-CON-04 AND group with one non-matching condition does not fire: true
+          WFX-CON-FINDING roles condition does not fire via REST user create (role set post-hook): true
+          WFX-EDIT-01 edit handler updates the workflow and replaces actions/conditions: true
+          WFX-LC-01 save handler creates an active auto workflow with a serialized action: true
+          WFX-LC-02 firing user_register increments run 0→1 and writes one log row: true
+          WFX-LC-03 two user_register fires increment run to 2 and create 2 log rows: true
+          WFX-LC-04 end-to-end scrape→save→fire→assert with no critical error or fatal: true
+          WFX-NEG-01 bad create nonce is rejected and creates no workflow: true
+          WFX-NEG-02 unauthenticated admin-ajax POST is rejected (no privileged handler): true
+          WFX-NEG-03 save with empty actions persists the workflow with zero action rows: true
+          WFX-PER-01 execution log created_at is a valid recent datetime: true
+          WFX-STA-01 paused workflow does not fire on user_register: true
+          WFX-STA-02 only the active workflow fires when active+paused share the event: true
+          'a paused workflow persists status = paused': true
+          a seeded workflow appears in the list table: true
+          deleting a workflow row removes it: true
+          employee is blocked from the Add New screen: true
+          employee is blocked from the workflow list: true
+          filtered status views load without a fatal: true
+          insert a workflow row and read it back: true
+          list page exposes the Add New control to the add screen: true
+          list table renders the expected columns: true
+          save attempt on the Add New form does not fatal: true
+          status sub-views render with live counts: true
+          the four workflow tables exist: true
+          the workflow search box is present: true
+          workflow list page loads with the list table mounted: true
+          wp_erp_workflows has the expected columns: true
+
+# ── Known and NOT automated ───────────────────────────────────────────────────
+# Every entry below is false on purpose: the feature exists in the product and has
+# manual coverage, but no Playwright test asserts it. Names are the AREA names from
+# the Lead-QA manual suite (test-cases/2026-07-30-erp-new-ui-full.md §5 "Area index",
+# 540 cases across 20 areas) — they are copied from that index, not invented here.
+#
+# These are what stop the coverage number from reading 100% while whole React
+# screens go untested. As each area is automated, replace the area-level entry with
+# per-test entries set to true.
+- page: 'not automated (manual-suite areas)'
+  features:
+      hrm (new UI):
+          'SHELL — app shell, routing, engine switch, theme, i18n [lite]': false
+          'DASH — HR dashboard [lite]': false
+          'EMP — employees list [lite]': false
+          'EMPCRUD — employee create / edit / lifecycle [lite]': false
+          'PROF — employee profile (v1-v4) + My Profile [lite]': false
+          'ORG — departments, designations, org chart, announcements, requests [lite]': false
+          'LEAVE — requests, entitlements, policies, types, holidays, calendar, FY [lite]': false
+          'HRREP — HR reports (6 report routes) [lite]': false
+      pro modules:
+          'REIM — reimbursement (UI; REST is covered)': false
+      cross-cutting:
+          'PERM — permissions, isolation, privacy (security) [lite]': false
+          'WF — real-life multi-actor user workflows (end-to-end) [lite]': false

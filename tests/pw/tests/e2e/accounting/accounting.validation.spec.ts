@@ -6,7 +6,7 @@ import { toPath } from '@utils/helpers';
 /**
  * Accounting SPA — access-control / validation smoke (UI side of the catalog's
  * authorization rows). REST role-blocking (403/401) is asserted in
- * tests/api/accounting/accounting.negative.api.spec.ts; this file confirms the UI
+ * tests/api/accounting.negative.spec.ts; this file confirms the UI
  * surface: the account manager can reach the write screens, the admin can reach the
  * new-document routes, and an employee is bounced from the whole module.
  *

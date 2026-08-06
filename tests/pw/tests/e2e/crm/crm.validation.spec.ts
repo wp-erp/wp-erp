@@ -17,7 +17,7 @@ import { toPath } from '@utils/helpers';
  *
  * Implements: CRM-EC-01..06, 08, 09, 15, 16; CRM-NC-01..04, 06..12.
  * KNOWN GAPS annotated // BUG CANDIDATE: CRM-EC-16, CRM-NC-05 (the dedup cases
- * live in crm.negative.api.spec.ts where the read-back is deterministic).
+ * live in tests/api/crm.negative.spec.ts where the read-back is deterministic).
  */
 
 const CRITICAL_ERROR = 'There has been a critical error on this website';
@@ -63,10 +63,9 @@ async function rowByEmail(email: string): Promise<Record<string, unknown> | unde
 }
 
 async function countByEmail(email: string): Promise<number> {
-    const rows = await dbUtils.dbQuery<{ c: number }>(
-        `SELECT COUNT(*) AS c FROM ${tables.peoples} WHERE email = ?`,
-        [email.toLowerCase().trim()],
-    );
+    const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${tables.peoples} WHERE email = ?`, [
+        email.toLowerCase().trim(),
+    ]);
     return Number(rows[0]?.c ?? 0);
 }
 
@@ -166,8 +165,7 @@ test.describe('CRM validation — edge (admin)', () => {
         expect(id, 'contact inserted').toBeTruthy();
 
         const typed =
-            (await CrmPage.findTypedPersonByEmail(raw.toLowerCase(), 'contact')) ??
-            (await CrmPage.findTypedPersonByEmail(raw, 'contact'));
+            (await CrmPage.findTypedPersonByEmail(raw.toLowerCase(), 'contact')) ?? (await CrmPage.findTypedPersonByEmail(raw, 'contact'));
         expect(typed, 'contact created and resolvable by email').toBeTruthy();
         const stored = String(typed?.email ?? '');
         // Stored email carries no surrounding whitespace and round-trips case-insensitively.
@@ -254,10 +252,7 @@ test.describe('CRM validation — edge (admin)', () => {
 
         // BUG CANDIDATE: a blank-name contact should NOT be persisted as a typed contact.
         const typed = await CrmPage.findTypedPersonByEmail(email, 'contact');
-        expect(
-            typed,
-            'whitespace-only name must not yield a typed contact (else blank-name bug)',
-        ).toBeFalsy();
+        expect(typed, 'whitespace-only name must not yield a typed contact (else blank-name bug)').toBeFalsy();
     });
 });
 
@@ -305,9 +300,7 @@ test.describe('CRM validation — negative (admin)', () => {
         await page.locator(crm.modal.submitBtn).click();
         // The email input has type=email → browser blocks submit; field stays.
         await expect(page.locator(crm.modal.email)).toBeVisible();
-        const valid = await page
-            .locator(crm.modal.email)
-            .evaluate((el: HTMLInputElement) => el.checkValidity());
+        const valid = await page.locator(crm.modal.email).evaluate((el: HTMLInputElement) => el.checkValidity());
         expect(valid, 'invalid email fails HTML5 validity').toBe(false);
     });
 

@@ -52,9 +52,7 @@ test.describe('HRM UI — admin CRUD', () => {
 
         await hrm.goToDepartments();
         expect(await hrm.hasCriticalError()).toBe(false);
-        await expect(
-            page.locator(hrm.admin.department.listRow).filter({ hasText: dept.title }),
-        ).toHaveCount(1);
+        await expect(page.locator(hrm.admin.department.listRow).filter({ hasText: dept.title })).toHaveCount(1);
     });
 
     test('HRM-HP-18 departments list loads with Add New', { tag: ['@lite', '@hrm', '@admin'] }, async ({ page }) => {
@@ -120,8 +118,6 @@ test.describe('HRM UI — HR manager', () => {
         await hrm.createDepartment({ title: dept.title, description: dept.description });
 
         await hrm.goToDepartments();
-        await expect(
-            page.locator(hrm.admin.department.listRow).filter({ hasText: dept.title }),
-        ).toHaveCount(1);
+        await expect(page.locator(hrm.admin.department.listRow).filter({ hasText: dept.title })).toHaveCount(1);
     });
 });

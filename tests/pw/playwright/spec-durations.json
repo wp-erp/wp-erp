@@ -1,0 +1,44 @@
+{
+  "specs": [
+    {
+      "file": "crm/crm.validation.spec.ts",
+      "ms": 45990,
+      "tests": 21
+    },
+    {
+      "file": "crm/crm.crud.spec.ts",
+      "ms": 18873,
+      "tests": 14
+    },
+    {
+      "file": "crm/crm.spec.ts",
+      "ms": 14779,
+      "tests": 11
+    },
+    {
+      "file": "hrm/hrm.crud.spec.ts",
+      "ms": 12817,
+      "tests": 10
+    },
+    {
+      "file": "hrm/hrm.spec.ts",
+      "ms": 11348,
+      "tests": 10
+    },
+    {
+      "file": "asset/asset.lifecycle.spec.ts",
+      "ms": 10788,
+      "tests": 8
+    },
+    {
+      "file": "asset/asset.spec.ts",
+      "ms": 9797,
+      "tests": 10
+    },
+    {
+      "file": "hrm/hrm.validation.spec.ts",
+      "ms": 5339,
+      "tests": 5
+    }
+  ]
+}

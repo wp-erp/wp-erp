@@ -87,8 +87,8 @@ export default class SummaryReporter implements Reporter {
                     skipped_tests,
                 },
                 null,
-                2
-            )
+                2,
+            ),
         );
     }
 }

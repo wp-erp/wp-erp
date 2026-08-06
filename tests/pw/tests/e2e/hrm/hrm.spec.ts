@@ -12,7 +12,7 @@ import { tables } from '@utils/dbData';
  * the views (see hrmPage.ts). Department/Designation have stable DOM ids and a
  * deterministic ajax submit, so those get real create flows. The employee modal
  * mixes select2 widgets, so its UI coverage is a resilient modal smoke; depth is
- * carried by the REST spec (hrm.api.spec.ts).
+ * carried by the REST spec (tests/api/hrm.spec.ts).
  *
  * Names are generated per-test via the testData factories — never hard-coded IDs.
  */
@@ -93,16 +93,20 @@ test.describe('HRM — admin UI', () => {
         await expect(page.locator(hrm.admin.employee.actionHidden)).toHaveCount(1);
     });
 
-    test('submitting an employee with no required fields shows validation (negative)', { tag: ['@lite', '@hrm', '@admin'] }, async ({ page }) => {
-        const hrm = new HrmPage(page);
-        await hrm.openAddEmployeeModal();
+    test(
+        'submitting an employee with no required fields shows validation (negative)',
+        { tag: ['@lite', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const hrm = new HrmPage(page);
+            await hrm.openAddEmployeeModal();
 
-        // Submit empty: native required ids should report invalid and the modal
-        // must stay open (first_name still visible), no row added, no fatal.
-        await page.locator(hrm.admin.employee.submit).first().click();
-        await expect(page.locator(hrm.admin.employee.firstName)).toBeVisible();
-        expect(await hrm.hasCriticalError()).toBe(false);
-    });
+            // Submit empty: native required ids should report invalid and the modal
+            // must stay open (first_name still visible), no row added, no fatal.
+            await page.locator(hrm.admin.employee.submit).first().click();
+            await expect(page.locator(hrm.admin.employee.firstName)).toBeVisible();
+            expect(await hrm.hasCriticalError()).toBe(false);
+        },
+    );
 
     test('headcount report loads (smoke)', { tag: ['@lite', '@hrm', '@admin'] }, async ({ page }) => {
         const hrm = new HrmPage(page);

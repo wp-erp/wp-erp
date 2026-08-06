@@ -37,13 +37,15 @@ test.describe('Accounting SPA smoke — admin', () => {
         // Route-specific text on the chart screen. Kept tolerant: any of the chart
         // headings / add control. NOTE: exact heading wording not live-verified; this
         // resilient regex is intentionally broad. (See notes.)
-        await expect(page.locator(acct.admin.appRoot)).toContainText(/Chart of Accounts|Add Account|Account Name|Chart/i, { timeout: 20_000 });
+        await expect(page.locator(acct.admin.appRoot)).toContainText(/Chart of Accounts|Add Account|Account Name|Chart/i, {
+            timeout: 20_000,
+        });
         expect(await acct.hasCriticalError(), 'no fatal on charts route').toBe(false);
     });
 
     test('ACCOUNTING-HP-29 reports route mounts without a console fatal', { tag: ['@lite', '@accounting', '@admin'] }, async ({ page }) => {
         const fatals: string[] = [];
-        page.on('console', (msg) => {
+        page.on('console', msg => {
             if (msg.type() === 'error' && /Uncaught|TypeError|is not a function|Cannot read/i.test(msg.text())) {
                 fatals.push(msg.text());
             }
@@ -62,16 +64,24 @@ test.describe('Accounting SPA smoke — admin', () => {
         expect(await acct.hasCriticalError(), 'no fatal on banks route').toBe(false);
     });
 
-    test('ACCOUNTING-EC-10 invoice total renders with the configured currency symbol', { tag: ['@lite', '@accounting', '@admin'] }, async ({ page }) => {
-        // We don't change ERP currency settings on the shared site; this is a
-        // mojibake smoke: the sales list shows formatted amounts without replacement
-        // characters. Exact symbol depends on site settings (not asserted).
-        const acct = new AccountingPage(page);
-        await acct.goto(toPath('wp-admin/admin.php?page=erp-accounting#/transactions/sales'));
-        await expect(page.locator(acct.admin.appRoot)).toBeAttached();
-        const text = (await page.locator(acct.admin.appRoot).innerText().catch(() => '')) ?? '';
-        // No Unicode replacement character (mojibake) in the rendered amounts.
-        expect(text.includes('�'), 'no mojibake in rendered currency amounts').toBe(false);
-        expect(await acct.hasCriticalError(), 'no fatal on sales route').toBe(false);
-    });
+    test(
+        'ACCOUNTING-EC-10 invoice total renders with the configured currency symbol',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async ({ page }) => {
+            // We don't change ERP currency settings on the shared site; this is a
+            // mojibake smoke: the sales list shows formatted amounts without replacement
+            // characters. Exact symbol depends on site settings (not asserted).
+            const acct = new AccountingPage(page);
+            await acct.goto(toPath('wp-admin/admin.php?page=erp-accounting#/transactions/sales'));
+            await expect(page.locator(acct.admin.appRoot)).toBeAttached();
+            const text =
+                (await page
+                    .locator(acct.admin.appRoot)
+                    .innerText()
+                    .catch(() => '')) ?? '';
+            // No Unicode replacement character (mojibake) in the rendered amounts.
+            expect(text.includes('�'), 'no mojibake in rendered currency amounts').toBe(false);
+            expect(await acct.hasCriticalError(), 'no fatal on sales route').toBe(false);
+        },
+    );
 });

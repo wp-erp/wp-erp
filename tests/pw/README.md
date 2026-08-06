@@ -28,7 +28,7 @@ REST endpoints, and direct MySQL assertions — across the **HRM**, **CRM**,
 - **Module + role tag taxonomy** — `@hrm` / `@crm` / `@accounting` / `@core` and
   `@admin` / `@manager` / `@employee` for targeted runs.
 - **Linear project-chain seeding** — `local_site_setup → site_setup → auth_setup →
-  e2e_setup` seeds fixtures (REST for HRM/Accounting, DB for CRM) and writes IDs
+e2e_setup` seeds fixtures (REST for HRM/Accounting, DB for CRM) and writes IDs
   back into `.env`.
 - **Dual environment provider** — zero-config `@wordpress/env` (Docker) site
   (`WP_ENV=true`), or any existing WordPress / Valet install (`WP_ENV=false`).
@@ -116,24 +116,24 @@ npm test
 
 ## Running tests
 
-| Command | What it does |
-|---|---|
-| `npm test` | Full **e2e** suite (setup chain → `tests/e2e`) |
-| `npm run test:api` | **REST** suite (`api.config.ts` → `tests/api`) |
-| `npm run test:e2e` | `e2e_tests` only with `NO_SETUP=true` — re-run against an already-seeded site |
-| `npm run setup` / `docker:setup` | Run the **setup chain only** (seed-once); stops before tests |
-| `npm run docker:full` | `start:env` + `create:admin` + `setup` — first boot / after `reset:env` |
-| `npm run test:headed` | Run with a visible browser |
-| `npm run test:ui` | Playwright interactive UI mode |
-| `npm run test:debug` | Playwright Inspector / step debugger |
-| `npm run test:report` | Open the last HTML report |
-| `ERP_PRO=true npm test` | Include `@pro` specs (see above) |
-| `npm test -- --grep @hrm` | Filter to a module (`@hrm`/`@crm`/`@accounting`/`@core`) |
-| `npm test -- --grep @manager` | Filter to a role (`@admin`/`@manager`/`@employee`) |
-| `npm test -- tests/e2e/hrm/hrm.spec.ts` | Run a single spec file |
-| `SLOWMO=300 HEADLESS=false npm test` | Watch a flow (slow-mo, non-headless) |
-| `npm run stop:env` / `npm run restart:env` / `npm run reset:env` | Stop / restart / destroy + recreate the wp-env site |
-| `npm run check:plugins` / `check:users` / `check:modules` | wp-cli introspection of the live site |
+| Command                                                          | What it does                                                                  |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `npm test`                                                       | Full **e2e** suite (setup chain → `tests/e2e`)                                |
+| `npm run test:api`                                               | **REST** suite (`api.config.ts` → `tests/api`)                                |
+| `npm run test:e2e`                                               | `e2e_tests` only with `NO_SETUP=true` — re-run against an already-seeded site |
+| `npm run setup` / `docker:setup`                                 | Run the **setup chain only** (seed-once); stops before tests                  |
+| `npm run docker:full`                                            | `start:env` + `create:admin` + `setup` — first boot / after `reset:env`       |
+| `npm run test:headed`                                            | Run with a visible browser                                                    |
+| `npm run test:ui`                                                | Playwright interactive UI mode                                                |
+| `npm run test:debug`                                             | Playwright Inspector / step debugger                                          |
+| `npm run test:report`                                            | Open the last HTML report                                                     |
+| `ERP_PRO=true npm test`                                          | Include `@pro` specs (see above)                                              |
+| `npm test -- --grep @hrm`                                        | Filter to a module (`@hrm`/`@crm`/`@accounting`/`@core`)                      |
+| `npm test -- --grep @manager`                                    | Filter to a role (`@admin`/`@manager`/`@employee`)                            |
+| `npm test -- tests/e2e/hrm/hrm.spec.ts`                          | Run a single spec file                                                        |
+| `SLOWMO=300 HEADLESS=false npm test`                             | Watch a flow (slow-mo, non-headless)                                          |
+| `npm run stop:env` / `npm run restart:env` / `npm run reset:env` | Stop / restart / destroy + recreate the wp-env site                           |
+| `npm run check:plugins` / `check:users` / `check:modules`        | wp-cli introspection of the live site                                         |
 
 > wp-env auto-assigns the MySQL host port on each (re)create. `start:env` and
 > `reset:env` automatically run `npm run db:port`, which writes the live port into
@@ -160,7 +160,7 @@ uses a trimmed `site_setup → auth_setup → api_tests`).
 - **local_site_setup** — wp-env only: activate `wp-erp` (lite), pretty permalinks, timezone.
 - **site_setup** — site-readiness + lite module activation, then a **separate, trackable
   block of `@pro` steps**: `activate erp-pro plugin` → `set erp pro license` → `activate
-  all erp pro modules` → `verify pro install completed`.
+all erp pro modules` → `verify pro install completed`.
 - **auth_setup** — admin login → `storageState` + capture `X-WP-Nonce`; create the
   role users; log each role in once → `playwright/.auth/<role>StorageState.json`, and
   capture each manager's own REST nonce.
@@ -189,12 +189,18 @@ tests/pw/
 ├── bin/
 │   ├── createAdmin.js          # `npm run create:admin`
 │   └── syncDbPort.js           # `npm run db:port` — sync DB_PORT from wp-env
+├── types/                      # environment.d.ts (typed process.env), global.d.ts (matchers)
+├── feature-map/
+│   └── feature-map.yml         # feature inventory the coverage teardown scores a run against
 ├── utils/                      # test.ts, helpers.ts, apiUtils.ts, apiEndPoints.ts,
 │                               # dbUtils.ts, dbData.ts, testData.ts, payloads.ts,
-│                               # schemas.ts, interfaces.ts, pwMatchers.ts, reporters
+│                               # schemas.ts, interfaces.ts, pwMatchers.ts, reporters,
+│                               # getShardSpecs.js + shard-durations.json (balanced shards)
 └── tests/
-    ├── e2e/                    # _localSite/_site/_auth/_env setup + <module>/<feature>{Page,spec}.ts
-    └── api/                    # <module>/<feature>.api.spec.ts
+    ├── e2e/                    # _localSite/_site/_auth/_env setup at root, then one
+    │                           # DIRECTORY PER FEATURE: <feature>/<feature>{,.crud,…}.spec.ts
+    │                           # with its page object <feature>Page.ts alongside
+    └── api/                    # FLAT — <feature>{,.crud,.negative,.lifecycle}.spec.ts
 ```
 
 ## Configuration (`.env`)
@@ -213,7 +219,7 @@ Copy `.env.example` → `.env` and adjust. Key groups:
 
 - **UI (`tests/e2e`)** — thin specs drive feature-isolated page objects. Several
   pro/accounting/CRM screens are Vue SPAs, so their UI specs are smoke-level (mount
-  + no fatal + key controls); behavioral depth lives in the REST and DB specs.
+    - no fatal + key controls); behavioral depth lives in the REST and DB specs.
 - **REST (`tests/api`)** — `ApiUtils.fromStorageState(...)` with cookie + `X-WP-Nonce`;
   full CRUD, edge, negative, and access-control coverage.
 - **DB (`utils/dbUtils.ts`)** — `mysql2` assertions for table-backed features.
@@ -243,10 +249,10 @@ All of the above are git-ignored.
   site. wp-erp pins web `1000` + MySQL `1001` (`.wp-env.json`) so it has a stable slot
   when several wp-env sites share Docker.
 - **Run the dev site on a different port** — the default is `1000` web / `1001` DB
-  (pinned in `.wp-env.json`). To change it *locally*: add `"port"` / `"mysqlPort"` to
+  (pinned in `.wp-env.json`). To change it _locally_: add `"port"` / `"mysqlPort"` to
   `.wp-env.override.json` (gitignored), set `BASE_URL` / `SERVER_URL` / `DB_PORT` in `.env`
   to match, then `npm run restart:env`. **Re-run the setup chain afterwards** (`npm run
-  docker:setup`, or just `npm test`) — changing the port changes WordPress's `siteurl`
+docker:setup`, or just `npm test`) — changing the port changes WordPress's `siteurl`
   (hence `COOKIEHASH`), which invalidates the saved auth `storageState`, so it must be
   regenerated. No DB reset is needed; the data volume persists across the restart.
 - **DB connection errors** — run `npm run db:port` to re-sync `DB_PORT` to the live

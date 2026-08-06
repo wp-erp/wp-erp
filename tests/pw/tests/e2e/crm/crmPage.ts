@@ -215,10 +215,7 @@ export class CrmPage {
 
     /** Resolve the numeric people-type id for a type name (contact/company). */
     private static async peopleTypeId(typeName: string): Promise<number | undefined> {
-        const rows = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${tables.peopleTypes} WHERE name = ? LIMIT 1`,
-            [typeName],
-        );
+        const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${tables.peopleTypes} WHERE name = ? LIMIT 1`, [typeName]);
         return rows[0]?.id;
     }
 
@@ -276,14 +273,14 @@ export class CrmPage {
             [peopleId, typeId],
         );
 
-        await dbUtils.dbQuery(
-            `INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'life_stage', ?)`,
-            [peopleId, args.life_stage ?? 'lead'],
-        );
-        await dbUtils.dbQuery(
-            `INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'contact_owner', ?)`,
-            [peopleId, String(owner)],
-        );
+        await dbUtils.dbQuery(`INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'life_stage', ?)`, [
+            peopleId,
+            args.life_stage ?? 'lead',
+        ]);
+        await dbUtils.dbQuery(`INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'contact_owner', ?)`, [
+            peopleId,
+            String(owner),
+        ]);
 
         return String(peopleId);
     }
@@ -294,24 +291,24 @@ export class CrmPage {
      * round-trips of edge values (charset, case, phone formatting, truncation),
      * independent of the modal's async select2 timing.
      */
-    static async insertContactRow(args: { first_name: string; last_name?: string; email: string; phone?: string; life_stage?: string }): Promise<string | undefined> {
+    static async insertContactRow(args: {
+        first_name: string;
+        last_name?: string;
+        email: string;
+        phone?: string;
+        life_stage?: string;
+    }): Promise<string | undefined> {
         return CrmPage.insertPerson({ type: 'contact', ...args });
     }
 
     /** Fetch a seeded person row by id (used by API/DB specs to read back). */
     static async getPerson(id: string | number): Promise<Record<string, unknown> | undefined> {
-        const rows = await dbUtils.dbQuery<Record<string, unknown>>(
-            `SELECT * FROM ${tables.peoples} WHERE id = ? LIMIT 1`,
-            [id],
-        );
+        const rows = await dbUtils.dbQuery<Record<string, unknown>>(`SELECT * FROM ${tables.peoples} WHERE id = ? LIMIT 1`, [id]);
         return rows[0];
     }
 
     /** Find a typed person by email (verifies the type relation exists). */
-    static async findTypedPersonByEmail(
-        email: string,
-        typeName: string,
-    ): Promise<Record<string, unknown> | undefined> {
+    static async findTypedPersonByEmail(email: string, typeName: string): Promise<Record<string, unknown> | undefined> {
         const rows = await dbUtils.dbQuery<Record<string, unknown>>(
             `SELECT p.* FROM ${tables.peoples} p
                 JOIN ${tables.peopleTypeRelations} r ON r.people_id = p.id

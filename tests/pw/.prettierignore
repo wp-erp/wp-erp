@@ -1,0 +1,23 @@
+# Run artifacts — generated, never hand-edited, and `prettier --check` is a CI gate,
+# so an unformatted leftover from a local run must not be able to fail it.
+node_modules/
+lib/
+playwright/
+playwright-report/
+playwright-report-e2e/
+playwright-report-api/
+blob-report/
+test-results/
+summary-report/
+coverage-report/
+all-summaries/
+all-durations/
+all-blobs-e2e/
+all-blobs-api/
+wp-data/
+
+# Committed measurement baseline — written by aggregateSpecDurations.js.
+utils/shard-durations.json
+
+# Generated from the suite's own test list; regenerate, don't reformat.
+feature-map/feature-map.yml

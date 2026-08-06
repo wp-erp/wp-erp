@@ -48,7 +48,7 @@ const COMPANY_OPTION = '_erp_company';
 // <select> options are ISO codes; we prefer US but fall back to the first real
 // option (skip "-1"/"-Select-") so the test is resilient across installs.
 async function selectAnyValidCountry(page: import('@utils/test').Page): Promise<void> {
-    await page.evaluate((sel) => {
+    await page.evaluate(sel => {
         const el = document.querySelector<HTMLSelectElement>(sel);
         if (!el) return;
         const real = Array.from(el.options).find(o => o.value && o.value !== '-1' && o.value !== '-' && o.value !== '');
@@ -68,10 +68,7 @@ async function submitCompanyEditor(
     if (fields.name !== undefined) await page.locator(CORE.companyName).fill(fields.name);
     if (fields.withValidCountry) await selectAnyValidCountry(page);
 
-    await Promise.all([
-        page.waitForURL(/page=erp-company/, { timeout: 20_000 }),
-        page.locator(CORE.companyPublish).click(),
-    ]);
+    await Promise.all([page.waitForURL(/page=erp-company/, { timeout: 20_000 }), page.locator(CORE.companyPublish).click()]);
     return page.url();
 }
 
@@ -107,7 +104,7 @@ test.describe('CORE edge cases — Admin', () => {
         await expect(page.locator(CORE.companyForm)).toBeVisible({ timeout: 20_000 });
         await page.locator(CORE.companyName).fill(`PW Co ${Date.now()}`);
         // Force the country <select> to an empty value so the handler bounces it.
-        await page.evaluate((sel) => {
+        await page.evaluate(sel => {
             const el = document.querySelector<HTMLSelectElement>(sel);
             if (el) {
                 el.value = '';
@@ -235,20 +232,24 @@ test.describe('CORE edge cases — Admin', () => {
     // A normal admin page does NOT instantiate the wizard, so we drive the wizard URL and
     // assert the forced flip. We seed the flag to a non-'1' value first so the flip is
     // observable deterministically on a fresh OR an already-seeded install.
-    test('EC-14/BUG-14 loading the setup wizard page force-sets setup_wizard_ran=1', { tag: ['@lite', '@core', '@admin'] }, async ({ page }) => {
-        const snap = await dbUtils.getOptionValue('erp_setup_wizard_ran');
-        await dbUtils.setOptionValue('erp_setup_wizard_ran', '0');
+    test(
+        'EC-14/BUG-14 loading the setup wizard page force-sets setup_wizard_ran=1',
+        { tag: ['@lite', '@core', '@admin'] },
+        async ({ page }) => {
+            const snap = await dbUtils.getOptionValue('erp_setup_wizard_ran');
+            await dbUtils.setOptionValue('erp_setup_wizard_ran', '0');
 
-        await page.goto(CORE.setupWizardUrl);
-        await expect(page.locator('body')).not.toContainText(CORE.criticalError);
+            await page.goto(CORE.setupWizardUrl);
+            await expect(page.locator('body')).not.toContainText(CORE.criticalError);
 
-        // BUG CANDIDATE: includes/Admin/SetupWizard.php __construct() sets the flag on
-        // construction, not on wizard completion — a mere page load marks the wizard "done".
-        const ran = await dbUtils.getOptionValue('erp_setup_wizard_ran');
-        expect(String(ran ?? '')).toBe('1');
+            // BUG CANDIDATE: includes/Admin/SetupWizard.php __construct() sets the flag on
+            // construction, not on wizard completion — a mere page load marks the wizard "done".
+            const ran = await dbUtils.getOptionValue('erp_setup_wizard_ran');
+            expect(String(ran ?? '')).toBe('1');
 
-        if (snap !== undefined) await dbUtils.setOptionValue('erp_setup_wizard_ran', snap);
-    });
+            if (snap !== undefined) await dbUtils.setOptionValue('erp_setup_wizard_ran', snap);
+        },
+    );
 
     // BUG-02 — zip vs postcode key mismatch in Company::get_formatted_address().
     // The editor stores address.zip, but get_formatted_address() reads
@@ -275,16 +276,20 @@ test.describe('CORE edge cases — Admin', () => {
     // BUG-10 — Danger Zone read-only structural gate (audit-log survives reset is a
     // documented spec property; we never execute the reset). Confirmation button
     // exists and the confirm input is empty by default.
-    test('BUG-10 danger zone confirmation gate is present and empty (no execute)', { tag: ['@lite', '@core', '@admin'] }, async ({ page }) => {
-        await page.goto(CORE.toolsDangerUrl);
-        await expect(page.locator(CORE.dangerForm)).toBeVisible({ timeout: 20_000 });
-        const confirm = page.locator(CORE.dangerConfirm);
-        await expect(confirm).toBeAttached();
-        await expect(confirm).toHaveValue('');
-        // BUG CANDIDATE: includes/Admin/Ajax.php:1070 gates reset on a case-sensitive
-        // exact "Reset" string; documented here, never executed on the shared site.
-        await expect(page.locator(CORE.dangerBtn)).toBeAttached();
-    });
+    test(
+        'BUG-10 danger zone confirmation gate is present and empty (no execute)',
+        { tag: ['@lite', '@core', '@admin'] },
+        async ({ page }) => {
+            await page.goto(CORE.toolsDangerUrl);
+            await expect(page.locator(CORE.dangerForm)).toBeVisible({ timeout: 20_000 });
+            const confirm = page.locator(CORE.dangerConfirm);
+            await expect(confirm).toBeAttached();
+            await expect(confirm).toHaveValue('');
+            // BUG CANDIDATE: includes/Admin/Ajax.php:1070 gates reset on a case-sensitive
+            // exact "Reset" string; documented here, never executed on the shared site.
+            await expect(page.locator(CORE.dangerBtn)).toBeAttached();
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

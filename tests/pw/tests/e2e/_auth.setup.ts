@@ -18,8 +18,18 @@ setup.describe('authentication & role users', () => {
         const password = process.env.USER_PASSWORD ?? '01erp01';
         const roleUsers = [
             { username: data.users.hrManager.username, email: 'hr_manager1@example.com', role: 'erp_hr_manager', idKey: 'HR_MANAGER_ID' },
-            { username: data.users.crmManager.username, email: 'crm_manager1@example.com', role: 'erp_crm_manager', idKey: 'CRM_MANAGER_ID' },
-            { username: data.users.accManager.username, email: 'acc_manager1@example.com', role: 'erp_ac_manager', idKey: 'ACC_MANAGER_ID' },
+            {
+                username: data.users.crmManager.username,
+                email: 'crm_manager1@example.com',
+                role: 'erp_crm_manager',
+                idKey: 'CRM_MANAGER_ID',
+            },
+            {
+                username: data.users.accManager.username,
+                email: 'acc_manager1@example.com',
+                role: 'erp_ac_manager',
+                idKey: 'ACC_MANAGER_ID',
+            },
             { username: data.users.employee.username, email: 'employee1@example.com', role: 'employee', idKey: 'EMPLOYEE_USER_ID' },
         ];
         for (const u of roleUsers) {

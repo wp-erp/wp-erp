@@ -25,9 +25,7 @@ function devMysqlPort() {
         return null; // Docker not running / not the wp-env provider
     }
     // The dev MySQL container is "*-mysql-1" (NOT "*-tests-mysql-1").
-    const line = out
-        .split('\n')
-        .find((l) => /-mysql-1\b/.test(l) && !/-tests-mysql-1\b/.test(l));
+    const line = out.split('\n').find(l => /-mysql-1\b/.test(l) && !/-tests-mysql-1\b/.test(l));
     if (!line) return null;
     // e.g. "...-mysql-1 0.0.0.0:52779->3306/tcp, [::]:52779->3306/tcp"
     const m = line.match(/(?:0\.0\.0\.0|127\.0\.0\.1):(\d+)->3306\/tcp/);
