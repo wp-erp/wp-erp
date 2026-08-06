@@ -145,6 +145,48 @@ jobs:
                       [ -s "$f" ] || { echo "::error::missing built asset $f"; exit 1; }
                   done
 
+            # ── HR React admin (the New UI), when this branch carries it ───────────
+            # A separate toolchain from everything above: Node 24 + pnpm, per
+            # modules/hrm/.nvmrc and bin/build-react.sh, and its output
+            # (modules/hrm/assets/dist-react) is gitignored like the rest. Without this
+            # the newui job finds no bundle and skips itself, so CI would go green
+            # having run zero New UI specs.
+            #
+            # Guarded on the source tree: branches without the redesign (develop today)
+            # skip it entirely and pay nothing. pnpm is pinned to 10 because pnpm 11
+            # refuses the git-hosted @wedevs/plugin-ui dependency with
+            # ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED unless it is added to allowBuilds.
+            - name: Detect the HR React source
+              id: react_src
+              run: |
+                  if [ -d modules/hrm/assets/src-react ]; then
+                      echo "present=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "present=false" >> "$GITHUB_OUTPUT"
+                      echo "::notice::no modules/hrm/assets/src-react — this branch has no HR React admin to build"
+                  fi
+
+            - name: Use Node.js 24 (HR React toolchain)
+              if: steps.react_src.outputs.present == 'true'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+
+            - name: Build the HR React admin
+              if: steps.react_src.outputs.present == 'true'
+              working-directory: modules/hrm
+              run: |
+                  corepack enable
+                  corepack prepare pnpm@10.15.0 --activate
+                  pnpm install
+                  pnpm run build
+
+            - name: Verify the React bundle exists
+              if: steps.react_src.outputs.present == 'true'
+              run: |
+                  ls modules/hrm/assets/dist-react/*.js >/dev/null 2>&1 \
+                      || { echo "::error::src-react is present but the build emitted no dist-react/*.js"; exit 1; }
+
             # Tar the runtime tree. node_modules is a build-time dependency only (the
             # bundles it produces ARE included) and the .auth/report/wp-data dirs are run
             # outputs — none are needed downstream.
@@ -152,6 +194,8 @@ jobs:
               run: |
                   tar --exclude='./.git' \
                       --exclude='./node_modules' \
+                      --exclude='./modules/hrm/node_modules' \
+                      --exclude='./.pnpm-store' \
                       --exclude='./tests/pw/node_modules' \
                       --exclude='./tests/pw/playwright/.auth' \
                       --exclude='./tests/pw/playwright-report' \
