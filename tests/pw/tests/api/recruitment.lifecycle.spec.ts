@@ -94,11 +94,20 @@ function formBlocks(html: string): string[] {
     return html.match(/<form[\s\S]*?<\/form>/gi) ?? [];
 }
 
-/** The `_wpnonce` hidden value inside the first <form> that contains `needle`. */
+/**
+ * The `_wpnonce` hidden value inside the first <form> that contains `needle`.
+ *
+ * Scrapes ONLY that form. The previous `form ?? html` fallback grabbed any _wpnonce on
+ * the page when the form was absent, yielding a valid-looking nonce for the WRONG
+ * action: the caller's `test.skip(!nonce, …)` never fired and the POST died on nonce
+ * verification as a bare 500 with no PHP error behind it. Measured on the HR React
+ * engine, where `page=erp-hr` renders the SPA and this legacy form is not present at
+ * all. No form, no nonce — let the caller skip and say why.
+ */
 function scrapeFormNonce(html: string, needle: string): string {
     const form = formBlocks(html).find(f => f.includes(needle));
-    const source = form ?? html;
-    const m = source.match(/name="_wpnonce"\s+value="([a-f0-9]+)"/i);
+    if (!form) return '';
+    const m = form.match(/name="_wpnonce"\s+value="([a-f0-9]+)"/i);
     return m?.[1] ?? '';
 }
 

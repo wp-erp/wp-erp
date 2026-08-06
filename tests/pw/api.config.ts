@@ -37,6 +37,18 @@ export default defineConfig({
         { name: 'local_site_setup', testDir: 'tests/e2e', testMatch: ['**/_localSite.setup.ts'] },
         { name: 'site_setup', testDir: 'tests/e2e', testMatch: ['**/_site.setup.ts'], dependencies: dep(['local_site_setup']) },
         { name: 'auth_setup', testDir: 'tests/e2e', testMatch: ['**/_auth.setup.ts'], dependencies: dep(['site_setup']), retries: 1 },
-        { name: 'api_tests', testMatch: /.*\.spec\.ts/, dependencies: dep(['auth_setup']) },
+        // Always runs, even under NO_SETUP. Several api specs drive LEGACY admin-post
+        // screens (the recruitment wizard scrapes its form nonce out of the rendered
+        // page), and a fresh install defaults to the React HR engine where those forms
+        // do not exist. Measured: REC-LC-01 posted a wrong-form nonce and died 500 on
+        // React; on `vue` the same file is 24/24 green.
+        {
+            name: 'engine_legacy',
+            testDir: 'tests/e2e',
+            testMatch: ['**/_engine.setup.ts'],
+            testIgnore: /newui\//,
+            dependencies: dep(['auth_setup']),
+        },
+        { name: 'api_tests', testMatch: /.*\.spec\.ts/, dependencies: ['engine_legacy'] },
     ],
 });
