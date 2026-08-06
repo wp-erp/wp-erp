@@ -133,18 +133,14 @@ jobs:
                   compression-level: 0
 
     # ── Build the PRIVATE erp-pro plugin. ──────────────────────────────────────
-    # Only `composer install` here. SKIPS on fork PRs (no secret access — expected). On
-    # the internal repo it MUST succeed: a bad ERP_PRO_TOKEN fails this job LOUDLY (no
-    # masking) and the whole workflow turns red.
-    #
-    # DECLARED GAP: erp-pro does NOT ship its built bundles either — 32 built JS files
-    # (modules/hrm/*/assets/dist-react/*.js, packages/hr-shared/dist/*.js, deals,
-    # hr-frontend) are absent from a fresh checkout and are produced by `npm run build`
-    # (root webpack + per-module React packages) at release time. Pro UI specs therefore
-    # run against modules whose front-end never loads; any that pass do so vacuously.
-    # Not fixed in this change: the pro build is a multi-package job, unlike free's
-    # single `npm run build`. Tracked separately — do not read a green pro shard as
-    # coverage of pro UI.
+    # erp-pro DOES ship its built bundles in-repo — unlike wp-erp free, its .gitignore
+    # excludes only node_modules/vendor/dist/build, and the webpack outputs
+    # (modules/*/assets/js/{admin,frontend,vendor,style}.js|.min.js, hr-frontend's hashed
+    # chunks, deals) are committed. Verified on develop @ ee5d41d5. So `composer install`
+    # is all this job needs; adding an npm build here would rebuild what is already there.
+    # SKIPS on fork PRs (no secret access — expected). On the internal repo it MUST
+    # succeed: a bad ERP_PRO_TOKEN fails this job LOUDLY (no masking) and the whole
+    # workflow turns red.
     build_pro:
         name: build erp-pro
         runs-on: ubuntu-latest
