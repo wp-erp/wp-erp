@@ -55,3 +55,7 @@ plugin-deploy.sh
 # Internal planning docs — not shipped, not tracked
 /openspec/
 .vscode/sftp.json
+
+# pnpm content-addressable store, created in-repo when the HR React build runs in a
+# container (bin/build-react.sh -> pnpm). Cache, never source.
+/.pnpm-store/

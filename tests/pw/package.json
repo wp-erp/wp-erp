@@ -44,7 +44,9 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier . --check",
-        "format:fix": "prettier . --write"
+        "format:fix": "prettier . --write",
+        "test:e2e:newui": "NO_SETUP=true playwright test --config=newui.config.ts --project=newui_tests",
+        "test:newui": "playwright test --config=newui.config.ts"
     },
     "dependencies": {
         "@faker-js/faker": "^9.4.0",

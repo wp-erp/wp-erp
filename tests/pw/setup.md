@@ -69,21 +69,43 @@ exactly like Dokan keeps `dokan-pro` out of its base config.
 chain automatically. `NO_SETUP=true` drops the dependencies (run against a seeded site).
 
 ```
-local_site_setup → site_setup → auth_setup → e2e_setup → e2e_tests
-   (_localSite)     (_site)      (_auth)      (_env)      (*.spec.ts)
+local_site_setup → site_setup → auth_setup → e2e_setup → engine_legacy → e2e_tests
+   (_localSite)     (_site)      (_auth)      (_env)       (_engine)      (*.spec.ts)
 ```
 
-| Project            | Spec                  | Responsibility                                                             |
-| ------------------ | --------------------- | -------------------------------------------------------------------------- |
-| `local_site_setup` | `_localSite.setup.ts` | wp-env only: activate wp-erp, permalinks, timezone (LITE)                  |
-| `site_setup`       | `_site.setup.ts`      | activate CRM/Accounting; **separate, explicit `@pro` Pro activation** (§6) |
-| `auth_setup`       | `_auth.setup.ts`      | log in each role → storageState files + REST nonces                        |
-| `e2e_setup`        | `_env.setup.ts`       | per-module fixtures                                                        |
-| `e2e_tests`        | `*.spec.ts`           | the actual tests (sharded in CI)                                           |
+| Project            | Spec                  | Responsibility                                                                    |
+| ------------------ | --------------------- | --------------------------------------------------------------------------------- |
+| `local_site_setup` | `_localSite.setup.ts` | wp-env only: activate wp-erp, permalinks, timezone (LITE)                         |
+| `site_setup`       | `_site.setup.ts`      | activate CRM/Accounting; **separate, explicit `@pro` Pro activation** (§6)        |
+| `auth_setup`       | `_auth.setup.ts`      | log in each role → storageState files + REST nonces                               |
+| `e2e_setup`        | `_env.setup.ts`       | per-module fixtures                                                               |
+| `engine_legacy`    | `_engine.setup.ts`    | pin the HR admin to the **legacy Vue** engine (§3.1) — runs even under `NO_SETUP` |
+| `e2e_tests`        | `*.spec.ts`           | the actual tests (sharded in CI)                                                  |
 
 `npm run setup` / `npm run docker:setup` = `playwright test --project=e2e_setup`, which
 runs the four setup projects (via dependencies) and **stops before the tests** — the
 seed-once step.
+
+### 3.1 Two HR engines, two configs
+
+The HR admin ships two front ends and `UiEngineResolver` picks between them from ONE
+site-wide option (`erp_hr_ui_engine`), defaulting a **new** install to React. The suite
+therefore runs them from separate configs, each pinning the engine its specs were
+written against:
+
+| Config                 | testDir           | Engine pinned | Script                   |
+| ---------------------- | ----------------- | ------------- | ------------------------ |
+| `playwright.config.ts` | `tests/e2e`       | `vue`         | `npm run test:e2e`       |
+| `newui.config.ts`      | `tests/e2e/newui` | `react`       | `npm run test:e2e:newui` |
+| `api.config.ts`        | `tests/api`       | — (REST only) | `npm run test:api`       |
+
+They cannot share a site concurrently — one option, two values — so **run them in
+sequence, and in CI as separate jobs**. Both engine pins run even under `NO_SETUP`, so
+whichever suite you start flips the site to its own engine first.
+
+Measured, in case this looks like over-engineering: with React pinned globally, **61**
+legacy specs failed on Vue-only selectors (`#payrun-wrapper` and friends), and every one
+of them passed again on `vue`. Nothing was wrong with the product.
 
 ---
 

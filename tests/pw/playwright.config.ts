@@ -54,6 +54,11 @@ export default defineConfig({
         { name: 'site_setup', testMatch: ['**/_site.setup.ts'], dependencies: dep(['local_site_setup']) },
         { name: 'auth_setup', testMatch: ['**/_auth.setup.ts'], dependencies: dep(['site_setup']), retries: 1 },
         { name: 'e2e_setup', testMatch: ['**/_env.setup.ts'], dependencies: dep(['auth_setup']), fullyParallel: true, retries: 1 },
-        { name: 'e2e_tests', testMatch: /.*\.spec\.ts/, dependencies: dep(['e2e_setup']) },
+        // Always runs, even under NO_SETUP: the newui suite leaves the site on the
+        // React engine, and these specs drive the legacy Vue screens.
+        { name: 'engine_legacy', testMatch: ['**/_engine.setup.ts'], testIgnore: /newui\//, dependencies: dep(['e2e_setup']) },
+        // The legacy-engine suite. tests/e2e/newui is excluded: those specs need the
+        // opposite HR engine and run from newui.config.ts (see the note there).
+        { name: 'e2e_tests', testMatch: /.*\.spec\.ts/, testIgnore: /newui\//, dependencies: ['engine_legacy'] },
     ],
 });

@@ -403,6 +403,157 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 7
 
+    # ── HR New UI (React engine) suite. ────────────────────────────────────────
+    # Its OWN job, on its OWN wp-env, because the HR engine is a single site-wide option:
+    # the legacy e2e shards pin `vue` and this suite pins `react`, so sharing a site would
+    # have them flip it under each other. Measured the day this was written: React pinned
+    # globally failed 61 legacy specs on Vue-only selectors, all green again on `vue`.
+    #
+    # Skips itself (does not fail) on a build without the redesign — `tests/e2e/newui`
+    # only makes sense where modules/hrm/assets/dist-react exists.
+    newui_tests:
+        name: newui tests (HR React)
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        needs: [build_lite, build_pro]
+        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        steps:
+            - name: Download wp-erp build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: wp-erp-build
+                  path: /tmp/
+
+            - name: Extract wp-erp build
+              run: |
+                  tar -xzf /tmp/wp-erp-build.tar.gz
+                  rm /tmp/wp-erp-build.tar.gz
+
+            # No React bundle -> no New UI on this build -> nothing for this job to prove.
+            - name: Detect the HR React build
+              id: react
+              run: |
+                  if ls modules/hrm/assets/dist-react/*.js >/dev/null 2>&1; then
+                      echo "present=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "present=false" >> "$GITHUB_OUTPUT"
+                      echo "::notice::no modules/hrm/assets/dist-react bundle — skipping the New UI suite"
+                  fi
+
+            - name: Download erp-pro build artifact (pro runs only)
+              if: steps.react.outputs.present == 'true' && needs.build_pro.result == 'success'
+              uses: actions/download-artifact@v4
+              with:
+                  name: erp-pro-build
+                  path: /tmp/
+
+            - name: Extract erp-pro build (pro runs only)
+              if: steps.react.outputs.present == 'true' && needs.build_pro.result == 'success'
+              run: |
+                  tar -xzf /tmp/erp-pro.tar.gz
+                  rm /tmp/erp-pro.tar.gz
+
+            - name: Use Node.js 20
+              if: steps.react.outputs.present == 'true'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache tests/pw node_modules
+              if: steps.react.outputs.present == 'true'
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install test dependencies
+              if: steps.react.outputs.present == 'true' && steps.pw-nm.outputs.cache-hit != 'true'
+              working-directory: tests/pw
+              run: npm ci --prefer-offline --no-audit --no-fund
+
+            - name: Cache Playwright browsers
+              if: steps.react.outputs.present == 'true'
+              id: pw-browsers
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install Playwright Chromium (+ OS deps)
+              if: steps.react.outputs.present == 'true' && steps.pw-browsers.outputs.cache-hit != 'true'
+              working-directory: tests/pw
+              run: npx playwright install --with-deps chromium
+
+            - name: Prepare .env + wp-env config (lite vs pro)
+              if: steps.react.outputs.present == 'true'
+              working-directory: tests/pw
+              run: |
+                  cp .env.example .env
+                  mkdir -p wp-data && touch wp-data/debug.log
+                  if [ -d "$GITHUB_WORKSPACE/erp-pro" ]; then
+                      echo "ERP_PRO=true" >> "$GITHUB_ENV"
+                      cp .wp-env.ci.json .wp-env.override.json
+                  else
+                      echo "ERP_PRO=false" >> "$GITHUB_ENV"
+                      rm -f .wp-env.override.json
+                  fi
+
+            - name: Route Docker Hub through a mirror
+              if: steps.react.outputs.present == 'true'
+              run: |
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            - name: Start wp-env
+              if: steps.react.outputs.present == 'true'
+              uses: nick-fields/retry@v3
+              with:
+                  timeout_minutes: 8
+                  max_attempts: 3
+                  retry_on: error
+                  command: cd tests/pw && npm run start:env
+
+            # Full chain from newui.config.ts: seed the site, then pin the React engine.
+            - name: 🌱 Run setup (seed site + pin React)
+              if: steps.react.outputs.present == 'true'
+              timeout-minutes: 15
+              working-directory: tests/pw
+              run: npx playwright test --config=newui.config.ts --project=newui_engine
+
+            - name: 🧪 Run newui tests
+              if: steps.react.outputs.present == 'true'
+              timeout-minutes: 20
+              working-directory: tests/pw
+              run: npm run test:e2e:newui
+
+            - name: Upload blob report
+              if: always() && steps.react.outputs.present == 'true'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-report-newui
+                  path: tests/pw/blob-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
+            - name: Upload newui summary
+              if: always() && steps.react.outputs.present == 'true'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: summary-newui
+                  path: tests/pw/summary-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
     # ── REST/API suite (single runner). ────────────────────────────────────────
     api_tests:
         name: api tests
@@ -537,7 +688,7 @@ jobs:
         # report is only built for runs that actually produced results (pro success, or
         # lite when build_pro was skipped on a fork PR).
         if: ${{ !cancelled() && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped') }}
-        needs: [build_pro, e2e_tests, api_tests]
+        needs: [build_pro, e2e_tests, newui_tests, api_tests]
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
@@ -627,6 +778,12 @@ jobs:
                   path: tests/pw/all-summaries
                   pattern: summary-api
 
+            - name: Download newui summary
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-summaries
+                  pattern: summary-newui
+
             - name: Merge e2e shard summaries
               if: always()
               working-directory: tests/pw
@@ -668,11 +825,22 @@ jobs:
             # Scores the merged run against feature-map/feature-map.yml. Runs here, once,
             # because a per-shard score would count the other shards' features as gaps.
             # ERP_PRO mirrors the shards: pro when build_pro produced an artifact.
+            # Every suite's summary in one file. The feature map spans legacy e2e AND
+            # newui, so scoring against the e2e-only merge would report all 45 newui
+            # features as uncovered on a fully green run.
+            - name: Merge all summaries for coverage
+              if: always()
+              working-directory: tests/pw
+              run: |
+                  ARTIFACTS_DIR=./all-summaries REPORT_MATCH=summary \
+                  MERGED_OUTPUT=./all-summaries/merged-all.json \
+                  node ./utils/mergeSummaryReport.js || true
+
             - name: Generate feature coverage report
               if: always()
               working-directory: tests/pw
               env:
-                  SUMMARY_FILE: ./all-summaries/merged-summary.json
+                  SUMMARY_FILE: ./all-summaries/merged-all.json
                   OUTPUT_FILE: ./all-summaries/coverage.json
                   SUMMARY_MD: ./all-summaries/coverage.md
                   ERP_PRO: ${{ needs.build_pro.result == 'success' }}

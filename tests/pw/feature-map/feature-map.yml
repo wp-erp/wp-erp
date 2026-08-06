@@ -486,8 +486,8 @@
 - page: 'not automated (manual-suite areas)'
   features:
       hrm (new UI):
-          'SHELL — app shell, routing, engine switch, theme, i18n [lite]': false
-          'DASH — HR dashboard [lite]': false
+          'SHELL — remaining Tier-2/3 cases (theme, i18n, list-state persistence) [lite]': false
+          'DASH — widget-level cases (count reconciliation, Present Today, calendar visibility, birthday mail) [lite]': false
           'EMP — employees list [lite]': false
           'EMPCRUD — employee create / edit / lifecycle [lite]': false
           'PROF — employee profile (v1-v4) + My Profile [lite]': false
@@ -499,3 +499,53 @@
       cross-cutting:
           'PERM — permissions, isolation, privacy (security) [lite]': false
           'WF — real-life multi-actor user workflows (end-to-end) [lite]': false
+
+- page: 'newui (HR React engine)'
+  features:
+      shell and routing:
+          'ERP-NUI-SHELL-001 HR admin mounts as a React SPA and renders the dashboard [lite]': true
+          'ERP-NUI-SHELL-002 /dashboard redirects to / [lite]': true
+          'ERP-NUI-SHELL-002 /holidays redirects to /leave/holidays [lite]': true
+          'ERP-NUI-SHELL-002 /reports redirects to /reports/age-profile [lite]': true
+          'ERP-NUI-SHELL-002 route /announcements resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /departments resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /designations resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /employees resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/:id resolves for a real employee [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/:id/edit resolves for a real employee [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/:id/profile resolves for a real employee [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/:id/profile-v2 resolves for a real employee [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/:id/profile-v3 resolves for a real employee [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/:id/profile-v4 resolves for a real employee [lite]': true
+          'ERP-NUI-SHELL-002 route /employees/new resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /help resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/calendar resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/entitlements resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/financial-years resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/forward resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/holidays resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/policies resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/requests resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/types resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /leave/unpaid resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /my-profile resolves to the current user [lite]': true
+          'ERP-NUI-SHELL-002 route /org-chart resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /reports/age-profile resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /reports/gender-profile resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /reports/headcount resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /reports/leaves resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /reports/salary-history resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /reports/years-of-service resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-002 route /requests resolves to its own screen [lite]': true
+          'ERP-NUI-SHELL-003 the six report routes are distinct screens [lite]': true
+          'ERP-NUI-SHELL-004 &section=leave is a no-op under React [lite]': true
+          'ERP-NUI-SHELL-004 &section=payroll is a no-op under React [lite]': true
+          'ERP-NUI-SHELL-004 &section=people is a no-op under React [lite]': true
+          'ERP-NUI-SHELL-006 deep-linking a hash route lands on that screen [lite]': true
+          'ERP-NUI-SHELL-007 Back and Forward move between routes without a full reload [lite]': true
+          'ERP-NUI-SHELL-009 an unknown hash route shows the in-app Page not found [lite]': true
+          'ERP-NUI-SHELL-010 a malformed employee id is not passed to the API raw [lite]': true
+      dashboard:
+          'ERP-NUI-DASH-001 dashboard renders its widgets without error [lite]': true
+          'ERP-NUI-DASH-001 the dashboard bootstrap REST call returns 200 [lite]': true
+          'ERP-NUI-DASH-014 dashboard loads for a plain employee [lite]': true

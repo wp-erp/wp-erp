@@ -12,6 +12,9 @@ lib/
 # Auth state, wp-env data, generated run artifacts
 playwright/.auth/
 playwright/systemInfo.json
+# Per-run timings. The COMMITTED baseline is utils/shard-durations.json, refreshed
+# deliberately from aggregated CI runs — not whatever a local run last produced.
+playwright/spec-durations.json
 wp-data/
 
 # Reports & test output
