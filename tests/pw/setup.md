@@ -207,3 +207,16 @@ slice — Pro provisioning is a distinct, trackable step in every shard's log.
 3. Pro modes: `LICENSE_KEY` set **and** `erp-pro` cloned as a sibling under
    `wp-content/plugins/` **and** an override file present (`.wp-env.override.json`).
 4. After `reset:env` (fresh DB): run `npm run docker:setup` before any test.
+5. **The plugin's JS bundles must be built.** `.gitignore` excludes
+   `modules/accounting/assets/js/{admin,bootstrap,frontend,style}.js` and
+   `assets/js/{vendor,i18n,erp-settings,erp-settings-bootstrap}.js` — a fresh checkout
+   has none of them, so the Accounting SPA never mounts and the CRM modals lose
+   select2, and every UI spec in those modules fails on a 30s `toBeVisible`. Build once
+   from the repo root (Node 12 is required — webpack 3 + node-sass):
+
+   ```bash
+   docker run --rm -v "$PWD":/app -w /app node:12.1.0 sh -c "npm ci && npm run build"
+   ```
+
+   Re-run after changes under `assets/src/` or `modules/accounting/assets/src/`.
+   CI does this in the `build_lite` job.
