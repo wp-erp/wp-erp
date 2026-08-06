@@ -4,7 +4,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { data } from '@utils/testData';
 import { schemas } from '@utils/schemas';
 import { dbUtils } from '@utils/dbUtils';
-import { AccountingPage } from '../../e2e/accounting/accountingPage';
+import { AccountingPage } from '../e2e/accounting/accountingPage';
 
 /**
  * Accounting REST — Happy Paths + Edge Cases (from test-plans/accounting.md).

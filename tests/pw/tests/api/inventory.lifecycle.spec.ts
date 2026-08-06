@@ -4,7 +4,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { restUrl } from '@utils/helpers';
-import { AccountingPage } from '../../e2e/accounting/accountingPage';
+import { AccountingPage } from '../e2e/accounting/accountingPage';
 
 /**
  * Accounting — Inventory CSV-import + stock-movement LIFECYCLE (PRO module "inventory").

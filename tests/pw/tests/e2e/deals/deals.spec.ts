@@ -10,7 +10,7 @@ import { data } from '@utils/testData';
  * it proves the Vue SPA boots into `#erp-deals` with no PHP fatal across each
  * sub-section (Dashboard / All Deals / Activities), and asserts the access-control
  * boundary for a plain employee. The DB seed/round-trip lives in the sibling
- * tests/api/crm/deals.db.api.spec.ts.
+ * tests/api/deals.db.spec.ts.
  *
  * Resilient-assertion philosophy (per _pro-grounding.md):
  *  - Always assert NOT the critical-error string AND the real mount visible.

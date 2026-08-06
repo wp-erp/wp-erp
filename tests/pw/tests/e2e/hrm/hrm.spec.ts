@@ -12,7 +12,7 @@ import { tables } from '@utils/dbData';
  * the views (see hrmPage.ts). Department/Designation have stable DOM ids and a
  * deterministic ajax submit, so those get real create flows. The employee modal
  * mixes select2 widgets, so its UI coverage is a resilient modal smoke; depth is
- * carried by the REST spec (hrm.api.spec.ts).
+ * carried by the REST spec (tests/api/hrm.spec.ts).
  *
  * Names are generated per-test via the testData factories — never hard-coded IDs.
  */

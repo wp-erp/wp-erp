@@ -8,7 +8,7 @@ import { data } from '@utils/testData';
  *
  * The Deals module ships NO REST controller (`grep register_rest_route` across
  * erp-pro/modules/crm/deals returns nothing — also documented in the sibling
- * tests/api/crm/deals.db.api.spec.ts). Its write layer is WP admin-ajax
+ * tests/api/deals.db.spec.ts). Its write layer is WP admin-ajax
  * (action=erp_deals_*) + Eloquent models writing to `wp_erp_crm_deals*`.
  *
  * SURFACE (per _pro-grounding.md surface-preference rule 3 — raw admin-ajax, the

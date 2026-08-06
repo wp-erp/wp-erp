@@ -32,7 +32,7 @@ import type { ResponseBody } from '@utils/interfaces';
  *     5xx/fatal fails. create_policy:166 references an undefined $id on some
  *     installs, so a 500 there is a KNOWN logged bug — flagged, never asserted.
  *   - The free happy-path (plain name/days create + list) is NOT duplicated here;
- *     it lives in hrm.crud.api.spec.ts (HRM-HP-27..30). This file is pro-only.
+ *     it lives in tests/api/hrm.crud.spec.ts (HRM-HP-27..30). This file is pro-only.
  *
  * Every test carries: tier (@pro) + module (@hrm) + role (@admin/@manager).
  */

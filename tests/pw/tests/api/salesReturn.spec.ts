@@ -4,7 +4,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { restUrl, BASE_URL } from '@utils/helpers';
-import { AccountingPage } from '../../e2e/accounting/accountingPage';
+import { AccountingPage } from '../e2e/accounting/accountingPage';
 
 /**
  * Accounting — Sales Return (PRO) REST.

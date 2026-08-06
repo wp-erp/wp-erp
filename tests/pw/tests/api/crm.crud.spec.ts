@@ -4,7 +4,7 @@ import { data, TEST_PREFIX } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { tables } from '@utils/dbData';
 import { schemas } from '@utils/schemas';
-import { CrmPage } from '../../e2e/crm/crmPage';
+import { CrmPage } from '../e2e/crm/crmPage';
 
 /**
  * CRM "API" CRUD — DB-backed (the free CRM ships no REST controller).

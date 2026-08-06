@@ -4,7 +4,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { data } from '@utils/testData';
 import { BASE_URL } from '@utils/helpers';
 import { dbUtils } from '@utils/dbUtils';
-import { AccountingPage } from '../../e2e/accounting/accountingPage';
+import { AccountingPage } from '../e2e/accounting/accountingPage';
 
 /**
  * Accounting REST — Negative Cases + "Where Bugs Hide" (test-plans/accounting.md).

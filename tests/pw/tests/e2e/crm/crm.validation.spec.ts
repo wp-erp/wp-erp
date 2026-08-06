@@ -17,7 +17,7 @@ import { toPath } from '@utils/helpers';
  *
  * Implements: CRM-EC-01..06, 08, 09, 15, 16; CRM-NC-01..04, 06..12.
  * KNOWN GAPS annotated // BUG CANDIDATE: CRM-EC-16, CRM-NC-05 (the dedup cases
- * live in crm.negative.api.spec.ts where the read-back is deterministic).
+ * live in tests/api/crm.negative.spec.ts where the read-back is deterministic).
  */
 
 const CRITICAL_ERROR = 'There has been a critical error on this website';

@@ -1,0 +1,24 @@
+{
+  "specs": [
+    {
+      "file": "_auth.setup.ts",
+      "ms": 30618,
+      "tests": 6
+    },
+    {
+      "file": "_site.setup.ts",
+      "ms": 26078,
+      "tests": 7
+    },
+    {
+      "file": "_localSite.setup.ts",
+      "ms": 8020,
+      "tests": 1
+    },
+    {
+      "file": "_env.setup.ts",
+      "ms": 663,
+      "tests": 3
+    }
+  ]
+}

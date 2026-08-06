@@ -189,12 +189,18 @@ tests/pw/
 ├── bin/
 │   ├── createAdmin.js          # `npm run create:admin`
 │   └── syncDbPort.js           # `npm run db:port` — sync DB_PORT from wp-env
+├── types/                      # environment.d.ts (typed process.env), global.d.ts (matchers)
+├── feature-map/
+│   └── feature-map.yml         # feature inventory the coverage teardown scores a run against
 ├── utils/                      # test.ts, helpers.ts, apiUtils.ts, apiEndPoints.ts,
 │                               # dbUtils.ts, dbData.ts, testData.ts, payloads.ts,
-│                               # schemas.ts, interfaces.ts, pwMatchers.ts, reporters
+│                               # schemas.ts, interfaces.ts, pwMatchers.ts, reporters,
+│                               # getShardSpecs.js + shard-durations.json (balanced shards)
 └── tests/
-    ├── e2e/                    # _localSite/_site/_auth/_env setup + <module>/<feature>{Page,spec}.ts
-    └── api/                    # <module>/<feature>.api.spec.ts
+    ├── e2e/                    # _localSite/_site/_auth/_env setup at root, then one
+    │                           # DIRECTORY PER FEATURE: <feature>/<feature>{,.crud,…}.spec.ts
+    │                           # with its page object <feature>Page.ts alongside
+    └── api/                    # FLAT — <feature>{,.crud,.negative,.lifecycle}.spec.ts
 ```
 
 ## Configuration (`.env`)

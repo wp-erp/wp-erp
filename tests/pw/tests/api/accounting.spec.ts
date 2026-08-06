@@ -3,7 +3,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { data } from '@utils/testData';
 import { schemas } from '@utils/schemas';
-import { AccountingPage } from '../../e2e/accounting/accountingPage';
+import { AccountingPage } from '../e2e/accounting/accountingPage';
 
 /**
  * Accounting REST specs (namespace erp/v1, rest_base accounting/v1/*).

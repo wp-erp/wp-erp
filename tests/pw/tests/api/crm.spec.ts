@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { schemas } from '@utils/schemas';
 import { dbUtils } from '@utils/dbUtils';
 import { tables } from '@utils/dbData';
-import { CrmPage } from '../../e2e/crm/crmPage';
+import { CrmPage } from '../e2e/crm/crmPage';
 
 /**
  * CRM "API" spec — DB-backed.

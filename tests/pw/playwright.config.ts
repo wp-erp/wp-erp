@@ -30,8 +30,11 @@ export default defineConfig({
     globalTeardown: './global-teardown',
     grep: [/@lite/, /@liteOnly/, /@pro/],
     grepInvert: isPro ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
+    // specDurationReporter runs in CI too: each shard writes playwright/spec-durations.json,
+    // which the workflow uploads so the committed utils/shard-durations.json baseline can be
+    // refreshed from real CI timings rather than one developer's laptop.
     reporter: isCI
-        ? [['list'], ['blob'], ['./utils/summaryReporter.ts']]
+        ? [['list'], ['blob'], ['./utils/summaryReporter.ts'], ['./utils/specDurationReporter.ts']]
         : [['list'], ['html', { open: 'never' }], ['./utils/summaryReporter.ts'], ['./utils/specDurationReporter.ts']],
     use: {
         ...devices['Desktop Chrome'],

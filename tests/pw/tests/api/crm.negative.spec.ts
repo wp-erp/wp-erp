@@ -4,7 +4,7 @@ import { data, TEST_PREFIX } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { tables } from '@utils/dbData';
 import { BASE_URL } from '@utils/helpers';
-import { CrmPage } from '../../e2e/crm/crmPage';
+import { CrmPage } from '../e2e/crm/crmPage';
 
 /**
  * CRM negative / bug-hunting specs — DB-backed where the free CRM has no REST.

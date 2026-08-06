@@ -3,6 +3,11 @@
 /vendor
 /vendor copy/
 
+# Sibling checkout of the private erp-pro plugin, for @pro runs. CI puts it in the
+# same place (playwright.yml build_pro -> $GITHUB_WORKSPACE/erp-pro) and
+# tests/pw/.wp-env.ci.json maps it into wp-env from here.
+/erp-pro/
+
 # Build artifacts
 build
 

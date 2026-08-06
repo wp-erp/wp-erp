@@ -33,5 +33,26 @@
     "playwright/no-conditional-expect": "off",
     "playwright/no-wait-for-timeout": "off"
   },
-  "ignorePatterns": ["node_modules/", "lib/", "playwright-report/", "test-results/"]
+  "overrides": [
+    {
+      "files": ["*.js", "bin/*.js", "utils/*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules/",
+    "lib/",
+    "playwright-report/",
+    "playwright-report-e2e/",
+    "playwright-report-api/",
+    "blob-report/",
+    "test-results/",
+    "summary-report/",
+    "coverage-report/",
+    "all-summaries/",
+    "all-blobs-e2e/",
+    "all-blobs-api/"
+  ]
 }

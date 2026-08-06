@@ -1,5 +1,5 @@
 import { test, expect } from '@utils/test';
-import { CrmPage } from './crmPage';
+import { CrmPage } from '../crm/crmPage';
 import { data } from '@utils/testData';
 import { proModuleActive } from '@utils/helpers';
 

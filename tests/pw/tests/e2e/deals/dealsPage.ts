@@ -8,7 +8,7 @@ import { toPath } from '@utils/helpers';
  * The Deals data layer is admin-ajax + Eloquent models, NOT REST — there is no
  * `/erp/v1/deals` route (verified: `grep register_rest_route` in the deals module
  * returns nothing). So this POM only models the UI surface; the seed/round-trip
- * assertions live in the sibling DB spec (tests/api/crm/deals.db.api.spec.ts).
+ * assertions live in the sibling DB spec (tests/api/deals.db.spec.ts).
  *
  * Routing (WPERP >= 1.4.0): Deals registers via `erp_add_menu` INTO the CRM app,
  * so it is reached as `admin.php?page=erp-crm&section=deals` with a
