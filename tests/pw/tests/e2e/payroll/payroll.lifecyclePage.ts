@@ -80,9 +80,7 @@ export class PayrollLifecyclePage {
      */
     async bootstrap(): Promise<boolean> {
         await this.page.goto(this.urls.payroll, { waitUntil: 'domcontentloaded' });
-        await expect(this.page.locator('body')).not.toContainText(
-            'There has been a critical error on this website',
-        );
+        await expect(this.page.locator('body')).not.toContainText('There has been a critical error on this website');
 
         const localized = await this.page.evaluate(() => {
             const w = window as unknown as {
@@ -95,8 +93,7 @@ export class PayrollLifecyclePage {
         });
 
         this.nonce = String(localized.nonce ?? '');
-        this.ajaxurl =
-            String(localized.ajaxurl ?? '') || toPath('wp-admin/admin-ajax.php');
+        this.ajaxurl = String(localized.ajaxurl ?? '') || toPath('wp-admin/admin-ajax.php');
         return this.nonce !== '';
     }
 
@@ -143,9 +140,7 @@ export class PayrollLifecyclePage {
      * repeated bracket keys the URLSearchParams set() API cannot model (the
      * empidlist[0][id] / empidlist[0][pay_basic] pair). Always carries the cookies.
      */
-    async ajaxRaw<T = unknown>(
-        rawBody: string,
-    ): Promise<{ status: number; body: AjaxEnvelope<T> | null; raw: string }> {
+    async ajaxRaw<T = unknown>(rawBody: string): Promise<{ status: number; body: AjaxEnvelope<T> | null; raw: string }> {
         const resp = await this.page.request.post(this.ajaxurl, {
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: rawBody,
@@ -164,11 +159,7 @@ export class PayrollLifecyclePage {
 
     /** Step 1 — active employees not yet in any calendar (monthly pay_type). */
     async getAvailableEmployees(payType = 'monthly') {
-        return this.ajax<Record<string, string>>(
-            'erp_payroll_get_available_employees',
-            { pay_type: payType },
-            true,
-        );
+        return this.ajax<Record<string, string>>('erp_payroll_get_available_employees', { pay_type: payType }, true);
     }
 
     /**
@@ -176,12 +167,7 @@ export class PayrollLifecyclePage {
      * empids MUST be non-empty (the handler builds an INSERT...VALUES loop and
      * SQL-errors on empty). cal_type is unique per calendar (handler-enforced).
      */
-    async createPayCalendar(args: {
-        calName: string;
-        calType: string;
-        empIds: number[];
-        payDayMode?: number;
-    }) {
+    async createPayCalendar(args: { calName: string; calType: string; empIds: number[]; payDayMode?: number }) {
         const parts = [
             'action=erp_payroll_create_pay_calendar',
             `cal_name=${encodeURIComponent(args.calName)}`,
@@ -193,21 +179,13 @@ export class PayrollLifecyclePage {
     }
 
     /** Step 3 — calendar employee list (provides pay_basic). No nonce. */
-    async getEmployeeListByCalId(args: {
-        calId: number;
-        prId?: number;
-        fromDate: string;
-        toDate: string;
-    }) {
-        return this.ajax<Array<Record<string, string>>>(
-            'erp_payroll_get_employee_list_by_calid',
-            {
-                calid: args.calId,
-                prid: args.prId ?? 0,
-                from_date: args.fromDate,
-                to_date: args.toDate,
-            },
-        );
+    async getEmployeeListByCalId(args: { calId: number; prId?: number; fromDate: string; toDate: string }) {
+        return this.ajax<Array<Record<string, string>>>('erp_payroll_get_employee_list_by_calid', {
+            calid: args.calId,
+            prid: args.prId ?? 0,
+            from_date: args.fromDate,
+            to_date: args.toDate,
+        });
     }
 
     /**
@@ -333,10 +311,7 @@ export class PayrollLifecyclePage {
     }
 
     /** Read the mirror additional_allowance_deduction rows for an employee+item. */
-    static async getAllowanceDeductionRows(
-        empId: number,
-        payItemId: number,
-    ): Promise<Array<Record<string, unknown>>> {
+    static async getAllowanceDeductionRows(empId: number, payItemId: number): Promise<Array<Record<string, unknown>>> {
         return dbUtils.dbQuery<Record<string, unknown>>(
             `SELECT pay_item_id, pay_item_amount, empid, payrun_id, pay_item_add_or_deduct, note
              FROM ${PAYROLL_LIFECYCLE_TABLES.additionalAllowanceDeduction}
@@ -383,33 +358,15 @@ export class PayrollLifecyclePage {
 
     /** Remove a calendar plus all of its lifecycle child rows. */
     static async deleteCalendarCascade(calId: number): Promise<void> {
-        await dbUtils.dbQuery(
-            `DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payrunDetail} WHERE pay_cal_id = ?`,
-            [calId],
-        );
-        await dbUtils.dbQuery(
-            `DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payCalendarEmployee} WHERE pay_calendar_id = ?`,
-            [calId],
-        );
-        await dbUtils.dbQuery(
-            `DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.calendarTypeSettings} WHERE pay_calendar_id = ?`,
-            [calId],
-        );
-        await dbUtils.dbQuery(
-            `DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payCalendar} WHERE id = ?`,
-            [calId],
-        );
+        await dbUtils.dbQuery(`DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payrunDetail} WHERE pay_cal_id = ?`, [calId]);
+        await dbUtils.dbQuery(`DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payCalendarEmployee} WHERE pay_calendar_id = ?`, [calId]);
+        await dbUtils.dbQuery(`DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.calendarTypeSettings} WHERE pay_calendar_id = ?`, [calId]);
+        await dbUtils.dbQuery(`DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payCalendar} WHERE id = ?`, [calId]);
     }
 
     /** Remove a payitem (and its mirror allowance/deduction rows) by id. */
     static async deletePayitemCascade(payItemId: number): Promise<void> {
-        await dbUtils.dbQuery(
-            `DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.additionalAllowanceDeduction} WHERE pay_item_id = ?`,
-            [payItemId],
-        );
-        await dbUtils.dbQuery(
-            `DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payitem} WHERE id = ?`,
-            [payItemId],
-        );
+        await dbUtils.dbQuery(`DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.additionalAllowanceDeduction} WHERE pay_item_id = ?`, [payItemId]);
+        await dbUtils.dbQuery(`DELETE FROM ${PAYROLL_LIFECYCLE_TABLES.payitem} WHERE id = ?`, [payItemId]);
     }
 }

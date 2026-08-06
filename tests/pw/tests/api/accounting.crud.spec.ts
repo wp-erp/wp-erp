@@ -80,10 +80,9 @@ async function invoiceVoucherBalance(trnNo: string | number): Promise<{ debit: n
  * different voucher. Always resolve the voucher_no first.
  */
 async function invoiceVoucherNo(invoiceId: string | number): Promise<string> {
-    const rows = await dbUtils.dbQuery<{ voucher_no: number | string }>(
-        `SELECT voucher_no FROM wp_erp_acct_invoices WHERE id = ?`,
-        [invoiceId],
-    );
+    const rows = await dbUtils.dbQuery<{ voucher_no: number | string }>(`SELECT voucher_no FROM wp_erp_acct_invoices WHERE id = ?`, [
+        invoiceId,
+    ]);
     return String(rows[0]?.voucher_no ?? invoiceId);
 }
 
@@ -95,19 +94,13 @@ async function invoiceBalanceById(invoiceId: string | number): Promise<{ debit: 
 
 /** AR debit (gross) for an invoice voucher, from invoice_account_details. */
 async function invoiceArDebit(voucherNo: string | number): Promise<number> {
-    const rows = await dbUtils.dbQuery<{ d: string }>(
-        `SELECT IFNULL(SUM(debit),0) d FROM ${INV_ACCT_TABLE} WHERE trn_no = ?`,
-        [voucherNo],
-    );
+    const rows = await dbUtils.dbQuery<{ d: string }>(`SELECT IFNULL(SUM(debit),0) d FROM ${INV_ACCT_TABLE} WHERE trn_no = ?`, [voucherNo]);
     return Number(rows[0]?.d ?? 0);
 }
 
 /** Revenue/ledger credit for a voucher, from ledger_details. */
 async function ledgerCredit(voucherNo: string | number): Promise<number> {
-    const rows = await dbUtils.dbQuery<{ c: string }>(
-        `SELECT IFNULL(SUM(credit),0) c FROM ${TB_TABLE} WHERE trn_no = ?`,
-        [voucherNo],
-    );
+    const rows = await dbUtils.dbQuery<{ c: string }>(`SELECT IFNULL(SUM(credit),0) c FROM ${TB_TABLE} WHERE trn_no = ?`, [voucherNo]);
     return Number(rows[0]?.c ?? 0);
 }
 
@@ -282,7 +275,9 @@ test.describe('Accounting REST — Invoices & per-voucher balance (admin)', () =
 
     /** POST an invoice; returns the response `id` (the auto-increment PK; the create
      *  body does NOT include voucher_no — resolve it via invoiceVoucherNo when needed). */
-    async function postInvoice(opts: Parameters<typeof AccountingPage.invoicePayload>[2] & { unitPrice?: number }): Promise<{ id: string; body: Record<string, unknown> }> {
+    async function postInvoice(
+        opts: Parameters<typeof AccountingPage.invoicePayload>[2] & { unitPrice?: number },
+    ): Promise<{ id: string; body: Record<string, unknown> }> {
         const unitPrice = opts.unitPrice ?? 100;
         const payload = AccountingPage.invoicePayload(customerId, unitPrice, opts);
         const [created] = await api.create(endPoints.acctInvoices, payload);
@@ -305,20 +300,22 @@ test.describe('Accounting REST — Invoices & per-voucher balance (admin)', () =
         expect(listRes.status()).toBe(200);
         // The list items carry BOTH `id` and a distinct `voucher_no`; the create
         // response returns the `id`, so match on the list item's `id`.
-        const found = Array.isArray(list)
-            ? list.some((inv: { id?: number | string }) => String(inv?.id ?? '') === id)
-            : false;
+        const found = Array.isArray(list) ? list.some((inv: { id?: number | string }) => String(inv?.id ?? '') === id) : false;
         expect(found, 'created invoice appears in the sales list').toBe(true);
     });
 
-    test('ACCOUNTING-HP-11 invoice ledger nets to zero (per-voucher, cross-table)', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const { id } = await postInvoice({ status: 2, unitPrice: 100 });
-        expect(id).toBeTruthy();
-        // AR debit lives in invoice_account_details; revenue credit in ledger_details.
-        const { debit, credit } = await invoiceBalanceById(id);
-        expect(round2(debit), 'invoice voucher: Σdebit == Σcredit (AR dr = revenue cr)').toBeCloseTo(round2(credit), 2);
-        expect(debit, 'invoice posted non-zero legs').toBeGreaterThan(0);
-    });
+    test(
+        'ACCOUNTING-HP-11 invoice ledger nets to zero (per-voucher, cross-table)',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async () => {
+            const { id } = await postInvoice({ status: 2, unitPrice: 100 });
+            expect(id).toBeTruthy();
+            // AR debit lives in invoice_account_details; revenue credit in ledger_details.
+            const { debit, credit } = await invoiceBalanceById(id);
+            expect(round2(debit), 'invoice voucher: Σdebit == Σcredit (AR dr = revenue cr)').toBeCloseTo(round2(credit), 2);
+            expect(debit, 'invoice posted non-zero legs').toBeGreaterThan(0);
+        },
+    );
 
     test('ACCOUNTING-HP-12 invoice with 10% tax: AR carries tax, revenue is net', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
         const { id, body } = await postInvoice({ status: 2, unitPrice: 100, tax: 10 });
@@ -341,7 +338,15 @@ test.describe('Accounting REST — Invoices & per-voucher balance (admin)', () =
     });
 
     test('ACCOUNTING-HP-13 multi-line invoice (3 lines) totals correctly', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const mkLine = (price: number) => ({ product_id: 0, qty: 1, unit_price: price, discount: 0, tax: 0, tax_cat_id: 0, item_total: price });
+        const mkLine = (price: number) => ({
+            product_id: 0,
+            qty: 1,
+            unit_price: price,
+            discount: 0,
+            tax: 0,
+            tax_cat_id: 0,
+            item_total: price,
+        });
         const payload = {
             customer_id: Number(customerId),
             date: '2025-01-15',
@@ -495,10 +500,9 @@ test.describe('Accounting REST — Payments (admin)', () => {
     }
 
     async function invoiceStatus(invoiceId: string): Promise<number> {
-        const rows = await dbUtils.dbQuery<{ status: number | string }>(
-            `SELECT status FROM wp_erp_acct_invoices WHERE id = ?`,
-            [invoiceId],
-        );
+        const rows = await dbUtils.dbQuery<{ status: number | string }>(`SELECT status FROM wp_erp_acct_invoices WHERE id = ?`, [
+            invoiceId,
+        ]);
         return Number(rows[0]?.status ?? -1);
     }
 
@@ -506,7 +510,10 @@ test.describe('Accounting REST — Payments (admin)', () => {
         const { id, due } = await postInvoice(100);
         const [res, body] = await api.post(endPoints.acctPayments, { data: paymentPayload(id, due, due) }, false);
         expect(res.status(), 'payment accepted').toBeLessThan(400);
-        expect(String((body as { voucher_no?: unknown })?.voucher_no ?? (body as { id?: unknown })?.id ?? ''), 'payment voucher returned').toBeTruthy();
+        expect(
+            String((body as { voucher_no?: unknown })?.voucher_no ?? (body as { id?: unknown })?.id ?? ''),
+            'payment voucher returned',
+        ).toBeTruthy();
 
         // DETERMINISTIC oracle: the full due is allocated as a receipt against the invoice.
         const allocated = await receiptAmountForInvoice(id);
@@ -702,7 +709,7 @@ test.describe('Accounting REST — Ledgers, Banks, Journals (admin)', () => {
         const [res, body] = await api.get(endPoints.acctLedgers);
         expect(res.status()).toBe(200);
         expect(Array.isArray(body), 'ledgers list is an array').toBe(true);
-        const names = (body as Array<{ name?: string }>).map((l) => String(l?.name ?? ''));
+        const names = (body as Array<{ name?: string }>).map(l => String(l?.name ?? ''));
         expect(names.length, 'fixed chart + system ledgers present').toBeGreaterThan(5);
     });
 
@@ -780,35 +787,50 @@ test.describe('Accounting REST — Ledgers, Banks, Journals (admin)', () => {
 // Reports + Company  (HP-24..26, HP-29-data, EC-13/14/15)
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Accounting REST — Reports & Company (admin)', () => {
-    test('ACCOUNTING-HP-24 trial balance answers; report debit/credit relationship', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const [res, body] = await api.get(reportUrl('trial-balance', { start_date: '2025-01-01', end_date: '2025-12-31' }), undefined, false);
-        expect(res.status(), 'trial-balance answered').toBeLessThan(500);
-        if (res.status() !== 200 || !body || typeof body !== 'object') return;
-        // VERIFIED shape: { rows, total_debit, total_credit } where a balanced book
-        // has total_debit == -total_credit. The SHARED live site is already imbalanced
-        // (BUG-01 unbalanced-journal pollution), so we do NOT assert global balance —
-        // we report the imbalance. Per-voucher balance is the deterministic oracle.
-        const td = Number((body as { total_debit?: unknown }).total_debit ?? 0);
-        const tc = Number((body as { total_credit?: unknown }).total_credit ?? 0);
-        const imbalance = round2(td + tc);
-        if (imbalance !== 0) {
-            // BUG CANDIDATE: global trial balance is imbalanced (Σdebit != Σcredit) —
-            // an accepted unbalanced journal (BUG-01) leaves a permanent imbalance.
-            test.info().annotations.push({ type: 'trial-balance-imbalance', description: `total_debit+total_credit=${imbalance}` });
-        }
-        expect(typeof td, 'total_debit is numeric').toBe('number');
-        expect(typeof tc, 'total_credit is numeric').toBe('number');
-    });
+    test(
+        'ACCOUNTING-HP-24 trial balance answers; report debit/credit relationship',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async () => {
+            const [res, body] = await api.get(
+                reportUrl('trial-balance', { start_date: '2025-01-01', end_date: '2025-12-31' }),
+                undefined,
+                false,
+            );
+            expect(res.status(), 'trial-balance answered').toBeLessThan(500);
+            if (res.status() !== 200 || !body || typeof body !== 'object') return;
+            // VERIFIED shape: { rows, total_debit, total_credit } where a balanced book
+            // has total_debit == -total_credit. The SHARED live site is already imbalanced
+            // (BUG-01 unbalanced-journal pollution), so we do NOT assert global balance —
+            // we report the imbalance. Per-voucher balance is the deterministic oracle.
+            const td = Number((body as { total_debit?: unknown }).total_debit ?? 0);
+            const tc = Number((body as { total_credit?: unknown }).total_credit ?? 0);
+            const imbalance = round2(td + tc);
+            if (imbalance !== 0) {
+                // BUG CANDIDATE: global trial balance is imbalanced (Σdebit != Σcredit) —
+                // an accepted unbalanced journal (BUG-01) leaves a permanent imbalance.
+                test.info().annotations.push({ type: 'trial-balance-imbalance', description: `total_debit+total_credit=${imbalance}` });
+            }
+            expect(typeof td, 'total_debit is numeric').toBe('number');
+            expect(typeof tc, 'total_credit is numeric').toBe('number');
+        },
+    );
 
     test('ACCOUNTING-HP-25 ledger report for a single ledger', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
         const [, ledgers] = await api.get(endPoints.acctLedgers);
         const firstId = Array.isArray(ledgers) ? String((ledgers as Array<{ id?: unknown }>)[0]?.id ?? LEDGER.cash) : String(LEDGER.cash);
-        const [res, body] = await api.get(reportUrl('ledger-report', { ledger_id: firstId, start_date: '2025-01-01', end_date: '2025-12-31' }), undefined, false);
+        const [res, body] = await api.get(
+            reportUrl('ledger-report', { ledger_id: firstId, start_date: '2025-01-01', end_date: '2025-12-31' }),
+            undefined,
+            false,
+        );
         expect(res.status(), 'ledger-report answered').toBeLessThan(500);
         if (res.status() === 200) {
             // VERIFIED shape: { details: [...], extra: { total_debit, total_credit } }.
             const details = (body as { details?: unknown })?.details;
-            expect(Array.isArray(details) || body === null || typeof body === 'object', 'ledger-report returns a usable shape').toBeTruthy();
+            expect(
+                Array.isArray(details) || body === null || typeof body === 'object',
+                'ledger-report returns a usable shape',
+            ).toBeTruthy();
         }
     });
 
@@ -832,7 +854,11 @@ test.describe('Accounting REST — Reports & Company (admin)', () => {
     });
 
     test('ACCOUNTING-EC-14 trial balance with an empty future window', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const [res, body] = await api.get(reportUrl('trial-balance', { start_date: '2099-01-01', end_date: '2099-12-31' }), undefined, false);
+        const [res, body] = await api.get(
+            reportUrl('trial-balance', { start_date: '2099-01-01', end_date: '2099-12-31' }),
+            undefined,
+            false,
+        );
         expect(res.status(), 'empty-window trial-balance answered').toBe(200);
         // VERIFIED: returns { rows: [], total_debit: 0, total_credit: 0 } — no crash.
         const rows = (body as { rows?: unknown })?.rows;

@@ -237,29 +237,33 @@ test.describe('HRM SMS lifecycle — save Twilio gateway', () => {
 test.describe('HRM SMS lifecycle — switch gateway', () => {
     // SMS-LC-02 — switch to Nexmo → selected gateway flips, nexmo creds added, and
     // the prior twilio creds REMAIN (Integration::save merges onto get_option base).
-    test('switch the active gateway to Nexmo (prior creds are merged, not wiped)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ request }) => {
-        const res = await ajaxPost(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'sms',
-            [FIELD.selectedGateway]: 'nexmo',
-            [FIELD.nexmoApiKey]: NEXMO_KEY,
-            [FIELD.nexmoApiSecret]: NEXMO_SECRET,
-            [FIELD.nexmoSenderId]: NEXMO_SENDER,
-        });
-        expectNotFatal(res);
-        expect(res.body.success, `switch succeeded (msg="${envMessage(res.body)}")`).toBe(true);
+    test(
+        'switch the active gateway to Nexmo (prior creds are merged, not wiped)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ request }) => {
+            const res = await ajaxPost(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'sms',
+                [FIELD.selectedGateway]: 'nexmo',
+                [FIELD.nexmoApiKey]: NEXMO_KEY,
+                [FIELD.nexmoApiSecret]: NEXMO_SECRET,
+                [FIELD.nexmoSenderId]: NEXMO_SENDER,
+            });
+            expectNotFatal(res);
+            expect(res.body.success, `switch succeeded (msg="${envMessage(res.body)}")`).toBe(true);
 
-        const opt = await readSmsOption();
-        expect(opt, 'option still present after switch').toBeTruthy();
-        // Changed key: the active gateway flipped.
-        expect(String(opt?.[FIELD.selectedGateway]), 'selected gateway flipped to nexmo').toBe('nexmo');
-        // New creds landed.
-        expect(String(opt?.[FIELD.nexmoApiKey]), 'nexmo apikey persisted').toBe(NEXMO_KEY);
-        expect(String(opt?.[FIELD.nexmoApiSecret]), 'nexmo apisecret persisted').toBe(NEXMO_SECRET);
-        // MERGE: the earlier twilio creds were NOT removed (documented behavior).
-        expect(String(opt?.[FIELD.twilioAccountSid]), 'prior twilio creds remain after switch (merge)').toBe(TWILIO_SID);
-    });
+            const opt = await readSmsOption();
+            expect(opt, 'option still present after switch').toBeTruthy();
+            // Changed key: the active gateway flipped.
+            expect(String(opt?.[FIELD.selectedGateway]), 'selected gateway flipped to nexmo').toBe('nexmo');
+            // New creds landed.
+            expect(String(opt?.[FIELD.nexmoApiKey]), 'nexmo apikey persisted').toBe(NEXMO_KEY);
+            expect(String(opt?.[FIELD.nexmoApiSecret]), 'nexmo apisecret persisted').toBe(NEXMO_SECRET);
+            // MERGE: the earlier twilio creds were NOT removed (documented behavior).
+            expect(String(opt?.[FIELD.twilioAccountSid]), 'prior twilio creds remain after switch (merge)').toBe(TWILIO_SID);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -271,31 +275,35 @@ test.describe('HRM SMS lifecycle — lenient save (documented gap)', () => {
     // only at SEND time in GatewayHandler::__construct(). We assert success + empty
     // value persisted; we do NOT assert a 4xx (the lenient-save behavior is the
     // documented bug).
-    test('saving an empty gateway is accepted (no save-time validation) — SMS-BUG-01', { tag: ['@pro', '@hrm', '@admin'] }, async ({ request }) => {
-        const res = await ajaxPost(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'sms',
-            [FIELD.selectedGateway]: '',
-        });
-        expectNotFatal(res);
-        expect(res.body.success, 'an empty gateway is accepted at save time (documented gap)').toBe(true);
+    test(
+        'saving an empty gateway is accepted (no save-time validation) — SMS-BUG-01',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ request }) => {
+            const res = await ajaxPost(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'sms',
+                [FIELD.selectedGateway]: '',
+            });
+            expectNotFatal(res);
+            expect(res.body.success, 'an empty gateway is accepted at save time (documented gap)').toBe(true);
 
-        const opt = await readSmsOption();
-        expect(opt, 'option still present').toBeTruthy();
-        expect(String(opt?.[FIELD.selectedGateway] ?? ''), 'empty gateway value persisted').toBe('');
+            const opt = await readSmsOption();
+            expect(opt, 'option still present').toBeTruthy();
+            expect(String(opt?.[FIELD.selectedGateway] ?? ''), 'empty gateway value persisted').toBe('');
 
-        // Restore a real gateway so the singleton ends the lifecycle in a usable
-        // state before the negative-nonce tests (which must NOT mutate it).
-        const restore = await ajaxPost(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'sms',
-            [FIELD.selectedGateway]: 'twilio',
-        });
-        expectNotFatal(restore);
-        expect(restore.body.success, 'restored a real gateway').toBe(true);
-    });
+            // Restore a real gateway so the singleton ends the lifecycle in a usable
+            // state before the negative-nonce tests (which must NOT mutate it).
+            const restore = await ajaxPost(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'sms',
+                [FIELD.selectedGateway]: 'twilio',
+            });
+            expectNotFatal(restore);
+            expect(restore.body.success, 'restored a real gateway').toBe(true);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -319,10 +327,9 @@ test.describe('HRM SMS lifecycle — negative (nonce)', () => {
         expect(envMessage(res.body)).toMatch(/Nonce verification failed/i);
 
         const after = await readSmsOption();
-        expect(
-            String(after?.[FIELD.selectedGateway] ?? ''),
-            'gateway unchanged after a rejected save',
-        ).toBe(String(before?.[FIELD.selectedGateway] ?? ''));
+        expect(String(after?.[FIELD.selectedGateway] ?? ''), 'gateway unchanged after a rejected save').toBe(
+            String(before?.[FIELD.selectedGateway] ?? ''),
+        );
     });
 
     // SMS-LC-05 — a missing nonce is likewise rejected by verify_nonce
@@ -341,10 +348,9 @@ test.describe('HRM SMS lifecycle — negative (nonce)', () => {
         expect(envMessage(res.body)).toMatch(/Nonce verification failed/i);
 
         const after = await readSmsOption();
-        expect(
-            String(after?.[FIELD.selectedGateway] ?? ''),
-            'gateway unchanged after a rejected save',
-        ).toBe(String(before?.[FIELD.selectedGateway] ?? ''));
+        expect(String(after?.[FIELD.selectedGateway] ?? ''), 'gateway unchanged after a rejected save').toBe(
+            String(before?.[FIELD.selectedGateway] ?? ''),
+        );
     });
 });
 
@@ -365,33 +371,40 @@ test.describe('HRM SMS lifecycle — documented bug (unknown module fatal)', () 
     // build depend on the exact 500 — both a fatal (500 / critical-error body) AND a
     // graceful success:false rejection are acceptable; only a clean success:true is
     // a regression-of-the-bug-fix that this test would (intentionally) flag for review.
-    test('unknown module param does not save cleanly (SMS-BUG-02 — known fatal)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ request }) => {
-        test.info().annotations.push({
-            type: 'known-bug',
-            description: 'SMS-BUG-02: erp-settings-save with an unregistered `module` fatals (Ajax.php:97 — save() on string). Tampering an authed save with a valid nonce yields HTTP 500.',
-        });
+    test(
+        'unknown module param does not save cleanly (SMS-BUG-02 — known fatal)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ request }) => {
+            test.info().annotations.push({
+                type: 'known-bug',
+                description:
+                    'SMS-BUG-02: erp-settings-save with an unregistered `module` fatals (Ajax.php:97 — save() on string). Tampering an authed save with a valid nonce yields HTTP 500.',
+            });
 
-        const res = await ajaxPost(request, {
-            _wpnonce: nonce,
-            module: `foobar-not-real-${RUN}`,
-            section: 'sms',
-            [FIELD.selectedGateway]: 'twilio',
-        });
+            const res = await ajaxPost(request, {
+                _wpnonce: nonce,
+                module: `foobar-not-real-${RUN}`,
+                section: 'sms',
+                [FIELD.selectedGateway]: 'twilio',
+            });
 
-        // Either it fatals (the documented bug: 500 and/or critical-error body) or it
-        // is gracefully rejected (success:false). The ONLY disallowed outcome is a
-        // clean success — that path would silently mis-handle a tampered module.
-        const fataled = res.status >= 500 || res.raw.includes(CRITICAL_ERROR);
-        const gracefullyRejected = res.status === 200 && res.body.success === false;
-        expect(
-            fataled || gracefullyRejected,
-            `tampered module is not handled cleanly (status=${res.status}, success=${String(res.body.success)})`,
-        ).toBe(true);
+            // Either it fatals (the documented bug: 500 and/or critical-error body) or it
+            // is gracefully rejected (success:false). The ONLY disallowed outcome is a
+            // clean success — that path would silently mis-handle a tampered module.
+            const fataled = res.status >= 500 || res.raw.includes(CRITICAL_ERROR);
+            const gracefullyRejected = res.status === 200 && res.body.success === false;
+            expect(
+                fataled || gracefullyRejected,
+                `tampered module is not handled cleanly (status=${res.status}, success=${String(res.body.success)})`,
+            ).toBe(true);
 
-        // The SMS option must be untouched by the tampered call.
-        const opt = await readSmsOption();
-        expect(String(opt?.[FIELD.selectedGateway] ?? ''), 'tampered module did not write the SMS option').not.toBe(`foobar-not-real-${RUN}`);
-    });
+            // The SMS option must be untouched by the tampered call.
+            const opt = await readSmsOption();
+            expect(String(opt?.[FIELD.selectedGateway] ?? ''), 'tampered module did not write the SMS option').not.toBe(
+                `foobar-not-real-${RUN}`,
+            );
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -417,10 +430,7 @@ test.describe('HRM SMS lifecycle — access boundary (manager)', () => {
 
             const denied = /not allowed to access this page/i.test(bodyText);
             const hasNoSaveNonce = !/^[a-f0-9]{8,}$/.test(localized);
-            expect(
-                denied || hasNoSaveNonce,
-                'a manager is denied the settings page and/or gets no save nonce',
-            ).toBe(true);
+            expect(denied || hasNoSaveNonce, 'a manager is denied the settings page and/or gets no save nonce').toBe(true);
         } finally {
             await page.close();
             await context.close();
@@ -431,26 +441,29 @@ test.describe('HRM SMS lifecycle — access boundary (manager)', () => {
     // manager session POSTing with the admin's scraped nonce is rejected (nonces are
     // session-bound). Assert the boundary (success:false), never an exact code, and
     // confirm nothing was written.
-    test('an HR manager save is rejected at the AJAX layer (session-bound nonce)', { tag: ['@pro', '@hrm', '@manager'] }, async ({ browser }) => {
-        const before = await readSmsOption();
-        const context = await browser.newContext({ storageState: data.auth.hrManagerFile });
-        try {
-            const res = await ajaxPost(context.request, {
-                _wpnonce: nonce, // admin's nonce — bound to the admin session, not the manager's
-                module: 'erp-integration',
-                section: 'sms',
-                [FIELD.selectedGateway]: 'nexmo',
-            });
-            expectNotFatal(res);
-            expect(res.body.success, 'a manager cannot save the SMS gateway').toBe(false);
+    test(
+        'an HR manager save is rejected at the AJAX layer (session-bound nonce)',
+        { tag: ['@pro', '@hrm', '@manager'] },
+        async ({ browser }) => {
+            const before = await readSmsOption();
+            const context = await browser.newContext({ storageState: data.auth.hrManagerFile });
+            try {
+                const res = await ajaxPost(context.request, {
+                    _wpnonce: nonce, // admin's nonce — bound to the admin session, not the manager's
+                    module: 'erp-integration',
+                    section: 'sms',
+                    [FIELD.selectedGateway]: 'nexmo',
+                });
+                expectNotFatal(res);
+                expect(res.body.success, 'a manager cannot save the SMS gateway').toBe(false);
 
-            const after = await readSmsOption();
-            expect(
-                String(after?.[FIELD.selectedGateway] ?? ''),
-                'gateway unchanged after a denied manager save',
-            ).toBe(String(before?.[FIELD.selectedGateway] ?? ''));
-        } finally {
-            await context.close();
-        }
-    });
+                const after = await readSmsOption();
+                expect(String(after?.[FIELD.selectedGateway] ?? ''), 'gateway unchanged after a denied manager save').toBe(
+                    String(before?.[FIELD.selectedGateway] ?? ''),
+                );
+            } finally {
+                await context.close();
+            }
+        },
+    );
 });

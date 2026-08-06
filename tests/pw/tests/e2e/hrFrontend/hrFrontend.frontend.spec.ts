@@ -71,8 +71,8 @@ let insertedEmployeeRow = false;
 
 let adminApi: ApiUtils;
 
-test.beforeAll( async () => {
-    adminApi = await ApiUtils.fromStorageState( data.auth.adminFile, process.env.X_WP_NONCE );
+test.beforeAll(async () => {
+    adminApi = await ApiUtils.fromStorageState(data.auth.adminFile, process.env.X_WP_NONCE);
 
     // Step 1 — discover the active dashboard slug (default 'wp-erp').
     activeSlug = await HrFrontendPage.getSlug();
@@ -81,18 +81,18 @@ test.beforeAll( async () => {
     // genuine "employee renders" path is reachable. Resolve the real id first
     // (CI-safe), then idempotent insert.
     EMP_USER_ID = HrFrontendPage.resolveEmployeeUserId();
-    const had = await HrFrontendPage.employeeRowExists( EMP_USER_ID );
-    if ( ! had ) {
-        await HrFrontendPage.insertEmployeeRow( EMP_USER_ID );
+    const had = await HrFrontendPage.employeeRowExists(EMP_USER_ID);
+    if (!had) {
+        await HrFrontendPage.insertEmployeeRow(EMP_USER_ID);
         insertedEmployeeRow = true;
     }
-} );
+});
 
-test.afterAll( async () => {
+test.afterAll(async () => {
     // Remove the gate row we added (Step 7: employee gated out again).
     try {
-        if ( insertedEmployeeRow ) {
-            await HrFrontendPage.deleteEmployeeRow( EMP_USER_ID );
+        if (insertedEmployeeRow) {
+            await HrFrontendPage.deleteEmployeeRow(EMP_USER_ID);
         }
     } catch {
         /* best-effort cleanup */
@@ -115,67 +115,77 @@ test.afterAll( async () => {
     } catch {
         /* pool may already be closed by a sibling spec */
     }
-} );
+});
 
 // ──────────────────────────────────────────────────────────────────────────
 // Baseline + render proof (admin) — Steps 1, 3, 8, 9
 // ──────────────────────────────────────────────────────────────────────────
-test.describe( 'HR Frontend dashboard — render baseline (admin)', () => {
-    test.use( { storageState: data.auth.adminFile } );
+test.describe('HR Frontend dashboard — render baseline (admin)', () => {
+    test.use({ storageState: data.auth.adminFile });
 
-    test( 'HRFE-FE-01 admin renders the dashboard (manage_options passes the gate)', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
-        const fe = new HrFrontendPage( page );
-        await fe.expectDashboardRenders( activeSlug );
+    test(
+        'HRFE-FE-01 admin renders the dashboard (manage_options passes the gate)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const fe = new HrFrontendPage(page);
+            await fe.expectDashboardRenders(activeSlug);
 
-        // Loading shell text from templates/dashboard.php is part of the markup.
-        await expect( page.locator( fe.sel.loading ), 'loading shell is part of the standalone template' )
-            .toBeAttached();
-    } );
+            // Loading shell text from templates/dashboard.php is part of the markup.
+            await expect(page.locator(fe.sel.loading), 'loading shell is part of the standalone template').toBeAttached();
+        },
+    );
 
-    test( 'HRFE-FE-02 admin sub-routes render the same template (React-Router catch-all)', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
-        const fe = new HrFrontendPage( page );
-        // The `^<slug>/(.+)/?` rule routes any sub-path to the same dashboard.
-        for ( const sub of [ 'employees', 'leave' ] ) {
-            await fe.expectDashboardRenders( `${activeSlug}/${sub}` );
-        }
-    } );
+    test(
+        'HRFE-FE-02 admin sub-routes render the same template (React-Router catch-all)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const fe = new HrFrontendPage(page);
+            // The `^<slug>/(.+)/?` rule routes any sub-path to the same dashboard.
+            for (const sub of ['employees', 'leave']) {
+                await fe.expectDashboardRenders(`${activeSlug}/${sub}`);
+            }
+        },
+    );
 
-    test( 'HRFE-FE-03 the React bundle is served (200, non-trivial size)', { tag: [ '@pro', '@hrm', '@core' ] }, async ( { page } ) => {
+    test('HRFE-FE-03 the React bundle is served (200, non-trivial size)', { tag: ['@pro', '@hrm', '@core'] }, async ({ page }) => {
         // The template enqueues .../hr-frontend.js?ver=…; fetch it through the page
         // session and assert it is actually served (not a 404 placeholder).
-        const url = toPath( 'wp-content/plugins/erp-pro/modules/pro/hr-frontend/assets/js/hr-frontend.js' );
-        const resp = await page.request.get( url );
-        expect( resp.status(), 'hr-frontend.js must not 500' ).toBeLessThan( 500 );
-        expect( resp.status(), 'hr-frontend.js bundle is served' ).toBe( 200 );
+        const url = toPath('wp-content/plugins/erp-pro/modules/pro/hr-frontend/assets/js/hr-frontend.js');
+        const resp = await page.request.get(url);
+        expect(resp.status(), 'hr-frontend.js must not 500').toBeLessThan(500);
+        expect(resp.status(), 'hr-frontend.js bundle is served').toBe(200);
         const buf = await resp.body();
-        expect( buf.byteLength, 'bundle is a real (large) JS file, not a stub' ).toBeGreaterThan( 100_000 );
-    } );
-} );
+        expect(buf.byteLength, 'bundle is a real (large) JS file, not a stub').toBeGreaterThan(100_000);
+    });
+});
 
 // ──────────────────────────────────────────────────────────────────────────
 // Access control — unauthenticated + HR manager — Steps 2, 4
 // ──────────────────────────────────────────────────────────────────────────
-test.describe( 'HR Frontend dashboard — unauthenticated gate', () => {
-    test.use( data.auth.noAuth );
+test.describe('HR Frontend dashboard — unauthenticated gate', () => {
+    test.use(data.auth.noAuth);
 
-    test( 'HRFE-FE-04 unauthenticated visit is redirected to the login page', { tag: [ '@pro', '@hrm', '@core' ] }, async ( { page } ) => {
-        const fe = new HrFrontendPage( page );
-        const finalUrl = await fe.expectGatedAway( activeSlug );
+    test('HRFE-FE-04 unauthenticated visit is redirected to the login page', { tag: ['@pro', '@hrm', '@core'] }, async ({ page }) => {
+        const fe = new HrFrontendPage(page);
+        const finalUrl = await fe.expectGatedAway(activeSlug);
         // wp_redirect( wp_login_url( <dashboard_url> ) ) → lands on wp-login.php.
-        expect( finalUrl, 'unauthenticated user is gated to wp-login.php' ).toContain( 'wp-login.php' );
-        expect( finalUrl, 'login redirect carries a redirect_to back to the dashboard' )
-            .toContain( 'redirect_to' );
-    } );
-} );
+        expect(finalUrl, 'unauthenticated user is gated to wp-login.php').toContain('wp-login.php');
+        expect(finalUrl, 'login redirect carries a redirect_to back to the dashboard').toContain('redirect_to');
+    });
+});
 
-test.describe( 'HR Frontend dashboard — HR manager render', () => {
-    test.use( { storageState: data.auth.hrManagerFile } );
+test.describe('HR Frontend dashboard — HR manager render', () => {
+    test.use({ storageState: data.auth.hrManagerFile });
 
-    test( 'HRFE-FE-05 HR manager renders the dashboard (erp_hr_manager passes the gate)', { tag: [ '@pro', '@hrm', '@manager' ] }, async ( { page } ) => {
-        const fe = new HrFrontendPage( page );
-        await fe.expectDashboardRenders( activeSlug );
-    } );
-} );
+    test(
+        'HRFE-FE-05 HR manager renders the dashboard (erp_hr_manager passes the gate)',
+        { tag: ['@pro', '@hrm', '@manager'] },
+        async ({ page }) => {
+            const fe = new HrFrontendPage(page);
+            await fe.expectDashboardRenders(activeSlug);
+        },
+    );
+});
 
 // ──────────────────────────────────────────────────────────────────────────
 // Employee gate lifecycle — Steps 5, 6, 7
@@ -184,33 +194,41 @@ test.describe( 'HR Frontend dashboard — HR manager render', () => {
 // present; the LAST test removes the row and re-asserts the gate, mirroring the
 // afterAll cleanup behaviour deterministically.
 // ──────────────────────────────────────────────────────────────────────────
-test.describe( 'HR Frontend dashboard — employee gate', () => {
-    test.use( { storageState: data.auth.employeeFile } );
+test.describe('HR Frontend dashboard — employee gate', () => {
+    test.use({ storageState: data.auth.employeeFile });
 
-    test( 'HRFE-FE-06 employee WITH an ERP employee row renders the dashboard (userId localized)', { tag: [ '@pro', '@hrm', '@employee' ] }, async ( { page } ) => {
-        // Sanity: the gate row inserted in beforeAll is present.
-        expect( await HrFrontendPage.employeeRowExists( EMP_USER_ID ), 'gate row exists for the employee user' ).toBe( true );
+    test(
+        'HRFE-FE-06 employee WITH an ERP employee row renders the dashboard (userId localized)',
+        { tag: ['@pro', '@hrm', '@employee'] },
+        async ({ page }) => {
+            // Sanity: the gate row inserted in beforeAll is present.
+            expect(await HrFrontendPage.employeeRowExists(EMP_USER_ID), 'gate row exists for the employee user').toBe(true);
 
-        const fe = new HrFrontendPage( page );
-        await fe.expectDashboardRenders( activeSlug );
+            const fe = new HrFrontendPage(page);
+            await fe.expectDashboardRenders(activeSlug);
 
-        // dashboard.php localizes userId = current user id (employee-storage user 4).
-        const localizedId = await fe.localizedUserId();
-        expect( localizedId, 'window.wpErpHrFrontend.userId equals the employee user id' ).toBe( EMP_USER_ID );
-    } );
+            // dashboard.php localizes userId = current user id (employee-storage user 4).
+            const localizedId = await fe.localizedUserId();
+            expect(localizedId, 'window.wpErpHrFrontend.userId equals the employee user id').toBe(EMP_USER_ID);
+        },
+    );
 
-    test( 'HRFE-FE-07 removing the ERP employee row gates the employee out to /wp-admin/', { tag: [ '@pro', '@hrm', '@employee' ] }, async ( { page } ) => {
-        // Flip the gate: delete the row → !is_employee && !has_hr_cap → redirect.
-        await HrFrontendPage.deleteEmployeeRow( EMP_USER_ID );
-        insertedEmployeeRow = false; // afterAll no longer needs to delete it
-        expect( await HrFrontendPage.employeeRowExists( EMP_USER_ID ), 'gate row removed' ).toBe( false );
+    test(
+        'HRFE-FE-07 removing the ERP employee row gates the employee out to /wp-admin/',
+        { tag: ['@pro', '@hrm', '@employee'] },
+        async ({ page }) => {
+            // Flip the gate: delete the row → !is_employee && !has_hr_cap → redirect.
+            await HrFrontendPage.deleteEmployeeRow(EMP_USER_ID);
+            insertedEmployeeRow = false; // afterAll no longer needs to delete it
+            expect(await HrFrontendPage.employeeRowExists(EMP_USER_ID), 'gate row removed').toBe(false);
 
-        const fe = new HrFrontendPage( page );
-        const finalUrl = await fe.expectGatedAway( activeSlug );
-        // wp_redirect( admin_url() ) → lands on /wp-admin/.
-        expect( finalUrl, 'gated employee is redirected to wp-admin' ).toContain( '/wp-admin/' );
-    } );
-} );
+            const fe = new HrFrontendPage(page);
+            const finalUrl = await fe.expectGatedAway(activeSlug);
+            // wp_redirect( admin_url() ) → lands on /wp-admin/.
+            expect(finalUrl, 'gated employee is redirected to wp-admin').toContain('/wp-admin/');
+        },
+    );
+});
 
 // ──────────────────────────────────────────────────────────────────────────
 // Slug-change lifecycle — Step 10 + HRFE-BUG-01
@@ -220,73 +238,89 @@ test.describe( 'HR Frontend dashboard — employee gate', () => {
 // (b) wp-cli slug change: the deterministic path that DOES register the rule, used
 //     for the positive "new slug renders" assertion.
 // ──────────────────────────────────────────────────────────────────────────
-test.describe( 'HR Frontend dashboard — slug change lifecycle (admin)', () => {
-    test.use( { storageState: data.auth.adminFile } );
+test.describe('HR Frontend dashboard — slug change lifecycle (admin)', () => {
+    test.use({ storageState: data.auth.adminFile });
 
-    test( 'HRFE-FE-08 REST slug change returns success but the new slug is NOT immediately reachable (HRFE-BUG-01)', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
-        const stamp = Date.now();
-        const newSlug = `pw-hrfe-rest-${stamp}`;
+    test(
+        'HRFE-FE-08 REST slug change returns success but the new slug is NOT immediately reachable (HRFE-BUG-01)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const stamp = Date.now();
+            const newSlug = `pw-hrfe-rest-${stamp}`;
 
-        const [ resp, body ] = await adminApi.post(
-            HrFrontendPage.settingsUrl(),
-            { data: { hr_frontend_slug: newSlug, hr_frontend_dashboard_title: `PW Probe Dash ${stamp}` } },
-            false,
-        );
-        // The settings write itself must succeed and never fatal.
-        expect( resp.status(), 'REST settings update must not 500' ).toBeLessThan( 500 );
-        expect( resp.status(), 'admin is authorized to update settings' ).toBe( 200 );
-        expect( ( body as ResponseBody ).success, 'update returns success:true' ).toBe( true );
+            const [resp, body] = await adminApi.post(
+                HrFrontendPage.settingsUrl(),
+                { data: { hr_frontend_slug: newSlug, hr_frontend_dashboard_title: `PW Probe Dash ${stamp}` } },
+                false,
+            );
+            // The settings write itself must succeed and never fatal.
+            expect(resp.status(), 'REST settings update must not 500').toBeLessThan(500);
+            expect(resp.status(), 'admin is authorized to update settings').toBe(200);
+            expect((body as ResponseBody).success, 'update returns success:true').toBe(true);
 
-        // The option DID change (update_option ran)…
-        expect( await HrFrontendPage.getSlug(), 'slug option reflects the REST change' ).toBe( newSlug );
+            // The option DID change (update_option ran)…
+            expect(await HrFrontendPage.getSlug(), 'slug option reflects the REST change').toBe(newSlug);
 
-        // …but the rewrite rule was NOT registered by the REST path (the bug). Visit
-        // the new slug and assert resiliently: NOT a WP fatal, and the dashboard does
-        // NOT render (404 / no #erp-hr-frontend-root). We do NOT assert an exact 404 —
-        // we document the bug as "new slug not reachable after a REST-only change".
-        await page.goto( HrFrontendPage.dashboardUrl( newSlug ), { waitUntil: 'domcontentloaded' } );
-        const html = ( await page.locator( 'body' ).textContent() ) ?? '';
-        expect( html, 'no WP critical-error splash on the unreachable new slug' )
-            .not.toContain( HrFrontendPage.CRITICAL_ERROR );
-        await expect( page.locator( '#erp-hr-frontend-root' ), 'HRFE-BUG-01: REST-only slug change does NOT register the rewrite rule, so the new slug does not render the dashboard' )
-            .toHaveCount( 0 );
+            // …but the rewrite rule was NOT registered by the REST path (the bug). Visit
+            // the new slug and assert resiliently: NOT a WP fatal, and the dashboard does
+            // NOT render (404 / no #erp-hr-frontend-root). We do NOT assert an exact 404 —
+            // we document the bug as "new slug not reachable after a REST-only change".
+            await page.goto(HrFrontendPage.dashboardUrl(newSlug), { waitUntil: 'domcontentloaded' });
+            const html = (await page.locator('body').textContent()) ?? '';
+            expect(html, 'no WP critical-error splash on the unreachable new slug').not.toContain(HrFrontendPage.CRITICAL_ERROR);
+            await expect(
+                page.locator('#erp-hr-frontend-root'),
+                'HRFE-BUG-01: REST-only slug change does NOT register the rewrite rule, so the new slug does not render the dashboard',
+            ).toHaveCount(0);
 
-        // Confirm the rule really is absent (DB oracle), pinning the bug precisely.
-        expect( HrFrontendPage.rewriteRuleExists( newSlug ), 'HRFE-BUG-01: no rewrite rule for the new slug after a REST-only change' )
-            .toBe( false );
-    } );
+            // Confirm the rule really is absent (DB oracle), pinning the bug precisely.
+            expect(
+                HrFrontendPage.rewriteRuleExists(newSlug),
+                'HRFE-BUG-01: no rewrite rule for the new slug after a REST-only change',
+            ).toBe(false);
+        },
+    );
 
-    test( 'HRFE-FE-09 wp-cli slug change registers the rule and the new slug renders the dashboard', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
-        const stamp = Date.now();
-        const newSlug = `pw-hrfe-cli-${stamp}`;
+    test(
+        'HRFE-FE-09 wp-cli slug change registers the rule and the new slug renders the dashboard',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const stamp = Date.now();
+            const newSlug = `pw-hrfe-cli-${stamp}`;
 
-        // Deterministic path: option update + rewrite flush re-runs add_rewrite_rules().
-        HrFrontendPage.setSlugViaCli( newSlug );
+            // Deterministic path: option update + rewrite flush re-runs add_rewrite_rules().
+            HrFrontendPage.setSlugViaCli(newSlug);
 
-        // Rule now present (DB oracle).
-        expect( HrFrontendPage.rewriteRuleExists( newSlug ), 'rewrite rule registered for the new slug after a hard flush' )
-            .toBe( true );
+            // Rule now present (DB oracle).
+            expect(HrFrontendPage.rewriteRuleExists(newSlug), 'rewrite rule registered for the new slug after a hard flush').toBe(true);
 
-        // And the new slug URL renders the standalone dashboard for the admin.
-        const fe = new HrFrontendPage( page );
-        await fe.expectDashboardRenders( newSlug );
+            // And the new slug URL renders the standalone dashboard for the admin.
+            const fe = new HrFrontendPage(page);
+            await fe.expectDashboardRenders(newSlug);
 
-        // The old default slug no longer routes the dashboard (the rule moved):
-        // its rewrite rule is gone, so the standalone template never mounts there.
-        // expectGatedAway already asserts #erp-hr-frontend-root has count 0.
-        await fe.expectGatedAway( HrFrontendPage.DEFAULT_SLUG );
-        expect( HrFrontendPage.rewriteRuleExists( HrFrontendPage.DEFAULT_SLUG ), 'default-slug rule removed after switching to the new slug' )
-            .toBe( false );
-    } );
+            // The old default slug no longer routes the dashboard (the rule moved):
+            // its rewrite rule is gone, so the standalone template never mounts there.
+            // expectGatedAway already asserts #erp-hr-frontend-root has count 0.
+            await fe.expectGatedAway(HrFrontendPage.DEFAULT_SLUG);
+            expect(
+                HrFrontendPage.rewriteRuleExists(HrFrontendPage.DEFAULT_SLUG),
+                'default-slug rule removed after switching to the new slug',
+            ).toBe(false);
+        },
+    );
 
-    test( 'HRFE-FE-10 afterAll-style restore returns the default slug to a rendering state', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
-        // Mirror the teardown deterministically inside the run so the assertion is
-        // visible: restoring slug='wp-erp' + flush makes the default slug render again.
-        HrFrontendPage.restoreDefaultsViaCli();
-        expect( await HrFrontendPage.getSlug(), 'slug restored to the shipped default' ).toBe( HrFrontendPage.DEFAULT_SLUG );
-        expect( HrFrontendPage.rewriteRuleExists( HrFrontendPage.DEFAULT_SLUG ), 'default-slug rewrite rule restored' ).toBe( true );
+    test(
+        'HRFE-FE-10 afterAll-style restore returns the default slug to a rendering state',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            // Mirror the teardown deterministically inside the run so the assertion is
+            // visible: restoring slug='wp-erp' + flush makes the default slug render again.
+            HrFrontendPage.restoreDefaultsViaCli();
+            expect(await HrFrontendPage.getSlug(), 'slug restored to the shipped default').toBe(HrFrontendPage.DEFAULT_SLUG);
+            expect(HrFrontendPage.rewriteRuleExists(HrFrontendPage.DEFAULT_SLUG), 'default-slug rewrite rule restored').toBe(true);
 
-        const fe = new HrFrontendPage( page );
-        await fe.expectDashboardRenders( HrFrontendPage.DEFAULT_SLUG );
-    } );
-} );
+            const fe = new HrFrontendPage(page);
+            await fe.expectDashboardRenders(HrFrontendPage.DEFAULT_SLUG);
+        },
+    );
+});

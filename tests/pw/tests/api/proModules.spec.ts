@@ -66,9 +66,7 @@ function asArray(body: ResponseBody): unknown[] {
 
 /** Pull the `id` field off each module entry (both shapes carry `id`). */
 function idsOf(rows: unknown[]): string[] {
-    return rows
-        .map((r) => (r && typeof r === 'object' ? String((r as { id?: unknown }).id ?? '') : ''))
-        .filter((s) => s !== '');
+    return rows.map(r => (r && typeof r === 'object' ? String((r as { id?: unknown }).id ?? '') : '')).filter(s => s !== '');
 }
 
 let api: ApiUtils;
@@ -150,7 +148,7 @@ test.describe('PRO modules REST — catalog (admin)', () => {
 
         const rows = asArray(body) as Array<Record<string, unknown>>;
         for (const id of REQUIRED_IDS) {
-            const entry = rows.find((m) => String(m.id) === id);
+            const entry = rows.find(m => String(m.id) === id);
             expect(entry, `"${id}" present in catalog`).toBeTruthy();
             if (entry) {
                 // `available` = file_exists(module_file); the named modules are installed.
@@ -209,7 +207,7 @@ test.describe('PRO modules REST — installed (admin)', () => {
         // installed_modules returns raw get_all_modules() maps for every installed
         // module: id/version/path/name/module_file/module_class/is_pro/category etc.
         // Shape differs from get_items (no active/available flags here).
-        const sample = rows.find((m) => String(m.id) === 'deals') ?? rows[0];
+        const sample = rows.find(m => String(m.id) === 'deals') ?? rows[0];
         expect(sample, 'an installed entry is present').toBeTruthy();
         expect(sample, 'installed entry exposes id').toHaveProperty('id');
         expect(sample, 'installed entry exposes name').toHaveProperty('name');
@@ -315,7 +313,7 @@ test.describe('PRO modules REST — DB cross-check (admin)', () => {
         expect(resp.status()).toBe(200);
 
         const rows = asArray(body) as Array<Record<string, unknown>>;
-        const apiActiveIds = rows.filter((m) => m.active === true).map((m) => String(m.id));
+        const apiActiveIds = rows.filter(m => m.active === true).map(m => String(m.id));
 
         // wp_options key Module::ACTIVE_MODULES_DB_KEY = 'erp_pro_active_modules'.
         const optionVal = await dbUtils.getOptionValue<unknown>('erp_pro_active_modules');

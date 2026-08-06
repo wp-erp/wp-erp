@@ -216,29 +216,33 @@ test.describe('CRM Integrations — Help Scout connect (pro, admin)', () => {
     });
 
     // INTG-CON-02 — re-save with NEW unique values overwrites the prior option.
-    test('Help Scout: re-save overwrites the prior option (idempotent update)', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const appId = `appid_${RUN}_v2`;
-        const appSecret = `secret_${RUN}_v2`;
-        const callback = `http://localhost:9999/erp-helpscout/api?v=${RUN}`;
+    test(
+        'Help Scout: re-save overwrites the prior option (idempotent update)',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const appId = `appid_${RUN}_v2`;
+            const appSecret = `secret_${RUN}_v2`;
+            const callback = `http://localhost:9999/erp-helpscout/api?v=${RUN}`;
 
-        const res = await settingsSave(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'helpscout',
-            helpscout_app_id: appId,
-            helpscout_app_secret: appSecret,
-            helpscout_callback_uri: callback,
-        });
+            const res = await settingsSave(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'helpscout',
+                helpscout_app_id: appId,
+                helpscout_app_secret: appSecret,
+                helpscout_callback_uri: callback,
+            });
 
-        expectNotFatal(res);
-        expect(res.body.success, `Help Scout re-save succeeded (msg="${envelopeMessage(res.body)}")`).toBe(true);
+            expectNotFatal(res);
+            expect(res.body.success, `Help Scout re-save succeeded (msg="${envelopeMessage(res.body)}")`).toBe(true);
 
-        // The single option row now reflects the v2 values (overwrite, not append).
-        const opt = await dbUtils.getOptionValue<Record<string, string>>(OPT.helpscout);
-        expect(opt?.helpscout_app_id).toBe(appId);
-        expect(opt?.helpscout_app_secret).toBe(appSecret);
-        expect(opt?.helpscout_callback_uri).toBe(callback);
-    });
+            // The single option row now reflects the v2 values (overwrite, not append).
+            const opt = await dbUtils.getOptionValue<Record<string, string>>(OPT.helpscout);
+            expect(opt?.helpscout_app_id).toBe(appId);
+            expect(opt?.helpscout_app_secret).toBe(appSecret);
+            expect(opt?.helpscout_callback_uri).toBe(callback);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -246,57 +250,65 @@ test.describe('CRM Integrations — Help Scout connect (pro, admin)', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('CRM Integrations — Zendesk connect (pro, admin)', () => {
     // INTG-CON-03 — save subdomain/login_email/password persists all three.
-    test('Zendesk: save settings persists all three fields to wp_options[zendesk]', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const subdomain = `mysub${RUN}.zendesk.com`;
-        const email = `qa${RUN}@example.com`;
-        const password = `pass_${RUN}`;
+    test(
+        'Zendesk: save settings persists all three fields to wp_options[zendesk]',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const subdomain = `mysub${RUN}.zendesk.com`;
+            const email = `qa${RUN}@example.com`;
+            const password = `pass_${RUN}`;
 
-        const res = await settingsSave(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'zendesk',
-            zendesk_subdomain: subdomain,
-            zendesk_login_email: email,
-            zendesk_password: password,
-        });
+            const res = await settingsSave(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'zendesk',
+                zendesk_subdomain: subdomain,
+                zendesk_login_email: email,
+                zendesk_password: password,
+            });
 
-        expectNotFatal(res);
-        expect(res.body.success, `Zendesk save succeeded (msg="${envelopeMessage(res.body)}")`).toBe(true);
-        expect(envelopeMessage(res.body)).toMatch(/Settings Saved Successfully/i);
+            expectNotFatal(res);
+            expect(res.body.success, `Zendesk save succeeded (msg="${envelopeMessage(res.body)}")`).toBe(true);
+            expect(envelopeMessage(res.body)).toMatch(/Settings Saved Successfully/i);
 
-        const opt = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
-        expect(opt, 'erp_integration_settings_zendesk row exists').toBeTruthy();
-        expect(opt?.zendesk_subdomain).toBe(subdomain);
-        expect(opt?.zendesk_login_email).toBe(email);
-        expect(opt?.zendesk_password).toBe(password);
-    });
+            const opt = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
+            expect(opt, 'erp_integration_settings_zendesk row exists').toBeTruthy();
+            expect(opt?.zendesk_subdomain).toBe(subdomain);
+            expect(opt?.zendesk_login_email).toBe(email);
+            expect(opt?.zendesk_password).toBe(password);
+        },
+    );
 
     // INTG-CON-04 — a malformed email still persists: Zendesk has no _filter
     // validation, so the save layer is lenient. Document that behavior (edge),
     // do not assert a rejection that the code does not perform.
-    test('Zendesk: malformed email still persists (no _filter validation — lenient)', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const subdomain = `lenient${RUN}.zendesk.com`;
-        const malformed = `not-an-email-${RUN}`;
-        const password = `pass_${RUN}_x`;
+    test(
+        'Zendesk: malformed email still persists (no _filter validation — lenient)',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const subdomain = `lenient${RUN}.zendesk.com`;
+            const malformed = `not-an-email-${RUN}`;
+            const password = `pass_${RUN}_x`;
 
-        const res = await settingsSave(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'zendesk',
-            zendesk_subdomain: subdomain,
-            zendesk_login_email: malformed,
-            zendesk_password: password,
-        });
+            const res = await settingsSave(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'zendesk',
+                zendesk_subdomain: subdomain,
+                zendesk_login_email: malformed,
+                zendesk_password: password,
+            });
 
-        expectNotFatal(res);
-        // No validation hook => save succeeds despite the bad email.
-        expect(res.body.success, `Zendesk lenient save succeeded (msg="${envelopeMessage(res.body)}")`).toBe(true);
+            expectNotFatal(res);
+            // No validation hook => save succeeds despite the bad email.
+            expect(res.body.success, `Zendesk lenient save succeeded (msg="${envelopeMessage(res.body)}")`).toBe(true);
 
-        const opt = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
-        // The malformed value is persisted as-is (lenient local behavior).
-        expect(opt?.zendesk_login_email).toBe(malformed);
-        expect(opt?.zendesk_subdomain).toBe(subdomain);
-    });
+            const opt = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
+            // The malformed value is persisted as-is (lenient local behavior).
+            expect(opt?.zendesk_login_email).toBe(malformed);
+            expect(opt?.zendesk_subdomain).toBe(subdomain);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -306,24 +318,28 @@ test.describe('CRM Integrations — Zendesk connect (pro, admin)', () => {
 test.describe('CRM Integrations — Mailchimp connect validation (pro, admin)', () => {
     // INTG-CON-05 — invalid api_key => 'Invalid API key. Enter correct one!' and
     // NO option is written (WP_Error short-circuits before update_option).
-    test('Mailchimp: invalid api_key returns the validation error and writes NO option', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const before = await dbUtils.getOptionValue(OPT.mailchimp);
+    test(
+        'Mailchimp: invalid api_key returns the validation error and writes NO option',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const before = await dbUtils.getOptionValue(OPT.mailchimp);
 
-        const res = await settingsSave(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'mailchimp',
-            api_key: `fakekey_${RUN}-us1`,
-        });
+            const res = await settingsSave(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'mailchimp',
+                api_key: `fakekey_${RUN}-us1`,
+            });
 
-        expectNotFatal(res);
-        expect(res.body.success, 'Mailchimp invalid key is rejected (success:false)').toBe(false);
-        expect(envelopeMessage(res.body)).toContain(INVALID_KEY_MSG);
+            expectNotFatal(res);
+            expect(res.body.success, 'Mailchimp invalid key is rejected (success:false)').toBe(false);
+            expect(envelopeMessage(res.body)).toContain(INVALID_KEY_MSG);
 
-        // DB: the option is not newly created (and not mutated if it pre-existed).
-        const after = await dbUtils.getOptionValue(OPT.mailchimp);
-        expect(after).toEqual(before);
-    });
+            // DB: the option is not newly created (and not mutated if it pre-existed).
+            const after = await dbUtils.getOptionValue(OPT.mailchimp);
+            expect(after).toEqual(before);
+        },
+    );
 
     // INTG-CON-06 — an EMPTY (but posted) api_key still hits is_connected('') =>
     // false => same validation error. The isset() early-return does NOT fire
@@ -359,23 +375,27 @@ test.describe('CRM Integrations — Mailchimp connect validation (pro, admin)', 
 test.describe('CRM Integrations — HubSpot connect validation (pro, admin)', () => {
     // INTG-CON-08 — invalid api_key => 'Invalid API key. Enter correct one!' and
     // NO option is written.
-    test('HubSpot: invalid api_key returns the validation error and writes NO option', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const before = await dbUtils.getOptionValue(OPT.hubspot);
+    test(
+        'HubSpot: invalid api_key returns the validation error and writes NO option',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const before = await dbUtils.getOptionValue(OPT.hubspot);
 
-        const res = await settingsSave(request, {
-            _wpnonce: nonce,
-            module: 'erp-integration',
-            section: 'hubspot',
-            api_key: `fakehubspot_${RUN}`,
-        });
+            const res = await settingsSave(request, {
+                _wpnonce: nonce,
+                module: 'erp-integration',
+                section: 'hubspot',
+                api_key: `fakehubspot_${RUN}`,
+            });
 
-        expectNotFatal(res);
-        expect(res.body.success, 'HubSpot invalid key is rejected (success:false)').toBe(false);
-        expect(envelopeMessage(res.body)).toContain(INVALID_KEY_MSG);
+            expectNotFatal(res);
+            expect(res.body.success, 'HubSpot invalid key is rejected (success:false)').toBe(false);
+            expect(envelopeMessage(res.body)).toContain(INVALID_KEY_MSG);
 
-        const after = await dbUtils.getOptionValue(OPT.hubspot);
-        expect(after).toEqual(before);
-    });
+            const after = await dbUtils.getOptionValue(OPT.hubspot);
+            expect(after).toEqual(before);
+        },
+    );
 
     // INTG-CON-09 — saving a VALID HubSpot key needs a real external account.
     test('HubSpot: valid api_key persists (success branch)', { tag: ['@pro', '@crm', '@admin'] }, async () => {
@@ -391,7 +411,9 @@ test.describe('CRM Integrations — Salesforce connect (pro, admin)', () => {
     // INTG-CON-10 — the Salesforce settings section renders without a fatal; its
     // connect is an external OAuth redirect, so there is no local save to assert.
     test('Salesforce: settings section renders (no local save — OAuth redirect)', { tag: ['@pro', '@crm', '@admin'] }, async ({ page }) => {
-        await page.goto(toPath('wp-admin/admin.php?page=erp-crm&section=integration&sub-section=salesforce'), { waitUntil: 'domcontentloaded' });
+        await page.goto(toPath('wp-admin/admin.php?page=erp-crm&section=integration&sub-section=salesforce'), {
+            waitUntil: 'domcontentloaded',
+        });
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
         await expect(page.locator('#wpbody-content')).toBeVisible();
         await expect(page.locator('div.wrap h2').first()).toContainText(/Integrations/i);
@@ -411,25 +433,29 @@ test.describe('CRM Integrations — save access control (pro, admin)', () => {
     // INTG-CON-12 — a save POST WITHOUT _wpnonce is rejected at verify_nonce, and
     // no option is written. Assert the boundary (rejected), not an exact code —
     // the handler answers 200 with success:false here.
-    test('save without _wpnonce is rejected (nonce verification) and writes nothing', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const before = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
+    test(
+        'save without _wpnonce is rejected (nonce verification) and writes nothing',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const before = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
 
-        const res = await settingsSave(request, {
-            // intentionally NO _wpnonce
-            module: 'erp-integration',
-            section: 'zendesk',
-            zendesk_subdomain: `nononce${RUN}.zendesk.com`,
-        });
+            const res = await settingsSave(request, {
+                // intentionally NO _wpnonce
+                module: 'erp-integration',
+                section: 'zendesk',
+                zendesk_subdomain: `nononce${RUN}.zendesk.com`,
+            });
 
-        expectNotFatal(res);
-        expect(res.body.success, 'missing nonce is rejected (success:false)').toBe(false);
-        expect(envelopeMessage(res.body)).toMatch(/Nonce verification failed/i);
+            expectNotFatal(res);
+            expect(res.body.success, 'missing nonce is rejected (success:false)').toBe(false);
+            expect(envelopeMessage(res.body)).toMatch(/Nonce verification failed/i);
 
-        // The bad subdomain must NOT have been persisted.
-        const after = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
-        expect(after?.zendesk_subdomain ?? '').not.toBe(`nononce${RUN}.zendesk.com`);
-        expect(after).toEqual(before);
-    });
+            // The bad subdomain must NOT have been persisted.
+            const after = await dbUtils.getOptionValue<Record<string, string>>(OPT.zendesk);
+            expect(after?.zendesk_subdomain ?? '').not.toBe(`nononce${RUN}.zendesk.com`);
+            expect(after).toEqual(before);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -445,15 +471,19 @@ test.describe('CRM Integrations — save access control (pro, admin)', () => {
 test.describe('CRM Integrations — known bug: unknown module fatal (pro, admin)', () => {
     // INTG-CON-13 — documents BUG-INTG-01. This is the ONE assertion that pins an
     // exact 500 (a known logged bug), per the resilient-assertion exception.
-    test('BUG-INTG-01: unknown module value fatals the save endpoint (HTTP 500)', { tag: ['@pro', '@crm', '@admin'] }, async ({ request }) => {
-        const res = await settingsSave(request, {
-            _wpnonce: nonce,
-            module: `not-a-real-module-${RUN}`,
-            section: 'mailchimp',
-        });
-        // KNOWN BUG: a valid nonce + unknown module => save() on string => fatal.
-        // Documented as an explicit 500 (resilient-philosophy exception). If this
-        // ever returns 200 the free-side bug was fixed — update this assertion.
-        expect(res.status, 'BUG-INTG-01: unknown module 500 fatal (Ajax.php:97 save() on string)').toBe(500);
-    });
+    test(
+        'BUG-INTG-01: unknown module value fatals the save endpoint (HTTP 500)',
+        { tag: ['@pro', '@crm', '@admin'] },
+        async ({ request }) => {
+            const res = await settingsSave(request, {
+                _wpnonce: nonce,
+                module: `not-a-real-module-${RUN}`,
+                section: 'mailchimp',
+            });
+            // KNOWN BUG: a valid nonce + unknown module => save() on string => fatal.
+            // Documented as an explicit 500 (resilient-philosophy exception). If this
+            // ever returns 200 the free-side bug was fixed — update this assertion.
+            expect(res.status, 'BUG-INTG-01: unknown module 500 fatal (Ajax.php:97 save() on string)').toBe(500);
+        },
+    );
 });

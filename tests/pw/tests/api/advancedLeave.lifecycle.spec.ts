@@ -123,10 +123,7 @@ test.afterAll(async () => {
         await dbUtils.dbQuery(`DELETE FROM ${requestsTable} WHERE user_id = ?`, [EMP]);
         await dbUtils.dbQuery(`DELETE FROM ${entitlementsTable} WHERE user_id = ?`, [EMP]);
         if (REQ || REQ2) {
-            await dbUtils.dbQuery(
-                `DELETE FROM ${approvalStatusTable} WHERE leave_request_id IN (?, ?)`,
-                [REQ || 0, REQ2 || 0],
-            );
+            await dbUtils.dbQuery(`DELETE FROM ${approvalStatusTable} WHERE leave_request_id IN (?, ?)`, [REQ || 0, REQ2 || 0]);
         }
         if (POL) {
             await dbUtils.dbQuery(`DELETE FROM ${segregationTable} WHERE leave_policy_id = ?`, [POL]);
@@ -311,8 +308,9 @@ test.describe('Advanced Leave lifecycle — request + approve (pro, admin)', () 
             false,
         );
         expect(resp.status(), 'JSON body is a clean 400, not a fatal').toBe(400);
-        expect(String(body?.code ?? ''), 'required-entitlement surfaced for empty body params')
-            .toContain('rest_leave_request_required_entitlement');
+        expect(String(body?.code ?? ''), 'required-entitlement surfaced for empty body params').toContain(
+            'rest_leave_request_required_entitlement',
+        );
     });
 
     // ALV-LC-06 — approve the pending request. 200 with status=1 (approved) and
@@ -321,21 +319,16 @@ test.describe('Advanced Leave lifecycle — request + approve (pro, admin)', () 
     test('ALV-LC-06 approve request → 200 approved (status=1), balance 20→17', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         expect(REQ, 'request created first (serial)').toBeTruthy();
 
-        const [resp, body] = await api.put(
-            `${endPoints.leaveRequests}/${REQ}/approve`,
-            formBody({ comments: 'ok' }),
-            false,
-        );
+        const [resp, body] = await api.put(`${endPoints.leaveRequests}/${REQ}/approve`, formBody({ comments: 'ok' }), false);
         expect(resp.status(), 'approve answered without a fatal').toBeLessThan(500);
         expect(resp.status(), 'approve is a 200').toBe(200);
         expect(Number(body?.status), 'approved status (1)').toBe(1);
         expect(Number(body?.available_days), 'available 20 − 3 = 17 in response').toBe(GRANT_DAYS - APPROVED_DAYS);
 
         // Request row status flipped.
-        const reqRows = await dbUtils.dbQuery<{ last_status: number }>(
-            `SELECT last_status FROM ${requestsTable} WHERE id = ? LIMIT 1`,
-            [REQ],
-        );
+        const reqRows = await dbUtils.dbQuery<{ last_status: number }>(`SELECT last_status FROM ${requestsTable} WHERE id = ? LIMIT 1`, [
+            REQ,
+        ]);
         expect(Number(reqRows[0]?.last_status), 'DB request last_status flipped to approved (1)').toBe(1);
 
         // Consumption entitlement row written (day_out = 3, keyed to the request).
@@ -369,11 +362,7 @@ test.describe('Advanced Leave lifecycle — request + approve (pro, admin)', () 
     // (idempotency). Balance unchanged.
     test('ALV-LC-08 re-approve → 400 already_approved (balance unchanged)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         expect(REQ, 'approved request first (serial)').toBeTruthy();
-        const [resp, body] = await api.put(
-            `${endPoints.leaveRequests}/${REQ}/approve`,
-            formBody({ comments: 'again' }),
-            false,
-        );
+        const [resp, body] = await api.put(`${endPoints.leaveRequests}/${REQ}/approve`, formBody({ comments: 'again' }), false);
         expect(resp.status(), 're-approve is a clean 400, not a fatal').toBe(400);
         expect(String(body?.code ?? ''), 'already_approved surfaced').toContain('rest_leave_request_already_approved');
         expect(await availableBalance(), 'balance still 17 after a rejected re-approve').toBe(GRANT_DAYS - APPROVED_DAYS);
@@ -409,11 +398,7 @@ test.describe('Advanced Leave lifecycle — reject branch (pro, admin)', () => {
     // ALV-LC-10 — reject WITHOUT a reason → 400 missing_reason (reason required).
     test('ALV-LC-10 reject without reason → 400 missing_reason', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         expect(REQ2, '2nd request created first (serial)').toBeTruthy();
-        const [resp, body] = await api.put(
-            `${endPoints.leaveRequests}/${REQ2}/reject`,
-            formBody({ reason: '' }),
-            false,
-        );
+        const [resp, body] = await api.put(`${endPoints.leaveRequests}/${REQ2}/reject`, formBody({ reason: '' }), false);
         expect(resp.status(), 'missing-reason reject is a clean 400').toBe(400);
         expect(String(body?.code ?? ''), 'missing_reason surfaced').toContain('rest_leave_request_missing_reason');
     });
@@ -424,19 +409,14 @@ test.describe('Advanced Leave lifecycle — reject branch (pro, admin)', () => {
         expect(REQ2, '2nd request created first (serial)').toBeTruthy();
         const balanceBefore = await availableBalance();
 
-        const [resp, body] = await api.put(
-            `${endPoints.leaveRequests}/${REQ2}/reject`,
-            formBody({ reason: 'Not approved' }),
-            false,
-        );
+        const [resp, body] = await api.put(`${endPoints.leaveRequests}/${REQ2}/reject`, formBody({ reason: 'Not approved' }), false);
         expect(resp.status(), 'reject answered without a fatal').toBeLessThan(500);
         expect(resp.status(), 'reject is a 200').toBe(200);
         expect(Number(body?.status), 'rejected status (3)').toBe(3);
 
-        const rows = await dbUtils.dbQuery<{ last_status: number }>(
-            `SELECT last_status FROM ${requestsTable} WHERE id = ? LIMIT 1`,
-            [REQ2],
-        );
+        const rows = await dbUtils.dbQuery<{ last_status: number }>(`SELECT last_status FROM ${requestsTable} WHERE id = ? LIMIT 1`, [
+            REQ2,
+        ]);
         expect(Number(rows[0]?.last_status), 'DB request last_status flipped to rejected (3)').toBe(3);
 
         // No new consumption row → still exactly one (from the approve).
@@ -452,11 +432,7 @@ test.describe('Advanced Leave lifecycle — reject branch (pro, admin)', () => {
     // ALV-LC-12 — re-reject an already-rejected request → 400 already_rejected.
     test('ALV-LC-12 re-reject → 400 already_rejected', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         expect(REQ2, 'rejected request first (serial)').toBeTruthy();
-        const [resp, body] = await api.put(
-            `${endPoints.leaveRequests}/${REQ2}/reject`,
-            formBody({ reason: 'again' }),
-            false,
-        );
+        const [resp, body] = await api.put(`${endPoints.leaveRequests}/${REQ2}/reject`, formBody({ reason: 'again' }), false);
         expect(resp.status(), 're-reject is a clean 400, not a fatal').toBe(400);
         expect(String(body?.code ?? ''), 'already_rejected surfaced').toContain('rest_leave_request_already_rejected');
     });
@@ -470,19 +446,11 @@ test.describe('Advanced Leave lifecycle — boundaries + known bugs (pro)', () =
 
     // ALV-LC-13 — approve / reject a non-existent request id → 404 invalid_id.
     test('ALV-LC-13 approve/reject unknown id → 404 invalid_id', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const [aResp, aBody] = await api.put(
-            `${endPoints.leaveRequests}/99999999/approve`,
-            formBody({ comments: 'x' }),
-            false,
-        );
+        const [aResp, aBody] = await api.put(`${endPoints.leaveRequests}/99999999/approve`, formBody({ comments: 'x' }), false);
         expect(aResp.status(), 'approve unknown id is a clean 404').toBe(404);
         expect(String(aBody?.code ?? '')).toContain('rest_leave_request_invalid_id');
 
-        const [rResp, rBody] = await api.put(
-            `${endPoints.leaveRequests}/99999999/reject`,
-            formBody({ reason: 'x' }),
-            false,
-        );
+        const [rResp, rBody] = await api.put(`${endPoints.leaveRequests}/99999999/reject`, formBody({ reason: 'x' }), false);
         expect(rResp.status(), 'reject unknown id is a clean 404').toBe(404);
         expect(String(rBody?.code ?? '')).toContain('rest_leave_request_invalid_id');
     });
@@ -535,10 +503,7 @@ test.describe('Advanced Leave lifecycle — boundaries + known bugs (pro)', () =
     // query layer stringifies (Object of class WP_Error could not be converted).
     // Resilient: tolerate >=200, only flag the documented 500; never write a row.
     test('ALV-LC-16 [KNOWN BUG] REST entitlement create fatals (500)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const countBefore = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${entitlementsTable} WHERE user_id = ?`,
-            [EMP],
-        );
+        const countBefore = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${entitlementsTable} WHERE user_id = ?`, [EMP]);
         const [resp, body] = await api.post(
             endPoints.leaveEntitlements,
             { data: { employee_id: EMP, policy: POL, days: 20, start_date: '2026-01-01', end_date: '2026-12-31' } },
@@ -548,15 +513,10 @@ test.describe('Advanced Leave lifecycle — boundaries + known bugs (pro)', () =
         // we DO record it and assert it never silently created an entitlement.
         expect(resp.status(), 'entitlement create answered with a definite status').toBeGreaterThanOrEqual(200);
         if (resp.status() === 500) {
-            expect(String(body?.code ?? ''), 'LEAVE-BUG-2: internal_server_error on entitlement create')
-                .toContain('internal_server_error');
+            expect(String(body?.code ?? ''), 'LEAVE-BUG-2: internal_server_error on entitlement create').toContain('internal_server_error');
         }
-        const countAfter = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${entitlementsTable} WHERE user_id = ?`,
-            [EMP],
-        );
-        expect(Number(countAfter[0]?.c), 'broken entitlement create added no row')
-            .toBe(Number(countBefore[0]?.c));
+        const countAfter = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${entitlementsTable} WHERE user_id = ?`, [EMP]);
+        expect(Number(countAfter[0]?.c), 'broken entitlement create added no row').toBe(Number(countBefore[0]?.c));
     });
 });
 

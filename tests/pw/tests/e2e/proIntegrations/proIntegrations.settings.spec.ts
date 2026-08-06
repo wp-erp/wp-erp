@@ -32,7 +32,7 @@ import { AcctProSettingsPage } from './proIntegrations.settingsPage';
  */
 
 // This file rewrites shared wp_options rows; run its tests in order, never parallel.
-test.describe.configure( { mode: 'serial' } );
+test.describe.configure({ mode: 'serial' });
 
 // Fresh epoch-millis suffix per run keeps every saved value unique + traceable.
 const RUN = Date.now();
@@ -62,11 +62,7 @@ const OPTS = {
 } as const;
 
 /** Snapshot every option id we mutate so afterAll can restore the prior state. */
-const ALL_OPTION_IDS = [
-    ...Object.values( OPTS.stripe ),
-    ...Object.values( OPTS.paypal ),
-    ...Object.values( OPTS.general ),
-];
+const ALL_OPTION_IDS = [...Object.values(OPTS.stripe), ...Object.values(OPTS.paypal), ...Object.values(OPTS.general)];
 
 const CRITICAL = 'There has been a critical error on this website';
 
@@ -74,298 +70,334 @@ const CRITICAL = 'There has been a critical error on this website';
  * True when the save envelope reported a hard success. Used to gate DB read-backs
  * so a session/nonce hiccup degrades to a soft skip rather than a brittle failure.
  */
-function isSaved( json?: { success: boolean; data?: unknown } ): boolean {
+function isSaved(json?: { success: boolean; data?: unknown }): boolean {
     return !!json && json.success === true;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Admin — the full happy-path lifecycle + checkbox semantics + nonce negatives.
 // ──────────────────────────────────────────────────────────────────────────────
-test.describe( 'acctProSettings — Payment Gateway settings lifecycle (admin)', () => {
-    test.use( { storageState: data.auth.adminFile } );
+test.describe('acctProSettings — Payment Gateway settings lifecycle (admin)', () => {
+    test.use({ storageState: data.auth.adminFile });
 
     // Capture the original option values so we can restore them after the run.
     const original = new Map<string, string | undefined>();
 
-    test.beforeAll( async () => {
-        for ( const id of ALL_OPTION_IDS ) {
-            original.set( id, await AcctProSettingsPage.option( id ) );
+    test.beforeAll(async () => {
+        for (const id of ALL_OPTION_IDS) {
+            original.set(id, await AcctProSettingsPage.option(id));
         }
-    } );
+    });
 
-    test.afterAll( async () => {
+    test.afterAll(async () => {
         // Best-effort restore of every option we wrote (or delete rows we created).
         try {
-            for ( const [ id, value ] of original.entries() ) {
-                if ( value === undefined ) {
-                    await dbUtils.dbQuery( `DELETE FROM wp_options WHERE option_name = ?`, [ id ] );
+            for (const [id, value] of original.entries()) {
+                if (value === undefined) {
+                    await dbUtils.dbQuery(`DELETE FROM wp_options WHERE option_name = ?`, [id]);
                 } else {
-                    await dbUtils.setOptionValue( id, value );
+                    await dbUtils.setOptionValue(id, value);
                 }
             }
         } catch {
             /* best-effort cleanup */
         }
         await dbUtils.close();
-    } );
+    });
 
     // ── Step 1 — scrape the page-localized save nonce; SPA mounts, no fatal ──────
-    test( 'APS-01 settings page mounts and exposes the localized save nonce (no fatal)', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
+    test(
+        'APS-01 settings page mounts and exposes the localized save nonce (no fatal)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
 
-        // The mount shell is present and there is no PHP/JS fatal.
-        await expect( page.locator( settings.sel.settingsRoot ) ).toBeAttached( { timeout: 30_000 } );
-        expect( await settings.hasCriticalError(), 'no fatal on the Settings page' ).toBe( false );
-        // The admin session must yield a real 10-char-ish nonce (the SPA save depends on it).
-        expect( nonce, 'erp_settings_var.nonce scraped from the live admin session' ).toMatch( /^[a-f0-9]{6,}$/ );
-    } );
+            // The mount shell is present and there is no PHP/JS fatal.
+            await expect(page.locator(settings.sel.settingsRoot)).toBeAttached({ timeout: 30_000 });
+            expect(await settings.hasCriticalError(), 'no fatal on the Settings page').toBe(false);
+            // The admin session must yield a real 10-char-ish nonce (the SPA save depends on it).
+            expect(nonce, 'erp_settings_var.nonce scraped from the live admin session').toMatch(/^[a-f0-9]{6,}$/);
+        },
+    );
 
     // ── Step 2 — SAVE Stripe sub-section (happy path) → per-id wp_options rows ────
-    test( 'APS-02 saving the Stripe sub-section persists each field as its own option', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
-        expect( nonce, 'admin save nonce' ).not.toBe( '' );
+    test(
+        'APS-02 saving the Stripe sub-section persists each field as its own option',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
+            expect(nonce, 'admin save nonce').not.toBe('');
 
-        const title = `StripeQA_${RUN}`;
-        const liveSecret = `sk_live_QA_${RUN}`;
-        const livePub = `pk_live_QA_${RUN}`;
-        const testSecret = `sk_test_QA_${RUN}`;
-        const testPub = `pk_test_QA_${RUN}`;
+            const title = `StripeQA_${RUN}`;
+            const liveSecret = `sk_live_QA_${RUN}`;
+            const livePub = `pk_live_QA_${RUN}`;
+            const testSecret = `sk_test_QA_${RUN}`;
+            const testPub = `pk_test_QA_${RUN}`;
 
-        const res = await settings.savePaymentSection( nonce, 'stripe', {
-            erp_pg_stripe_enable_disable: 'yes',
-            erp_pg_stripe_title: title,
-            erp_pg_stripe_description: 'Stripe is the smart and easiest payment method.',
-            erp_pg_stripe_live_secret_key: liveSecret,
-            erp_pg_stripe_live_publishable_key: livePub,
-            erp_pg_stripe_enable_testmode: 'yes',
-            erp_pg_stripe_test_secret_key: testSecret,
-            erp_pg_stripe_test_publishable_key: testPub,
-        } );
+            const res = await settings.savePaymentSection(nonce, 'stripe', {
+                erp_pg_stripe_enable_disable: 'yes',
+                erp_pg_stripe_title: title,
+                erp_pg_stripe_description: 'Stripe is the smart and easiest payment method.',
+                erp_pg_stripe_live_secret_key: liveSecret,
+                erp_pg_stripe_live_publishable_key: livePub,
+                erp_pg_stripe_enable_testmode: 'yes',
+                erp_pg_stripe_test_secret_key: testSecret,
+                erp_pg_stripe_test_publishable_key: testPub,
+            });
 
-        // Never a fatal in the response body; the save reports a JSON envelope.
-        expect( res.raw, 'save response is not a fatal' ).not.toContain( CRITICAL );
-        expect( res.status, 'admin-ajax returns 200 for the save handler' ).toBe( 200 );
+            // Never a fatal in the response body; the save reports a JSON envelope.
+            expect(res.raw, 'save response is not a fatal').not.toContain(CRITICAL);
+            expect(res.status, 'admin-ajax returns 200 for the save handler').toBe(200);
 
-        if ( isSaved( res.json ) ) {
-            // Each id persisted as its own option (single_option=true).
-            await AcctProSettingsPage.expectOption( OPTS.stripe.enable, 'yes' );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.title, title );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.liveSecret, liveSecret );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.livePublishable, livePub );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.testmode, 'yes' );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.testSecret, testSecret );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.testPublishable, testPub );
-        } else {
-            // Documented soft path: a session/nonce mismatch returns success:false. Still
-            // assert the boundary (no write happened for our unique value) + no fatal.
-            const persisted = await AcctProSettingsPage.option( OPTS.stripe.title );
-            expect( persisted, 'unique Stripe title NOT persisted on a rejected save' ).not.toBe( title );
-        }
-    } );
+            if (isSaved(res.json)) {
+                // Each id persisted as its own option (single_option=true).
+                await AcctProSettingsPage.expectOption(OPTS.stripe.enable, 'yes');
+                await AcctProSettingsPage.expectOption(OPTS.stripe.title, title);
+                await AcctProSettingsPage.expectOption(OPTS.stripe.liveSecret, liveSecret);
+                await AcctProSettingsPage.expectOption(OPTS.stripe.livePublishable, livePub);
+                await AcctProSettingsPage.expectOption(OPTS.stripe.testmode, 'yes');
+                await AcctProSettingsPage.expectOption(OPTS.stripe.testSecret, testSecret);
+                await AcctProSettingsPage.expectOption(OPTS.stripe.testPublishable, testPub);
+            } else {
+                // Documented soft path: a session/nonce mismatch returns success:false. Still
+                // assert the boundary (no write happened for our unique value) + no fatal.
+                const persisted = await AcctProSettingsPage.option(OPTS.stripe.title);
+                expect(persisted, 'unique Stripe title NOT persisted on a rejected save').not.toBe(title);
+            }
+        },
+    );
 
     // ── Step 3 — SAVE PayPal sub-section (happy path) ────────────────────────────
-    test( 'APS-03 saving the PayPal sub-section persists title/email/sandbox', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
-        expect( nonce ).not.toBe( '' );
+    test(
+        'APS-03 saving the PayPal sub-section persists title/email/sandbox',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
+            expect(nonce).not.toBe('');
 
-        const title = `PaypalQA_${RUN}`;
-        const email = `qa+${RUN}@example.com`;
+            const title = `PaypalQA_${RUN}`;
+            const email = `qa+${RUN}@example.com`;
 
-        const res = await settings.savePaymentSection( nonce, 'paypal', {
-            erp_pg_paypal_enable_disable: 'yes',
-            erp_pg_paypal_title: title,
-            erp_pg_paypal_description: 'Pay via PayPal.',
-            erp_pg_paypal_receiver_email: email,
-            erp_pg_paypal_sandbox: 'yes',
-        } );
+            const res = await settings.savePaymentSection(nonce, 'paypal', {
+                erp_pg_paypal_enable_disable: 'yes',
+                erp_pg_paypal_title: title,
+                erp_pg_paypal_description: 'Pay via PayPal.',
+                erp_pg_paypal_receiver_email: email,
+                erp_pg_paypal_sandbox: 'yes',
+            });
 
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( res.status ).toBe( 200 );
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(res.status).toBe(200);
 
-        if ( isSaved( res.json ) ) {
-            await AcctProSettingsPage.expectOption( OPTS.paypal.enable, 'yes' );
-            await AcctProSettingsPage.expectOption( OPTS.paypal.title, title );
-            await AcctProSettingsPage.expectOption( OPTS.paypal.receiverEmail, email );
-            await AcctProSettingsPage.expectOption( OPTS.paypal.sandbox, 'yes' );
-        } else {
-            const persisted = await AcctProSettingsPage.option( OPTS.paypal.title );
-            expect( persisted, 'unique PayPal title NOT persisted on a rejected save' ).not.toBe( title );
-        }
-    } );
+            if (isSaved(res.json)) {
+                await AcctProSettingsPage.expectOption(OPTS.paypal.enable, 'yes');
+                await AcctProSettingsPage.expectOption(OPTS.paypal.title, title);
+                await AcctProSettingsPage.expectOption(OPTS.paypal.receiverEmail, email);
+                await AcctProSettingsPage.expectOption(OPTS.paypal.sandbox, 'yes');
+            } else {
+                const persisted = await AcctProSettingsPage.option(OPTS.paypal.title);
+                expect(persisted, 'unique PayPal title NOT persisted on a rejected save').not.toBe(title);
+            }
+        },
+    );
 
     // ── Step 4 — SAVE General sub-section (payment-account head) ──────────────────
-    test( 'APS-04 saving the General sub-section persists the payment-account head', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
-        expect( nonce ).not.toBe( '' );
+    test(
+        'APS-04 saving the General sub-section persists the payment-account head',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
+            expect(nonce).not.toBe('');
 
-        // Value is a ledger/account id from erp_acct_get_bank_dropdown(); '7' = the
-        // seeded "Cash" ledger (live-confirmed it exists).
-        const accountHead = '7';
-        const res = await settings.savePaymentSection( nonce, 'general', {
-            erp_pg_payment_account_head: accountHead,
-        } );
+            // Value is a ledger/account id from erp_acct_get_bank_dropdown(); '7' = the
+            // seeded "Cash" ledger (live-confirmed it exists).
+            const accountHead = '7';
+            const res = await settings.savePaymentSection(nonce, 'general', {
+                erp_pg_payment_account_head: accountHead,
+            });
 
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( res.status ).toBe( 200 );
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(res.status).toBe(200);
 
-        if ( isSaved( res.json ) ) {
-            await AcctProSettingsPage.expectOption( OPTS.general.accountHead, accountHead );
-        } else {
-            // Resilient: at least no fatal; option may carry a prior valid value.
-            const v = await AcctProSettingsPage.option( OPTS.general.accountHead );
-            expect( v === undefined || /^\d+$/.test( v ), 'account head is unset or a numeric id' ).toBe( true );
-        }
-    } );
+            if (isSaved(res.json)) {
+                await AcctProSettingsPage.expectOption(OPTS.general.accountHead, accountHead);
+            } else {
+                // Resilient: at least no fatal; option may carry a prior valid value.
+                const v = await AcctProSettingsPage.option(OPTS.general.accountHead);
+                expect(v === undefined || /^\d+$/.test(v), 'account head is unset or a numeric id').toBe(true);
+            }
+        },
+    );
 
     // ── Step 5 — checkbox toggle-OFF semantics (omitted key → 'no') ──────────────
-    test( 'APS-05 re-saving Stripe without the enable key normalizes the checkbox to "no"', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
-        expect( nonce ).not.toBe( '' );
+    test(
+        'APS-05 re-saving Stripe without the enable key normalizes the checkbox to "no"',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
+            expect(nonce).not.toBe('');
 
-        const offTitle = `StripeOFF_${RUN}`;
-        // NOTE: erp_pg_stripe_enable_disable is deliberately OMITTED here.
-        const res = await settings.savePaymentSection( nonce, 'stripe', {
-            erp_pg_stripe_title: offTitle,
-        } );
+            const offTitle = `StripeOFF_${RUN}`;
+            // NOTE: erp_pg_stripe_enable_disable is deliberately OMITTED here.
+            const res = await settings.savePaymentSection(nonce, 'stripe', {
+                erp_pg_stripe_title: offTitle,
+            });
 
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( res.status ).toBe( 200 );
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(res.status).toBe(200);
 
-        if ( isSaved( res.json ) ) {
-            // Template.php::parse_option_value() checkbox branch: an absent $_POST[id]
-            // normalizes the stored option to 'no' (proves section-save checkbox reset).
-            await AcctProSettingsPage.expectOption( OPTS.stripe.enable, 'no' );
-            await AcctProSettingsPage.expectOption( OPTS.stripe.title, offTitle );
-        } else {
-            // Soft-reject path — assert the boundary only.
-            const t = await AcctProSettingsPage.option( OPTS.stripe.title );
-            expect( t ).not.toBe( offTitle );
-        }
-    } );
+            if (isSaved(res.json)) {
+                // Template.php::parse_option_value() checkbox branch: an absent $_POST[id]
+                // normalizes the stored option to 'no' (proves section-save checkbox reset).
+                await AcctProSettingsPage.expectOption(OPTS.stripe.enable, 'no');
+                await AcctProSettingsPage.expectOption(OPTS.stripe.title, offTitle);
+            } else {
+                // Soft-reject path — assert the boundary only.
+                const t = await AcctProSettingsPage.option(OPTS.stripe.title);
+                expect(t).not.toBe(offTitle);
+            }
+        },
+    );
 
     // ── Step 6 — NEGATIVE: invalid nonce is rejected, nothing is written ─────────
-    test( 'APS-06 a save with an invalid nonce is rejected and writes nothing', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        // We still load the page (real session) but post a bogus nonce.
-        await settings.openAndScrapeNonce();
+    test(
+        'APS-06 a save with an invalid nonce is rejected and writes nothing',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            // We still load the page (real session) but post a bogus nonce.
+            await settings.openAndScrapeNonce();
 
-        const sentinel = `StripeBADNONCE_${RUN}`;
-        const before = await AcctProSettingsPage.option( OPTS.stripe.title );
+            const sentinel = `StripeBADNONCE_${RUN}`;
+            const before = await AcctProSettingsPage.option(OPTS.stripe.title);
 
-        const res = await settings.savePaymentSection( 'deadbeef00', 'stripe', {
-            erp_pg_stripe_enable_disable: 'yes',
-            erp_pg_stripe_title: sentinel,
-        } );
+            const res = await settings.savePaymentSection('deadbeef00', 'stripe', {
+                erp_pg_stripe_enable_disable: 'yes',
+                erp_pg_stripe_title: sentinel,
+            });
 
-        // The handler dies before save: {success:false,"Error: Nonce verification failed"}.
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( res.json?.success, 'invalid nonce ⇒ success:false' ).toBe( false );
-        expect( String( res.json?.data ?? '' ) ).toMatch( /Nonce verification failed/i );
+            // The handler dies before save: {success:false,"Error: Nonce verification failed"}.
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(res.json?.success, 'invalid nonce ⇒ success:false').toBe(false);
+            expect(String(res.json?.data ?? '')).toMatch(/Nonce verification failed/i);
 
-        // No DB write: the sentinel never lands; the title is unchanged.
-        const after = await AcctProSettingsPage.option( OPTS.stripe.title );
-        expect( after, 'title unchanged by a rejected save' ).toBe( before );
-        expect( after ).not.toBe( sentinel );
-    } );
-} );
+            // No DB write: the sentinel never lands; the title is unchanged.
+            const after = await AcctProSettingsPage.option(OPTS.stripe.title);
+            expect(after, 'title unchanged by a rejected save').toBe(before);
+            expect(after).not.toBe(sentinel);
+        },
+    );
+});
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Logged-out — admin-ajax must not save for an anonymous request.
 // ──────────────────────────────────────────────────────────────────────────────
-test.describe( 'acctProSettings — logged-out boundary', () => {
-    test.use( data.auth.noAuth );
+test.describe('acctProSettings — logged-out boundary', () => {
+    test.use(data.auth.noAuth);
 
     // ── Step 7 — NEGATIVE: no auth cookies ⇒ no privileged save ──────────────────
-    test( 'APS-07 an anonymous save does not persist (admin-ajax dies "0" / rejects)', { tag: [ '@pro', '@accounting', '@employee' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
+    test(
+        'APS-07 an anonymous save does not persist (admin-ajax dies "0" / rejects)',
+        { tag: ['@pro', '@accounting', '@employee'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
 
-        const sentinel = `StripeANON_${RUN}`;
-        const before = await AcctProSettingsPage.option( OPTS.stripe.title );
+            const sentinel = `StripeANON_${RUN}`;
+            const before = await AcctProSettingsPage.option(OPTS.stripe.title);
 
-        // No cookies, no valid nonce: the unprivileged admin-ajax handler dies with
-        // '0' (no JSON envelope) or a nonce error — either way it is NOT a success.
-        const res = await settings.savePaymentSection( 'deadbeef00', 'stripe', {
-            erp_pg_stripe_enable_disable: 'yes',
-            erp_pg_stripe_title: sentinel,
-        } );
+            // No cookies, no valid nonce: the unprivileged admin-ajax handler dies with
+            // '0' (no JSON envelope) or a nonce error — either way it is NOT a success.
+            const res = await settings.savePaymentSection('deadbeef00', 'stripe', {
+                erp_pg_stripe_enable_disable: 'yes',
+                erp_pg_stripe_title: sentinel,
+            });
 
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( isSaved( res.json ), 'anonymous request is never a hard success' ).toBe( false );
-        // Tolerate the bare '0' body or a JSON error envelope.
-        expect( res.raw === '0' || res.json?.success === false, 'anon save rejected' ).toBe( true );
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(isSaved(res.json), 'anonymous request is never a hard success').toBe(false);
+            // Tolerate the bare '0' body or a JSON error envelope.
+            expect(res.raw === '0' || res.json?.success === false, 'anon save rejected').toBe(true);
 
-        const after = await AcctProSettingsPage.option( OPTS.stripe.title );
-        expect( after, 'no write from the anonymous path' ).toBe( before );
-        expect( after ).not.toBe( sentinel );
-    } );
-} );
+            const after = await AcctProSettingsPage.option(OPTS.stripe.title);
+            expect(after, 'no write from the anonymous path').toBe(before);
+            expect(after).not.toBe(sentinel);
+        },
+    );
+});
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Accounting manager — the Settings PAGE is menu-gated to manage_options, so a
 // manager cannot even load the SPA to obtain a nonce ⇒ Payment save is admin-only.
 // ──────────────────────────────────────────────────────────────────────────────
-test.describe( 'acctProSettings — role boundary (accounting manager)', () => {
-    test.use( { storageState: data.auth.accManagerFile } );
+test.describe('acctProSettings — role boundary (accounting manager)', () => {
+    test.use({ storageState: data.auth.accManagerFile });
 
     // ── Step 8 — manager is denied the nonce AND a stale-nonce save is rejected ──
-    test( 'APS-08 accounting manager cannot obtain the settings nonce; its save is rejected', { tag: [ '@pro', '@accounting', '@manager' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
+    test(
+        'APS-08 accounting manager cannot obtain the settings nonce; its save is rejected',
+        { tag: ['@pro', '@accounting', '@manager'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
 
-        // The erp-settings page is gated to manage_options at the MENU level, so the
-        // manager lands on the WP "Error" template with no erp_settings_var. Assert
-        // the deny (empty/absent nonce), not a successful manager save. Never a fatal.
-        expect( await settings.hasCriticalError() ).toBe( false );
-        expect( nonce, 'manager gets no localized settings nonce' ).toBe( '' );
+            // The erp-settings page is gated to manage_options at the MENU level, so the
+            // manager lands on the WP "Error" template with no erp_settings_var. Assert
+            // the deny (empty/absent nonce), not a successful manager save. Never a fatal.
+            expect(await settings.hasCriticalError()).toBe(false);
+            expect(nonce, 'manager gets no localized settings nonce').toBe('');
 
-        // A save attempt with any (stale/empty) nonce must be rejected — no write.
-        const sentinel = `StripeMGR_${RUN}`;
-        const before = await AcctProSettingsPage.option( OPTS.stripe.title );
-        const res = await settings.savePaymentSection( nonce || 'deadbeef00', 'stripe', {
-            erp_pg_stripe_enable_disable: 'yes',
-            erp_pg_stripe_title: sentinel,
-        } );
+            // A save attempt with any (stale/empty) nonce must be rejected — no write.
+            const sentinel = `StripeMGR_${RUN}`;
+            const before = await AcctProSettingsPage.option(OPTS.stripe.title);
+            const res = await settings.savePaymentSection(nonce || 'deadbeef00', 'stripe', {
+                erp_pg_stripe_enable_disable: 'yes',
+                erp_pg_stripe_title: sentinel,
+            });
 
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( isSaved( res.json ), 'manager save is not a hard success' ).toBe( false );
-        const after = await AcctProSettingsPage.option( OPTS.stripe.title );
-        expect( after, 'manager save wrote nothing' ).toBe( before );
-        expect( after ).not.toBe( sentinel );
-    } );
-} );
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(isSaved(res.json), 'manager save is not a hard success').toBe(false);
+            const after = await AcctProSettingsPage.option(OPTS.stripe.title);
+            expect(after, 'manager save wrote nothing').toBe(before);
+            expect(after).not.toBe(sentinel);
+        },
+    );
+});
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Employee — access control: a plain employee gets neither the SPA nor the nonce.
 // ──────────────────────────────────────────────────────────────────────────────
-test.describe( 'acctProSettings — access control (employee)', () => {
-    test.use( { storageState: data.auth.employeeFile } );
+test.describe('acctProSettings — access control (employee)', () => {
+    test.use({ storageState: data.auth.employeeFile });
 
-    test( 'APS-09 employee cannot load the settings nonce and its save is rejected', { tag: [ '@pro', '@accounting', '@employee' ] }, async ( { page } ) => {
-        const settings = new AcctProSettingsPage( page );
-        const nonce = await settings.openAndScrapeNonce();
+    test(
+        'APS-09 employee cannot load the settings nonce and its save is rejected',
+        { tag: ['@pro', '@accounting', '@employee'] },
+        async ({ page }) => {
+            const settings = new AcctProSettingsPage(page);
+            const nonce = await settings.openAndScrapeNonce();
 
-        expect( await settings.hasCriticalError() ).toBe( false );
-        expect( nonce, 'employee gets no localized settings nonce' ).toBe( '' );
+            expect(await settings.hasCriticalError()).toBe(false);
+            expect(nonce, 'employee gets no localized settings nonce').toBe('');
 
-        const sentinel = `StripeEMP_${RUN}`;
-        const before = await AcctProSettingsPage.option( OPTS.stripe.title );
-        const res = await settings.savePaymentSection( nonce || 'deadbeef00', 'stripe', {
-            erp_pg_stripe_enable_disable: 'yes',
-            erp_pg_stripe_title: sentinel,
-        } );
+            const sentinel = `StripeEMP_${RUN}`;
+            const before = await AcctProSettingsPage.option(OPTS.stripe.title);
+            const res = await settings.savePaymentSection(nonce || 'deadbeef00', 'stripe', {
+                erp_pg_stripe_enable_disable: 'yes',
+                erp_pg_stripe_title: sentinel,
+            });
 
-        expect( res.raw ).not.toContain( CRITICAL );
-        expect( isSaved( res.json ) ).toBe( false );
-        const after = await AcctProSettingsPage.option( OPTS.stripe.title );
-        expect( after, 'employee save wrote nothing' ).toBe( before );
-        expect( after ).not.toBe( sentinel );
-    } );
-} );
+            expect(res.raw).not.toContain(CRITICAL);
+            expect(isSaved(res.json)).toBe(false);
+            const after = await AcctProSettingsPage.option(OPTS.stripe.title);
+            expect(after, 'employee save wrote nothing').toBe(before);
+            expect(after).not.toBe(sentinel);
+        },
+    );
+});
 
 // ──────────────────────────────────────────────────────────────────────────────
 // WooCommerce sync save path — UNAVAILABLE without the WooCommerce plugin.
@@ -374,19 +406,23 @@ test.describe( 'acctProSettings — access control (employee)', () => {
 // absent (woocommerce/Module.php init_plugin() early-returns without WC_VERSION).
 // We deliberately do NOT exercise a confirmed fatal; this is a documented skip.
 // ──────────────────────────────────────────────────────────────────────────────
-test.describe( 'acctProSettings — WooCommerce sync settings (needs WooCommerce)', () => {
-    test.use( { storageState: data.auth.adminFile } );
+test.describe('acctProSettings — WooCommerce sync settings (needs WooCommerce)', () => {
+    test.use({ storageState: data.auth.adminFile });
 
     // Step 9 — skipped: the WC settings save handler is unregistered (and fatals,
     // BUG-ACCSET-1) without the WooCommerce plugin (WC_VERSION). It cannot be
     // exercised here; enable once WooCommerce is installed in the QA site.
-    test.skip( 'APS-10 WooCommerce sync settings save (needs WooCommerce; see BUG-ACCSET-1)', { tag: [ '@pro', '@accounting', '@admin' ] }, async ( { page } ) => {
-        // Intentionally empty. Saving module=erp-woocommerce via erp-settings-save
-        // hits a fatal ("Call to a member function save() on string",
-        // includes/Settings/Ajax.php:97) when WooCommerce is not loaded, because
-        // the `erp_settings_save_erp-woocommerce_section` filter is never registered.
-        // Asserting that confirmed 500/fatal would violate the resilient philosophy,
-        // so the WC sync save lifecycle stays skipped until WC is present.
-        void page;
-    } );
-} );
+    test.skip(
+        'APS-10 WooCommerce sync settings save (needs WooCommerce; see BUG-ACCSET-1)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async ({ page }) => {
+            // Intentionally empty. Saving module=erp-woocommerce via erp-settings-save
+            // hits a fatal ("Call to a member function save() on string",
+            // includes/Settings/Ajax.php:97) when WooCommerce is not loaded, because
+            // the `erp_settings_save_erp-woocommerce_section` filter is never registered.
+            // Asserting that confirmed 500/fatal would violate the resilient philosophy,
+            // so the WC sync save lifecycle stays skipped until WC is present.
+            void page;
+        },
+    );
+});

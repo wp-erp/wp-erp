@@ -143,9 +143,7 @@ function main() {
     const reportPaths = findResults(ARTIFACTS_DIR, []);
 
     if (reportPaths.length === 0) {
-        console.warn(
-            `Warning: no results.json found under '${ARTIFACTS_DIR}' matching '${REPORT_MATCH}'. Nothing to merge.`
-        );
+        console.warn(`Warning: no results.json found under '${ARTIFACTS_DIR}' matching '${REPORT_MATCH}'. Nothing to merge.`);
         process.exit(0);
     }
 
@@ -166,7 +164,7 @@ function main() {
     console.log(
         `Merged ${merged.shards} shard(s) -> ${MERGED_OUTPUT} | status=${merged.status} ` +
             `total=${merged.total_tests} passed=${merged.passed} failed=${merged.failed} ` +
-            `skipped=${merged.skipped} flaky=${merged.flaky} duration=${merged.suite_duration_formatted}`
+            `skipped=${merged.skipped} flaky=${merged.flaky} duration=${merged.suite_duration_formatted}`,
     );
 }
 

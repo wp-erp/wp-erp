@@ -19,7 +19,9 @@ export default class SpecDurationReporter implements Reporter {
     onTestEnd(test: TestCase, result: TestResult): void {
         this.durations.push({ title: test.titlePath().slice(1).join(' › '), ms: result.duration });
 
-        const file = relative(resolve(process.cwd(), 'tests', 'e2e'), test.location.file).split('\\').join('/');
+        const file = relative(resolve(process.cwd(), 'tests', 'e2e'), test.location.file)
+            .split('\\')
+            .join('/');
         // Setup/teardown projects and anything outside tests/e2e (api specs run from
         // their own config) are not shardable by getShardSpecs — skip them.
         if (file.startsWith('..')) return;
@@ -40,9 +42,7 @@ export default class SpecDurationReporter implements Reporter {
         }
 
         if (this.byFile.size === 0) return;
-        const specs = [...this.byFile.entries()]
-            .map(([file, v]) => ({ file, ms: v.ms, tests: v.tests }))
-            .sort((a, b) => b.ms - a.ms);
+        const specs = [...this.byFile.entries()].map(([file, v]) => ({ file, ms: v.ms, tests: v.tests })).sort((a, b) => b.ms - a.ms);
         const dir = resolve(process.cwd(), 'playwright');
         mkdirSync(dir, { recursive: true });
         writeFileSync(resolve(dir, 'spec-durations.json'), JSON.stringify({ specs }, null, 2));

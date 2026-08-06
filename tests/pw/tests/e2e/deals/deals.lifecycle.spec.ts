@@ -60,10 +60,10 @@ const T = {
 // Seed FK targets (verified live). Stage 4 = 'Proposal Made' (order 0, first
 // stage); stage 5 = 'Negotiations Started' (order 4, last stage). Contact id=1
 // exists as a CRM contact. Activity type 1 = 'Call'.
-const FIRST_STAGE = 4;        // order 0
-const TARGET_STAGE = 5;       // order 4 (last)
+const FIRST_STAGE = 4; // order 0
+const TARGET_STAGE = 5; // order 4 (last)
 const CONTACT_ID = 1;
-const OWNER_ID = 1;           // admin user; owner_id is MANDATORY for managers/admin
+const OWNER_ID = 1; // admin user; owner_id is MANDATORY for managers/admin
 const ACTIVITY_TYPE_CALL = 1;
 
 // Unique data per run so created rows are findable and cleanable.
@@ -166,10 +166,7 @@ test.afterAll(async () => {
             await dbUtils.dbQuery(`DELETE FROM ${T.activities} WHERE deal_id = ?`, [dealId]);
         }
         // Belt-and-suspenders: remove any stray rows by the run-unique title.
-        const stray = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${T.deals} WHERE title LIKE ?`,
-            [`%${RUN}%RUN%`],
-        );
+        const stray = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE title LIKE ?`, [`%${RUN}%RUN%`]);
         for (const row of stray) {
             await dbUtils.dbQuery(`DELETE FROM ${T.stageHistory} WHERE deal_id = ?`, [row.id]);
             await dbUtils.dbQuery(`DELETE FROM ${T.activities} WHERE deal_id = ?`, [row.id]);
@@ -231,8 +228,14 @@ test.describe('CRM Deals lifecycle — create', () => {
 
         // DB: the row exists with the posted fields.
         const rows = await dbUtils.dbQuery<{
-            title: string; stage_id: number; contact_id: number; owner_id: number;
-            value: string; won_at: string | null; lost_at: string | null; deleted_at: string | null;
+            title: string;
+            stage_id: number;
+            contact_id: number;
+            owner_id: number;
+            value: string;
+            won_at: string | null;
+            lost_at: string | null;
+            deleted_at: string | null;
         }>(
             `SELECT title, stage_id, contact_id, owner_id, value, won_at, lost_at, deleted_at
                  FROM ${T.deals} WHERE id = ? LIMIT 1`,
@@ -280,10 +283,7 @@ test.describe('CRM Deals lifecycle — create', () => {
         expect(errMessage(res.body)).toMatch(/Could not save the deal/i);
 
         // And nothing was inserted for that title.
-        const stray = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${T.deals} WHERE title = ? LIMIT 1`,
-            [`NOOWNER ${RUN} RUN`],
-        );
+        const stray = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE title = ? LIMIT 1`, [`NOOWNER ${RUN} RUN`]);
         expect(stray.length, 'no row persisted when owner_id was omitted').toBe(0);
     });
 });
@@ -305,10 +305,7 @@ test.describe('CRM Deals lifecycle — move stage', () => {
         expectNotFatal(res);
         expect(res.body.success, `move succeeded (msg="${errMessage(res.body)}")`).toBe(true);
 
-        const rows = await dbUtils.dbQuery<{ stage_id: number }>(
-            `SELECT stage_id FROM ${T.deals} WHERE id = ? LIMIT 1`,
-            [dealId],
-        );
+        const rows = await dbUtils.dbQuery<{ stage_id: number }>(`SELECT stage_id FROM ${T.deals} WHERE id = ? LIMIT 1`, [dealId]);
         expect(Number(rows[0]?.stage_id), 'deal moved to the target stage (5)').toBe(TARGET_STAGE);
     });
 
@@ -318,10 +315,7 @@ test.describe('CRM Deals lifecycle — move stage', () => {
     test('move rebuilds stage history (old stage closed, intervening stages opened)', { tag: ['@pro', '@crm', '@admin'] }, async () => {
         test.skip(!dealId, 'needs the deal moved in DEALS-LC-04');
 
-        const total = await dbUtils.dbQuery<{ cnt: number }>(
-            `SELECT COUNT(*) AS cnt FROM ${T.stageHistory} WHERE deal_id = ?`,
-            [dealId],
-        );
+        const total = await dbUtils.dbQuery<{ cnt: number }>(`SELECT COUNT(*) AS cnt FROM ${T.stageHistory} WHERE deal_id = ?`, [dealId]);
         expect(Number(total[0]?.cnt), 'history has a row per stage up to+including the target').toBe(5);
 
         // The prior current stage (4) is now closed (out IS NOT NULL).
@@ -365,8 +359,12 @@ test.describe('CRM Deals lifecycle — add activity', () => {
         expect(activityId, 'save_activity returned an activity id').toBeGreaterThan(0);
 
         const rows = await dbUtils.dbQuery<{
-            type: string; title: string; deal_id: number; assigned_to_id: number;
-            start: string; done_at: string | null;
+            type: string;
+            title: string;
+            deal_id: number;
+            assigned_to_id: number;
+            start: string;
+            done_at: string | null;
         }>(
             `SELECT type, title, deal_id, assigned_to_id, start, done_at
                  FROM ${T.activities} WHERE id = ? LIMIT 1`,
@@ -380,10 +378,7 @@ test.describe('CRM Deals lifecycle — add activity', () => {
         expect(Number(act?.assigned_to_id), 'activity is assigned to the owner').toBe(OWNER_ID);
         expect(act?.done_at, 'a fresh activity is not done').toBeNull();
 
-        const cnt = await dbUtils.dbQuery<{ cnt: number }>(
-            `SELECT COUNT(*) AS cnt FROM ${T.activities} WHERE deal_id = ?`,
-            [dealId],
-        );
+        const cnt = await dbUtils.dbQuery<{ cnt: number }>(`SELECT COUNT(*) AS cnt FROM ${T.activities} WHERE deal_id = ?`, [dealId]);
         expect(Number(cnt[0]?.cnt), 'exactly one activity on the deal').toBe(1);
     });
 
@@ -451,8 +446,11 @@ test.describe('CRM Deals lifecycle — won / lost / reopen', () => {
         expect(res.body.success, `mark-lost succeeded (msg="${errMessage(res.body)}")`).toBe(true);
 
         const rows = await dbUtils.dbQuery<{
-            won_at: string | null; lost_at: string | null;
-            lost_reason: string | null; lost_reason_id: number | null; lost_reason_comment: string | null;
+            won_at: string | null;
+            lost_at: string | null;
+            lost_reason: string | null;
+            lost_reason_id: number | null;
+            lost_reason_comment: string | null;
         }>(
             `SELECT won_at, lost_at, lost_reason, lost_reason_id, lost_reason_comment
                  FROM ${T.deals} WHERE id = ? LIMIT 1`,
@@ -497,12 +495,11 @@ test.describe('CRM Deals lifecycle — won / lost / reopen', () => {
         expect(res.body.success, `reopen succeeded (msg="${errMessage(res.body)}")`).toBe(true);
 
         const rows = await dbUtils.dbQuery<{
-            won_at: string | null; lost_at: string | null;
-            lost_reason: string | null; lost_reason_id: number | null;
-        }>(
-            `SELECT won_at, lost_at, lost_reason, lost_reason_id FROM ${T.deals} WHERE id = ? LIMIT 1`,
-            [dealId],
-        );
+            won_at: string | null;
+            lost_at: string | null;
+            lost_reason: string | null;
+            lost_reason_id: number | null;
+        }>(`SELECT won_at, lost_at, lost_reason, lost_reason_id FROM ${T.deals} WHERE id = ? LIMIT 1`, [dealId]);
         expect(rows[0]?.won_at, 'won_at cleared on reopen').toBeNull();
         expect(rows[0]?.lost_at, 'lost_at cleared on reopen').toBeNull();
         expect(rows[0]?.lost_reason, 'lost_reason cleared on reopen').toBeNull();
@@ -525,10 +522,7 @@ test.describe('CRM Deals lifecycle — delete activity', () => {
         expectNotFatal(res);
         expect(res.body.success, `delete_activity succeeded (msg="${errMessage(res.body)}")`).toBe(true);
 
-        const cnt = await dbUtils.dbQuery<{ cnt: number }>(
-            `SELECT COUNT(*) AS cnt FROM ${T.activities} WHERE id = ?`,
-            [activityId],
-        );
+        const cnt = await dbUtils.dbQuery<{ cnt: number }>(`SELECT COUNT(*) AS cnt FROM ${T.activities} WHERE id = ?`, [activityId]);
         expect(Number(cnt[0]?.cnt), 'activity row is gone after delete').toBe(0);
     });
 
@@ -565,10 +559,7 @@ test.describe('CRM Deals lifecycle — trash', () => {
         expect(rows[0]?.deleted_at, 'deleted_at is now set (soft delete)').not.toBeNull();
 
         // It is excluded from the active (deleted_at IS NULL) set.
-        const active = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${T.deals} WHERE id = ? AND deleted_at IS NULL`,
-            [dealId],
-        );
+        const active = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE id = ? AND deleted_at IS NULL`, [dealId]);
         expect(active.length, 'trashed deal is excluded from the active set').toBe(0);
     });
 
@@ -606,10 +597,7 @@ test.describe('CRM Deals lifecycle — negative (validation + nonce)', () => {
         expect(errMessage(res.body)).toMatch(/Nonce verification failed/i);
 
         // Nothing was created.
-        const stray = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${T.deals} WHERE title = ? LIMIT 1`,
-            [`BADNONCE ${RUN} RUN`],
-        );
+        const stray = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE title = ? LIMIT 1`, [`BADNONCE ${RUN} RUN`]);
         expect(stray.length, 'no deal created on a bad nonce').toBe(0);
     });
 

@@ -105,9 +105,7 @@ test.describe('Custom Field Builder UI (pro, admin)', () => {
         const before = await page.locator(cfb.sel.singleField).count();
         await page.locator(cfb.sel.addNewField).click();
         // Vue appends a <single-field> row; the count should grow (give Vue a beat).
-        await expect
-            .poll(async () => page.locator(cfb.sel.singleField).count(), { timeout: 15_000 })
-            .toBeGreaterThan(before);
+        await expect.poll(async () => page.locator(cfb.sel.singleField).count(), { timeout: 15_000 }).toBeGreaterThan(before);
         // Adding a row must never surface a PHP fatal.
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
     });
@@ -132,17 +130,21 @@ test.describe('Custom Field Builder UI (pro, admin)', () => {
 test.describe('Custom Field Builder access control (pro, manager)', () => {
     test.use({ storageState: data.auth.hrManagerFile });
 
-    test('CFB-UI-11 HR manager (no manage_options) is blocked from the builder', { tag: ['@pro', '@hrm', '@manager'] }, async ({ page }) => {
-        const cfb = new CustomFieldPage(page);
-        await page.goto(cfb.urls.employee);
-        // Never a fatal.
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
-        // The Vue field mount must NOT render for a user without manage_options.
-        await expect(page.locator(cfb.sel.fieldParent)).toHaveCount(0);
-        const body = await page.locator('body').innerText();
-        const blocked = /not allowed|do not have (?:sufficient )?permission|cheating/i.test(body);
-        expect(blocked, 'manager lands on a not-allowed boundary, not the builder').toBe(true);
-    });
+    test(
+        'CFB-UI-11 HR manager (no manage_options) is blocked from the builder',
+        { tag: ['@pro', '@hrm', '@manager'] },
+        async ({ page }) => {
+            const cfb = new CustomFieldPage(page);
+            await page.goto(cfb.urls.employee);
+            // Never a fatal.
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            // The Vue field mount must NOT render for a user without manage_options.
+            await expect(page.locator(cfb.sel.fieldParent)).toHaveCount(0);
+            const body = await page.locator('body').innerText();
+            const blocked = /not allowed|do not have (?:sufficient )?permission|cheating/i.test(body);
+            expect(blocked, 'manager lands on a not-allowed boundary, not the builder').toBe(true);
+        },
+    );
 });
 
 test.describe('Custom Field Builder access control (pro, employee)', () => {

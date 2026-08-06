@@ -39,7 +39,9 @@ async function dbQuery<T = any>(sql: string, params: any[] = []): Promise<T[]> {
 }
 
 async function getOptionValue<T = unknown>(name: string): Promise<T | undefined> {
-    const rows = await dbQuery<{ option_value: string }>(`SELECT option_value FROM ${tables.options} WHERE option_name = ? LIMIT 1`, [name]);
+    const rows = await dbQuery<{ option_value: string }>(`SELECT option_value FROM ${tables.options} WHERE option_name = ? LIMIT 1`, [
+        name,
+    ]);
     if (rows.length === 0) return undefined;
     const raw = rows[0]!.option_value;
     try {
@@ -66,10 +68,7 @@ async function updateOptionValue(name: string, partial: Record<string, unknown>)
 
 async function setUserMeta(userId: number | string, key: string, value: unknown): Promise<void> {
     const stored = typeof value === 'string' ? value : serialize(value);
-    await dbQuery(
-        `INSERT INTO ${tables.userMeta} (user_id, meta_key, meta_value) VALUES (?, ?, ?)`,
-        [userId, key, stored],
-    );
+    await dbQuery(`INSERT INTO ${tables.userMeta} (user_id, meta_key, meta_value) VALUES (?, ?, ?)`, [userId, key, stored]);
 }
 
 /** Delete rows from a table where a column matches a LIKE prefix (test cleanup). */

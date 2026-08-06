@@ -97,7 +97,7 @@ writeOut(
     `### Feature coverage (${report.mode}) — ${report.coverage}\n\n` +
         `${covered.length} of ${totalFeatures} mapped features were exercised ` +
         `(a skipped test counts as uncovered).\n\n` +
-        `| Area | Coverage |\n|---|---|\n${rows}\n`
+        `| Area | Coverage |\n|---|---|\n${rows}\n`,
 );
 
 console.log(`coverage (${report.mode}): ${report.coverage} — ${covered.length}/${totalFeatures} features`);

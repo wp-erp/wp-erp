@@ -137,10 +137,7 @@ test.afterAll(async () => {
         await api.delete(url.shift(id), undefined, false);
     }
     try {
-        const rows = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${SHIFTS} WHERE name LIKE ?`,
-            [`pw_shift_${RUN}%`],
-        );
+        const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${SHIFTS} WHERE name LIKE ?`, [`pw_shift_${RUN}%`]);
         for (const row of rows) {
             await dbUtils.dbQuery(`DELETE FROM ${SHIFT_USER} WHERE shift_id = ?`, [row.id]);
         }
@@ -244,10 +241,7 @@ test.describe('HRM Attendance REST — shifts CRUD (admin)', () => {
         if (resp.ok()) {
             // update_shift returns the updated array (truthy).
             expect(body, 'update returns a truthy result').toBeTruthy();
-            const rows = await dbUtils.dbQuery<{ name: string }>(
-                `SELECT name FROM ${SHIFTS} WHERE id = ? LIMIT 1`,
-                [id],
-            );
+            const rows = await dbUtils.dbQuery<{ name: string }>(`SELECT name FROM ${SHIFTS} WHERE id = ? LIMIT 1`, [id]);
             expect(rows[0]?.name, 'shift name updated in DB').toBe(newName);
         } else {
             expect([400, 401, 403, 404, 409, 422]).toContain(resp.status());
@@ -288,10 +282,10 @@ test.describe('HRM Attendance REST — shifts CRUD (admin)', () => {
 
         // Bulk delete is also a SOFT delete (status=0 per id), so the rows persist
         // but become inactive. Assert both are deactivated (or physically gone).
-        const rows = await dbUtils.dbQuery<{ id: number; status: number }>(
-            `SELECT id, status FROM ${SHIFTS} WHERE id IN (?, ?)`,
-            [id1, id2],
-        );
+        const rows = await dbUtils.dbQuery<{ id: number; status: number }>(`SELECT id, status FROM ${SHIFTS} WHERE id IN (?, ?)`, [
+            id1,
+            id2,
+        ]);
         const allInactive = rows.every(r => Number(r.status) === 0);
         expect(allInactive, 'both shifts soft-deleted (status 0) or removed').toBe(true);
     });
@@ -304,50 +298,46 @@ test.describe('HRM Attendance REST — shift validation (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
     test('ATT-API-10 create shift missing required name → 400', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const [resp] = await api.post(
-            url.shifts(),
-            { data: { start_time: '09:00:00', end_time: '17:00:00' } },
-            false,
-        );
+        const [resp] = await api.post(url.shifts(), { data: { start_time: '09:00:00', end_time: '17:00:00' } }, false);
         // rest_missing_callback_param → 400.
         expect(resp.status(), 'missing required name is rejected (4xx)').toBeGreaterThanOrEqual(400);
         expect(resp.status(), 'missing required must not 500').toBeLessThan(500);
     });
 
     test('ATT-API-11 create shift missing start/end time → 400', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const [resp] = await api.post(
-            url.shifts(),
-            { data: { name: `pw_shift_${RUN}_noTimes` } },
-            false,
-        );
+        const [resp] = await api.post(url.shifts(), { data: { name: `pw_shift_${RUN}_noTimes` } }, false);
         expect(resp.status()).toBeGreaterThanOrEqual(400);
         expect(resp.status()).toBeLessThan(500);
     });
 
-    test('ATT-API-12 create shift with a 24h range is rejected (currently HTTP 500 — KNOWN BUG)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // insert_shift: end >= start+86400 → WP_Error('invalid-shift-range'). Equal
-        // start/end times collapse to a 24h span which trips that guard.
-        //
-        // KNOWN BUG: erp_attendance_insert_shift returns the WP_Error WITHOUT a
-        // ['status' => 4xx] arg, so WP_REST_Server maps this client-side validation
-        // failure to HTTP 500 instead of a 400/422. The request IS correctly refused
-        // (right error code in the body) but with the wrong status. We assert the
-        // ACTUAL observed contract here. See bug-reports/BUGS.md.
-        const [resp, body] = await api.post(
-            url.shifts(),
-            { data: shiftPayload({ start_time: '09:00:00', end_time: '09:00:00' }) },
-            false,
-        );
-        expect(resp.ok(), 'a 24h-span shift is not accepted').toBe(false);
-        if (resp.status() === 500) {
-            // Documented current behavior: 500 carrying the real validation code.
-            expect(String(body?.code ?? ''), 'body still names the validation error').toBe('invalid-shift-range');
-        } else {
-            // If a future fix maps it to a proper 4xx, accept that too.
-            expect(resp.status(), 'invalid range refused as a client error').toBeGreaterThanOrEqual(400);
-            expect(['invalid-shift-range', 'rest_invalid_param', '']).toContain(String(body?.code ?? ''));
-        }
-    });
+    test(
+        'ATT-API-12 create shift with a 24h range is rejected (currently HTTP 500 — KNOWN BUG)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // insert_shift: end >= start+86400 → WP_Error('invalid-shift-range'). Equal
+            // start/end times collapse to a 24h span which trips that guard.
+            //
+            // KNOWN BUG: erp_attendance_insert_shift returns the WP_Error WITHOUT a
+            // ['status' => 4xx] arg, so WP_REST_Server maps this client-side validation
+            // failure to HTTP 500 instead of a 400/422. The request IS correctly refused
+            // (right error code in the body) but with the wrong status. We assert the
+            // ACTUAL observed contract here. See bug-reports/BUGS.md.
+            const [resp, body] = await api.post(
+                url.shifts(),
+                { data: shiftPayload({ start_time: '09:00:00', end_time: '09:00:00' }) },
+                false,
+            );
+            expect(resp.ok(), 'a 24h-span shift is not accepted').toBe(false);
+            if (resp.status() === 500) {
+                // Documented current behavior: 500 carrying the real validation code.
+                expect(String(body?.code ?? ''), 'body still names the validation error').toBe('invalid-shift-range');
+            } else {
+                // If a future fix maps it to a proper 4xx, accept that too.
+                expect(resp.status(), 'invalid range refused as a client error').toBeGreaterThanOrEqual(400);
+                expect(['invalid-shift-range', 'rest_invalid_param', '']).toContain(String(body?.code ?? ''));
+            }
+        },
+    );
 
     test('ATT-API-13 duplicate name+time is rejected (currently HTTP 500 — KNOWN BUG)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = shiftPayload();
@@ -400,10 +390,10 @@ test.describe('HRM Attendance REST — assign / bulk-assign (admin)', () => {
         );
         expect(resp.status(), 'assign must not 500').toBeLessThan(500);
         if (resp.ok()) {
-            const rows = await dbUtils.dbQuery<{ id: number }>(
-                `SELECT id FROM ${SHIFT_USER} WHERE shift_id = ? AND user_id = ? LIMIT 1`,
-                [id, empUserId],
-            );
+            const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${SHIFT_USER} WHERE shift_id = ? AND user_id = ? LIMIT 1`, [
+                id,
+                empUserId,
+            ]);
             expect(rows.length, 'assignment row inserted in shift_user').toBeGreaterThanOrEqual(1);
         }
     });
@@ -435,11 +425,7 @@ test.describe('HRM Attendance REST — assign / bulk-assign (admin)', () => {
         const id = await createShift();
         test.skip(!id, 'needs a shift');
         // Omit start_date/end_date (both registered required).
-        const [resp] = await api.post(
-            url.assign(id),
-            { data: { users_id: [Number(empUserId || 1)], shift_id: Number(id) } },
-            false,
-        );
+        const [resp] = await api.post(url.assign(id), { data: { users_id: [Number(empUserId || 1)], shift_id: Number(id) } }, false);
         expect(resp.status(), 'missing required assign params rejected').toBeGreaterThanOrEqual(400);
     });
 
@@ -466,7 +452,7 @@ test.describe('HRM Attendance REST — assign / bulk-assign (admin)', () => {
         }
     });
 
-    test('ATT-API-19 bulk_shift_assign replaces a user\'s shift', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    test("ATT-API-19 bulk_shift_assign replaces a user's shift", { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const id = await createShift();
         test.skip(!id, 'needs a shift');
         test.skip(!empUserId, 'needs a seeded employee');
@@ -506,11 +492,7 @@ test.describe('HRM Attendance REST — logs & reports (admin)', () => {
         test.skip(!empUserId, 'needs a seeded employee');
         // erp_attendance_punch with no active date_shift for the user can return a
         // WP_Error/false, and is a KNOWN 500 risk in some states. Tolerate it.
-        const [resp] = await api.post(
-            url.logs(),
-            { data: { user_id: Number(empUserId), timestamp: null } },
-            false,
-        );
+        const [resp] = await api.post(url.logs(), { data: { user_id: Number(empUserId), timestamp: null } }, false);
         expect(resp.status(), 'punch answered (5xx tolerated as logged bug)').toBeGreaterThanOrEqual(200);
     });
 
@@ -527,11 +509,7 @@ test.describe('HRM Attendance REST — logs & reports (admin)', () => {
 
     test('ATT-API-24 single-employee report returns attendances (array/empty)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         test.skip(!empUserId, 'needs a seeded employee');
-        const [resp, body] = await api.get(
-            `${url.report(empUserId)}?start_date=2026-06-01&end_date=2026-06-30`,
-            undefined,
-            false,
-        );
+        const [resp, body] = await api.get(`${url.report(empUserId)}?start_date=2026-06-01&end_date=2026-06-30`, undefined, false);
         expect(resp.status(), 'report read must not 500').toBeLessThan(500);
         if (resp.status() === 200) {
             // get_single_employee_attendances returns $report['attendances'].
@@ -545,11 +523,7 @@ test.describe('HRM Attendance REST — logs & reports (admin)', () => {
     });
 
     test('ATT-API-26 hrentry (all-date attendance) list does not 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const [resp] = await api.get(
-            `${url.hrentry()}?start_date=2026-06-01&end_date=2026-06-30&per_page=10&page=1`,
-            undefined,
-            false,
-        );
+        const [resp] = await api.get(`${url.hrentry()}?start_date=2026-06-01&end_date=2026-06-30&per_page=10&page=1`, undefined, false);
         expect(resp.status(), 'hrentry list must not 500').toBeLessThan(500);
     });
 });
@@ -600,17 +574,9 @@ test.describe('HRM Attendance REST — employees & grace-time (admin)', () => {
         // Seed a known value then read it back via the get branch.
         const before = String(Math.floor(Math.random() * 300) + 1);
         const after = String(Math.floor(Math.random() * 300) + 1);
-        await api.post(
-            url.graceTime(),
-            { data: { params: { grace_before_checkin: before, grace_after_checkin: after } } },
-            false,
-        );
+        await api.post(url.graceTime(), { data: { params: { grace_before_checkin: before, grace_after_checkin: after } } }, false);
 
-        const [resp, body] = await api.post(
-            url.graceTime(),
-            { data: { params: { get_grace_before_checkin: true } } },
-            false,
-        );
+        const [resp, body] = await api.post(url.graceTime(), { data: { params: { get_grace_before_checkin: true } } }, false);
         expect(resp.status(), 'grace-time get-mode must not 500').toBeLessThan(500);
         if (resp.ok() && Array.isArray(body)) {
             expect(String(body[0]), 'get-mode returns saved before-grace').toBe(before);

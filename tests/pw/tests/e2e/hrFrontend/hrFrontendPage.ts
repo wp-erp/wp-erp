@@ -39,7 +39,7 @@ import { dbUtils } from '@utils/dbUtils';
 export class HrFrontendPage {
     readonly page: Page;
 
-    constructor( page: Page ) {
+    constructor(page: Page) {
         this.page = page;
     }
 
@@ -69,22 +69,21 @@ export class HrFrontendPage {
 
     /** REST settings endpoint (DashboardSettings::register_rest_routes). */
     static settingsUrl(): string {
-        return restUrl( '/erp/v1/hrm/hr-frontend/settings' );
+        return restUrl('/erp/v1/hrm/hr-frontend/settings');
     }
 
     /** Build the dashboard URL for a slug: BASE_URL/<slug>/. */
-    static dashboardUrl( slug: string ): string {
-        return toPath( `${slug}/` );
+    static dashboardUrl(slug: string): string {
+        return toPath(`${slug}/`);
     }
 
     // ── DB oracle: GATE table (wp_erp_hr_employees) ──────────────────────────
 
     /** True if an ERP employee row exists for the given WP user id. */
-    static async employeeRowExists( userId: number ): Promise<boolean> {
-        const rows = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${HrFrontendPage.EMP_TABLE} WHERE user_id = ? LIMIT 1`,
-            [ userId ],
-        );
+    static async employeeRowExists(userId: number): Promise<boolean> {
+        const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${HrFrontendPage.EMP_TABLE} WHERE user_id = ? LIMIT 1`, [
+            userId,
+        ]);
         return rows.length > 0;
     }
 
@@ -98,8 +97,8 @@ export class HrFrontendPage {
     static resolveEmployeeUserId(): number {
         const username = process.env.EMPLOYEE ?? 'employee1';
         try {
-            const id = Number( exeCommandWpcli( `user get ${username} --field=ID` ).trim() );
-            return Number.isFinite( id ) && id > 0 ? id : HrFrontendPage.EMP_USER_ID;
+            const id = Number(exeCommandWpcli(`user get ${username} --field=ID`).trim());
+            return Number.isFinite(id) && id > 0 ? id : HrFrontendPage.EMP_USER_ID;
         } catch {
             return HrFrontendPage.EMP_USER_ID;
         }
@@ -110,33 +109,30 @@ export class HrFrontendPage {
      * gated-out (302 → /wp-admin/) to dashboard-renders (200). Confirmed-live
      * payload from the recipe (verbatim columns/values).
      */
-    static async insertEmployeeRow( userId: number ): Promise<void> {
+    static async insertEmployeeRow(userId: number): Promise<void> {
         // Idempotent: do not duplicate if a prior run left a row.
-        if ( await HrFrontendPage.employeeRowExists( userId ) ) return;
+        if (await HrFrontendPage.employeeRowExists(userId)) return;
         await dbUtils.dbQuery(
             `INSERT INTO ${HrFrontendPage.EMP_TABLE}
                 (user_id, designation, department, location, hiring_source, hiring_date,
                  termination_date, date_of_birth, reporting_to, pay_type, type, status)
              VALUES (?, 0, 0, 0, 'direct', '2024-01-01',
                  '0000-00-00', '0000-00-00', 0, 'monthly', 'permanent', 'active')`,
-            [ userId ],
+            [userId],
         );
     }
 
     /** Remove the ERP employee row (afterAll cleanup → user gated out again). */
-    static async deleteEmployeeRow( userId: number ): Promise<void> {
-        await dbUtils.dbQuery(
-            `DELETE FROM ${HrFrontendPage.EMP_TABLE} WHERE user_id = ?`,
-            [ userId ],
-        );
+    static async deleteEmployeeRow(userId: number): Promise<void> {
+        await dbUtils.dbQuery(`DELETE FROM ${HrFrontendPage.EMP_TABLE} WHERE user_id = ?`, [userId]);
     }
 
     // ── wp-cli oracle: slug option + rewrite rules (deterministic) ───────────
 
     /** Read the active dashboard slug from wp_options (default 'wp-erp'). */
     static async getSlug(): Promise<string> {
-        const raw = await dbUtils.getOptionValue<string>( HrFrontendPage.OPT_SLUG );
-        const slug = String( raw ?? '' ).trim();
+        const raw = await dbUtils.getOptionValue<string>(HrFrontendPage.OPT_SLUG);
+        const slug = String(raw ?? '').trim();
         return slug.length ? slug : HrFrontendPage.DEFAULT_SLUG;
     }
 
@@ -146,23 +142,23 @@ export class HrFrontendPage {
      * Rewrites::add_rewrite_rules() with the new slug, then persists the rule —
      * so unlike the REST path (HRFE-BUG-01) the new slug URL reliably resolves.
      */
-    static setSlugViaCli( slug: string ): void {
-        exeCommandWpcli( `option update ${HrFrontendPage.OPT_SLUG} ${slug}` );
-        exeCommandWpcli( 'rewrite flush' );
+    static setSlugViaCli(slug: string): void {
+        exeCommandWpcli(`option update ${HrFrontendPage.OPT_SLUG} ${slug}`);
+        exeCommandWpcli('rewrite flush');
     }
 
     /** Restore slug + title to the shipped defaults and hard-flush the rules. */
     static restoreDefaultsViaCli(): void {
-        exeCommandWpcli( `option update ${HrFrontendPage.OPT_SLUG} ${HrFrontendPage.DEFAULT_SLUG}` );
-        exeCommandWpcli( `option update ${HrFrontendPage.OPT_TITLE} "${HrFrontendPage.DEFAULT_TITLE}"` );
-        exeCommandWpcli( 'rewrite flush' );
+        exeCommandWpcli(`option update ${HrFrontendPage.OPT_SLUG} ${HrFrontendPage.DEFAULT_SLUG}`);
+        exeCommandWpcli(`option update ${HrFrontendPage.OPT_TITLE} "${HrFrontendPage.DEFAULT_TITLE}"`);
+        exeCommandWpcli('rewrite flush');
     }
 
     /** True if a rewrite rule mentioning the given slug exists (rewrite_rules option). */
-    static rewriteRuleExists( slug: string ): boolean {
-        const csv = exeCommandWpcli( 'rewrite list --format=csv' );
+    static rewriteRuleExists(slug: string): boolean {
+        const csv = exeCommandWpcli('rewrite list --format=csv');
         // A rule line looks like `^<slug>/?$,index.php?erp_dashboard=true,…`.
-        return csv.split( '\n' ).some( line => line.includes( `^${slug}/` ) );
+        return csv.split('\n').some(line => line.includes(`^${slug}/`));
     }
 
     // ── UI-driven render (Surface #2) ────────────────────────────────────────
@@ -176,35 +172,32 @@ export class HrFrontendPage {
      * gate/redirect is in play (page.goto follows redirects; the final response
      * status is what we inspect).
      */
-    async expectDashboardRenders( slug: string ): Promise<void> {
-        await this.page.goto( HrFrontendPage.dashboardUrl( slug ), { waitUntil: 'domcontentloaded' } );
+    async expectDashboardRenders(slug: string): Promise<void> {
+        await this.page.goto(HrFrontendPage.dashboardUrl(slug), { waitUntil: 'domcontentloaded' });
 
         // Never a WP fatal on an authorized render.
-        const body = ( await this.page.locator( 'body' ).textContent() ) ?? '';
-        expect( body, 'authorized render shows no WP critical-error splash' )
-            .not.toContain( HrFrontendPage.CRITICAL_ERROR );
+        const body = (await this.page.locator('body').textContent()) ?? '';
+        expect(body, 'authorized render shows no WP critical-error splash').not.toContain(HrFrontendPage.CRITICAL_ERROR);
 
         // The standalone dashboard template mounts these (templates/dashboard.php).
-        await expect( this.page.locator( this.sel.root ), 'React root #erp-hr-frontend-root is present' )
-            .toBeAttached( { timeout: 30_000 } );
-        await expect( this.page.locator( this.sel.bundle ), 'hr-frontend.js bundle is enqueued' )
-            .toBeAttached( { timeout: 30_000 } );
+        await expect(this.page.locator(this.sel.root), 'React root #erp-hr-frontend-root is present').toBeAttached({ timeout: 30_000 });
+        await expect(this.page.locator(this.sel.bundle), 'hr-frontend.js bundle is enqueued').toBeAttached({ timeout: 30_000 });
 
         // window.wpErpHrFrontend localized object (userId etc.) is present.
-        const localized = await this.page.evaluate( () => {
+        const localized = await this.page.evaluate(() => {
             const w = window as unknown as { wpErpHrFrontend?: { userId?: number } };
             return w.wpErpHrFrontend ?? null;
-        } );
-        expect( localized, 'window.wpErpHrFrontend localized object is present' ).not.toBeNull();
+        });
+        expect(localized, 'window.wpErpHrFrontend localized object is present').not.toBeNull();
     }
 
     /** Read window.wpErpHrFrontend.userId from a rendered dashboard. */
     async localizedUserId(): Promise<number | null> {
-        return this.page.evaluate( () => {
+        return this.page.evaluate(() => {
             const w = window as unknown as { wpErpHrFrontend?: { userId?: number } };
             const id = w.wpErpHrFrontend?.userId;
             return typeof id === 'number' ? id : null;
-        } );
+        });
     }
 
     /**
@@ -212,17 +205,15 @@ export class HrFrontendPage {
      * NOT render). page.goto follows the 302, landing on wp-login.php (unauth) or
      * /wp-admin/ (no-cap); in either case #erp-hr-frontend-root must be absent.
      */
-    async expectGatedAway( slug: string ): Promise<string> {
-        await this.page.goto( HrFrontendPage.dashboardUrl( slug ), { waitUntil: 'domcontentloaded' } );
+    async expectGatedAway(slug: string): Promise<string> {
+        await this.page.goto(HrFrontendPage.dashboardUrl(slug), { waitUntil: 'domcontentloaded' });
         const finalUrl = this.page.url();
 
-        const body = ( await this.page.locator( 'body' ).textContent() ) ?? '';
-        expect( body, 'a gate redirect must not surface a WP fatal' )
-            .not.toContain( HrFrontendPage.CRITICAL_ERROR );
+        const body = (await this.page.locator('body').textContent()) ?? '';
+        expect(body, 'a gate redirect must not surface a WP fatal').not.toContain(HrFrontendPage.CRITICAL_ERROR);
 
         // Dashboard markers must be absent on the redirect target.
-        await expect( this.page.locator( this.sel.root ), 'gated user never sees the dashboard root' )
-            .toHaveCount( 0 );
+        await expect(this.page.locator(this.sel.root), 'gated user never sees the dashboard root').toHaveCount(0);
 
         return finalUrl;
     }

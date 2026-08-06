@@ -144,7 +144,11 @@ test.describe('Accounting REST — Invoices & reconciliation', () => {
     });
 
     test('trial-balance report stays balanced (Σdebit == Σcredit)', { tag: ['@lite', '@accounting'] }, async () => {
-        const [res, body] = await api.get(`${endPoints.acctReports}/trial-balance?start_date=2025-01-01&end_date=2025-12-31`, undefined, false);
+        const [res, body] = await api.get(
+            `${endPoints.acctReports}/trial-balance?start_date=2025-01-01&end_date=2025-12-31`,
+            undefined,
+            false,
+        );
 
         // The report controller may key by capability/date; only assert balance
         // when it returns a usable shape, otherwise just confirm it answered.
@@ -154,7 +158,7 @@ test.describe('Accounting REST — Invoices & reconciliation', () => {
         const rows: Array<{ debit?: number | string; credit?: number | string }> = Array.isArray(body)
             ? body
             : Array.isArray((body as { data?: unknown }).data)
-              ? ((body as { data: Array<{ debit?: number | string; credit?: number | string }> }).data)
+              ? (body as { data: Array<{ debit?: number | string; credit?: number | string }> }).data
               : [];
 
         if (rows.length === 0) return; // nothing to reconcile in this window

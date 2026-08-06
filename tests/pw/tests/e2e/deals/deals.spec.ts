@@ -141,9 +141,7 @@ test.describe('CRM Deals access control (pro, employee)', () => {
         } else {
             // If the node is in the DOM it must not be a usable, visible app —
             // a denied page shows a WP permission notice somewhere in the body.
-            await expect(page.locator('body')).toContainText(
-                /do not have permission|sorry, you are not allowed|cheat/i,
-            );
+            await expect(page.locator('body')).toContainText(/do not have permission|sorry, you are not allowed|cheat/i);
         }
     });
 });

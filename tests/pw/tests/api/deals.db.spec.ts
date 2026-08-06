@@ -53,15 +53,11 @@ test.afterAll(async () => {
 test.describe('CRM Deals — seeded reference data (DB)', () => {
     // DEALS-DB-01 — the default pipeline row exists.
     test('default "Pipeline" (id=1) is seeded', { tag: ['@pro', '@crm', '@admin'] }, async () => {
-        const all = await dbUtils.dbQuery<{ id: number; title: string }>(
-            `SELECT id, title FROM ${T.pipelines}`,
-        );
+        const all = await dbUtils.dbQuery<{ id: number; title: string }>(`SELECT id, title FROM ${T.pipelines}`);
         // Seed inserts exactly 1; a live site may have added more → assert >= 1.
         expect(all.length, 'at least the seeded pipeline exists').toBeGreaterThanOrEqual(1);
 
-        const def = await dbUtils.dbQuery<{ id: number; title: string }>(
-            `SELECT id, title FROM ${T.pipelines} WHERE id = 1 LIMIT 1`,
-        );
+        const def = await dbUtils.dbQuery<{ id: number; title: string }>(`SELECT id, title FROM ${T.pipelines} WHERE id = 1 LIMIT 1`);
         expect(def[0], 'pipeline id=1 exists').toBeTruthy();
         expect(String(def[0]?.title)).toBe('Pipeline');
     });
@@ -142,21 +138,22 @@ test.describe('CRM Deals — deal row round-trip (DB)', () => {
         // mysql2 surfaces insertId on the OkPacket; fall back to a title lookup.
         dealId = (result as unknown as { insertId?: number }).insertId;
         if (!dealId) {
-            const found = await dbUtils.dbQuery<{ id: number }>(
-                `SELECT id FROM ${T.deals} WHERE title = ? ORDER BY id DESC LIMIT 1`,
-                [DEAL_TITLE],
-            );
+            const found = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE title = ? ORDER BY id DESC LIMIT 1`, [
+                DEAL_TITLE,
+            ]);
             dealId = found[0]?.id;
         }
         expect(dealId, 'deal insert returned an id').toBeTruthy();
 
         const rows = await dbUtils.dbQuery<{
-            id: number; title: string; stage_id: number; value: string;
-            won_at: string | null; lost_at: string | null; deleted_at: string | null;
-        }>(
-            `SELECT id, title, stage_id, value, won_at, lost_at, deleted_at FROM ${T.deals} WHERE id = ? LIMIT 1`,
-            [dealId],
-        );
+            id: number;
+            title: string;
+            stage_id: number;
+            value: string;
+            won_at: string | null;
+            lost_at: string | null;
+            deleted_at: string | null;
+        }>(`SELECT id, title, stage_id, value, won_at, lost_at, deleted_at FROM ${T.deals} WHERE id = ? LIMIT 1`, [dealId]);
         const deal = rows[0];
         expect(deal, 'deal row is readable by id').toBeTruthy();
         expect(String(deal?.title)).toBe(DEAL_TITLE);
@@ -217,10 +214,7 @@ test.describe('CRM Deals — deal row round-trip (DB)', () => {
         test.skip(!dealId, 'needs the deal created earlier');
         await dbUtils.dbQuery(`UPDATE ${T.deals} SET deleted_at = NOW() WHERE id = ?`, [dealId]);
 
-        const active = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${T.deals} WHERE id = ? AND deleted_at IS NULL`,
-            [dealId],
-        );
+        const active = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE id = ? AND deleted_at IS NULL`, [dealId]);
         expect(active.length, 'soft-deleted deal is excluded from the active set').toBe(0);
 
         // The row still physically exists (soft delete, not hard delete).
@@ -234,10 +228,7 @@ test.describe('CRM Deals — deal row round-trip (DB)', () => {
 
     // DEALS-DB-09 — negative: a non-existent deal id returns no row.
     test('reading a non-existent deal id returns nothing', { tag: ['@pro', '@crm', '@admin'] }, async () => {
-        const rows = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${T.deals} WHERE id = ? LIMIT 1`,
-            [999_999_999],
-        );
+        const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${T.deals} WHERE id = ? LIMIT 1`, [999_999_999]);
         expect(rows.length, 'a missing deal id yields no rows').toBe(0);
     });
 });

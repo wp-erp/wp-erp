@@ -92,9 +92,20 @@ interface WorkflowRow {
     created_at: string;
     deleted_at: string | null;
 }
-interface ActionRow { name: string; params: string; workflow_id: number }
-interface ConditionRow { condition_name: string; operator: string; value: string; workflow_id: number }
-interface CountRow { c: number }
+interface ActionRow {
+    name: string;
+    params: string;
+    workflow_id: number;
+}
+interface ConditionRow {
+    condition_name: string;
+    operator: string;
+    value: string;
+    workflow_id: number;
+}
+interface CountRow {
+    c: number;
+}
 
 // ── admin-ajax helpers (this feature only — NOT shared utils) ────────────────
 
@@ -103,21 +114,16 @@ interface CountRow { c: number }
  * The first hidden input (v-if=workflow_edit_mode) carries 'erp-wf-edit-workflow',
  * the second (v-else) carries 'erp-wf-new-workflow'. We match by mode.
  */
-async function scrapeWorkflowNonce(
-    request: APIRequestContext,
-    mode: 'create' | 'edit',
-    editId?: number,
-): Promise<string> {
-    const url = mode === 'edit'
-        ? `${URLS.addNew.replace('erp-workflow-new', 'erp-workflow')}&action=edit&id=${editId}`
-        : URLS.addNew;
+async function scrapeWorkflowNonce(request: APIRequestContext, mode: 'create' | 'edit', editId?: number): Promise<string> {
+    const url = mode === 'edit' ? `${URLS.addNew.replace('erp-workflow-new', 'erp-workflow')}&action=edit&id=${editId}` : URLS.addNew;
     const resp = await request.get(url);
     const html = await resp.text();
     expect(html, 'workflow form page must not be a PHP fatal').not.toContain(CRITICAL_ERROR);
 
-    const re = mode === 'edit'
-        ? /v-if="workflow_edit_mode" type="hidden" v-model="nonce" value="([a-f0-9]+)"/
-        : /v-else type="hidden" v-model="nonce" value="([a-f0-9]+)"/;
+    const re =
+        mode === 'edit'
+            ? /v-if="workflow_edit_mode" type="hidden" v-model="nonce" value="([a-f0-9]+)"/
+            : /v-else type="hidden" v-model="nonce" value="([a-f0-9]+)"/;
     const match = html.match(re);
     expect(match?.[1], `should scrape the ${mode} nonce from the workflow view`).toBeTruthy();
     return match![1]!;
@@ -133,7 +139,7 @@ interface SaveWorkflowInput {
     event?: string;
     eventsGroup?: string;
     conditionsGroup?: 'and' | 'or';
-    activate?: boolean;          // omit → status 'paused'
+    activate?: boolean; // omit → status 'paused'
     delayTime?: number;
     delayPeriod?: string;
     conditions?: WfCondition[];
@@ -184,7 +190,11 @@ async function saveNewWorkflow(
     });
     const status = resp.status();
     let body: any;
-    try { body = await resp.json(); } catch { body = await resp.text(); }
+    try {
+        body = await resp.json();
+    } catch {
+        body = await resp.text();
+    }
 
     let id: number | undefined;
     if (body?.success === true) {
@@ -205,16 +215,17 @@ async function saveEditWorkflow(
         multipart: buildMultipart('erp_wf_edit_workflow', nonce, input, workflowId),
     });
     let body: any;
-    try { body = await resp.json(); } catch { body = await resp.text(); }
+    try {
+        body = await resp.json();
+    } catch {
+        body = await resp.text();
+    }
     return { status: resp.status(), body };
 }
 
 // ── DB read helpers ──────────────────────────────────────────────────────────
 async function getWorkflowIdByName(name: string): Promise<number | undefined> {
-    const rows = await dbUtils.dbQuery<{ id: number }>(
-        `SELECT id FROM ${WF_TABLE} WHERE name = ? ORDER BY id DESC LIMIT 1`,
-        [name],
-    );
+    const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${WF_TABLE} WHERE name = ? ORDER BY id DESC LIMIT 1`, [name]);
     return rows[0]?.id;
 }
 async function getWorkflow(id: number): Promise<WorkflowRow | undefined> {
@@ -286,10 +297,7 @@ test.afterAll(async () => {
     }
     // Safety net: nuke any leftover EXEC-prefixed rows (and their children) from a
     // crashed run, so the next run starts clean.
-    const leftovers = await dbUtils.dbQuery<{ id: number }>(
-        `SELECT id FROM ${WF_TABLE} WHERE name LIKE ?`,
-        [`${WF_NAME_PREFIX}%`],
-    );
+    const leftovers = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${WF_TABLE} WHERE name LIKE ?`, [`${WF_NAME_PREFIX}%`]);
     for (const r of leftovers) {
         await dbUtils.dbQuery(`DELETE FROM ${WF_LOGS} WHERE workflow_id = ?`, [r.id]);
         await dbUtils.dbQuery(`DELETE FROM ${WF_ACTIONS} WHERE workflow_id = ?`, [r.id]);
@@ -313,108 +321,132 @@ test.describe('HRM Workflow execution — lifecycle (pro, admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
     // WFX-LC-01 — the save handler creates an active auto workflow + its action.
-    test('WFX-LC-01 save handler creates an active auto workflow with a serialized action', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}LC01 ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
+    test(
+        'WFX-LC-01 save handler creates an active auto workflow with a serialized action',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}LC01 ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
 
-        const { status, body, id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, conditionsGroup: 'or',
-            actions: [probeHookAction(suffix)],
-        });
+            const { status, body, id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                conditionsGroup: 'or',
+                actions: [probeHookAction(suffix)],
+            });
 
-        expect(status, 'admin-ajax returns 200 even for app-level errors').toBe(200);
-        expect(body?.success, `save handler should succeed: ${JSON.stringify(body)}`).toBe(true);
-        expect(id, 'a wp_erp_workflows row should exist after a successful save').toBeTruthy();
+            expect(status, 'admin-ajax returns 200 even for app-level errors').toBe(200);
+            expect(body?.success, `save handler should succeed: ${JSON.stringify(body)}`).toBe(true);
+            expect(id, 'a wp_erp_workflows row should exist after a successful save').toBeTruthy();
 
-        const wf = await getWorkflow(id!);
-        expect(wf).toBeTruthy();
-        // type defaults to 'auto' (DB default — the handler never sends it).
-        expect(String(wf!.type)).toBe('auto');
-        expect(String(wf!.status)).toBe('active');
-        expect(String(wf!.event)).toBe('created_user');
-        expect(String(wf!.events_group)).toBe('general');
-        expect(String(wf!.conditions_group)).toBe('or');
-        expect(Number(wf!.run)).toBe(0); // never fired yet
-        expect(wf!.deleted_at).toBeNull();
+            const wf = await getWorkflow(id!);
+            expect(wf).toBeTruthy();
+            // type defaults to 'auto' (DB default — the handler never sends it).
+            expect(String(wf!.type)).toBe('auto');
+            expect(String(wf!.status)).toBe('active');
+            expect(String(wf!.event)).toBe('created_user');
+            expect(String(wf!.events_group)).toBe('general');
+            expect(String(wf!.conditions_group)).toBe('or');
+            expect(Number(wf!.run)).toBe(0); // never fired yet
+            expect(wf!.deleted_at).toBeNull();
 
-        // The action persisted with php-serialized params carrying hook_name.
-        const actions = await getActions(id!);
-        expect(actions.length).toBe(1);
-        expect(actions[0]!.name).toBe('trigger_action_hook');
-        expect(actions[0]!.params).toContain('hook_name');
-        expect(actions[0]!.params).toContain(`pw_wf_probe_hook_${suffix}`);
+            // The action persisted with php-serialized params carrying hook_name.
+            const actions = await getActions(id!);
+            expect(actions.length).toBe(1);
+            expect(actions[0]!.name).toBe('trigger_action_hook');
+            expect(actions[0]!.params).toContain('hook_name');
+            expect(actions[0]!.params).toContain(`pw_wf_probe_hook_${suffix}`);
 
-        // No conditions were sent → zero condition rows.
-        expect((await getConditions(id!)).length).toBe(0);
-    });
+            // No conditions were sent → zero condition rows.
+            expect((await getConditions(id!)).length).toBe(0);
+        },
+    );
 
     // WFX-LC-02 — firing user_register on a no-condition active workflow runs it.
-    test('WFX-LC-02 firing user_register increments run 0→1 and writes one log row', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}LC02 ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, actions: [probeHookAction(suffix)],
-        });
-        expect(id, 'workflow should be created').toBeTruthy();
-        expect(await getRun(id!)).toBe(0);
-        expect(await getLogCount(id!)).toBe(0);
+    test(
+        'WFX-LC-02 firing user_register increments run 0→1 and writes one log row',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}LC02 ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id, 'workflow should be created').toBeTruthy();
+            expect(await getRun(id!)).toBe(0);
+            expect(await getLogCount(id!)).toBe(0);
 
-        const userId = await fireCreatedUser(suffix);
-        expect(userId, 'user create should fire user_register').toBeTruthy();
+            const userId = await fireCreatedUser(suffix);
+            expect(userId, 'user create should fire user_register').toBeTruthy();
 
-        // Execution side-effects: run incremented + exactly one log row.
-        expect(await getRun(id!), 'run should increment to 1').toBe(1);
-        expect(await getLogCount(id!), 'one execution → one log row').toBe(1);
-    });
+            // Execution side-effects: run incremented + exactly one log row.
+            expect(await getRun(id!), 'run should increment to 1').toBe(1);
+            expect(await getLogCount(id!), 'one execution → one log row').toBe(1);
+        },
+    );
 
     // WFX-LC-03 — two fires → run=2, 2 logs (per-event, repeatable execution).
-    test('WFX-LC-03 two user_register fires increment run to 2 and create 2 log rows', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}LC03 ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, actions: [probeHookAction(suffix)],
-        });
-        expect(id).toBeTruthy();
+    test(
+        'WFX-LC-03 two user_register fires increment run to 2 and create 2 log rows',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}LC03 ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id).toBeTruthy();
 
-        await fireCreatedUser(`${suffix}a`);
-        await fireCreatedUser(`${suffix}b`);
+            await fireCreatedUser(`${suffix}a`);
+            await fireCreatedUser(`${suffix}b`);
 
-        expect(await getRun(id!), 'run should be 2 after two fires').toBe(2);
-        expect(await getLogCount(id!), 'two executions → two log rows').toBe(2);
-    });
+            expect(await getRun(id!), 'run should be 2 after two fires').toBe(2);
+            expect(await getLogCount(id!), 'two executions → two log rows').toBe(2);
+        },
+    );
 
     // WFX-LC-04 — full end-to-end, asserting no fatal anywhere in the flow.
-    test('WFX-LC-04 end-to-end scrape→save→fire→assert with no critical error or fatal', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}LC04 ${suffix}`;
+    test(
+        'WFX-LC-04 end-to-end scrape→save→fire→assert with no critical error or fatal',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}LC04 ${suffix}`;
 
-        // (1) Add-New page renders, scrape nonce.
-        await page.goto(URLS.addNew, { waitUntil: 'domcontentloaded' });
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            // (1) Add-New page renders, scrape nonce.
+            await page.goto(URLS.addNew, { waitUntil: 'domcontentloaded' });
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
 
-        // (2) save via the real handler.
-        const { status, body, id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, actions: [probeHookAction(suffix)],
-        });
-        expect(status).toBe(200);
-        expect(body?.success).toBe(true);
-        expect(id).toBeTruthy();
+            // (2) save via the real handler.
+            const { status, body, id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                actions: [probeHookAction(suffix)],
+            });
+            expect(status).toBe(200);
+            expect(body?.success).toBe(true);
+            expect(id).toBeTruthy();
 
-        // (3) fire the trigger.
-        await fireCreatedUser(suffix);
+            // (3) fire the trigger.
+            await fireCreatedUser(suffix);
 
-        // (4) assert execution + the workflow shows up in the list with no fatal.
-        expect(await getRun(id!)).toBe(1);
-        expect(await getLogCount(id!)).toBe(1);
+            // (4) assert execution + the workflow shows up in the list with no fatal.
+            expect(await getRun(id!)).toBe(1);
+            expect(await getLogCount(id!)).toBe(1);
 
-        await page.goto(URLS.list, { waitUntil: 'domcontentloaded' });
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
-        await expect(page.locator('table.wp-list-table')).toContainText(name, { timeout: 15_000 });
-    });
+            await page.goto(URLS.list, { waitUntil: 'domcontentloaded' });
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            await expect(page.locator('table.wp-list-table')).toContainText(name, { timeout: 15_000 });
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -424,65 +456,83 @@ test.describe('HRM Workflow execution — condition gating (pro, admin)', () => 
     test.use({ storageState: data.auth.adminFile });
 
     // WFX-CON-01 — a NON-matching email condition does NOT fire.
-    test('WFX-CON-01 non-matching email condition does not fire (run stays 0, no logs)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}CON01 ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, conditionsGroup: 'and',
-            conditions: [{ condition_name: 'email', operator: '=', value: `never-match-${suffix}@nope.test` }],
-            actions: [probeHookAction(suffix)],
-        });
-        expect(id).toBeTruthy();
+    test(
+        'WFX-CON-01 non-matching email condition does not fire (run stays 0, no logs)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}CON01 ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                conditionsGroup: 'and',
+                conditions: [{ condition_name: 'email', operator: '=', value: `never-match-${suffix}@nope.test` }],
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id).toBeTruthy();
 
-        // Fire with a DIFFERENT email than the condition value.
-        await fireCreatedUser(suffix, `${suffix}@example.com`);
+            // Fire with a DIFFERENT email than the condition value.
+            await fireCreatedUser(suffix, `${suffix}@example.com`);
 
-        expect(await getRun(id!), 'non-matching condition must not fire').toBe(0);
-        expect(await getLogCount(id!), 'no execution → no log row').toBe(0);
-    });
+            expect(await getRun(id!), 'non-matching condition must not fire').toBe(0);
+            expect(await getLogCount(id!), 'no execution → no log row').toBe(0);
+        },
+    );
 
     // WFX-CON-02 — a MATCHING email condition (scalar field present at trigger
     // time) DOES fire. Email is the deterministic matching field over REST.
-    test('WFX-CON-02 matching email condition fires on user_register (run=1, 1 log)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}CON02 ${suffix}`;
-        const matchEmail = `pwwfxmatch${suffix}@example.com`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, conditionsGroup: 'and',
-            conditions: [{ condition_name: 'email', operator: '=', value: matchEmail }],
-            actions: [probeHookAction(suffix)],
-        });
-        expect(id).toBeTruthy();
+    test(
+        'WFX-CON-02 matching email condition fires on user_register (run=1, 1 log)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}CON02 ${suffix}`;
+            const matchEmail = `pwwfxmatch${suffix}@example.com`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                conditionsGroup: 'and',
+                conditions: [{ condition_name: 'email', operator: '=', value: matchEmail }],
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id).toBeTruthy();
 
-        // Fire with the EXACT email the condition expects.
-        await fireCreatedUser(suffix, matchEmail);
+            // Fire with the EXACT email the condition expects.
+            await fireCreatedUser(suffix, matchEmail);
 
-        expect(await getRun(id!), 'matching condition should fire').toBe(1);
-        expect(await getLogCount(id!), 'one execution → one log row').toBe(1);
-    });
+            expect(await getRun(id!), 'matching condition should fire').toBe(1);
+            expect(await getLogCount(id!), 'one execution → one log row').toBe(1);
+        },
+    );
 
     // WFX-CON-03 — the condition row persists exactly as sent.
-    test('WFX-CON-03 condition row persists with name/operator/value/workflow_id', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}CON03 ${suffix}`;
-        const value = `persist-${suffix}@nope.test`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, conditionsGroup: 'and',
-            conditions: [{ condition_name: 'email', operator: '=', value }],
-            actions: [probeHookAction(suffix)],
-        });
-        expect(id).toBeTruthy();
+    test(
+        'WFX-CON-03 condition row persists with name/operator/value/workflow_id',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}CON03 ${suffix}`;
+            const value = `persist-${suffix}@nope.test`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                conditionsGroup: 'and',
+                conditions: [{ condition_name: 'email', operator: '=', value }],
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id).toBeTruthy();
 
-        const conditions = await getConditions(id!);
-        expect(conditions.length).toBe(1);
-        expect(conditions[0]!.condition_name).toBe('email');
-        expect(conditions[0]!.operator).toBe('=');
-        expect(conditions[0]!.value).toBe(value);
-        expect(Number(conditions[0]!.workflow_id)).toBe(id);
-    });
+            const conditions = await getConditions(id!);
+            expect(conditions.length).toBe(1);
+            expect(conditions[0]!.condition_name).toBe('email');
+            expect(conditions[0]!.operator).toBe('=');
+            expect(conditions[0]!.value).toBe(value);
+            expect(Number(conditions[0]!.workflow_id)).toBe(id);
+        },
+    );
 
     // WFX-CON-04 — AND group with one matching + one non-matching → does NOT fire.
     test('WFX-CON-04 AND group with one non-matching condition does not fire', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
@@ -491,9 +541,11 @@ test.describe('HRM Workflow execution — condition gating (pro, admin)', () => 
         const matchEmail = `pwwfxand${suffix}@example.com`;
         const nonce = await scrapeWorkflowNonce(page.request, 'create');
         const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, conditionsGroup: 'and',
+            name,
+            activate: true,
+            conditionsGroup: 'and',
             conditions: [
-                { condition_name: 'email', operator: '=', value: matchEmail },          // matches
+                { condition_name: 'email', operator: '=', value: matchEmail }, // matches
                 { condition_name: 'email', operator: '=', value: `other-${suffix}@x.test` }, // never matches
             ],
             actions: [probeHookAction(suffix)],
@@ -514,23 +566,29 @@ test.describe('HRM Workflow execution — condition gating (pro, admin)', () => 
     // assigns the role AFTER `user_register`. This is asserted as the OBSERVED
     // behavior (run=0) so the suite encodes the nuance rather than mis-claiming a
     // fire. (A wp-cli create with --role would fire it; REST does not.)
-    test('WFX-CON-FINDING roles condition does not fire via REST user create (role set post-hook)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}CONROLE ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, conditionsGroup: 'and',
-            conditions: [{ condition_name: 'roles', operator: '=', value: 'subscriber' }],
-            actions: [probeHookAction(suffix)],
-        });
-        expect(id).toBeTruthy();
+    test(
+        'WFX-CON-FINDING roles condition does not fire via REST user create (role set post-hook)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}CONROLE ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                conditionsGroup: 'and',
+                conditions: [{ condition_name: 'roles', operator: '=', value: 'subscriber' }],
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id).toBeTruthy();
 
-        await fireCreatedUser(suffix); // REST create with roles:['subscriber']
+            await fireCreatedUser(suffix); // REST create with roles:['subscriber']
 
-        // Observed: role is empty at user_register over REST → condition fails.
-        expect(await getRun(id!), 'roles condition does not match over REST timing').toBe(0);
-        expect(await getLogCount(id!)).toBe(0);
-    });
+            // Observed: role is empty at user_register over REST → condition fails.
+            expect(await getRun(id!), 'roles condition does not match over REST timing').toBe(0);
+            expect(await getLogCount(id!)).toBe(0);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -545,7 +603,8 @@ test.describe('HRM Workflow execution — status gating (pro, admin)', () => {
         const name = `${WF_NAME_PREFIX}STA01 ${suffix}`;
         const nonce = await scrapeWorkflowNonce(page.request, 'create');
         const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, /* activate omitted → paused */ actions: [probeHookAction(suffix)],
+            name,
+            /* activate omitted → paused */ actions: [probeHookAction(suffix)],
         });
         expect(id).toBeTruthy();
 
@@ -560,29 +619,36 @@ test.describe('HRM Workflow execution — status gating (pro, admin)', () => {
 
     // WFX-STA-02 — when an active + a paused workflow share event=created_user,
     // only the active one fires.
-    test('WFX-STA-02 only the active workflow fires when active+paused share the event', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const activeName = `${WF_NAME_PREFIX}STA02act ${suffix}`;
-        const pausedName = `${WF_NAME_PREFIX}STA02pau ${suffix}`;
+    test(
+        'WFX-STA-02 only the active workflow fires when active+paused share the event',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const activeName = `${WF_NAME_PREFIX}STA02act ${suffix}`;
+            const pausedName = `${WF_NAME_PREFIX}STA02pau ${suffix}`;
 
-        const nonce1 = await scrapeWorkflowNonce(page.request, 'create');
-        const active = await saveNewWorkflow(page.request, nonce1, {
-            name: activeName, activate: true, actions: [probeHookAction(`${suffix}a`)],
-        });
-        const nonce2 = await scrapeWorkflowNonce(page.request, 'create');
-        const paused = await saveNewWorkflow(page.request, nonce2, {
-            name: pausedName, /* paused */ actions: [probeHookAction(`${suffix}p`)],
-        });
-        expect(active.id).toBeTruthy();
-        expect(paused.id).toBeTruthy();
+            const nonce1 = await scrapeWorkflowNonce(page.request, 'create');
+            const active = await saveNewWorkflow(page.request, nonce1, {
+                name: activeName,
+                activate: true,
+                actions: [probeHookAction(`${suffix}a`)],
+            });
+            const nonce2 = await scrapeWorkflowNonce(page.request, 'create');
+            const paused = await saveNewWorkflow(page.request, nonce2, {
+                name: pausedName,
+                /* paused */ actions: [probeHookAction(`${suffix}p`)],
+            });
+            expect(active.id).toBeTruthy();
+            expect(paused.id).toBeTruthy();
 
-        await fireCreatedUser(suffix);
+            await fireCreatedUser(suffix);
 
-        expect(await getRun(active.id!), 'active workflow runs').toBe(1);
-        expect(await getLogCount(active.id!)).toBe(1);
-        expect(await getRun(paused.id!), 'paused workflow stays untouched').toBe(0);
-        expect(await getLogCount(paused.id!)).toBe(0);
-    });
+            expect(await getRun(active.id!), 'active workflow runs').toBe(1);
+            expect(await getLogCount(active.id!)).toBe(1);
+            expect(await getRun(paused.id!), 'paused workflow stays untouched').toBe(0);
+            expect(await getLogCount(paused.id!)).toBe(0);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -597,7 +663,8 @@ test.describe('HRM Workflow execution — action persistence (pro, admin)', () =
         const name = `${WF_NAME_PREFIX}ACT01 ${suffix}`;
         const nonce = await scrapeWorkflowNonce(page.request, 'create');
         const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true,
+            name,
+            activate: true,
             actions: [{ name: 'add_user_role', title: 'Add User Role', role: 'subscriber' }],
         });
         expect(id).toBeTruthy();
@@ -610,38 +677,48 @@ test.describe('HRM Workflow execution — action persistence (pro, admin)', () =
     });
 
     // WFX-ACT-02 — multiple actions persist as multiple rows keyed by workflow_id.
-    test('WFX-ACT-02 multiple actions persist as multiple rows keyed by workflow_id', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}ACT02 ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true,
-            actions: [
-                { name: 'trigger_action_hook', title: 'Trigger Action Hook', hook_name: `pw_a_${suffix}` },
-                { name: 'add_user_role', title: 'Add User Role', role: 'subscriber' },
-            ],
-        });
-        expect(id).toBeTruthy();
+    test(
+        'WFX-ACT-02 multiple actions persist as multiple rows keyed by workflow_id',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}ACT02 ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true,
+                actions: [
+                    { name: 'trigger_action_hook', title: 'Trigger Action Hook', hook_name: `pw_a_${suffix}` },
+                    { name: 'add_user_role', title: 'Add User Role', role: 'subscriber' },
+                ],
+            });
+            expect(id).toBeTruthy();
 
-        const actions = await getActions(id!);
-        expect(actions.length).toBe(2);
-        const names = actions.map((a) => a.name).sort();
-        expect(names).toEqual(['add_user_role', 'trigger_action_hook']);
-        for (const a of actions) expect(Number(a.workflow_id)).toBe(id);
-    });
+            const actions = await getActions(id!);
+            expect(actions.length).toBe(2);
+            const names = actions.map(a => a.name).sort();
+            expect(names).toEqual(['add_user_role', 'trigger_action_hook']);
+            for (const a of actions) expect(Number(a.workflow_id)).toBe(id);
+        },
+    );
 
     // WFX-NEG-03 — saving with no actions persists the workflow but zero actions.
-    test('WFX-NEG-03 save with empty actions persists the workflow with zero action rows', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const name = `${WF_NAME_PREFIX}NEG03 ${suffix}`;
-        const nonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { body, id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, /* no actions, no conditions */
-        });
-        expect(body?.success).toBe(true);
-        expect(id, 'the workflow row still persists').toBeTruthy();
-        expect((await getActions(id!)).length, 'no actions sent → zero action rows').toBe(0);
-    });
+    test(
+        'WFX-NEG-03 save with empty actions persists the workflow with zero action rows',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const name = `${WF_NAME_PREFIX}NEG03 ${suffix}`;
+            const nonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { body, id } = await saveNewWorkflow(page.request, nonce, {
+                name,
+                activate: true /* no actions, no conditions */,
+            });
+            expect(body?.success).toBe(true);
+            expect(id, 'the workflow row still persists').toBeTruthy();
+            expect((await getActions(id!)).length, 'no actions sent → zero action rows').toBe(0);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -656,7 +733,9 @@ test.describe('HRM Workflow execution — log fidelity (pro, admin)', () => {
         const name = `${WF_NAME_PREFIX}PER01 ${suffix}`;
         const nonce = await scrapeWorkflowNonce(page.request, 'create');
         const { id } = await saveNewWorkflow(page.request, nonce, {
-            name, activate: true, actions: [probeHookAction(suffix)],
+            name,
+            activate: true,
+            actions: [probeHookAction(suffix)],
         });
         expect(id).toBeTruthy();
 
@@ -689,12 +768,18 @@ test.describe('HRM Workflow execution — auth boundaries (pro, admin)', () => {
         // Deliberately pass a bogus nonce (do NOT scrape a real one).
         const resp = await page.request.post(toPath('wp-admin/admin-ajax.php'), {
             multipart: buildMultipart('erp_wf_new_workflow', 'deadbeef00', {
-                name, activate: true, actions: [probeHookAction(suffix)],
+                name,
+                activate: true,
+                actions: [probeHookAction(suffix)],
             }),
         });
         expect(resp.status(), 'admin-ajax returns 200 with a JSON error body').toBe(200);
         let body: any;
-        try { body = await resp.json(); } catch { body = await resp.text(); }
+        try {
+            body = await resp.json();
+        } catch {
+            body = await resp.text();
+        }
         // The Ajax trait's verify_nonce sends a JSON error (not die(-1)).
         expect(body?.success).toBe(false);
         expect(String(body?.data ?? '')).toMatch(/nonce verification failed/i);
@@ -704,25 +789,28 @@ test.describe('HRM Workflow execution — auth boundaries (pro, admin)', () => {
     });
 
     // WFX-NEG-02 — an unauthenticated (no-cookie) POST is rejected by WP.
-    test('WFX-NEG-02 unauthenticated admin-ajax POST is rejected (no privileged handler)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // A fresh cookie-less context: the privileged wp_ajax_* action is not
-        // wired for logged-out users, so WP returns 400 with body '0'.
-        const ctx = await pwRequest.newContext({ baseURL: process.env.BASE_URL ?? 'http://localhost:9999' });
-        const resp = await ctx.post(toPath('wp-admin/admin-ajax.php'), {
-            form: { action: 'erp_wf_new_workflow' },
-        });
-        const status = resp.status();
-        const body = (await resp.text()).trim();
-        // An anonymous caller must be REJECTED. WordPress may serve the blocked marker
-        // '0' (no nopriv handler) or run the handler which then fails nonce verification
-        // ({"success":false,"data":"... Nonce verification failed"}). Either way it must
-        // NOT succeed and must NOT create a workflow — assert no success envelope.
-        expect(
-            body.includes('"success":true'),
-            `anonymous caller must not succeed (got ${status} / "${body.slice(0, 60)}")`,
-        ).toBe(false);
-        await ctx.dispose();
-    });
+    test(
+        'WFX-NEG-02 unauthenticated admin-ajax POST is rejected (no privileged handler)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // A fresh cookie-less context: the privileged wp_ajax_* action is not
+            // wired for logged-out users, so WP returns 400 with body '0'.
+            const ctx = await pwRequest.newContext({ baseURL: process.env.BASE_URL ?? 'http://localhost:9999' });
+            const resp = await ctx.post(toPath('wp-admin/admin-ajax.php'), {
+                form: { action: 'erp_wf_new_workflow' },
+            });
+            const status = resp.status();
+            const body = (await resp.text()).trim();
+            // An anonymous caller must be REJECTED. WordPress may serve the blocked marker
+            // '0' (no nopriv handler) or run the handler which then fails nonce verification
+            // ({"success":false,"data":"... Nonce verification failed"}). Either way it must
+            // NOT succeed and must NOT create a workflow — assert no success envelope.
+            expect(body.includes('"success":true'), `anonymous caller must not succeed (got ${status} / "${body.slice(0, 60)}")`).toBe(
+                false,
+            );
+            await ctx.dispose();
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -733,38 +821,45 @@ test.describe('HRM Workflow execution — edit handler (pro, admin)', () => {
 
     // WFX-EDIT-01 — the edit handler updates the workflow and replaces its
     // actions/conditions (the handler deletes then re-inserts both).
-    test('WFX-EDIT-01 edit handler updates the workflow and replaces actions/conditions', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const suffix = String(Date.now());
-        const origName = `${WF_NAME_PREFIX}EDIT01 ${suffix}`;
-        const editedName = `${WF_NAME_PREFIX}EDIT01-edited ${suffix}`;
+    test(
+        'WFX-EDIT-01 edit handler updates the workflow and replaces actions/conditions',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const suffix = String(Date.now());
+            const origName = `${WF_NAME_PREFIX}EDIT01 ${suffix}`;
+            const editedName = `${WF_NAME_PREFIX}EDIT01-edited ${suffix}`;
 
-        // Create with a condition + a trigger_action_hook action.
-        const createNonce = await scrapeWorkflowNonce(page.request, 'create');
-        const { id } = await saveNewWorkflow(page.request, createNonce, {
-            name: origName, activate: true, conditionsGroup: 'and',
-            conditions: [{ condition_name: 'email', operator: '=', value: `orig-${suffix}@x.test` }],
-            actions: [probeHookAction(suffix)],
-        });
-        expect(id).toBeTruthy();
-        expect((await getConditions(id!)).length).toBe(1);
-        expect((await getActions(id!))[0]!.name).toBe('trigger_action_hook');
+            // Create with a condition + a trigger_action_hook action.
+            const createNonce = await scrapeWorkflowNonce(page.request, 'create');
+            const { id } = await saveNewWorkflow(page.request, createNonce, {
+                name: origName,
+                activate: true,
+                conditionsGroup: 'and',
+                conditions: [{ condition_name: 'email', operator: '=', value: `orig-${suffix}@x.test` }],
+                actions: [probeHookAction(suffix)],
+            });
+            expect(id).toBeTruthy();
+            expect((await getConditions(id!)).length).toBe(1);
+            expect((await getActions(id!))[0]!.name).toBe('trigger_action_hook');
 
-        // Edit: rename, drop the condition (none sent), swap to add_user_role.
-        const editNonce = await scrapeWorkflowNonce(page.request, 'edit', id);
-        const { status, body } = await saveEditWorkflow(page.request, editNonce, id!, {
-            name: editedName, conditionsGroup: 'or',
-            actions: [{ name: 'add_user_role', title: 'Add User Role', role: 'subscriber' }],
-        });
-        expect(status).toBe(200);
-        expect(body?.success, `edit should succeed: ${JSON.stringify(body)}`).toBe(true);
+            // Edit: rename, drop the condition (none sent), swap to add_user_role.
+            const editNonce = await scrapeWorkflowNonce(page.request, 'edit', id);
+            const { status, body } = await saveEditWorkflow(page.request, editNonce, id!, {
+                name: editedName,
+                conditionsGroup: 'or',
+                actions: [{ name: 'add_user_role', title: 'Add User Role', role: 'subscriber' }],
+            });
+            expect(status).toBe(200);
+            expect(body?.success, `edit should succeed: ${JSON.stringify(body)}`).toBe(true);
 
-        // The update landed; conditions were deleted (none re-sent); action swapped.
-        const wf = await getWorkflow(id!);
-        expect(String(wf!.name)).toBe(editedName);
-        expect((await getConditions(id!)).length, 'edit deletes old conditions and re-inserts the (empty) set').toBe(0);
-        const actions = await getActions(id!);
-        expect(actions.length).toBe(1);
-        expect(actions[0]!.name).toBe('add_user_role');
-        expect(actions[0]!.params).toContain('subscriber');
-    });
+            // The update landed; conditions were deleted (none re-sent); action swapped.
+            const wf = await getWorkflow(id!);
+            expect(String(wf!.name)).toBe(editedName);
+            expect((await getConditions(id!)).length, 'edit deletes old conditions and re-inserts the (empty) set').toBe(0);
+            const actions = await getActions(id!);
+            expect(actions.length).toBe(1);
+            expect(actions[0]!.name).toBe('add_user_role');
+            expect(actions[0]!.params).toContain('subscriber');
+        },
+    );
 });

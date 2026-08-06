@@ -47,11 +47,11 @@ wp-content/plugins/
 
 wp-env auto-activates every plugin listed in the effective config's `plugins` array.
 
-| File | When used | Mounts | Result |
-|------|-----------|--------|--------|
-| `.wp-env.json` | always (base) | `wp-erp` + `mu-plugins` + `wp-data` | **Lite** site |
-| `.wp-env.override.json` | local dev (auto-merged by wp-env) | adds `erp-pro` | **Lite + Pro** |
-| `.wp-env.ci.json` | CI (copied to `.wp-env.override.json`) | adds `erp-pro` | **Lite + Pro** |
+| File                    | When used                              | Mounts                              | Result         |
+| ----------------------- | -------------------------------------- | ----------------------------------- | -------------- |
+| `.wp-env.json`          | always (base)                          | `wp-erp` + `mu-plugins` + `wp-data` | **Lite** site  |
+| `.wp-env.override.json` | local dev (auto-merged by wp-env)      | adds `erp-pro`                      | **Lite + Pro** |
+| `.wp-env.ci.json`       | CI (copied to `.wp-env.override.json`) | adds `erp-pro`                      | **Lite + Pro** |
 
 `erp-pro` is **never** in `.wp-env.json` — Pro is opt-in via the override/ci file,
 exactly like Dokan keeps `dokan-pro` out of its base config.
@@ -73,13 +73,13 @@ local_site_setup → site_setup → auth_setup → e2e_setup → e2e_tests
    (_localSite)     (_site)      (_auth)      (_env)      (*.spec.ts)
 ```
 
-| Project | Spec | Responsibility |
-|---------|------|----------------|
-| `local_site_setup` | `_localSite.setup.ts` | wp-env only: activate wp-erp, permalinks, timezone (LITE) |
-| `site_setup` | `_site.setup.ts` | activate CRM/Accounting; **separate, explicit `@pro` Pro activation** (§6) |
-| `auth_setup` | `_auth.setup.ts` | log in each role → storageState files + REST nonces |
-| `e2e_setup` | `_env.setup.ts` | per-module fixtures |
-| `e2e_tests` | `*.spec.ts` | the actual tests (sharded in CI) |
+| Project            | Spec                  | Responsibility                                                             |
+| ------------------ | --------------------- | -------------------------------------------------------------------------- |
+| `local_site_setup` | `_localSite.setup.ts` | wp-env only: activate wp-erp, permalinks, timezone (LITE)                  |
+| `site_setup`       | `_site.setup.ts`      | activate CRM/Accounting; **separate, explicit `@pro` Pro activation** (§6) |
+| `auth_setup`       | `_auth.setup.ts`      | log in each role → storageState files + REST nonces                        |
+| `e2e_setup`        | `_env.setup.ts`       | per-module fixtures                                                        |
+| `e2e_tests`        | `*.spec.ts`           | the actual tests (sharded in CI)                                           |
 
 `npm run setup` / `npm run docker:setup` = `playwright test --project=e2e_setup`, which
 runs the four setup projects (via dependencies) and **stops before the tests** — the
@@ -102,23 +102,23 @@ In a Pro run the report shows these discrete `@pro` nodes under `site_setup`:
 
 ## 5. npm scripts (run from `tests/pw/`)
 
-| Script | What it does |
-|--------|--------------|
-| `npm run start:env` | Boots wp-env; `poststart:env` syncs `DB_PORT` from Docker |
-| `npm run stop:env` | Stops containers (keeps DB) |
-| `npm run restart:env` | `stop:env` + `start:env` |
-| `npm run reset:env` | Destroys + recreates the stack (**DB lost — re-seed required**) |
-| `npm run db:port` | Re-sync `DB_PORT` from the running dev MySQL container |
-| `npm run create:admin` | Ensures the `.env` admin user exists |
-| `npm run setup` | Run the setup chain only (seed-once) — `--project=e2e_setup` |
-| `npm run docker:setup` | Alias of `setup` |
-| `npm run docker:full` | `start:env` + `create:admin` + `setup` (use on first boot) |
-| `npm test` | Full Playwright run (setup chain + e2e) |
-| `npm run test:e2e` | E2E only, `NO_SETUP=true` (seeded site) |
-| `npm run test:api` | REST tests via `api.config.ts` |
-| `npm run check:plugins` / `check:users` / `check:modules` | wp-cli introspection |
-| `npm run test:headed` / `test:ui` / `test:debug` / `test:report` | Run modes / report |
-| `npm run lint` / `lint:fix` / `format` / `format:fix` / `type:check` | Quality |
+| Script                                                               | What it does                                                    |
+| -------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `npm run start:env`                                                  | Boots wp-env; `poststart:env` syncs `DB_PORT` from Docker       |
+| `npm run stop:env`                                                   | Stops containers (keeps DB)                                     |
+| `npm run restart:env`                                                | `stop:env` + `start:env`                                        |
+| `npm run reset:env`                                                  | Destroys + recreates the stack (**DB lost — re-seed required**) |
+| `npm run db:port`                                                    | Re-sync `DB_PORT` from the running dev MySQL container          |
+| `npm run create:admin`                                               | Ensures the `.env` admin user exists                            |
+| `npm run setup`                                                      | Run the setup chain only (seed-once) — `--project=e2e_setup`    |
+| `npm run docker:setup`                                               | Alias of `setup`                                                |
+| `npm run docker:full`                                                | `start:env` + `create:admin` + `setup` (use on first boot)      |
+| `npm test`                                                           | Full Playwright run (setup chain + e2e)                         |
+| `npm run test:e2e`                                                   | E2E only, `NO_SETUP=true` (seeded site)                         |
+| `npm run test:api`                                                   | REST tests via `api.config.ts`                                  |
+| `npm run check:plugins` / `check:users` / `check:modules`            | wp-cli introspection                                            |
+| `npm run test:headed` / `test:ui` / `test:debug` / `test:report`     | Run modes / report                                              |
+| `npm run lint` / `lint:fix` / `format` / `format:fix` / `type:check` | Quality                                                         |
 
 ---
 
@@ -157,16 +157,17 @@ the test still runs).
 ## 7. Tag system (drives Lite/Pro filtering)
 
 `playwright.config.ts`:
+
 - `grep: [/@lite/, /@liteOnly/, /@pro/]`
 - `grepInvert: ERP_PRO ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/]`
 
-| Tag | Meaning |
-|-----|---------|
-| `@lite` | Runs in Lite **and** Lite+Pro environments |
-| `@liteOnly` | Runs ONLY when Pro is absent |
-| `@pro` | Requires erp-pro |
-| `@hrm` / `@crm` / `@accounting` | Module |
-| `@admin` / `@manager` / `@employee` | Role |
+| Tag                                 | Meaning                                    |
+| ----------------------------------- | ------------------------------------------ |
+| `@lite`                             | Runs in Lite **and** Lite+Pro environments |
+| `@liteOnly`                         | Runs ONLY when Pro is absent               |
+| `@pro`                              | Requires erp-pro                           |
+| `@hrm` / `@crm` / `@accounting`     | Module                                     |
+| `@admin` / `@manager` / `@employee` | Role                                       |
 
 Every spec carries one Lite/Pro gate + one module tag + one role tag.
 
@@ -174,13 +175,13 @@ Every spec carries one Lite/Pro gate + one module tag + one role tag.
 
 ## 8. Run modes
 
-| Mode | Command |
-|------|---------|
-| **First boot (Pro)** | `npm run docker:full` then `npm run test:e2e` |
-| **Re-seed after reset:env** | `npm run docker:setup` |
+| Mode                         | Command                                                        |
+| ---------------------------- | -------------------------------------------------------------- |
+| **First boot (Pro)**         | `npm run docker:full` then `npm run test:e2e`                  |
+| **Re-seed after reset:env**  | `npm run docker:setup`                                         |
 | **Iterate on a seeded site** | `NO_SETUP=true npx playwright test --project=e2e_tests <path>` |
-| **Lite only** | `ERP_PRO=false npm test` |
-| **API** | `npm run test:api` |
+| **Lite only**                | `ERP_PRO=false npm test`                                       |
+| **API**                      | `npm run test:api`                                             |
 
 ---
 
@@ -214,9 +215,9 @@ slice — Pro provisioning is a distinct, trackable step in every shard's log.
    select2, and every UI spec in those modules fails on a 30s `toBeVisible`. Build once
    from the repo root (Node 12 is required — webpack 3 + node-sass):
 
-   ```bash
-   docker run --rm -v "$PWD":/app -w /app node:12.1.0 sh -c "npm ci && npm run build"
-   ```
+    ```bash
+    docker run --rm -v "$PWD":/app -w /app node:12.1.0 sh -c "npm ci && npm run build"
+    ```
 
-   Re-run after changes under `assets/src/` or `modules/accounting/assets/src/`.
-   CI does this in the `build_lite` job.
+    Re-run after changes under `assets/src/` or `modules/accounting/assets/src/`.
+    CI does this in the `build_lite` job.

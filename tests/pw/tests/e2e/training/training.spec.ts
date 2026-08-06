@@ -57,84 +57,100 @@ test.describe('HRM Training CPT (pro, admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
     // TRN-UI-01
-    test('Training CPT list page loads with the Add New control and no PHP fatal', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        await page.goto(training.urls.list);
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
-        await expect(page.locator(training.list.body)).toBeVisible({ timeout: 30_000 });
-        await expect(page.locator(training.list.heading)).toBeVisible();
-        // "Create Training" / "Add New Training" page-title action.
-        await expect(page.locator(training.list.addNewBtn).first()).toBeVisible();
-        await expect(page.locator('#wpadminbar')).toBeVisible();
-    });
+    test(
+        'Training CPT list page loads with the Add New control and no PHP fatal',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            await page.goto(training.urls.list);
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            await expect(page.locator(training.list.body)).toBeVisible({ timeout: 30_000 });
+            await expect(page.locator(training.list.heading)).toBeVisible();
+            // "Create Training" / "Add New Training" page-title action.
+            await expect(page.locator(training.list.addNewBtn).first()).toBeVisible();
+            await expect(page.locator('#wpadminbar')).toBeVisible();
+        },
+    );
 
     // TRN-UI-02
-    test('list table shows the pro custom columns and drops the default Date column', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        await training.goToList();
-        await expect(page.locator(training.list.table)).toBeVisible({ timeout: 30_000 });
+    test(
+        'list table shows the pro custom columns and drops the default Date column',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            await training.goToList();
+            await expect(page.locator(training.list.table)).toBeVisible({ timeout: 30_000 });
 
-        // Custom columns from set_training_column(). WP_List_Table prints each
-        // column header in BOTH thead and tfoot, so every th.column-* legitimately
-        // appears twice — assert the first header is visible (and the pair count).
-        await expect(page.locator(training.list.colSubject).first()).toBeVisible();
-        await expect(page.locator(training.list.colSubject)).toHaveCount(2);
-        await expect(page.locator(training.list.colDescription).first()).toBeVisible();
-        await expect(page.locator(training.list.colDuration).first()).toBeVisible();
-        await expect(page.locator(training.list.colParticipant).first()).toBeVisible();
+            // Custom columns from set_training_column(). WP_List_Table prints each
+            // column header in BOTH thead and tfoot, so every th.column-* legitimately
+            // appears twice — assert the first header is visible (and the pair count).
+            await expect(page.locator(training.list.colSubject).first()).toBeVisible();
+            await expect(page.locator(training.list.colSubject)).toHaveCount(2);
+            await expect(page.locator(training.list.colDescription).first()).toBeVisible();
+            await expect(page.locator(training.list.colDuration).first()).toBeVisible();
+            await expect(page.locator(training.list.colParticipant).first()).toBeVisible();
 
-        const header = page.locator(`${training.list.table} thead`);
-        await expect(header).toContainText(/Training Subject/i);
-        await expect(header).toContainText(/Description/i);
-        await expect(header).toContainText(/Duration/i);
-        await expect(header).toContainText(/Participant/i);
+            const header = page.locator(`${training.list.table} thead`);
+            await expect(header).toContainText(/Training Subject/i);
+            await expect(header).toContainText(/Description/i);
+            await expect(header).toContainText(/Duration/i);
+            await expect(header).toContainText(/Participant/i);
 
-        // unset( $column['date'] ) — the default Date column must be absent.
-        await expect(page.locator(`${training.list.table} th.column-date`)).toHaveCount(0);
-    });
+            // unset( $column['date'] ) — the default Date column must be absent.
+            await expect(page.locator(`${training.list.table} th.column-date`)).toHaveCount(0);
+        },
+    );
 
     // TRN-UI-03
-    test('new-training editor mounts with title field, HR Training Options metabox and nonce', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        await page.goto(training.urls.new);
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+    test(
+        'new-training editor mounts with title field, HR Training Options metabox and nonce',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            await page.goto(training.urls.new);
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
 
-        await expect(page.locator(training.editor.form)).toBeVisible({ timeout: 30_000 });
-        await expect(page.locator(training.editor.title)).toBeVisible();
-        await expect(page.locator(training.editor.metaBox)).toBeVisible();
+            await expect(page.locator(training.editor.form)).toBeVisible({ timeout: 30_000 });
+            await expect(page.locator(training.editor.title)).toBeVisible();
+            await expect(page.locator(training.editor.metaBox)).toBeVisible();
 
-        // Metabox body fields (TrainingPostType::meta_boxes_cb).
-        await expect(page.locator(training.editor.subject)).toHaveCount(1);
-        await expect(page.locator(training.editor.trainingType)).toHaveCount(1);
-        await expect(page.locator(training.editor.frequency)).toHaveCount(1);
-        await expect(page.locator(training.editor.description)).toHaveCount(1);
+            // Metabox body fields (TrainingPostType::meta_boxes_cb).
+            await expect(page.locator(training.editor.subject)).toHaveCount(1);
+            await expect(page.locator(training.editor.trainingType)).toHaveCount(1);
+            await expect(page.locator(training.editor.frequency)).toHaveCount(1);
+            await expect(page.locator(training.editor.description)).toHaveCount(1);
 
-        // Hidden security nonce required by save_training() (wp_nonce_field). The
-        // metabox wp_nonce_field is printed twice in this build, so the input
-        // legitimately appears twice — assert it is attached, not exactly one.
-        await expect(page.locator(training.editor.nonce).first()).toBeAttached();
-        await expect(page.locator(training.editor.nonce)).toHaveCount(2);
-    });
+            // Hidden security nonce required by save_training() (wp_nonce_field). The
+            // metabox wp_nonce_field is printed twice in this build, so the input
+            // legitimately appears twice — assert it is attached, not exactly one.
+            await expect(page.locator(training.editor.nonce).first()).toBeAttached();
+            await expect(page.locator(training.editor.nonce)).toHaveCount(2);
+        },
+    );
 
     // TRN-UI-04
-    test('create a training via the WP post editor and assert it appears in the list', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        const title = uniqueTitle();
+    test(
+        'create a training via the WP post editor and assert it appears in the list',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            const title = uniqueTitle();
 
-        await training.createTraining({
-            title,
-            subject: `PW Safety Skill ${Date.now()}`,
-            frequency: '3 days',
-            description: 'pw seeded training',
-        });
+            await training.createTraining({
+                title,
+                subject: `PW Safety Skill ${Date.now()}`,
+                frequency: '3 days',
+                description: 'pw seeded training',
+            });
 
-        // save_training() wp_redirect's to edit.php?post_type=erp_hr_training (line 343).
-        await expect(page).toHaveURL(/post_type=erp_hr_training/);
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            // save_training() wp_redirect's to edit.php?post_type=erp_hr_training (line 343).
+            await expect(page).toHaveURL(/post_type=erp_hr_training/);
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
 
-        // The new row is visible in the WP_List_Table body.
-        await expect(page.locator(training.list.rows)).toContainText(title, { timeout: 30_000 });
-    });
+            // The new row is visible in the WP_List_Table body.
+            await expect(page.locator(training.list.rows)).toContainText(title, { timeout: 30_000 });
+        },
+    );
 
     // TRN-UI-05
     test('created training meta persists in wp_postmeta (subject + frequency)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
@@ -148,9 +164,7 @@ test.describe('HRM Training CPT (pro, admin)', () => {
 
         // Resolve the post id by title (poll: the redirect lands a beat before the
         // row is fully visible to a fresh query under parallel load).
-        await expect
-            .poll(async () => await TrainingPage.postIdByTitle(title), { timeout: 20_000 })
-            .toBeTruthy();
+        await expect.poll(async () => await TrainingPage.postIdByTitle(title), { timeout: 20_000 }).toBeTruthy();
 
         const postId = await TrainingPage.postIdByTitle(title);
         expect(postId, 'created training has a post id').toBeTruthy();
@@ -162,55 +176,61 @@ test.describe('HRM Training CPT (pro, admin)', () => {
     });
 
     // TRN-UI-06
-    test('created training row exists in wp_posts with the correct post_type/status', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        const title = uniqueTitle();
+    test(
+        'created training row exists in wp_posts with the correct post_type/status',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            const title = uniqueTitle();
 
-        await training.createTraining({ title, subject: 'row check', frequency: '1 day' });
-        await expect(page).toHaveURL(/post_type=erp_hr_training/);
+            await training.createTraining({ title, subject: 'row check', frequency: '1 day' });
+            await expect(page).toHaveURL(/post_type=erp_hr_training/);
 
-        await expect
-            .poll(async () => (await TrainingPage.findPostByTitle(title)).length, { timeout: 20_000 })
-            .toBeGreaterThanOrEqual(1);
+            await expect
+                .poll(async () => (await TrainingPage.findPostByTitle(title)).length, { timeout: 20_000 })
+                .toBeGreaterThanOrEqual(1);
 
-        const rows = await TrainingPage.findPostByTitle(title);
-        expect(rows.length, 'exactly one CPT row for the unique title').toBe(1);
-        expect(rows[0]!.post_type).toBe(TRAINING_POST_TYPE);
-        expect(rows[0]!.post_status).toBe('publish');
-    });
+            const rows = await TrainingPage.findPostByTitle(title);
+            expect(rows.length, 'exactly one CPT row for the unique title').toBe(1);
+            expect(rows[0]!.post_type).toBe(TRAINING_POST_TYPE);
+            expect(rows[0]!.post_status).toBe('publish');
+        },
+    );
 
     // TRN-UI-07
-    test('set Assign To = All Employees and save without error; training_type meta persists', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        const title = uniqueTitle();
+    test(
+        'set Assign To = All Employees and save without error; training_type meta persists',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            const title = uniqueTitle();
 
-        await training.createTraining({
-            title,
-            subject: 'all-employee training',
-            frequency: '2 days',
-            trainingType: 'all_employee',
-        });
+            await training.createTraining({
+                title,
+                subject: 'all-employee training',
+                frequency: '2 days',
+                trainingType: 'all_employee',
+            });
 
-        await expect(page).toHaveURL(/post_type=erp_hr_training/);
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            await expect(page).toHaveURL(/post_type=erp_hr_training/);
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
 
-        await expect
-            .poll(async () => await TrainingPage.postIdByTitle(title), { timeout: 20_000 })
-            .toBeTruthy();
-        const postId = await TrainingPage.postIdByTitle(title);
+            await expect.poll(async () => await TrainingPage.postIdByTitle(title), { timeout: 20_000 }).toBeTruthy();
+            const postId = await TrainingPage.postIdByTitle(title);
 
-        // assign_training_to_employees() writes training_type via update_post_meta (line 406).
-        expect(await TrainingPage.getMeta(postId!, 'training_type')).toBe('all_employee');
-    });
+            // assign_training_to_employees() writes training_type via update_post_meta (line 406).
+            expect(await TrainingPage.getMeta(postId!, 'training_type')).toBe('all_employee');
+        },
+    );
 
     // TRN-UI-08
     test('Assign To select offers the documented options', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         const training = new TrainingPage(page);
         await training.goToNew();
 
-        const values = await page.locator(`${training.editor.trainingType} option`).evaluateAll(
-            opts => opts.map(o => (o as HTMLOptionElement).value),
-        );
+        const values = await page
+            .locator(`${training.editor.trainingType} option`)
+            .evaluateAll(opts => opts.map(o => (o as HTMLOptionElement).value));
 
         // assign_type map (meta_boxes_cb lines 125-131).
         for (const expected of ['', 'all_employee', 'selected_employee', 'by_department', 'by_designation']) {
@@ -254,18 +274,22 @@ test.describe('HRM Training CPT (pro, admin)', () => {
     });
 
     // TRN-UI-10
-    test("selecting 'Selected Employee' reveals the employees select and hides the others", { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        await training.goToNew();
+    test(
+        "selecting 'Selected Employee' reveals the employees select and hides the others",
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            await training.goToNew();
 
-        await page.locator(training.editor.trainingType).selectOption('selected_employee');
+            await page.locator(training.editor.trainingType).selectOption('selected_employee');
 
-        // toggle JS (meta_boxes_cb lines 220-249) shows only the matching field.
-        await expect(page.locator(training.editor.selectedEmployeeField)).toBeVisible({ timeout: 15_000 });
-        await expect(page.locator(training.editor.employees)).toHaveCount(1);
-        await expect(page.locator(training.editor.byDepartmentField)).toBeHidden();
-        await expect(page.locator(training.editor.byDesignationField)).toBeHidden();
-    });
+            // toggle JS (meta_boxes_cb lines 220-249) shows only the matching field.
+            await expect(page.locator(training.editor.selectedEmployeeField)).toBeVisible({ timeout: 15_000 });
+            await expect(page.locator(training.editor.employees)).toHaveCount(1);
+            await expect(page.locator(training.editor.byDepartmentField)).toBeHidden();
+            await expect(page.locator(training.editor.byDesignationField)).toBeHidden();
+        },
+    );
 
     // TRN-UI-11
     test('auto-assign checkbox persists when checked', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
@@ -282,9 +306,7 @@ test.describe('HRM Training CPT (pro, admin)', () => {
         await expect(page).toHaveURL(/post_type=erp_hr_training/);
         await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
 
-        await expect
-            .poll(async () => await TrainingPage.postIdByTitle(title), { timeout: 20_000 })
-            .toBeTruthy();
+        await expect.poll(async () => await TrainingPage.postIdByTitle(title), { timeout: 20_000 }).toBeTruthy();
         const postId = await TrainingPage.postIdByTitle(title);
 
         // save_training() stores the checkbox value 'yes' (lines 316, 319-321).
@@ -292,17 +314,21 @@ test.describe('HRM Training CPT (pro, admin)', () => {
     });
 
     // TRN-UI-12 — additional edge: 'By Department' reveals the departments select.
-    test("selecting 'By Department' reveals the departments select and hides the others", { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const training = new TrainingPage(page);
-        await training.goToNew();
+    test(
+        "selecting 'By Department' reveals the departments select and hides the others",
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const training = new TrainingPage(page);
+            await training.goToNew();
 
-        await page.locator(training.editor.trainingType).selectOption('by_department');
+            await page.locator(training.editor.trainingType).selectOption('by_department');
 
-        await expect(page.locator(training.editor.byDepartmentField)).toBeVisible({ timeout: 15_000 });
-        await expect(page.locator(training.editor.departments)).toHaveCount(1);
-        await expect(page.locator(training.editor.selectedEmployeeField)).toBeHidden();
-        await expect(page.locator(training.editor.byDesignationField)).toBeHidden();
-    });
+            await expect(page.locator(training.editor.byDepartmentField)).toBeVisible({ timeout: 15_000 });
+            await expect(page.locator(training.editor.departments)).toHaveCount(1);
+            await expect(page.locator(training.editor.selectedEmployeeField)).toBeHidden();
+            await expect(page.locator(training.editor.byDesignationField)).toBeHidden();
+        },
+    );
 });
 
 // ──────────────────────────────────────────────────────────────────────────

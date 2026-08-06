@@ -84,13 +84,13 @@ const idOf = (body: ResponseBody): string => {
 
 // ── Shared lifecycle state (populated by the steps, consumed by later steps) ──
 let api: ApiUtils;
-let empUserId = '';     // seeded employee (carries the 'employee' cap → can punch)
-let shiftId = '';       // created shift id
-let dshiftId = '';      // today's date_shift row id for empUserId/shiftId
-let today = '';         // SITE today (Y-m-d) — site TZ may differ from the runner
-let monthStart = '';    // first-of-month for the report window
-let monthEnd = '';      // last-of-month for the report window
-let checkinLogId = '';  // the open log row id created by check-in
+let empUserId = ''; // seeded employee (carries the 'employee' cap → can punch)
+let shiftId = ''; // created shift id
+let dshiftId = ''; // today's date_shift row id for empUserId/shiftId
+let today = ''; // SITE today (Y-m-d) — site TZ may differ from the runner
+let monthStart = ''; // first-of-month for the report window
+let monthEnd = ''; // last-of-month for the report window
+let checkinLogId = ''; // the open log row id created by check-in
 
 /** A REST-created employee gets the 'employee' WP cap → can punch. */
 async function seedEmployee(): Promise<string> {
@@ -135,18 +135,12 @@ test.afterAll(async () => {
     try {
         const ids = new Set<string>();
         if (shiftId) ids.add(shiftId);
-        const stragglers = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${SHIFTS} WHERE name LIKE ?`,
-            [`pw_life_${RUN}%`],
-        );
+        const stragglers = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${SHIFTS} WHERE name LIKE ?`, [`pw_life_${RUN}%`]);
         for (const r of stragglers) ids.add(String(r.id));
 
         for (const id of ids) {
             // logs hang off date_shift rows of this shift
-            await dbUtils.dbQuery(
-                `DELETE FROM ${LOG} WHERE date_shift_id IN (SELECT id FROM ${DATE_SHIFT} WHERE shift_id = ?)`,
-                [id],
-            );
+            await dbUtils.dbQuery(`DELETE FROM ${LOG} WHERE date_shift_id IN (SELECT id FROM ${DATE_SHIFT} WHERE shift_id = ?)`, [id]);
             await dbUtils.dbQuery(`DELETE FROM ${DATE_SHIFT} WHERE shift_id = ?`, [id]);
             await dbUtils.dbQuery(`DELETE FROM ${SHIFT_USER} WHERE shift_id = ?`, [id]);
             await dbUtils.dbQuery(`DELETE FROM ${GENERATED_TO} WHERE shift_id = ?`, [id]);
@@ -206,7 +200,7 @@ test.describe('HRM Attendance REST — lifecycle (admin)', () => {
                 data: {
                     users_id: [Number(empUserId)], // MUST be an array (assign_to_shift foreach's it)
                     shift_id: Number(shiftId),
-                    start_date: today,             // TODAY + overwrite:true is required, else no date_shift covers NOW
+                    start_date: today, // TODAY + overwrite:true is required, else no date_shift covers NOW
                     end_date: today,
                     overwrite: true,
                 },
@@ -234,15 +228,14 @@ test.describe('HRM Attendance REST — lifecycle (admin)', () => {
                ORDER BY id DESC LIMIT 1`,
             [shiftId, empUserId, today],
         );
-        expect(ds.length, "a date_shift row covering NOW exists (overwrite:true + start_date=today)").toBe(1);
+        expect(ds.length, 'a date_shift row covering NOW exists (overwrite:true + start_date=today)').toBe(1);
         expect(ds[0]!.day_type, 'date_shift is a working_day').toBe('working_day');
         dshiftId = String(ds[0]!.id);
 
         // DB oracle C: the generated-to bookkeeping row (note 'attendence' spelling).
-        const gen = await dbUtils.dbQuery<{ shift_id: number }>(
-            `SELECT shift_id FROM ${GENERATED_TO} WHERE shift_id = ? LIMIT 1`,
-            [shiftId],
-        );
+        const gen = await dbUtils.dbQuery<{ shift_id: number }>(`SELECT shift_id FROM ${GENERATED_TO} WHERE shift_id = ? LIMIT 1`, [
+            shiftId,
+        ]);
         expect(gen.length, 'shift_generated_to bookkeeping row inserted').toBeGreaterThanOrEqual(1);
     });
 
@@ -280,10 +273,7 @@ test.describe('HRM Attendance REST — lifecycle (admin)', () => {
         expect(isOpen(log[0]!.checkout), 'checkout still open after check-in').toBe(true);
 
         // DB oracle B: date_shift flagged present.
-        const ds = await dbUtils.dbQuery<{ present: number | null }>(
-            `SELECT present FROM ${DATE_SHIFT} WHERE id = ? LIMIT 1`,
-            [dshiftId],
-        );
+        const ds = await dbUtils.dbQuery<{ present: number | null }>(`SELECT present FROM ${DATE_SHIFT} WHERE id = ? LIMIT 1`, [dshiftId]);
         expect(Number(ds[0]!.present), 'date_shift marked present after check-in').toBe(1);
     });
 
@@ -337,11 +327,7 @@ test.describe('HRM Attendance REST — lifecycle (admin)', () => {
     test('ATT-LIFE-06 GET reports/{user_id} lists today as present', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         test.skip(!empUserId || !dshiftId, 'needs a punched employee');
 
-        const [resp, body] = await api.get(
-            `${url.report(empUserId)}?start_date=${monthStart}&end_date=${monthEnd}`,
-            undefined,
-            false,
-        );
+        const [resp, body] = await api.get(`${url.report(empUserId)}?start_date=${monthStart}&end_date=${monthEnd}`, undefined, false);
         expect(resp.status(), 'report read must not 500').toBeLessThan(500);
         expect(resp.status()).toBe(200);
         // get_single_employee_attendances returns $report['attendances'] (a bare array).
@@ -397,28 +383,28 @@ test.describe('HRM Attendance REST — lifecycle (admin)', () => {
     });
 
     // ── 8. read single-day attendance confirms the HR edit ───────────────────
-    test('ATT-LIFE-08 GET hrentry/{date} confirms the edited entry (worktime + employee_name)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        test.skip(!dshiftId, 'needs the edited entry (ATT-LIFE-07)');
+    test(
+        'ATT-LIFE-08 GET hrentry/{date} confirms the edited entry (worktime + employee_name)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            test.skip(!dshiftId, 'needs the edited entry (ATT-LIFE-07)');
 
-        const [resp, body] = await api.get(
-            `${url.hrentry(today)}?per_page=50&page=1`,
-            undefined,
-            false,
-        );
-        // get_single_date_attendance emits 'Undefined array key' warnings but returns 200 non-fatal.
-        expect(resp.status(), 'single-day read must not 500/fatal').toBeLessThan(500);
-        expect(resp.status()).toBe(200);
-        expect(Array.isArray(body), 'single-day attendance is a bare array').toBe(true);
+            const [resp, body] = await api.get(`${url.hrentry(today)}?per_page=50&page=1`, undefined, false);
+            // get_single_date_attendance emits 'Undefined array key' warnings but returns 200 non-fatal.
+            expect(resp.status(), 'single-day read must not 500/fatal').toBeLessThan(500);
+            expect(resp.status()).toBe(200);
+            expect(Array.isArray(body), 'single-day attendance is a bare array').toBe(true);
 
-        const entry = Array.isArray(body)
-            ? body.find((r: any) => String(r?.user_id) === empUserId && String(r?.dshift_id) === dshiftId)
-            : undefined;
-        expect(entry, 'our edited entry surfaces in the single-day list').toBeTruthy();
-        // The HR edit (3600s) surfaces as worktime, with the joined employee_name + our shift name.
-        expect(String(entry?.worktime ?? ''), 'edited worktime (3600) surfaces').toBe('3600');
-        expect(String(entry?.shift ?? ''), 'joined shift is our created shift').toBe(`pw_life_${RUN}_main`);
-        expect(String(entry?.employee_name ?? ''), 'employee_name joined onto the entry').not.toBe('');
-    });
+            const entry = Array.isArray(body)
+                ? body.find((r: any) => String(r?.user_id) === empUserId && String(r?.dshift_id) === dshiftId)
+                : undefined;
+            expect(entry, 'our edited entry surfaces in the single-day list').toBeTruthy();
+            // The HR edit (3600s) surfaces as worktime, with the joined employee_name + our shift name.
+            expect(String(entry?.worktime ?? ''), 'edited worktime (3600) surfaces').toBe('3600');
+            expect(String(entry?.shift ?? ''), 'joined shift is our created shift').toBe(`pw_life_${RUN}_main`);
+            expect(String(entry?.employee_name ?? ''), 'employee_name joined onto the entry').not.toBe('');
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -428,32 +414,36 @@ test.describe('HRM Attendance REST — lifecycle (admin)', () => {
 test.describe('HRM Attendance REST — lifecycle negatives (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('ATT-LIFE-09 punch for a user with NO covering date-shift is refused (ATT-BUG-1)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // A fresh employee assigned to no shift → erp_attendance_get_punching_shift
-        // returns a WP_Error → 'Date shift is not found.' The WP_Error has no
-        // ['status'=>4xx], so WP_REST_Server maps it to HTTP 500 (KNOWN BUG ATT-BUG-1):
-        // correct error CODE in the body, wrong HTTP status. Assert the boundary.
-        const unassigned = await seedEmployee();
-        test.skip(!unassigned, 'could not seed an unassigned employee');
+    test(
+        'ATT-LIFE-09 punch for a user with NO covering date-shift is refused (ATT-BUG-1)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // A fresh employee assigned to no shift → erp_attendance_get_punching_shift
+            // returns a WP_Error → 'Date shift is not found.' The WP_Error has no
+            // ['status'=>4xx], so WP_REST_Server maps it to HTTP 500 (KNOWN BUG ATT-BUG-1):
+            // correct error CODE in the body, wrong HTTP status. Assert the boundary.
+            const unassigned = await seedEmployee();
+            test.skip(!unassigned, 'could not seed an unassigned employee');
 
-        try {
-            const [resp, body] = await api.post(url.logs(), { data: { user_id: Number(unassigned) } }, false);
-            expect(resp.ok(), 'punch with no covering date-shift is not accepted').toBe(false);
-            if (resp.status() === 500) {
-                expect(String(body?.code ?? ''), 'body still names the validation error').toBe('invalid-time');
-            } else {
-                expect(resp.status(), 'no-shift punch refused as a client error').toBeGreaterThanOrEqual(400);
-                expect(resp.status(), 'no-shift punch refused as a client error').toBeLessThan(500);
-            }
-        } finally {
-            // best-effort: drop the throwaway user's WP row + any logs
             try {
-                await dbUtils.dbQuery(`DELETE FROM ${LOG} WHERE user_id = ?`, [unassigned]);
-            } catch {
-                /* ignore */
+                const [resp, body] = await api.post(url.logs(), { data: { user_id: Number(unassigned) } }, false);
+                expect(resp.ok(), 'punch with no covering date-shift is not accepted').toBe(false);
+                if (resp.status() === 500) {
+                    expect(String(body?.code ?? ''), 'body still names the validation error').toBe('invalid-time');
+                } else {
+                    expect(resp.status(), 'no-shift punch refused as a client error').toBeGreaterThanOrEqual(400);
+                    expect(resp.status(), 'no-shift punch refused as a client error').toBeLessThan(500);
+                }
+            } finally {
+                // best-effort: drop the throwaway user's WP row + any logs
+                try {
+                    await dbUtils.dbQuery(`DELETE FROM ${LOG} WHERE user_id = ?`, [unassigned]);
+                } catch {
+                    /* ignore */
+                }
             }
-        }
-    });
+        },
+    );
 
     test('ATT-LIFE-10 punch for a non-employee (admin) is refused (ATT-BUG-2)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // user_id=1 (admin) lacks the 'employee' cap → erp_attendance_punch returns

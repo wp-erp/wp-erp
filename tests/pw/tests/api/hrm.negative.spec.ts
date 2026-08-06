@@ -385,10 +385,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
         const id = idOf(body);
         // Read the stored days back from the policies table where REST may not expose it.
-        const rows = await dbUtils.dbQuery<{ days: string }>(
-            `SELECT days FROM ${tables.hrLeavePolicies} WHERE id = ? LIMIT 1`,
-            [id],
-        );
+        const rows = await dbUtils.dbQuery<{ days: string }>(`SELECT days FROM ${tables.hrLeavePolicies} WHERE id = ? LIMIT 1`, [id]);
         if (rows.length > 0) {
             const stored = Number(rows[0]!.days);
             // decimal(5,1) keeps a single decimal → 0.25 cannot survive intact.

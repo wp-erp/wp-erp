@@ -169,10 +169,7 @@ export class AdvancedLeavePage {
 
     /** Read the pro columns of a policy row by id. */
     static async getPolicyRow(id: number): Promise<Record<string, unknown> | undefined> {
-        const rows = await dbUtils.dbQuery<Record<string, unknown>>(
-            `SELECT * FROM ${leaveTables.policies} WHERE id = ? LIMIT 1`,
-            [id],
-        );
+        const rows = await dbUtils.dbQuery<Record<string, unknown>>(`SELECT * FROM ${leaveTables.policies} WHERE id = ? LIMIT 1`, [id]);
         return rows[0];
     }
 

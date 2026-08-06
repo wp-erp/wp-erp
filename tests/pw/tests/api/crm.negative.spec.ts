@@ -34,10 +34,7 @@ let api: ApiUtils;
 
 /** Resolve a people-type id by name. */
 async function typeId(name: string): Promise<number> {
-    const rows = await dbUtils.dbQuery<{ id: number }>(
-        `SELECT id FROM ${tables.peopleTypes} WHERE name = ? LIMIT 1`,
-        [name],
-    );
+    const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${tables.peopleTypes} WHERE name = ? LIMIT 1`, [name]);
     expect(rows[0]?.id, `people type '${name}' exists`).toBeTruthy();
     return Number(rows[0]?.id);
 }
@@ -48,10 +45,9 @@ async function typeId(name: string): Promise<number> {
  */
 async function firstOrNewPerson(rawEmail: string, first: string): Promise<number> {
     const email = rawEmail.toLowerCase().trim();
-    const existing = await dbUtils.dbQuery<{ id: number }>(
-        `SELECT id FROM ${tables.peoples} WHERE email = ? ORDER BY id ASC LIMIT 1`,
-        [email],
-    );
+    const existing = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${tables.peoples} WHERE email = ? ORDER BY id ASC LIMIT 1`, [
+        email,
+    ]);
     let id = existing[0]?.id;
     if (!id) {
         const hash = `${TEST_PREFIX}${Date.now()}${Math.floor(Math.random() * 1e6)}`;
@@ -82,23 +78,19 @@ async function ensureTypeRelation(peopleId: number, type: string): Promise<void>
         [peopleId, tid],
     );
     if (existing.length === 0) {
-        await dbUtils.dbQuery(
-            `INSERT INTO ${tables.peopleTypeRelations} (people_id, people_types_id, deleted_at) VALUES (?, ?, NULL)`,
-            [peopleId, tid],
-        );
+        await dbUtils.dbQuery(`INSERT INTO ${tables.peopleTypeRelations} (people_id, people_types_id, deleted_at) VALUES (?, ?, NULL)`, [
+            peopleId,
+            tid,
+        ]);
     } else if (existing[0]?.deleted_at !== null) {
-        await dbUtils.dbQuery(
-            `UPDATE ${tables.peopleTypeRelations} SET deleted_at = NULL WHERE id = ?`,
-            [existing[0]?.id],
-        );
+        await dbUtils.dbQuery(`UPDATE ${tables.peopleTypeRelations} SET deleted_at = NULL WHERE id = ?`, [existing[0]?.id]);
     }
 }
 
 async function countByEmail(rawEmail: string): Promise<number> {
-    const rows = await dbUtils.dbQuery<{ c: number }>(
-        `SELECT COUNT(*) AS c FROM ${tables.peoples} WHERE email = ?`,
-        [rawEmail.toLowerCase().trim()],
-    );
+    const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${tables.peoples} WHERE email = ?`, [
+        rawEmail.toLowerCase().trim(),
+    ]);
     return Number(rows[0]?.c ?? 0);
 }
 
@@ -172,40 +164,44 @@ test.describe('CRM dedup contract (no DB unique on email)', () => {
 
 test.describe('CRM cross-module data integrity', () => {
     // CRM-BUG-15 — CRM contact & Accounting customer share wp_erp_peoples.
-    test('contact and customer with same email share one people row; types are independent', { tag: ['@lite', '@crm', '@admin'] }, async () => {
-        const email = `${TEST_PREFIX}xmod_${Date.now()}@example.com`;
-        const id = await firstOrNewPerson(email, `${TEST_PREFIX}Xmod`);
-        await ensureTypeRelation(id, 'contact');
-        await ensureTypeRelation(id, 'customer');
+    test(
+        'contact and customer with same email share one people row; types are independent',
+        { tag: ['@lite', '@crm', '@admin'] },
+        async () => {
+            const email = `${TEST_PREFIX}xmod_${Date.now()}@example.com`;
+            const id = await firstOrNewPerson(email, `${TEST_PREFIX}Xmod`);
+            await ensureTypeRelation(id, 'contact');
+            await ensureTypeRelation(id, 'customer');
 
-        // One row, two types.
-        expect(await countByEmail(email), 'one shared people row').toBe(1);
-        const before = await dbUtils.dbQuery<{ name: string }>(
-            `SELECT t.name FROM ${tables.peopleTypeRelations} r
+            // One row, two types.
+            expect(await countByEmail(email), 'one shared people row').toBe(1);
+            const before = await dbUtils.dbQuery<{ name: string }>(
+                `SELECT t.name FROM ${tables.peopleTypeRelations} r
                 JOIN ${tables.peopleTypes} t ON t.id = r.people_types_id
              WHERE r.people_id = ? AND r.deleted_at IS NULL`,
-            [id],
-        );
-        expect(before.map(r => r.name)).toEqual(expect.arrayContaining(['contact', 'customer']));
+                [id],
+            );
+            expect(before.map(r => r.name)).toEqual(expect.arrayContaining(['contact', 'customer']));
 
-        // Soft-delete the CRM (contact) type only — the customer type must survive.
-        await dbUtils.dbQuery(
-            `UPDATE ${tables.peopleTypeRelations} r
+            // Soft-delete the CRM (contact) type only — the customer type must survive.
+            await dbUtils.dbQuery(
+                `UPDATE ${tables.peopleTypeRelations} r
                 JOIN ${tables.peopleTypes} t ON t.id = r.people_types_id
              SET r.deleted_at = NOW() WHERE r.people_id = ? AND t.name = 'contact'`,
-            [id],
-        );
-        // BUG CANDIDATE: removing the CRM type must NOT strip the accounting customer type.
-        expect(await CrmPage.findTypedPersonByEmail(email, 'contact'), 'contact type removed').toBeFalsy();
-        const customerStill = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${tables.peopleTypeRelations} r
+                [id],
+            );
+            // BUG CANDIDATE: removing the CRM type must NOT strip the accounting customer type.
+            expect(await CrmPage.findTypedPersonByEmail(email, 'contact'), 'contact type removed').toBeFalsy();
+            const customerStill = await dbUtils.dbQuery<{ c: number }>(
+                `SELECT COUNT(*) AS c FROM ${tables.peopleTypeRelations} r
                 JOIN ${tables.peopleTypes} t ON t.id = r.people_types_id
              WHERE r.people_id = ? AND t.name = 'customer' AND r.deleted_at IS NULL`,
-            [id],
-        );
-        expect(Number(customerStill[0]?.c), 'customer type preserved across CRM-type delete').toBe(1);
-        expect(await CrmPage.getPerson(id), 'people row intact').toBeTruthy();
-    });
+                [id],
+            );
+            expect(Number(customerStill[0]?.c), 'customer type preserved across CRM-type delete').toBe(1);
+            expect(await CrmPage.getPerson(id), 'people row intact').toBeTruthy();
+        },
+    );
 });
 
 test.describe('CRM subscriber UNIQUE enforcement', () => {
@@ -219,9 +215,7 @@ test.describe('CRM subscriber UNIQUE enforcement', () => {
         );
         let groupId = (groupRes as unknown as { insertId?: number }).insertId;
         if (!groupId) {
-            const g = await dbUtils.dbQuery<{ id: number }>(
-                `SELECT id FROM ${crmTables.contactGroup} ORDER BY id DESC LIMIT 1`,
-            );
+            const g = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${crmTables.contactGroup} ORDER BY id DESC LIMIT 1`);
             groupId = g[0]?.id;
         }
         const hash = `${TEST_PREFIX}${Date.now()}`;
@@ -274,10 +268,7 @@ test.describe('CRM unauthorized AJAX', () => {
             const status = res.status();
             const text = await res.text().catch(() => '');
             const denied =
-                status >= 400 ||
-                text.trim() === '0' ||
-                text.trim() === '-1' ||
-                /forbidden|not allowed|do not have permission/i.test(text);
+                status >= 400 || text.trim() === '0' || text.trim() === '-1' || /forbidden|not allowed|do not have permission/i.test(text);
             // BUG CANDIDATE: if this is NOT denied (or a row appears), the AJAX handler
             // is missing a nonce/cap check.
             expect(denied, `unauthorized admin-ajax denied (status=${status}, body=${text.slice(0, 80)})`).toBe(true);

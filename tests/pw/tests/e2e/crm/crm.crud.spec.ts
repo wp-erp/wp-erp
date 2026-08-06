@@ -33,10 +33,9 @@ const crmTables = {
 
 /** Read a fresh person row by its (lowercased) email across any type. */
 async function peopleRowsByEmail(email: string): Promise<Array<Record<string, unknown>>> {
-    return dbUtils.dbQuery<Record<string, unknown>>(
-        `SELECT * FROM ${tables.peoples} WHERE email = ? ORDER BY id DESC`,
-        [email.toLowerCase().trim()],
-    );
+    return dbUtils.dbQuery<Record<string, unknown>>(`SELECT * FROM ${tables.peoples} WHERE email = ? ORDER BY id DESC`, [
+        email.toLowerCase().trim(),
+    ]);
 }
 
 async function assertHealthy(page: Page): Promise<void> {
@@ -101,7 +100,10 @@ test.describe('CRM CRUD — admin', () => {
             [row?.id],
         );
         expect(rel.length, 'a contact type relation exists').toBeGreaterThanOrEqual(1);
-        expect(rel.some(r => r.deleted_at === null), 'relation is not soft-deleted').toBe(true);
+        expect(
+            rel.some(r => r.deleted_at === null),
+            'relation is not soft-deleted',
+        ).toBe(true);
 
         // CRM-HP-03: the UI persists life_stage + contact_owner on the peoples row
         // itself (columns), not in peoplemeta (only the DB seeder writes those as meta).

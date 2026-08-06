@@ -146,9 +146,13 @@ test.describe('HRM REST — employees (admin)', () => {
         const userId = idOf(body);
         expect(userId).not.toBe('');
 
-        const [putResp] = await api.put(endPoints.employee(userId), {
-            data: { first_name: 'Renamed', pay_rate: 60000 },
-        }, false);
+        const [putResp] = await api.put(
+            endPoints.employee(userId),
+            {
+                data: { first_name: 'Renamed', pay_rate: 60000 },
+            },
+            false,
+        );
         // Controller sets 201 on update; accept 200/201.
         expect([200, 201]).toContain(putResp.status());
 
@@ -216,9 +220,13 @@ test.describe('HRM REST — departments (admin)', () => {
     test('HRM-HP-13 create child department with a parent', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
         test.skip(!seedDeptId, 'needs a parent department');
         const child = data.hrm.department();
-        const [resp, body] = await api.post(endPoints.departments, {
-            data: { title: child.title, parent: Number(seedDeptId) },
-        }, false);
+        const [resp, body] = await api.post(
+            endPoints.departments,
+            {
+                data: { title: child.title, parent: Number(seedDeptId) },
+            },
+            false,
+        );
         expect(resp.status(), 'child department create answered').toBeLessThan(500);
         if (!resp.ok()) return;
 
@@ -234,9 +242,13 @@ test.describe('HRM REST — departments (admin)', () => {
         test.skip(!leadId, 'needs an employee to act as lead');
 
         const dept = data.hrm.department();
-        const [resp, body] = await api.post(endPoints.departments, {
-            data: { title: dept.title, lead: Number(leadId) },
-        }, false);
+        const [resp, body] = await api.post(
+            endPoints.departments,
+            {
+                data: { title: dept.title, lead: Number(leadId) },
+            },
+            false,
+        );
         expect(resp.status(), 'department-with-lead create answered').toBeLessThan(500);
         if (!resp.ok()) return;
 
@@ -421,11 +433,7 @@ test.describe('HRM REST — announcements (admin)', () => {
 
     test('HRM-HP-33/34 create + list announcement', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
         const title = `pw_Announce_${Date.now()}`;
-        const [resp, body] = await api.post(
-            endPoints.announcements,
-            { data: { title, content: 'Hello team', status: 'publish' } },
-            false,
-        );
+        const [resp, body] = await api.post(endPoints.announcements, { data: { title, content: 'Hello team', status: 'publish' } }, false);
         expect(resp.status(), 'announcement create must not 500').toBeLessThan(500);
         if (!resp.ok()) {
             test.skip(true, 'announcement create unavailable in this environment');
@@ -439,8 +447,7 @@ test.describe('HRM REST — announcements (admin)', () => {
         const rows = Array.isArray(list) ? list : Array.isArray(list?.data) ? list.data : [];
         const found = rows.some(
             (a: { id?: number | string; title?: string | { rendered?: string } }) =>
-                String(a?.id ?? '') === id ||
-                (typeof a?.title === 'string' ? a.title : a?.title?.rendered ?? '').includes(title),
+                String(a?.id ?? '') === id || (typeof a?.title === 'string' ? a.title : (a?.title?.rendered ?? '')).includes(title),
         );
         expect(found, 'created announcement appears in the list').toBe(true);
     });

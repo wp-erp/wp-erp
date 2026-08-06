@@ -48,18 +48,18 @@ export interface SaveResult {
 export class AcctProSettingsPage {
     readonly page: Page;
 
-    constructor( page: Page ) {
+    constructor(page: Page) {
         this.page = page;
     }
 
     // ── URLs ────────────────────────────────────────────────────────────────────
     readonly urls = {
         // SPA shell root (settings.php:9 mounts #erp-settings).
-        settingsRoot: toPath( 'wp-admin/admin.php?page=erp-settings#/' ),
+        settingsRoot: toPath('wp-admin/admin.php?page=erp-settings#/'),
         // Accounting tab — the host of the pro-registered 'payment' section.
-        accounting: toPath( 'wp-admin/admin.php?page=erp-settings&tab=erp-ac' ),
+        accounting: toPath('wp-admin/admin.php?page=erp-settings&tab=erp-ac'),
         // admin-ajax endpoint that handles erp-settings-save.
-        adminAjax: toPath( 'wp-admin/admin-ajax.php' ),
+        adminAjax: toPath('wp-admin/admin-ajax.php'),
     } as const;
 
     readonly sel = {
@@ -77,7 +77,7 @@ export class AcctProSettingsPage {
      * cannot load the SPA).
      */
     async openAndScrapeNonce(): Promise<string> {
-        await this.page.goto( this.urls.accounting, { waitUntil: 'domcontentloaded' } );
+        await this.page.goto(this.urls.accounting, { waitUntil: 'domcontentloaded' });
         // Best-effort wait for the localized bootstrap var; tolerate its absence
         // (role-boundary pages render the WP "Error" template with no var).
         const nonce = await this.page
@@ -88,15 +88,19 @@ export class AcctProSettingsPage {
                 },
                 { timeout: 15_000 },
             )
-            .then( h => h.jsonValue() as Promise<string> )
-            .catch( () => '' );
-        return String( nonce ?? '' );
+            .then(h => h.jsonValue() as Promise<string>)
+            .catch(() => '');
+        return String(nonce ?? '');
     }
 
     /** True if the rendered page shows WP's fatal "critical error" splash. */
     async hasCriticalError(): Promise<boolean> {
-        const body = ( await this.page.locator( this.sel.fatalOracle ).innerText().catch( () => '' ) ) ?? '';
-        return body.includes( CRITICAL_ERROR );
+        const body =
+            (await this.page
+                .locator(this.sel.fatalOracle)
+                .innerText()
+                .catch(() => '')) ?? '';
+        return body.includes(CRITICAL_ERROR);
     }
 
     // ── Save (admin-ajax via the page's browser session) ─────────────────────────
@@ -121,11 +125,11 @@ export class AcctProSettingsPage {
             ...fields,
         };
 
-        const resp = await this.page.request.post( this.urls.adminAjax, { form } );
+        const resp = await this.page.request.post(this.urls.adminAjax, { form });
         const raw = await resp.text();
         let json: { success: boolean; data?: unknown } | undefined;
         try {
-            json = JSON.parse( raw );
+            json = JSON.parse(raw);
         } catch {
             json = undefined; // admin-ajax may die with the literal '0' for anon/unprivileged
         }
@@ -135,23 +139,23 @@ export class AcctProSettingsPage {
     // ── DB oracles (wp_options round-trip) ───────────────────────────────────────
 
     /** Read a single wp_options value (the pro fields persist one-id-per-option). */
-    static async option( name: string ): Promise<string | undefined> {
-        const v = await dbUtils.getOptionValue<string>( name );
-        return v === undefined ? undefined : String( v );
+    static async option(name: string): Promise<string | undefined> {
+        const v = await dbUtils.getOptionValue<string>(name);
+        return v === undefined ? undefined : String(v);
     }
 
     /**
      * Assert a save landed by reading the field's own wp_options row. Returns the
      * stored value so callers can branch resiliently rather than hard-asserting.
      */
-    static async readBack( name: string ): Promise<string | undefined> {
-        return AcctProSettingsPage.option( name );
+    static async readBack(name: string): Promise<string | undefined> {
+        return AcctProSettingsPage.option(name);
     }
 
     /** Convenience expectation: a saved option equals the expected value. */
-    static async expectOption( name: string, expected: string ): Promise<void> {
-        const actual = await AcctProSettingsPage.option( name );
-        expect( actual, `wp_options.${name}` ).toBe( expected );
+    static async expectOption(name: string, expected: string): Promise<void> {
+        const actual = await AcctProSettingsPage.option(name);
+        expect(actual, `wp_options.${name}`).toBe(expected);
     }
 }
 

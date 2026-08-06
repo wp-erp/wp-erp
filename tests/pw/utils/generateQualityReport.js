@@ -82,13 +82,18 @@ const dirSize = dir => {
     return total;
 };
 
-const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-}[c]));
+const escape = value =>
+    String(value ?? '').replace(
+        /[&<>"']/g,
+        c =>
+            ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+            })[c],
+    );
 
 // ----------------------------------------------------------------------------
 
@@ -119,9 +124,11 @@ const suiteShape = report => {
     };
 };
 
-const coverageShape = (raw) => {
+const coverageShape = raw => {
     if (!raw) return { pct: null, total: 0, covered: 0 };
-    const pctRaw = String(raw.coverage ?? '').replace('%', '').trim();
+    const pctRaw = String(raw.coverage ?? '')
+        .replace('%', '')
+        .trim();
     const pct = Number.isFinite(Number(pctRaw)) ? Number(pctRaw) : null;
     return {
         pct,
@@ -169,23 +176,26 @@ const renderArtifacts = () => {
         return '<div class="artifact-item" style="grid-column: 1/-1;"><div class="artifact-info"><div class="artifact-name">No artifacts available</div></div></div>';
     }
     const ignore = new Set(['all-blob-reports', 'html-report']);
-    const entries = fs.readdirSync(ARTIFACTS_DIR)
+    const entries = fs
+        .readdirSync(ARTIFACTS_DIR)
         .map(name => ({ name, full: path.join(ARTIFACTS_DIR, name) }))
         .filter(e => fs.statSync(e.full).isDirectory() && !ignore.has(e.name))
         .sort((a, b) => a.name.localeCompare(b.name));
     if (entries.length === 0) {
         return '<div class="artifact-item" style="grid-column: 1/-1;"><div class="artifact-info"><div class="artifact-name">No artifacts available</div></div></div>';
     }
-    return entries.map(e => {
-        const size = formatBytes(dirSize(e.full));
-        return `            <div class="artifact-item">
+    return entries
+        .map(e => {
+            const size = formatBytes(dirSize(e.full));
+            return `            <div class="artifact-item">
                 <div class="artifact-icon"><i class="ti ti-folder" aria-hidden="true"></i></div>
                 <div class="artifact-info">
                     <div class="artifact-name">${escape(e.name)}</div>
                     <div class="artifact-size">${escape(size)}</div>
                 </div>
             </div>`;
-    }).join('\n');
+        })
+        .join('\n');
 };
 
 // ----------------------------------------------------------------------------
@@ -197,8 +207,8 @@ const prNumber = process.env.PR_NUMBER || '—';
 const runId = process.env.GITHUB_RUN_ID || '—';
 const today = new Date().toISOString().slice(0, 10);
 
-const fmtPct = v => v === null || v === undefined ? '—' : `${num(v).toFixed(1)}`;
-const fmtCount = v => v === null || v === undefined ? '—' : String(num(v));
+const fmtPct = v => (v === null || v === undefined ? '—' : `${num(v).toFixed(1)}`);
+const fmtCount = v => (v === null || v === undefined ? '—' : String(num(v)));
 
 const placeholders = {
     BRANCH_NAME: branch,
@@ -278,23 +288,24 @@ console.log(`  pass rate ${totals.passRate}% | duration ${formatDuration(totals.
 
 const SUMMARY_FILE = process.env.SUMMARY_FILE;
 if (SUMMARY_FILE) {
-    const RUN_URL = process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && runId !== '—'
-        ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${runId}`
-        : null;
+    const RUN_URL =
+        process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && runId !== '—'
+            ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${runId}`
+            : null;
 
     // Brand palette (matches quality-report-template.html)
     const C = {
         purplePrimary: '534AB7',
-        purpleLight:   '7F77DD',
-        teal:          '0F6E56',
-        green:         '639922',
-        red:           'E24B4A',
-        amber:         'BA7517',
-        gray:          '888780',
-        ink:           '1a1a1a',
+        purpleLight: '7F77DD',
+        teal: '0F6E56',
+        green: '639922',
+        red: 'E24B4A',
+        amber: 'BA7517',
+        gray: '888780',
+        ink: '1a1a1a',
     };
 
-    const fmtNum = n => Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—';
+    const fmtNum = n => (Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—');
 
     // shields.io URL builder. Plain badges only — labelColor + color give us
     // the two-tone look the design uses for metric tiles.
@@ -302,41 +313,46 @@ if (SUMMARY_FILE) {
         const enc = s => encodeURIComponent(String(s).replace(/-/g, '--').replace(/_/g, '__'));
         const params = new URLSearchParams({ style: opts.style || 'for-the-badge' });
         if (opts.labelColor) params.set('labelColor', opts.labelColor);
-        if (opts.logo)       params.set('logo', opts.logo);
-        if (opts.logoColor)  params.set('logoColor', opts.logoColor);
+        if (opts.logo) params.set('logo', opts.logo);
+        if (opts.logoColor) params.set('logoColor', opts.logoColor);
         return `https://img.shields.io/badge/${enc(label)}-${enc(message)}-${color}?${params.toString()}`;
     };
     const badge = (label, message, color, opts = {}, alt) =>
         `<img alt="${escape(alt || `${label}: ${message}`)}" src="${shieldUrl(label, message, color, opts)}">`;
 
     const statusBadge = overallFailed
-        ? badge('✕  Tests failed', `${totals.failed} failure${totals.failed === 1 ? '' : 's'} · ${totals.passRate.toFixed(1)}% pass rate`, C.red, { labelColor: C.purplePrimary })
-        : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
+        ? badge(
+              '✕  Tests failed',
+              `${totals.failed} failure${totals.failed === 1 ? '' : 's'} · ${totals.passRate.toFixed(1)}% pass rate`,
+              C.red,
+              { labelColor: C.purplePrimary },
+          )
+        : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, {
+              labelColor: C.purplePrimary,
+          });
 
-    const suiteStatusBadge = (s) => {
-        if (!s)            return badge('No data', '—', C.gray);
-        if (s.failed > 0)  return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
+    const suiteStatusBadge = s => {
+        if (!s) return badge('No data', '—', C.gray);
+        if (s.failed > 0) return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
         return badge('Passed', `${s.passRate.toFixed(1)}% pass rate`, C.green);
     };
 
-    const passRateBadge = (pct) => badge(
-        'Pass rate',
-        `${pct.toFixed(1)}%`,
-        pct >= 99 ? C.green : pct >= 90 ? C.amber : C.red,
-        { style: 'flat-square' },
-    );
+    const passRateBadge = pct =>
+        badge('Pass rate', `${pct.toFixed(1)}%`, pct >= 99 ? C.green : pct >= 90 ? C.amber : C.red, { style: 'flat-square' });
 
     const apiCovStr = apiCov.pct === null ? '—' : `${apiCov.pct.toFixed(2)}%`;
     const e2eCovStr = e2eCov.pct === null ? '—' : `${e2eCov.pct.toFixed(2)}%`;
     const totalCovStr = totalCoveragePct === null ? '—' : `${totalCoveragePct.toFixed(2)}%`;
 
     // Metrics tile (renders as a labelColor=purple / value=brand-color shield).
-    const metricTile = (label, value, color) => `      <td align="center" valign="middle">${badge(label, value, color, { labelColor: C.purplePrimary })}</td>`;
+    const metricTile = (label, value, color) =>
+        `      <td align="center" valign="middle">${badge(label, value, color, { labelColor: C.purplePrimary })}</td>`;
 
     const artifactsTable = (() => {
         if (!ARTIFACTS_DIR || !fs.existsSync(ARTIFACTS_DIR)) return '_No artifacts available._';
         const ignore = new Set(['all-blob-reports', 'html-report']);
-        const entries = fs.readdirSync(ARTIFACTS_DIR)
+        const entries = fs
+            .readdirSync(ARTIFACTS_DIR)
             .map(name => ({ name, full: path.join(ARTIFACTS_DIR, name) }))
             .filter(e => fs.statSync(e.full).isDirectory() && !ignore.has(e.name))
             .sort((a, b) => a.name.localeCompare(b.name));
@@ -369,10 +385,18 @@ if (SUMMARY_FILE) {
     lines.push('');
     lines.push('<p>');
     lines.push('  ' + badge('Branch', branch, C.purpleLight, { labelColor: C.purplePrimary, logo: 'git', logoColor: 'white' }));
-    if (prNumber !== '—') lines.push('  ' + badge('PR', `#${prNumber}`, C.purpleLight, { labelColor: C.purplePrimary, logo: 'github', logoColor: 'white' }));
+    if (prNumber !== '—')
+        lines.push('  ' + badge('PR', `#${prNumber}`, C.purpleLight, { labelColor: C.purplePrimary, logo: 'github', logoColor: 'white' }));
     lines.push('  ' + badge('Commit', sha, C.purpleLight, { labelColor: C.purplePrimary, logo: 'git', logoColor: 'white' }));
     lines.push('  ' + badge('Date', today, C.purpleLight, { labelColor: C.purplePrimary, logo: 'calendar', logoColor: 'white' }));
-    lines.push('  ' + badge('Duration', formatDuration(totals.durationMs), C.purpleLight, { labelColor: C.purplePrimary, logo: 'clock', logoColor: 'white' }));
+    lines.push(
+        '  ' +
+            badge('Duration', formatDuration(totals.durationMs), C.purpleLight, {
+                labelColor: C.purplePrimary,
+                logo: 'clock',
+                logoColor: 'white',
+            }),
+    );
     lines.push('</p>');
     lines.push('');
 
@@ -427,7 +451,9 @@ if (SUMMARY_FILE) {
         const tag = s && s.failed > 0 ? 'failed' : 'ok';
         const passedCell = s ? `<strong>${fmtNum(s.passed)}</strong>` : '—';
         const failedCell = s ? (s.failed > 0 ? `<strong style="color:#${C.red}">${fmtNum(s.failed)}</strong>` : '0') : '—';
-        const passRateCell = s ? `<img alt="${s.passRate.toFixed(1)}%" src="${shieldUrl('', `${s.passRate.toFixed(1)}%`, s.failed > 0 ? C.red : s.passRate >= 99 ? C.green : C.amber, { style: 'flat-square' })}">` : '—';
+        const passRateCell = s
+            ? `<img alt="${s.passRate.toFixed(1)}%" src="${shieldUrl('', `${s.passRate.toFixed(1)}%`, s.failed > 0 ? C.red : s.passRate >= 99 ? C.green : C.amber, { style: 'flat-square' })}">`
+            : '—';
         return `    <tr>
       <td>${label} ${suiteStatusBadge(s)}</td>
       <td align="right">${s ? fmtNum(s.total) : '—'}</td>
@@ -460,7 +486,9 @@ if (SUMMARY_FILE) {
         : badge('Run', runId, C.purpleLight, { labelColor: C.purplePrimary });
     lines.push(`<p>${teamBadge}  ${runBadge}</p>`);
     lines.push('');
-    lines.push('<sub>The full styled HTML report (purple-gradient header, metric cards, progress bars) is available as the <strong>quality-report</strong> artifact on this run. GitHub strips CSS from job summaries, so the inline view above uses brand-coloured shield badges instead.</sub>');
+    lines.push(
+        '<sub>The full styled HTML report (purple-gradient header, metric cards, progress bars) is available as the <strong>quality-report</strong> artifact on this run. GitHub strips CSS from job summaries, so the inline view above uses brand-coloured shield badges instead.</sub>',
+    );
     lines.push('');
 
     fs.mkdirSync(path.dirname(SUMMARY_FILE), { recursive: true });

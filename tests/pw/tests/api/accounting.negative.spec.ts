@@ -49,10 +49,9 @@ async function ledgerVoucherSums(trnNo: string | number): Promise<{ debit: numbe
  * The detail tables key on voucher_no, which differs from the response `id`.
  */
 async function invoiceVoucherNo(invoiceId: string | number): Promise<string> {
-    const rows = await dbUtils.dbQuery<{ voucher_no: number | string }>(
-        `SELECT voucher_no FROM wp_erp_acct_invoices WHERE id = ?`,
-        [invoiceId],
-    );
+    const rows = await dbUtils.dbQuery<{ voucher_no: number | string }>(`SELECT voucher_no FROM wp_erp_acct_invoices WHERE id = ?`, [
+        invoiceId,
+    ]);
     return String(rows[0]?.voucher_no ?? invoiceId);
 }
 
@@ -151,15 +150,19 @@ test.describe('Accounting REST — validation negatives (admin)', () => {
         expect(String(body?.code ?? '')).toBe('rest_customer_invalid_id');
     });
 
-    test('ACCOUNTING-EC-21 / NC-23 get a non-existent invoice id -> actual is 200 BLANK', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const [res, body] = await api.get(`${endPoints.acctInvoices}/99999999`, undefined, false);
-        // CATALOG expected 404 (rest_invoice_invalid_id). LIVE-VERIFIED ACTUAL is 200
-        // with a blank invoice (line_items: [], total_due: 0).
-        // BUG CANDIDATE: missing invoice returns 200 blank record instead of 404.
-        expect(res.status(), 'missing invoice returns 200 (actual)').toBe(200);
-        const lineItems = (body as { line_items?: unknown })?.line_items;
-        expect(Array.isArray(lineItems) ? lineItems.length : 0, 'blank invoice has no line items').toBe(0);
-    });
+    test(
+        'ACCOUNTING-EC-21 / NC-23 get a non-existent invoice id -> actual is 200 BLANK',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async () => {
+            const [res, body] = await api.get(`${endPoints.acctInvoices}/99999999`, undefined, false);
+            // CATALOG expected 404 (rest_invoice_invalid_id). LIVE-VERIFIED ACTUAL is 200
+            // with a blank invoice (line_items: [], total_due: 0).
+            // BUG CANDIDATE: missing invoice returns 200 blank record instead of 404.
+            expect(res.status(), 'missing invoice returns 200 (actual)').toBe(200);
+            const lineItems = (body as { line_items?: unknown })?.line_items;
+            expect(Array.isArray(lineItems) ? lineItems.length : 0, 'blank invoice has no line items').toBe(0);
+        },
+    );
 
     test('ACCOUNTING-NC-23 void a non-existent invoice', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
         const [res] = await api.put(`${endPoints.acctInvoices}/99999999/void`, undefined, false);
@@ -194,29 +197,43 @@ test.describe('Accounting REST — negative money paths (admin)', () => {
             estimate: 0,
             status: 2,
             attachments: '',
-            line_items: [{ product_id: 0, qty, unit_price: unitPrice, discount: opts.discount ?? 0, tax: 0, tax_cat_id: 0, item_total: qty * unitPrice }],
+            line_items: [
+                {
+                    product_id: 0,
+                    qty,
+                    unit_price: unitPrice,
+                    discount: opts.discount ?? 0,
+                    tax: 0,
+                    tax_cat_id: 0,
+                    item_total: qty * unitPrice,
+                },
+            ],
         };
     }
 
-    test('ACCOUNTING-NC-08 / BUG-11 negative line price must not poison the ledger', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const [res, body] = await api.post(endPoints.acctInvoices, { data: lineInvoice(-100) }, false);
-        expect(res.status(), 'negative-price invoice answered').toBeLessThan(500);
-        if (res.status() < 400) {
-            const id = String((body as { id?: unknown })?.id ?? '');
-            if (id) {
-                // Master invariant: even a negative line must keep the voucher balanced
-                // across ledger_details ∪ invoice_account_details. A one-sided posting
-                // here unbalances the trial balance = Blocker.
-                const { debit, credit } = await invoiceVoucherSums(await invoiceVoucherNo(id));
-                expect(round2(debit), 'negative-line voucher still balanced (Σdr == Σcr)').toBeCloseTo(round2(credit), 2);
-                const amount = Number((body as { amount?: unknown })?.amount ?? 0);
-                if (amount < 0) {
-                    // BUG CANDIDATE: negative invoice total accepted silently (no input guard).
-                    expect(amount, 'negative total accepted silently (flagged)').toBeLessThan(0);
+    test(
+        'ACCOUNTING-NC-08 / BUG-11 negative line price must not poison the ledger',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async () => {
+            const [res, body] = await api.post(endPoints.acctInvoices, { data: lineInvoice(-100) }, false);
+            expect(res.status(), 'negative-price invoice answered').toBeLessThan(500);
+            if (res.status() < 400) {
+                const id = String((body as { id?: unknown })?.id ?? '');
+                if (id) {
+                    // Master invariant: even a negative line must keep the voucher balanced
+                    // across ledger_details ∪ invoice_account_details. A one-sided posting
+                    // here unbalances the trial balance = Blocker.
+                    const { debit, credit } = await invoiceVoucherSums(await invoiceVoucherNo(id));
+                    expect(round2(debit), 'negative-line voucher still balanced (Σdr == Σcr)').toBeCloseTo(round2(credit), 2);
+                    const amount = Number((body as { amount?: unknown })?.amount ?? 0);
+                    if (amount < 0) {
+                        // BUG CANDIDATE: negative invoice total accepted silently (no input guard).
+                        expect(amount, 'negative total accepted silently (flagged)').toBeLessThan(0);
+                    }
                 }
             }
-        }
-    });
+        },
+    );
 
     test('ACCOUNTING-NC-09 negative line qty', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
         const [res, body] = await api.post(endPoints.acctInvoices, { data: lineInvoice(100, { qty: -2 }) }, false);
@@ -275,7 +292,7 @@ test.describe('Accounting REST — negative money paths (admin)', () => {
         // Find a system ledger (system="1") — e.g. AR/Sales Revenue/Inventory.
         const [, ledgers] = await api.get(endPoints.acctLedgers);
         const sys = Array.isArray(ledgers)
-            ? (ledgers as Array<{ id?: unknown; system?: unknown; name?: unknown }>).find((l) => String(l?.system ?? '') === '1')
+            ? (ledgers as Array<{ id?: unknown; system?: unknown; name?: unknown }>).find(l => String(l?.system ?? '') === '1')
             : undefined;
         if (!sys?.id) {
             test.info().annotations.push({ type: 'skip-reason', description: 'no system ledger found in list' });
@@ -364,15 +381,42 @@ test.describe('Accounting REST — employee role is blocked', () => {
     });
 
     test('ACCOUNTING-NC-17 employee cannot receive a payment', { tag: ['@lite', '@accounting', '@employee'] }, async () => {
-        const payload = { customer_id: 1, trn_date: '2025-03-05', amount: 10, trn_by: 1, deposit_to: LEDGER.cash, type: 'invoice', status: 1, line_items: [] };
+        const payload = {
+            customer_id: 1,
+            trn_date: '2025-03-05',
+            amount: 10,
+            trn_by: 1,
+            deposit_to: LEDGER.cash,
+            type: 'invoice',
+            status: 1,
+            line_items: [],
+        };
         const [res] = await empApi.post(endPoints.acctPayments, { data: payload }, false);
         expect(res.status(), 'employee blocked from receiving a payment').toBeGreaterThanOrEqual(400);
     });
 
     test('ACCOUNTING-NC-18 employee cannot create a bill or expense', { tag: ['@lite', '@accounting', '@employee'] }, async () => {
-        const [billRes] = await empApi.post(endPoints.acctBills, { data: { vendor_id: 1, trn_date: '2025-03-07', amount: 10, due: 10, status: 1, bill_details: [] } }, false);
+        const [billRes] = await empApi.post(
+            endPoints.acctBills,
+            { data: { vendor_id: 1, trn_date: '2025-03-07', amount: 10, due: 10, status: 1, bill_details: [] } },
+            false,
+        );
         expect(billRes.status(), 'employee blocked from creating a bill').toBeGreaterThanOrEqual(400);
-        const [expRes] = await empApi.post(endPoints.acctExpenses, { data: { trn_date: '2025-03-06', amount: 10, deposit_to: LEDGER.cash, trn_by: 1, status: 1, type: 'expense', bill_details: [] } }, false);
+        const [expRes] = await empApi.post(
+            endPoints.acctExpenses,
+            {
+                data: {
+                    trn_date: '2025-03-06',
+                    amount: 10,
+                    deposit_to: LEDGER.cash,
+                    trn_by: 1,
+                    status: 1,
+                    type: 'expense',
+                    bill_details: [],
+                },
+            },
+            false,
+        );
         expect(expRes.status(), 'employee blocked from creating an expense').toBeGreaterThanOrEqual(400);
     });
 
@@ -386,19 +430,35 @@ test.describe('Accounting REST — employee role is blocked', () => {
         expect(res.status(), 'employee blocked from deleting a ledger').toBeGreaterThanOrEqual(400);
     });
 
-    test('ACCOUNTING-BUG-13 employee permission bypass probe (direct write routes)', { tag: ['@lite', '@accounting', '@employee'] }, async () => {
-        // The UI hides the buttons; the API permission_callback must still block. We
-        // assert each write route is blocked. (Observed as 403; see CAVEAT above.)
-        const routes: Array<[string, Record<string, unknown>]> = [
-            [endPoints.acctInvoices, AccountingPage.invoicePayload(1, 100, { status: 1 })],
-            [endPoints.acctJournals, { trn_date: '2025-03-02', line_items: [{ ledger_id: LEDGER.cash, debit: 1, credit: 0 }, { ledger_id: LEDGER.ownersContribution, debit: 0, credit: 1 }] }],
-            [endPoints.acctExpenses, { trn_date: '2025-03-06', amount: 1, deposit_to: LEDGER.cash, trn_by: 1, status: 1, type: 'expense', bill_details: [] }],
-        ];
-        for (const [url, payload] of routes) {
-            const [res] = await empApi.post(url, { data: payload }, false);
-            expect(res.status(), `employee blocked on ${url}`).toBeGreaterThanOrEqual(400);
-        }
-    });
+    test(
+        'ACCOUNTING-BUG-13 employee permission bypass probe (direct write routes)',
+        { tag: ['@lite', '@accounting', '@employee'] },
+        async () => {
+            // The UI hides the buttons; the API permission_callback must still block. We
+            // assert each write route is blocked. (Observed as 403; see CAVEAT above.)
+            const routes: Array<[string, Record<string, unknown>]> = [
+                [endPoints.acctInvoices, AccountingPage.invoicePayload(1, 100, { status: 1 })],
+                [
+                    endPoints.acctJournals,
+                    {
+                        trn_date: '2025-03-02',
+                        line_items: [
+                            { ledger_id: LEDGER.cash, debit: 1, credit: 0 },
+                            { ledger_id: LEDGER.ownersContribution, debit: 0, credit: 1 },
+                        ],
+                    },
+                ],
+                [
+                    endPoints.acctExpenses,
+                    { trn_date: '2025-03-06', amount: 1, deposit_to: LEDGER.cash, trn_by: 1, status: 1, type: 'expense', bill_details: [] },
+                ],
+            ];
+            for (const [url, payload] of routes) {
+                const [res] = await empApi.post(url, { data: payload }, false);
+                expect(res.status(), `employee blocked on ${url}`).toBeGreaterThanOrEqual(400);
+            }
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -430,14 +490,18 @@ test.describe('Accounting REST — where bugs hide (admin)', () => {
         expect(round2(debit) === round2(credit), 'voucher is NOT balanced (bug)').toBe(false);
     });
 
-    test('ACCOUNTING-BUG-02 invoice with no customer_id is accepted (200, no customer)', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const payload = AccountingPage.invoicePayload(0, 100, { status: 1 });
-        delete (payload as Record<string, unknown>).customer_id;
-        const [res, body] = await api.post(endPoints.acctInvoices, { data: payload }, false);
-        // BUG CANDIDATE: invoice accepted with no customer_id.
-        expect(res.status(), 'no-customer invoice accepted (200)').toBe(200);
-        expect((body as { customer_id?: unknown })?.customer_id ?? 0, 'no real customer attached').toBeFalsy();
-    });
+    test(
+        'ACCOUNTING-BUG-02 invoice with no customer_id is accepted (200, no customer)',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async () => {
+            const payload = AccountingPage.invoicePayload(0, 100, { status: 1 });
+            delete (payload as Record<string, unknown>).customer_id;
+            const [res, body] = await api.post(endPoints.acctInvoices, { data: payload }, false);
+            // BUG CANDIDATE: invoice accepted with no customer_id.
+            expect(res.status(), 'no-customer invoice accepted (200)').toBe(200);
+            expect((body as { customer_id?: unknown })?.customer_id ?? 0, 'no real customer attached').toBeFalsy();
+        },
+    );
 
     test('ACCOUNTING-BUG-08 non-existent person read does not 404 cleanly', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
         const [res] = await api.get(`${endPoints.acctPeople}/99999999`, undefined, false);
@@ -455,24 +519,39 @@ test.describe('Accounting REST — where bugs hide (admin)', () => {
         const [res, body] = await api.get(`${endPoints.acctReports}/sales-tax&start_date=2025-01-01&end_date=2025-12-31`, undefined, false);
         expect(res.status(), 'sales-tax report answered').toBeLessThan(500);
         if (res.status() === 200) {
-            const rows = Array.isArray(body) ? body : Array.isArray((body as { data?: unknown })?.data) ? (body as { data: unknown[] }).data : [];
+            const rows = Array.isArray(body)
+                ? body
+                : Array.isArray((body as { data?: unknown })?.data)
+                  ? (body as { data: unknown[] }).data
+                  : [];
             expect(Array.isArray(rows), 'sales-tax returns a summable shape').toBe(true);
         }
     });
 
-    test('ACCOUNTING-BUG-15 balance-sheet identity (Assets = Liabilities + Equity)', { tag: ['@lite', '@accounting', '@admin'] }, async () => {
-        const [res, body] = await api.get(`${endPoints.acctReports}/balance-sheet&start_date=2025-01-01&end_date=2025-12-31`, undefined, false);
-        expect(res.status(), 'balance-sheet answered').toBeLessThan(500);
-        if (res.status() !== 200 || !body || typeof body !== 'object') return;
-        // VERIFIED shape: { rows1: assets[], rows2: liabilities+equity[] }.
-        const sum = (arr: unknown): number =>
-            Array.isArray(arr) ? (arr as Array<{ balance?: unknown }>).reduce((a, r) => a + Number(r?.balance ?? 0), 0) : 0;
-        const assets = round2(sum((body as { rows1?: unknown }).rows1));
-        const liabEquity = round2(sum((body as { rows2?: unknown }).rows2));
-        // BUG CANDIDATE: an Assets != Liabilities + Equity gap means the books don't tie out.
-        if (assets !== liabEquity) {
-            test.info().annotations.push({ type: 'balance-sheet-imbalance', description: `assets=${assets} vs liab+equity=${liabEquity}` });
-        }
-        expect(Number.isFinite(assets) && Number.isFinite(liabEquity), 'balance-sheet totals are numeric').toBe(true);
-    });
+    test(
+        'ACCOUNTING-BUG-15 balance-sheet identity (Assets = Liabilities + Equity)',
+        { tag: ['@lite', '@accounting', '@admin'] },
+        async () => {
+            const [res, body] = await api.get(
+                `${endPoints.acctReports}/balance-sheet&start_date=2025-01-01&end_date=2025-12-31`,
+                undefined,
+                false,
+            );
+            expect(res.status(), 'balance-sheet answered').toBeLessThan(500);
+            if (res.status() !== 200 || !body || typeof body !== 'object') return;
+            // VERIFIED shape: { rows1: assets[], rows2: liabilities+equity[] }.
+            const sum = (arr: unknown): number =>
+                Array.isArray(arr) ? (arr as Array<{ balance?: unknown }>).reduce((a, r) => a + Number(r?.balance ?? 0), 0) : 0;
+            const assets = round2(sum((body as { rows1?: unknown }).rows1));
+            const liabEquity = round2(sum((body as { rows2?: unknown }).rows2));
+            // BUG CANDIDATE: an Assets != Liabilities + Equity gap means the books don't tie out.
+            if (assets !== liabEquity) {
+                test.info().annotations.push({
+                    type: 'balance-sheet-imbalance',
+                    description: `assets=${assets} vs liab+equity=${liabEquity}`,
+                });
+            }
+            expect(Number.isFinite(assets) && Number.isFinite(liabEquity), 'balance-sheet totals are numeric').toBe(true);
+        },
+    );
 });

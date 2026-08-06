@@ -37,7 +37,8 @@ test.describe('CORE REST — current user & users', () => {
         // The admin account has the administrator role in its capabilities map.
         const roles = (body?.roles ?? []) as string[];
         const caps = (body?.capabilities ?? {}) as Record<string, boolean>;
-        const isAdmin = (Array.isArray(roles) && roles.includes('administrator')) || caps.administrator === true || caps.manage_options === true;
+        const isAdmin =
+            (Array.isArray(roles) && roles.includes('administrator')) || caps.administrator === true || caps.manage_options === true;
         expect(isAdmin, 'currentUser is an administrator').toBe(true);
     });
 
@@ -75,10 +76,9 @@ test.describe('CORE invariants — options (DB)', () => {
         // Count how many option rows match the company key — must be exactly one or
         // zero (WP options are unique by name; this also proves there is no per-user
         // company duplication in the free plugin).
-        const rows = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${tables.options} WHERE option_name = ?`,
-            ['_erp_company'],
-        );
+        const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${tables.options} WHERE option_name = ?`, [
+            '_erp_company',
+        ]);
         const count = Number(rows[0]?.c ?? 0);
         expect(count, 'at most one _erp_company option row').toBeLessThanOrEqual(1);
     });

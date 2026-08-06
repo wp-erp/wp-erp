@@ -50,8 +50,7 @@ const ERP_NAV = 'ul.erp-nav:not(.-primary)';
 /** Resilient "settings surface" union: the not-connected CTA is a plain
  *  <button class="button-secondary"> (Configure / Connect Now), OR — when real
  *  keys happen to be saved — a connected sync form. */
-const SETTINGS_SURFACE =
-    'button.button-secondary, form#erp_mailchimp_sync_form, form#erp_helpscout_sync_form';
+const SETTINGS_SURFACE = 'button.button-secondary, form#erp_mailchimp_sync_form, form#erp_helpscout_sync_form';
 
 // ──────────────────────────────────────────────────────────────────────────
 // Admin role — full integration surface
@@ -72,7 +71,7 @@ test.describe('CRM Integrations (pro, admin)', () => {
     // INTG-UI-02 — provider nav renders every active integration tab.
     test('provider nav (ul.erp-nav) renders all active integration tabs', { tag: ['@pro', '@crm', '@admin'] }, async ({ page }) => {
         // Only providers whose module is active render a nav tab; assert exactly those.
-        const activeProviders = PROVIDERS.filter((p) => proModuleActive(p));
+        const activeProviders = PROVIDERS.filter(p => proModuleActive(p));
         test.skip(activeProviders.length === 0, 'no CRM integration provider module is active in this env');
         const crm = new CrmPage(page);
         await page.goto(crm.urls.integrations);

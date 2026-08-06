@@ -47,32 +47,26 @@ async function seedContact(lifeStage: string = 'lead', emailSuffix = ''): Promis
     );
     let id = (result as unknown as { insertId?: number }).insertId;
     if (!id) {
-        const found = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${tables.peoples} WHERE email = ? ORDER BY id DESC LIMIT 1`,
-            [email],
-        );
+        const found = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${tables.peoples} WHERE email = ? ORDER BY id DESC LIMIT 1`, [
+            email,
+        ]);
         id = found[0]?.id;
     }
     expect(id, 'people row inserted').toBeTruthy();
 
-    const typeRows = await dbUtils.dbQuery<{ id: number }>(
-        `SELECT id FROM ${tables.peopleTypes} WHERE name = 'contact' LIMIT 1`,
-    );
+    const typeRows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${tables.peopleTypes} WHERE name = 'contact' LIMIT 1`);
     const typeId = typeRows[0]?.id;
     expect(typeId, 'contact type exists').toBeTruthy();
 
-    await dbUtils.dbQuery(
-        `INSERT INTO ${tables.peopleTypeRelations} (people_id, people_types_id, deleted_at) VALUES (?, ?, NULL)`,
-        [id, typeId],
-    );
-    await dbUtils.dbQuery(
-        `INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'life_stage', ?)`,
-        [id, lifeStage],
-    );
-    await dbUtils.dbQuery(
-        `INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'contact_owner', '1')`,
-        [id],
-    );
+    await dbUtils.dbQuery(`INSERT INTO ${tables.peopleTypeRelations} (people_id, people_types_id, deleted_at) VALUES (?, ?, NULL)`, [
+        id,
+        typeId,
+    ]);
+    await dbUtils.dbQuery(`INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'life_stage', ?)`, [
+        id,
+        lifeStage,
+    ]);
+    await dbUtils.dbQuery(`INSERT INTO ${tables.peopleMeta} (erp_people_id, meta_key, meta_value) VALUES (?, 'contact_owner', '1')`, [id]);
     return { id: String(id), email };
 }
 
@@ -182,10 +176,7 @@ test.describe('CRM contact groups — DB CRUD', () => {
         const name = `${TEST_PREFIX}dupgrp_${Date.now()}`;
         await seedGroup(name);
         await seedGroup(name);
-        const rows = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${crmTables.contactGroup} WHERE name = ?`,
-            [name],
-        );
+        const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${crmTables.contactGroup} WHERE name = ?`, [name]);
         // BUG CANDIDATE: wp_erp_crm_contact_group has no unique on name; duplicates persist.
         expect(Number(rows[0]?.c), 'two groups with the same name coexist').toBe(2);
     });
@@ -230,10 +221,10 @@ test.describe('CRM contact ↔ company link — DB integrity', () => {
 
         // Link (admin-ajax erp-crm-customer-add-company has an unproven selector,
         // so seed the link row directly and assert the contract).
-        await dbUtils.dbQuery(
-            `INSERT INTO ${crmTables.customerCompanies} (customer_id, company_id) VALUES (?, ?)`,
-            [customerId, companyId],
-        );
+        await dbUtils.dbQuery(`INSERT INTO ${crmTables.customerCompanies} (customer_id, company_id) VALUES (?, ?)`, [
+            customerId,
+            companyId,
+        ]);
         let links = await dbUtils.dbQuery<{ c: number }>(
             `SELECT COUNT(*) AS c FROM ${crmTables.customerCompanies} WHERE customer_id = ? AND company_id = ?`,
             [customerId, companyId],
@@ -241,10 +232,10 @@ test.describe('CRM contact ↔ company link — DB integrity', () => {
         expect(Number(links[0]?.c), 'exactly one link row').toBe(1);
 
         // Unlink (mirrors erp-crm-customer-remove-company).
-        await dbUtils.dbQuery(
-            `DELETE FROM ${crmTables.customerCompanies} WHERE customer_id = ? AND company_id = ?`,
-            [customerId, companyId],
-        );
+        await dbUtils.dbQuery(`DELETE FROM ${crmTables.customerCompanies} WHERE customer_id = ? AND company_id = ?`, [
+            customerId,
+            companyId,
+        ]);
         links = await dbUtils.dbQuery<{ c: number }>(
             `SELECT COUNT(*) AS c FROM ${crmTables.customerCompanies} WHERE customer_id = ? AND company_id = ?`,
             [customerId, companyId],

@@ -38,21 +38,25 @@ test.describe('CORE REST — unauthorized & nonce gates', () => {
     // NC-11 (corrected) — user(1) at default context is PUBLIC (WP exposes the
     // author archive user), so a logged-out GET returns 200, NOT 401. The
     // privileged context=edit read IS gated → 401. We assert both actual behaviors.
-    test('NC-11 user(1) default context is public (200) but edit context is gated (401)', { tag: ['@lite', '@core', '@admin'] }, async () => {
-        const ctx = await request.newContext({ baseURL: BASE_URL, ...data.auth.noAuth });
-        try {
-            const pub = await ctx.get(endPoints.user(1), { failOnStatusCode: false });
-            // BUG CANDIDATE: wp/v2/users/1 leaks the admin's public profile to anonymous
-            // callers (WP core default), so the brief's "user(1) logged-out → 401" does
-            // not hold for the default context — only edit context is protected.
-            expect(pub.status(), 'public profile read is allowed by WP core').toBe(200);
+    test(
+        'NC-11 user(1) default context is public (200) but edit context is gated (401)',
+        { tag: ['@lite', '@core', '@admin'] },
+        async () => {
+            const ctx = await request.newContext({ baseURL: BASE_URL, ...data.auth.noAuth });
+            try {
+                const pub = await ctx.get(endPoints.user(1), { failOnStatusCode: false });
+                // BUG CANDIDATE: wp/v2/users/1 leaks the admin's public profile to anonymous
+                // callers (WP core default), so the brief's "user(1) logged-out → 401" does
+                // not hold for the default context — only edit context is protected.
+                expect(pub.status(), 'public profile read is allowed by WP core').toBe(200);
 
-            const edit = await ctx.get(`${endPoints.user(1)}?context=edit`, { failOnStatusCode: false });
-            expect(edit.status(), 'edit-context read of a user must be 401').toBe(401);
-        } finally {
-            await ctx.dispose();
-        }
-    });
+                const edit = await ctx.get(`${endPoints.user(1)}?context=edit`, { failOnStatusCode: false });
+                expect(edit.status(), 'edit-context read of a user must be 401').toBe(401);
+            } finally {
+                await ctx.dispose();
+            }
+        },
+    );
 
     // BUG-01 — a non-existent core user. The WP core users endpoint returns a real
     // 404 here (verified live), unlike the HRM employee endpoint which leaks a 200

@@ -325,7 +325,7 @@
 - page: 'payroll'
   features:
       automated:
-          '''Payroll'' nav and ''Pay Calendar'' / ''Pay Run List'' sub-nav are present': true
+          "'Payroll' nav and 'Pay Calendar' / 'Pay Run List' sub-nav are present": true
           HR manager can reach the pay calendar list: true
           HR manager can reach the pay run list: true
           HR manager can reach the payroll dashboard: true
@@ -427,8 +427,8 @@
           empty-title save is blocked by client-side required validation: true
           list table shows the pro custom columns and drops the default Date column: true
           'new-training editor mounts with title field, HR Training Options metabox and nonce': true
-          'selecting ''By Department'' reveals the departments select and hides the others': true
-          'selecting ''Selected Employee'' reveals the employees select and hides the others': true
+          "selecting 'By Department' reveals the departments select and hides the others": true
+          "selecting 'Selected Employee' reveals the employees select and hides the others": true
           'set Assign To = All Employees and save without error; training_type meta persists': true
           the wp_posts and wp_postmeta tables backing the CPT exist: true
 

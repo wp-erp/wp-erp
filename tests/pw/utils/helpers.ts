@@ -59,9 +59,7 @@ export function createEnvVar(key: string, value: string): void {
 export function exeCommandWpcli(command: string): string {
     const useWpEnv = parseBoolean(process.env.WP_ENV, true);
     const wpRoot = process.env.WP_ROOT;
-    const full = useWpEnv
-        ? `npx wp-env run cli -- wp ${command}`
-        : `wp ${wpRoot ? `--path="${wpRoot}"` : ''} ${command}`;
+    const full = useWpEnv ? `npx wp-env run cli -- wp ${command}` : `wp ${wpRoot ? `--path="${wpRoot}"` : ''} ${command}`;
     return execSync(full, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 }
 
@@ -102,9 +100,7 @@ export async function login(
         // admin bar — under CI load the redirect can lag, which otherwise reads as a
         // missing #wpadminbar even though the login succeeded.
         await Promise.all([
-            page
-                .waitForURL((url) => !url.pathname.endsWith('/wp-login.php'), { timeout: 45_000 })
-                .catch(() => undefined),
+            page.waitForURL(url => !url.pathname.endsWith('/wp-login.php'), { timeout: 45_000 }).catch(() => undefined),
             page.locator('#wp-submit').click(),
         ]);
     }
@@ -115,7 +111,10 @@ export async function login(
     const dismissRemindLater = async (): Promise<void> => {
         const remindLater = page.getByRole('link', { name: /remind me later/i });
         if ((await remindLater.count()) > 0) {
-            await remindLater.first().click().catch(() => undefined);
+            await remindLater
+                .first()
+                .click()
+                .catch(() => undefined);
         }
     };
     await dismissRemindLater();
@@ -167,7 +166,11 @@ export async function getApiNonce(page: Page, landing = 'wp-admin/admin.php?page
 export function proModuleActive(moduleId: string): boolean {
     const raw = process.env.ERP_PRO_ACTIVE_MODULES ?? '';
     if (raw.trim() === '') return true;
-    return raw.split(',').map((s) => s.trim()).filter(Boolean).includes(moduleId);
+    return raw
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .includes(moduleId);
 }
 
 export const helpers = {

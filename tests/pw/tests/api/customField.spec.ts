@@ -50,8 +50,7 @@ let api: ApiUtils;
 
 // REST route bases (built per the grounding: namespace erp/v1 + accounting/v1 base).
 const FIELD_BUILDER = restUrl('/erp/v1/accounting/v1/field-builder');
-const fieldRecord = (type: string, id: string | number): string =>
-    restUrl(`/erp/v1/accounting/v1/field-builder/${type}/${id}`);
+const fieldRecord = (type: string, id: string | number): string => restUrl(`/erp/v1/accounting/v1/field-builder/${type}/${id}`);
 
 // Pro module list (read-only sanity).
 const MODULES_INSTALLED = restUrl('/erp_pro/v1/admin/modules/installed');
@@ -110,11 +109,7 @@ async function getFormBuilderNonce(): Promise<string> {
  * option (Playwright forwards a string `data` as the raw request body) so we do
  * not need to touch the shared ApiUtils/ReqOptions contract.
  */
-async function saveCollection(
-    people: string,
-    collection: Array<Record<string, unknown>>,
-    nonce: string,
-): Promise<[number, string]> {
+async function saveCollection(people: string, collection: Array<Record<string, unknown>>, nonce: string): Promise<[number, string]> {
     const pairs: Array<[string, string]> = [
         ['action', 'erp_form_builder'],
         ['nonce', nonce],
@@ -141,9 +136,7 @@ async function saveCollection(
         }
     });
 
-    const encoded = pairs
-        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-        .join('&');
+    const encoded = pairs.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
 
     const [resp, body] = await api.post(
         ADMIN_AJAX,
@@ -310,7 +303,7 @@ test.describe('CFB write — admin-ajax form-builder (admin)', () => {
 
         const [, listBody] = await api.get(`${FIELD_BUILDER}?type=${WRITE_PEOPLE}&section=all`, undefined, false);
         const rows: Array<Record<string, unknown>> = Array.isArray(listBody) ? listBody : [];
-        const match = rows.find((f) => String(f?.name) === name);
+        const match = rows.find(f => String(f?.name) === name);
         expect(match, 'the edited field is present after the overwrite').toBeTruthy();
         if (match) {
             expect(String(match.label), 'the label was overwritten by the update').toBe('Edited Label');
@@ -351,7 +344,7 @@ test.describe('CFB write — admin-ajax form-builder (admin)', () => {
 
         const [, listBody] = await api.get(`${FIELD_BUILDER}?type=${WRITE_PEOPLE}&section=all`, undefined, false);
         const rows: Array<Record<string, unknown>> = Array.isArray(listBody) ? listBody : [];
-        const match = rows.find((f) => String(f?.name) === name);
+        const match = rows.find(f => String(f?.name) === name);
         expect(match, 'the select field persisted').toBeTruthy();
         if (match) {
             expect(String(match.type), 'field type round-trips').toBe('select');

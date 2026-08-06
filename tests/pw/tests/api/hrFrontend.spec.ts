@@ -272,11 +272,7 @@ test.describe('HR Frontend REST — POST validation (admin)', () => {
 
     test('HRFE-NC-01 missing hr_frontend_slug → 400, never a fatal', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const stamp = Date.now();
-        const [resp] = await api.post(
-            SETTINGS_URL,
-            { data: { hr_frontend_dashboard_title: `PW No Slug ${stamp}` } },
-            false,
-        );
+        const [resp] = await api.post(SETTINGS_URL, { data: { hr_frontend_dashboard_title: `PW No Slug ${stamp}` } }, false);
         // WP enforces required args before update_settings runs → clean 400, no 500.
         expect(resp.status(), 'missing required slug must not 500').toBeLessThan(500);
         expect(resp.ok() || resp.status() === 400, 'missing slug rejected as 400 (or lenient 2xx)').toBe(true);
@@ -284,11 +280,7 @@ test.describe('HR Frontend REST — POST validation (admin)', () => {
 
     test('HRFE-NC-02 missing hr_frontend_dashboard_title → 400, never a fatal', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const stamp = Date.now();
-        const [resp] = await api.post(
-            SETTINGS_URL,
-            { data: { hr_frontend_slug: `pw-hrfe-no-title-${stamp}` } },
-            false,
-        );
+        const [resp] = await api.post(SETTINGS_URL, { data: { hr_frontend_slug: `pw-hrfe-no-title-${stamp}` } }, false);
         expect(resp.status(), 'missing required title must not 500').toBeLessThan(500);
         expect(resp.ok() || resp.status() === 400, 'missing title rejected as 400 (or lenient 2xx)').toBe(true);
     });
@@ -323,11 +315,7 @@ test.describe('HR Frontend REST — access control (employee)', () => {
     test('HRFE-AC-03 employee write does not mutate the singleton settings', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         // A refused employee write must leave the admin-readable state unchanged.
         const sentinel = `pw-hrfe-emp-${Date.now()}`;
-        const [postResp] = await empApi.post(
-            SETTINGS_URL,
-            { data: settingsPayload({ hr_frontend_slug: sentinel }) },
-            false,
-        );
+        const [postResp] = await empApi.post(SETTINGS_URL, { data: settingsPayload({ hr_frontend_slug: sentinel }) }, false);
         expect(postResp.status(), 'employee write refused').not.toBe(200);
 
         const dbSlug = await dbUtils.getOptionValue<string>(OPT_SLUG);

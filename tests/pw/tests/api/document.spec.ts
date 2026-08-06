@@ -112,7 +112,16 @@ test.beforeAll(async () => {
         const emp = data.hrm.employee();
         const [, empBody] = await api.post(
             endPoints.employees,
-            { data: { first_name: emp.first_name, last_name: emp.last_name, email: emp.email, type: 'permanent', status: 'active', hiring_date: emp.hiring_date } },
+            {
+                data: {
+                    first_name: emp.first_name,
+                    last_name: emp.last_name,
+                    email: emp.email,
+                    type: 'permanent',
+                    status: 'active',
+                    hiring_date: emp.hiring_date,
+                },
+            },
             false,
         );
         userId = Number(empBody?.user_id ?? empBody?.id ?? 1) || 1;
@@ -141,33 +150,41 @@ test.afterAll(async () => {
 test.describe('HRM docs REST — happy paths (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('DOC-API-HP-01 GET docs tree — KNOWN BUG: undefined erp_doc_load_dir_file() → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG: get_docs() (DocumentController.php:107) calls the global helper
-        // erp_doc_load_dir_file() unqualified from namespace WeDevs\DocumentManager\API,
-        // so PHP fatals with "Call to undefined function ...\erp_doc_load_dir_file()".
-        // The tree route currently returns HTTP 500 — see bug-reports/BUGS.md.
-        // When fixed, restore: 200 + Home root object {id:0,text:'Home',children:[]}.
-        const [resp, body] = await api.get(docsUrl(userId), undefined, false);
-        expect(resp.status(), 'docs tree currently fatals → documented 500').toBe(500);
-        // The fatal aborts before the REST error handler, so the body is the WP
-        // critical-error page (string) — assert only that an error body came back.
-        expect(body, 'a 500 error body is returned').toBeTruthy();
-    });
+    test(
+        'DOC-API-HP-01 GET docs tree — KNOWN BUG: undefined erp_doc_load_dir_file() → 500',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // KNOWN BUG: get_docs() (DocumentController.php:107) calls the global helper
+            // erp_doc_load_dir_file() unqualified from namespace WeDevs\DocumentManager\API,
+            // so PHP fatals with "Call to undefined function ...\erp_doc_load_dir_file()".
+            // The tree route currently returns HTTP 500 — see bug-reports/BUGS.md.
+            // When fixed, restore: 200 + Home root object {id:0,text:'Home',children:[]}.
+            const [resp, body] = await api.get(docsUrl(userId), undefined, false);
+            expect(resp.status(), 'docs tree currently fatals → documented 500').toBe(500);
+            // The fatal aborts before the REST error handler, so the body is the WP
+            // critical-error page (string) — assert only that an error body came back.
+            expect(body, 'a 500 error body is returned').toBeTruthy();
+        },
+    );
 
-    test('DOC-API-HP-02 POST create folder — KNOWN BUG: undefined erp_doc_create_dir() → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG: create_dir() (DocumentController.php:129) calls the global helper
-        // erp_doc_create_dir() unqualified from namespace WeDevs\DocumentManager\API →
-        // "Call to undefined function ...\erp_doc_create_dir()" → HTTP 500. No row is
-        // created. See bug-reports/BUGS.md. When fixed, restore: 200 + 'Folder created
-        // successfully' string and the folder appears in the tree.
-        const name = `pw_folder_${Date.now()}`;
-        const before = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
-        const [resp] = await api.post(docsUrl(userId), { data: { employee_id: userId, parent_id: 0, dir_name: name } }, false);
-        expect(resp.status(), 'create folder currently fatals → documented 500').toBe(500);
-        // No row leaked despite the fatal (the helper that would insert never ran).
-        const after = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
-        expect(Number(after[0]?.c), 'no folder row was created').toBe(Number(before[0]?.c));
-    });
+    test(
+        'DOC-API-HP-02 POST create folder — KNOWN BUG: undefined erp_doc_create_dir() → 500',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // KNOWN BUG: create_dir() (DocumentController.php:129) calls the global helper
+            // erp_doc_create_dir() unqualified from namespace WeDevs\DocumentManager\API →
+            // "Call to undefined function ...\erp_doc_create_dir()" → HTTP 500. No row is
+            // created. See bug-reports/BUGS.md. When fixed, restore: 200 + 'Folder created
+            // successfully' string and the folder appears in the tree.
+            const name = `pw_folder_${Date.now()}`;
+            const before = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
+            const [resp] = await api.post(docsUrl(userId), { data: { employee_id: userId, parent_id: 0, dir_name: name } }, false);
+            expect(resp.status(), 'create folder currently fatals → documented 500').toBe(500);
+            // No row leaked despite the fatal (the helper that would insert never ran).
+            const after = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
+            expect(Number(after[0]?.c), 'no folder row was created').toBe(Number(before[0]?.c));
+        },
+    );
 
     test('DOC-API-HP-03 create nested folder — KNOWN BUG: create still fatals → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // KNOWN BUG: nesting cannot be exercised because create_dir() itself fatals on
@@ -197,10 +214,10 @@ test.describe('HRM docs REST — happy paths (admin)', () => {
         const text = typeof body === 'string' ? body : JSON.stringify(body ?? '');
         expect(text, "rename returns 'Renamed'").toContain('Renamed');
 
-        const rows = await dbUtils.dbQuery<{ dir_name: string }>(
-            `SELECT dir_name FROM ${REL_TABLE} WHERE eid = ? AND dir_id = ? LIMIT 1`,
-            [userId, folder.dirId],
-        );
+        const rows = await dbUtils.dbQuery<{ dir_name: string }>(`SELECT dir_name FROM ${REL_TABLE} WHERE eid = ? AND dir_id = ? LIMIT 1`, [
+            userId,
+            folder.dirId,
+        ]);
         expect(String(rows[0]?.dir_name), 'new name persisted in the DB').toBe(newName);
     });
 
@@ -211,10 +228,10 @@ test.describe('HRM docs REST — happy paths (admin)', () => {
         const [resp] = await api.delete(fileUrl(userId, folder.dirId!), undefined, false);
         expect([200, 204], 'delete returns 204 (resilient 200/204)').toContain(resp.status());
 
-        const rows = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ? AND dir_id = ?`,
-            [userId, folder.dirId],
-        );
+        const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ? AND dir_id = ?`, [
+            userId,
+            folder.dirId,
+        ]);
         expect(Number(rows[0]?.c), 'the deleted folder row is gone').toBe(0);
     });
 
@@ -238,11 +255,7 @@ test.describe('HRM docs REST — happy paths (admin)', () => {
         const child = await createFolder(userId, 0);
         test.skip(!parent.dirId || !child.dirId, 'needs two folders to move');
 
-        const [resp] = await api.put(
-            moveUrl(userId),
-            { data: { parent_id: parent.dirId, select_file_folder: [child.dirId] } },
-            false,
-        );
+        const [resp] = await api.put(moveUrl(userId), { data: { parent_id: parent.dirId, select_file_folder: [child.dirId] } }, false);
         expect([200, 204], 'move returns 204').toContain(resp.status());
 
         const rows = await dbUtils.dbQuery<{ parent_id: number }>(
@@ -316,35 +329,43 @@ test.describe('HRM docs REST — edge cases (admin)', () => {
             false,
         );
         expect(resp.status(), 'empty rename must not 500').toBeLessThan(500);
-        const rows = await dbUtils.dbQuery<{ dir_name: string }>(
-            `SELECT dir_name FROM ${REL_TABLE} WHERE eid = ? AND dir_id = ? LIMIT 1`,
-            [userId, folder.dirId],
-        );
+        const rows = await dbUtils.dbQuery<{ dir_name: string }>(`SELECT dir_name FROM ${REL_TABLE} WHERE eid = ? AND dir_id = ? LIMIT 1`, [
+            userId,
+            folder.dirId,
+        ]);
         expect(String(rows[0]?.dir_name), 'name unchanged after an empty rename').toBe(folder.name);
     });
 
-    test('DOC-API-EC-06 rename a non-existent target — KNOWN BUG: undefined rename_dir_file() → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG: rename_dir_file() (DocumentController.php:154) calls the global helper
-        // rename_dir_file() unqualified from namespace WeDevs\DocumentManager\API →
-        // "Call to undefined function ...\rename_dir_file()" → HTTP 500 for any non-empty
-        // dir_name (an empty dir_name early-returns 200 before the fatal — see EC-05).
-        // See bug-reports/BUGS.md. When fixed, restore: lenient 'Successfully Renamed'.
-        const [resp] = await api.put(
-            fileUrl(userId, 987654321),
-            { data: { employee_id: userId, parent_id: 0, dir_name: `pw_ghost_${Date.now()}`, type: 'folder' } },
-            false,
-        );
-        expect(resp.status(), 'rename currently fatals → documented 500').toBe(500);
-    });
+    test(
+        'DOC-API-EC-06 rename a non-existent target — KNOWN BUG: undefined rename_dir_file() → 500',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // KNOWN BUG: rename_dir_file() (DocumentController.php:154) calls the global helper
+            // rename_dir_file() unqualified from namespace WeDevs\DocumentManager\API →
+            // "Call to undefined function ...\rename_dir_file()" → HTTP 500 for any non-empty
+            // dir_name (an empty dir_name early-returns 200 before the fatal — see EC-05).
+            // See bug-reports/BUGS.md. When fixed, restore: lenient 'Successfully Renamed'.
+            const [resp] = await api.put(
+                fileUrl(userId, 987654321),
+                { data: { employee_id: userId, parent_id: 0, dir_name: `pw_ghost_${Date.now()}`, type: 'folder' } },
+                false,
+            );
+            expect(resp.status(), 'rename currently fatals → documented 500').toBe(500);
+        },
+    );
 
-    test('DOC-API-EC-07 delete a non-existent target — KNOWN BUG: undefined erp_doc_delete_dir_file() → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG: delete_dir_file() (DocumentController.php:173) calls the global helper
-        // erp_doc_delete_dir_file() unqualified from namespace WeDevs\DocumentManager\API →
-        // "Call to undefined function ...\erp_doc_delete_dir_file()" → HTTP 500 (never the
-        // intended 204). See bug-reports/BUGS.md. When fixed, restore: idempotent 204.
-        const [resp] = await api.delete(fileUrl(userId, 987654321), undefined, false);
-        expect(resp.status(), 'delete currently fatals → documented 500').toBe(500);
-    });
+    test(
+        'DOC-API-EC-07 delete a non-existent target — KNOWN BUG: undefined erp_doc_delete_dir_file() → 500',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // KNOWN BUG: delete_dir_file() (DocumentController.php:173) calls the global helper
+            // erp_doc_delete_dir_file() unqualified from namespace WeDevs\DocumentManager\API →
+            // "Call to undefined function ...\erp_doc_delete_dir_file()" → HTTP 500 (never the
+            // intended 204). See bug-reports/BUGS.md. When fixed, restore: idempotent 204.
+            const [resp] = await api.delete(fileUrl(userId, 987654321), undefined, false);
+            expect(resp.status(), 'delete currently fatals → documented 500').toBe(500);
+        },
+    );
 
     test('DOC-API-EC-08 delete cascades to child rows', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const parent = await createFolder(userId, 0);
@@ -356,10 +377,11 @@ test.describe('HRM docs REST — edge cases (admin)', () => {
         expect([200, 204]).toContain(resp.status());
 
         // Helper deletes by dir_id AND by parent_id → both parent and direct child gone.
-        const rows = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ? AND dir_id IN (?, ?)`,
-            [userId, parent.dirId, child.dirId],
-        );
+        const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ? AND dir_id IN (?, ?)`, [
+            userId,
+            parent.dirId,
+            child.dirId,
+        ]);
         expect(Number(rows[0]?.c), 'parent and its direct child are removed').toBe(0);
     });
 
@@ -368,24 +390,24 @@ test.describe('HRM docs REST — edge cases (admin)', () => {
         test.skip(!folder.dirId, 'needs a folder');
         // helper short-circuits ('You cannot move a folder into itself') but the
         // controller ignores the return and always emits 204.
-        const [resp] = await api.put(
-            moveUrl(userId),
-            { data: { parent_id: folder.dirId, select_file_folder: [folder.dirId] } },
-            false,
-        );
+        const [resp] = await api.put(moveUrl(userId), { data: { parent_id: folder.dirId, select_file_folder: [folder.dirId] } }, false);
         expect([200, 204], 'self-into-self move still answers 204').toContain(resp.status());
     });
 
-    test('DOC-API-EC-10 search with empty key — KNOWN BUG: undefined erp_doc_search_dir_file() → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG: search_file_folder() (DocumentController.php:209) calls the global
-        // helper erp_doc_search_dir_file() unqualified from namespace
-        // WeDevs\DocumentManager\API → "Call to undefined function
-        // ...\erp_doc_search_dir_file()" → HTTP 500 for ANY key (the empty-key path
-        // would have short-circuited inside the helper, but the helper never loads).
-        // See bug-reports/BUGS.md. When fixed, restore: 200 + null/empty body.
-        const [resp] = await api.get(searchUrl(userId, ''), undefined, false);
-        expect(resp.status(), 'empty-key search currently fatals → documented 500').toBe(500);
-    });
+    test(
+        'DOC-API-EC-10 search with empty key — KNOWN BUG: undefined erp_doc_search_dir_file() → 500',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // KNOWN BUG: search_file_folder() (DocumentController.php:209) calls the global
+            // helper erp_doc_search_dir_file() unqualified from namespace
+            // WeDevs\DocumentManager\API → "Call to undefined function
+            // ...\erp_doc_search_dir_file()" → HTTP 500 for ANY key (the empty-key path
+            // would have short-circuited inside the helper, but the helper never loads).
+            // See bug-reports/BUGS.md. When fixed, restore: 200 + null/empty body.
+            const [resp] = await api.get(searchUrl(userId, ''), undefined, false);
+            expect(resp.status(), 'empty-key search currently fatals → documented 500').toBe(500);
+        },
+    );
 
     test('DOC-API-EC-11 search with no match — KNOWN BUG: search fatals → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // KNOWN BUG: same undefined erp_doc_search_dir_file() as EC-10 → HTTP 500 even for
@@ -405,22 +427,30 @@ test.describe('HRM docs REST — edge cases (admin)', () => {
 
     test('DOC-API-EC-13 create folder under a non-numeric user_id 404s on the route', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // The path param regex is [\d]+ so a non-numeric segment never matches the route.
-        const [resp] = await api.post(restUrl('/erp/v1/hrm/docs/abc'), { data: { employee_id: userId, dir_name: `pw_x_${Date.now()}` } }, false);
+        const [resp] = await api.post(
+            restUrl('/erp/v1/hrm/docs/abc'),
+            { data: { employee_id: userId, dir_name: `pw_x_${Date.now()}` } },
+            false,
+        );
         expect(resp.status(), 'non-numeric user_id is a routing 404, not a fatal').toBe(404);
     });
 
-    test('DOC-API-EC-14 create folder with unicode name — KNOWN BUG: create fatals → 500', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG: create_dir() fatals on the undefined erp_doc_create_dir() (see HP-02)
-        // regardless of charset, so a unicode name also returns HTTP 500 and no row is
-        // written. See bug-reports/BUGS.md. When fixed, restore: unicode name round-trips
-        // ('Folder created successfully' + a persisted is_dir=1 row).
-        const name = `pw_日本_${Date.now()}`;
-        const before = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
-        const [resp] = await api.post(docsUrl(userId), { data: { employee_id: userId, parent_id: 0, dir_name: name } }, false);
-        expect(resp.status(), 'unicode create currently fatals → documented 500').toBe(500);
-        const after = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
-        expect(Number(after[0]?.c), 'no unicode folder row was created').toBe(Number(before[0]?.c));
-    });
+    test(
+        'DOC-API-EC-14 create folder with unicode name — KNOWN BUG: create fatals → 500',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // KNOWN BUG: create_dir() fatals on the undefined erp_doc_create_dir() (see HP-02)
+            // regardless of charset, so a unicode name also returns HTTP 500 and no row is
+            // written. See bug-reports/BUGS.md. When fixed, restore: unicode name round-trips
+            // ('Folder created successfully' + a persisted is_dir=1 row).
+            const name = `pw_日本_${Date.now()}`;
+            const before = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
+            const [resp] = await api.post(docsUrl(userId), { data: { employee_id: userId, parent_id: 0, dir_name: name } }, false);
+            expect(resp.status(), 'unicode create currently fatals → documented 500').toBe(500);
+            const after = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${REL_TABLE} WHERE eid = ?`, [userId]);
+            expect(Number(after[0]?.c), 'no unicode folder row was created').toBe(Number(before[0]?.c));
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

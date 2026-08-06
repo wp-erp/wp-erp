@@ -92,46 +92,62 @@ test.describe('Pro Reports REST — sales-return report (admin)', () => {
         }
     });
 
-    test('RPT-SR-EC-01 no-param call defaults dates server-side and answers 200 + array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // start_date -> 'first day of january', end_date -> 'last day of this month'
-        // (reports.php 16/23). No params must still answer a 200 array, not a 500.
-        const [resp, body] = await api.get(SALES_RETURN, undefined, false);
-        expect(resp.status(), 'dateless sales-return must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'dateless sales-return answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-SR-EC-01 no-param call defaults dates server-side and answers 200 + array',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // start_date -> 'first day of january', end_date -> 'last day of this month'
+            // (reports.php 16/23). No params must still answer a 200 array, not a 500.
+            const [resp, body] = await api.get(SALES_RETURN, undefined, false);
+            expect(resp.status(), 'dateless sales-return must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'dateless sales-return answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-SR-EC-02 malformed start_date is interpolated UN-prepared — must not 500', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // reports.php line 40 interpolates start_date raw into WHERE BETWEEN. A bad
-        // date may break the query: a 500 here is a CANDIDATE no-prepare/SQLi bug,
-        // flagged but never asserted as expected.
-        const [resp, body] = await api.get(`${SALES_RETURN}?start_date=not-a-date&end_date=2025-12-31`, undefined, false);
-        expect(resp.status(), 'malformed-date sales-return must not 500 (raw-SQL interpolation candidate bug)').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'malformed-date sales-return still answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-SR-EC-02 malformed start_date is interpolated UN-prepared — must not 500',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // reports.php line 40 interpolates start_date raw into WHERE BETWEEN. A bad
+            // date may break the query: a 500 here is a CANDIDATE no-prepare/SQLi bug,
+            // flagged but never asserted as expected.
+            const [resp, body] = await api.get(`${SALES_RETURN}?start_date=not-a-date&end_date=2025-12-31`, undefined, false);
+            expect(resp.status(), 'malformed-date sales-return must not 500 (raw-SQL interpolation candidate bug)').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'malformed-date sales-return still answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-SR-EC-03 SQL-breaking start_date is interpolated UN-prepared — must not 500', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // A quote-bearing token would terminate the interpolated string literal at
-        // reports.php line 40. Resilient: assert < 500, flag a 500 as the SQLi gap.
-        const inj = encodeURIComponent("2025-01-01' OR '1'='1");
-        const [resp, body] = await api.get(`${SALES_RETURN}?start_date=${inj}&end_date=2025-12-31`, undefined, false);
-        expect(resp.status(), 'quote-bearing start_date must not 500 (no-prepare SQLi candidate bug)').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'injection-probe sales-return still answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-SR-EC-03 SQL-breaking start_date is interpolated UN-prepared — must not 500',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // A quote-bearing token would terminate the interpolated string literal at
+            // reports.php line 40. Resilient: assert < 500, flag a 500 as the SQLi gap.
+            const inj = encodeURIComponent("2025-01-01' OR '1'='1");
+            const [resp, body] = await api.get(`${SALES_RETURN}?start_date=${inj}&end_date=2025-12-31`, undefined, false);
+            expect(resp.status(), 'quote-bearing start_date must not 500 (no-prepare SQLi candidate bug)').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'injection-probe sales-return still answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-SR-EC-04 reversed date window (end before start) still answers < 500 + array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(`${SALES_RETURN}?start_date=2025-12-31&end_date=2025-01-01`, undefined, false);
-        expect(resp.status(), 'reversed-window sales-return must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            // A reversed BETWEEN yields no rows, but must still be an array.
-            expect(asRows(body), 'reversed-window sales-return answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-SR-EC-04 reversed date window (end before start) still answers < 500 + array',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(`${SALES_RETURN}?start_date=2025-12-31&end_date=2025-01-01`, undefined, false);
+            expect(resp.status(), 'reversed-window sales-return must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                // A reversed BETWEEN yields no rows, but must still be an array.
+                expect(asRows(body), 'reversed-window sales-return answers an array').not.toBeNull();
+            }
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -157,41 +173,57 @@ test.describe('Pro Reports REST — purchase-return report (admin)', () => {
         }
     });
 
-    test('RPT-PR-EC-01 no-param call defaults dates server-side and answers 200 + array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // Same date defaulting as sales-return (reports.php 59-68).
-        const [resp, body] = await api.get(PURCHASE_RETURN, undefined, false);
-        expect(resp.status(), 'dateless purchase-return must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'dateless purchase-return answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-PR-EC-01 no-param call defaults dates server-side and answers 200 + array',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // Same date defaulting as sales-return (reports.php 59-68).
+            const [resp, body] = await api.get(PURCHASE_RETURN, undefined, false);
+            expect(resp.status(), 'dateless purchase-return must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'dateless purchase-return answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-PR-EC-02 malformed start_date is interpolated UN-prepared — must not 500', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // reports.php line 84 interpolates start_date raw into WHERE BETWEEN. A 500
-        // here is a CANDIDATE no-prepare/SQLi bug, flagged but not asserted.
-        const [resp, body] = await api.get(`${PURCHASE_RETURN}?start_date=not-a-date&end_date=2025-12-31`, undefined, false);
-        expect(resp.status(), 'malformed-date purchase-return must not 500 (raw-SQL interpolation candidate bug)').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'malformed-date purchase-return still answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-PR-EC-02 malformed start_date is interpolated UN-prepared — must not 500',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // reports.php line 84 interpolates start_date raw into WHERE BETWEEN. A 500
+            // here is a CANDIDATE no-prepare/SQLi bug, flagged but not asserted.
+            const [resp, body] = await api.get(`${PURCHASE_RETURN}?start_date=not-a-date&end_date=2025-12-31`, undefined, false);
+            expect(resp.status(), 'malformed-date purchase-return must not 500 (raw-SQL interpolation candidate bug)').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'malformed-date purchase-return still answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-PR-EC-03 SQL-breaking start_date is interpolated UN-prepared — must not 500', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const inj = encodeURIComponent("2025-01-01' OR '1'='1");
-        const [resp, body] = await api.get(`${PURCHASE_RETURN}?start_date=${inj}&end_date=2025-12-31`, undefined, false);
-        expect(resp.status(), 'quote-bearing start_date must not 500 (no-prepare SQLi candidate bug)').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'injection-probe purchase-return still answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-PR-EC-03 SQL-breaking start_date is interpolated UN-prepared — must not 500',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const inj = encodeURIComponent("2025-01-01' OR '1'='1");
+            const [resp, body] = await api.get(`${PURCHASE_RETURN}?start_date=${inj}&end_date=2025-12-31`, undefined, false);
+            expect(resp.status(), 'quote-bearing start_date must not 500 (no-prepare SQLi candidate bug)').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'injection-probe purchase-return still answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-PR-EC-04 reversed date window (end before start) still answers < 500 + array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(`${PURCHASE_RETURN}?start_date=2025-12-31&end_date=2025-01-01`, undefined, false);
-        expect(resp.status(), 'reversed-window purchase-return must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'reversed-window purchase-return answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-PR-EC-04 reversed date window (end before start) still answers < 500 + array',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(`${PURCHASE_RETURN}?start_date=2025-12-31&end_date=2025-01-01`, undefined, false);
+            expect(resp.status(), 'reversed-window purchase-return must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'reversed-window purchase-return answers an array').not.toBeNull();
+            }
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -203,20 +235,24 @@ test.describe('Pro Reports REST — purchase-return report (admin)', () => {
 test.describe('Pro Reports REST — purchase-vat report (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('RPT-VAT-HP-01 dated purchase-vat returns 200 + bare array (default branch)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(`${PURCHASE_VAT}?${SAMPLE_RANGE}`, undefined, false);
-        expect(resp.status(), 'purchase-vat report must not 500').toBeLessThan(500);
-        if (resp.status() !== 200) return;
+    test(
+        'RPT-VAT-HP-01 dated purchase-vat returns 200 + bare array (default branch)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(`${PURCHASE_VAT}?${SAMPLE_RANGE}`, undefined, false);
+            expect(resp.status(), 'purchase-vat report must not 500').toBeLessThan(500);
+            if (resp.status() !== 200) return;
 
-        const rows = asRows(body);
-        expect(rows, 'purchase-vat report is an array (or {data:[]})').not.toBeNull();
-        if (rows && rows.length > 0) {
-            const row = rows[0] as Record<string, unknown>;
-            // Default branch: {trn_date, voucher_no, tax_amount}.
-            expect(row, 'row carries a voucher_no').toHaveProperty('voucher_no');
-            expect(row, 'row carries a tax_amount').toHaveProperty('tax_amount');
-        }
-    });
+            const rows = asRows(body);
+            expect(rows, 'purchase-vat report is an array (or {data:[]})').not.toBeNull();
+            if (rows && rows.length > 0) {
+                const row = rows[0] as Record<string, unknown>;
+                // Default branch: {trn_date, voucher_no, tax_amount}.
+                expect(row, 'row carries a voucher_no').toHaveProperty('voucher_no');
+                expect(row, 'row carries a tax_amount').toHaveProperty('tax_amount');
+            }
+        },
+    );
 
     test('RPT-VAT-EC-01 missing dates short-circuit to 200 + empty array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
         // erp_acct_get_purchase_vat_report returns [] EARLY when start_date OR
@@ -230,16 +266,20 @@ test.describe('Pro Reports REST — purchase-vat report (admin)', () => {
         }
     });
 
-    test('RPT-VAT-EC-02 only start_date supplied still short-circuits to 200 + []', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // end_date empty => the early [] return path (reports.php 107-109).
-        const [resp, body] = await api.get(`${PURCHASE_VAT}?start_date=2025-01-01`, undefined, false);
-        expect(resp.status(), 'half-dated purchase-vat must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            const rows = asRows(body);
-            expect(rows, 'half-dated purchase-vat answers an array').not.toBeNull();
-            expect(rows ? rows.length : -1, 'half-dated purchase-vat short-circuits to []').toBe(0);
-        }
-    });
+    test(
+        'RPT-VAT-EC-02 only start_date supplied still short-circuits to 200 + []',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // end_date empty => the early [] return path (reports.php 107-109).
+            const [resp, body] = await api.get(`${PURCHASE_VAT}?start_date=2025-01-01`, undefined, false);
+            expect(resp.status(), 'half-dated purchase-vat must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                const rows = asRows(body);
+                expect(rows, 'half-dated purchase-vat answers an array').not.toBeNull();
+                expect(rows ? rows.length : -1, 'half-dated purchase-vat short-circuits to []').toBe(0);
+            }
+        },
+    );
 
     test('RPT-VAT-EC-03 vendor_id filter branch answers 200 + array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
         // vendor_id branch: {trn_date, voucher_no, tax_amount, vendor_id, vendor_name}.
@@ -268,24 +308,32 @@ test.describe('Pro Reports REST — purchase-vat report (admin)', () => {
         }
     });
 
-    test('RPT-VAT-EC-06 prepare-safe: a bad date is bound as %s — no SQL break (200 + array)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // Unlike sales/purchase return, purchase-vat uses $wpdb->prepare (146-150);
-        // a malformed date is bound, never breaks the query => expect a 200 array.
-        const inj = encodeURIComponent("2025-01-01' OR '1'='1");
-        const [resp, body] = await api.get(`${PURCHASE_VAT}?start_date=${inj}&end_date=2025-12-31`, undefined, false);
-        expect(resp.status(), 'prepare-safe purchase-vat must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'prepare-safe purchase-vat still answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-VAT-EC-06 prepare-safe: a bad date is bound as %s — no SQL break (200 + array)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // Unlike sales/purchase return, purchase-vat uses $wpdb->prepare (146-150);
+            // a malformed date is bound, never breaks the query => expect a 200 array.
+            const inj = encodeURIComponent("2025-01-01' OR '1'='1");
+            const [resp, body] = await api.get(`${PURCHASE_VAT}?start_date=${inj}&end_date=2025-12-31`, undefined, false);
+            expect(resp.status(), 'prepare-safe purchase-vat must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'prepare-safe purchase-vat still answers an array').not.toBeNull();
+            }
+        },
+    );
 
-    test('RPT-VAT-EC-07 reversed date window (end before start) still answers < 500 + array', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(`${PURCHASE_VAT}?start_date=2025-12-31&end_date=2025-01-01`, undefined, false);
-        expect(resp.status(), 'reversed-window purchase-vat must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(asRows(body), 'reversed-window purchase-vat answers an array').not.toBeNull();
-        }
-    });
+    test(
+        'RPT-VAT-EC-07 reversed date window (end before start) still answers < 500 + array',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(`${PURCHASE_VAT}?start_date=2025-12-31&end_date=2025-01-01`, undefined, false);
+            expect(resp.status(), 'reversed-window purchase-vat must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(asRows(body), 'reversed-window purchase-vat answers an array').not.toBeNull();
+            }
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -304,16 +352,20 @@ test.describe('Pro Reports REST — accounting manager (positive baseline)', () 
         await mgrApi.dispose();
     });
 
-    test('RPT-AC-01 manager can reach all three reports (erp_ac_view_sales_summary)', { tag: ['@pro', '@accounting', '@manager'] }, async () => {
-        for (const url of [SALES_RETURN, PURCHASE_RETURN, PURCHASE_VAT]) {
-            const [resp, body] = await mgrApi.get(`${url}?${SAMPLE_RANGE}`, undefined, false);
-            expect([401, 403], `manager is authorized for ${url}`).not.toContain(resp.status());
-            expect(resp.status(), `manager report ${url} must not 500`).toBeLessThan(500);
-            if (resp.status() === 200) {
-                expect(asRows(body), `manager report ${url} answers an array`).not.toBeNull();
+    test(
+        'RPT-AC-01 manager can reach all three reports (erp_ac_view_sales_summary)',
+        { tag: ['@pro', '@accounting', '@manager'] },
+        async () => {
+            for (const url of [SALES_RETURN, PURCHASE_RETURN, PURCHASE_VAT]) {
+                const [resp, body] = await mgrApi.get(`${url}?${SAMPLE_RANGE}`, undefined, false);
+                expect([401, 403], `manager is authorized for ${url}`).not.toContain(resp.status());
+                expect(resp.status(), `manager report ${url} must not 500`).toBeLessThan(500);
+                if (resp.status() === 200) {
+                    expect(asRows(body), `manager report ${url} answers an array`).not.toBeNull();
+                }
             }
-        }
-    });
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

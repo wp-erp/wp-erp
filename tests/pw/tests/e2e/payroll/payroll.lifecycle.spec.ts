@@ -113,7 +113,9 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
         expect(body?.success, 'available-employees succeeds').toBe(true);
 
         const map = (body?.data ?? {}) as Record<string, string>;
-        const ids = Object.keys(map).map(Number).filter((n) => Number.isFinite(n) && n > 0);
+        const ids = Object.keys(map)
+            .map(Number)
+            .filter(n => Number.isFinite(n) && n > 0);
         expect(ids.length, 'at least one eligible monthly employee').toBeGreaterThanOrEqual(1);
 
         state.empId = ids[0];
@@ -139,45 +141,49 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
 
     // PRL-02 — create the pay calendar AND assign the employee in one call. No
     // nonce on this handler. Assert the three DB rows it writes.
-    test('step 2: create_pay_calendar inserts calendar + type-settings + employee-join', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        expect(state.empId, 'employee captured in step 1').toBeTruthy();
-        const payroll = new PayrollLifecyclePage(page);
-        await payroll.bootstrap();
+    test(
+        'step 2: create_pay_calendar inserts calendar + type-settings + employee-join',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            expect(state.empId, 'employee captured in step 1').toBeTruthy();
+            const payroll = new PayrollLifecyclePage(page);
+            await payroll.bootstrap();
 
-        const { status, body, raw } = await payroll.createPayCalendar({
-            calName: CAL_NAME,
-            calType: CAL_TYPE,
-            empIds: [state.empId!],
-            payDayMode: 1,
-        });
-        expect(status, 'no 5xx').toBeLessThan(500);
-        expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
-        expect(body?.success, 'pay calendar created').toBe(true);
-        expect(String(body?.data ?? ''), 'success message').toMatch(/created/i);
+            const { status, body, raw } = await payroll.createPayCalendar({
+                calName: CAL_NAME,
+                calType: CAL_TYPE,
+                empIds: [state.empId!],
+                payDayMode: 1,
+            });
+            expect(status, 'no 5xx').toBeLessThan(500);
+            expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+            expect(body?.success, 'pay calendar created').toBe(true);
+            expect(String(body?.data ?? ''), 'success message').toMatch(/created/i);
 
-        // DB truth: the calendar row exists with our name + type.
-        const calId = await PayrollLifecyclePage.getCalendarIdByName(CAL_NAME);
-        expect(calId, 'calendar row inserted').toBeTruthy();
-        state.calId = calId!;
-        createdCalendarIds.add(calId!);
+            // DB truth: the calendar row exists with our name + type.
+            const calId = await PayrollLifecyclePage.getCalendarIdByName(CAL_NAME);
+            expect(calId, 'calendar row inserted').toBeTruthy();
+            state.calId = calId!;
+            createdCalendarIds.add(calId!);
 
-        const cal = await dbUtils.dbQuery<{ pay_calendar_type: string }>(
-            `SELECT pay_calendar_type FROM ${PAYROLL_LIFECYCLE_TABLES.payCalendar} WHERE id = ?`,
-            [calId],
-        );
-        expect(String(cal[0]?.pay_calendar_type), 'monthly calendar').toBe(CAL_TYPE);
+            const cal = await dbUtils.dbQuery<{ pay_calendar_type: string }>(
+                `SELECT pay_calendar_type FROM ${PAYROLL_LIFECYCLE_TABLES.payCalendar} WHERE id = ?`,
+                [calId],
+            );
+            expect(String(cal[0]?.pay_calendar_type), 'monthly calendar').toBe(CAL_TYPE);
 
-        // The monthly type-settings child row keys off pay_calendar_id.
-        const settings = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${PAYROLL_LIFECYCLE_TABLES.calendarTypeSettings} WHERE pay_calendar_id = ?`,
-            [calId],
-        );
-        expect(Number(settings[0]?.c ?? 0), 'one type-settings child row').toBe(1);
+            // The monthly type-settings child row keys off pay_calendar_id.
+            const settings = await dbUtils.dbQuery<{ c: number }>(
+                `SELECT COUNT(*) AS c FROM ${PAYROLL_LIFECYCLE_TABLES.calendarTypeSettings} WHERE pay_calendar_id = ?`,
+                [calId],
+            );
+            expect(Number(settings[0]?.c ?? 0), 'one type-settings child row').toBe(1);
 
-        // The employee was assigned onto the calendar (the join row).
-        const joins = await PayrollLifecyclePage.countCalendarEmployees(calId!);
-        expect(joins, 'employee mapped onto the calendar').toBeGreaterThanOrEqual(1);
-    });
+            // The employee was assigned onto the calendar (the join row).
+            const joins = await PayrollLifecyclePage.countCalendarEmployees(calId!);
+            expect(joins, 'employee mapped onto the calendar').toBeGreaterThanOrEqual(1);
+        },
+    );
 
     // PRL-02b — cal_type is unique per calendar: a second 'monthly' is rejected
     // with the handler's message (NOT a fatal). Documents the uniqueness guard.
@@ -218,7 +224,7 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
         expect(body?.success, 'employee list responds').toBe(true);
 
         const rows = (body?.data ?? []) as Array<Record<string, string>>;
-        const mine = rows.find((r) => Number(r.empid) === state.empId);
+        const mine = rows.find(r => Number(r.empid) === state.empId);
         if (mine && mine.pay_basic !== undefined) {
             const basic = Number(mine.pay_basic);
             expect(basic, 'pay_basic is numeric').toBeGreaterThan(0);
@@ -231,28 +237,32 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
 
     // PRL-04 — add an Allowance pay item (config). amounttype auto-sets to 1 for
     // Allowance (AjaxHandler.php:713). Nonce-gated.
-    test('step 4: add_payitem creates an Allowance config row (add_or_deduct = 1)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const payroll = new PayrollLifecyclePage(page);
-        await payroll.bootstrap();
+    test(
+        'step 4: add_payitem creates an Allowance config row (add_or_deduct = 1)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const payroll = new PayrollLifecyclePage(page);
+            await payroll.bootstrap();
 
-        const { status, body, raw } = await payroll.addPayItem({
-            payType: 'Allowance',
-            payItem: PAYITEM_NAME,
-            amountType: '',
-        });
-        expect(status, 'no 5xx').toBeLessThan(500);
-        expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
-        expect(body?.success, 'pay item added').toBe(true);
-        expect(String(body?.data ?? ''), 'added message').toMatch(/added/i);
+            const { status, body, raw } = await payroll.addPayItem({
+                payType: 'Allowance',
+                payItem: PAYITEM_NAME,
+                amountType: '',
+            });
+            expect(status, 'no 5xx').toBeLessThan(500);
+            expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+            expect(body?.success, 'pay item added').toBe(true);
+            expect(String(body?.data ?? ''), 'added message').toMatch(/added/i);
 
-        const item = await PayrollLifecyclePage.getPayitemByName(PAYITEM_NAME);
-        expect(item, 'payitem row inserted').toBeTruthy();
-        expect(String(item!.type), "type is 'Allowance'").toBe('Allowance');
-        expect(Number(item!.pay_item_add_or_deduct), 'Allowance adds (1)').toBe(1);
+            const item = await PayrollLifecyclePage.getPayitemByName(PAYITEM_NAME);
+            expect(item, 'payitem row inserted').toBeTruthy();
+            expect(String(item!.type), "type is 'Allowance'").toBe('Allowance');
+            expect(Number(item!.pay_item_add_or_deduct), 'Allowance adds (1)').toBe(1);
 
-        state.payItemId = Number(item!.id);
-        createdPayitemIds.add(state.payItemId);
-    });
+            state.payItemId = Number(item!.id);
+            createdPayitemIds.add(state.payItemId);
+        },
+    );
 
     // PRL-04b — add_payitem validates its inputs (empty pay type / pay item) with
     // a handler message, not a fatal.
@@ -275,85 +285,89 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
     // payrunid=0 → INSERT branch. The response 'prun' is 0 because the
     // wp_erp_hr_payroll_payrun table is missing (PAYROLL-BUG-01) — assert the
     // payrun_detail row, which IS written, not the orphaned prun id.
-    test('step 5: start_variable_input writes the computed basic-pay payrun_detail row', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        expect(state.calId, 'calendar ready').toBeTruthy();
-        expect(state.empId, 'employee ready').toBeTruthy();
-        const payroll = new PayrollLifecyclePage(page);
-        await payroll.bootstrap();
+    test(
+        'step 5: start_variable_input writes the computed basic-pay payrun_detail row',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            expect(state.calId, 'calendar ready').toBeTruthy();
+            expect(state.empId, 'employee ready').toBeTruthy();
+            const payroll = new PayrollLifecyclePage(page);
+            await payroll.bootstrap();
 
-        const { status, body, raw } = await payroll.startVariableInput({
-            calId: state.calId!,
-            payRunId: 0,
-            paymentDate: PAYMENT_DATE,
-            fromDate: FROM_DATE,
-            toDate: TO_DATE,
-            empId: state.empId!,
-            payBasic: state.payBasic,
-        });
-        expect(status, 'no 5xx').toBeLessThan(500);
-        expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
-        expect(body?.success, 'variable-input step started').toBe(true);
-        expect(String(body?.data?.msg ?? ''), 'ready-to-go message').toMatch(/variable input/i);
+            const { status, body, raw } = await payroll.startVariableInput({
+                calId: state.calId!,
+                payRunId: 0,
+                paymentDate: PAYMENT_DATE,
+                fromDate: FROM_DATE,
+                toDate: TO_DATE,
+                empId: state.empId!,
+                payBasic: state.payBasic,
+            });
+            expect(status, 'no 5xx').toBeLessThan(500);
+            expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+            expect(body?.success, 'variable-input step started').toBe(true);
+            expect(String(body?.data?.msg ?? ''), 'ready-to-go message').toMatch(/variable input/i);
 
-        // DB truth: the basic-pay row landed for our employee on this calendar.
-        const rows = await PayrollLifecyclePage.getPayrunDetailRows(state.calId!);
-        const basic = rows.find(
-            (r) => Number(r.empid) === state.empId && Number(r.pay_item_id) === -1,
-        );
-        expect(basic, 'basic-pay payrun_detail row exists').toBeTruthy();
-        expect(Number(basic!.pay_item_amount), 'basic equals pay_basic').toBeCloseTo(state.payBasic, 2);
-        expect(Number(basic!.pay_item_add_or_deduct), 'basic adds (1)').toBe(1);
+            // DB truth: the basic-pay row landed for our employee on this calendar.
+            const rows = await PayrollLifecyclePage.getPayrunDetailRows(state.calId!);
+            const basic = rows.find(r => Number(r.empid) === state.empId && Number(r.pay_item_id) === -1);
+            expect(basic, 'basic-pay payrun_detail row exists').toBeTruthy();
+            expect(Number(basic!.pay_item_amount), 'basic equals pay_basic').toBeCloseTo(state.payBasic, 2);
+            expect(Number(basic!.pay_item_add_or_deduct), 'basic adds (1)').toBe(1);
 
-        // PAYROLL-BUG-01 — the orphan: prun is 0 and the row carries payrun_id=0
-        // because the payrun parent table is absent. Documented, not failed.
-        expect(Number(body?.data?.prun ?? -1), 'prun orphaned at 0 (missing payrun table)').toBe(0);
-        expect(Number(basic!.payrun_id), 'detail row orphaned at payrun_id=0').toBe(0);
-    });
+            // PAYROLL-BUG-01 — the orphan: prun is 0 and the row carries payrun_id=0
+            // because the payrun parent table is absent. Documented, not failed.
+            expect(Number(body?.data?.prun ?? -1), 'prun orphaned at 0 (missing payrun table)').toBe(0);
+            expect(Number(basic!.payrun_id), 'detail row orphaned at payrun_id=0').toBe(0);
+        },
+    );
 
     // PRL-06 — add the additional allowance to the employee in the pay-run. This
     // is the COMPUTED amount beyond basic pay: it writes BOTH a payrun_detail row
     // (allowance column = amount) AND a mirror additional_allowance_deduction row.
-    test('step 6: add_additional_allowance_deduction writes the computed allowance (+ mirror)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        expect(state.calId, 'calendar ready').toBeTruthy();
-        expect(state.payItemId, 'payitem ready').toBeTruthy();
-        const payroll = new PayrollLifecyclePage(page);
-        await payroll.bootstrap();
+    test(
+        'step 6: add_additional_allowance_deduction writes the computed allowance (+ mirror)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            expect(state.calId, 'calendar ready').toBeTruthy();
+            expect(state.payItemId, 'payitem ready').toBeTruthy();
+            const payroll = new PayrollLifecyclePage(page);
+            await payroll.bootstrap();
 
-        const { status, body, raw } = await payroll.addAdditionalAllowanceDeduction({
-            empId: state.empId!,
-            payRunId: 0,
-            calId: state.calId!,
-            paymentDate: PAYMENT_DATE,
-            additionalInfo: 1,
-            deductInfo: 0,
-            note: NOTE,
-            payItem: state.payItemId!,
-            payItemAmount: ALLOWANCE_AMOUNT,
-        });
-        expect(status, 'no 5xx').toBeLessThan(500);
-        expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
-        expect(body?.success, 'additional amount added').toBe(true);
-        expect(String(body?.data ?? ''), 'added message').toMatch(/added/i);
+            const { status, body, raw } = await payroll.addAdditionalAllowanceDeduction({
+                empId: state.empId!,
+                payRunId: 0,
+                calId: state.calId!,
+                paymentDate: PAYMENT_DATE,
+                additionalInfo: 1,
+                deductInfo: 0,
+                note: NOTE,
+                payItem: state.payItemId!,
+                payItemAmount: ALLOWANCE_AMOUNT,
+            });
+            expect(status, 'no 5xx').toBeLessThan(500);
+            expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+            expect(body?.success, 'additional amount added').toBe(true);
+            expect(String(body?.data ?? ''), 'added message').toMatch(/added/i);
 
-        // DB truth #1 — the allowance row in payrun_detail.
-        const rows = await PayrollLifecyclePage.getPayrunDetailRows(state.calId!);
-        const allowanceRow = rows.find(
-            (r) => Number(r.empid) === state.empId && Number(r.pay_item_id) === state.payItemId,
-        );
-        expect(allowanceRow, 'allowance payrun_detail row exists').toBeTruthy();
-        expect(Number(allowanceRow!.pay_item_amount), 'allowance amount').toBeCloseTo(ALLOWANCE_AMOUNT, 2);
-        expect(Number(allowanceRow!.allowance), 'allowance column carries the amount').toBeCloseTo(ALLOWANCE_AMOUNT, 2);
-        expect(Number(allowanceRow!.deduction), 'deduction column is 0').toBeCloseTo(0, 2);
-        expect(Number(allowanceRow!.pay_item_add_or_deduct), 'allowance adds (1)').toBe(1);
-        expect(String(allowanceRow!.note ?? ''), 'note persisted').toBe(NOTE);
+            // DB truth #1 — the allowance row in payrun_detail.
+            const rows = await PayrollLifecyclePage.getPayrunDetailRows(state.calId!);
+            const allowanceRow = rows.find(r => Number(r.empid) === state.empId && Number(r.pay_item_id) === state.payItemId);
+            expect(allowanceRow, 'allowance payrun_detail row exists').toBeTruthy();
+            expect(Number(allowanceRow!.pay_item_amount), 'allowance amount').toBeCloseTo(ALLOWANCE_AMOUNT, 2);
+            expect(Number(allowanceRow!.allowance), 'allowance column carries the amount').toBeCloseTo(ALLOWANCE_AMOUNT, 2);
+            expect(Number(allowanceRow!.deduction), 'deduction column is 0').toBeCloseTo(0, 2);
+            expect(Number(allowanceRow!.pay_item_add_or_deduct), 'allowance adds (1)').toBe(1);
+            expect(String(allowanceRow!.note ?? ''), 'note persisted').toBe(NOTE);
 
-        // DB truth #2 — the mirror additional_allowance_deduction row.
-        const mirror = await PayrollLifecyclePage.getAllowanceDeductionRows(state.empId!, state.payItemId!);
-        expect(mirror.length, 'mirror allowance-deduction row exists').toBeGreaterThanOrEqual(1);
-        expect(Number(mirror[0]!.pay_item_amount), 'mirror amount').toBeCloseTo(ALLOWANCE_AMOUNT, 2);
-        expect(Number(mirror[0]!.pay_item_add_or_deduct), 'mirror marks allowance (1)').toBe(1);
-        expect(String(mirror[0]!.note ?? ''), 'mirror note').toBe(NOTE);
-    });
+            // DB truth #2 — the mirror additional_allowance_deduction row.
+            const mirror = await PayrollLifecyclePage.getAllowanceDeductionRows(state.empId!, state.payItemId!);
+            expect(mirror.length, 'mirror allowance-deduction row exists').toBeGreaterThanOrEqual(1);
+            expect(Number(mirror[0]!.pay_item_amount), 'mirror amount').toBeCloseTo(ALLOWANCE_AMOUNT, 2);
+            expect(Number(mirror[0]!.pay_item_add_or_deduct), 'mirror marks allowance (1)').toBe(1);
+            expect(String(mirror[0]!.note ?? ''), 'mirror note').toBe(NOTE);
+        },
+    );
 
     // PRL-06b — the pay-run now totals basic + allowance. Assert the COMPUTED sum
     // straight from payrun_detail (the canonical truth the UI sums).
@@ -369,10 +383,7 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
              WHERE pay_cal_id = ? AND empid = ? AND pay_item_add_or_deduct = 1`,
             [state.calId, state.empId],
         );
-        expect(Number(sum[0]?.total ?? 0), 'basic + allowance computed').toBeCloseTo(
-            state.payBasic + ALLOWANCE_AMOUNT,
-            2,
-        );
+        expect(Number(sum[0]?.total ?? 0), 'basic + allowance computed').toBeCloseTo(state.payBasic + ALLOWANCE_AMOUNT, 2);
     });
 
     // PRL-07 — list-appearance. The calendar surfaces in get_pay_calendar with
@@ -380,29 +391,33 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
     // because it INNER-JOINs the missing payrun table (PAYROLL-BUG-01) — so the
     // resilient list-appearance assertion is on the calendar + the payrun_detail
     // DB rows, NOT on get_payrun_list.
-    test('step 7: calendar appears in get_pay_calendar; payrun list empty (missing-table bug)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        expect(state.calId, 'calendar ready').toBeTruthy();
-        const payroll = new PayrollLifecyclePage(page);
-        await payroll.bootstrap();
+    test(
+        'step 7: calendar appears in get_pay_calendar; payrun list empty (missing-table bug)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            expect(state.calId, 'calendar ready').toBeTruthy();
+            const payroll = new PayrollLifecyclePage(page);
+            await payroll.bootstrap();
 
-        // The calendar list is the reliable list-appearance proof.
-        const cals = await payroll.getPayCalendar();
-        expect(cals.status, 'no 5xx').toBeLessThan(500);
-        expect(cals.body?.success, 'pay calendar list responds').toBe(true);
-        const calList = (cals.body?.data ?? []) as Array<Record<string, string>>;
-        const mine = calList.find((c) => Number(c.id) === state.calId);
-        expect(mine, 'our calendar appears in the list').toBeTruthy();
-        expect(Number(mine!.cal_emp_number), 'cal_emp_number reflects the assigned employee').toBeGreaterThanOrEqual(1);
+            // The calendar list is the reliable list-appearance proof.
+            const cals = await payroll.getPayCalendar();
+            expect(cals.status, 'no 5xx').toBeLessThan(500);
+            expect(cals.body?.success, 'pay calendar list responds').toBe(true);
+            const calList = (cals.body?.data ?? []) as Array<Record<string, string>>;
+            const mine = calList.find(c => Number(c.id) === state.calId);
+            expect(mine, 'our calendar appears in the list').toBeTruthy();
+            expect(Number(mine!.cal_emp_number), 'cal_emp_number reflects the assigned employee').toBeGreaterThanOrEqual(1);
 
-        // get_payrun_list is empty (not an error) — the documented missing-table bug.
-        const runs = await payroll.getPayrunList();
-        expect(runs.status, 'no 5xx').toBeLessThan(500);
-        expect(runs.raw, 'no PHP fatal even with the missing table').not.toContain(CRITICAL_ERROR);
-        expect(runs.body?.success, 'payrun list responds (empty, not error)').toBe(true);
-        expect(Array.isArray(runs.body?.data), 'payrun list is an array').toBe(true);
-        // PAYROLL-BUG-01: with the parent table absent, the INNER JOIN yields [].
-        expect((runs.body?.data ?? []).length, 'payrun list empty due to missing parent table').toBe(0);
-    });
+            // get_payrun_list is empty (not an error) — the documented missing-table bug.
+            const runs = await payroll.getPayrunList();
+            expect(runs.status, 'no 5xx').toBeLessThan(500);
+            expect(runs.raw, 'no PHP fatal even with the missing table').not.toContain(CRITICAL_ERROR);
+            expect(runs.body?.success, 'payrun list responds (empty, not error)').toBe(true);
+            expect(Array.isArray(runs.body?.data), 'payrun list is an array').toBe(true);
+            // PAYROLL-BUG-01: with the parent table absent, the INNER JOIN yields [].
+            expect((runs.body?.data ?? []).length, 'payrun list empty due to missing parent table').toBe(0);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -419,22 +434,26 @@ test.describe('HRM Payroll lifecycle access (pro, manager)', () => {
     // session maps to a user that also has manage_options, so it passes. We assert
     // the boundary resiliently: reachable page + either eligible employees OR a
     // permissions message, never a fatal.
-    test('HR manager reaches payroll and either gets employees or a clean permission message', { tag: ['@pro', '@hrm', '@manager'] }, async ({ page }) => {
-        const payroll = new PayrollLifecyclePage(page);
-        const ok = await payroll.bootstrap();
-        expect(ok, 'manager gets the localized payroll nonce').toBe(true);
+    test(
+        'HR manager reaches payroll and either gets employees or a clean permission message',
+        { tag: ['@pro', '@hrm', '@manager'] },
+        async ({ page }) => {
+            const payroll = new PayrollLifecyclePage(page);
+            const ok = await payroll.bootstrap();
+            expect(ok, 'manager gets the localized payroll nonce').toBe(true);
 
-        const { status, body, raw } = await payroll.getAvailableEmployees('monthly');
-        expect(status, 'no 5xx').toBeLessThan(500);
-        expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
-        if (body?.success) {
-            // Manager (with manage_options) sees the eligible map.
-            expect(typeof body.data, 'employees map returned').toBe('object');
-        } else {
-            // A pure hr_manager hits the cap mismatch — documented, not a fatal.
-            expect(String(body?.data ?? ''), 'clean permissions message').toMatch(/permission/i);
-        }
-    });
+            const { status, body, raw } = await payroll.getAvailableEmployees('monthly');
+            expect(status, 'no 5xx').toBeLessThan(500);
+            expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+            if (body?.success) {
+                // Manager (with manage_options) sees the eligible map.
+                expect(typeof body.data, 'employees map returned').toBe('object');
+            } else {
+                // A pure hr_manager hits the cap mismatch — documented, not a fatal.
+                expect(String(body?.data ?? ''), 'clean permissions message').toMatch(/permission/i);
+            }
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -445,34 +464,42 @@ test.describe('HRM Payroll lifecycle access control (pro, employee)', () => {
     test.use({ storageState: data.auth.employeeFile });
 
     // PRL-AC-02 — employee cannot bootstrap the payroll lifecycle nonce.
-    test('employee is blocked from the payroll page and gets no localized nonce', { tag: ['@pro', '@hrm', '@employee'] }, async ({ page }) => {
-        const payroll = new PayrollLifecyclePage(page);
-        const ok = await payroll.bootstrap();
-        // bootstrap() already asserted NOT the critical-error splash. The localized
-        // payroll object must be absent for an unprivileged user.
-        expect(ok, 'no wpErpPayroll.nonce for a plain employee').toBe(false);
+    test(
+        'employee is blocked from the payroll page and gets no localized nonce',
+        { tag: ['@pro', '@hrm', '@employee'] },
+        async ({ page }) => {
+            const payroll = new PayrollLifecyclePage(page);
+            const ok = await payroll.bootstrap();
+            // bootstrap() already asserted NOT the critical-error splash. The localized
+            // payroll object must be absent for an unprivileged user.
+            expect(ok, 'no wpErpPayroll.nonce for a plain employee').toBe(false);
 
-        const body = await page.locator('body').innerText();
-        expect(/not allowed|do not have permission|cheating|access/i.test(body), 'permission boundary shown').toBeTruthy();
-    });
+            const body = await page.locator('body').innerText();
+            expect(/not allowed|do not have permission|cheating|access/i.test(body), 'permission boundary shown').toBeTruthy();
+        },
+    );
 
     // PRL-AC-03 — even posting the protected write directly (without a valid page
     // nonce) is refused; never a fatal, never a 2xx success.
-    test('employee posting the generate-payrun write is refused without a fatal', { tag: ['@pro', '@hrm', '@employee'] }, async ({ page }) => {
-        const payroll = new PayrollLifecyclePage(page);
-        await payroll.bootstrap(); // populates ajaxurl even when nonce is absent
+    test(
+        'employee posting the generate-payrun write is refused without a fatal',
+        { tag: ['@pro', '@hrm', '@employee'] },
+        async ({ page }) => {
+            const payroll = new PayrollLifecyclePage(page);
+            await payroll.bootstrap(); // populates ajaxurl even when nonce is absent
 
-        // No valid nonce in hand → the protected handler must reject it.
-        const { status, body, raw } = await payroll.ajaxRaw<unknown>(
-            'action=erp_payroll_start_variable_input&_wpnonce=&calid=0&payrunid=0' +
-                '&payment_date=2026-06-30&from_date=2026-06-01&to_date=2026-06-30' +
-                '&empidlist[0][id]=0&empidlist[0][pay_basic]=0&specify_pay_item=false',
-        );
-        expect(status, 'no 5xx').toBeLessThan(500);
-        expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
-        // Either a nonce/permission rejection envelope, or a non-success body —
-        // assert the boundary, not an exact code.
-        const refused = body && typeof body === 'object' && 'success' in body ? !(body as { success: boolean }).success : true;
-        expect(refused, 'generate-payrun write refused for an employee').toBeTruthy();
-    });
+            // No valid nonce in hand → the protected handler must reject it.
+            const { status, body, raw } = await payroll.ajaxRaw<unknown>(
+                'action=erp_payroll_start_variable_input&_wpnonce=&calid=0&payrunid=0' +
+                    '&payment_date=2026-06-30&from_date=2026-06-01&to_date=2026-06-30' +
+                    '&empidlist[0][id]=0&empidlist[0][pay_basic]=0&specify_pay_item=false',
+            );
+            expect(status, 'no 5xx').toBeLessThan(500);
+            expect(raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+            // Either a nonce/permission rejection envelope, or a non-success body —
+            // assert the boundary, not an exact code.
+            const refused = body && typeof body === 'object' && 'success' in body ? !(body as { success: boolean }).success : true;
+            expect(refused, 'generate-payrun write refused for an employee').toBeTruthy();
+        },
+    );
 });

@@ -48,7 +48,7 @@ function jobsUrl(query = ''): string {
 function rowsOf(body: ResponseBody): Array<Record<string, unknown>> {
     const candidate =
         (body && typeof body === 'object' && (body as Record<string, unknown>).data
-            ? ((body as Record<string, unknown>).data as Record<string, unknown>)?.jobs ?? (body as Record<string, unknown>).data
+            ? (((body as Record<string, unknown>).data as Record<string, unknown>)?.jobs ?? (body as Record<string, unknown>).data)
             : undefined) ??
         (body && typeof body === 'object' ? (body as Record<string, unknown>).jobs : undefined) ??
         (Array.isArray(body) ? body : undefined);
@@ -123,15 +123,19 @@ test.afterAll(async () => {
 test.describe('HRM Recruitment REST — jobs list (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('REC-API-01 GET jobs returns 200-with-rows OR documented 404 empty-state (no 500)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const [resp, body] = await api.get(jobsUrl(), {}, false);
-        expect(resp.status(), 'jobs list must not 500').toBeLessThan(500);
-        expect([200, 404], 'jobs list answers 200-with-rows or 404 empty-state').toContain(resp.status());
-        if (resp.status() === 200) {
-            const rows = rowsOf(body);
-            expect(Array.isArray(rows), 'on 200 the jobs payload is an array').toBe(true);
-        }
-    });
+    test(
+        'REC-API-01 GET jobs returns 200-with-rows OR documented 404 empty-state (no 500)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(jobsUrl(), {}, false);
+            expect(resp.status(), 'jobs list must not 500').toBeLessThan(500);
+            expect([200, 404], 'jobs list answers 200-with-rows or 404 empty-state').toContain(resp.status());
+            if (resp.status() === 200) {
+                const rows = rowsOf(body);
+                expect(Array.isArray(rows), 'on 200 the jobs payload is an array').toBe(true);
+            }
+        },
+    );
 
     test('REC-API-02 seeded published job (future _expire_date) appears with its meta', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const title = `PW_Recruit_pub_${Date.now()}`;
@@ -144,7 +148,7 @@ test.describe('HRM Recruitment REST — jobs list (admin)', () => {
         if (resp.status() !== 200) return;
 
         const rows = rowsOf(body);
-        const found = rows.find((r) => String(r.id) === String(jobId));
+        const found = rows.find(r => String(r.id) === String(jobId));
         expect(found, 'seeded published job is present in the list').toBeTruthy();
         if (found) {
             expect(String(found.title)).toBe(title);
@@ -153,52 +157,56 @@ test.describe('HRM Recruitment REST — jobs list (admin)', () => {
         }
     });
 
-    test('REC-API-03 job with empty _expire_date is still returned (OR meta_value="" branch)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        const title = `PW_Recruit_noexp_${Date.now()}`;
-        const jobId = await seedJob({ title, status: 'publish', expireDate: '' });
-        test.skip(!jobId, 'DB seed unavailable in this environment');
+    test(
+        'REC-API-03 job with empty _expire_date is still returned (OR meta_value="" branch)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            const title = `PW_Recruit_noexp_${Date.now()}`;
+            const jobId = await seedJob({ title, status: 'publish', expireDate: '' });
+            test.skip(!jobId, 'DB seed unavailable in this environment');
 
-        // Ground-truth oracle: confirm the seeded row really persists with an EMPTY
-        // _expire_date. The controller's base WHERE matches it via the second OR
-        // disjunct `pmeta.meta_value = ''` (RecruitmentController L61), with NO status
-        // param in play here (this request sends only per_page) — verified against the
-        // live DB/collation: `'' = ''` is true and `'' >= today` is false, so the
-        // empty-meta row qualifies and is returned in a 200. The DB read-back keeps the
-        // 404 branch resilient: a documented empty-state is only legitimate when the
-        // qualifying row is genuinely absent, never a brittle hard-fail on a blip.
-        const seededMeta = await dbUtils.dbQuery<{ meta_value: string }>(
-            `SELECT meta_value FROM wp_postmeta WHERE post_id = ? AND meta_key = '_expire_date' LIMIT 1`,
-            [jobId],
-        );
-        const rowQualifies = seededMeta.length > 0 && String(seededMeta[0]?.meta_value ?? 'x') === '';
+            // Ground-truth oracle: confirm the seeded row really persists with an EMPTY
+            // _expire_date. The controller's base WHERE matches it via the second OR
+            // disjunct `pmeta.meta_value = ''` (RecruitmentController L61), with NO status
+            // param in play here (this request sends only per_page) — verified against the
+            // live DB/collation: `'' = ''` is true and `'' >= today` is false, so the
+            // empty-meta row qualifies and is returned in a 200. The DB read-back keeps the
+            // 404 branch resilient: a documented empty-state is only legitimate when the
+            // qualifying row is genuinely absent, never a brittle hard-fail on a blip.
+            const seededMeta = await dbUtils.dbQuery<{ meta_value: string }>(
+                `SELECT meta_value FROM wp_postmeta WHERE post_id = ? AND meta_key = '_expire_date' LIMIT 1`,
+                [jobId],
+            );
+            const rowQualifies = seededMeta.length > 0 && String(seededMeta[0]?.meta_value ?? 'x') === '';
 
-        const [resp, body] = await api.get(jobsUrl('per_page=100'), {}, false);
-        expect(resp.status(), 'empty _expire_date list must not 500').toBeLessThan(500);
-        expect([200, 404], 'jobs list answers 200-with-rows or 404 empty-state').toContain(resp.status());
+            const [resp, body] = await api.get(jobsUrl('per_page=100'), {}, false);
+            expect(resp.status(), 'empty _expire_date list must not 500').toBeLessThan(500);
+            expect([200, 404], 'jobs list answers 200-with-rows or 404 empty-state').toContain(resp.status());
 
-        if (resp.status() === 200) {
-            const rows = rowsOf(body);
-            const found = rows.find((r) => String(r.id) === String(jobId));
-            // The OR meta_value="" branch (L61) must surface the empty-expire job.
-            expect(found, 'empty _expire_date job present (L61 OR meta_value="" branch)').toBeTruthy();
-            if (found) {
-                // get_post_meta(..., '_expire_date', true) returns '' for the empty meta (L101).
-                expect(String(found.expire_date ?? ''), 'empty expire_date echoed back as empty string').toBe('');
-                expect(String(found.status), 'seeded empty-expire job is published').toBe('publish');
+            if (resp.status() === 200) {
+                const rows = rowsOf(body);
+                const found = rows.find(r => String(r.id) === String(jobId));
+                // The OR meta_value="" branch (L61) must surface the empty-expire job.
+                expect(found, 'empty _expire_date job present (L61 OR meta_value="" branch)').toBeTruthy();
+                if (found) {
+                    // get_post_meta(..., '_expire_date', true) returns '' for the empty meta (L101).
+                    expect(String(found.expire_date ?? ''), 'empty expire_date echoed back as empty string').toBe('');
+                    expect(String(found.status), 'seeded empty-expire job is published').toBe('publish');
+                }
+                return;
             }
-            return;
-        }
 
-        // 404 documented empty-state (same legitimate state as REC-API-10): the
-        // wp_send_json_error envelope is a non-success. We do NOT re-demand 200 here —
-        // the OR-branch contract is proven on the 200 path above and against the live
-        // DB; treating a transient empty-state 404 as a hard failure only flakes the
-        // suite. We still record whether the qualifying row was present for triage.
-        if (body && typeof body === 'object') {
-            expect((body as Record<string, unknown>).success ?? false, '404 envelope is not a success').not.toBe(true);
-        }
-        expect(typeof rowQualifies, 'oracle evaluated the empty-meta qualification').toBe('boolean');
-    });
+            // 404 documented empty-state (same legitimate state as REC-API-10): the
+            // wp_send_json_error envelope is a non-success. We do NOT re-demand 200 here —
+            // the OR-branch contract is proven on the 200 path above and against the live
+            // DB; treating a transient empty-state 404 as a hard failure only flakes the
+            // suite. We still record whether the qualifying row was present for triage.
+            if (body && typeof body === 'object') {
+                expect((body as Record<string, unknown>).success ?? false, '404 envelope is not a success').not.toBe(true);
+            }
+            expect(typeof rowQualifies, 'oracle evaluated the empty-meta qualification').toBe('boolean');
+        },
+    );
 
     test('REC-API-04 per_page=1 caps the returned jobs at 1', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // Ensure at least two qualifying jobs exist.
@@ -230,7 +238,10 @@ test.describe('HRM Recruitment REST — jobs list (admin)', () => {
             const rows = rowsOf(body);
             // NOTE: the publish branch (L68) further requires DATE(_expire_date) > CURDATE(),
             // so only rows with a strictly-future expiry survive; every survivor is 'publish'.
-            expect(rows.every((r) => String(r.status) === 'publish'), 'every filtered row is published').toBe(true);
+            expect(
+                rows.every(r => String(r.status) === 'publish'),
+                'every filtered row is published',
+            ).toBe(true);
         }
     });
 
@@ -243,7 +254,10 @@ test.describe('HRM Recruitment REST — jobs list (admin)', () => {
         expect([200, 404]).toContain(resp.status());
         if (resp.status() === 200) {
             const rows = rowsOf(body);
-            expect(rows.every((r) => String(r.status) === 'draft'), 'every filtered row is a draft').toBe(true);
+            expect(
+                rows.every(r => String(r.status) === 'draft'),
+                'every filtered row is a draft',
+            ).toBe(true);
         }
         // Documented: draft jobs WITHOUT _expire_date meta never appear (INNER JOIN requirement).
     });
@@ -265,8 +279,14 @@ test.describe('HRM Recruitment REST — jobs list (admin)', () => {
         expect([200, 404]).toContain(resp.status());
         if (resp.status() === 200) {
             const rows = rowsOf(body);
-            expect(rows.some((r) => String(r.id) === String(jobId)), 'searched job is present').toBe(true);
-            expect(rows.every((r) => String(r.title).includes(term)), 'every result title contains the term').toBe(true);
+            expect(
+                rows.some(r => String(r.id) === String(jobId)),
+                'searched job is present',
+            ).toBe(true);
+            expect(
+                rows.every(r => String(r.title).includes(term)),
+                'every result title contains the term',
+            ).toBe(true);
         }
     });
 
@@ -303,19 +323,23 @@ test.describe('HRM Recruitment REST — jobs list (admin)', () => {
 test.describe('HRM Recruitment REST — public exposure & CORS (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('REC-API-13 endpoint is reachable WITHOUT auth (permission_callback returns true)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // FINDING: permission_callback always returns true (L35-39), so an HR-only
-        // job listing is publicly readable. Build a context with NO storageState and
-        // NO nonce to prove the request is not refused with 401/403.
-        const anon = await ApiUtils.fromStorageState(data.auth.adminFile, ''); // empty nonce → no X-WP-Nonce header
-        try {
-            const [resp] = await anon.get(jobsUrl(), {}, false);
-            expect(resp.status(), 'no-auth probe must not 500').toBeLessThan(500);
-            expect([401, 403], 'recruitment jobs is PUBLIC — no auth refusal (documented exposure)').not.toContain(resp.status());
-        } finally {
-            await anon.dispose();
-        }
-    });
+    test(
+        'REC-API-13 endpoint is reachable WITHOUT auth (permission_callback returns true)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            // FINDING: permission_callback always returns true (L35-39), so an HR-only
+            // job listing is publicly readable. Build a context with NO storageState and
+            // NO nonce to prove the request is not refused with 401/403.
+            const anon = await ApiUtils.fromStorageState(data.auth.adminFile, ''); // empty nonce → no X-WP-Nonce header
+            try {
+                const [resp] = await anon.get(jobsUrl(), {}, false);
+                expect(resp.status(), 'no-auth probe must not 500').toBeLessThan(500);
+                expect([401, 403], 'recruitment jobs is PUBLIC — no auth refusal (documented exposure)').not.toContain(resp.status());
+            } finally {
+                await anon.dispose();
+            }
+        },
+    );
 
     test('REC-API-14 response advertises CORS Access-Control-Allow-Origin: *', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // DOCUMENT: get_jobs permission_callback sets header('Access-Control-Allow-Origin: *')

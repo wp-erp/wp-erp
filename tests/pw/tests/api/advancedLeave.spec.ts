@@ -56,9 +56,7 @@ const idOf = (body: ResponseBody): string => {
 /** Seed a leave-type id off the policy-names table so DB seeds have a valid leave_id. */
 async function anyLeaveTypeId(): Promise<number> {
     try {
-        const rows = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${PREFIX}_erp_hr_leaves ORDER BY id ASC LIMIT 1`,
-        );
+        const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${PREFIX}_erp_hr_leaves ORDER BY id ASC LIMIT 1`);
         return rows[0]?.id ?? 1;
     } catch {
         return 1;
@@ -296,10 +294,7 @@ test.describe('Advanced Leave DB — pro policy columns (pro, admin)', () => {
         expect(id, 'seed insert should yield a policy id').toBeTruthy();
         seededPolicyIds.push(Number(id));
 
-        const rows = await dbUtils.dbQuery<Record<string, unknown>>(
-            `SELECT * FROM ${policiesTable} WHERE id = ? LIMIT 1`,
-            [Number(id)],
-        );
+        const rows = await dbUtils.dbQuery<Record<string, unknown>>(`SELECT * FROM ${policiesTable} WHERE id = ? LIMIT 1`, [Number(id)]);
         const row = rows[0]!;
         expect(Number(row.carryover_days)).toBe(7);
         expect(Number(row.carryover_uses_limit)).toBe(90);
@@ -323,10 +318,7 @@ test.describe('Advanced Leave DB — pro policy columns (pro, admin)', () => {
         expect(policyId, 'parent policy seed yields an id').toBeTruthy();
         seededPolicyIds.push(policyId);
 
-        await dbUtils.dbQuery(
-            `INSERT INTO ${segregationTable} (leave_policy_id, jan, jun, decem) VALUES (?, 2, 3, 5)`,
-            [policyId],
-        );
+        await dbUtils.dbQuery(`INSERT INTO ${segregationTable} (leave_policy_id, jan, jun, decem) VALUES (?, 2, 3, 5)`, [policyId]);
 
         const rows = await dbUtils.dbQuery<Record<string, unknown>>(
             `SELECT jan, jun, decem FROM ${segregationTable} WHERE leave_policy_id = ? LIMIT 1`,
@@ -349,10 +341,7 @@ test.describe('Advanced Leave DB — pro policy columns (pro, admin)', () => {
         );
         const policyId = Number((policyResult as unknown as { insertId?: number }).insertId);
         seededPolicyIds.push(policyId);
-        await dbUtils.dbQuery(
-            `INSERT INTO ${segregationTable} (leave_policy_id, decem) VALUES (?, 9)`,
-            [policyId],
-        );
+        await dbUtils.dbQuery(`INSERT INTO ${segregationTable} (leave_policy_id, decem) VALUES (?, 9)`, [policyId]);
 
         // A REST PUT routes through update_policy (no $_POST['segre']) — segregation
         // is untouched. Resilient: the PUT may 400 if the helper cannot resolve the
@@ -364,10 +353,9 @@ test.describe('Advanced Leave DB — pro policy columns (pro, admin)', () => {
         );
         expect(putResp.status(), 'PUT answered without a fatal').toBeLessThan(500);
 
-        const rows = await dbUtils.dbQuery<{ decem: number }>(
-            `SELECT decem FROM ${segregationTable} WHERE leave_policy_id = ? LIMIT 1`,
-            [policyId],
-        );
+        const rows = await dbUtils.dbQuery<{ decem: number }>(`SELECT decem FROM ${segregationTable} WHERE leave_policy_id = ? LIMIT 1`, [
+            policyId,
+        ]);
         expect(Number(rows[0]?.decem ?? -1), 'segregation decem unchanged by REST PUT').toBe(9);
     });
 });

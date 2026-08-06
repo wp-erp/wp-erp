@@ -1,9 +1,6 @@
 {
-  "plugins": [
-    "../../",
-    "../../../erp-pro"
-  ],
-  "mappings": {
-    "wp-content/plugins/erp-pro": "../../../erp-pro"
-  }
+    "plugins": ["../../", "../../../erp-pro"],
+    "mappings": {
+        "wp-content/plugins/erp-pro": "../../../erp-pro"
+    }
 }

@@ -40,10 +40,10 @@ npm run format                # prettier --check
 - **Place it** under `tests/e2e/<module>/` (UI) or `tests/api/<module>/` (REST),
   where `<module>` ∈ `hrm | crm | accounting | core`.
 - **Tag every test** with one tier, one module, and one role tag:
-  - tier — `@lite` (runs always), `@liteOnly` (lite-only), `@pro` (pro runs only)
-  - module — `@hrm` / `@crm` / `@accounting` / `@core`
-  - role — `@admin` / `@manager` / `@employee`
-  - optional — `@serial` (opt-in; excluded from default parallel runs)
+    - tier — `@lite` (runs always), `@liteOnly` (lite-only), `@pro` (pro runs only)
+    - module — `@hrm` / `@crm` / `@accounting` / `@core`
+    - role — `@admin` / `@manager` / `@employee`
+    - optional — `@serial` (opt-in; excluded from default parallel runs)
 - **Use the page-object pattern** for UI: selectors + flows live in
   `tests/e2e/<module>/<feature>Page.ts`; specs stay thin and pick a role via
   `test.use({ storageState: data.auth.<role>File })`.

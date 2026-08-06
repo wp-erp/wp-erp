@@ -64,18 +64,15 @@ if (!fs.existsSync(e2eRoot)) {
     process.exit(0);
 }
 
-const allSpecs = walkSpecs(e2eRoot)
-    .map(file => ({
-        file,
-        // Default newly-added (unmeasured) specs to the global mean so they
-        // don't all stack in a single bin.
-        ms: baselineByFile.has(file) ? baselineByFile.get(file) : null,
-    }));
+const allSpecs = walkSpecs(e2eRoot).map(file => ({
+    file,
+    // Default newly-added (unmeasured) specs to the global mean so they
+    // don't all stack in a single bin.
+    ms: baselineByFile.has(file) ? baselineByFile.get(file) : null,
+}));
 
 const measured = allSpecs.filter(s => s.ms !== null);
-const meanMs = measured.length
-    ? measured.reduce((a, b) => a + b.ms, 0) / measured.length
-    : 0;
+const meanMs = measured.length ? measured.reduce((a, b) => a + b.ms, 0) / measured.length : 0;
 for (const s of allSpecs) {
     if (s.ms === null) s.ms = meanMs;
 }

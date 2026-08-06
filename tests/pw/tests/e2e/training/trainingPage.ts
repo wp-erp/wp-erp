@@ -161,9 +161,7 @@ export class TrainingPage {
     }
 
     /** Find the CPT post row(s) by exact title (verifies post_type + status). */
-    static async findPostByTitle(
-        title: string,
-    ): Promise<{ ID: number; post_status: string; post_type: string }[]> {
+    static async findPostByTitle(title: string): Promise<{ ID: number; post_status: string; post_type: string }[]> {
         return dbUtils.dbQuery<{ ID: number; post_status: string; post_type: string }>(
             `SELECT ID, post_status, post_type FROM ${trainingTables.posts}
              WHERE post_title = ? AND post_type = ? ORDER BY ID DESC`,

@@ -62,9 +62,23 @@ export const data = {
 
     // ── Accounting factories ──────────────────────────────────────────────────
     accounting: {
-        customer: () => ({ first_name: faker.person.firstName(), last_name: faker.person.lastName(), email: `cust_${uid()}@example.com`, type: 'customer' }),
-        vendor: () => ({ first_name: faker.person.firstName(), last_name: faker.person.lastName(), email: `vend_${uid()}@example.com`, type: 'vendor' }),
-        product: () => ({ name: `Product_${uid()}`, cost_price: faker.commerce.price({ min: 10, max: 100 }), sale_price: faker.commerce.price({ min: 100, max: 200 }) }),
+        customer: () => ({
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
+            email: `cust_${uid()}@example.com`,
+            type: 'customer',
+        }),
+        vendor: () => ({
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
+            email: `vend_${uid()}@example.com`,
+            type: 'vendor',
+        }),
+        product: () => ({
+            name: `Product_${uid()}`,
+            cost_price: faker.commerce.price({ min: 10, max: 100 }),
+            sale_price: faker.commerce.price({ min: 100, max: 200 }),
+        }),
         invoiceAmount: () => Number(faker.finance.amount({ min: 50, max: 500, dec: 2 })),
     },
 

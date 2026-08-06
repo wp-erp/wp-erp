@@ -98,7 +98,11 @@ export class AccountingPage {
 
     /** True when the page shows a WP/PHP fatal — used as a smoke oracle. */
     async hasCriticalError(): Promise<boolean> {
-        const body = (await this.page.locator('body').innerText().catch(() => '')) ?? '';
+        const body =
+            (await this.page
+                .locator('body')
+                .innerText()
+                .catch(() => '')) ?? '';
         return /critical error|Fatal error|There has been a critical error/i.test(body);
     }
 

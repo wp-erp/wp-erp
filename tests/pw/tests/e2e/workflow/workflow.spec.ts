@@ -96,20 +96,14 @@ async function insertWorkflow(name: string, status: 'active' | 'paused' = 'activ
     );
     let id = (result as unknown as { insertId?: number }).insertId;
     if (!id) {
-        const found = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${WF_TABLE} WHERE name = ? ORDER BY id DESC LIMIT 1`,
-            [name],
-        );
+        const found = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${WF_TABLE} WHERE name = ? ORDER BY id DESC LIMIT 1`, [name]);
         id = found[0]?.id;
     }
     return id;
 }
 
 async function getWorkflowsByName(name: string): Promise<Record<string, unknown>[]> {
-    return dbUtils.dbQuery<Record<string, unknown>>(
-        `SELECT * FROM ${WF_TABLE} WHERE name = ?`,
-        [name],
-    );
+    return dbUtils.dbQuery<Record<string, unknown>>(`SELECT * FROM ${WF_TABLE} WHERE name = ?`, [name]);
 }
 
 // Track ids we create so afterAll can purge their child rows too.
@@ -273,10 +267,7 @@ test.describe('HRM Workflow UI (pro, admin)', () => {
         const stillForm = await page.locator(SEL.app).count();
         expect(onList + stillForm).toBeGreaterThan(0);
         // Clean up any row the save may have created under our prefix.
-        const rows = await dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${WF_TABLE} WHERE name LIKE ?`,
-            [`${WF_NAME_PREFIX}%-ui`],
-        );
+        const rows = await dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${WF_TABLE} WHERE name LIKE ?`, [`${WF_NAME_PREFIX}%-ui`]);
         for (const r of rows) createdIds.push(r.id);
     });
 });
@@ -307,11 +298,25 @@ test.describe('HRM Workflow DB (pro, admin)', () => {
              WHERE table_schema = DATABASE() AND table_name = ?`,
             [WF_TABLE],
         );
-        const names = cols.map((c) => String((c as Record<string, unknown>).COLUMN_NAME ?? (c as Record<string, unknown>).column_name).toLowerCase());
+        const names = cols.map(c =>
+            String((c as Record<string, unknown>).COLUMN_NAME ?? (c as Record<string, unknown>).column_name).toLowerCase(),
+        );
         for (const expected of [
-            'id', 'name', 'type', 'object', 'events_group', 'event',
-            'conditions_group', 'status', 'delay_time', 'delay_period', 'run',
-            'created_at', 'updated_at', 'deleted_at', 'created_by',
+            'id',
+            'name',
+            'type',
+            'object',
+            'events_group',
+            'event',
+            'conditions_group',
+            'status',
+            'delay_time',
+            'delay_period',
+            'run',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+            'created_by',
         ]) {
             expect(names, `column ${expected}`).toContain(expected);
         }

@@ -108,22 +108,26 @@ test.describe('HRM Payroll UI (pro, admin)', () => {
     });
 
     // PR-UI-04 — Add / Edit pay-calendar form mounts with its core inputs.
-    test('add pay calendar form mounts with name/type inputs and employee picker', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const payroll = new PayrollPage(page);
-        await payroll.goToAddCalendar();
-        await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
-        await expect(page.locator(payroll.addForm.root)).toBeAttached();
-        await expect(page.locator(payroll.addForm.heading)).toContainText(/Pay Calendar Settings/i);
-        // The name/type inputs are bound with Vue `v-model`, which Vue STRIPS from
-        // the DOM after it mounts — never selectable post-hydration. Assert instead
-        // on the stable, real server-rendered controls that survive hydration: the
-        // Add Employee button and the employee-filter controls (real id/class).
-        await expect(page.locator(payroll.addForm.addEmployeeBtn)).toBeAttached();
-        // Employee filter controls (real ids — not Vue template attributes).
-        await expect(page.locator(payroll.addForm.empDept)).toBeAttached();
-        await expect(page.locator(payroll.addForm.empDesig)).toBeAttached();
-        await expect(page.locator(payroll.addForm.empName)).toBeAttached();
-    });
+    test(
+        'add pay calendar form mounts with name/type inputs and employee picker',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const payroll = new PayrollPage(page);
+            await payroll.goToAddCalendar();
+            await expect(page.locator('body')).not.toContainText(CRITICAL_ERROR);
+            await expect(page.locator(payroll.addForm.root)).toBeAttached();
+            await expect(page.locator(payroll.addForm.heading)).toContainText(/Pay Calendar Settings/i);
+            // The name/type inputs are bound with Vue `v-model`, which Vue STRIPS from
+            // the DOM after it mounts — never selectable post-hydration. Assert instead
+            // on the stable, real server-rendered controls that survive hydration: the
+            // Add Employee button and the employee-filter controls (real id/class).
+            await expect(page.locator(payroll.addForm.addEmployeeBtn)).toBeAttached();
+            // Employee filter controls (real ids — not Vue template attributes).
+            await expect(page.locator(payroll.addForm.empDept)).toBeAttached();
+            await expect(page.locator(payroll.addForm.empDesig)).toBeAttached();
+            await expect(page.locator(payroll.addForm.empName)).toBeAttached();
+        },
+    );
 
     // PR-UI-05 — Pay Run List mounts; the dispatch form's hidden inputs and the
     // WP_List_Table are present.

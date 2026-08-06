@@ -96,7 +96,7 @@ function formBlocks(html: string): string[] {
 
 /** The `_wpnonce` hidden value inside the first <form> that contains `needle`. */
 function scrapeFormNonce(html: string, needle: string): string {
-    const form = formBlocks(html).find((f) => f.includes(needle));
+    const form = formBlocks(html).find(f => f.includes(needle));
     const source = form ?? html;
     const m = source.match(/name="_wpnonce"\s+value="([a-f0-9]+)"/i);
     return m?.[1] ?? '';
@@ -126,7 +126,7 @@ async function postForm(url: string, fields: Record<string, string | string[]>):
         // PHP only parses an array from `key[]=a&key[]=b`; repeated bare `key=` keeps
         // only the last value. Handlers that read array fields (e.g. stage_name) need
         // the `[]` suffix.
-        if (Array.isArray(v)) v.forEach((item) => form.append(`${k}[]`, item));
+        if (Array.isArray(v)) v.forEach(item => form.append(`${k}[]`, item));
         else form.append(k, v);
     }
     const resp = await formCtx.post(url, {
@@ -143,13 +143,15 @@ async function postForm(url: string, fields: Record<string, string | string[]>):
  * envelope (admin-ajax always answers 200). `data` is forwarded as a raw string
  * body via the typed option, so the shared ApiUtils contract is untouched.
  */
-async function postAjax(fields: Record<string, string | string[]>): Promise<{ status: number; success: boolean; data: unknown; raw: string }> {
+async function postAjax(
+    fields: Record<string, string | string[]>,
+): Promise<{ status: number; success: boolean; data: unknown; raw: string }> {
     const form = new URLSearchParams();
     for (const [k, v] of Object.entries(fields)) {
         // PHP only parses an array from `key[]=a&key[]=b`; repeated bare `key=` keeps
         // only the last value. Handlers that read array fields (e.g. stage_name) need
         // the `[]` suffix.
-        if (Array.isArray(v)) v.forEach((item) => form.append(`${k}[]`, item));
+        if (Array.isArray(v)) v.forEach(item => form.append(`${k}[]`, item));
         else form.append(k, v);
     }
     const [resp, body] = await api.post(
@@ -160,7 +162,13 @@ async function postAjax(fields: Record<string, string | string[]>): Promise<{ st
     const raw = typeof body === 'string' ? body : JSON.stringify(body);
     let parsed: { success?: boolean; data?: unknown } = {};
     if (body && typeof body === 'object') parsed = body as { success?: boolean; data?: unknown };
-    else { try { parsed = JSON.parse(raw); } catch { /* leave empty */ } }
+    else {
+        try {
+            parsed = JSON.parse(raw);
+        } catch {
+            /* leave empty */
+        }
+    }
     return { status: resp.status(), success: parsed.success === true, data: parsed.data, raw };
 }
 
@@ -168,7 +176,7 @@ async function postAjax(fields: Record<string, string | string[]>): Promise<{ st
 function jobsOf(body: unknown): Array<Record<string, unknown>> {
     const b = body as Record<string, unknown> | undefined;
     const candidate =
-        (b && typeof b === 'object' && b.data ? (b.data as Record<string, unknown>)?.jobs ?? b.data : undefined) ??
+        (b && typeof b === 'object' && b.data ? ((b.data as Record<string, unknown>)?.jobs ?? b.data) : undefined) ??
         (b && typeof b === 'object' ? b.jobs : undefined) ??
         (Array.isArray(body) ? body : undefined);
     return Array.isArray(candidate) ? (candidate as Array<Record<string, unknown>>) : [];
@@ -187,20 +195,20 @@ test.beforeAll(async () => {
 
     // admin_create_candidate rejects an empty attach_ids[] with a 'file-error', so
     // seed a dummy attachment post to use as the uploaded CV reference.
-    const insert = await dbUtils.dbQuery<{ insertId: number }>(
-        `INSERT INTO wp_posts
+    const insert = await dbUtils
+        .dbQuery<{ insertId: number }>(
+            `INSERT INTO wp_posts
             (post_author, post_date, post_date_gmt, post_content, post_title, post_status,
              comment_status, ping_status, post_name, post_modified, post_modified_gmt,
              post_type, post_mime_type, post_content_filtered, post_excerpt, to_ping, pinged, post_parent, menu_order, guid)
          VALUES (1, NOW(), UTC_TIMESTAMP(), '', ?, 'inherit', 'closed', 'closed', ?, NOW(), UTC_TIMESTAMP(),
                  'attachment', 'application/pdf', '', '', '', '', 0, 0, '')`,
-        [`PW LC CV ${stamp()}`, `pw-lc-cv-${stamp()}`],
-    ).catch(() => [] as Array<{ insertId: number }>);
+            [`PW LC CV ${stamp()}`, `pw-lc-cv-${stamp()}`],
+        )
+        .catch(() => [] as Array<{ insertId: number }>);
     seededAttachId = (insert as unknown as { insertId?: number }).insertId ?? 0;
     if (!seededAttachId) {
-        const found = await oneRow<{ ID: number }>(
-            `SELECT ID FROM wp_posts WHERE post_type='attachment' ORDER BY ID DESC LIMIT 1`,
-        );
+        const found = await oneRow<{ ID: number }>(`SELECT ID FROM wp_posts WHERE post_type='attachment' ORDER BY ID DESC LIMIT 1`);
         seededAttachId = found?.ID ?? 0;
     }
 });
@@ -218,7 +226,12 @@ test.afterAll(async () => {
         await dbUtils.dbQuery(`DELETE FROM wp_posts WHERE ID = ?`, [lifecycleJobId]).catch(() => undefined);
     }
     for (const title of createdStageTitles) {
-        await dbUtils.dbQuery(`DELETE FROM wp_erp_application_job_stage_relation WHERE stageid IN (SELECT id FROM wp_erp_application_stage WHERE title = ?)`, [title]).catch(() => undefined);
+        await dbUtils
+            .dbQuery(
+                `DELETE FROM wp_erp_application_job_stage_relation WHERE stageid IN (SELECT id FROM wp_erp_application_stage WHERE title = ?)`,
+                [title],
+            )
+            .catch(() => undefined);
         await dbUtils.dbQuery(`DELETE FROM wp_erp_application_stage WHERE title = ?`, [title]).catch(() => undefined);
     }
     if (seededAttachId) {
@@ -281,36 +294,40 @@ test.describe('HRM Recruitment — full pipeline lifecycle (admin)', () => {
         }
     });
 
-    test('REC-LC-02 assign hiring-workflow stages → job_stage_relation rows (delete-then-insert)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        test.skip(!lifecycleJobId, 'no job opening from REC-LC-01');
-        const url = wizardStep('hiring_workflow', lifecycleJobId);
+    test(
+        'REC-LC-02 assign hiring-workflow stages → job_stage_relation rows (delete-then-insert)',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            test.skip(!lifecycleJobId, 'no job opening from REC-LC-01');
+            const url = wizardStep('hiring_workflow', lifecycleJobId);
 
-        const html = await getHtml(url);
-        test.skip(!html, 'hiring_workflow step did not render');
-        const nonce = scrapeFormNonce(html, 'hidden_hiring_workflow');
-        test.skip(!nonce, 'hiring_workflow form nonce unavailable');
+            const html = await getHtml(url);
+            test.skip(!html, 'hiring_workflow step did not render');
+            const nonce = scrapeFormNonce(html, 'hidden_hiring_workflow');
+            test.skip(!nonce, 'hiring_workflow form nonce unavailable');
 
-        const { status, location } = await postForm(url, {
-            hidden_hiring_workflow: 'hiring_workflow',
-            postid: lifecycleJobId,
-            stage_name: SEEDED_STAGES, // stage_name[] = 1,2,3,4
-            _wpnonce: nonce,
-        });
-        expect(status, 'a valid hiring_workflow nonce is NOT met with a wp_die 500').toBeLessThan(500);
-        expect(status, 'hiring_workflow redirects on success (302)').toBe(302);
-        expect(location, 'redirect advances to the job_information step').toContain('step=job_information');
+            const { status, location } = await postForm(url, {
+                hidden_hiring_workflow: 'hiring_workflow',
+                postid: lifecycleJobId,
+                stage_name: SEEDED_STAGES, // stage_name[] = 1,2,3,4
+                _wpnonce: nonce,
+            });
+            expect(status, 'a valid hiring_workflow nonce is NOT met with a wp_die 500').toBeLessThan(500);
+            expect(status, 'hiring_workflow redirects on success (302)').toBe(302);
+            expect(location, 'redirect advances to the job_information step').toContain('step=job_information');
 
-        // DB effect: one relation row per assigned stage (delete-then-insert).
-        const rows = await dbUtils.dbQuery<{ stageid: number }>(
-            `SELECT stageid FROM wp_erp_application_job_stage_relation WHERE jobid = ? ORDER BY stageid`,
-            [lifecycleJobId],
-        );
-        // The posted stage_name ids map to the installed global hiring stages (whose
-        // real ids are environment-specific, not necessarily 1..4). The behavioral
-        // contract is that a successful hiring_workflow save links stage rows to the
-        // job via delete-then-insert — assert the job now has linked stage relations.
-        expect(rows.length, 'hiring_workflow save linked stage rows to the job').toBeGreaterThan(0);
-    });
+            // DB effect: one relation row per assigned stage (delete-then-insert).
+            const rows = await dbUtils.dbQuery<{ stageid: number }>(
+                `SELECT stageid FROM wp_erp_application_job_stage_relation WHERE jobid = ? ORDER BY stageid`,
+                [lifecycleJobId],
+            );
+            // The posted stage_name ids map to the installed global hiring stages (whose
+            // real ids are environment-specific, not necessarily 1..4). The behavioral
+            // contract is that a successful hiring_workflow save links stage rows to the
+            // job via delete-then-insert — assert the job now has linked stage relations.
+            expect(rows.length, 'hiring_workflow save linked stage rows to the job').toBeGreaterThan(0);
+        },
+    );
 
     test('REC-LC-03 add job information → department + job-detail postmeta', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         test.skip(!lifecycleJobId, 'no job opening from REC-LC-01');
@@ -342,7 +359,7 @@ test.describe('HRM Recruitment — full pipeline lifecycle (admin)', () => {
                 WHERE post_id = ? AND meta_key IN ('_department','_employment_type','_expire_date','_vacancy','_location','_minimum_experience')`,
             [lifecycleJobId],
         );
-        const map = Object.fromEntries(meta.map((m) => [m.meta_key, m.meta_value]));
+        const map = Object.fromEntries(meta.map(m => [m.meta_key, m.meta_value]));
         expect(map._department, 'department meta set').toBe('1');
         expect(map._employment_type, 'employment type meta set').toBe('full_time');
         expect(map._expire_date, 'future expiry meta set').toBe('2099-12-31');
@@ -362,7 +379,7 @@ test.describe('HRM Recruitment — full pipeline lifecycle (admin)', () => {
         if (resp.status() !== 200) return;
 
         const rows = jobsOf(body);
-        const found = rows.find((r) => String(r.id) === String(lifecycleJobId));
+        const found = rows.find(r => String(r.id) === String(lifecycleJobId));
         expect(found, 'the lifecycle job (future _expire_date) is present in the list').toBeTruthy();
         if (found) {
             expect(String(found.expire_date), 'the future expiry is echoed back').toBe('2099-12-31');
@@ -432,38 +449,39 @@ test.describe('HRM Recruitment — full pipeline lifecycle (admin)', () => {
         expect(String(attachMeta?.meta_value ?? ''), 'the uploaded CV attachment id is recorded').toBe(String(seededAttachId));
     });
 
-    test('REC-LC-06 move applicant across pipeline stages → wp_erp_application.stage updated', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        test.skip(!lifecycleApplicantId, 'no applicant from REC-LC-05');
+    test(
+        'REC-LC-06 move applicant across pipeline stages → wp_erp_application.stage updated',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async () => {
+            test.skip(!lifecycleApplicantId, 'no applicant from REC-LC-05');
 
-        const appRow = await oneRow<{ id: number }>(
-            `SELECT id FROM wp_erp_application WHERE applicant_id = ? AND job_id = ? ORDER BY id DESC LIMIT 1`,
-            [lifecycleApplicantId, lifecycleJobId],
-        );
-        const applicationId = String(appRow?.id ?? '');
-        test.skip(!applicationId, 'no application row to move');
+            const appRow = await oneRow<{ id: number }>(
+                `SELECT id FROM wp_erp_application WHERE applicant_id = ? AND job_id = ? ORDER BY id DESC LIMIT 1`,
+                [lifecycleApplicantId, lifecycleJobId],
+            );
+            const applicationId = String(appRow?.id ?? '');
+            test.skip(!applicationId, 'no application row to move');
 
-        const recHtml = await getHtml(REC_PAGE);
-        const formNonce = scrapeRecNonce(recHtml);
-        test.skip(!formNonce, 'recruitment_form_builder_nonce unavailable');
+            const recHtml = await getHtml(REC_PAGE);
+            const formNonce = scrapeRecNonce(recHtml);
+            test.skip(!formNonce, 'recruitment_form_builder_nonce unavailable');
 
-        // Move from the entry stage (1) to "Face to Face Interview" (3).
-        const targetStage = '3';
-        const result = await postAjax({
-            action: 'erp-rec-change_stage',
-            _wpnonce: formNonce,
-            application_id: applicationId,
-            stage_id: targetStage,
-        });
-        expect(result.status, 'change_stage answers 200 (envelope)').toBe(200);
-        expect(result.success, `stage change succeeded (body: ${result.raw.slice(0, 160)})`).toBe(true);
-        expect(JSON.stringify(result.data), 'stage-change confirmation returned').toContain('Stage changed successfully');
+            // Move from the entry stage (1) to "Face to Face Interview" (3).
+            const targetStage = '3';
+            const result = await postAjax({
+                action: 'erp-rec-change_stage',
+                _wpnonce: formNonce,
+                application_id: applicationId,
+                stage_id: targetStage,
+            });
+            expect(result.status, 'change_stage answers 200 (envelope)').toBe(200);
+            expect(result.success, `stage change succeeded (body: ${result.raw.slice(0, 160)})`).toBe(true);
+            expect(JSON.stringify(result.data), 'stage-change confirmation returned').toContain('Stage changed successfully');
 
-        const moved = await oneRow<{ stage: string }>(
-            `SELECT stage FROM wp_erp_application WHERE id = ? LIMIT 1`,
-            [applicationId],
-        );
-        expect(String(moved?.stage), 'the application moved to the target stage').toBe(targetStage);
-    });
+            const moved = await oneRow<{ stage: string }>(`SELECT stage FROM wp_erp_application WHERE id = ? LIMIT 1`, [applicationId]);
+            expect(String(moved?.stage), 'the application moved to the target stage').toBe(targetStage);
+        },
+    );
 
     test('REC-LC-07 change applicant status (shortlist) → applicant status meta updated', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         test.skip(!lifecycleApplicantId, 'no applicant from REC-LC-05');
@@ -531,10 +549,7 @@ test.describe('HRM Recruitment — full pipeline lifecycle (admin)', () => {
         expect(dup.success, 'a duplicate stage title is rejected').toBe(false);
         expect(JSON.stringify(dup.data), 'duplicate rejection message returned').toContain('Stage title already exist');
 
-        const count = await oneRow<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM wp_erp_application_stage WHERE title = ?`,
-            [stageTitle],
-        );
+        const count = await oneRow<{ c: number }>(`SELECT COUNT(*) AS c FROM wp_erp_application_stage WHERE title = ?`, [stageTitle]);
         expect(Number(count?.c), 'the duplicate was not inserted (still exactly one row)').toBe(1);
     });
 
@@ -558,10 +573,9 @@ test.describe('HRM Recruitment — full pipeline lifecycle (admin)', () => {
         expect(JSON.stringify(result.data), 'application-stage confirmation returned').toContain('Stage created successfully');
 
         // DB effect: a new stage row AND a relation row linking it to the job.
-        const stageRow = await oneRow<{ id: number }>(
-            `SELECT id FROM wp_erp_application_stage WHERE title = ? ORDER BY id DESC LIMIT 1`,
-            [stageTitle],
-        );
+        const stageRow = await oneRow<{ id: number }>(`SELECT id FROM wp_erp_application_stage WHERE title = ? ORDER BY id DESC LIMIT 1`, [
+            stageTitle,
+        ]);
         expect(stageRow, 'the new application stage row exists').toBeTruthy();
         const newStageId = String(stageRow?.id ?? '');
 

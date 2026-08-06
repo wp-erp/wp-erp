@@ -90,20 +90,24 @@ test.describe('Advanced Leave UI (pro, admin)', () => {
     // ALV-UI-04 — segregation fields render iff erp_pro_seg_leave === 'yes'.
     // Resilient: when the option is on, the 12 month inputs (incl. segre[decem])
     // must be present; otherwise we only assert the form still mounted (no fatal).
-    test('segregation policy fields render when the segregation setting is enabled', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
-        const leave = new AdvancedLeavePage(page);
-        await leave.goToNewPolicyForm();
+    test(
+        'segregation policy fields render when the segregation setting is enabled',
+        { tag: ['@pro', '@hrm', '@admin'] },
+        async ({ page }) => {
+            const leave = new AdvancedLeavePage(page);
+            await leave.goToNewPolicyForm();
 
-        if (await optionIsYes(proLeaveOptions.segregation)) {
-            await expect(page.locator(leave.pro.segregationJan)).toBeVisible({ timeout: 15_000 });
-            await expect(page.locator(leave.pro.segregationDec)).toHaveCount(1);
-            // 12 month inputs render in the segregation table.
-            await expect(page.locator(leave.pro.segregationInputs)).toHaveCount(12);
-        } else {
-            // Gating off → fields absent by design; the form must still be intact.
-            await expect(page.locator(leave.form.root)).toBeVisible();
-        }
-    });
+            if (await optionIsYes(proLeaveOptions.segregation)) {
+                await expect(page.locator(leave.pro.segregationJan)).toBeVisible({ timeout: 15_000 });
+                await expect(page.locator(leave.pro.segregationDec)).toHaveCount(1);
+                // 12 month inputs render in the segregation table.
+                await expect(page.locator(leave.pro.segregationInputs)).toHaveCount(12);
+            } else {
+                // Gating off → fields absent by design; the form must still be intact.
+                await expect(page.locator(leave.form.root)).toBeVisible();
+            }
+        },
+    );
 
     // ALV-UI-05 — accrual fields render iff erp_pro_accrual_leave === 'yes'.
     test('accrual policy fields render when the accrual setting is enabled', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {

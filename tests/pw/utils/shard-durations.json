@@ -1,161 +1,161 @@
 {
-  "generatedAt": "2026-08-06T06:29:34.386Z",
-  "shards": 1,
-  "specs": [
-    {
-      "file": "crm/crm.validation.spec.ts",
-      "ms": 50617,
-      "tests": 21
-    },
-    {
-      "file": "proIntegrations/proIntegrations.settings.spec.ts",
-      "ms": 36923,
-      "tests": 10
-    },
-    {
-      "file": "hrFrontend/hrFrontend.frontend.spec.ts",
-      "ms": 31315,
-      "tests": 10
-    },
-    {
-      "file": "core/core.crud.spec.ts",
-      "ms": 16058,
-      "tests": 15
-    },
-    {
-      "file": "crm/crm.crud.spec.ts",
-      "ms": 14469,
-      "tests": 14
-    },
-    {
-      "file": "advancedLeave/advancedLeave.spec.ts",
-      "ms": 14279,
-      "tests": 11
-    },
-    {
-      "file": "core/core.validation.spec.ts",
-      "ms": 13587,
-      "tests": 37
-    },
-    {
-      "file": "payroll/payroll.lifecycle.spec.ts",
-      "ms": 12571,
-      "tests": 15
-    },
-    {
-      "file": "payroll/payroll.spec.ts",
-      "ms": 12199,
-      "tests": 22
-    },
-    {
-      "file": "hrm/hrm.spec.ts",
-      "ms": 11987,
-      "tests": 10
-    },
-    {
-      "file": "training/training.spec.ts",
-      "ms": 11349,
-      "tests": 17
-    },
-    {
-      "file": "hrm/hrm.crud.spec.ts",
-      "ms": 10979,
-      "tests": 10
-    },
-    {
-      "file": "workflow/workflow.spec.ts",
-      "ms": 10878,
-      "tests": 20
-    },
-    {
-      "file": "asset/asset.lifecycle.spec.ts",
-      "ms": 10824,
-      "tests": 8
-    },
-    {
-      "file": "crm/crm.spec.ts",
-      "ms": 10638,
-      "tests": 11
-    },
-    {
-      "file": "accounting/accounting.spec.ts",
-      "ms": 10602,
-      "tests": 10
-    },
-    {
-      "file": "customField/customField.spec.ts",
-      "ms": 9715,
-      "tests": 12
-    },
-    {
-      "file": "workflow/workflow.execution.spec.ts",
-      "ms": 8954,
-      "tests": 18
-    },
-    {
-      "file": "asset/asset.spec.ts",
-      "ms": 8862,
-      "tests": 10
-    },
-    {
-      "file": "accounting/accounting.validation.spec.ts",
-      "ms": 7931,
-      "tests": 7
-    },
-    {
-      "file": "proIntegrations/proIntegrations.spec.ts",
-      "ms": 7704,
-      "tests": 11
-    },
-    {
-      "file": "attendance/attendance.spec.ts",
-      "ms": 7513,
-      "tests": 6
-    },
-    {
-      "file": "deals/deals.spec.ts",
-      "ms": 7267,
-      "tests": 9
-    },
-    {
-      "file": "accounting/accounting.crud.spec.ts",
-      "ms": 7237,
-      "tests": 5
-    },
-    {
-      "file": "integrations/integrations.spec.ts",
-      "ms": 6628,
-      "tests": 11
-    },
-    {
-      "file": "hrm/hrm.validation.spec.ts",
-      "ms": 6374,
-      "tests": 5
-    },
-    {
-      "file": "integrations/integrations.connect.spec.ts",
-      "ms": 6231,
-      "tests": 13
-    },
-    {
-      "file": "document/document.spec.ts",
-      "ms": 6041,
-      "tests": 5
-    },
-    {
-      "file": "recruitment/recruitment.spec.ts",
-      "ms": 4196,
-      "tests": 6
-    },
-    {
-      "file": "deals/deals.lifecycle.spec.ts",
-      "ms": 2402,
-      "tests": 20
-    },
-    {
-      "file": "sms/sms.lifecycle.spec.ts",
-      "ms": 1354,
-      "tests": 9
-    }
-  ]
+    "generatedAt": "2026-08-06T06:29:34.386Z",
+    "shards": 1,
+    "specs": [
+        {
+            "file": "crm/crm.validation.spec.ts",
+            "ms": 50617,
+            "tests": 21
+        },
+        {
+            "file": "proIntegrations/proIntegrations.settings.spec.ts",
+            "ms": 36923,
+            "tests": 10
+        },
+        {
+            "file": "hrFrontend/hrFrontend.frontend.spec.ts",
+            "ms": 31315,
+            "tests": 10
+        },
+        {
+            "file": "core/core.crud.spec.ts",
+            "ms": 16058,
+            "tests": 15
+        },
+        {
+            "file": "crm/crm.crud.spec.ts",
+            "ms": 14469,
+            "tests": 14
+        },
+        {
+            "file": "advancedLeave/advancedLeave.spec.ts",
+            "ms": 14279,
+            "tests": 11
+        },
+        {
+            "file": "core/core.validation.spec.ts",
+            "ms": 13587,
+            "tests": 37
+        },
+        {
+            "file": "payroll/payroll.lifecycle.spec.ts",
+            "ms": 12571,
+            "tests": 15
+        },
+        {
+            "file": "payroll/payroll.spec.ts",
+            "ms": 12199,
+            "tests": 22
+        },
+        {
+            "file": "hrm/hrm.spec.ts",
+            "ms": 11987,
+            "tests": 10
+        },
+        {
+            "file": "training/training.spec.ts",
+            "ms": 11349,
+            "tests": 17
+        },
+        {
+            "file": "hrm/hrm.crud.spec.ts",
+            "ms": 10979,
+            "tests": 10
+        },
+        {
+            "file": "workflow/workflow.spec.ts",
+            "ms": 10878,
+            "tests": 20
+        },
+        {
+            "file": "asset/asset.lifecycle.spec.ts",
+            "ms": 10824,
+            "tests": 8
+        },
+        {
+            "file": "crm/crm.spec.ts",
+            "ms": 10638,
+            "tests": 11
+        },
+        {
+            "file": "accounting/accounting.spec.ts",
+            "ms": 10602,
+            "tests": 10
+        },
+        {
+            "file": "customField/customField.spec.ts",
+            "ms": 9715,
+            "tests": 12
+        },
+        {
+            "file": "workflow/workflow.execution.spec.ts",
+            "ms": 8954,
+            "tests": 18
+        },
+        {
+            "file": "asset/asset.spec.ts",
+            "ms": 8862,
+            "tests": 10
+        },
+        {
+            "file": "accounting/accounting.validation.spec.ts",
+            "ms": 7931,
+            "tests": 7
+        },
+        {
+            "file": "proIntegrations/proIntegrations.spec.ts",
+            "ms": 7704,
+            "tests": 11
+        },
+        {
+            "file": "attendance/attendance.spec.ts",
+            "ms": 7513,
+            "tests": 6
+        },
+        {
+            "file": "deals/deals.spec.ts",
+            "ms": 7267,
+            "tests": 9
+        },
+        {
+            "file": "accounting/accounting.crud.spec.ts",
+            "ms": 7237,
+            "tests": 5
+        },
+        {
+            "file": "integrations/integrations.spec.ts",
+            "ms": 6628,
+            "tests": 11
+        },
+        {
+            "file": "hrm/hrm.validation.spec.ts",
+            "ms": 6374,
+            "tests": 5
+        },
+        {
+            "file": "integrations/integrations.connect.spec.ts",
+            "ms": 6231,
+            "tests": 13
+        },
+        {
+            "file": "document/document.spec.ts",
+            "ms": 6041,
+            "tests": 5
+        },
+        {
+            "file": "recruitment/recruitment.spec.ts",
+            "ms": 4196,
+            "tests": 6
+        },
+        {
+            "file": "deals/deals.lifecycle.spec.ts",
+            "ms": 2402,
+            "tests": 20
+        },
+        {
+            "file": "sms/sms.lifecycle.spec.ts",
+            "ms": 1354,
+            "tests": 9
+        }
+    ]
 }

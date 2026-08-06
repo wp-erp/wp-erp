@@ -133,48 +133,57 @@ test.describe('Inventory REST — inventory list (admin)', () => {
         }
     });
 
-    test('INV-EC-04 non-numeric per_page currently fatals (offset arithmetic on a string)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // KNOWN BUG: InventoryController::get_all_inventory_items() computes
-        //   'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
-        // at InventoryController.php:77 BEFORE any intval(). With per_page=abc (and
-        // page unset => null) PHP 8 throws
-        //   TypeError: Unsupported operand types: string * int
-        // so the endpoint returns 500, NOT the 200 + [] one might expect from
-        // intval('abc')===0 => "LIMIT 0". The string is never coerced — the multiply
-        // fatals first. See bug-reports/BUGS.md.
-        // Resilient philosophy: we do NOT assert an exact 500; we assert it is plainly
-        // NOT a clean success (and never a 200), which holds whether or not the bug is fixed.
-        const [resp, body] = await api.get(`${INVENTORY}?per_page=abc`, undefined, false);
-        expect(resp.status(), 'non-numeric per_page is not a clean success (KNOWN BUG: string * int fatal at InventoryController.php:77)').toBeGreaterThanOrEqual(400);
-        expect(resp.status(), 'non-numeric per_page never silently 200-OKs a list').not.toBe(200);
-        // A body is returned (the WP critical-error HTML page on the current 500).
-        expect(body, 'an error body is returned for the non-numeric per_page request').toBeTruthy();
-    });
+    test(
+        'INV-EC-04 non-numeric per_page currently fatals (offset arithmetic on a string)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // KNOWN BUG: InventoryController::get_all_inventory_items() computes
+            //   'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+            // at InventoryController.php:77 BEFORE any intval(). With per_page=abc (and
+            // page unset => null) PHP 8 throws
+            //   TypeError: Unsupported operand types: string * int
+            // so the endpoint returns 500, NOT the 200 + [] one might expect from
+            // intval('abc')===0 => "LIMIT 0". The string is never coerced — the multiply
+            // fatals first. See bug-reports/BUGS.md.
+            // Resilient philosophy: we do NOT assert an exact 500; we assert it is plainly
+            // NOT a clean success (and never a 200), which holds whether or not the bug is fixed.
+            const [resp, body] = await api.get(`${INVENTORY}?per_page=abc`, undefined, false);
+            expect(
+                resp.status(),
+                'non-numeric per_page is not a clean success (KNOWN BUG: string * int fatal at InventoryController.php:77)',
+            ).toBeGreaterThanOrEqual(400);
+            expect(resp.status(), 'non-numeric per_page never silently 200-OKs a list').not.toBe(200);
+            // A body is returned (the WP critical-error HTML page on the current 500).
+            expect(body, 'an error body is returned for the non-numeric per_page request').toBeTruthy();
+        },
+    );
 
-    test('INV-EC-05 list rows are only inventory-type products (product_type_id=1) — DB oracle', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(`${INVENTORY}?per_page=100&page=1`, undefined, false);
-        expect(resp.status(), 'inventory list must not 500').toBeLessThan(500);
-        if (resp.status() !== 200 || !Array.isArray(body) || body.length === 0) {
-            test.skip(true, 'no inventory rows to reconcile against the DB in this environment');
-            return;
-        }
+    test(
+        'INV-EC-05 list rows are only inventory-type products (product_type_id=1) — DB oracle',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(`${INVENTORY}?per_page=100&page=1`, undefined, false);
+            expect(resp.status(), 'inventory list must not 500').toBeLessThan(500);
+            if (resp.status() !== 200 || !Array.isArray(body) || body.length === 0) {
+                test.skip(true, 'no inventory rows to reconcile against the DB in this environment');
+                return;
+            }
 
-        // Oracle: the WHERE product_type_id=1 means every listed id must be type 1.
-        let dbRows: Array<{ id: number; product_type_id: number }> = [];
-        try {
-            dbRows = await dbUtils.dbQuery<{ id: number; product_type_id: number }>(
-                `SELECT id, product_type_id FROM ${PRODUCTS} WHERE product_type_id = 1`,
-            );
-        } catch {
-            test.skip(true, 'DB unavailable for the product-type oracle');
-            return;
-        }
-        const inventoryIds = new Set(dbRows.map((r) => Number(r.id)));
-        const allInventoryType = (body as Array<{ id?: number | string }>).every((r) =>
-            inventoryIds.has(Number(r?.id)),
-        );
-        expect(allInventoryType, 'every listed product is an inventory-type (product_type_id=1) product').toBe(true);
-    });
+            // Oracle: the WHERE product_type_id=1 means every listed id must be type 1.
+            let dbRows: Array<{ id: number; product_type_id: number }> = [];
+            try {
+                dbRows = await dbUtils.dbQuery<{ id: number; product_type_id: number }>(
+                    `SELECT id, product_type_id FROM ${PRODUCTS} WHERE product_type_id = 1`,
+                );
+            } catch {
+                test.skip(true, 'DB unavailable for the product-type oracle');
+                return;
+            }
+            const inventoryIds = new Set(dbRows.map(r => Number(r.id)));
+            const allInventoryType = (body as Array<{ id?: number | string }>).every(r => inventoryIds.has(Number(r?.id)));
+            expect(allInventoryType, 'every listed product is an inventory-type (product_type_id=1) product').toBe(true);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -195,45 +204,57 @@ test.describe('Inventory REST — stock overview (admin)', () => {
         expect(obj, 'object carries stock_out').toHaveProperty('stock_out');
     });
 
-    test('INV-HP-04 stock-overview honors a date window (dates are discarded by the query)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // NOTE: the helper builds $where from start_date but the final SQL ignores it,
-        // so dates never filter — both responses should be structurally identical.
-        const [resp, body] = await api.get(`${STOCK_OVERVIEW}?${SAMPLE_RANGE}`, undefined, false);
-        expect(resp.status(), 'dated stock-overview must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(body && typeof body === 'object' && !Array.isArray(body), 'dated stock-overview is an object').toBe(true);
-            expect(body as Record<string, unknown>, 'still carries stock_in').toHaveProperty('stock_in');
-        }
-    });
+    test(
+        'INV-HP-04 stock-overview honors a date window (dates are discarded by the query)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // NOTE: the helper builds $where from start_date but the final SQL ignores it,
+            // so dates never filter — both responses should be structurally identical.
+            const [resp, body] = await api.get(`${STOCK_OVERVIEW}?${SAMPLE_RANGE}`, undefined, false);
+            expect(resp.status(), 'dated stock-overview must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(body && typeof body === 'object' && !Array.isArray(body), 'dated stock-overview is an object').toBe(true);
+                expect(body as Record<string, unknown>, 'still carries stock_in').toHaveProperty('stock_in');
+            }
+        },
+    );
 
-    test('INV-EC-06 malformed start_date with empty end_date still answers 200 (where discarded)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(`${STOCK_OVERVIEW}?start_date=not-a-date`, undefined, false);
-        expect(resp.status(), 'malformed-date stock-overview must not 500').toBeLessThan(500);
-        if (resp.status() === 200) {
-            expect(body && typeof body === 'object' && !Array.isArray(body), 'still a single object').toBe(true);
-        }
-    });
+    test(
+        'INV-EC-06 malformed start_date with empty end_date still answers 200 (where discarded)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(`${STOCK_OVERVIEW}?start_date=not-a-date`, undefined, false);
+            expect(resp.status(), 'malformed-date stock-overview must not 500').toBeLessThan(500);
+            if (resp.status() === 200) {
+                expect(body && typeof body === 'object' && !Array.isArray(body), 'still a single object').toBe(true);
+            }
+        },
+    );
 
-    test('INV-EC-07 stock-overview reconciles with the product_details SUMs — DB oracle', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        const [resp, body] = await api.get(STOCK_OVERVIEW, undefined, false);
-        if (resp.status() !== 200 || !body || typeof body !== 'object' || Array.isArray(body)) {
-            test.skip(true, 'stock-overview unavailable to reconcile in this environment');
-            return;
-        }
+    test(
+        'INV-EC-07 stock-overview reconciles with the product_details SUMs — DB oracle',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            const [resp, body] = await api.get(STOCK_OVERVIEW, undefined, false);
+            if (resp.status() !== 200 || !body || typeof body !== 'object' || Array.isArray(body)) {
+                test.skip(true, 'stock-overview unavailable to reconcile in this environment');
+                return;
+            }
 
-        let dbRows: Array<{ stock_in: string | null; stock_out: string | null }> = [];
-        try {
-            dbRows = await dbUtils.dbQuery<{ stock_in: string | null; stock_out: string | null }>(
-                `SELECT SUM(stock_in) AS stock_in, SUM(stock_out) AS stock_out FROM ${PRODUCT_DETAILS}`,
-            );
-        } catch {
-            test.skip(true, 'DB unavailable for the stock-overview oracle');
-            return;
-        }
-        const dbIn = Number(dbRows[0]?.stock_in ?? 0);
-        const apiIn = Number((body as { stock_in?: number | string | null }).stock_in ?? 0);
-        expect(apiIn, 'API stock_in equals the DB SUM(stock_in)').toBe(dbIn);
-    });
+            let dbRows: Array<{ stock_in: string | null; stock_out: string | null }> = [];
+            try {
+                dbRows = await dbUtils.dbQuery<{ stock_in: string | null; stock_out: string | null }>(
+                    `SELECT SUM(stock_in) AS stock_in, SUM(stock_out) AS stock_out FROM ${PRODUCT_DETAILS}`,
+                );
+            } catch {
+                test.skip(true, 'DB unavailable for the stock-overview oracle');
+                return;
+            }
+            const dbIn = Number(dbRows[0]?.stock_in ?? 0);
+            const apiIn = Number((body as { stock_in?: number | string | null }).stock_in ?? 0);
+            expect(apiIn, 'API stock_in equals the DB SUM(stock_in)').toBe(dbIn);
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -340,16 +361,20 @@ test.describe('Inventory REST — reports (admin)', () => {
         }
     });
 
-    test('INV-EC-09 reports default their dates when none supplied (first-of-Jan / last-of-month)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // No dates => the helpers fill start/end => 200 with []/rows; a 500 would be a bug.
-        for (const url of [RPT_ITEM_LIST, RPT_ITEM_SUMMARY, RPT_PURCHASE, RPT_SALES]) {
-            const [resp, body] = await api.get(url, undefined, false);
-            expect(resp.status(), `dateless report ${url} must not 500`).toBeLessThan(500);
-            if (resp.status() === 200) {
-                expect(asRows(body), `dateless report ${url} answers an array`).not.toBeNull();
+    test(
+        'INV-EC-09 reports default their dates when none supplied (first-of-Jan / last-of-month)',
+        { tag: ['@pro', '@accounting', '@admin'] },
+        async () => {
+            // No dates => the helpers fill start/end => 200 with []/rows; a 500 would be a bug.
+            for (const url of [RPT_ITEM_LIST, RPT_ITEM_SUMMARY, RPT_PURCHASE, RPT_SALES]) {
+                const [resp, body] = await api.get(url, undefined, false);
+                expect(resp.status(), `dateless report ${url} must not 500`).toBeLessThan(500);
+                if (resp.status() === 200) {
+                    expect(asRows(body), `dateless report ${url} answers an array`).not.toBeNull();
+                }
             }
-        }
-    });
+        },
+    );
 
     test('INV-EC-10 malformed start_date is FY-snapped and still answers < 500', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
         // A non-matching FY date can leave start_date='' producing an odd BETWEEN;
@@ -405,13 +430,17 @@ test.describe('Inventory REST — accounting manager (positive baseline)', () =>
         }
     });
 
-    test('INV-AC-03 manager can reach the inventory reports (erp_ac_view_sales_summary)', { tag: ['@pro', '@accounting', '@manager'] }, async () => {
-        for (const url of [RPT_ITEM_LIST, RPT_ITEM_SUMMARY, RPT_PURCHASE, RPT_SALES]) {
-            const [resp] = await mgrApi.get(`${url}?${SAMPLE_RANGE}`, undefined, false);
-            expect([401, 403], `manager authorized for ${url}`).not.toContain(resp.status());
-            expect(resp.status(), `manager report ${url} must not 500`).toBeLessThan(500);
-        }
-    });
+    test(
+        'INV-AC-03 manager can reach the inventory reports (erp_ac_view_sales_summary)',
+        { tag: ['@pro', '@accounting', '@manager'] },
+        async () => {
+            for (const url of [RPT_ITEM_LIST, RPT_ITEM_SUMMARY, RPT_PURCHASE, RPT_SALES]) {
+                const [resp] = await mgrApi.get(`${url}?${SAMPLE_RANGE}`, undefined, false);
+                expect([401, 403], `manager authorized for ${url}`).not.toContain(resp.status());
+                expect(resp.status(), `manager report ${url} must not 500`).toBeLessThan(500);
+            }
+        },
+    );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

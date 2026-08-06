@@ -126,10 +126,7 @@ export class AssetPage {
         await this.openCategoryPopup();
         await this.page.locator(this.categoryModal.catName).fill(catName);
         await Promise.all([
-            this.page.waitForResponse(
-                r => r.url().includes('admin-ajax.php') && r.request().method() === 'POST',
-                { timeout: 30_000 },
-            ),
+            this.page.waitForResponse(r => r.url().includes('admin-ajax.php') && r.request().method() === 'POST', { timeout: 30_000 }),
             this.page.locator(this.categoryModal.submitBtn).click(),
         ]);
         return catName;
@@ -150,10 +147,7 @@ export class AssetPage {
 
     /** Look up category ids by exact name (used to confirm a UI insert landed). */
     static async findCategoryByName(catName: string): Promise<{ id: number }[]> {
-        return dbUtils.dbQuery<{ id: number }>(
-            `SELECT id FROM ${assetTables.category} WHERE cat_name = ? ORDER BY id DESC`,
-            [catName],
-        );
+        return dbUtils.dbQuery<{ id: number }>(`SELECT id FROM ${assetTables.category} WHERE cat_name = ? ORDER BY id DESC`, [catName]);
     }
 
     /**
@@ -163,10 +157,7 @@ export class AssetPage {
      * Returns the new id, or undefined if the insert id could not be resolved.
      */
     static async insertCategoryRow(catName: string): Promise<number | undefined> {
-        const result = await dbUtils.dbQuery<{ insertId?: number }>(
-            `INSERT INTO ${assetTables.category} (cat_name) VALUES (?)`,
-            [catName],
-        );
+        const result = await dbUtils.dbQuery<{ insertId?: number }>(`INSERT INTO ${assetTables.category} (cat_name) VALUES (?)`, [catName]);
         let id = (result as unknown as { insertId?: number }).insertId;
         if (!id) {
             const found = await AssetPage.findCategoryByName(catName);
@@ -234,21 +225,46 @@ export class AssetPage {
 
     // ── DB lookups for each lifecycle step (no REST) ──────────────────────────
 
-    static async findAssetByCode(itemCode: string): Promise<{ id: number; status: string; allottable: string; asset_type: string; parent: number }[]> {
+    static async findAssetByCode(
+        itemCode: string,
+    ): Promise<{ id: number; status: string; allottable: string; asset_type: string; parent: number }[]> {
         return dbUtils.dbQuery(
             `SELECT id, status, allottable, asset_type, parent FROM ${assetTables.assets} WHERE item_code = ? ORDER BY id DESC`,
             [itemCode],
         );
     }
 
-    static async findRequestByGroup(itemGroup: string | number): Promise<{ id: number; user_id: number; item_group: string; item_id: number | null; status: string; allott_id: number | null; given_item_id: number | null; reply_msg: string | null }[]> {
+    static async findRequestByGroup(itemGroup: string | number): Promise<
+        {
+            id: number;
+            user_id: number;
+            item_group: string;
+            item_id: number | null;
+            status: string;
+            allott_id: number | null;
+            given_item_id: number | null;
+            reply_msg: string | null;
+        }[]
+    > {
         return dbUtils.dbQuery(
             `SELECT id, user_id, item_group, item_id, status, allott_id, given_item_id, reply_msg FROM ${assetTables.request} WHERE item_group = ? ORDER BY id DESC`,
             [String(itemGroup)],
         );
     }
 
-    static async findHistoryByItem(itemId: string | number): Promise<{ id: number; status: string; category_id: number; item_group: string; item_id: number; allotted_to: number; date_given: string; date_return_real: string | null; return_note: string | null }[]> {
+    static async findHistoryByItem(itemId: string | number): Promise<
+        {
+            id: number;
+            status: string;
+            category_id: number;
+            item_group: string;
+            item_id: number;
+            allotted_to: number;
+            date_given: string;
+            date_return_real: string | null;
+            return_note: string | null;
+        }[]
+    > {
         return dbUtils.dbQuery(
             `SELECT id, status, category_id, item_group, item_id, allotted_to, date_given, date_return_real, return_note FROM ${assetTables.history} WHERE item_id = ? ORDER BY id DESC`,
             [String(itemId)],
@@ -256,10 +272,9 @@ export class AssetPage {
     }
 
     static async assetStatus(id: string | number): Promise<string | undefined> {
-        const rows = await dbUtils.dbQuery<{ status: string }>(
-            `SELECT status FROM ${assetTables.assets} WHERE id = ? LIMIT 1`,
-            [String(id)],
-        );
+        const rows = await dbUtils.dbQuery<{ status: string }>(`SELECT status FROM ${assetTables.assets} WHERE id = ? LIMIT 1`, [
+            String(id),
+        ]);
         return rows[0]?.status;
     }
 

@@ -74,7 +74,7 @@ export class PayrollPage {
         // pay-calendar.php:1
         root: '#pay-calendar-wrapper',
         heading: '#pay-calendar-wrapper > h1',
-        addNewBtn: "#pay-calendar-wrapper a.button.button-primary",
+        addNewBtn: '#pay-calendar-wrapper a.button.button-primary',
     } as const;
 
     readonly addForm = {
@@ -147,25 +147,20 @@ export class PayrollPage {
              WHERE table_schema = DATABASE() AND table_name = ?`,
             [table],
         );
-        return cols.map((c) =>
+        return cols.map(c =>
             String((c as Record<string, unknown>).COLUMN_NAME ?? (c as Record<string, unknown>).column_name).toLowerCase(),
         );
     }
 
     /** Count seeded payitems of a given type (Allowance|Deduction|Tax|Non-Taxable Payments). */
     static async payitemCountByType(type: string): Promise<number> {
-        const rows = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${PAYROLL_TABLES.payitem} WHERE type = ?`,
-            [type],
-        );
+        const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${PAYROLL_TABLES.payitem} WHERE type = ?`, [type]);
         return Number(rows[0]?.c ?? 0);
     }
 
     /** Total seeded payitems. */
     static async payitemTotal(): Promise<number> {
-        const rows = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${PAYROLL_TABLES.payitem}`,
-        );
+        const rows = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${PAYROLL_TABLES.payitem}`);
         return Number(rows[0]?.c ?? 0);
     }
 
@@ -203,17 +198,14 @@ export class PayrollPage {
 
     /** Map an employee onto a calendar (AjaxHandler.php:513-521). */
     static async insertCalendarEmployee(calendarId: number, empId: number): Promise<void> {
-        await dbUtils.dbQuery(
-            `INSERT INTO ${PAYROLL_TABLES.payCalendarEmployee} (pay_calendar_id, empid) VALUES (?, ?)`,
-            [calendarId, empId],
-        );
+        await dbUtils.dbQuery(`INSERT INTO ${PAYROLL_TABLES.payCalendarEmployee} (pay_calendar_id, empid) VALUES (?, ?)`, [
+            calendarId,
+            empId,
+        ]);
     }
 
     static async getPayCalendarsByName(name: string): Promise<Record<string, unknown>[]> {
-        return dbUtils.dbQuery<Record<string, unknown>>(
-            `SELECT * FROM ${PAYROLL_TABLES.payCalendar} WHERE pay_calendar_name = ?`,
-            [name],
-        );
+        return dbUtils.dbQuery<Record<string, unknown>>(`SELECT * FROM ${PAYROLL_TABLES.payCalendar} WHERE pay_calendar_name = ?`, [name]);
     }
 
     /** Remove a calendar and its child rows (the cleanup path remove_calendar uses). */
