@@ -72,11 +72,7 @@ class EmployeesController extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    $user_id = (int) $request['user_id'];
-                    $current_user_id = get_current_user_id();
-
-                    // Allow users to view their own profile or if they have erp_list_employee capability
-                    return ( $user_id === $current_user_id ) || current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_employee', (int) $request['user_id'] );
                 },
             ],
             [
