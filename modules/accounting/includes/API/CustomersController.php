@@ -399,11 +399,54 @@ class CustomersController extends \WeDevs\ERP\API\REST_Controller {
     public function get_transactions( $request ) {
         $id = (int) $request['id'];
 
-        $args['people_id'] = $id;
+        if ( ! $this->is_customer( $id ) ) {
+            return new WP_Error( 'rest_customer_invalid_id', __( 'Invalid customer id.', 'erp' ), [ 'status' => 404 ] );
+        }
+
+        $args = [
+            'people_id' => $id,
+        ];
 
         $transactions = erp_acct_get_people_transactions( $args );
 
         return new WP_REST_Response( $transactions, 200 );
+    }
+
+    /**
+     * Verify a people id actually belongs to a customer-type record.
+     *
+     * The transaction routes are gated only by erp_ac_view_customer, so without
+     * this check a customer viewer could read any people id's (vendor/employee)
+     * transaction history by changing the path id.
+     *
+     * @param int $people_id
+     *
+     * @return bool
+     */
+    protected function is_customer( $people_id ) {
+        global $wpdb;
+
+        if ( ! $people_id ) {
+            return false;
+        }
+
+        $customer_type_id = (int) $wpdb->get_var(
+            $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_people_types WHERE name = %s LIMIT 1", 'customer' )
+        );
+
+        if ( ! $customer_type_id ) {
+            return false;
+        }
+
+        $exists = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}erp_people_type_relations WHERE people_id = %d AND people_types_id = %d",
+                $people_id,
+                $customer_type_id
+            )
+        );
+
+        return $exists > 0;
     }
 
     /**
@@ -432,7 +475,12 @@ class CustomersController extends \WeDevs\ERP\API\REST_Controller {
      * @return array
      */
     public function filter_transactions( $request ) {
-        $id           = $request['id'];
+        $id = (int) $request['id'];
+
+        if ( ! $this->is_customer( $id ) ) {
+            return new WP_Error( 'rest_customer_invalid_id', __( 'Invalid customer id.', 'erp' ), [ 'status' => 404 ] );
+        }
+
         $start_date   = $request['start_date'];
         $end_date     = $request['end_date'];
         $args         = [

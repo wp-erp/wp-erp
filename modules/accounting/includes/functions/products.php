@@ -493,10 +493,14 @@ function erp_acct_validate_csv_data( $data ) {
                     case 'category_id':
 
                         if ( ! empty( $line[ $value ] ) ) {
+                            // CSV cell values are attacker-controlled; bind as integer to prevent SQL injection.
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_product_categories
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_product_categories
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -506,9 +510,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_product_types
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_product_types
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -518,9 +525,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_tax_categories
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_tax_categories
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -530,12 +540,15 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT people.id
-                                FROM {$wpdb->prefix}erp_peoples AS people
-                                LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
-                                ON people.id = rel.people_id
-                                WHERE people.id = {$line[ $value ]}
-                                AND rel.people_types_id = 4"
+                                $wpdb->prepare(
+                                    "SELECT people.id
+                                    FROM {$wpdb->prefix}erp_peoples AS people
+                                    LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
+                                    ON people.id = rel.people_id
+                                    WHERE people.id = %d
+                                    AND rel.people_types_id = 4",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -566,14 +579,17 @@ function erp_acct_validate_csv_data( $data ) {
                 }
 
                 if ( empty( $product_exists_id ) ) {
-                    $product_data[ $index ] .= "'{$value}',";
+                    // Escape each CSV-derived value; this VALUES fragment is later
+                    // concatenated into the bulk INSERT string, so quotes/backslashes
+                    // must be neutralised to prevent SQL injection.
+                    $product_data[ $index ] .= "'" . esc_sql( $value ) . "',";
                 } else {
                     $to_be_updated[ $product_exists_id ][ $key ] = $value;
                 }
             }
 
             if ( empty( $product_exists_id ) ) {
-                $product_data[ $index ] .= "'{$user}','{$curr_date}'";
+                $product_data[ $index ] .= "'" . esc_sql( $user ) . "','" . esc_sql( $curr_date ) . "'";
             } else {
                 unset( $product_data[ $index ] );
             }

@@ -23,6 +23,7 @@ export const endPoints = {
     designations: erp('hrm/designations'),
     designation: (id: string | number) => erp(`hrm/designations/${id}`),
     announcements: erp('hrm/announcements'),
+    employeePhotoUpload: erp('hrm/employees/upload'),
     leavePolicies: erp('hrm/leaves/policies'),
     leaveRequests: erp('hrm/leaves/requests'),
     leaveEntitlements: erp('hrm/leaves/entitlements'),
@@ -31,7 +32,10 @@ export const endPoints = {
 
     // Accounting (rest_base already embeds accounting/v1)
     acctCustomers: erp('accounting/v1/customers'),
+    acctCustomerTransactions: (id: string | number) => erp(`accounting/v1/customers/${id}/transactions`),
+    acctCustomerTransactionsFilter: (id: string | number) => erp(`accounting/v1/customers/${id}/transactions/filter`),
     acctVendors: erp('accounting/v1/vendors'),
+    acctVendorTransactions: (id: string | number) => erp(`accounting/v1/vendors/${id}/transactions`),
     acctPeople: erp('accounting/v1/people'),
     acctProducts: erp('accounting/v1/products'),
     acctProductCats: erp('accounting/v1/product-cats'),

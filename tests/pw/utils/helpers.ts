@@ -153,6 +153,33 @@ export async function getApiNonce(page: Page, landing = 'wp-admin/admin.php?page
 }
 
 /**
+ * Read WP ERP's localized admin-ajax nonces from an admin page the current user can
+ * reach. Core handlers verify `erp-nonce` (localized as `wpErp.nonce`, present on EVERY
+ * admin page via erp-script); HRM handlers verify `wp-erp-hr-nonce` (`wpErpHr.nonce`,
+ * only on HR pages); CRM handlers verify `wp-erp-crm-nonce` (`wpErpCrm.nonce`, only on
+ * CRM pages). A role that cannot reach a module's page yields '' for that module's nonce
+ * — callers must treat '' as "cannot exercise that role's cap gate" and skip, not fail.
+ */
+export async function getErpAjaxNonces(
+    page: Page,
+    landing = 'wp-admin/index.php',
+): Promise<{ core: string; hr: string; crm: string }> {
+    await page.goto(toPath(landing));
+    return page.evaluate(() => {
+        const w = window as unknown as {
+            wpErp?: { nonce?: string };
+            wpErpHr?: { nonce?: string };
+            wpErpCrm?: { nonce?: string };
+        };
+        return {
+            core: String(w.wpErp?.nonce ?? ''),
+            hr: String(w.wpErpHr?.nonce ?? ''),
+            crm: String(w.wpErpCrm?.nonce ?? ''),
+        };
+    });
+}
+
+/**
  * Whether an erp-pro module is active on the site under test. The active-module
  * list is captured into `ERP_PRO_ACTIVE_MODULES` by `_site.setup.ts`; @pro specs
  * use this to SKIP (not fail) when their module is inactive in the current env —
@@ -179,6 +206,7 @@ export const helpers = {
     ensureUser,
     login,
     getApiNonce,
+    getErpAjaxNonces,
     proModuleActive,
     BASE_URL,
     SERVER_URL,

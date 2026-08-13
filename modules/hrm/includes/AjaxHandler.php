@@ -849,7 +849,15 @@ class AjaxHandler {
 		$this->verify_hrm_nonce();
 
 		$employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-		$employee    = new Employee( $employee_id );
+
+		// Object-scoped authorization: erp_view_employee is mapped (erp_hr_map_meta_caps)
+		// to allow only the employee themselves or an HR manager, preventing any
+		// logged-in user from reading another employee's PII by id.
+		if ( ! current_user_can( 'erp_view_employee', $employee_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		$employee = new Employee( $employee_id );
 
 		if ( ! $employee->is_employee() ) {
 			$this->send_error( __( 'Employee does not exists.', 'erp' ) );
@@ -1496,9 +1504,20 @@ class AjaxHandler {
 			$this->send_error();
 		}
 
-		\WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->update( array( 'status' => 'read' ) );
-
+		// Only return content for an actual announcement post type — get_post()
+		// would otherwise disclose the title/content of any post (drafts, other CPTs).
 		$post = get_post( $post_id );
+
+		if ( ! $post || 'erp_hr_announcement' !== $post->post_type ) {
+			$this->send_error( __( 'Announcement not found.', 'erp' ) );
+		}
+
+		// Scope the read-status update to the current user's own recipient row,
+		// otherwise it flips the flag for every recipient of the announcement.
+		\WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )
+			->where( 'user_id', get_current_user_id() )
+			->update( array( 'status' => 'read' ) );
+
 		setup_postdata( $post );
 
 		$post_data = array(
@@ -1521,11 +1540,18 @@ class AjaxHandler {
 	public function birthday_wish() {
 		$this->verify_hrm_nonce();
 
+		// Sending birthday wishes is an HR-manager action (the widget that exposes
+		// this button is itself gated on erp_hr_manager); the nonce is not authorization.
+		if ( ! current_user_can( 'erp_hr_manager' ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$employee_user_id = ( isset( $_POST['employee_user_id'] ) ) ? intval( wp_unslash( $_POST['employee_user_id'] ) ) : '';
 
 		// To prevent sending wish multiple time
-		// set email already sent status: true
-		setcookie( $employee_user_id, true, strtotime( 'tomorrow' ) );
+		// set email already sent status: true. Use a namespaced cookie key rather
+		// than the bare user id.
+		setcookie( 'erp_hr_birthday_wish_' . $employee_user_id, true, strtotime( 'tomorrow' ) );
 
 		$emailer = wperp()->emailer->get_email( 'BirthdayWish' );
 
@@ -1585,9 +1611,18 @@ class AjaxHandler {
 	public function employee_delete_performance() {
 		$this->verify_hrm_nonce();
 
-		$id      = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-		$user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+		$id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
+		$performance = \WeDevs\ERP\HRM\Models\Performance::find( $id );
+
+		if ( ! $performance ) {
+			$this->send_error( __( 'Performance review does not exist.', 'erp' ) );
+		}
+
+		// Authorize against the employee the review actually belongs to, NOT a
+		// separate request parameter. Otherwise an attacker can pass a user_id
+		// they are allowed to manage while deleting any other employee's review.
+		$user_id            = (int) $performance->employee_id;
 		$department_lead_id = erp_hr_get_department_lead_by_user( $user_id );
 
 		// Check permission
@@ -1598,7 +1633,7 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		\WeDevs\ERP\HRM\Models\Performance::find( $id )->delete();
+		$performance->delete();
 
 		$this->send_success();
 	}
@@ -2173,6 +2208,14 @@ class AjaxHandler {
 		$user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 		$policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 		$status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'all';
+
+		// Object-scoped authorization: erp_view_employee is mapped to allow only
+		// the employee themselves or an HR manager, so a user cannot read another
+		// employee's leave history by changing employee_id (is_employee() below
+		// only validates the target, not the caller).
+		if ( ! current_user_can( 'erp_view_employee', $user_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
 
 		$args = array(
 			'f_year'  => $year,
