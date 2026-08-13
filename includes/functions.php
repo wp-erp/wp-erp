@@ -3063,34 +3063,170 @@ function erp_render_menu_header( $component ) {
 }
 
 /**
- * RSS feed
+ * Latest blog posts from wperp.com.
+ *
+ * Uses the WordPress REST API and falls back to the RSS feed. The return value
+ * mimics the SimpleXML feed structure ( $feed->channel->item[]->title / ->link )
+ * so existing templates keep working.
  *
  * @return object|false
  */
 function erp_web_feed() {
 	$transient_name = 'erp_web_feed_cache';
-	$cached_data = get_transient( $transient_name );
+	$cached_items   = get_transient( $transient_name );
 
-	if ( $cached_data !== false ) {
-		return simplexml_load_string( $cached_data );
+	if ( is_array( $cached_items ) ) {
+		return empty( $cached_items ) ? false : erp_build_web_feed( $cached_items );
 	}
 
-	$url = apply_filters( 'erp_web_feed_url', 'https://wperp.com/feed/' );
-	$args = array(
-		'timeout'   => 15,
-		'sslverify' => false,
+	$items = erp_fetch_web_feed_items_rest();
+
+	if ( empty( $items ) ) {
+		$items = erp_fetch_web_feed_items_rss();
+	}
+
+	if ( empty( $items ) ) {
+		// Cache the failure briefly so we don't hammer the endpoint on every page load.
+		set_transient( $transient_name, array(), HOUR_IN_SECONDS );
+
+		return false;
+	}
+
+	set_transient( $transient_name, $items, DAY_IN_SECONDS );
+
+	return erp_build_web_feed( $items );
+}
+
+/**
+ * Fetch the latest posts through the wperp.com REST API.
+ *
+ * @since 1.13.1
+ *
+ * @return array List of [ 'title' => string, 'link' => string ].
+ */
+function erp_fetch_web_feed_items_rest() {
+	$url = apply_filters(
+		'erp_web_feed_rest_url',
+		add_query_arg(
+			array(
+				'per_page' => 5,
+				'_fields'  => 'title,link',
+			),
+			'https://wperp.com/wp-json/wp/v2/posts'
+		)
 	);
 
-	$response = wp_remote_post( $url, $args );
+	$response = wp_remote_get(
+		$url,
+		array(
+			'timeout'   => 15,
+			'sslverify' => false,
+		)
+	);
 
-	$data = '';
-	if ( ! is_wp_error( $response ) ) {
-		$data = wp_remote_retrieve_body( $response );
-
-		set_transient( $transient_name, $data, DAY_IN_SECONDS );
+	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		return array();
 	}
 
-	return simplexml_load_string( $data );
+	$posts = json_decode( wp_remote_retrieve_body( $response ), true );
+
+	if ( ! is_array( $posts ) ) {
+		return array();
+	}
+
+	$items = array();
+
+	foreach ( $posts as $post ) {
+		if ( empty( $post['link'] ) ) {
+			continue;
+		}
+
+		$title = isset( $post['title']['rendered'] ) ? $post['title']['rendered'] : '';
+
+		$items[] = array(
+			'title' => html_entity_decode( wp_strip_all_tags( $title ), ENT_QUOTES, 'UTF-8' ),
+			'link'  => $post['link'],
+		);
+	}
+
+	return $items;
+}
+
+/**
+ * Fetch the latest posts through the wperp.com RSS feed.
+ *
+ * @since 1.13.1
+ *
+ * @return array List of [ 'title' => string, 'link' => string ].
+ */
+function erp_fetch_web_feed_items_rss() {
+	$url = apply_filters( 'erp_web_feed_url', 'https://wperp.com/feed/' );
+
+	$response = wp_remote_get(
+		$url,
+		array(
+			'timeout'   => 15,
+			'sslverify' => false,
+		)
+	);
+
+	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		return array();
+	}
+
+	$prev_state = libxml_use_internal_errors( true );
+	$feed       = simplexml_load_string( wp_remote_retrieve_body( $response ) );
+
+	libxml_clear_errors();
+	libxml_use_internal_errors( $prev_state );
+
+	if ( false === $feed || ! isset( $feed->channel->item ) ) {
+		return array();
+	}
+
+	$items = array();
+
+	foreach ( $feed->channel->item as $entry ) {
+		$link = (string) $entry->link;
+
+		if ( '' === $link ) {
+			continue;
+		}
+
+		$items[] = array(
+			'title' => (string) $entry->title,
+			'link'  => $link,
+		);
+	}
+
+	return array_slice( $items, 0, 5 );
+}
+
+/**
+ * Wrap feed items in a feed-shaped object for backward compatibility.
+ *
+ * @since 1.13.1
+ *
+ * @param array $items List of [ 'title' => string, 'link' => string ].
+ *
+ * @return object
+ */
+function erp_build_web_feed( $items ) {
+	$feed          = new stdClass();
+	$feed->channel = new stdClass();
+
+	$feed->channel->item = array_map(
+		function ( $item ) {
+			$entry        = new stdClass();
+			$entry->title = $item['title'];
+			$entry->link  = $item['link'];
+
+			return $entry;
+		},
+		$items
+	);
+
+	return $feed;
 }
 
 /**
