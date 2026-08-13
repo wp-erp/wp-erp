@@ -3100,7 +3100,7 @@ function erp_web_feed() {
 /**
  * Fetch the latest posts through the wperp.com REST API.
  *
- * @since 1.13.1
+ * @since 1.17.8
  *
  * @return array List of [ 'title' => string, 'link' => string ].
  */
@@ -3155,7 +3155,7 @@ function erp_fetch_web_feed_items_rest() {
 /**
  * Fetch the latest posts through the wperp.com RSS feed.
  *
- * @since 1.13.1
+ * @since 1.17.8
  *
  * @return array List of [ 'title' => string, 'link' => string ].
  */
@@ -3205,7 +3205,7 @@ function erp_fetch_web_feed_items_rss() {
 /**
  * Wrap feed items in a feed-shaped object for backward compatibility.
  *
- * @since 1.13.1
+ * @since 1.17.8
  *
  * @param array $items List of [ 'title' => string, 'link' => string ].
  *
