@@ -152,6 +152,18 @@ class Settings extends Template {
             'id'    => 'erp_hrm_hide_pay_rate',
             'desc'  => __( 'By default hide pay rate on employee profile.', 'erp' ),
         ];
+        $fields['miscellaneous'][] = [
+            'title'   => __( 'HR Admin Interface', 'erp' ),
+            'type'    => 'select',
+            'id'      => 'erp_hr_ui_engine',
+            'default' => 'auto',
+            'options' => [
+                'auto'  => __( 'Let each user choose', 'erp' ),
+                'react' => __( 'New interface for everyone', 'erp' ),
+                'vue'   => __( 'Classic interface for everyone', 'erp' ),
+            ],
+            'desc'    => __( 'Forcing an interface overrides every user\'s own choice. "Let each user choose" keeps the per-user switch, starting from the interface this site was installed with.', 'erp' ),
+        ];
         $fields['miscellaneous'][] =[
             'type'  => 'sectionend',
             'id'    => 'hrm_miscellaneous',

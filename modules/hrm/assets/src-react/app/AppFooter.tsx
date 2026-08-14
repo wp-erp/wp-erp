@@ -1,0 +1,36 @@
+/**
+ * Shell footer — bottom-of-page meta strip.
+ *
+ * Houses the "View legacy version" engine-switch link (relocated from the
+ * top bar) plus a small copyright line.
+ */
+
+import type { JSX } from 'react';
+
+import { LegacyLink } from '@/shared/components/TopBar/LegacyLink';
+import { __ } from '@/shared/i18n';
+
+export function AppFooter(): JSX.Element {
+	// Copyright year — a cosmetic label, not a company date, so the reader's
+	// clock is fine here (see `siteToday()` for the ones that matter).
+	const year    = new Date().getFullYear();
+	// Legacy parity: the old admin footer carried the plugin version, which is
+	// the first thing a support conversation asks for.
+	const version = window.__ERP_HR_BOOT__?.pluginVersion ?? '';
+
+	return (
+		<footer
+			role="contentinfo"
+			className="border-t border-border bg-card"
+		>
+			<div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center justify-between gap-3 px-6 py-3 text-xs text-muted-foreground">
+				<span>
+					{ __( '© ', 'erp' ) }{ year }{ ' ' }
+					{ __( 'WP-ERP HR', 'erp' ) }
+					{ version ? ` · v${ version }` : '' }
+				</span>
+				<LegacyLink />
+			</div>
+		</footer>
+	);
+}

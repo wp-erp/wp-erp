@@ -263,7 +263,25 @@ function erp_hr_get_gender_ratio_data() {
 function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
     global $wpdb;
 
-    $count         = 0;
+    $count = 0;
+
+    // Optimized month headcount: one COUNT instead of a per-employee DatePeriod
+    // loop. The dashboard calls this 12× (one per chart month); the old loop was
+    // O(employees × months-since-hire) and caused 504 gateway timeouts.
+    if ( 'month' === $query_type ) {
+        $month_start = $date . '-01';
+        $month_end   = gmdate( 'Y-m-t', strtotime( $month_start ) );
+        $dept_sql    = $dept ? $wpdb->prepare( ' AND department = %d', (int) $dept ) : '';
+
+        return (int) $wpdb->get_var(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees
+             WHERE hiring_date IS NOT NULL AND hiring_date <> '0000-00-00'
+               AND hiring_date <= '" . esc_sql( $month_end ) . "'
+               AND ( termination_date IS NULL OR termination_date = '0000-00-00' OR termination_date >= '" . esc_sql( $month_start ) . "' )
+               {$dept_sql}"
+        );
+    }
+
     $all_user_data = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date, status FROM {$wpdb->prefix}erp_hr_employees ", ARRAY_A );
 
     if ( 'date' == $query_type ) {

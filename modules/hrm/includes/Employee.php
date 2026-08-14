@@ -719,11 +719,16 @@ class Employee {
             return true;
         }
 
-        if ( $this->erp_user ) {
-            return true;
-        }
-
-        return false;
+        // `$this->erp_user` is *always* an Employee model instance — the
+        // constructor seeds an empty one before any lookup runs — so a bare
+        // truthiness check was true for every id, including ids with no row in
+        // `erp_hr_employees` at all. That made this method, and therefore the
+        // ~40 `if ( ! $employee->is_employee() )` guards built on it, answer
+        // "yes" unconditionally. `exists` is set by Eloquent only once the
+        // model has been hydrated from the table, which is what being an
+        // employee actually means. `withTrashed()` in the loader keeps
+        // soft-deleted employees hydrated, so they still count, as before.
+        return (bool) ( $this->erp_user && $this->erp_user->exists );
     }
 
     /**
@@ -868,7 +873,29 @@ class Employee {
             $name[] = $this->last_name;
         }
 
-        return implode( ' ', $name );
+        $full_name = implode( ' ', $name );
+
+        if ( '' !== $full_name ) {
+            return $full_name;
+        }
+
+        // An employee imported or created without first/last name meta has only a
+        // `display_name`. Returning '' for them made the record invisible in every
+        // consumer that labels a row by `full_name` — the legacy screens read
+        // `display_name` straight from the users table and so never showed the gap.
+        $user = $this->user_id ? get_userdata( $this->user_id ) : null;
+
+        if ( ! $user ) {
+            return '';
+        }
+
+        foreach ( [ $user->display_name, $user->user_login, $user->user_email ] as $fallback ) {
+            if ( '' !== (string) $fallback ) {
+                return (string) $fallback;
+            }
+        }
+
+        return '';
     }
 
     /**

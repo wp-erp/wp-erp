@@ -130,7 +130,12 @@ function erp_hr_get_employees( $args = [] ) {
 
         if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
             $arg_s     = $args['s'];
-            $employees = $employees->where( 'display_name', 'LIKE', "%$arg_s%" );
+            // Match the name or the HR Employee ID (grouped so it ANDs with the
+            // status / department / designation filters above).
+            $employees = $employees->where( function ( $query ) use ( $arg_s, $employee_tbl ) {
+                $query->where( 'display_name', 'LIKE', "%$arg_s%" )
+                      ->orWhere( $employee_tbl . '.employee_id', 'LIKE', "%$arg_s%" );
+            } );
         }
 
         if ( 'employee_name' === $args['orderby'] ) {
@@ -822,6 +827,13 @@ function erp_hr_employee_tab_url( $tab, $employee_id ) {
 /**
  * Get Employee Announcement List
  *
+ * Published announcements only. The assignment row in `erp_hr_announcement` is
+ * written once and never revisited, so without this condition an announcement
+ * still in draft — or one trashed precisely to retract it — kept being served
+ * to the assigned employee, title and body alike. The manager-side listing has
+ * always passed `post_status => 'publish'`; only this employee-side query did
+ * not.
+ *
  * @since 0.1
  *
  * @param int $user_id
@@ -833,6 +845,7 @@ function erp_hr_employee_dashboard_announcement( $user_id ) {
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Announcement::join( $wpdb->posts, 'post_id', '=', $wpdb->posts . '.ID' )
         ->where( 'user_id', '=', $user_id )
+        ->where( $wpdb->posts . '.post_status', '=', 'publish' )
         ->orderby( $wpdb->posts . '.post_date', 'desc' )
         ->take( 8 )
         ->get()
