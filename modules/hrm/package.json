@@ -8,7 +8,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@wedevs/plugin-ui"
+      "@wedevs/plugin-ui",
+      "@wedevs/plugin-ui@https://codeload.github.com/getdokan/plugin-ui/tar.gz/f5d308f31543a376eca856c97104753550918eed"
     ]
   },
   "overrides": {
@@ -28,7 +29,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
-    "@wedevs/plugin-ui": "github:getdokan/plugin-ui",
+    "@wedevs/plugin-ui": "github:getdokan/plugin-ui#f5d308f31543a376eca856c97104753550918eed",
     "@wordpress/api-fetch": "^7.32.0",
     "@wordpress/components": "^30.5.0",
     "@wordpress/data": "^10.32.0",
