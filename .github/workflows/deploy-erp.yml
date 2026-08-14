@@ -100,19 +100,20 @@ jobs:
           SLUG: erp # wp.org slug differs from repo name (wp-erp)
       # Only a tag push on the org repo publishes. Fork runs and manual dispatches
       # stop at the zip artifact above.
-      # Release rehearsal. deploy.sh in 10up/action-wordpress-plugin-deploy@stable
+      # Payload check. deploy.sh in 10up/action-wordpress-plugin-deploy@stable
       # assembles what goes to .org with exactly this rsync when a .distignore is
       # present (deploy.sh:120-124), so running it here proves the .org payload
-      # without SVN, credentials or a commit. The action itself can't be dry-run
-      # from a fork: @stable has no dry-run input and checks SVN credentials
-      # before anything else.
+      # before the deploy step gets it — without SVN, credentials or a commit.
+      # (The action itself can't be dry-run: @stable has no dry-run input and
+      # checks SVN credentials before anything else.)
       #
       # This is the check that matters for React: dist-react is gitignored, and
       # it only reaches .org because .distignore exists. Remove .distignore and
       # deploy.sh falls back to `git archive HEAD`, which would ship a plugin
       # with no React admin and no error.
-      - name: Rehearse the wp.org file assembly
-        if: github.event_name == 'workflow_dispatch'
+      # Runs on every event, dispatch and tag push alike, so a real release also
+      # has to prove its payload before anything reaches SVN.
+      - name: Verify the wp.org payload before deploy
         run: |
           TRUNK="${{ runner.temp }}/trunk"
           mkdir -p "$TRUNK"
