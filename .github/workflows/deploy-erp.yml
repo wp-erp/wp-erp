@@ -3,6 +3,10 @@ on:
   push:
     tags:
       - "*"
+  # Manual run: builds Vue + React and uploads the zip as a run artifact. The
+  # WordPress.org deploy step below is skipped, so a dispatch (on a fork or on
+  # the org repo) can never publish a release.
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -41,6 +45,13 @@ jobs:
       - name: Build HR React admin
         run: npm run build:react
 
+      # Back to Node 12 for the POT step: makepot runs wpvuei18n, which belongs to
+      # the legacy Node 12 toolchain. (Its makepot:react half is wp-cli/PHP and is
+      # Node-agnostic, but it has to run after the React build so dist-react exists.)
+      - name: Restore Node.js 12.1.0 for tooling
+        uses: actions/setup-node@v4
+        with:
+          node-version: '12.1.0'
       - name: Generate POT
         run: npm run makepot
       - name: Composer install and build
@@ -52,7 +63,10 @@ jobs:
           retention-days: 5
         env:
           SLUG: erp # wp.org slug differs from repo name (wp-erp)
+      # Only a tag push on the org repo publishes. Fork runs and manual dispatches
+      # stop at the zip artifact above.
       - name: WordPress Plugin Deploy
+        if: github.event_name == 'push' && github.repository == 'wp-erp/wp-erp'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
           dry-run: false
