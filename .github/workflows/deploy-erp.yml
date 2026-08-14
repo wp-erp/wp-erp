@@ -74,6 +74,44 @@ jobs:
           SLUG: erp # wp.org slug differs from repo name (wp-erp)
       # Only a tag push on the org repo publishes. Fork runs and manual dispatches
       # stop at the zip artifact above.
+      # Release rehearsal. A manual dispatch runs the very same deploy action in
+      # dry-run mode: it checks out the .org SVN repo and stages trunk through
+      # rsync + .distignore exactly as a real release does, then stops before the
+      # commit. This is what proves the wp.org path ships the CI-built React —
+      # dist-react is gitignored, and the action only picks gitignored files up
+      # because .distignore exists (without it, it falls back to `git archive`
+      # and the React admin would be silently missing from the .org zip).
+      - name: WordPress Plugin Deploy (dry run)
+        if: github.event_name == 'workflow_dispatch'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          dry-run: true
+        env:
+          SLUG: erp
+          ASSETS_DIR: .wordpress-org
+          VERSION: 0.0.0-dry-run
+
+      - name: Verify what the dry run staged for wp.org
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          TRUNK="$HOME/svn-erp/trunk"
+          test -d "$TRUNK" || { echo "ERROR: nothing staged at $TRUNK"; exit 1; }
+
+          react=$(ls "$TRUNK"/modules/hrm/assets/dist-react/*.js 2>/dev/null | wc -l)
+          vue=$(ls "$TRUNK"/assets/js/*.js 2>/dev/null | wc -l)
+          echo "staged files : $(find "$TRUNK" -type f | wc -l)"
+          echo "react bundles: $react"
+          echo "vue bundles  : $vue"
+
+          [ "$react" -gt 0 ] || { echo "ERROR: no React bundles staged for wp.org"; exit 1; }
+          [ "$vue"   -gt 0 ] || { echo "ERROR: no Vue bundles staged for wp.org"; exit 1; }
+
+          for p in node_modules src-react; do
+            n=$(find "$TRUNK" -path "*/$p/*" | wc -l)
+            echo "$p entries : $n"
+            [ "$n" -eq 0 ] || { echo "ERROR: $p leaked into trunk"; exit 1; }
+          done
+
       - name: WordPress Plugin Deploy
         if: github.event_name == 'push' && github.repository == 'wp-erp/wp-erp'
         uses: 10up/action-wordpress-plugin-deploy@stable
