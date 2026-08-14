@@ -746,9 +746,16 @@
                     }
 
                     $purchased_module = '';
+                    $module_licensed  = false;
 
                     if ( $is_pro_active ) {
-                        if ( $module->is_pro || in_array( $module->path, $my_modules ) ) {
+                        if ( method_exists( wp_erp_pro()->module, 'is_module_licensed' ) ) {
+                            $module_licensed = wp_erp_pro()->module->is_module_licensed( $module->path, $module->is_pro, $my_modules );
+                        } else {
+                            $module_licensed = $module->is_pro || in_array( $module->path, $my_modules );
+                        }
+
+                        if ( $module_licensed ) {
                             $purchased_module = 'purchased';
                         }
                     }
@@ -787,7 +794,7 @@
                                     <a class="doc_link" href="<?php echo esc_url( $module->doc_link ); ?>" target="_blank"><?php esc_html_e( 'Docs', 'erp' ); ?></a>
                                 </div>
                                 <div class="erp-links">
-                                    <?php if ( $is_pro_active && ( $module->is_pro || in_array( $module->path, $my_modules ) ) ) : ?>
+                                    <?php if ( $is_pro_active && $module_licensed ) : ?>
                                         <label class="switch">
                                             <input class="extension_action" type="checkbox" <?php echo esc_attr( $checked ); ?>
                                                    data-module-id="<?php echo esc_attr( $module->id ); ?>">

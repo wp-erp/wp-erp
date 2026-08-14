@@ -5,7 +5,7 @@ Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.7
+Stable tag: 1.17.8
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -202,7 +202,7 @@ Need more control over how your business runs? Add any of these premium extensio
 👉 [How to Translate WordPress ERP to Your Favorite Languages Easily](https://wperp.com/65662/how-to-translate-wordpress-erp-to-your-favorite-languages-easily/)
 👉 [How to Install ERP on Your WordPress Site (with Configurations)](https://wperp.com/62945/how-to-install-wperp-on-wordpress-easy-guide/)
 👉 [A Beginner’s Guide to Implement ERP System on WordPress (Free)](https://wperp.com/13483/free-erp-system-wordpress/)
-    
+
 = VISIT OUR WEBSITE TO LEARN MORE =
 ➡️ [ERP, Inc.](https://wperp.com/) ⬅️
 
@@ -327,10 +327,16 @@ We strive to respond to all queries within 12 hours. Our response time may be ju
 It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured of the best service.
 
 == Changelog ==
+= v1.17.8 → Aug 13, 2026
+--------------------------
+* [Fixed] The "Latest ERP Blogs" dashboard widget printed libxml parser warnings when wperp.com returned a non-feed response, and cached that broken response for 24 hours.
+* [Fixed] Validate CRM inbound email attachment filenames.
+* [Enhancement] The dashboard blog widget now reads posts from the wperp.com REST API, falls back to the RSS feed, and caches failures for one hour instead of a full day.
+
 = v1.17.7 → Jul 16, 2026
 --------------------------
-* [Fixed] Added a capability check to the company location creation AJAX handler (CVE-2026-15349) [#1629](https://github.com/wp-erp/wp-erp/pull/1629).
-* [Enhancement] Hide the 'Upgrade to Pro' plugin action link when ERP Pro is active [#1617](https://github.com/wp-erp/wp-erp/pull/1617).
+* [Fixed] Added a capability check to the company location creation AJAX handler Researcher: PRISM (via Wordfence)
+* [Enhancement] Hide the 'Upgrade to Pro' plugin action link when ERP Pro is active.
 
 = v1.17.6 → Jul 7, 2026
 --------------------------
