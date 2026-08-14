@@ -66,6 +66,32 @@ jobs:
       - name: Composer install and build
         run: |
           composer install --no-dev --optimize-autoloader
+      # Release gate. Nothing gets zipped or deployed unless the React admin is
+      # actually built: every entry's .asset.php must have a real .js beside it.
+      # build-react.sh only checks that *some* non-empty .js exists, which would
+      # still pass if an entry silently dropped out.
+      - name: Verify the React admin is built
+        run: |
+          DIST=modules/hrm/assets/dist-react
+          test -d "$DIST" || { echo "ERROR: $DIST missing — the React build did not run"; exit 1; }
+
+          fail=0
+          for entry in employees hr-globals vendor; do
+            js="$DIST/$entry.js"
+            asset="$DIST/$entry.asset.php"
+            if [ ! -s "$js" ] || [ ! -s "$asset" ]; then
+              echo "ERROR: missing or empty $entry bundle ($js / $asset)"; fail=1; continue
+            fi
+            size=$(wc -c < "$js")
+            if [ "$size" -lt 1024 ]; then
+              echo "ERROR: $js is only ${size} bytes — a stub, not a build"; fail=1; continue
+            fi
+            echo "ok: $entry.js ${size} bytes"
+          done
+
+          echo "total dist-react js: $(ls "$DIST"/*.js 2>/dev/null | wc -l)"
+          [ "$fail" -eq 0 ] || { echo "React build not release-ready — refusing to package or deploy"; exit 1; }
+
       - name: Generate zip
         uses: 10up/action-wordpress-plugin-build-zip@stable
         with:
