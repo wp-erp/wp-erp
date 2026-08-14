@@ -43,6 +43,15 @@ jobs:
         with:
           node-version: '24'
       - name: Build HR React admin
+        env:
+          # pnpm/action-setup keeps its store under
+          # /home/runner/setup-pnpm/node_modules/.bin/store, and preparing the
+          # git-hosted @wedevs/plugin-ui builds it inside that store. wp-scripts'
+          # webpack config excludes every path containing node_modules from its
+          # TS loader, so the package fails to parse its own src/index.ts there.
+          # Reproduced locally: same commit builds clean in a normal path and
+          # fails identically under a node_modules path.
+          npm_config_store_dir: ${{ runner.temp }}/pnpm-store
         run: npm run build:react
 
       # Back to Node 12 for the POT step: makepot runs wpvuei18n, which belongs to
