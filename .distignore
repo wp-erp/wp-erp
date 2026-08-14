@@ -4,6 +4,9 @@
 /.wordpress-org
 /zipfile
 /node_modules
+# Unanchored, so it also drops the React app's modules/hrm/node_modules —
+# which is ~276MB in the built zip when only /node_modules is listed.
+node_modules
 /tests
 /vendor/bin
 /vendor/google/apiclient/examples
@@ -26,6 +29,7 @@
 /modules/hrm/tsconfig.json
 /modules/hrm/package.json
 /modules/hrm/package-lock.json
+/modules/hrm/pnpm-lock.yaml
 /modules/hrm/.npmrc
 /modules/hrm/.nvmrc
 
