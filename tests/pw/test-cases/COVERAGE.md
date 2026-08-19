@@ -397,6 +397,80 @@ genuinely lives.
   modal, which belongs with the single-deal pass.
 - **Deal ownership between agents** — see the authorization note above.
 
+### CRM — Single deal (10 cases, all green — 2 of them known-defect guards)
+
+`sub-section=all-deals&action=view-deal&id=N`: the largest surface in Deals, and where four of the
+five earlier Deals bugs live. An editable header (title, value, owner, pipeline, expected close
+date), a clickable stage bar, Won / Lost / Trash controls, five sidebar boxes, a four-tab composer
+(Add activity, Take notes, Send Mail, Upload Files), competitors, and a six-tab timeline.
+
+Covered: the page renders its seven boxes, four composer tabs and six timeline tabs with the deal's
+own title and formatted value; a note is written through the Trix composer and lands in
+`erp_crm_deals_notes` and in the Notes timeline; a competitor is added through its modal and lands in
+`erp_crm_deals_competitors`; clicking the stage bar moves the deal and the stored stage matches the
+clicked position; Won stamps `won_at` and swaps the buttons to Reopen, and Reopen clears it; Trash is
+a SOFT delete (`deleted_at` stamped, row kept) and the deal leaves the board; the page is closed to an
+employee; and a script payload in a note never becomes executable markup.
+
+**Two pre-existing defects re-verified on 1.7.0 — both still Open, and both were NEVER POSTED to
+GitHub when filed on 2026-07-21 against 1.6.0:**
+
+- **ERP-043** — a deal's stage history should hold exactly ONE open (`out IS NULL`) row, naming the
+  stage the deal is in. Measured on a deal at `Demo Scheduled`: **4 open rows**, naming Proposal Made,
+  Lead In, Contact Made and Demo Scheduled. `save_deal()` still rebuilds history from an unscoped
+  `PipelineStageModel::get()` (`Deals.php:611`). Carried as a `test.fail()` guard. **Distinct from
+  ERP-144**: this is the COUNT of open rows, ERP-144 is WHICH stages they name — one survives a fix to
+  the other.
+- **ERP-044** — `erp_deals_delete_competitor` as a CRM agent returns **HTTP 500, 3/3**, body
+  `<p>There has been a critical error on this website.</p>`. Unchanged in 1.7.0:
+  `delete_competitor()` passes `CompetitorModel::where(...)->get()` — a Collection — to
+  `is_user_can_delete_competitor()`, which reads `$competitor->created_by`. Admins and managers
+  short-circuit one line above and never reach it. **One detail the original report does not have:**
+  it fatals on a competitor id that does not exist either, because `empty($competitor)` is false for
+  an empty Collection — so the intended `"Invalid competitor"` refusal is dead code by the same
+  mechanism. Carried as a `test.fail()` guard asserting only that the module ANSWERS rather than
+  fatals; a refusal on ownership grounds would be a legitimate answer and would still pass.
+
+**Traps paid for here:**
+
+1. **The page's ids are Vue `_uid` counters** — `activity-form-22`, `erp-deal-note-24`,
+   `competitor-form-16`. They were stable across reloads when measured, but they are a render-order
+   artifact, not a contract. Everything anchors on classes instead.
+2. **The stage bar's `tooltip-title` is NOT the stage name on this page.** It is a composed history
+   string ("Lead In 0 days ($500.00)"), unlike the Add New Deal modal where it is the bare title.
+   Stages are addressed by index here.
+3. **A dump taken with `innerText` lies about text-transformed labels.** The timeline tabs render as
+   `ALL / ACTIVITIES / NOTES …` and I wrote the constant that way; the DOM text is `All / Activities /
+   Notes`, uppercased by CSS. `textContent` — and therefore every Playwright text API — sees the real
+   casing. The assertion caught it.
+4. **`erp_crm_deals_notes` stores the body in `note`, not `content`.** Assumed, and the query failed
+   loudly, which is the right way for that to go wrong.
+5. **Notes are Trix a third time** (CRM contact feed, deals note editor). Type, never `fill()`.
+
+**A cross-file cleanup collision caught BEFORE it caused red — the fourth of this class.**
+`deals.spec.ts` was calling `cleanupDeals()` with the default `pwerp` marker, which matches every
+suite-created deal including `singleDeal.spec.ts`'s. Four workers run in parallel, so the two files
+overlap in time and the deals spec's `afterAll` would have wiped rows the single-deal spec was
+mid-assertion on. Both files now carry their own marker — `pwerp_deal` and `pwerp_sd`. Same lesson as
+traps 21, 22 and 28: **any spec cleaning a shared table scopes to its own marker; the unscoped default
+belongs to `cleanupAll()` only.** Worth noting it was found by reading, not by a failure.
+
+**Not covered on the single-deal page, and why:**
+
+- **The Send Mail composer** — it sends real mail. Same decision as the CRM contact feed's Email tab.
+- **Upload Files / attachments**, which is ERP-066's territory (an attachment row written for a
+  non-existent media id). Needs a media fixture and its own pass.
+- **The Add activity composer and Open Activities** — activity creation, completion and the activity
+  modal. Adjacent to the `activities` sub-section, better done together.
+- **Lost**, and the lost-reason modal — `erp_crm_deals_lost_reasons` is seeded empty, so the path
+  needs a reason created through ERP Settings first. Won and Reopen ARE covered.
+- **Restore and permanent Delete** from the trashed state, and the Trashed deals board filter.
+- **Participants and Agents** beyond rendering their empty boxes — both need a second CRM user and
+  belong with the agent/manager visibility pass.
+- **The editable header popovers** (title, value, owner, pipeline switch, expected close date).
+- **ERP-045** (cross-pipeline stage transfer on delete) — needs a second pipeline, deliberately left
+  to the pipeline-administration pass so it is not confused with ERP-043 or ERP-144.
+
 ### ERP-144 → erp-pro#959 — the default pipeline is seeded out of order, and it is not cosmetic (filed 2026-08-19)
 
 `table-data.php:26` seeds `Proposal Made` with `order = 0` while Lead In..Negotiations Started get

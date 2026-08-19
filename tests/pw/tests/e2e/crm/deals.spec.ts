@@ -21,7 +21,7 @@ test.describe('CRM — Deals @pro', () => {
     let page: DealsPage;
 
     test.beforeAll(async () => {
-        await cleanupDeals();
+        await cleanupDeals('pwerp_deal');
     });
 
     test.beforeEach(async ({ page: p }) => {
@@ -29,7 +29,7 @@ test.describe('CRM — Deals @pro', () => {
     });
 
     test.afterAll(async () => {
-        await cleanupDeals();
+        await cleanupDeals('pwerp_deal');
         await closeDb();
     });
 
