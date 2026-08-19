@@ -1,5 +1,5 @@
 import { test as setup } from '@utils/test';
-import { login, getApiNonce, createEnvVar, ensureUser } from '@utils/helpers';
+import { login, getApiNonce, createEnvVar, ensureUser, ensureUserWithRoles } from '@utils/helpers';
 import { data } from '@utils/testData';
 
 /**
@@ -26,6 +26,17 @@ setup.describe('authentication & role users', () => {
             const id = ensureUser(u.username, u.email, u.role, password);
             if (id) createEnvVar(u.idKey, id);
         }
+
+        // The CRM agent is deliberately a *subscriber* with the CRM agent role layered
+        // on top — the exact low-privilege combination reported in erp-pro#872.
+        const agentId = ensureUserWithRoles(
+            data.users.crmAgent.username,
+            'crm_agent1@example.com',
+            'subscriber',
+            ['erp_crm_agent'],
+            password,
+        );
+        if (agentId) createEnvVar('CRM_AGENT_ID', agentId);
     });
 
     setup('authenticate HR manager', { tag: ['@lite'] }, async ({ page }) => {
@@ -52,5 +63,11 @@ setup.describe('authentication & role users', () => {
     });
     setup('authenticate Employee', { tag: ['@lite'] }, async ({ page }) => {
         await login(page, data.users.employee.username, data.users.employee.password, data.auth.employeeFile);
+    });
+    setup('authenticate CRM agent', { tag: ['@lite'] }, async ({ page }) => {
+        await login(page, data.users.crmAgent.username, data.users.crmAgent.password, data.auth.crmAgentFile);
+        // The agent reaches the CRM screens, so read its own nonce from erp-crm.
+        const nonce = await getApiNonce(page, 'wp-admin/admin.php?page=erp-crm');
+        if (nonce) createEnvVar('CRM_AGENT_NONCE', nonce);
     });
 });

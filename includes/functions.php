@@ -2651,6 +2651,7 @@ function erp_array_flatten( $array ) {
  *
  * @since 1.3.1 function has been from crm
  * @since 1.2.4
+ * @since 1.17.9 Roles granting capabilities the current user does not have are removed
  *
  * @return array
  */
@@ -2664,9 +2665,85 @@ function erp_get_editable_roles() {
 		unset( $wp_roles['administrator'] );
 	}
 
+	// Prevent privilege escalation: a user must never be able to assign a role
+	// that holds capabilities the user does not have themselves.
+	foreach ( $wp_roles as $role_key => $role ) {
+		if ( ! erp_can_current_user_assign_role( $role_key, $role ) ) {
+			unset( $wp_roles[ $role_key ] );
+		}
+	}
+
 	$roles = apply_filters( 'erp_editable_roles', $wp_roles );
 
 	return $roles;
+}
+
+/**
+ * Check whether the current user is allowed to assign a given role.
+ *
+ * A role can only be assigned when the current user already holds every
+ * capability the role grants. This stops a low privileged user (e.g. a CRM
+ * agent with the subscriber role) from creating a WordPress user with a
+ * higher privileged role such as editor.
+ *
+ * @since 1.17.9
+ *
+ * @param string $role_key Role slug.
+ * @param array  $role     Optional. Role data as returned by `get_editable_roles()`.
+ *
+ * @return bool
+ */
+function erp_can_current_user_assign_role( $role_key, $role = [] ) {
+	if ( empty( $role_key ) ) {
+		return false;
+	}
+
+	if ( current_user_can( 'administrator' ) || current_user_can( 'promote_users' ) ) {
+		return true;
+	}
+
+	if ( empty( $role['capabilities'] ) ) {
+		$role_object = get_role( $role_key );
+
+		if ( ! $role_object ) {
+			return false;
+		}
+
+		$role = [ 'capabilities' => (array) $role_object->capabilities ];
+	}
+
+	$current_user = wp_get_current_user();
+	$user_caps    = ! empty( $current_user->allcaps ) ? array_filter( (array) $current_user->allcaps ) : [];
+
+	/**
+	 * Meta capabilities are resolved against a specific object, so they cannot be
+	 * compared between roles. They are ignored while diffing capabilities.
+	 */
+	$meta_caps = apply_filters( 'erp_role_comparison_ignored_caps', [
+		'edit_post',
+		'read_post',
+		'delete_post',
+		'edit_page',
+		'read_page',
+		'delete_page',
+		'edit_comment',
+		'edit_user',
+		'delete_user',
+		'remove_user',
+		'add_user_to_blog',
+	] );
+
+	foreach ( (array) $role['capabilities'] as $cap => $granted ) {
+		if ( ! $granted || in_array( $cap, $meta_caps, true ) ) {
+			continue;
+		}
+
+		if ( empty( $user_caps[ $cap ] ) ) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 /**

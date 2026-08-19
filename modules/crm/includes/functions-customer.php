@@ -3922,6 +3922,7 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
  *
  * @since 1.1.7
  * @since 1.1.18 Check if current user has permission to create wp user
+ * @since 1.17.9 Validate the requested role against the roles the current user may assign
  *
  * @param int   $customer_id
  * @param array $args        Optional parameter
@@ -3947,6 +3948,11 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
         return new WP_Error( 'no-email', __( 'No email found for creating wp user', 'erp' ) );
     }
 
+    // Never allow assigning a role that grants more capabilities than the current user holds.
+    if ( ! array_key_exists( $role, erp_get_editable_roles() ) || ! erp_can_current_user_assign_role( $role ) ) {
+        return new WP_Error( 'invalid-role', __( 'You are not allowed to create a user with the selected role', 'erp' ) );
+    }
+
     // attempt to create the user
     $userdata = [
         'user_login'   => $email,
@@ -3961,7 +3967,11 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
     $userdata['role']      = $role;
 
     $userdata = apply_filters( 'erp_crm_make_wpuser_args', $userdata );
-    $user_id  = wp_insert_user( $userdata );
+
+    // Re-assert the validated role in case a filter altered it.
+    $userdata['role'] = $role;
+
+    $user_id = wp_insert_user( $userdata );
 
     if ( is_wp_error( $user_id ) ) {
         return $user_id;
@@ -3977,8 +3987,22 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
     unset( $people['id'], $people['user_id'], $people['website'], $people['email'], $people['created'], $people['types'], $people['first_name'], $people['last_name'], $people['life_stage'], $people['contact_owner'] );
     $people_array = array_merge( $people, $meta_array );
 
+    global $wpdb;
+
+    // Meta keys that would alter the user's privileges must never be copied over.
+    $protected_meta_keys = [
+        $wpdb->get_blog_prefix() . 'capabilities',
+        $wpdb->get_blog_prefix() . 'user_level',
+        'wp_capabilities',
+        'wp_user_level',
+    ];
+
     if ( $people_array ) {
         foreach ( $people_array as $key => $value ) {
+            if ( in_array( $key, $protected_meta_keys, true ) || is_protected_meta( $key, 'user' ) ) {
+                continue;
+            }
+
             update_user_meta( $user_id, $key, $value );
         }
     }
