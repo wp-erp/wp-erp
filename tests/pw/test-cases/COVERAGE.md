@@ -307,6 +307,135 @@ second attempt wrote a row with NULL message and NULL user_id, which may simply 
 names. **No REST defect is claimed.** If someone later sends a correct payload and the row still comes
 back empty, that would be an ERP-136-shaped bug worth its own report.
 
+### CRM — Deals (20 cases, all green — 3 of them known-defect guards)
+
+An erp-pro module (`modules/crm/deals`) with four screens behind one page slug, switched by
+`sub-section`: `dashboard` (analytics), `all-deals` (the pipeline board), `activities` (the cross-deal
+activity list) and `settings` (rendered inside ERP Settings, not here). It registers **no REST routes
+at all** — everything is one of 41 `wp_ajax_erp_deals_*` actions — so `DealsPage.callAjax()` exists to
+reach a handler's own permission check rather than the menu's.
+
+**Verified before writing a line of it, per the ERP-141 lesson:** all thirteen `wp_erp_crm_deals*`
+tables exist on this install. Seeded content is one pipeline, five stages and six activity types;
+`erp_crm_deals` itself and every other child table start empty, so this pass creates its own data.
+
+Covered: the board renders every seeded stage and paints them in the order the database holds; the
+dashboard renders its three statistic boxes and its funnel; the activities screen renders its seven
+columns and its empty state; a deal is created through the modal and stored against its contact with
+the right value, stage and owner; stage history is written; the status and owner filters render with
+their four and one options; the pipeline switcher stays hidden while one pipeline exists; ERP Settings
+and the board agree on the stage list; a deal with no counterparty is refused; the server refuses an
+empty title and a non-existent stage through the AJAX endpoint; the board is closed to an employee and
+pipeline administration is closed to a CRM agent; and a script payload in a deal title never becomes
+executable markup.
+
+**The authorization case is worth reading before writing another one for this module.** Twelve of the
+41 handlers — `save_deal`, `delete_deal`, `save_deal_note`, `delete_note`, `add_deal_attachment`,
+`remove_deal_attachment`, `update_deal_people`, `add_agents`, `remove_agents`, `send_email`,
+`save_competitor`, `delete_competitor` — carry **no capability check whatsoever**, only
+`verify_nonce('erp-deals')`. That is not automatically a hole: the nonce is localized only on the
+module's own screens, which are gated at `erp_crm_add_contact`, so a role that cannot load the board
+never obtains one. The employee case asserts exactly that — denied AND handed no nonce — rather than
+asserting the absence of a check. What is NOT covered is whether a CRM **agent**, who legitimately
+holds the nonce, can act on another agent's deals; that is an ownership question, needs a second
+agent and deals owned by each, and belongs with the CRM agent/manager visibility pass.
+
+**Two product defects found, both reproduced, neither posted yet:**
+
+- **ERP-144 (Major)** — the seeded pipeline is out of order and every deal records reaching
+  "Proposal Made". Written up below. Posted as [erp-pro#959](https://github.com/wp-erp/erp-pro/issues/959).
+- **ERP-145 (Minor)** — the Add New Deal modal overwrites a title the user already typed. Written up
+  below. Posted as [erp-pro#960](https://github.com/wp-erp/erp-pro/issues/960).
+
+**Product traps paid for in this pass:**
+
+1. **The module ships its own modal.** `.erp-deal-modal` has nothing to do with the shared `#erp-modal`
+   shell `BasePage` handles, so none of the inherited modal helpers apply. `DealsPage.dealModal` is
+   deliberately named differently from `BasePage.modal` rather than overriding it.
+2. **Success and refusal both arrive by sweetalert**, never as a notice — and three sweetalert
+   containers are in the DOM at once (new deal, schedule activity, mark as lost), so any locator on
+   `.sweet-alert` or `.erp-deal-modal-content` must be `.first()`.
+3. **No ids, no names on any field** — same as payroll. Everything is anchored on the sibling
+   `<label>`, and the pipeline-stage bullets carry their title in a `tooltip-title` attribute with no
+   text content at all.
+4. **The contact picker needs 3+ characters and a real AJAX round-trip.** `pressSequentially()`, not
+   `fill()`, and the option list has to be awaited.
+5. **The dashboard funnel's own column header reuses `.stage-name`**, so the first cell of
+   `funnelStageOrder()` is the literal word "Stage". Dropped in the page object.
+6. **Two different reports look like the same funnel and are not.** "Number of Qualified Leads" is
+   `deals_by_pipeline_stages()` — deals in each stage *now*, and it is correct. "Deal Progress" is
+   `deals_progress_by_stages()` — deals that have *reached* each stage, read from
+   `erp_crm_deals_stage_history`, and it is the one ERP-144 corrupts. I screenshotted the wrong one
+   first and would have filed a claim the data did not support; the screenshot was discarded.
+7. **`save_deal` needs `owner_id` when the caller is a manager.** `Deal_Ajax::save_deal` defaults the
+   owner to the current user only for non-managers, so an admin calling the endpoint without it gets
+   the generic `"Could not save the deal. Please try again."` from the failed insert rather than a
+   field error. Not filed — the UI always sends it, and the message is only reachable by hand-built
+   requests.
+
+**A test I planned and then deleted, because the behaviour does not exist:** "a deal with no title is
+refused". There is no such thing as an untitled deal from this modal — picking a counterparty fills
+the title. Asserting the refusal would have asserted a rule the product does not have. It was replaced
+by the auto-fill case plus a server-side empty-title case through the AJAX endpoint, where the rule
+genuinely lives.
+
+**Not covered in deals, and why:**
+
+- **The single-deal page** (`action=view-deal`) — notes, participants, agents, competitors,
+  attachments, the email composer, the changelog and the activity modal. It is the largest surface in
+  the module and deserves its own pass; four of the prior Deals bugs (ERP-043/044/045/066) live there.
+- **Drag-and-drop between stages.** The board uses `jquery-ui-sortable`; a stage move is the event that
+  writes the `out` side of stage history, and it is the natural place to re-check ERP-043's
+  one-open-row invariant. Not attempted this pass.
+- **Won / Lost / Reopen and lost reasons.** `erp_crm_deals_lost_reasons` is seeded empty, so the lost
+  path needs a reason created through settings first.
+- **Pipeline and stage administration beyond the authorization guard** — creating a second pipeline,
+  reordering stages, deleting a stage with deals in it (ERP-045's territory). A second pipeline would
+  also expose the ERP-043 cross-pipeline leak; deliberately left to that pass so the two are not
+  confused.
+- **The `activities` screen beyond rendering.** Creating a deal activity needs a deal and the activity
+  modal, which belongs with the single-deal pass.
+- **Deal ownership between agents** — see the authorization note above.
+
+### ERP-144 → erp-pro#959 — the default pipeline is seeded out of order, and it is not cosmetic (filed 2026-08-19)
+
+`table-data.php:26` seeds `Proposal Made` with `order = 0` while Lead In..Negotiations Started get
+1,2,3,4. Every reader of that column is correct; the data is wrong. So the board, ERP Settings, the
+Add New Deal modal and the Deal Progress report all open the funnel at the fourth stage, and
+`new-deal-modal/index.js:298` makes `Proposal Made` the default stage for every new deal.
+
+The part that turns it from cosmetic into wrong data: `Deals::save_deal()` (`Deals.php:611-625`)
+rebuilds stage history by walking stages in `order` sequence and writing an `in` row for each until it
+reaches the deal's own stage. A deal created at `Lead In` therefore records having reached
+`Proposal Made` first. `Statistics::deals_progress_by_stages()` (`Statistics.php:193/197`) counts that
+table, and reported — with two deals, one at Lead In and one at Contact Made — `Proposal Made` 2 deals
+/ $3,000.00 while `Demo Scheduled`, the stage immediately before it, sat at 0. A funnel that cannot
+occur.
+
+**Not a duplicate of ERP-043**, and the register row says so: ERP-043 is the unscoped
+`PipelineStageModel::get()` leaking stages from *other* pipelines. This reproduces on a
+single-pipeline site and would survive a fix to ERP-043 untouched. Duplicate search was run over
+REGISTER.md and every bug file before minting.
+
+**4/4** deal creations (two through the board, two through `erp_deals_save_deal`) each wrote the
+phantom row, on a deterministic DB and report oracle, plus 2/2 suite runs of the guard. Carried as two
+`test.fail()` guards — one on the painted order, one on the history — each with a precondition
+assertion, because `test.fail()` reports a PASS on any failure including a broken setup. The canary
+beside them ("a new deal opens at the first stage of the pipeline") asserts what the product *does*,
+so a broken modal cannot make the guards pass for free.
+
+### ERP-145 → erp-pro#960 — the new-deal modal overwrites a title the user already typed (filed 2026-08-19)
+
+Type a deal title, then pick the contact, and the title is replaced with `<contact> deal`. No notice,
+no undo. `new-deal-modal/index.js:324-331` is a watcher on the selected contact that assigns the title
+unconditionally; `:333-343` does the same for the company. A `if (!this.deal.title)` guard would keep
+the convenience and stop the loss.
+
+Only bites users who fill the form out of order, since Contact is the first field — hence Minor. **3/3
+in the browser plus 2/2 suite runs, which is below the 5–6× gate a browser finding normally needs.
+Stated, not waived:** it was filed anyway because the cause is an unconditional assignment read in
+source with no timing or state dependency for a race to hide in. Carried as a `test.fail()` guard.
+
 ### A third cleanup collision — and one intermittent I could not reproduce
 
 `cleanupCrmActivities()` deleted every `%pwerp%` activity, so the tasks spec wiped the activities

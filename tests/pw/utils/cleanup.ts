@@ -345,6 +345,47 @@ export async function cleanupCrmActivities(marker = 'pwerp'): Promise<number> {
     return result.affectedRows ?? 0;
 }
 
+/**
+ * Deals created by the suite, plus every child row that hangs off them.
+ *
+ * SCOPED BY TITLE MARKER for the same reason leave requests, `erp_peoples` and
+ * CRM activities are: four workers run at once and the deals tables are shared.
+ * The children are removed by deal id rather than by their own marker — a note
+ * or a stage-history row carries no title of its own, so an id scope is the only
+ * one that exists.
+ *
+ * Stage history matters more than it looks: the product writes a row per stage
+ * on every save, so leaving it behind skews the funnel analytics the dashboard
+ * reads on the next run.
+ */
+export async function cleanupDeals(marker = 'pwerp'): Promise<number> {
+    const deals = `${prefix()}erp_crm_deals`;
+    const rows = await query<RowDataPacket[]>(`SELECT id FROM ${deals} WHERE title LIKE ?`, [`%${marker}%`]);
+    const ids = rows.map((row) => Number(row.id));
+
+    if (ids.length) {
+        const placeholders = ids.map(() => '?').join(', ');
+        const children = [
+            'erp_crm_deals_stage_history',
+            'erp_crm_deals_notes',
+            'erp_crm_deals_participants',
+            'erp_crm_deals_activities',
+            'erp_crm_deals_agents',
+            'erp_crm_deals_attachments',
+            'erp_crm_deals_emails',
+            'erp_crm_deals_competitors',
+        ];
+
+        for (const table of children) {
+            await execute(`DELETE FROM ${prefix()}${table} WHERE deal_id IN (${placeholders})`, ids);
+        }
+    }
+
+    const result = await execute(`DELETE FROM ${deals} WHERE title LIKE ?`, [`%${marker}%`]);
+
+    return result.affectedRows ?? 0;
+}
+
 export async function cleanupAll(): Promise<Record<string, number>> {
     return {
         departments: await cleanupDepartments(),
@@ -352,6 +393,7 @@ export async function cleanupAll(): Promise<Record<string, number>> {
         employees: await cleanupEmployees(),
         people: await cleanupPeople(),
         crmActivities: await cleanupCrmActivities(),
+        deals: await cleanupDeals(),
         holidays: await cleanupHolidays(),
         leavePolicies: await cleanupLeavePolicies(),
         entitlements: await cleanupEntitlements(),
