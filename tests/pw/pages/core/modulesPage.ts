@@ -146,6 +146,16 @@ export class ModulesPage extends BasePage {
         return this.page.locator(moduleSelectors.proBlock).isVisible().catch(() => false);
     }
 
+    /**
+     * How many Pro extensions the page RENDERED, visible or not.
+     *
+     * Deterministic where visibility is not: the markup is always emitted, and
+     * only the reveal is subject to the `window.load` race behind erp-pro#952.
+     */
+    async proExtensionsRendered(): Promise<number> {
+        return this.page.locator(`${moduleSelectors.proBlock} h3.title a`).count();
+    }
+
     get coreModuleCards(): Locator {
         return this.page.locator(moduleSelectors.coreModuleCard);
     }

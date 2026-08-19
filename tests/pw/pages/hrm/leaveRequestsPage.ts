@@ -28,14 +28,31 @@ export const leaveRequestSelectors = {
     filterPolicy: '#leave_policy',
 
     approve: 'a.erp-hr-leave-approve-btn',
+    rejectReason: '#erp-hr-leave-reject-reason',
     reject: 'a.erp-hr-leave-reject-btn',
 } as const;
 
 /** List columns, verified live. */
 export const leaveRequestColumns = ['Employee Name', 'Policy', 'Request For', 'Requested On', 'Available', 'Status', 'Reason', 'Approved By'] as const;
 
+/**
+ * List views. The screen DEFAULTS to Pending (`status=2`,
+ * `LeaveRequestsListTable.php:369`) — once a request is approved or rejected it
+ * leaves the default list entirely, so a status assertion made after acting on
+ * a row must be made on the `all` view or the row simply is not there.
+ */
+export const leaveRequestStatus = {
+    all: 'all',
+    approved: '1',
+    pending: '2',
+    rejected: '3',
+} as const;
+
 /** Marker written into every request the suite raises. */
 export const SUITE_REQUEST_REASON = 'Raised by the automated suite.';
+
+/** Reason the suite gives when rejecting — the reject modal requires one. */
+export const SUITE_REJECT_REASON = 'Rejected by the automated suite.';
 
 export interface LeaveRequestInput {
     employeeLabel: string;
@@ -51,8 +68,8 @@ export class LeaveRequestsPage extends BasePage {
         super(page);
     }
 
-    async goto(): Promise<void> {
-        await this.gotoAdmin('erp-hr', { section: 'leave', 'sub-section': 'leave-requests' });
+    async goto(status: keyof typeof leaveRequestStatus = 'pending'): Promise<void> {
+        await this.gotoAdmin('erp-hr', { section: 'leave', 'sub-section': 'leave-requests', status: leaveRequestStatus[status] });
     }
 
     async gotoNew(): Promise<void> {
@@ -187,12 +204,24 @@ export class LeaveRequestsPage extends BasePage {
         return this.noticeText();
     }
 
-    async reject(employee: string): Promise<string> {
+    /**
+     * Rejects a pending request.
+     *
+     * Unlike Approve, the reject modal (`tmpl-erp-hr-leave-reject-js-tmp`) has a
+     * REQUIRED reason. Submitting it empty answers with a field error rendered
+     * inside `#leave-reject-form-error`, leaves the modal open and the request
+     * Pending — no notice, no dialog, nothing that reads as a failure from the
+     * outside.
+     */
+    async reject(employee: string, reason = SUITE_REJECT_REASON): Promise<string> {
         this.captureDialogs();
         await this.clickRowAction(employee, this.rejectLink(employee));
         await this.page.waitForTimeout(1200);
 
-        if (await this.isModalOpen()) return this.submitModal();
+        if (await this.isModalOpen()) {
+            await this.page.locator(leaveRequestSelectors.rejectReason).fill(reason);
+            return this.submitModal();
+        }
 
         await this.waitForErpReady();
         return this.noticeText();

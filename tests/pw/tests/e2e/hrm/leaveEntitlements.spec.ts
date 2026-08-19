@@ -18,8 +18,11 @@ test.describe('HR — Leave → Entitlements', () => {
         await page.goto();
     });
 
+    // Scoped to this spec's own people — see the note in leaveRequests.spec.ts.
+    const touched = [3, 4].map(employeeName);
+
     test.afterAll(async () => {
-        await cleanupEntitlements();
+        await cleanupEntitlements(touched);
         await closeDb();
     });
 

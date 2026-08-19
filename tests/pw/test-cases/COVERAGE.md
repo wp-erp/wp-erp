@@ -27,7 +27,7 @@ the correct summary of this suite's product coverage is **none**.
 | Site harness (screens, fields, labels, options, routes, schema) | **Done** — see `harness/report/INDEX.md` |
 | Tiered test-case design | **Done** — 1,669 cases across 19 areas |
 | Specs authored | **Core done** — licence, modules, tools, company (4 page objects + 4 specs) |
-| Specs executed | **107 passed, 6 skipped-with-reason, 0 failed** against localhost:8888 (Core + HRM people + Leave holidays/policies/entitlements/requests) |
+| Specs executed | **87 passed, 3 skipped-with-reason, 0 failed** in `e2e_tests` against localhost:8888 (Core + HRM people + Leave holidays/policies/entitlements/requests). The 3 skips are the licence cases that need an UNlicensed site. |
 | CI workflow | Draft exists at `wp-erp/.github/workflows/pw-suite.yml`; **never run** |
 
 ## Case design by area
@@ -153,38 +153,578 @@ own `license_limit` Playwright project, excluded from the normal suite by `grepI
 | hrm-leave (holidays) | 9 | 9 | 9 | 0 | 1 observation (D4) |
 | hrm-leave (policies) | 10 | 10 | 10 | 0 | 0 |
 | hrm-leave (entitlements) | 7 | 7 | 7 | 0 | 0 |
-| hrm-leave (requests) | 9 | 9 | 6 | 3 (blocked, below) | 0 |
+| hrm-leave (requests) | 9 | 9 | 9 | 0 | 0 |
+| hrm-leave (calendar) | 6 | 6 | 6 | 0 | 2 (D5, D6 — both `test.fail()`) |
+| hrm-payroll | 13 | 13 | 13 | 0 | 1 re-verified (ERP-004, 2 `test.fail()` guards) |
+| hrm-attendance | 10 | 10 | 10 | 0 | 0 |
+| hrm-assets | 8 | 8 | 8 | 0 | 0 |
+| hrm-recruitment | 17 | 17 | 17 | 0 | 0 |
+| hrm-documents | 4 | 4 | 4 | 0 | 1 (D8 — `test.fail()`) |
+| hrm-training | 4 | 4 | 4 | 0 | 1 gap (`test.fail()`, not filed) |
+| hrm-reports | 17 | 17 | 17 | 0 | 0 |
+| crm-contacts | 5 | 5 | 5 | 0 | 1 re-verified (ERP-135, `test.fail()`) |
+| crm-companies | 5 | 5 | 5 | 0 | 0 |
+| crm-activities | 4 | 4 | 4 | 0 | 0 |
+| crm-tasks | 3 | 3 | 3 | 0 | 1 (D9 — `test.fail()`) |
 
 The suite cleans up after itself (`utils/cleanup.ts`, called from each HRM spec's `afterAll`), so a
 full run leaves the demo site exactly as it found it — verified: 24 employees, 0 suite leftovers.
 Records are matched by the suite's own `@example.test` e-mail domain, never by name; seeded demo
 staff are all `@northwind-analytics.test`.
 
-**HRM still to author:** leave calendar, payroll, attendance, assets, recruitment, documents,
-training, reports.
+### CRM — first slice: Contacts (5 cases, all green)
 
-### Leave requests — 3 cases BLOCKED, not silently skipped
+CRM is a family, so it is being taken in slices; this is Contacts, the core. Covered: the list renders
+its captured columns, holds **exactly** the eight seeded contacts, a contact can be created and is
+stored as a person of type `contact`, and the screen is closed to the employee role.
 
-`test.fixme()` marks three request cases: raising a request, approving it (the balance oracle), and
-rejecting it. They are blocked on the new-request form leaving `#submit` **disabled for some week
-ranges and not others**, for the same employee with the same 20-day balance:
+**The table that matters:** contacts, customers, vendors AND employees all live in one table,
+`erp_peoples`, distinguished only by a row in `erp_people_type_relations`. Every CRM count therefore
+depends on that table being clean — which is how the pollution below came to light.
 
-- enables for `2026-09-07`, `2026-09-14`, `2026-09-21`, `2026-10-05`
-- stays disabled for `2026-09-28`
-- "20 days are available" is shown in every case
-- no overlapping row in `wp_erp_hr_leave_requests` (the table was empty)
-- no holiday in the range — the seeded holidays are Jan/Feb/Mar/May/Dec
+**ERP-135 / erp-pro#950 re-verified — still open.** `GET erp/v1/crm/contacts` answers with a SINGLE
+raw contact object rather than a collection: a stray `wp_send_json` inside the loop
+(`ContactsController.php:378`) ends the request on the first row, so the client gets one contact,
+unwrapped, with no total and no pagination. Confirmed live this run (200, `isArray: false`, keys
+`id,user_id,first_name,…`). Carried as a `test.fail()` guard; not re-filed.
 
-I have NOT established whether this is a product rule I have not found (an advance-notice window, an
-entitlement validity boundary) or a timing problem in the harness, so it is **not claimed as a
-defect and not asserted as correct**. Ruled out so far: overlapping requests, holidays in range,
-stale entitlement ledger rows, and `fill()` not firing the datepicker's `onSelect` (tried, made
-things worse, reverted).
+### ERP-137 / erp-pro#952 — the visibility guard was FLAKY and has been replaced
 
-What IS proven and green around them: the form only offers policies the employee is entitled to,
-submit stays disabled until the form is complete, a span across the weekend counts only its working
-days (Fri→Mon = 2), an employee with no entitlement is offered no policy, and the screen is closed
-to the employee role. People (employees, departments,
+The full run turned this known-defect guard red: `test.fail()` on "the Pro extensions block never
+becomes visible" reported **passed**, i.e. the defect did not reproduce. Measured rather than guessed:
+running that spec alone the block is hidden **5/5**, but in a full four-worker run it is **visible**.
+
+That is the race #952 itself describes, seen from the other side — under parallel load the page is
+slower, `window.load` lands AFTER jQuery's ready callback, the handler binds in time and the reveal
+works. **This is new information for the issue** and worth adding to it: the defect's appearance
+depends on page-load speed, so a fast/cached site shows the bug and a loaded one hides it.
+
+For the suite it meant a filed defect was generating intermittent red. Visibility cannot honestly be
+asserted either way, so the deterministic half is asserted instead: every licensed Pro extension is
+**rendered** in the markup, whatever the race does about showing it. That still catches a licensing or
+rendering regression, which is what the screen is for, and `revealProExtensions()` remains for the
+tests that need to interact with the list.
+
+### Suite pollution found and fixed: 58 orphaned `erp_peoples` rows
+
+Writing the first CRM assertion surfaced something the HRM passes had been doing for weeks:
+`cleanupEmployees()` deleted the `erp_hr_employees` row, the user and its meta — but **not** the
+shared `erp_peoples` row or its type relation. An ERP person is two rows, and only one was being
+removed. **58 orphans had accumulated**, every one of them a `pwerp`/`@example.test` record from the
+suite's own employee tests.
+
+That mattered more than tidiness: `erp_peoples` is the CRM table, so the suite had been quietly
+inflating the CRM data set on every run. The very first CRM REST probe returned one of my own orphans
+(`Qa Xss / pwerp_xss…@example.test`) as if it were company data. Any "the list holds exactly the
+seeded contacts" assertion would have been impossible to write honestly against that base.
+
+Fixed by adding `cleanupPeople()` and calling it from `cleanupEmployees()`; the 58 existing orphans
+were purged. Verified afterwards that the seeded demo data survived intact — 8 contacts, 6 customers,
+4 vendors, 25 HR employees — because the delete matches only the suite's own markers
+(`@example.test`, `pwerp` names), never `@northwind-analytics.test`.
+
+### CRM — Companies (5 cases, all green)
+
+Same `erp_peoples` table again, distinguished by the `company` people type; the form differs from a
+contact's only in having one name field (`contact[main][company]`) instead of first/last. Covered: the
+list's captured columns, create stored as a person of type **company** with the name in the `company`
+column, the genuinely-empty starting state, the required-field refusal, and the screen closed to the
+employee role.
+
+**A second cleanup collision, same root as the leave one:** the full run turned the CONTACTS create
+test red, because the companies spec's `cleanupCrmContacts()` deleted every suite-created person —
+including the contacts spec's in-flight row — while the two files ran on different workers. Cleanup of
+`erp_peoples` is now **scoped by people type**: contacts clean `contact`, companies clean `company`,
+employees clean `employee`. Unscoped cleanup is reserved for `cleanupAll()`. That is the second time a
+shared table has produced cross-file red; the rule is now in HANDOFF.
+
+**A seed-data trap worth knowing:** `seedData.crmCompanies` does NOT create CRM companies. It is
+consumed by `seedAccountingPeople()` to create accounting **customers** — so the six "companies"
+(Beacon Retail, Harbourline, …) exist as type `customer`, and the CRM `company` type has **zero** rows
+on a freshly seeded site. The empty-state test states that explicitly rather than leaving the next
+reader to rediscover it. The name is misleading; renaming it is a seed change, not a test change, so
+it is recorded here rather than done silently mid-pass.
+
+**A refusal I described wrongly at first:** the "company with no life stage or owner" case initially
+asserted that the PRODUCT refuses it. It does not — the refusal is the **browser's**: both selects
+carry `required`, so constraint validation blocks the submit and no request is ever sent. Verified: no
+AJAX fires, three fields report invalid, and the select's own message reads "Please select an item in
+the list." The test now asserts that mechanism, because "the server rejected it" would have been an
+untrue description of a passing test.
+
+### CRM — Activities (4 cases, all green)
+
+The activity feed on a contact's detail page: a composer with five tabs (New Note, Email, Log
+Activity, Schedule, Tasks) over a timeline filtered by All Activities / Email / Task / Schedule /
+Note. Activities are rows in `erp_crm_customer_activities`, typed by the tab that wrote them.
+
+Covered: the feed renders its composer tabs and filters, a note is logged against the contact and
+appears in the timeline (DB oracle on type `new_note` and `user_id`), the empty feed states itself,
+and the feed is closed to the employee role.
+
+**Two markup traps, both cheap to lose an hour to:**
+
+1. The note body is a **Trix editor** — a contenteditable custom element, not a textarea and not an
+   iframe. `fill()` cannot drive it; the text is typed with real key events after focusing.
+2. The save control is an **`<input type="submit" value="Save Note">`**, not a `<button>`. Playwright's
+   `:has-text()` matches text content and never an input's value, so `button:has-text("Save Note")`
+   silently matched nothing. My first dump missed this because it enumerated hidden elements too and
+   reported the control as present.
+
+**A bug in the suite's OWN cleanup, found by a residue check:** the type-scoped `cleanupPeople()` I
+added for the companies collision deleted the type RELATION first and then scoped the people delete
+*by that relation* — which no longer existed. The person row survived every time, with no type at all.
+Six orphans had built up within a single pass. Fixed by resolving the target ids before deleting
+anything, plus a sweep for rows the broken ordering already orphaned. `erp_peoples` is back to its
+seeded baseline of 19 after a full run.
+
+**Not covered in activities, and why:** the Email tab (it sends mail — out of scope for a functional
+pass and worth its own decision), and Schedule/Task creation, which belong with the CRM tasks and
+schedules pass.
+
+### D9 / ERP-143 → erp-pro#958 — CRM Tasks and Schedules cannot be created at all (filed 2026-08-19)
+
+The Tasks pass found a functional defect: on a contact's activity feed, **"Create Task" and "Create
+Schedule" are rendered `disabled` and never enable**, whatever is filled in. New Note on the same feed
+works, so the feed itself is sound.
+
+Root cause read from source and confirmed live: the buttons bind to `:disabled="!isValid"`; `isValid`
+for these composers needs only `feedData.message`; and that is populated solely by a `trix-change`
+listener attached once in `activate()` to `jQuery(this.$el).find('trix-editor').get(0)`
+(`crm-app.js:194`). Instrumentation shows the listener is not on the editor being typed into: typing
+fires **16 `trix-change` events**, exactly **one** `trix-editor` exists in the document, and the model
+still never updates.
+
+Ruled out before claiming it: that the buttons were simply waiting on more required input. With due
+date `2026-09-30`, time `10:00am`, an assignee selected and a message typed, the button is still
+disabled. Also ruled out that the tab switch was the trigger — loading the page directly at `#tasks`
+behaves identically. **5/5**, filed as ERP-143 (awaiting go-ahead), carried as a `test.fail()`.
+
+**A detour I got wrong twice, recorded so nobody repeats it:** I tried to confirm the REST route as a
+comparison and sent `type: 'tasks'` (the DB value — the API expects `task`,
+`ActivitiesController.php:34`), then `user_id`/`message` when the response suggests `contact_id`. The
+second attempt wrote a row with NULL message and NULL user_id, which may simply be my wrong field
+names. **No REST defect is claimed.** If someone later sends a correct payload and the row still comes
+back empty, that would be an ERP-136-shaped bug worth its own report.
+
+### A third cleanup collision — and one intermittent I could not reproduce
+
+`cleanupCrmActivities()` deleted every `%pwerp%` activity, so the tasks spec wiped the activities
+spec's in-flight note across workers; the note test failed about one run in three. Cleanup is now
+scoped by marker (`pwerp note` vs `pwerp task`). **That is the third time a shared table has produced
+cross-file red** — after leave requests and `erp_peoples` — so the rule is now general in HANDOFF: any
+spec cleaning a shared table scopes to its own marker.
+
+Honesty note: one run AFTER that fix still showed the same test failing, and it was also markedly
+slower (41.6s vs ~20s), which points at machine contention rather than the collision. I could not
+reproduce it in five subsequent CRM runs or two full-suite runs. It is recorded as an unresolved
+intermittent rather than declared fixed.
+
+**Not covered yet in CRM, and why:** contact groups contact groups and subscribers, activities and
+schedules, tasks, deals and the deal pipeline, CRM reports, and the CRM agent/manager visibility rules
+— the last being a security question (can an agent see another agent's contacts?) that deserves its
+own focused pass rather than a line in a functional one.
+
+**HRM is now authored end to end** — People, Leave (holidays, policies, entitlements, requests,
+calendar), Payroll, Attendance, Assets, Recruitment, Documents, Training and Reports all have specs
+that have actually run. What remains inside those areas is listed per-section above as "not covered,
+and why".
+
+### HR Reports — 17 cases, all green
+
+Nine read-only reports (age profile, gender profile, headcount, years of service, salary history,
+leaves, assets, attendance by date, attendance by employee). All nine load without a PHP fatal, three
+render their captured columns, and — the point of this pass — **their figures are reconciled against
+the seeded company rather than against the screen describing itself**:
+
+- headcount lists all **24** seeded employees and exactly those;
+- salary history reports each spot-checked employee at their seeded pay rate and `monthly` pay type;
+- the leaves report carries a column for every one of the six seeded leave policies;
+- the age profile breaks down by all eight seeded departments.
+
+**A discrepancy I chased before asserting anything:** `erp_hr_employees` holds **25** active rows while
+the seed defines 24 and headcount shows 24. The 25th is the suite's OWN `erp_employee` actor, created
+by `_auth.setup.ts` for authorization tests; it has no department, designation or hire date and the
+headcount report legitimately omits it. Asserting a flat "24" would have been right by accident and
+brittle forever, so the test asserts every seeded name is present AND that the report holds exactly
+the seeded staff — which stays true whatever actors the suite adds. The leaves report meanwhile counts
+**25 items**, because it does include the actor; that is a difference between two reports' inclusion
+rules, not an error, and it is why no cross-report total is asserted.
+
+**Not covered, and why:** the attendance reports render but hold no data — attendance logging is not
+covered yet (see the attendance section), so there is nothing to reconcile. Their CSV export and the
+date-range filters are likewise unexercised. The Flot charts are not asserted at all: they are canvas
+drawings with no accessible text, and asserting their existence would prove nothing about the numbers
+in them.
+
+### Training — 4 cases, all green
+
+Not an ERP screen at all: trainings are a WordPress custom post type (`erp_hr_training`) edited in the
+CLASSIC editor and listed by `edit.php`, with the module's fields in an "HR Training Options"
+metabox. The module ships **no tables** — assignments live in meta (`erp_employee_training` on the
+user, `erp_training_completed_employee` / `..._incompleted_employee` on the post).
+
+Covered and green: the list renders its captured columns; a training can be created and its subject
+round-trips into postmeta and back out into the list column; the list is closed to the employee role;
+and the headcount endpoint case below.
+
+**A product typo that matters for selectors:** the subject field's id is **`traning-subject`**
+(misspelled) while its posted name is `training_subject`. The page object anchors on the NAME. This is
+the third typo of its kind in erp-pro after `asset-allottment` and the view file `assign-new-traing.php`
+— worth expecting rather than being surprised by.
+
+**A gap carried but deliberately NOT filed:** `erp_training_employee_count` (`Ajax.php:28`) is the one
+training AJAX action with **neither a capability check nor a nonce**; the other four check
+`erp_list_employee`. Verified live: as a plain employee it answers `{"success":true,"data":{"count":0}}`.
+It is carried as a `test.fail()` so it flips the moment a check is added — or the moment the endpoint
+starts returning more than a number. Not filed because the response is a bare **count**: no names, no
+e-mails, no PII, so the disclosure is a departmental headcount. Worth noting alongside it that **none**
+of the five actions verifies a nonce, so the mutating ones (assign, delete) are CSRF-able against a
+user who does hold the capability — that is the more interesting half, and it is recorded here rather
+than filed because I did not build the cross-site proof this pass.
+
+**Suite pollution I caused and fixed:** opening `post-new.php` makes WordPress write an `auto-draft`
+row EVERY time, and my first cleanup matched only `pwerp%` titles — so each run left a stray "Auto
+Draft" behind (5 had accumulated before I checked). `cleanupTrainings()` now sweeps auto-drafts of
+this post type too, and a full run leaves zero rows.
+
+**Not covered, and why:** assigning a training to an employee and the completion flow. Both live on
+the EMPLOYEE profile's Training tab rather than this screen, and they need an employee actor plus the
+assign modal — that belongs with the employee-profile pass, not here.
+
+### Documents — 4 cases green, and one security finding
+
+Files are ordinary WordPress media attachments; the folder tree lives in
+`erp_employee_dir_file_relationship` and sharing in `erp_dir_file_share`. Both tables exist.
+
+Covered and green: the screen renders its controls (Upload, Create Folder, Move to, Delete, Share
+with) and its three sources (Owned by me, My Dropbox, Shared with me); a file can be uploaded and is
+recorded against the tree with a real attachment behind it; and the screen is closed to the employee
+role (HR manager is allowed — checked both, rather than assuming).
+
+### D8 / ERP-142 → erp-pro#957 — HR documents are served from public, unauthenticated URLs (filed 2026-08-19)
+
+The module stores documents as plain media and hands out `wp_get_attachment_url()` with no protection
+of its own. `curl` with no cookies returns **HTTP 200 and the full contents**, 3/3, and the same from
+a fresh browser context with an empty cookie jar. Yet the module ships an ownership and sharing model
+(`erp_dir_file_share`, "Shared with me", a "Share with" action) — which turns out to govern only
+whether a file is LISTED, not whether it can be read.
+
+**Stated fairly:** directory listing is **403**, so files cannot be browsed; an attacker needs the
+URL. But filenames survive `sanitize_file_name()` verbatim under a predictable `uploads/YYYY/MM/`
+path, and URLs leak through history, referrers, backups and forwarded links. This is WordPress's
+default media handling — the argument is not that WordPress is wrong, but that a module shipping a
+sharing model should not rely on it for HR records. Filed as **High**, not Critical, for that reason.
+
+**Not a duplicate, and why it took a careful look:** ERP-021 (Open) reports a share-route IDOR whose
+oracle mentions the attachment URL, and it would be easy to fold this in. But that defect needs a
+logged-in employee abusing `/documents/share`; this one needs **no account at all** and would survive
+a complete fix of that route. Worth flagging the chain: ERP-021 hands an employee someone else's
+document URL, ERP-142 makes that URL work for anyone, forever.
+
+**A trap in my own test I had to correct:** `test.fail()` reports a PASS on any failure, so the
+security case would have looked satisfied if the UPLOAD had broken instead. It now asserts its own
+precondition, the `@crud` case is the canary, and I verified out-of-band that the failing assertion is
+the anonymous fetch (200 + confidential text), not the upload. Also: WordPress **deduplicates**
+repeated filenames (`name-1.txt`, `name-2.txt`), so a fixed fixture name is only assertable on the
+first run — each run now uploads a unique name from memory.
+
+**Not covered, and why:** folder create/move/delete, the share flow itself (ERP-021 territory — it
+needs two employee actors and is a security pass rather than a functional one), and the **Dropbox**
+integration, which is an external service and is left alone entirely.
+
+### Recruitment — 17 cases, all green
+
+The largest HRM module: 12 screens, 10 tables (all present, checked first), job openings stored as a
+WordPress custom post type (`erp_hr_recruitment`) rather than an ERP table.
+
+Covered and green: all eight screens load without a PHP fatal (job openings, add opening, candidates,
+add candidate, stages, calendar, reports, AI settings); the job-opening, candidate and stage lists
+render their captured columns; the four default hiring stages are present; step one of the opening
+wizard publishes the post and advances; the wizard cannot be advanced without a title; the AI settings
+screen renders its key field; and the module is closed to the employee role.
+
+**Two things I got wrong and corrected — both worth recording:**
+
+1. **I invented the default stage names.** I wrote `Unscreened / In Process / Archived / Other`, taken
+   from the REPORTS screen's candidate-distribution columns. The actual stages are
+   **Screening / Phone Interview / Face to Face Interview / Make an Offer**. The test failed and the
+   names came from the screen. This is precisely the failure the anti-invention rail exists to catch,
+   and it caught it — but only because the assertion was real.
+2. **"Created → listed" was the wrong assertion.** Step one publishes the post, yet the list INNER
+   JOINs postmeta on `_expire_date` (`functions-recruitment.php:604`), which a LATER wizard step
+   writes. The test now asserts what is actually true and documents the consequence.
+
+**Observed, NOT filed — the orphaned opening:** an opening abandoned at step one is a **published
+post that never appears in the Job Opening list**, and so cannot be seen, edited or deleted from that
+screen. It is carried as a passing Tier-2 case that states the behaviour. Not filed because it needs a
+product decision (should step one publish at all, or save a draft?) rather than a defect report, and I
+have no evidence of user harm beyond the invisibility itself.
+
+**The AI screens are LOADED, never exercised.** Four screens are backed by a **Gemini API key**
+(`erp_rec_gemini_api_key`). The suite asserts the settings screen renders and stops there. No
+generation, CV analysis or job-writer action is triggered anywhere: those are outbound calls to a paid
+third-party service, and the test mu-plugin blocks **only wordpress.org** — such a call would really
+leave the machine. Tagged `@needs-external`. Exercising them needs a sandbox key and an explicit
+decision from the user.
+
+**Not covered, and why:** the rest of the opening wizard (hiring workflow, job information,
+questionnaire), candidates and their stage movement/rating, the todo calendar, and the reports
+export/e-mail paths. The wizard is several more steps and candidates depend on a completed opening —
+that is its own pass.
+
+### Assets — 8 cases, all green
+
+Three server-rendered lists sharing the ERP modal shell. All four tables exist (checked first).
+
+Covered and green: the assets, allotments and requests screens each render their captured columns; a
+category can be created; an asset is stored correctly and listed; the form offers the categories that
+exist; an asset with no category is refused with the product's own message; and the screen is closed
+to the employee role.
+
+**Product facts learned:**
+
+1. **Sub-section slugs are irregular and one is misspelled** — `asset`, `asset-allottment` (two t's),
+   `asset-request`. A wrong slug silently renders the Assets list, so a typo looks like three screens
+   with identical columns. That is exactly what I saw before checking the nav.
+2. **One asset is TWO rows**: a group row (`parent = 0`) plus one child per item code, the child
+   carrying `status = 'stock'`. The list's "Available/Total" counts the children, so a one-item asset
+   reads 1/1.
+3. **The modal shows BOTH submit buttons at once** — "Save Asset" and "Save Category" — so
+   `BasePage.submitModal()` (which takes the first primary button) always pressed Save Asset. The page
+   object names them.
+4. **A refusal is delivered by sweetalert**, not a notice and not a native dialog: `asset_insert`
+   answers HTTP 200 with a bare `die()` string which the JS renders through swal. Reading the page
+   body finds nothing and makes a refusal that DID warn the user look silent — I hit exactly that and
+   fixed the reader rather than the assertion.
+
+**Observed, NOT filed — a dangling AJAX callback that is not reachable:**
+`wp_ajax_erp-hr-emp-delete-asset` is registered to `[$this, 'emp_asset_remove']`, and that method
+**does not exist** in `AjaxHandler` (which has no parent class). Calling the action returns HTTP 500,
+verified as admin. The employee asset tab does carry `data-action="erp-hr-emp-delete-asset"` on its
+delete control (`asset-employee-tab.php:114`), which looks damning — but the handler bound to that
+control (`assets.js:1558`) sends a hardcoded `erp-assets-request-delete`, which works, and never reads
+`data-action`. So the dangling callback is **dead code, not a user-facing fault**. Recorded rather than
+filed: filing it as "delete is broken" would have been wrong, and it took reading the JS binding to
+know that.
+
+Also worth noting for whoever tests this next: the module has **28 AJAX actions and ZERO
+`current_user_can`** — the payroll pattern. It is less exposed than payroll only because 24 of the 28
+verify a form-specific nonce an employee cannot obtain. The four that verify nothing are
+`erp-hr-emp-delete-asset` (dead), `erp-assets-emp-request-return`, `erp-assets-emp-reject-return-request`
+and `erp_asset_edit_category_reload`. **The two live return-request actions were NOT probed for
+privilege escalation this pass** — that needs an allotment to exist first, and it is the obvious next
+thing to check here.
+
+**Not covered, and why:** allotting an asset to an employee, the return flow, asset requests and their
+approve/reject, and the dismiss/single-item paths. All of them need an allotment chain built first;
+that is its own pass, and it is where the unguarded return actions should be probed.
+
+### Attendance — 10 cases, all green
+
+The best-built module met so far. It is a hash-routed SPA (`#/`, `#/shifts`, `#/assign-shift-bulk`,
+`#/exim`) with a REST API at `erp/v1/hrm/attendance/*` that guards **every** route with a capability
+check — 29 `current_user_can` calls, against payroll's one. All five of its tables exist (checked
+first, after ERP-141 taught that this cannot be assumed).
+
+Covered and green: the attendance, shifts and bulk-assign screens each render their captured columns;
+the bulk-assign screen offers the seeded employees; a shift can be created with a DB oracle on
+`start_time`/`end_time`/`duration`; an overnight shift counts its own hours, not a negative span; a
+duplicate shift is refused; a 24-hour shift is refused; the screen is closed to the employee role; and
+the REST shift route refuses an employee over Basic-Auth — the case that PROVES the capability check
+rather than assuming it.
+
+**Product rules learned:**
+
+1. **A shift is a duplicate on NAME or on TIME RANGE** (`erp_atts_is_duplicate_shift`) — two shifts
+   may not share a start/end pair even under different names. Each test therefore owns a distinct
+   time range, and the file cleans shifts in `beforeAll` as well as `afterAll`: a leftover range makes
+   an unrelated later create look like a duplicate.
+2. **A shift must be under 24 hours.** Equal start and end pushes the end forward a day, which trips
+   the `invalid-shift-range` guard.
+3. **Navigating to the hash you are already on is a no-op** — the SPA does not remount, so a second
+   "Add New Shift" click finds nothing. `openShiftForm()` forces a document load.
+
+**Observed, not filed:** validation failures come back as **HTTP 500** with a `WP_Error` body
+(`duplicate-shift`, `invalid-shift-range`) where a 4xx would be correct — a `WP_Error` with no status
+defaults to 500. It is an API-correctness wart, not a functional fault: the message is accurate, the
+UI shows it, and nothing is written. Recorded rather than filed.
+
+**Not covered, and why:** check-in/check-out logging (`erp_attendance_log`), shift generation
+("Generate" per shift), the import/export and grace-time settings on `#/exim`, and the attendance
+report. Those need generated shift days and log rows to assert anything honest about presence/late
+arithmetic, which is its own pass. Payroll has a
+first pass (below); its pay-RUN arithmetic is not covered yet.
+
+### Payroll — first pass (13 cases green), and ERP-004 re-verified as still open
+
+Payroll is erp-pro, has **no REST API**, and is driven by **67 `wp_ajax_erp_payroll_*` actions**
+(`payroll/includes/AjaxHandler.php`). The forms are Vue with **no id or name on any field**, so
+`PayrollPage` anchors every control on its visible label.
+
+Covered and green: all five screens load without a PHP fatal (dashboard, calendar, payrun, bulk pay
+item edit, reports); the pay-run and bulk-edit lists render their captured columns; a pay calendar
+can be created through the form and the row is verified in the DB; the type list offers exactly
+Hourly/Weekly/Biweekly/Monthly (`daily` and `contract` are explicitly removed); a second calendar of
+the same type is refused; and the Pay Run screen is closed to the employee role.
+
+**ERP-004 (filed 2026-07-02 against erp-pro 1.6.0, Critical, still Open) re-verified on 1.7.0 —
+still unfixed.** `AjaxHandler.php` contains exactly ONE `current_user_can` call across its 67
+actions. Confirmed live this run, as a plain `employee`:
+
+- `erp_payroll_get_employee_list` → `{"success":true,...}` with every employee's name, e-mail and
+  `pay_rate`. The whole salary roster, to anyone logged in.
+- `erp_payroll_create_pay_calendar` → `"Pay calendar created successfully"`, and the row was really
+  written to `wp_erp_hr_payroll_pay_calendar` (I deleted it again).
+
+Carried as two `test.fail()` guards, NOT re-filed — ERP-004 already covers both halves. They will
+start failing the moment it is fixed.
+
+**Product rules learned, both of which shape the tests:**
+
+1. **One calendar per TYPE.** `create_pay_calendar` counts rows of that type and refuses a second.
+   This bit the authz guard: it first used `monthly`, which an earlier test had already created, so
+   the employee's write was refused by the DUPLICATE check and the guard read as "fixed". It now uses
+   `hourly` and explicitly asserts the refusal is *not* the duplicate message — a pass for the wrong
+   reason is the exact failure mode a security guard must not have.
+2. **The employee picker only offers staff whose own pay type matches the calendar.** Every seeded
+   employee is monthly, so the form cannot build a weekly or biweekly calendar at all. The
+   duplicate-type case therefore drives the endpoint, and says so in the test.
+
+**A collision the parallel run caught, worth recording:** the calendar spec and the entitlements spec
+were both using employee index 3, and the suite runs four workers — so two files assigned entitlements
+to the same person at the same time and both went red, while each passed alone. Test-data ownership is
+now disjoint per spec file: entitlements 3-4, requests 4-12, calendar 15-17 + 20-21. Two spec files
+must not share a seeded employee.
+
+### The pay RUN is BLOCKED on this environment — ERP-141 → erp-pro#956 (Critical), filed 2026-08-19
+
+No pay-run tests were written, deliberately. `wp_erp_hr_payroll_payrun` **does not exist** on this
+install: the installer's `CREATE TABLE` declares an unquoted `to_date`, which is a RESERVED word in
+MariaDB 12.3, so the statement is a syntax error — and `dbDelta()` reports `"Created table …"` anyway
+while `Installer.php:205` ignores the return. Seven of the module's eight tables exist; this one does
+not. MySQL does not reserve `TO_DATE`, so the defect is MariaDB-only, which is why earlier payroll
+bugs (ERP-018, ERP-032) could describe pay runs that worked.
+
+The consequence is financial and verified: `start_payrun` can never record a run, so every
+`payrun_detail` row carries `payrun_id = 0`, and the employee-list query sums by `empid` + `payrun_id`
+— which makes each pay run include every previous one. Observed 2/2 for an employee on 5,200:
+**5,200 → 5,200 → 10,400 → 20,800**, persisted and shown as Net Pay.
+
+**Writing pay-run assertions here would be writing tests against a broken schema** — they would encode
+the compounding as expected, or fail for a reason unrelated to what they claim to check. The cases stay
+unwritten and are recorded here as blocked. Once ERP-141 is fixed (or the suite runs on MySQL), the
+oracle is ready: Net Pay = Pay Basic + Payment − Deduction − Tax, cross-checked against the ledger rows
+`approve_payment()` writes to `wp_erp_acct_ledger_details` (cash 7, wages_salaries 42,
+payroll_tax_expense 43 on this install).
+
+**A wrong hypothesis I discarded, recorded so nobody re-runs it:** I first blamed the malformed
+`updated_at timestamp on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP` in the same
+CREATE. A raw query with that clause alone succeeds on MariaDB 12.3 — it is not the cause. Only the
+column-by-column probe pinned `to_date`.
+
+**Also observed, NOT filed:** `approve_payment()` computes the amounts it posts to the accounting
+ledger entirely from `$_POST['employeedata']`, never recomputing them from the stored pay-run detail,
+and with no capability check (nonce only). That is a money-integrity concern, but ERP-141 blocks the
+approve path here, so it is unproven end-to-end and is written down rather than claimed.
+
+**Not covered yet, and why:** the pay RUN itself — starting a run, variable input, approving, and the
+payslip. That is the arithmetic (gross − deductions = net) and the money path, and it deserves its own
+pass rather than being tacked on here. Also uncovered: pay items and categories, payroll settings, the
+reports screen beyond loading, and `erp_payroll_get_employee_list`'s missing-`empids` warning noted
+while reading `create_pay_calendar` (`$_POST['empids']` is read without `isset`).
+
+### D5 / D6 — Leave Calendar department filter (ERP-138, ERP-139), found 2026-08-19
+
+Two defects in one code path, both carried as `test.fail()` in `leaveCalendar.spec.ts` — they pass
+while the defect stands and fail the moment it is fixed. Both filed 2026-08-19 with screenshots:
+**ERP-138 → erp-pro#953**, **ERP-139 → erp-pro#954**.
+
+- **D5 / ERP-138 — the filter widens instead of narrowing.** Filtering the calendar by a department
+  with no approved leave shows EVERY approved leave in the company. `views/leave/calendar.php:3`
+  normalises the "- Select Designation -" sentinel `-1` with `absint()`, and `absint('-1')` is **1** —
+  so a department-only filter becomes department + designation 1. When that pair matches nobody,
+  `erp_hr_get_leave_requests()` adds no WHERE clause at all (`if ( $users->count() )`) and returns
+  everything. Proven at the data layer: `department_id=65, designation_id=0` → 0 rows (correct),
+  `designation_id=1` → 2 rows, which is the unfiltered total.
+- **D6 / ERP-139 — the id list collapses to one employee.**
+  `$wpdb->prepare(" AND request.user_id in (%s)", implode(', ', $user_ids))` quotes the whole list, so
+  MySQL casts `IN ('21, 22, 23')` to 21. Confirmed in MySQL directly: `22 in ('21, 22, 23')` = 0.
+  Observed drawing 0 of 2 approved Engineering leaves.
+
+D5 **masks** D6 through the filter form, so the D6 test reaches the department-only branch through
+the URL the view already supports. Fixing D5 alone exposes D6 to every ordinary filter use.
+
+What is green on the calendar: it mounts with its navigation and view controls, the filter offers
+every department, an approved leave is drawn and a pending one is not (the whole `status => 1` rule),
+and the screen is closed to the employee role.
+
+### D7 — approving a vanished leave request fatals (ERP-140), found 2026-08-19
+
+Surfaced by a race that was **mine**: four workers, and one spec file's `afterAll` cleanup deleted a
+request another file was mid-approve on. The race is fixed — leave cleanup is now scoped to the
+employees each spec actually touched (`utils/cleanup.ts`, `userIdsFor()`), and the orphan sweep only
+runs on an unscoped call.
+
+The fatal it exposed is the product's and needs no harness at all:
+`erp_hr_leave_request_update_status()` calls `$request->toArray()` at `functions-leave.php:1674`, one
+line BEFORE `if ( empty( $request ) )`, so the `no-request-found` WP_Error is unreachable and a
+missing id always throws `Call to a member function toArray() on null`. Proven 3/3 with an id
+guaranteed not to exist. Every caller inherits it, including the REST approve/reject endpoints.
+
+**Not carried as a `test.fail()` case, deliberately:** asserting it means deleting a request and then
+approving it, which leaves the entitlement ledger half-written for whatever runs next. The
+deterministic probe proves it without that cost. This is a coverage gap that is *recorded*, not one
+that is hidden. Filed 2026-08-19 with a screenshot: **ERP-140 → erp-pro#955**.
+
+**Not covered, and why:** the year boundary. The view only ever loads the CURRENT calendar year, but
+the seeded financial year is 2026 only, so a 2027 request cannot be entitled and the boundary cannot
+be exercised without a second financial year. Left uncovered deliberately rather than asserted from
+code reading.
+
+### Leave requests — the 3 blocked cases are RESOLVED and green (2026-08-19)
+
+Raising, approving and rejecting a request all run green now, twice consecutively. The block was
+**two harness defects of my own**, not a product rule, and the earlier write-up here reached the
+wrong conclusion for an instructive reason — recorded rather than quietly deleted.
+
+**1. The suite's own cleanup left orphan rows that the product then honoured.**
+A leave request is THREE rows: the header in `wp_erp_hr_leave_requests`, one
+`wp_erp_hr_leave_request_details` row per leave day, and a `wp_erp_hr_leave_approval_status` row.
+`cleanupLeaveRequests()` deleted only the header. The product's overlap guard
+(`erp_hrm_is_leave_recored_exist_between_date`, `functions-leave.php:93`) queries the **details**
+table, so every orphan silently refused any later request over the same dates with
+*"Existing Leave Record found within selected range!"* — an AJAX error, which `leave.js:728` turns
+into a disabled `#submit`.
+
+Why it looked like a per-date product rule: the dates that failed were exactly the dates a previous
+failed run had already written details rows for. And the earlier check that "ruled out" overlaps
+looked at `wp_erp_hr_leave_requests`, which was genuinely empty — the header had been deleted. The
+oracle was reading the wrong table, which is the same class of mistake as the retracted D4 below.
+Fixed in `utils/cleanup.ts`: children are deleted before the header, plus an orphan sweep that heals
+state an older run left behind.
+
+**2. The list defaults to Pending, so an approved request is not "missing" — it moved.**
+`LeaveRequestsListTable.php:369` defaults `status` to `2` (Pending). Once acted on, a request leaves
+the default view entirely. `LeaveRequestsPage.goto()` now takes a status view and the approve/reject
+cases assert on `all`.
+
+**3. Reject requires a reason; approve does not.**
+`tmpl-erp-hr-leave-reject-js-tmp` has one required field, `#erp-hr-leave-reject-reason` ("Reason *").
+Submitting it empty renders the error inside `#leave-reject-form-error`, leaves the modal open and
+the request Pending — no notice, no dialog, nothing that reads as a failure from outside. The page
+object now fills it.
+
+The evidence for all three is the product's own AJAX response, captured live:
+`{"success":false,"data":"Existing Leave Record found within selected range!"}`. **Nothing here was
+filed as a product defect, because none of it is one.**
+
+What is now proven and green: a request can be raised against an entitlement, approving it consumes
+exactly the days requested (balance oracle before/after), rejecting it spends nothing, the list
+renders its full column set once a request exists, the form only offers policies the employee is
+entitled to, submit stays disabled until the form is complete, a span across the weekend counts only
+its working days (Fri→Mon = 2), an employee with no entitlement is offered no policy, and the screen
+is closed to the employee role. People (employees, departments,
 designations) and Leave → Holidays + Policies are done and green.
 
 Leave-policy creation is a **full page** at `&action=new`, not a modal, and its form requires

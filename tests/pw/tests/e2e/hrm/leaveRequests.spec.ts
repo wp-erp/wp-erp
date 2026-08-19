@@ -22,26 +22,32 @@ test.describe('HR — Leave → Requests', () => {
         await page.goto();
     });
 
+    // Scoped to this spec's own people: the suite runs four workers, so the
+    // leave specs overlap in time and an unscoped delete takes another file's
+    // rows out from under it mid-approve.
+    const touched = [4, 5, 6, 7, 8, 9, 11, 12].map(employeeName);
+
     test.afterAll(async () => {
-        await cleanupLeaveRequests();
-        await cleanupEntitlements();
+        await cleanupLeaveRequests(touched);
+        await cleanupEntitlements(touched);
         await closeDb();
     });
 
     // ---- Tier 1 ----------------------------------------------------------
 
     test('the requests list renders its columns once a request exists', { tag: ['@tier1', '@hrm-leave'] }, async () => {
-        // The screen renders NO table at all while there are no requests, so the
-        // column set can only be asserted when one exists. Creating a request is
-        // currently blocked (see the fixme notes below), so this checks the
-        // columns when data is present and the empty state when it is not —
-        // both are true statements about the screen, neither is a silent pass.
-        expect(await page.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
+        // The screen renders NO table at all while there are no requests, so a
+        // request has to exist before the column set can be asserted at all.
+        const policy = leavePolicies[0]!;
+        const employee = employeeName(4);
+        const monday = upcomingMonday(11);
 
-        if (!(await page.hasTable())) {
-            expect(await page.rowCount(), 'an empty list renders no rows').toBe(0);
-            return;
-        }
+        await entitlements.assignToEmployee({ policyLabel: policy.name, employeeLabel: employee });
+        await page.create({ employeeLabel: employee, from: monday, to: daysAfter(monday, 1) });
+        await page.goto();
+
+        expect(await page.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
+        expect(await page.hasTable(), 'the list renders a table once a request exists').toBe(true);
 
         const headers = await page.columnHeaders();
 
@@ -87,7 +93,6 @@ test.describe('HR — Leave → Requests', () => {
         // (an advance-notice or entitlement-validity window) or a harness timing
         // problem, so it is NOT being claimed as a defect and NOT asserted as
         // correct. Tracked in test-cases/COVERAGE.md.
-        test.fixme();
 
         const policy = leavePolicies[0]!;
         const employee = employeeName(7);
@@ -120,7 +125,6 @@ test.describe('HR — Leave → Requests', () => {
         // (an advance-notice or entitlement-validity window) or a harness timing
         // problem, so it is NOT being claimed as a defect and NOT asserted as
         // correct. Tracked in test-cases/COVERAGE.md.
-        test.fixme();
 
         const policy = leavePolicies[0]!;
         const employee = employeeName(8);
@@ -140,7 +144,9 @@ test.describe('HR — Leave → Requests', () => {
         expect(await page.requestedDays(employee), 'the request is for three working days').toBe(requestedDays);
 
         await page.approve(employee);
-        await page.goto();
+
+        // Acting on a request moves it off the default Pending view.
+        await page.goto('all');
         expect(await page.statusOf(employee), 'the request is approved').toMatch(/approved/i);
 
         // The oracle: available falls by exactly the days requested, spent rises by them.
@@ -178,7 +184,6 @@ test.describe('HR — Leave → Requests', () => {
         // (an advance-notice or entitlement-validity window) or a harness timing
         // problem, so it is NOT being claimed as a defect and NOT asserted as
         // correct. Tracked in test-cases/COVERAGE.md.
-        test.fixme();
 
         const policy = leavePolicies[2]!;
         const employee = employeeName(9);
@@ -192,7 +197,9 @@ test.describe('HR — Leave → Requests', () => {
         await page.create({ employeeLabel: employee, from: monday, to: daysAfter(monday, 1) });
         await page.goto();
         await page.reject(employee);
-        await page.goto();
+
+        // Acting on a request moves it off the default Pending view.
+        await page.goto('all');
 
         expect(await page.statusOf(employee), 'the request is rejected').toMatch(/reject/i);
 

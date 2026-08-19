@@ -59,7 +59,7 @@ test.describe('ERP Pro licence', () => {
         const purchased = await licensePage.listedExtraExtensions();
 
         expect(granted.length, 'the licence grants extensions').toBeGreaterThan(0);
-        expect(purchased.length, 'one row per licensed extension').toBe(granted.length);
+        expect(purchased, 'one row per licensed extension').toHaveLength(granted.length);
     });
 
     test('no extension is advertised that the licence does not grant', { tag: ['@tier2', '@core-license', '@pro'] }, async () => {
