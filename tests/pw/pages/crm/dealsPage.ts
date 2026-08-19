@@ -396,6 +396,37 @@ export class DealsPage extends BasePage {
         );
     }
 
+    /**
+     * The GET half of the same thing.
+     *
+     * Several handlers read `$_GET` rather than `$_POST` — `get_single_deal_data`,
+     * `get_deals_by_pipeline`, `get_overview_data`, `search_people` — so posting
+     * to them silently sends no arguments at all and the handler answers its
+     * "invalid" branch, which reads exactly like a permission refusal. Use this
+     * one for those.
+     */
+    async callAjaxGet(action: string, data: Record<string, unknown> = {}): Promise<{ status: number; body: unknown }> {
+        return this.page.evaluate(
+            async ({ action, data }) => {
+                const globals = (window as unknown as { erpDealsGlobal?: { ajaxurl: string; nonce: string } }).erpDealsGlobal;
+                if (!globals) return { status: 0, body: 'erpDealsGlobal absent — the screen never loaded its script' };
+
+                const params = new URLSearchParams({ action, _wpnonce: globals.nonce });
+                for (const [key, value] of Object.entries(data)) params.set(key, String(value));
+
+                const response = await fetch(`${globals.ajaxurl}?${params.toString()}`, { credentials: 'same-origin' });
+                const text = await response.text();
+
+                try {
+                    return { status: response.status, body: JSON.parse(text) };
+                } catch {
+                    return { status: response.status, body: text };
+                }
+            },
+            { action, data }
+        );
+    }
+
     /** The nonce and role flags the module hands the current user. */
     async localizedGlobals(): Promise<Record<string, unknown> | null> {
         return this.page.evaluate(() => {

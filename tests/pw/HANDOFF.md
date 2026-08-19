@@ -11,8 +11,8 @@ Read this, then `test-cases/COVERAGE.md` (the honest ledger), then `harness/repo
 
 ## Current state — verified, not remembered
 
-Last full run: **213 passed, 3 skipped, 0 failed** in `e2e_tests`, twice consecutively (the setup
-projects add ~17 more).
+Last full run: **225 passed, 3 skipped, 0 failed** in `e2e_tests`, twice consecutively (the setup
+projects add ~18 more — `crmAgent2` joined the auth chain).
 `npx tsc --noEmit` clean, `npx eslint .` clean.
 
 | Area | Tests | Green | Skipped |
@@ -37,6 +37,8 @@ projects add ~17 more).
 | crm-tasks — list, create guard, authz | 3 | 3 | — |
 | crm-deals — board, dashboard, activities, create, stages, authz | 20 | 20 | — |
 | crm-deals — single deal: notes, competitors, stage move, won/reopen/trash, authz | 10 | 10 | — |
+| crm-deals — agent-vs-agent access control (6 positive controls + 2 guards) | 8 | 8 | — |
+| harness — date helpers (no browser; guards the timezone bug in trap 41) | 4 | 4 | — |
 
 The 3 skips are deliberate and recorded in `COVERAGE.md`: licence cases that need the site to be
 UNlicensed (the activation form is not rendered while licensed).
@@ -54,6 +56,21 @@ NO_SETUP=true npx playwright test --project=e2e_tests <file> # one spec, skip th
 `NO_SETUP=true` is the fast loop, but auth `storageState` goes stale — a stale state silently
 redirects to `wp-login.php?reauth=1`, which makes an authorization test look like an empty list
 rather than a refusal. When authz tests behave oddly, re-run `--project=auth_setup` first.
+
+## Environment variables the suite needs
+
+`.env` is gitignored (correctly — it holds the licence key). **`.env.example` is ALSO gitignored**, by
+the plugin repo's own root `.gitignore:36`, so there is no tracked template to copy. Until that
+changes, this list is the template:
+
+`BASE_URL`, `ADMIN`, `ADMIN_PASSWORD`, `USER_PASSWORD`, `HR_MANAGER`, `CRM_MANAGER`, `CRM_AGENT`,
+**`CRM_AGENT_2`**, `ACCOUNT_MANAGER`, `RECRUITER`, `EMPLOYEE`, `DB_*`, `ERP_LICENSE_EMAIL`,
+`ERP_LICENSE_KEY`.
+
+`CRM_AGENT_2` was added 2026-08-20 for the agent-vs-agent access-control pass — one agent cannot
+answer whether another agent's data is reachable. `_auth.setup.ts` is data-driven off
+`utils/authStates.ts`, so adding the actor there is all that is needed; the value on this machine is
+`erp_crm_agent2`.
 
 ## Environment facts
 
@@ -217,9 +234,31 @@ rather than a refusal. When authz tests behave oddly, re-run `--project=auth_set
 37. **`erp_crm_deals_notes` stores the body in `note`, not `content`** — and deals notes are **Trix**,
     the third Trix editor in this product after the CRM contact feed. Type into it; `fill()` does
     nothing.
-38. **`cleanupDeals()` defaults to the `pwerp` marker, which matches EVERY suite deal.** Two deal
-    specs run in parallel, so each passes its own: `pwerp_deal` (deals.spec) and `pwerp_sd`
-    (singleDeal.spec). Fourth occurrence of this class — caught by reading this time, not by red.
+38. **`cleanupDeals()` defaults to the `pwerp` marker, which matches EVERY suite deal.** Three deal
+    specs run in parallel, so each passes its own: `pwerp_deal` (deals.spec), `pwerp_sd`
+    (singleDeal.spec) and `pwerp_vis` (dealVisibility.spec). Fourth occurrence of this class — caught
+    by reading this time, not by red.
+39. **Deals' permission model lives in an Eloquent SCOPE, not in the handlers.**
+    `Deal::scopeReadable()` (`Models/Deal.php:35`) restricts a non-admin/non-manager to deals they own
+    or are a listed agent on, and everything routed through `get_deal()` inherits it. Reading the AJAX
+    layer alone shows no capability checks and suggests four holes; three of those four are enforced
+    one layer down. **Assert the behaviour before believing the absence of a check.** The one genuine
+    hole is `save_deal` (ERP-146).
+40. **Several deals handlers read `$_GET`, not `$_POST`** — `get_single_deal_data`,
+    `get_deals_by_pipeline`, `get_overview_data`, `search_people`. POSTing to them sends no arguments
+    and the handler answers its "invalid" branch, **which is indistinguishable from a permission
+    refusal**. Use `DealsPage.callAjaxGet()` for those, or manufacture a false access-denied finding.
+41. **`toDate()` must never use `toISOString()`.** Every date the suite builds comes from LOCAL
+    components (`setDate()`, `getDay()`), and `toISOString()` converts to UTC before slicing — so on
+    UTC+6 any date generated between 00:00 and 06:00 local came out a day early, turning
+    `upcomingMonday()` into a Sunday and two leave specs red with "expected 3, received 2" working
+    days. **The product was right; the harness was wrong, and only at night.** Fixed at the root in
+    `helpers.toDate()`; guarded by `tests/e2e/core/dateHelpers.spec.ts`. Note CI runners are UTC, so
+    CI would have stayed green while a local evening run went red.
+42. **Ordering matters when probing access control.** A probe that ran `save_deal` before
+    `delete_deal` made the delete look unguarded; it is guarded, but the earlier write had already
+    made the caller the owner. Attempt the guarded action BOTH before and after the suspected
+    escalation, or the chain reads as two independent holes.
 
 ## Bugs filed (all on `wp-erp/erp-pro`, sub-issues of #844, screenshots embedded)
 
@@ -236,17 +275,18 @@ rather than a refusal. When authz tests behave oddly, re-run `--project=auth_set
 | ERP-143 | [#958](https://github.com/wp-erp/erp-pro/issues/958) | Major | CRM Tasks/Schedules cannot be created — the composer's submit never enables (`trix-change` bound to the wrong editor) |
 | ERP-144 | [#959](https://github.com/wp-erp/erp-pro/issues/959) | Major | Default deal pipeline seeded out of order (`Proposal Made` gets `order = 0`) — the board, settings, modal and Deal Progress all open at stage four, and every deal records having REACHED Proposal Made, so the funnel reports 2 deals there with 0 at the stage before it |
 | ERP-145 | [#960](https://github.com/wp-erp/erp-pro/issues/960) | Minor | Add New Deal overwrites a title the user already typed — the contact watcher assigns unconditionally |
+| ERP-146 | [#963](https://github.com/wp-erp/erp-pro/issues/963) | **Major / P1** | A CRM agent can take over another agent's deal — `save_deal` is the one path that skips `Deal::scopeReadable()`, and it reassigns `owner_id` to the caller, so the write transfers the deal and unlocks the trash/read/note paths that DO check |
 
-**Re-verified on 1.7.0 but still NOT POSTED** — filed 2026-07-21 against 1.6.0, never sent to GitHub:
+**Filed 2026-07-21 against 1.6.0, re-verified on 1.7.0, and POSTED 2026-08-19** (the two that were re-tested):
 
 | ID | Severity | Still reproduces? | Summary |
 |---|---|---|---|
-| ERP-043 | Major | **Yes** — 4 open rows on a deal at Demo Scheduled, expected 1 | Stage history keeps an open (`out IS NULL`) row for every stage at or below the deal's, not just the current one — `Deals.php:611` loads stages unscoped |
-| ERP-044 | Major | **Yes** — HTTP 500, 3/3 | `erp_deals_delete_competitor` fatals for any CRM agent: a Collection is passed where a model is expected. Also fatals for a non-existent competitor id, because `empty()` is false for an empty Collection — so the "Invalid competitor" guard is dead code |
-| ERP-045 | Major | **Not re-tested** — needs a second pipeline | Stage/pipeline delete transfer accepts a `transfer_to_stage_id` from a different pipeline |
-| ERP-066 | Minor | **Not re-tested** — needs a media fixture | `add_attachment()` persists a row for a non-existent WP media id |
+| ERP-043 → [#961](https://github.com/wp-erp/erp-pro/issues/961) | Major | **Yes** — 4 open rows on a deal at Demo Scheduled, expected 1 | Stage history keeps an open (`out IS NULL`) row for every stage at or below the deal's, not just the current one — `Deals.php:611` loads stages unscoped |
+| ERP-044 → [#962](https://github.com/wp-erp/erp-pro/issues/962) | Major | **Yes** — HTTP 500, 3/3 | `erp_deals_delete_competitor` fatals for any CRM agent: a Collection is passed where a model is expected. Also fatals for a non-existent competitor id, because `empty()` is false for an empty Collection — so the "Invalid competitor" guard is dead code |
+| ERP-045 | Major | **Not re-tested** — needs a second pipeline; still unposted | Stage/pipeline delete transfer accepts a `transfer_to_stage_id` from a different pipeline |
+| ERP-066 | Minor | **Not re-tested** — needs a media fixture; still unposted | `add_attachment()` persists a row for a non-existent WP media id |
 
-Bug files: `~/.claude/skills/wp-erp-qa/bugs/2026-08-18/` and `2026-08-19/`. Register: `bugs/REGISTER.md`, **next ID `ERP-146`**. Filing needs the user's explicit go-ahead per issue; identity gate is `gh auth status`
+Bug files: `~/.claude/skills/wp-erp-qa/bugs/2026-08-18/` and `2026-08-19/`. Register: `bugs/REGISTER.md`, **next ID `ERP-147`**. Filing needs the user's explicit go-ahead per issue; identity gate is `gh auth status`
 = `shohan0120`. Screenshots are attached by loading the PNG onto the macOS clipboard
 (`osascript … as «class PNGf»`) and sending a real Cmd+V into the GitHub comment box — `gh` cannot
 upload images, and the React editor exposes no file input. Two things make this reliable, both
@@ -274,28 +314,25 @@ was filed, because nothing was a product defect. Full write-up in `COVERAGE.md`.
 The lesson is the same one D4 taught: **when an oracle disagrees with the UI, check the oracle is
 reading the table the product reads.**
 
-## RESUME HERE — the next pass is the rest of CRM
+## RESUME HERE — the next pass is contact groups, subscribers and CRM reports
 
-Deals is now covered at BOTH levels — the board/dashboard/activities screens and the single-deal
-page. What is left inside CRM, in the order I would take it:
+Deals is now covered at three levels — board, single deal, and agent-vs-agent access control. What
+remains inside CRM:
 
-1. **The agent/manager visibility pass** — the security one, and the highest value left in CRM.
-   Questions it must answer: can a CRM agent see or act on another agent's contacts and deals? The
-   deals module has **12 AJAX handlers with no capability check at all** (`save_deal`, `delete_deal`,
-   the note/attachment/agent/participant/competitor/email ones), protected only by the nonce being
-   localized on `erp_crm_add_contact`-gated screens. An agent legitimately holds that nonce. This is
-   untested. It needs a SECOND CRM agent seeded — `_auth.setup.ts` currently creates one.
-   `DealsPage.callAjax()` is the tool; `withRole(browser, 'crmAgent', …)` is the harness.
-2. **Contact groups and subscribers** — `admin.php?page=erp-crm&section=contact-group`. Untouched.
-3. **Schedules** — the CRM contact feed's Schedule composer. **Blocked-ish:** ERP-143 / erp-pro#958
-   says Create Schedule never enables, same defect as Tasks. Expect a `test.fail()` guard, not
-   coverage.
-4. **CRM reports** — `section=reports`. Untouched.
-5. **Deals leftovers**, each needing a fixture the suite does not have yet: Lost + lost reasons (needs
-   a reason created in ERP Settings), attachments (needs a media fixture, and is ERP-066's ground),
-   the Add activity composer, participants/agents (needs the second agent from step 1), pipeline
-   administration and a second pipeline (which is where ERP-045 and the cross-pipeline half of
-   ERP-043 live).
+1. **Contact groups and subscribers** — `admin.php?page=erp-crm&section=contact-group`. Completely
+   untouched; nothing gathered yet, so this one starts cold.
+2. **CRM reports** — `section=reports`. Untouched.
+3. **Schedules** — the contact feed's Schedule composer. **Expect a `test.fail()` guard, not
+   coverage:** ERP-143 / erp-pro#958 records that Create Schedule never enables, the same defect as
+   Tasks.
+4. **The same agent-vs-agent question on the FREE side** — contacts, companies and activities, which
+   use `contact_owner` rather than the deals model. Deals turned out to be mostly correct; do not
+   assume the free side matches, and do not assume it is broken either.
+5. **Deals leftovers**, each blocked on a fixture the suite does not have: Lost + lost reasons (needs
+   a reason created in ERP Settings), attachments (needs a media fixture; ERP-066's ground), the Add
+   activity composer, the deal `agents` sharing list (the intended grant path in `scopeReadable()`),
+   and pipeline administration with a SECOND pipeline — which is where ERP-045 and the cross-pipeline
+   half of ERP-043 live.
 
 ## Next steps, in order
 
@@ -307,10 +344,10 @@ page. What is left inside CRM, in the order I would take it:
 2. Payroll pay RUN — **blocked by ERP-141 / erp-pro#956** on this MariaDB environment; the schema is
    broken, so no pay-run assertions were written. Revisit once it is fixed, or run that pass against
    MySQL. Pay items/categories and payroll settings are still open regardless.
-3. **CRM in progress** — Contacts, Companies, Activities, Tasks and Deals (board AND single-deal)
-   done. Remaining is listed in RESUME HERE above, agent/manager visibility first. Then Accounting —
-   which has **zero specs today**, though its tier-1 cases are authored and 161 REST routes are
-   harvested — then the remaining Pro modules.
+3. **CRM in progress** — Contacts, Companies, Activities, Tasks and Deals (board, single-deal AND
+   agent access control) done. Remaining is listed in RESUME HERE above. Then Accounting — which has
+   **zero specs today**, though its tier-1 cases are authored and 161 REST routes are harvested —
+   then the remaining Pro modules.
 4. The 100/101-seat licence test is designed (6 cases in `test-cases/`) but **not implemented** — it
    belongs in the separate `license_limit` project so it never runs inside the normal suite.
 5. CI: `.github/workflows/pw-suite.yml` exists but has **never been run**. Needs `ERP_PRO_TOKEN`,

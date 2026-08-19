@@ -471,6 +471,107 @@ belongs to `cleanupAll()` only.** Worth noting it was found by reading, not by a
 - **ERP-045** (cross-pipeline stage transfer on delete) — needs a second pipeline, deliberately left
   to the pipeline-administration pass so it is not confused with ERP-043 or ERP-144.
 
+### A harness bug that only fires at night — `toDate()` and the timezone (found 2026-08-20)
+
+Two leave specs went red on a full run with `"Mon–Wed counts as three working days — expected 3,
+received 2"`. Nothing in leave had changed, and the same specs had been green twice that evening.
+
+**It was ours, and it was the clock.** `toDate()` formatted with `date.toISOString().slice(0, 10)`,
+but every date the suite builds is assembled from LOCAL components (`setDate()`, `getDay()`).
+`toISOString()` converts to UTC first, so on a timezone ahead of UTC any date produced between
+midnight and the offset comes out as the **previous day**. This machine is UTC+6 and the run started
+at 00:04 local, so `upcomingMonday()` returned a **Sunday**:
+
+```
+local now       : Thu Aug 20 2026 00:04:25
+toISOString     : 2026-08-19T18:04:25.051Z
+local Monday    : Mon Sep 07 2026   (getDay 1)
+after toISO cut : 2026-09-06        (day-of-week 0 — Sunday)
+```
+
+Mon–Wed silently became Sun–Tue, which really is two working days. **The product was right and the
+harness was wrong**, and the failure message pointed straight at working-day counting — the exact
+shape of a product defect. Had it been believed, it would have produced a bug report about leave
+maths.
+
+Fixed at the root: `toDate()` now formats from local components, which repairs `dateOffset()`,
+`upcomingMonday()` and every caller at once rather than patching one helper.
+
+**Guard added:** `tests/e2e/core/dateHelpers.spec.ts` — four cases, no browser and no site, asserting
+that `upcomingMonday()` lands on a Monday for every offset the suite actually uses, that
+Monday+1/+2/+4 are Tue/Wed/Fri, that `toDate()` returns the local calendar day, and that a locally
+built date survives the round trip with its weekday intact.
+
+Three things worth carrying forward:
+
+1. **A time-of-day-dependent bug is the worst kind to triage** — it passes all day and fails at night,
+   so it gets written off as flake. The COVERAGE entry from the earlier CRM pass, "one intermittent I
+   could not reproduce", is very likely this same bug seen once and dismissed. It is now reproducible
+   on demand: run between 00:00 and 06:00 local, or set `TZ` ahead of UTC.
+2. **`toISOString()` is not a date formatter.** It is a UTC instant serialiser. Any code mixing it
+   with `setDate()`/`getDay()` has this bug latent in it.
+3. **It would have hit CI regardless of local time.** GitHub Actions runners are UTC, so `toDate()`
+   there is accidentally correct — meaning CI would have been GREEN while a Bangladesh-hours local run
+   was red, which is the most confusing possible split.
+
+### CRM — Deal access control between agents (8 cases, all green — 2 known-defect guards)
+
+The security pass, and the one that needed a **second CRM agent**: one agent can only answer "can I
+see my own data". `authStates.ts` now carries `crmAgent2`, and `_auth.setup.ts` — which is
+data-driven off that map — seeds and authenticates it with no change of its own.
+
+**Deals HAS a working ownership model, and that is the finding's foundation.**
+`Deal::scopeReadable()` (`Models/Deal.php:35`) restricts anyone who is neither administrator nor CRM
+manager to deals they own or are a listed agent on. Every path that loads a deal through `get_deal()`
+inherits it. Six positive controls confirm it holds, and they are what make the one failure
+meaningful — this is a single missing check, not "deals have no permissions":
+
+| Path | Agent → another agent's deal | Result |
+|---|---|---|
+| `erp_deals_get_single_deal_data` | read | refused — `"Deal does not exist"` |
+| `erp_deals_save_deal_note` | note | refused — `"Invalid deal id"`, nothing written |
+| `erp_deals_delete_deal` | trash | refused — `"Invalid deal"`, `deleted_at` still NULL |
+| board (`get_deals_by_pipeline`) | list | the deal is absent |
+| `erp_deals_get_single_deal_data` as CRM **manager** | read | allowed — the exemption works |
+| `erp_deals_save_deal` | **write** | **allowed — ERP-146** |
+
+**ERP-146 / erp-pro#963 (Major, P1)** — `Deals::save_deal()` (`Deals.php:535`) is the one path that
+never routes through `readable()`, and the AJAX handler has no capability check either. Worse than an
+unauthorised edit: `Deal_Ajax.php:260` reassigns `owner_id` to the caller for any non-manager, so the
+write **transfers the deal**. Measured 3/3 — `owner_id` 11 → 115 while `created_by` stayed 11, a trash
+refused as `"Invalid deal"` seconds earlier then succeeded, and the original agent's board went
+**empty**. Both halves are carried as `test.fail()` guards: the takeover itself, and the escalation
+(refused-before / allowed-after on the same endpoint, same caller, same deal).
+
+**How wrong my code-reading was, recorded because it is the lesson.** From reading the AJAX layer
+alone I predicted FOUR holes — read, write, delete and board scope — because none of those handlers
+carries a capability check. Three of the four were wrong: the model lives one layer down, in an
+Eloquent scope on the model, not in the handlers. The first run reported "Expected to fail, but
+passed" three times, which is `test.fail()` doing exactly its job. **A permission model can live
+below the layer you are reading; assert the behaviour before believing the absence of a check.**
+
+The first probe also nearly produced a wrong conclusion in the other direction: a run that did
+`save_deal` *before* `delete_deal` showed the delete succeeding, which looks like "delete is
+unguarded". It is not — the earlier write had already made the caller the owner. Ordering the probe
+so the delete is attempted BOTH before and after the write is what separated the two.
+
+**A second trap worth keeping:** several deals handlers read `$_GET`, not `$_POST` —
+`get_single_deal_data`, `get_deals_by_pipeline`, `get_overview_data`, `search_people`. POSTing to them
+sends no arguments at all and the handler answers its "invalid" branch, **which reads exactly like a
+permission refusal**. `DealsPage.callAjaxGet()` exists for those; using the wrong one would have
+manufactured a false "access denied" and a bug report to match.
+
+**Not covered here, and why:**
+
+- **CRM contacts, companies and activities** between agents — the same question on the free side, a
+  different ownership column (`contact_owner`), and a bigger surface. Deals only, this pass.
+- **The deal `agents` list** — `scopeReadable()` also grants access to a listed agent, which is the
+  intended sharing mechanism. Adding an agent and confirming the grant works belongs with the
+  participants/agents pass.
+- **Whether the takeover is reachable through the UI** rather than through the endpoint. It is filed
+  on the endpoint, which is what the module exposes; the single-deal page will not offer an agent a
+  deal they cannot read, so the practical path is a crafted request.
+
 ### ERP-144 → erp-pro#959 — the default pipeline is seeded out of order, and it is not cosmetic (filed 2026-08-19)
 
 `table-data.php:26` seeds `Proposal Made` with `order = 0` while Lead In..Negotiations Started get
