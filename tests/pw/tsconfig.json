@@ -1,24 +1,41 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "lib": ["ES2022", "DOM"],
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@utils/*": ["utils/*"]
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM"],
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "baseUrl": ".",
+        "paths": {
+            "@utils/*": ["./utils/*"],
+            "@pages/*": ["./pages/*"],
+            "@harness/*": ["./harness/*"],
+            "@apiEndPoints": ["./utils/apiEndPoints"],
+            "@apiUtils": ["./utils/apiUtils"],
+            "@authStates": ["./utils/authStates"],
+            "@dbUtils": ["./utils/dbUtils"],
+            "@helpers": ["./utils/helpers"],
+            "@interfaces": ["./utils/interfaces"],
+            "@license": ["./utils/license"],
+            "@payloads": ["./utils/payloads"],
+            "@schemas": ["./utils/schemas"],
+            "@testData": ["./utils/testData"],
+            "@test": ["./utils/test"]
+        },
+        "strict": true,
+        "noUncheckedIndexedAccess": false,
+        "noImplicitOverride": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "tsBuildInfoFile": "./.tsbuildinfo",
+        "noEmit": true,
+        "types": ["node"]
     },
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "lib"
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "lib"]
+    "include": ["**/*.ts", "**/*.js"],
+    "exclude": ["node_modules", "playwright-report", "test-results"]
 }

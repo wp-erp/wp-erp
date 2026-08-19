@@ -1,0 +1,5271 @@
+[
+  {
+    "route": "#/dashboard",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 1,
+    "fields": [
+      {
+        "type": "select",
+        "name": "query_time",
+        "id": "att-filter-duration",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "this_month",
+            "label": "This Month"
+          },
+          {
+            "value": "last_month",
+            "label": "Last Month"
+          },
+          {
+            "value": "this_quarter",
+            "label": "This Quarter"
+          },
+          {
+            "value": "last_quarter",
+            "label": "Last Quarter"
+          },
+          {
+            "value": "this_year",
+            "label": "This Year"
+          },
+          {
+            "value": "last_year",
+            "label": "Last Year"
+          }
+        ]
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/users/customers",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "Search People",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table people-table table-striped table-dark ",
+        "columns": [
+          "Name",
+          "Company",
+          "Email",
+          "Phone",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Import",
+      "Export",
+      "Search"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/users/vendors",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "Search People",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table people-table table-striped table-dark ",
+        "columns": [
+          "Name",
+          "Company",
+          "Email",
+          "Phone",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Import",
+      "Export",
+      "Search"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/users/employees",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark",
+        "columns": [
+          "Name",
+          "Designation",
+          "Department",
+          "Email",
+          "Phone"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Show more details"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/sales",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "1",
+            "label": "Draft"
+          },
+          {
+            "value": "2",
+            "label": "Awaiting Payment"
+          },
+          {
+            "value": "3",
+            "label": "Pending"
+          },
+          {
+            "value": "4",
+            "label": "Paid"
+          },
+          {
+            "value": "5",
+            "label": "Partially Paid"
+          },
+          {
+            "value": "6",
+            "label": "Approved"
+          },
+          {
+            "value": "7",
+            "label": "Closed"
+          },
+          {
+            "value": "8",
+            "label": "Void"
+          },
+          {
+            "value": "9",
+            "label": "Returned"
+          },
+          {
+            "value": "10",
+            "label": "Partially Returned"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "invoice",
+            "label": "Invoice"
+          },
+          {
+            "value": "payment",
+            "label": "Receive"
+          },
+          {
+            "value": "return_payment",
+            "label": "Payment"
+          },
+          {
+            "value": "estimate",
+            "label": "Estimate"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--cancel",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "reset",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--reset",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--primary",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 transact",
+        "columns": [
+          "Voucher No.",
+          "Type",
+          "Ref",
+          "Customer",
+          "Trn Date",
+          "Due Date",
+          "Balance",
+          "Total",
+          "Status"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Submit"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/expenses",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 10,
+    "fields": [
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "1",
+            "label": "Draft"
+          },
+          {
+            "value": "2",
+            "label": "Awaiting Payment"
+          },
+          {
+            "value": "3",
+            "label": "Pending"
+          },
+          {
+            "value": "4",
+            "label": "Paid"
+          },
+          {
+            "value": "5",
+            "label": "Partially Paid"
+          },
+          {
+            "value": "6",
+            "label": "Approved"
+          },
+          {
+            "value": "7",
+            "label": "Closed"
+          },
+          {
+            "value": "8",
+            "label": "Void"
+          },
+          {
+            "value": "9",
+            "label": "Returned"
+          },
+          {
+            "value": "10",
+            "label": "Partially Returned"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "expense",
+            "label": "Expense"
+          },
+          {
+            "value": "bill",
+            "label": "Bill"
+          },
+          {
+            "value": "pay_bill",
+            "label": "Bill Payment"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "5",
+            "label": "pwerpFirst Lastytlo"
+          },
+          {
+            "value": "4",
+            "label": "pwerpFirst Lastlsdk"
+          },
+          {
+            "value": "3",
+            "label": "pwerpFirst Lasthasu"
+          },
+          {
+            "value": "2",
+            "label": "pwerpFirst Lastushu"
+          },
+          {
+            "value": "1",
+            "label": "pwerpFirst LastProbe"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--cancel",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "reset",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--reset",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--primary",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 transact",
+        "columns": [
+          "Voucher No.",
+          "Type",
+          "Ref",
+          "People",
+          "Trn Date",
+          "Due Date",
+          "Due",
+          "Total",
+          "Status"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Submit"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/purchases",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "1",
+            "label": "Draft"
+          },
+          {
+            "value": "2",
+            "label": "Awaiting Payment"
+          },
+          {
+            "value": "3",
+            "label": "Pending"
+          },
+          {
+            "value": "4",
+            "label": "Paid"
+          },
+          {
+            "value": "5",
+            "label": "Partially Paid"
+          },
+          {
+            "value": "6",
+            "label": "Approved"
+          },
+          {
+            "value": "7",
+            "label": "Closed"
+          },
+          {
+            "value": "8",
+            "label": "Void"
+          },
+          {
+            "value": "9",
+            "label": "Returned"
+          },
+          {
+            "value": "10",
+            "label": "Partially Returned"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "All"
+          },
+          {
+            "value": "purchase",
+            "label": "Purchase"
+          },
+          {
+            "value": "pay_purchase",
+            "label": "Payment"
+          },
+          {
+            "value": "receive_pay_purchase",
+            "label": "Receive"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--cancel",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "reset",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--reset",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--primary",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 transact",
+        "columns": [
+          "Voucher No.",
+          "Type",
+          "Ref",
+          "Customer",
+          "Trn Date",
+          "Due Date",
+          "Balance",
+          "Total",
+          "Status"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Submit"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/journals",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [
+      {
+        "cls": "wp-ListTable widefat fixed journal-list",
+        "columns": [
+          "Voucher No.",
+          "Date",
+          "Particulars",
+          "Amount"
+        ]
+      }
+    ],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/reimbursements",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat reimbursement-l",
+        "columns": [
+          "Voucher No",
+          "People Name",
+          "Amount",
+          "Transaction Date",
+          "Voucher Type"
+        ]
+      }
+    ],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/products/product-service",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "Search Products",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 product-",
+        "columns": [
+          "Product Name",
+          "Sale Price",
+          "Cost Price",
+          "Product Category",
+          "Tax Category",
+          "Product Type",
+          "Vendor",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Import",
+      "Export",
+      "Search"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/products/product-categories",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Category Name",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "",
+        "cls": "wperp-btn btn--primary text-left",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped",
+        "columns": [
+          "Category Name",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Save"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/products/inventory",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 inventor",
+        "columns": [
+          "Product Name",
+          "Sale Price",
+          "Cost Price",
+          "Stock",
+          "Product Category",
+          "Tax Category",
+          "Vendor"
+        ]
+      }
+    ],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/settings/charts",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "paged",
+        "id": "",
+        "cls": "current-page",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "paged",
+        "id": "",
+        "cls": "current-page",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "paged",
+        "id": "",
+        "cls": "current-page",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat table2 chart-li",
+        "columns": [
+          "Code",
+          "Name",
+          "Balance",
+          "Count",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Show more details"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/settings/banks",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/settings/taxes/tax-rates",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "form-check-input",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-ListTable widefat fixed tax-rate-list wperp-table table-s",
+        "columns": [
+          "Tax Zone Name",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/settings/taxes/tax-records",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [
+      {
+        "cls": "wp-ListTable widefat fixed tax-records-list wperp-table tabl",
+        "columns": [
+          "Voucher No",
+          "Agency",
+          "Date",
+          "Amount",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "More"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/opening-balance",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 118,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Description",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table erp-accordion-expand-body",
+        "columns": [
+          "Agency",
+          "Debit",
+          "Credit"
+        ]
+      },
+      {
+        "cls": "wperp-table wperp-form-table erp-accordion-expand-body",
+        "columns": [
+          "Account",
+          "Debit",
+          "Credit"
+        ]
+      },
+      {
+        "cls": "wperp-table wperp-form-table erp-accordion-expand-body",
+        "columns": [
+          "Account",
+          "Debit",
+          "Credit"
+        ]
+      },
+      {
+        "cls": "wperp-table wperp-form-table erp-accordion-expand-body",
+        "columns": [
+          "Account",
+          "Debit",
+          "Credit"
+        ]
+      },
+      {
+        "cls": "wperp-table wperp-form-table erp-accordion-expand-body",
+        "columns": [
+          "Account",
+          "Debit",
+          "Credit"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Agency",
+      "Save"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/invoices/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 29,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "discount-percent",
+            "label": "Discount percent"
+          },
+          {
+            "value": "discount-value",
+            "label": "Discount value"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "discount-percent",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select sales tax",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "url",
+        "name": "href",
+        "id": "",
+        "cls": "trix-input trix-input--dialog",
+        "label": "",
+        "placeholder": "Enter a URL…",
+        "required": true,
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "trix-button trix-button--dialog",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "trix-button trix-button--dialog",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Product/Service",
+          "Qty",
+          "Unit Price",
+          "Amount",
+          "Tax"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Bold",
+      "Italic",
+      "Strikethrough",
+      "Link",
+      "Heading",
+      "Quote",
+      "Code",
+      "Bullets",
+      "Numbers",
+      "Decrease Level",
+      "Increase Level",
+      "Attach Files",
+      "Undo",
+      "Redo",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/estimates/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 29,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "cls": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "discount-percent",
+            "label": "Discount percent"
+          },
+          {
+            "value": "discount-value",
+            "label": "Discount value"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "discount-percent",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select sales tax",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "url",
+        "name": "href",
+        "id": "",
+        "cls": "trix-input trix-input--dialog",
+        "label": "",
+        "placeholder": "Enter a URL…",
+        "required": true,
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "trix-button trix-button--dialog",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "cls": "trix-button trix-button--dialog",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Product/Service",
+          "Qty",
+          "Unit Price",
+          "Amount",
+          "Tax"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Bold",
+      "Italic",
+      "Strikethrough",
+      "Link",
+      "Heading",
+      "Quote",
+      "Code",
+      "Bullets",
+      "Numbers",
+      "Decrease Level",
+      "Increase Level",
+      "Attach Files",
+      "Undo",
+      "Redo",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/payments/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Account",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "finalamount",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Voucher No",
+          "Due Date",
+          "Total",
+          "Balance",
+          "Amount"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/bills/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 20,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference No",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "amount",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "amount",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "amount",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "finalamount",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "SL No.",
+          "Account",
+          "Description",
+          "Amount",
+          "Total"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/pay-bills/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference NO",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Account",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Bill No",
+          "Due Date",
+          "Total",
+          "Due",
+          "Amount"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/purchase-orders/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 25,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference No",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Purchase Vat Zone",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Product/Service",
+          "Qty",
+          "Unit Price",
+          "Amount",
+          "VAT"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/purchases/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 25,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference No",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "qty",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Please search Oops! No elements found. List is empty.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Purchase Vat Zone",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Product/Service",
+          "Qty",
+          "Unit Price",
+          "Amount",
+          "VAT"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/pay-purchases/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference No",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Account",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "finalamount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "Voucher No",
+          "Due Date",
+          "Total",
+          "Balance",
+          "Amount"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/expenses/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 21,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Reference No",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Account",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "amount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "amount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "amount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "finalamount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "SL No.",
+          "Account",
+          "Description",
+          "Amount",
+          "Total"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/checks/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 20,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Check No*",
+        "placeholder": "",
+        "required": true,
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Billing Address",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "amount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "amount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "",
+        "placeholder": "Particulars",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "amount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "finalamount",
+        "id": "",
+        "cls": "text-right wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table",
+        "columns": [
+          "SL No.",
+          "Account",
+          "Description",
+          "Amount",
+          "Total"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Save",
+      "Save and New",
+      "Save as Draft"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/journals/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 14,
+    "fields": [
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Ref.",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field display-flex",
+        "label": "Particulars",
+        "placeholder": "Internal Information",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": true,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": true,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": true,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": true,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field text-right",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "attachments[]",
+        "id": "attachment",
+        "cls": "display-none",
+        "label": "Select files",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table wperp-form-table new-journal-form",
+        "columns": [
+          "SL No.",
+          "Account",
+          "Particulars",
+          "Debit",
+          "Credit"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Add Line",
+      "Save"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/transactions/reimbursements/new",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 7,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Amount",
+        "placeholder": "Enter Amount",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Enter Voucher Type",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Account",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Particulars",
+        "placeholder": "Enter Particulars",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "More",
+      "Save",
+      "Save and New"
+    ],
+    "empty": ""
+  },
+  {
+    "route": "#/settings/pay-tax",
+    "heading": "Accounting",
+    "tabs": [],
+    "fieldCount": 7,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Select Account",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Please search",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Tax Amount",
+        "placeholder": "Enter Tax Amount",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "cls": "multiselect__input",
+        "label": "",
+        "placeholder": "Enter Voucher Type",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "",
+        "cls": "wperp-form-field",
+        "label": "Particulars",
+        "placeholder": "Enter Particulars",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "More",
+      "Save"
+    ],
+    "empty": ""
+  },
+  {
+    "url": "admin.php?page=erp-accounting#/reports",
+    "route": "#/reports",
+    "heading": "",
+    "links": [
+      "Reports :: #/reports",
+      "View Report :: #/reports/trial-balance",
+      "View Report :: #/reports/ledgers/7",
+      "View Report :: #/reports/income-statement",
+      "View Report :: #/reports/sales/tax/",
+      "View Report :: #/reports/balance-sheet"
+    ],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [],
+    "buttons": [
+      "More"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-accounting#/reports/trial-balance",
+    "route": "#/reports/trial-balance",
+    "heading": "",
+    "links": [
+      "Reports :: #/reports"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please search",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat",
+        "columns": [
+          "Account Name",
+          "Debit Total",
+          "Credit Total"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "View"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-accounting#/reports/ledgers/7",
+    "route": "#/reports/ledgers/7",
+    "heading": "",
+    "links": [
+      "Reports :: #/reports"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please search",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat ledge",
+        "columns": [
+          "Trns Date",
+          "Created At",
+          "Trns No",
+          "Particulars",
+          "Debit",
+          "Credit",
+          "Balance"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Filter",
+      "Show more details"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-accounting#/reports/income-statement",
+    "route": "#/reports/income-statement",
+    "heading": "",
+    "links": [
+      "Reports :: #/reports"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat incom",
+        "columns": [
+          "Account Name",
+          "Amount"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat incom",
+        "columns": [
+          "Account Name",
+          "Amount"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Filter"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-accounting#/reports/sales/tax/",
+    "route": "#/reports/sales/tax/",
+    "heading": "",
+    "links": [
+      "Reports :: #/reports",
+      "Back :: #/reports/",
+      "View Report :: #/reports/sales/tax/agency-based",
+      "View Report :: #/reports/sales/tax/transaction-based",
+      "View Report :: #/reports/sales/tax/customer-based",
+      "View Report :: #/reports/sales/tax/category-based"
+    ],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [],
+    "buttons": [
+      "More"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-accounting#/reports/balance-sheet",
+    "route": "#/reports/balance-sheet",
+    "heading": "",
+    "links": [
+      "Reports :: #/reports"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "prepare-close",
+        "label": "Prepare for closing",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wperp-table table-striped table-dark widefat balan",
+        "columns": [
+          "Assets",
+          "Amount"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat balan",
+        "columns": [
+          "Liability",
+          "Amount"
+        ]
+      },
+      {
+        "cls": "wperp-table table-striped table-dark widefat balan",
+        "columns": [
+          "Equity",
+          "Amount"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Filter"
+    ]
+  }
+]

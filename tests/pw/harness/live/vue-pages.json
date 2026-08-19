@@ -1,0 +1,3191 @@
+[
+  {
+    "url": "admin.php?page=erp-company",
+    "heading": "Company Details",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings"
+    ],
+    "hashLinks": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [],
+    "buttons": []
+  },
+  {
+    "url": "admin.php?page=erp-crm&section=dashboard",
+    "heading": "CRM",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "All Deals",
+      "Activities",
+      "Activity Report",
+      "Customer Report",
+      "Growth Report"
+    ],
+    "hashLinks": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [
+      {
+        "cls": "",
+        "columns": [
+          "SunMonTueWedThuFriSat",
+          "Sun",
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "Sun",
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "1"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29"
+        ]
+      },
+      {
+        "cls": "",
+        "columns": [
+          "30",
+          "31",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "today",
+      "month",
+      "week",
+      "day"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-crm&section=deals",
+    "heading": "CRM",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "All Deals",
+      "Activities",
+      "Activity Report",
+      "Customer Report",
+      "Growth Report"
+    ],
+    "hashLinks": [],
+    "fieldCount": 17,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "qlStartDate",
+        "label": "",
+        "placeholder": "From Date",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "qlEndDate",
+        "label": "",
+        "placeholder": "To Date",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "lgStartDate",
+        "label": "From",
+        "placeholder": "Start Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "lgEndDate",
+        "label": "To",
+        "placeholder": "End Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "lrStartDate",
+        "label": "From",
+        "placeholder": "Start Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "lrEndDate",
+        "label": "To",
+        "placeholder": "End Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "label": "Time Filter",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "Time Filter",
+        "placeholder": "Time Step (Mins)",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "Time Filter",
+        "placeholder": "Max Interval (Mins)",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "dealLostReasonStartDate",
+        "label": "From",
+        "placeholder": "Start Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "dealLostReasonEndDate",
+        "label": "To",
+        "placeholder": "End Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "topSalesPersonStartDate",
+        "label": "",
+        "placeholder": "Start Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "topSalesPersonEndDate",
+        "label": "",
+        "placeholder": "End Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "wld-start-date",
+        "label": "",
+        "placeholder": "From Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "wld-end-date",
+        "label": "",
+        "placeholder": "To Date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "fwm-start-date",
+        "label": "",
+        "placeholder": "From Date",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "fwm-end-date",
+        "label": "",
+        "placeholder": "To Date",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat striped",
+        "columns": [
+          "Stage",
+          "Counts of deals reached the stage",
+          "Values of deals reached the stage",
+          "Average deal value (USD)",
+          "Average time until the stage reached (days)"
+        ]
+      },
+      {
+        "cls": "wp-list-table widefat striped",
+        "columns": [
+          "Type",
+          "Total",
+          "Open",
+          "Done"
+        ]
+      },
+      {
+        "cls": "wp-list-table widefat striped",
+        "columns": [
+          "Title",
+          "Value",
+          "Company",
+          "Contact",
+          "Exp. close date",
+          "Owner"
+        ]
+      }
+    ],
+    "buttons": [
+      "More",
+      "Pipeline",
+      "This month",
+      "Open Deals",
+      "Absolute",
+      "Percentage",
+      "Other Reasons",
+      "Number of Win",
+      "All",
+      "All Owners",
+      "Value",
+      "Count",
+      "All Agents",
+      "×",
+      "Close"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-crm&section=integration",
+    "heading": "CRM",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "All Deals",
+      "Activities",
+      "Activity Report",
+      "Customer Report",
+      "Growth Report",
+      "Hubspot",
+      "Mailchimp",
+      "Salesforce",
+      "Helpscout"
+    ],
+    "hashLinks": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [],
+    "buttons": [
+      "More",
+      "Configure"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-crm&section=reports",
+    "heading": "CRM",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "All Deals",
+      "Activities",
+      "Activity Report",
+      "Customer Report",
+      "Growth Report"
+    ],
+    "hashLinks": [],
+    "fieldCount": 0,
+    "fields": [],
+    "tables": [],
+    "buttons": [
+      "More",
+      "View Report"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=payroll&sub-section=dashboard",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=payroll&sub-section=calendar",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "Add New Pay Calendar"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=payroll&sub-section=payrun",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 11,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "select",
+        "name": "filter_payrun_status",
+        "id": "filter_payrun_status",
+        "label": "Filter by Status",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "- Select All -"
+          }
+        ]
+      },
+      {
+        "type": "submit",
+        "name": "filter_status_button",
+        "id": "filter_status_button",
+        "label": "Filter by Status",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped table-view-list payruns",
+        "columns": [
+          "Pay Period",
+          "Pay Run",
+          "Payment Date Sort descending.",
+          "Employees",
+          "Net Pay + Tax",
+          "Status Sort descending.",
+          "Action"
+        ]
+      }
+    ],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "Filter"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=payroll&sub-section=bulk-pay-item-edit",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 13,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "select",
+        "name": "pay_items",
+        "id": "pay_items",
+        "label": "SL",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "Select a pay item"
+          },
+          {
+            "value": "1",
+            "label": "Travel Allowance"
+          },
+          {
+            "value": "2",
+            "label": "Accomodation Allowance"
+          },
+          {
+            "value": "3",
+            "label": "City Compensatory Allowance"
+          },
+          {
+            "value": "4",
+            "label": "Pay Adjustment"
+          },
+          {
+            "value": "5",
+            "label": "OverTime"
+          },
+          {
+            "value": "6",
+            "label": "Variable Pay"
+          },
+          {
+            "value": "7",
+            "label": "Bonus"
+          },
+          {
+            "value": "8",
+            "label": "Holiday Pay"
+          },
+          {
+            "value": "9",
+            "label": "Service Charge"
+          },
+          {
+            "value": "10",
+            "label": "Provident Fund"
+          },
+          {
+            "value": "11",
+            "label": "Loan"
+          },
+          {
+            "value": "12",
+            "label": "Advance Pay"
+          },
+          {
+            "value": "13",
+            "label": "Advance"
+          },
+          {
+            "value": "14",
+            "label": "Miscelleneous Deduction"
+          },
+          {
+            "value": "15",
+            "label": "Give as you earn"
+          },
+          {
+            "value": "16",
+            "label": "Expenses"
+          },
+          {
+            "value": "17",
+            "label": "Redundancy"
+          },
+          {
+            "value": "18",
+            "label": "Millage"
+          },
+          {
+            "value": "19",
+            "label": "Income Tax"
+          },
+          {
+            "value": "20",
+            "label": "Fedaral Tax"
+          },
+          {
+            "value": "21",
+            "label": "State Tax"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "emp_dept",
+        "id": "emp_dept",
+        "label": "SL",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "All Department"
+          },
+          {
+            "value": "1",
+            "label": "General Management"
+          },
+          {
+            "value": "2",
+            "label": "Operations Department"
+          },
+          {
+            "value": "3",
+            "label": "Finance Department"
+          },
+          {
+            "value": "4",
+            "label": "Sales Department"
+          },
+          {
+            "value": "5",
+            "label": "Human Resource Department"
+          },
+          {
+            "value": "6",
+            "label": "Purchase Department"
+          },
+          {
+            "value": "7",
+            "label": "Engineering Department"
+          },
+          {
+            "value": "8",
+            "label": "Production Department"
+          },
+          {
+            "value": "9",
+            "label": "Procurement Department"
+          },
+          {
+            "value": "24",
+            "label": "pwerp_dept_2vjg9u"
+          },
+          {
+            "value": "33",
+            "label": "pwerp_dept_n40ldm"
+          },
+          {
+            "value": "41",
+            "label": "pwerp_dept_sfcrvj"
+          },
+          {
+            "value": "59",
+            "label": "pwerp_dept_t6il8m"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "emp_desig",
+        "id": "emp_desig",
+        "label": "SL",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "All Designations"
+          },
+          {
+            "value": "18",
+            "label": "Business Executive"
+          },
+          {
+            "value": "10",
+            "label": "Business Manager"
+          },
+          {
+            "value": "3",
+            "label": "CEO"
+          },
+          {
+            "value": "20",
+            "label": "Customer Support Executive"
+          },
+          {
+            "value": "16",
+            "label": "Engineer"
+          },
+          {
+            "value": "12",
+            "label": "Finance/Accounts Manager"
+          },
+          {
+            "value": "14",
+            "label": "Hiring Manager"
+          },
+          {
+            "value": "13",
+            "label": "Human Resource Manager"
+          },
+          {
+            "value": "17",
+            "label": "Junior Engineer"
+          },
+          {
+            "value": "4",
+            "label": "Managing Director"
+          },
+          {
+            "value": "19",
+            "label": "Marketing Executive"
+          },
+          {
+            "value": "9",
+            "label": "Marketing Manager"
+          },
+          {
+            "value": "8",
+            "label": "Operations Manager"
+          },
+          {
+            "value": "1",
+            "label": "President"
+          },
+          {
+            "value": "5",
+            "label": "Product Manager"
+          },
+          {
+            "value": "7",
+            "label": "Program Manager"
+          },
+          {
+            "value": "6",
+            "label": "Project Manager"
+          },
+          {
+            "value": "42",
+            "label": "pwerp_desig_3caprx"
+          },
+          {
+            "value": "29",
+            "label": "pwerp_desig_so8jlt"
+          },
+          {
+            "value": "38",
+            "label": "pwerp_desig_y7cni4"
+          },
+          {
+            "value": "54",
+            "label": "pwerp_desig_ygsll6"
+          },
+          {
+            "value": "15",
+            "label": "Senior Engineer"
+          },
+          {
+            "value": "11",
+            "label": "Technology Manager"
+          },
+          {
+            "value": "2",
+            "label": "Vice President"
+          }
+        ]
+      },
+      {
+        "type": "search",
+        "name": "emp_name",
+        "id": "emp_name",
+        "label": "SL",
+        "placeholder": "Search an employee",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped table-rec-reports",
+        "columns": [
+          "SL",
+          "Employee",
+          "Department",
+          "Designation",
+          "Total Payment"
+        ]
+      }
+    ],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "Search",
+      "Update"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=payroll&sub-section=reports",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "View Report"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=recruitment&sub-section=erp-rec-ai-job-settings",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 26,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "search",
+        "name": "",
+        "id": "ai-job-search",
+        "label": "",
+        "placeholder": "Search jobs...",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "ai-processing-toggle",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "category_detected",
+        "id": "category-detected",
+        "label": "Category Detected",
+        "placeholder": "Product category automatically detected from the job posting. Edit if needed.",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "core_skills_detected",
+        "id": "core-skills-detected",
+        "label": "Core Skills Detected",
+        "placeholder": "List the key skills candidates should have. Add, remove, or edit as needed. Use comma-separated values.",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "secondary_skills_detected",
+        "id": "secondary-skills-detected",
+        "label": "Secondary Skills Detected",
+        "placeholder": "Optional additional skills that may be relevant for this role.",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "tools_detected",
+        "id": "tools-detected",
+        "label": "Tool & Platform Use Detected",
+        "placeholder": "Specify tools or platforms candidates should be familiar with (e.g., Jira, Mixpanel).",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "minimum_experience_display",
+        "id": "minimum-experience-display",
+        "label": "Minimum Experience",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "experience_type_display",
+        "id": "experience-type-display",
+        "label": "Experience Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "experience_preference",
+        "id": "",
+        "label": "Preferred (Partial credit for related experiences)",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "experience_preference",
+        "id": "",
+        "label": "Required (Strict: only exact match gets points)",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "education_expectation",
+        "id": "education-expectation",
+        "label": "",
+        "placeholder": "Enter the minimum education required for this role (e.g., Bachelor's in CS, Business).",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "textarea",
+        "name": "certification",
+        "id": "certification",
+        "label": "",
+        "placeholder": "List any certifications that are expected or preferred for candidates.",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "weight_skills_match",
+        "id": "",
+        "label": "Skills",
+        "placeholder": "",
+        "required": true,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "weight_experience_match",
+        "id": "",
+        "label": "Experience",
+        "placeholder": "",
+        "required": true,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "weight_education_fit",
+        "id": "",
+        "label": "Education",
+        "placeholder": "",
+        "required": true,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "weight_certification",
+        "id": "",
+        "label": "Certifications",
+        "placeholder": "",
+        "required": true,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "weight_soft_skills",
+        "id": "",
+        "label": "Soft Skills",
+        "placeholder": "",
+        "required": true,
+        "visible": false
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped ai-jobs-table",
+        "columns": [
+          "Job Title",
+          "AI Candidate Processing",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "← Back to Jobs",
+      "Generate with AI",
+      "Save"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=recruitment&sub-section=erp-rec-ai-settings",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 15,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "password",
+        "name": "erp_rec_gemini_api_key",
+        "id": "erp_rec_gemini_api_key",
+        "label": "API Key",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "password",
+        "name": "erp_rec_anthropic_api_key",
+        "id": "erp_rec_anthropic_api_key",
+        "label": "API Key",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "password",
+        "name": "erp_rec_openai_api_key",
+        "id": "erp_rec_openai_api_key",
+        "label": "API Key",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "password",
+        "name": "erp_rec_openrouter_api_key",
+        "id": "erp_rec_openrouter_api_key",
+        "label": "API Key",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "submit",
+        "id": "submit",
+        "label": "API Key",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "ai-model-selector",
+        "label": "Select AI Model",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "gemini-1.5-flash-latest",
+            "label": "Gemini 1.5 Flash"
+          },
+          {
+            "value": "gemini-1.5-pro-latest",
+            "label": "Gemini 1.5 Pro"
+          },
+          {
+            "value": "gemini-2.0-flash-exp",
+            "label": "Gemini 2.0 Flash (Experimental)"
+          }
+        ]
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "Save Settings",
+      "Save Model"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-workflow-new",
+    "heading": "Create Workflow",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings"
+    ],
+    "hashLinks": [],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Enter Workflow Name",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Save & Activate",
+      "Save Only"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=leave&sub-section=leave-requests",
+    "heading": "HR",
+    "tabs": [
+      "Overview",
+      "People",
+      "Leave",
+      "Payroll",
+      "Attendance",
+      "Assets",
+      "Documents",
+      "Training",
+      "Recruitment",
+      "Reports",
+      "Help",
+      "Contacts",
+      "Tasks",
+      "Deals",
+      "Integrations",
+      "Dashboard",
+      "Users",
+      "Transactions",
+      "Products",
+      "Settings",
+      "Requests",
+      "Leave Entitlements",
+      "Holidays",
+      "Policies",
+      "Calendar",
+      "Pay Calendar",
+      "Pay Run List",
+      "Bulk pay item edit",
+      "Shifts",
+      "Tools",
+      "Assign Bulk Shift",
+      "Allotments",
+      "Job Opening",
+      "Add Opening",
+      "Question Sets",
+      "Candidates",
+      "Add candidate",
+      "Stages",
+      "AI Talent Pool",
+      "AI Job Settings",
+      "AI Job Writer",
+      "AI Model Settings",
+      "Age Profile",
+      "Salary History",
+      "Gender Profile",
+      "Years of Service",
+      "Head Count",
+      "Leaves",
+      "Attendance (Date Based)",
+      "Attendance (Employee Based)"
+    ],
+    "hashLinks": [],
+    "fieldCount": 19,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "item_group-hide",
+        "id": "item_group-hide",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "type-hide",
+        "id": "type-hide",
+        "label": "Type",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "category_id-hide",
+        "id": "category_id-hide",
+        "label": "Category",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_reg-hide",
+        "id": "date_reg-hide",
+        "label": "Reg Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_expiry-hide",
+        "id": "date_expiry-hide",
+        "label": "Expiry Date",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "date_warranty-hide",
+        "id": "date_warranty-hide",
+        "label": "Warranty Till",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "status-hide",
+        "id": "status-hide",
+        "label": "Available/Total",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "number",
+        "name": "wp_screen_options[value]",
+        "id": "erp_assets_per_page",
+        "label": "Assets",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "screen-options-apply",
+        "id": "screen-options-apply",
+        "label": "Item Name",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "employee_name",
+        "id": "employee_name",
+        "label": "Employee name",
+        "placeholder": "Search by employee name",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "select",
+        "name": "financial_year",
+        "id": "financial_year",
+        "label": "Financial year",
+        "placeholder": "",
+        "required": false,
+        "visible": false,
+        "options": [
+          {
+            "value": "",
+            "label": "Select year"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "leave_policy",
+        "id": "leave_policy",
+        "label": "Leave Policy",
+        "placeholder": "",
+        "required": false,
+        "visible": false,
+        "options": [
+          {
+            "value": "",
+            "label": "All Policy"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "name": "filter_leave_status[]",
+        "id": "1",
+        "label": "Approved",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "filter_leave_status[]",
+        "id": "2",
+        "label": "Pending",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "filter_leave_status[]",
+        "id": "3",
+        "label": "Rejected",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "select",
+        "name": "filter_leave_year",
+        "id": "filter_leave_year",
+        "label": "Date range",
+        "placeholder": "",
+        "required": false,
+        "visible": false,
+        "options": [
+          {
+            "value": "",
+            "label": "Filter by date"
+          },
+          {
+            "value": "1",
+            "label": "Last week"
+          },
+          {
+            "value": "2",
+            "label": "Last month"
+          },
+          {
+            "value": "3",
+            "label": "Last 3 months"
+          },
+          {
+            "value": "custom",
+            "label": "Custom"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "hide_filter",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "leave_filter_reset",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "submit",
+        "name": "filter_employee_search",
+        "id": "filter_employee_search",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Apply",
+      "Screen Options",
+      "More",
+      "Close dialog"
+    ]
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=attendance#/",
+    "route": "#/",
+    "heading": "Attendance + Add New",
+    "fieldCount": 5,
+    "fields": [
+      {
+        "type": "date",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Type here",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "date",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Start date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "date",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Start date",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "label": "Date",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "label": "Date",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped",
+        "columns": [
+          "Date",
+          "Attended",
+          "Absent",
+          "Presence",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [
+      "Go to",
+      "Filter"
+    ],
+    "empty": ""
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=attendance#/shifts",
+    "route": "#/shifts",
+    "heading": "Shifts + Add New Shift",
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "label": "Shift Name",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "label": "Shift Name",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped",
+        "columns": [
+          "Shift Name",
+          "Start Time",
+          "End Time",
+          "Duration",
+          "Holidays",
+          "Actions"
+        ]
+      }
+    ],
+    "buttons": [],
+    "empty": ""
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=attendance#/exim",
+    "route": "#/exim",
+    "heading": "Grace time before checkin ( Minute )",
+    "fieldCount": 6,
+    "fields": [
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "",
+            "label": "Select a shift"
+          }
+        ]
+      },
+      {
+        "type": "file",
+        "name": "",
+        "id": "file",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "number",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [],
+    "buttons": [
+      "Save grace time",
+      "Migration",
+      "Go to Export",
+      "Download sample file",
+      "Import"
+    ],
+    "empty": ""
+  },
+  {
+    "url": "admin.php?page=erp-hr&section=attendance#/assign-shift-bulk",
+    "route": "#/assign-shift-bulk",
+    "heading": "Bulk Shift AssignBack",
+    "fieldCount": 17,
+    "fields": [
+      {
+        "type": "search",
+        "name": "s",
+        "id": "erp-employee-search-search-input",
+        "label": "Search Employee:",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "button",
+        "name": "employee_search",
+        "id": "search-submit",
+        "label": "Search Employee:",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "selected_shift",
+        "id": "bulk-action-selector-top",
+        "label": "Select bulk action",
+        "placeholder": "",
+        "required": false,
+        "visible": false,
+        "options": [
+          {
+            "value": "-1",
+            "label": "Bulk Actions"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "doaction",
+        "label": "Select bulk action",
+        "placeholder": "",
+        "required": false,
+        "visible": false
+      },
+      {
+        "type": "select",
+        "name": "filter_designation",
+        "id": "filter_designation",
+        "label": "Filter by Designation",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "- Select Designation -"
+          },
+          {
+            "value": "1",
+            "label": "President"
+          },
+          {
+            "value": "3",
+            "label": "CEO"
+          },
+          {
+            "value": "4",
+            "label": "Managing Director"
+          },
+          {
+            "value": "5",
+            "label": "Product Manager"
+          },
+          {
+            "value": "6",
+            "label": "Project Manager"
+          },
+          {
+            "value": "7",
+            "label": "Program Manager"
+          },
+          {
+            "value": "8",
+            "label": "Operations Manager"
+          },
+          {
+            "value": "9",
+            "label": "Marketing Manager"
+          },
+          {
+            "value": "10",
+            "label": "Business Manager"
+          },
+          {
+            "value": "12",
+            "label": "Finance/Accounts Manager"
+          },
+          {
+            "value": "13",
+            "label": "Human Resource Manager"
+          },
+          {
+            "value": "14",
+            "label": "Hiring Manager"
+          },
+          {
+            "value": "16",
+            "label": "Engineer"
+          },
+          {
+            "value": "17",
+            "label": "Junior Engineer"
+          },
+          {
+            "value": "18",
+            "label": "Business Executive"
+          },
+          {
+            "value": "19",
+            "label": "Marketing Executive"
+          },
+          {
+            "value": "20",
+            "label": "Customer Support Executive"
+          },
+          {
+            "value": "29",
+            "label": "pwerp_desig_so8jlt"
+          },
+          {
+            "value": "38",
+            "label": "pwerp_desig_y7cni4"
+          },
+          {
+            "value": "42",
+            "label": "pwerp_desig_3caprx"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "filter_department",
+        "id": "filter_department",
+        "label": "Filter by Designation",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "- Select Department -"
+          },
+          {
+            "value": "1",
+            "label": "General Management"
+          },
+          {
+            "value": "2",
+            "label": "Operations Department"
+          },
+          {
+            "value": "3",
+            "label": "Finance Department"
+          },
+          {
+            "value": "4",
+            "label": "Sales Department"
+          },
+          {
+            "value": "5",
+            "label": "Human Resource Department"
+          },
+          {
+            "value": "6",
+            "label": "Purchase Department"
+          },
+          {
+            "value": "7",
+            "label": "Engineering Department"
+          },
+          {
+            "value": "8",
+            "label": "Production Department"
+          },
+          {
+            "value": "9",
+            "label": "Procurement Department"
+          },
+          {
+            "value": "24",
+            "label": "pwerp_dept_2vjg9u"
+          },
+          {
+            "value": "33",
+            "label": "pwerp_dept_n40ldm"
+          },
+          {
+            "value": "41",
+            "label": "pwerp_dept_sfcrvj"
+          },
+          {
+            "value": "59",
+            "label": "pwerp_dept_t6il8m"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "filter_employment_type",
+        "id": "filter_employment_type",
+        "label": "Filter by Designation",
+        "placeholder": "",
+        "required": false,
+        "visible": true,
+        "options": [
+          {
+            "value": "-1",
+            "label": "- Select Type -"
+          },
+          {
+            "value": "permanent",
+            "label": "Full Time"
+          },
+          {
+            "value": "parttime",
+            "label": "Part Time"
+          },
+          {
+            "value": "contract",
+            "label": "On Contract"
+          },
+          {
+            "value": "temporary",
+            "label": "Temporary"
+          },
+          {
+            "value": "trainee",
+            "label": "Trainee"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "filter_employee",
+        "id": "filter_employee",
+        "label": "Filter by Designation",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "button",
+        "name": "reset",
+        "id": "reset",
+        "label": "Filter by Designation",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "cb-select-all-1",
+        "label": "Select All",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "employee_id[]",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "employee_id[]",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "employee_id[]",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "employee_id[]",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "employee_id[]",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "employee_id[]",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "cb-select-all-2",
+        "label": "Select All",
+        "placeholder": "",
+        "required": false,
+        "visible": true
+      }
+    ],
+    "tables": [
+      {
+        "cls": "wp-list-table widefat fixed striped employees",
+        "columns": [
+          "Select All",
+          "Employee Name",
+          "Designation",
+          "Department",
+          "Employment Type",
+          "Shift",
+          "Status"
+        ]
+      }
+    ],
+    "buttons": [],
+    "empty": ""
+  },
+  {
+    "url": "admin.php?page=custom-field-builder",
+    "heading": "Custom Field Builder",
+    "tabs": [
+      "Employee",
+      "Contact",
+      "Company",
+      "Customer",
+      "Vendor"
+    ],
+    "tables": [],
+    "fieldCount": 10,
+    "fields": [
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Label",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "",
+        "label": "Check if required",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true,
+        "options": [
+          {
+            "value": "0",
+            "label": "Choose Section"
+          },
+          {
+            "value": "top",
+            "label": "Top Area"
+          },
+          {
+            "value": "basic",
+            "label": "Basic Information"
+          },
+          {
+            "value": "work",
+            "label": "Work Information"
+          },
+          {
+            "value": "personal",
+            "label": "Personal Information"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom Area"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true,
+        "options": [
+          {
+            "value": "text",
+            "label": "Text"
+          },
+          {
+            "value": "password",
+            "label": "Password"
+          },
+          {
+            "value": "textarea",
+            "label": "Textarea"
+          },
+          {
+            "value": "select",
+            "label": "Dropdown"
+          },
+          {
+            "value": "radio",
+            "label": "Radio"
+          },
+          {
+            "value": "checkbox",
+            "label": "Checkbox"
+          },
+          {
+            "value": "number",
+            "label": "number"
+          },
+          {
+            "value": "url",
+            "label": "Url"
+          },
+          {
+            "value": "email",
+            "label": "Email"
+          },
+          {
+            "value": "date",
+            "label": "Date"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "text",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "value",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "placeholder",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "helptext",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Add Option",
+      "Done",
+      "Add New Field",
+      "Save Changes"
+    ],
+    "note": "fields captured after clicking \"Add New Field\""
+  }
+]

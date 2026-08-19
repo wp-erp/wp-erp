@@ -1,0 +1,124 @@
+name: Playwright suite (e2e + API)
+
+on:
+    push:
+        branches: [develop, 'test/**']
+    pull_request:
+        branches: [develop, master]
+    workflow_dispatch:
+        inputs:
+            tier:
+                description: 'Tier to run (all | tier1 | tier2 | tier3)'
+                required: false
+                default: 'all'
+
+# The erp-pro licence allows ONE active site at a time (license_limit: 1), so two
+# runs must never hold it at once. Queue instead of cancelling: a cancelled run
+# skips its deactivate step and would strand the seat.
+concurrency:
+    group: erp-pro-license
+    cancel-in-progress: false
+
+jobs:
+    e2e:
+        name: e2e + API on wp-env :8888
+        runs-on: ubuntu-latest
+        timeout-minutes: 90
+
+        defaults:
+            run:
+                working-directory: wp-erp/tests/pw
+
+        env:
+            BASE_URL: http://localhost:8888
+            SERVER_URL: http://localhost:8888
+            DB_HOST: 127.0.0.1
+            DB_PORT: '8889'
+            DB_USER: root
+            DB_PASSWORD: password
+            DB_NAME: wordpress
+            DB_PREFIX: wp_
+            ADMIN_USERNAME: admin
+            ADMIN_PASSWORD: password
+            ERP_LICENSE_EMAIL: ${{ secrets.ERP_LICENSE_EMAIL }}
+            ERP_LICENSE_KEY: ${{ secrets.ERP_LICENSE_KEY }}
+            ERP_LICENSE_USERS: ${{ vars.ERP_LICENSE_USERS || '100' }}
+            CI: 'true'
+            HEADLESS: 'true'
+
+        steps:
+            - name: Checkout wp-erp (free)
+              uses: actions/checkout@v4
+              with:
+                  path: wp-erp
+
+            # .wp-env.json maps ../../../erp-pro, i.e. a sibling of the wp-erp checkout.
+            - name: Checkout erp-pro
+              uses: actions/checkout@v4
+              with:
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  token: ${{ secrets.ERP_PRO_TOKEN }}
+                  path: erp-pro
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: wp-erp/tests/pw/package-lock.json
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Install Chromium
+              run: npx playwright install --with-deps chromium
+
+            - name: Start wp-env
+              run: |
+                  cp .wp-env.ci.json .wp-env.override.json
+                  npm run start:env
+                  curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
+
+            # Activates the real licence exactly once for the whole run.
+            - name: Seed site (licence, modules, actors, fixtures)
+              run: npm run setup
+
+            - name: Regenerate harness facts
+              run: npm run harness
+
+            - name: e2e
+              run: npm run test:e2e -- ${{ github.event.inputs.tier == 'tier1' && '--grep @tier1' || github.event.inputs.tier == 'tier2' && '--grep @tier2' || github.event.inputs.tier == 'tier3' && '--grep @tier3' || '' }}
+
+            - name: API
+              if: always()
+              run: npm run test:api
+
+            - name: Collect WordPress debug.log
+              if: always()
+              run: |
+                  cp wp-data/debug.log debug.log 2>/dev/null || echo "no debug.log produced" > debug.log
+                  tail -c 200000 debug.log > debug.tail.log || true
+
+            # Runs even when the job fails or is cancelled, so the single licence
+            # seat is always released back to the account.
+            - name: Deactivate licence
+              if: always()
+              run: npx playwright test --project=teardown:license --config=teardown.config.ts || true
+
+            - name: Upload reports
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pw-reports
+                  path: |
+                      wp-erp/tests/pw/playwright-report/
+                      wp-erp/tests/pw/blob-report/
+                      wp-erp/tests/pw/summary-report/
+                      wp-erp/tests/pw/test-results/
+                      wp-erp/tests/pw/harness/
+                      wp-erp/tests/pw/debug.tail.log
+                  retention-days: 14
+
+            - name: Stop wp-env
+              if: always()
+              run: npm run stop:env || true

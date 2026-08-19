@@ -1,56 +1,89 @@
 import { defineConfig, devices } from '@playwright/test';
-import 'dotenv/config';
 import { parseBoolean } from './utils/helpers';
-import { customExpect } from './utils/pwMatchers';
-import { expect } from '@playwright/test';
+import 'dotenv/config';
 
 const { CI, HEADLESS, BASE_URL, SLOWMO, NO_SETUP, ERP_PRO } = process.env;
-const isCI = parseBoolean(CI);
-const isPro = parseBoolean(ERP_PRO);
+const ci = parseBoolean(CI);
+const pro = parseBoolean(ERP_PRO ?? 'true');
 
-// NO_SETUP=true runs specs against an already-seeded site (skips the setup chain).
-const dep = (deps: string[]): string[] => (parseBoolean(NO_SETUP) ? [] : deps);
-
-expect.extend(customExpect);
-
-/**
- * WP ERP E2E suite (Dokan-style). Lite/Pro is selected by tags + ERP_PRO:
- *   grep keeps @lite/@liteOnly/@pro; grepInvert drops the ones that don't apply.
- * Setup is a linear project chain gated by NO_SETUP.
- */
 export default defineConfig({
     testDir: 'tests/e2e',
+
+    /* Tier grep is applied per-run by the npm scripts; @pro drops out when the
+       suite runs against a free-only site, and @license-limit / @needs-external
+       never run inside the normal suite — they have their own projects/runs. */
+    grepInvert: pro ? [/@license-limit/] : [/@pro/, /@license-limit/],
+
+    outputDir: 'test-results/',
+    globalTimeout: 120 * 60 * 1000,
+    timeout: ci ? 180 * 1000 : 90 * 1000,
+
+    expect: {
+        timeout: 15 * 1000,
+    },
+
     fullyParallel: false,
-    forbidOnly: isCI,
-    timeout: (isCI ? 60 : 45) * 1000,
-    expect: { timeout: 10_000 },
-    retries: isCI ? 2 : 1,
-    workers: isCI ? 1 : 4,
-    globalSetup: './global-setup',
-    globalTeardown: './global-teardown',
-    grep: [/@lite/, /@liteOnly/, /@pro/],
-    grepInvert: isPro ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
-    reporter: isCI
-        ? [['list'], ['blob'], ['./utils/summaryReporter.ts']]
-        : [['list'], ['html', { open: 'never' }], ['./utils/summaryReporter.ts'], ['./utils/specDurationReporter.ts']],
+    forbidOnly: ci,
+    retries: ci ? 2 : 0,
+    workers: ci ? 4 : 4,
+    preserveOutput: 'always',
+    reportSlowTests: { max: 5, threshold: 30_000 },
+
+    reporter: ci
+        ? [
+              ['blob', { outputDir: 'blob-report' }],
+              ['list', { printSteps: true }],
+              ['json', { outputFile: 'playwright-report/e2e/results.json' }],
+          ]
+        : [
+              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
+              ['list', { printSteps: true }],
+          ],
+
     use: {
         ...devices['Desktop Chrome'],
-        baseURL: BASE_URL ?? 'http://localhost:9999',
-        headless: parseBoolean(HEADLESS, true),
-        launchOptions: { slowMo: Number(SLOWMO ?? 0) },
+        baseURL: BASE_URL ?? 'http://localhost:8888',
+        headless: parseBoolean(HEADLESS ?? 'true'),
+        acceptDownloads: true,
         ignoreHTTPSErrors: true,
         bypassCSP: true,
-        actionTimeout: 15_000,
-        navigationTimeout: (isCI ? 45 : 30) * 1000,
+        actionTimeout: ci ? 30 * 1000 : 15 * 1000,
+        navigationTimeout: ci ? 120 * 1000 : 45 * 1000,
         trace: 'on-first-retry',
-        screenshot: 'only-on-failure',
+        screenshot: { mode: 'only-on-failure', fullPage: true },
         video: 'on-first-retry',
+        launchOptions: { slowMo: Number(SLOWMO ?? 0) * 1000 },
+        viewport: { width: 1440, height: 900 },
     },
+
     projects: [
-        { name: 'local_site_setup', testMatch: ['**/_localSite.setup.ts'] },
-        { name: 'site_setup', testMatch: ['**/_site.setup.ts'], dependencies: dep(['local_site_setup']) },
-        { name: 'auth_setup', testMatch: ['**/_auth.setup.ts'], dependencies: dep(['site_setup']), retries: 1 },
-        { name: 'e2e_setup', testMatch: ['**/_env.setup.ts'], dependencies: dep(['auth_setup']), fullyParallel: true, retries: 1 },
-        { name: 'e2e_tests', testMatch: /.*\.spec\.ts/, dependencies: dep(['e2e_setup']) },
+        {
+            name: 'site_setup',
+            testMatch: ['_site.setup.ts'],
+        },
+        {
+            name: 'auth_setup',
+            testMatch: ['_auth.setup.ts'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['site_setup'],
+        },
+        {
+            name: 'env_setup',
+            testMatch: ['_env.setup.ts'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['auth_setup'],
+        },
+        {
+            name: 'e2e_tests',
+            testMatch: /.*\.spec\.ts/,
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
+        },
+        {
+            /* Leaves 100 users behind and must not run in parallel with anything.
+               Invoked explicitly: npm run test:license-limit */
+            name: 'license_limit',
+            testMatch: ['license/userLimit.spec.ts'],
+            fullyParallel: false,
+            workers: 1,
+            retries: 0,
+        },
     ],
 });

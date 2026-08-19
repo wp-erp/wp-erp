@@ -1,104 +1,148 @@
-import type { APIRequestContext, APIResponse } from '@playwright/test';
-import { request } from '@playwright/test';
-import { BASE_URL } from './helpers';
-import { endPoints } from './apiEndPoints';
-import type { ReqOptions, ResponseBody, Headers } from './interfaces';
-
 /**
- * Thin wrapper over Playwright's APIRequestContext for WP ERP REST.
+ * REST client for seeding, teardown and the API suite.
  *
- * Auth model: cookie + nonce. The context is built from a logged-in admin
- * storageState (cookies), and every write carries `X-WP-Nonce` (set in .env by
- * the auth setup). Verb wrappers return `[response, body]` and assert ok() by
- * default; pass `assert = false` to allow expected failures (e.g. duplicates).
+ * Every call goes through `?rest_route=` so the suite works whether or not the
+ * site has pretty permalinks, and authenticates with Basic-Auth (the
+ * WP-API/Basic-Auth plugin wp-env installs).
  */
+import { APIRequestContext, APIResponse } from '@playwright/test';
+import { basicAuth, env, restPath } from '@utils/helpers';
+import { endPoints } from '@utils/apiEndPoints';
+import { ErpLicenseStatus, ErpUserCount } from '@utils/interfaces';
+
+export type Auth = Record<string, string>;
+
+export const adminAuth: Auth = basicAuth(env('ADMIN', 'admin'), env('ADMIN_PASSWORD', 'password'));
+
 export class ApiUtils {
-    readonly request: APIRequestContext;
-    private readonly nonce?: string;
+    constructor(private readonly request: APIRequestContext) {}
 
-    constructor(requestContext: APIRequestContext, nonce?: string) {
-        this.request = requestContext;
-        this.nonce = nonce;
-    }
-
-    /**
-     * Build an authed context from a saved role storageState. Pass that role's own
-     * X-WP-Nonce — a nonce is tied to the user, so the admin nonce will not
-     * authenticate a manager/employee session (the request would be treated as
-     * logged-out). Falls back to process.env.X_WP_NONCE (admin) when omitted.
-     */
-    static async fromStorageState(storageState: string, nonce?: string): Promise<ApiUtils> {
-        const ctx = await request.newContext({ baseURL: BASE_URL, storageState, ignoreHTTPSErrors: true });
-        return new ApiUtils(ctx, nonce);
-    }
-
+    /** Releases the underlying request context. Always call it in a finally. */
     async dispose(): Promise<void> {
         await this.request.dispose();
     }
 
-    private authHeaders(extra: Headers = {}): Headers {
-        const nonce = this.nonce ?? process.env.X_WP_NONCE ?? '';
-        return { 'Content-Type': 'application/json', ...(nonce ? { 'X-WP-Nonce': nonce } : {}), ...extra };
+    // ---- primitives -------------------------------------------------------
+
+    async get(route: string, auth: Auth = adminAuth, params: Record<string, string | number> = {}): Promise<APIResponse> {
+        return this.request.get(restPath(route, params), { headers: auth });
     }
 
-    /** Merge auth headers into the request options without losing them. */
-    private buildOptions(options?: ReqOptions): ReqOptions {
-        const { headers, ...rest } = options ?? {};
-        return { ...rest, headers: this.authHeaders(headers) };
+    async post(route: string, data: unknown, auth: Auth = adminAuth): Promise<APIResponse> {
+        return this.request.post(restPath(route), { headers: auth, data: data as Record<string, unknown> });
     }
 
-    private async getResponseBody(response: APIResponse, assert: boolean): Promise<ResponseBody> {
-        let body: ResponseBody;
-        try {
-            body = await response.json();
-        } catch {
-            body = await response.text();
+    async put(route: string, data: unknown, auth: Auth = adminAuth): Promise<APIResponse> {
+        return this.request.put(restPath(route), { headers: auth, data: data as Record<string, unknown> });
+    }
+
+    async delete(route: string, auth: Auth = adminAuth): Promise<APIResponse> {
+        return this.request.delete(restPath(route), { headers: auth });
+    }
+
+    /** GET returning parsed JSON, throwing on a non-2xx so seeding fails loudly. */
+    async getJson<T>(route: string, auth: Auth = adminAuth, params: Record<string, string | number> = {}): Promise<T> {
+        const response = await this.get(route, auth, params);
+        if (!response.ok()) {
+            throw new Error(`GET ${route} -> ${response.status()} ${await response.text()}`);
         }
-        if (assert && !response.ok()) {
-            throw new Error(`API request failed: ${response.status()} ${response.url()}\n${JSON.stringify(body)}`);
+        return (await response.json()) as T;
+    }
+
+    async postJson<T>(route: string, data: unknown, auth: Auth = adminAuth): Promise<T> {
+        const response = await this.post(route, data, auth);
+        if (!response.ok()) {
+            throw new Error(`POST ${route} -> ${response.status()} ${await response.text()}`);
         }
-        return body;
+        return (await response.json()) as T;
     }
 
-    async get(url: string, options?: ReqOptions, assert = true): Promise<[APIResponse, ResponseBody]> {
-        const response = await this.request.get(url, this.buildOptions(options));
-        return [response, await this.getResponseBody(response, assert)];
+    // ---- test-helper endpoints -------------------------------------------
+
+    private testKey(): Record<string, string> {
+        return { erp_test_key: env('ERP_TEST_KEY', 'erp-pw-local') };
     }
 
-    async post(url: string, options?: ReqOptions, assert = true): Promise<[APIResponse, ResponseBody]> {
-        const response = await this.request.post(url, this.buildOptions(options));
-        return [response, await this.getResponseBody(response, assert)];
+    async licenseState(): Promise<{ license: unknown; license_status: ErpLicenseStatus | false }> {
+        return this.getJson(endPoints.testHelper.license, adminAuth, this.testKey());
     }
 
-    async put(url: string, options?: ReqOptions, assert = true): Promise<[APIResponse, ResponseBody]> {
-        const response = await this.request.put(url, this.buildOptions(options));
-        return [response, await this.getResponseBody(response, assert)];
+    /** The product's own user count — the number the 100-seat rule enforces on. */
+    async userCount(): Promise<ErpUserCount> {
+        return this.getJson(endPoints.testHelper.userCount, adminAuth, this.testKey());
     }
 
-    async patch(url: string, options?: ReqOptions, assert = true): Promise<[APIResponse, ResponseBody]> {
-        const response = await this.request.patch(url, this.buildOptions(options));
-        return [response, await this.getResponseBody(response, assert)];
+    async fireCron(hook: string): Promise<APIResponse> {
+        return this.request.post(restPath(endPoints.testHelper.cron, { ...this.testKey(), hook }), { headers: adminAuth });
     }
 
-    async delete(url: string, options?: ReqOptions, assert = true): Promise<[APIResponse, ResponseBody]> {
-        const response = await this.request.delete(url, this.buildOptions(options));
-        return [response, await this.getResponseBody(response, assert)];
+    async roleNotice(userId: number): Promise<{ notice: string | false }> {
+        return this.getJson(endPoints.testHelper.notices, adminAuth, { ...this.testKey(), user_id: userId });
     }
 
-    // ── Generic create helper: POST a payload, return [body, id] ──────────────
-    async create(url: string, payload: unknown, assert = true): Promise<[ResponseBody, string]> {
-        const [, body] = await this.post(url, { data: payload }, assert);
-        return [body, String(body?.id ?? '')];
+    /** Writes allow-listed options (woocommerce_*, erp_*, blog*) via the helper. */
+    async setOptions(options: Record<string, unknown>): Promise<{ written: string[]; refused: string[] }> {
+        const response = await this.request.post(restPath(endPoints.testHelper.options, this.testKey()), { headers: adminAuth, data: { options } });
+        if (!response.ok()) throw new Error(`setOptions -> ${response.status()} ${await response.text()}`);
+        const result = (await response.json()) as { written: string[]; refused: string[] };
+        if (result.refused.length) throw new Error(`setOptions refused (not on the allow-list): ${result.refused.join(', ')}`);
+        return result;
     }
 
-    // ── WordPress users (used by the auth setup to create role accounts) ──────
-    async createUser(payload: Record<string, unknown>): Promise<[ResponseBody, string]> {
-        // idempotent: if the username/email exists, look it up and return its id
-        const [res, body] = await this.post(endPoints.users, { data: payload }, false);
-        if (res.ok()) return [body, String(body?.id ?? '')];
-        const username = String(payload.username ?? '');
-        const [, list] = await this.get(`${endPoints.users}?search=${encodeURIComponent(username)}&context=edit`, undefined, false);
-        const existing = Array.isArray(list) ? list.find((u: any) => u?.username === username || u?.slug === username) : undefined;
-        return [existing ?? body, String(existing?.id ?? '')];
+    async getOptions(names: string[]): Promise<Record<string, unknown>> {
+        return this.getJson(endPoints.testHelper.options, adminAuth, { ...this.testKey(), names: names.join(',') });
+    }
+
+    async flushCache(): Promise<void> {
+        await this.request.post(restPath(endPoints.testHelper.flushCache, this.testKey()), { headers: adminAuth });
+    }
+
+    async phpErrors(): Promise<{ lines: string[]; fatal?: string[] }> {
+        return this.getJson(endPoints.testHelper.phpErrors, adminAuth, this.testKey());
+    }
+
+    // ---- ERP Pro modules --------------------------------------------------
+
+    async activeModules(): Promise<unknown> {
+        return this.getJson(endPoints.pro.modules);
+    }
+
+    async activateModule(module: string): Promise<APIResponse> {
+        return this.post(endPoints.pro.activateModule, { module });
+    }
+
+    async deactivateModule(module: string): Promise<APIResponse> {
+        return this.post(endPoints.pro.deactivateModule, { module });
+    }
+
+    // ---- user seeding (test-helper mu-plugin) -----------------------------
+    //
+    // WP core's /wp/v2/users rejects ERP roles with rest_user_invalid_role
+    // because they are absent from get_editable_roles(); the helper endpoints
+    // call wp_insert_user directly.
+
+    async seedUser(data: { login: string; email: string; password: string; role: string }): Promise<{ id: number; created: boolean; roles: string[] }> {
+        return this.request
+            .post(restPath(endPoints.testHelper.seedUser, this.testKey()), { headers: adminAuth, data })
+            .then(async (response) => {
+                if (!response.ok()) throw new Error(`seedUser ${data.login} -> ${response.status()} ${await response.text()}`);
+                return response.json() as Promise<{ id: number; created: boolean; roles: string[] }>;
+            });
+    }
+
+    async seedUsersBulk(data: { prefix: string; role: string; count: number; password?: string }): Promise<{ created: number; ids: number[] }> {
+        const response = await this.request.post(restPath(endPoints.testHelper.seedUsersBulk, this.testKey()), { headers: adminAuth, data, timeout: 300_000 });
+        if (!response.ok()) throw new Error(`seedUsersBulk -> ${response.status()} ${await response.text()}`);
+        return response.json() as Promise<{ created: number; ids: number[] }>;
+    }
+
+    async cleanupUsers(prefix: string): Promise<{ deleted: number }> {
+        const response = await this.request.post(restPath(endPoints.testHelper.cleanupUsers, this.testKey()), { headers: adminAuth, data: { prefix }, timeout: 300_000 });
+        if (!response.ok()) throw new Error(`cleanupUsers ${prefix} -> ${response.status()} ${await response.text()}`);
+        return response.json() as Promise<{ deleted: number }>;
+    }
+
+    async deleteUser(id: number, reassign = 1): Promise<APIResponse> {
+        return this.request.delete(restPath(endPoints.wp.user(id), { force: 'true', reassign }), { headers: adminAuth });
     }
 }

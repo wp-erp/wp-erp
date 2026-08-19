@@ -1,0 +1,2039 @@
+{
+  "wp_erp_acct_bills": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "vendor_id",
+      "vendor_name",
+      "address",
+      "trn_date",
+      "due_date",
+      "ref",
+      "amount",
+      "particulars",
+      "status",
+      "attachments",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_bill_account_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "bill_no",
+      "trn_no",
+      "trn_date",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_bill_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_no",
+      "ledger_id",
+      "particulars",
+      "amount",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_cash_at_banks": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "ledger_id",
+      "name",
+      "balance",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_chart_of_accounts": {
+    "rows": 7,
+    "columns": [
+      "id",
+      "name",
+      "slug",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_currency_info": {
+    "rows": 162,
+    "columns": [
+      "id",
+      "name",
+      "sign",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_expenses": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "people_id",
+      "people_name",
+      "address",
+      "trn_date",
+      "amount",
+      "ref",
+      "check_no",
+      "particulars",
+      "status",
+      "trn_by",
+      "transaction_charge",
+      "trn_by_ledger_id",
+      "attachments",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_expense_checks": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_no",
+      "check_no",
+      "voucher_type",
+      "amount",
+      "bank",
+      "name",
+      "pay_to",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_expense_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_no",
+      "ledger_id",
+      "particulars",
+      "amount",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_financial_years": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "start_date",
+      "end_date",
+      "description",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_invoices": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "customer_id",
+      "customer_name",
+      "trn_date",
+      "due_date",
+      "billing_address",
+      "amount",
+      "discount",
+      "discount_type",
+      "shipping",
+      "shipping_tax",
+      "tax",
+      "tax_zone_id",
+      "estimate",
+      "attachments",
+      "status",
+      "particulars",
+      "additional_notes",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_invoice_account_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_no",
+      "trn_no",
+      "trn_date",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_invoice_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_no",
+      "product_id",
+      "qty",
+      "unit_price",
+      "discount",
+      "shipping",
+      "tax",
+      "tax_cat_id",
+      "item_total",
+      "ecommerce_type",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_invoice_details_tax": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_details_id",
+      "agency_id",
+      "tax_rate",
+      "tax_amount",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_invoice_receipts": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "customer_id",
+      "customer_name",
+      "trn_date",
+      "amount",
+      "transaction_charge",
+      "ref",
+      "particulars",
+      "attachments",
+      "status",
+      "trn_by",
+      "trn_by_ledger_id",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_invoice_receipts_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "invoice_no",
+      "amount",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_journals": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_date",
+      "ref",
+      "voucher_no",
+      "voucher_amount",
+      "particulars",
+      "attachments",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_journal_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_no",
+      "ledger_id",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_ledgers": {
+    "rows": 115,
+    "columns": [
+      "id",
+      "chart_id",
+      "category_id",
+      "name",
+      "slug",
+      "code",
+      "unused",
+      "system",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_ledger_categories": {
+    "rows": 16,
+    "columns": [
+      "id",
+      "name",
+      "slug",
+      "chart_id",
+      "parent_id",
+      "system",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_ledger_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "ledger_id",
+      "trn_no",
+      "particulars",
+      "debit",
+      "credit",
+      "trn_date",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_ledger_settings": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "ledger_id",
+      "short_code",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_opening_balances": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "financial_year_id",
+      "chart_id",
+      "ledger_id",
+      "type",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_payment_methods": {
+    "rows": 3,
+    "columns": [
+      "id",
+      "name",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_pay_bill": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "vendor_id",
+      "vendor_name",
+      "trn_date",
+      "amount",
+      "trn_by",
+      "trn_by_ledger_id",
+      "particulars",
+      "ref",
+      "attachments",
+      "status",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_pay_bill_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "bill_no",
+      "amount",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_pay_purchase": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "vendor_id",
+      "vendor_name",
+      "trn_date",
+      "amount",
+      "trn_by",
+      "transaction_charge",
+      "ref",
+      "trn_by_ledger_id",
+      "particulars",
+      "attachments",
+      "status",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_pay_purchase_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "purchase_no",
+      "amount",
+      "tax_cat_id",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_people_account_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "people_id",
+      "trn_no",
+      "trn_date",
+      "trn_by",
+      "voucher_type",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_people_trn": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "people_id",
+      "voucher_no",
+      "amount",
+      "trn_date",
+      "trn_by",
+      "particulars",
+      "voucher_type",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_people_trn_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "people_id",
+      "voucher_no",
+      "trn_date",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_products": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "product_type_id",
+      "product_sync_type_id",
+      "synced_product_id",
+      "category_id",
+      "tax_cat_id",
+      "vendor",
+      "cost_price",
+      "sale_price",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_product_categories": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "parent",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_product_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "product_id",
+      "trn_no",
+      "stock_in",
+      "stock_out",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_product_price": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "product_id",
+      "trn_no",
+      "price",
+      "trn_date",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_product_sync_types": {
+    "rows": 2,
+    "columns": [
+      "id",
+      "name",
+      "slug",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_product_types": {
+    "rows": 2,
+    "columns": [
+      "id",
+      "name",
+      "slug",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_purchase": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "vendor_id",
+      "vendor_name",
+      "billing_address",
+      "trn_date",
+      "due_date",
+      "amount",
+      "tax",
+      "tax_zone_id",
+      "ref",
+      "status",
+      "purchase_order",
+      "attachments",
+      "particulars",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_purchase_account_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "purchase_no",
+      "trn_no",
+      "trn_date",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_purchase_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "trn_no",
+      "product_id",
+      "qty",
+      "price",
+      "amount",
+      "tax",
+      "tax_cat_id",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_purchase_details_tax": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_details_id",
+      "agency_id",
+      "tax_rate",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_purchase_return": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_id",
+      "voucher_no",
+      "vendor_id",
+      "vendor_name",
+      "trn_date",
+      "amount",
+      "discount",
+      "discount_type",
+      "tax",
+      "reason",
+      "comments",
+      "status",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_purchase_return_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_details_id",
+      "trn_no",
+      "product_id",
+      "qty",
+      "price",
+      "discount",
+      "tax",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_reimburse_requests": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "people_id",
+      "trn_date",
+      "status",
+      "amount_total",
+      "reference",
+      "particulars",
+      "attachments",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_reimburse_request_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "request_id",
+      "amount",
+      "particulars",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_sales_return": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_id",
+      "voucher_no",
+      "customer_id",
+      "customer_name",
+      "trn_date",
+      "amount",
+      "discount",
+      "discount_type",
+      "tax",
+      "reason",
+      "comments",
+      "status",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_sales_return_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "invoice_details_id",
+      "trn_no",
+      "product_id",
+      "qty",
+      "unit_price",
+      "discount",
+      "tax",
+      "item_total",
+      "ecommerce_type",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_synced_taxes": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "system_id",
+      "sync_id",
+      "sync_slug",
+      "sync_type",
+      "sync_source"
+    ]
+  },
+  "wp_erp_acct_taxes": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "tax_rate_name",
+      "tax_number",
+      "default",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_tax_agencies": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "ecommerce_type",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_tax_agency_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "agency_id",
+      "trn_no",
+      "trn_date",
+      "particulars",
+      "debit",
+      "credit",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_tax_categories": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "description",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_tax_cat_agency": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "tax_id",
+      "component_name",
+      "tax_cat_id",
+      "agency_id",
+      "tax_rate",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_tax_pay": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "trn_date",
+      "particulars",
+      "amount",
+      "voucher_type",
+      "trn_by",
+      "agency_id",
+      "ledger_id",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_transfer_voucher": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "voucher_no",
+      "trn_date",
+      "amount",
+      "ac_from",
+      "ac_to",
+      "particulars",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_trn_status_types": {
+    "rows": 10,
+    "columns": [
+      "id",
+      "type_name",
+      "slug",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_acct_voucher_no": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "type",
+      "currency",
+      "editable",
+      "created_at",
+      "created_by",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_application": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "job_id",
+      "applicant_id",
+      "stage",
+      "apply_date",
+      "exam_detail",
+      "added_by",
+      "status"
+    ]
+  },
+  "wp_erp_application_comment": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "application_id",
+      "comment",
+      "user_id",
+      "comment_date"
+    ]
+  },
+  "wp_erp_application_interview": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "application_id",
+      "interview_type_id",
+      "interview_detail",
+      "start_date_time",
+      "duration_minutes",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_application_interviewer_relation": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "interview_id",
+      "interviewer_id"
+    ]
+  },
+  "wp_erp_application_job_stage_relation": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "jobid",
+      "stageid"
+    ]
+  },
+  "wp_erp_application_rating": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "application_id",
+      "rating",
+      "user_id",
+      "rating_date"
+    ]
+  },
+  "wp_erp_application_stage": {
+    "rows": 4,
+    "columns": [
+      "id",
+      "title",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_application_todo": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "application_id",
+      "title",
+      "deadline_date",
+      "status",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_application_todo_relation": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "todo_id",
+      "assigned_user_id"
+    ]
+  },
+  "wp_erp_attendance_date_shift": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "date",
+      "user_id",
+      "shift_id",
+      "start_time",
+      "end_time",
+      "present",
+      "late",
+      "early_left",
+      "day_type",
+      "created_at"
+    ]
+  },
+  "wp_erp_attendance_log": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "date_shift_id",
+      "checkin",
+      "checkout",
+      "time",
+      "created_at"
+    ]
+  },
+  "wp_erp_attendance_shifts": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "start_time",
+      "end_time",
+      "duration",
+      "holidays",
+      "status"
+    ]
+  },
+  "wp_erp_attendance_shift_user": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "shift_id",
+      "user_id",
+      "status"
+    ]
+  },
+  "wp_erp_attendence_shift_generated_to": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "start_date",
+      "end_date",
+      "generated_by",
+      "shift_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_audit_log": {
+    "rows": 159,
+    "columns": [
+      "id",
+      "component",
+      "sub_component",
+      "data_id",
+      "old_value",
+      "new_value",
+      "message",
+      "changetype",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_company_locations": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "company_id",
+      "name",
+      "address_1",
+      "address_2",
+      "city",
+      "state",
+      "zip",
+      "country",
+      "fax",
+      "phone",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_activities_task": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "activity_id",
+      "user_id"
+    ]
+  },
+  "wp_erp_crm_contact_group": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "description",
+      "private",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_contact_subscriber": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "group_id",
+      "status",
+      "subscribe_at",
+      "unsubscribe_at",
+      "hash"
+    ]
+  },
+  "wp_erp_crm_customer_activities": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "type",
+      "message",
+      "email_subject",
+      "log_type",
+      "start_date",
+      "end_date",
+      "created_by",
+      "extra",
+      "sent_notification",
+      "done_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_customer_companies": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "customer_id",
+      "company_id"
+    ]
+  },
+  "wp_erp_crm_deals": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "title",
+      "stage_id",
+      "contact_id",
+      "company_id",
+      "created_by",
+      "owner_id",
+      "value",
+      "currency",
+      "expected_close_date",
+      "won_at",
+      "lost_at",
+      "lost_reason_id",
+      "lost_reason",
+      "lost_reason_comment",
+      "created_at",
+      "updated_at",
+      "deleted_at"
+    ]
+  },
+  "wp_erp_crm_deals_activities": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "type",
+      "title",
+      "deal_id",
+      "contact_id",
+      "company_id",
+      "created_by",
+      "assigned_to_id",
+      "start",
+      "end",
+      "is_start_time_set",
+      "note",
+      "done_at",
+      "done_by",
+      "created_at",
+      "updated_at",
+      "deleted_at"
+    ]
+  },
+  "wp_erp_crm_deals_activity_types": {
+    "rows": 6,
+    "columns": [
+      "id",
+      "title",
+      "icon",
+      "order",
+      "deleted_at"
+    ]
+  },
+  "wp_erp_crm_deals_agents": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "agent_id",
+      "added_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_deals_attachments": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "attachment_id",
+      "added_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_deals_competitors": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "competitor_name",
+      "website",
+      "strengths",
+      "weaknesses",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_deals_emails": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "cust_act_id",
+      "hash",
+      "parent_id"
+    ]
+  },
+  "wp_erp_crm_deals_lost_reasons": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "reason"
+    ]
+  },
+  "wp_erp_crm_deals_notes": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "note",
+      "is_sticky",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_deals_participants": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "people_id",
+      "people_type",
+      "added_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_crm_deals_pipelines": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "title"
+    ]
+  },
+  "wp_erp_crm_deals_pipeline_stages": {
+    "rows": 5,
+    "columns": [
+      "id",
+      "title",
+      "pipeline_id",
+      "probability",
+      "is_rotting_on",
+      "rotting_after",
+      "life_stage",
+      "order"
+    ]
+  },
+  "wp_erp_crm_deals_stage_history": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "deal_id",
+      "stage_id",
+      "in",
+      "out",
+      "in_amount",
+      "expected_close_date",
+      "modified_by"
+    ]
+  },
+  "wp_erp_crm_save_email_replies": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "subject",
+      "template"
+    ]
+  },
+  "wp_erp_crm_save_search": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "type",
+      "global",
+      "search_name",
+      "search_val",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_cv_ai_analysis": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "applicant_id",
+      "attachment_id",
+      "analysis_data",
+      "processing_status",
+      "error_message",
+      "error_type",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_dir_file_share": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "owner_id",
+      "shared_with_id",
+      "dir_file_id",
+      "source",
+      "eid_type",
+      "details",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_employee_dir_file_relationship": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "eid",
+      "dir_id",
+      "dir_name",
+      "attachment_id",
+      "parent_id",
+      "is_dir",
+      "eid_type",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_holidays_indv": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "holiday_id",
+      "title",
+      "date",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_announcement": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "post_id",
+      "status",
+      "email_status"
+    ]
+  },
+  "wp_erp_hr_assets": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "parent",
+      "category_id",
+      "item_group",
+      "asset_type",
+      "item_code",
+      "manufacturer",
+      "model_no",
+      "price",
+      "date_reg",
+      "date_expiry",
+      "date_warranty",
+      "allottable",
+      "item_serial",
+      "item_desc",
+      "status",
+      "date_dissmissed",
+      "dissmiss_reason"
+    ]
+  },
+  "wp_erp_hr_assets_category": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "cat_name"
+    ]
+  },
+  "wp_erp_hr_assets_history": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "category_id",
+      "item_group",
+      "item_id",
+      "allotted_to",
+      "is_returnable",
+      "date_given",
+      "date_return_proposed",
+      "date_return_real",
+      "date_request_return",
+      "status",
+      "return_note"
+    ]
+  },
+  "wp_erp_hr_assets_request": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "item_group",
+      "item_id",
+      "given_item_id",
+      "allott_id",
+      "request_desc",
+      "not_in_list",
+      "date_requested",
+      "date_replied",
+      "reply_msg",
+      "status"
+    ]
+  },
+  "wp_erp_hr_dependents": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "employee_id",
+      "name",
+      "relation",
+      "dob",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_depts": {
+    "rows": 15,
+    "columns": [
+      "id",
+      "title",
+      "description",
+      "lead",
+      "parent",
+      "status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_designations": {
+    "rows": 25,
+    "columns": [
+      "id",
+      "title",
+      "description",
+      "status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_education": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "employee_id",
+      "school",
+      "degree",
+      "field",
+      "result",
+      "result_type",
+      "finished",
+      "notes",
+      "interest",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_employees": {
+    "rows": 6,
+    "columns": [
+      "id",
+      "user_id",
+      "employee_id",
+      "designation",
+      "department",
+      "location",
+      "hiring_source",
+      "hiring_date",
+      "termination_date",
+      "date_of_birth",
+      "reporting_to",
+      "pay_rate",
+      "pay_type",
+      "type",
+      "status",
+      "deleted_at"
+    ]
+  },
+  "wp_erp_hr_employee_history": {
+    "rows": 8,
+    "columns": [
+      "id",
+      "user_id",
+      "module",
+      "category",
+      "type",
+      "comment",
+      "data",
+      "date"
+    ]
+  },
+  "wp_erp_hr_employee_notes": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "comment",
+      "comment_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_employee_performance": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "employee_id",
+      "reporting_to",
+      "job_knowledge",
+      "work_quality",
+      "attendance",
+      "communication",
+      "dependablity",
+      "reviewer",
+      "comments",
+      "completion_date",
+      "goal_description",
+      "employee_assessment",
+      "supervisor",
+      "supervisor_assessment",
+      "type",
+      "performance_date"
+    ]
+  },
+  "wp_erp_hr_employee_remote_work_requests": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "reason",
+      "start_date",
+      "end_date",
+      "days",
+      "status",
+      "created_at",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_hr_employee_resign_requests": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "reason",
+      "date",
+      "status",
+      "created_at",
+      "updated_at",
+      "updated_by"
+    ]
+  },
+  "wp_erp_hr_financial_years": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "fy_name",
+      "start_date",
+      "end_date",
+      "description",
+      "created_by",
+      "updated_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_holiday": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "title",
+      "start",
+      "end",
+      "description",
+      "range_status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leaves": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "description",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leaves_unpaid": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "leave_id",
+      "leave_request_id",
+      "leave_approval_status_id",
+      "user_id",
+      "days",
+      "amount",
+      "total",
+      "f_year",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_approval_status": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "leave_request_id",
+      "approval_status_id",
+      "approved_by",
+      "message",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_encashment_requests": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "leave_id",
+      "approved_by",
+      "approval_status_id",
+      "encash_days",
+      "forward_days",
+      "amount",
+      "total",
+      "f_year",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_entitlements": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "leave_id",
+      "created_by",
+      "trn_id",
+      "trn_type",
+      "day_in",
+      "day_out",
+      "description",
+      "f_year",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_policies": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "leave_id",
+      "description",
+      "days",
+      "color",
+      "apply_limit",
+      "employee_type",
+      "department_id",
+      "location_id",
+      "designation_id",
+      "gender",
+      "marital",
+      "f_year",
+      "apply_for_new_users",
+      "carryover_days",
+      "carryover_uses_limit",
+      "encashment_days",
+      "encashment_based_on",
+      "forward_default",
+      "applicable_from_days",
+      "accrued_amount",
+      "accrued_max_days",
+      "halfday_enable",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_policies_segregation": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "leave_policy_id",
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "decem",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_requests": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "leave_id",
+      "leave_entitlement_id",
+      "day_status_id",
+      "days",
+      "start_date",
+      "end_date",
+      "reason",
+      "last_status",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_leave_request_details": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "leave_request_id",
+      "leave_approval_status_id",
+      "workingday_status",
+      "user_id",
+      "f_year",
+      "leave_date",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_hr_payroll_additional_allowance_deduction": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "pay_item_id",
+      "pay_item_amount",
+      "empid",
+      "pay_item_add_or_deduct",
+      "payrun_id",
+      "note"
+    ]
+  },
+  "wp_erp_hr_payroll_calendar_type_settings": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "pay_calendar_id",
+      "pay_day",
+      "custom_month_day",
+      "pay_day_mode"
+    ]
+  },
+  "wp_erp_hr_payroll_fixed_payment": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "pay_item_id",
+      "pay_item_amount",
+      "empid",
+      "pay_item_add_or_deduct",
+      "note"
+    ]
+  },
+  "wp_erp_hr_payroll_payitem": {
+    "rows": 21,
+    "columns": [
+      "id",
+      "type",
+      "payitem",
+      "pay_item_add_or_deduct"
+    ]
+  },
+  "wp_erp_hr_payroll_payrun_detail": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "payrun_id",
+      "pay_cal_id",
+      "payment_date",
+      "empid",
+      "pay_item_id",
+      "pay_item_amount",
+      "pay_item_add_or_deduct",
+      "allowance",
+      "deduction",
+      "note",
+      "approve_status"
+    ]
+  },
+  "wp_erp_hr_payroll_pay_calendar": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "pay_calendar_name",
+      "pay_calendar_type"
+    ]
+  },
+  "wp_erp_hr_payroll_pay_calendar_employee": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "pay_calendar_id",
+      "empid"
+    ]
+  },
+  "wp_erp_hr_work_exp": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "employee_id",
+      "company_name",
+      "job_title",
+      "from",
+      "to",
+      "description",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_peoplemeta": {
+    "rows": 0,
+    "columns": [
+      "meta_id",
+      "erp_people_id",
+      "meta_key",
+      "meta_value"
+    ]
+  },
+  "wp_erp_peoples": {
+    "rows": 5,
+    "columns": [
+      "id",
+      "user_id",
+      "first_name",
+      "last_name",
+      "company",
+      "email",
+      "phone",
+      "mobile",
+      "other",
+      "website",
+      "fax",
+      "notes",
+      "street_1",
+      "street_2",
+      "city",
+      "state",
+      "postal_code",
+      "country",
+      "currency",
+      "life_stage",
+      "contact_owner",
+      "hash",
+      "created_by",
+      "created"
+    ]
+  },
+  "wp_erp_people_life_stages": {
+    "rows": 4,
+    "columns": [
+      "id",
+      "slug",
+      "title",
+      "title_plural",
+      "position"
+    ]
+  },
+  "wp_erp_people_types": {
+    "rows": 5,
+    "columns": [
+      "id",
+      "name"
+    ]
+  },
+  "wp_erp_people_type_relations": {
+    "rows": 4,
+    "columns": [
+      "id",
+      "people_id",
+      "people_types_id",
+      "deleted_at"
+    ]
+  },
+  "wp_erp_user_leaves": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "user_id",
+      "request_id",
+      "title",
+      "date",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "wp_erp_wc_orders": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "people_id",
+      "order_id",
+      "order_status",
+      "order_date",
+      "order_total",
+      "accounting"
+    ]
+  },
+  "wp_erp_wc_order_product": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "order_id",
+      "product_id"
+    ]
+  },
+  "wp_erp_workflows": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "type",
+      "object",
+      "events_group",
+      "event",
+      "conditions_group",
+      "status",
+      "delay_time",
+      "delay_period",
+      "run",
+      "created_at",
+      "updated_at",
+      "deleted_at",
+      "created_by"
+    ]
+  },
+  "wp_erp_workflow_actions": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "name",
+      "params",
+      "extra",
+      "workflow_id"
+    ]
+  },
+  "wp_erp_workflow_conditions": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "condition_name",
+      "operator",
+      "value",
+      "workflow_id",
+      "parent_id"
+    ]
+  },
+  "wp_erp_workflow_logs": {
+    "rows": 0,
+    "columns": [
+      "id",
+      "workflow_id",
+      "created_at"
+    ]
+  }
+}

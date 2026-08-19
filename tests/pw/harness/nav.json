@@ -1,0 +1,318 @@
+[
+  {
+    "label": "WP ERP",
+    "href": "admin.php?page=erp"
+  },
+  {
+    "label": "Dashboard",
+    "href": "admin.php?page=erp"
+  },
+  {
+    "label": "HR",
+    "href": "admin.php?page=erp-hr"
+  },
+  {
+    "label": "CRM",
+    "href": "admin.php?page=erp-crm"
+  },
+  {
+    "label": "Accounting",
+    "href": "admin.php?page=erp-accounting"
+  },
+  {
+    "label": "Create Invoice",
+    "href": "admin.php?page=erp-accounting#/invoices/new"
+  },
+  {
+    "label": "Workflow",
+    "href": "admin.php?page=erp-workflow"
+  },
+  {
+    "label": "Company",
+    "href": "admin.php?page=erp-company"
+  },
+  {
+    "label": "Tools",
+    "href": "admin.php?page=erp-tools"
+  },
+  {
+    "label": "Settings",
+    "href": "admin.php?page=erp-settings"
+  },
+  {
+    "label": "Modules",
+    "href": "admin.php?page=erp-extensions"
+  },
+  {
+    "label": "License",
+    "href": "admin.php?page=erp-license"
+  },
+  {
+    "label": "Training",
+    "href": "edit.php?post_type=erp_hr_training"
+  },
+  {
+    "label": "Add New Training",
+    "href": "post-new.php?post_type=erp_hr_training"
+  },
+  {
+    "label": "Overview",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=dashboard"
+  },
+  {
+    "label": "People",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=people"
+  },
+  {
+    "label": "Leave",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave"
+  },
+  {
+    "label": "Payroll",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll"
+  },
+  {
+    "label": "Attendance",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=attendance"
+  },
+  {
+    "label": "Assets",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=asset"
+  },
+  {
+    "label": "Documents",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=documents"
+  },
+  {
+    "label": "Training",
+    "href": "http://localhost:8888/wp-admin/edit.php?post_type=erp_hr_training"
+  },
+  {
+    "label": "Recruitment",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment"
+  },
+  {
+    "label": "Reports",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report"
+  },
+  {
+    "label": "Help",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=help"
+  },
+  {
+    "label": "Overview",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=dashboard"
+  },
+  {
+    "label": "Contacts",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact"
+  },
+  {
+    "label": "Tasks",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=task"
+  },
+  {
+    "label": "Deals",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=deals"
+  },
+  {
+    "label": "Integrations",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=integration"
+  },
+  {
+    "label": "Reports",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=reports"
+  },
+  {
+    "label": "Help",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=help"
+  },
+  {
+    "label": "Dashboard",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/dashboard"
+  },
+  {
+    "label": "Users",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/users"
+  },
+  {
+    "label": "Transactions",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/transactions"
+  },
+  {
+    "label": "Products",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/products"
+  },
+  {
+    "label": "Settings",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/settings"
+  },
+  {
+    "label": "Reports",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/reports"
+  },
+  {
+    "label": "Help",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/erp-ac-help"
+  },
+  {
+    "label": "Requests",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave&sub-section=leave-requests"
+  },
+  {
+    "label": "Leave Entitlements",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements"
+  },
+  {
+    "label": "Holidays",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave&sub-section=holidays"
+  },
+  {
+    "label": "Policies",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave&sub-section=policies"
+  },
+  {
+    "label": "Calendar",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave&sub-section=leave-calendar"
+  },
+  {
+    "label": "Dashboard",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll&sub-section=dashboard"
+  },
+  {
+    "label": "Pay Calendar",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll&sub-section=calendar"
+  },
+  {
+    "label": "Pay Run List",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll&sub-section=payrun"
+  },
+  {
+    "label": "Bulk pay item edit",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll&sub-section=bulk-pay-item-edit"
+  },
+  {
+    "label": "Reports",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll&sub-section=reports"
+  },
+  {
+    "label": "Settings",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-settings#/erp-hr/payroll"
+  },
+  {
+    "label": "Attendance",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=attendance#/"
+  },
+  {
+    "label": "Shifts",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=attendance#/shifts"
+  },
+  {
+    "label": "Tools",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=attendance#/exim"
+  },
+  {
+    "label": "Assign Bulk Shift",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=attendance#/assign-shift-bulk"
+  },
+  {
+    "label": "Settings",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-settings#/erp-hr/attendance"
+  },
+  {
+    "label": "Assets",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=asset&sub-section=asset"
+  },
+  {
+    "label": "Allotments",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=asset&sub-section=asset-allottment"
+  },
+  {
+    "label": "Requests",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=asset&sub-section=asset-request"
+  },
+  {
+    "label": "Job Opening",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=job-opening"
+  },
+  {
+    "label": "Add Opening",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=add-opening"
+  },
+  {
+    "label": "Question Sets",
+    "href": "http://localhost:8888/wp-admin/edit.php?post_type=erp_hr_questionnaire"
+  },
+  {
+    "label": "Candidates",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=jobseeker_list"
+  },
+  {
+    "label": "Add candidate",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=add_candidate"
+  },
+  {
+    "label": "Calendar",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=todo-calendar"
+  },
+  {
+    "label": "Stages",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=stages"
+  },
+  {
+    "label": "Reports",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=reports"
+  },
+  {
+    "label": "AI Talent Pool",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=erp-rec-ai-analysis"
+  },
+  {
+    "label": "AI Job Settings",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=erp-rec-ai-job-settings"
+  },
+  {
+    "label": "AI Job Writer",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=erp-rec-ai-job-writer"
+  },
+  {
+    "label": "AI Model Settings",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment&sub-section=erp-rec-ai-settings"
+  },
+  {
+    "label": "Age Profile",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=age-profile"
+  },
+  {
+    "label": "Salary History",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=salary-history"
+  },
+  {
+    "label": "Gender Profile",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=gender-profile"
+  },
+  {
+    "label": "Years of Service",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=years-of-service"
+  },
+  {
+    "label": "Head Count",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=headcount"
+  },
+  {
+    "label": "Leaves",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=leaves"
+  },
+  {
+    "label": "Assets",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=asset-report"
+  },
+  {
+    "label": "Attendance (Date Based)",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=attendance-report"
+  },
+  {
+    "label": "Attendance (Employee Based)",
+    "href": "http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report&sub-section=report&type=att-report-employee"
+  }
+]

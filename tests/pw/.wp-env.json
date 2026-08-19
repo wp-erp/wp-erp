@@ -1,27 +1,38 @@
 {
-  "core": "WordPress/WordPress",
-  "phpVersion": "8.2",
-  "plugins": [
-    "../../"
-  ],
-  "themes": [],
-  "port": 1000,
-  "mysqlPort": 1001,
-  "testsPort": 9989,
-  "config": {
-    "WP_DEBUG": true,
-    "WP_DEBUG_LOG": "/var/www/html/wp-data/debug.log",
-    "WP_DEBUG_DISPLAY": false,
-    "SCRIPT_DEBUG": false
-  },
-  "mappings": {
-    "wp-content/plugins/wp-erp": "../../",
-    "wp-data": "./wp-data",
-    "wp-content/mu-plugins": "./mu-plugins"
-  },
-  "env": {
-    "tests": {
-      "mysqlPort": 9988
+    "core": "https://wordpress.org/wordpress-7.0.4.zip",
+    "phpVersion": "8.2",
+    "plugins": [
+        "https://github.com/WP-API/Basic-Auth/archive/master.zip",
+        "https://downloads.wordpress.org/plugin/woocommerce.11.0.1.zip",
+        "https://downloads.wordpress.org/plugin/erp-pdf-invoice.zip",
+        "https://downloads.wordpress.org/plugin/email-log.zip"
+    ],
+    "config": {
+        "WP_DEBUG": true,
+        "WP_DEBUG_LOG": "/var/www/html/wp-data/debug.log",
+        "WP_DEBUG_DISPLAY": false,
+        "SCRIPT_DEBUG": false,
+        "WP_MEMORY_LIMIT": "1024M",
+        "WP_MAX_MEMORY_LIMIT": "1024M",
+        "WP_AUTO_UPDATE_CORE": false,
+        "AUTOMATIC_UPDATER_DISABLED": true,
+        "ERP_PRO_BASE_URL": "https://wperp.com/",
+        "ERP_TEST_KEY": "erp-pw-local"
+    },
+    "mappings": {
+        "wp-data": "./wp-data",
+        "wp-content/mu-plugins": "./mu-plugins",
+        "wp-content/plugins/wp-erp": "../../",
+        "wp-content/plugins/erp-pro": "../../../erp-pro"
+    },
+    "env": {
+        "development": {
+            "port": 8888,
+            "mysqlPort": 8889
+        },
+        "tests": {
+            "port": 8890,
+            "mysqlPort": 8891
+        }
     }
-  }
 }

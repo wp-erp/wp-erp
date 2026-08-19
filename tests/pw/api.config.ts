@@ -1,42 +1,37 @@
-import { defineConfig, devices } from '@playwright/test';
-import 'dotenv/config';
+import { defineConfig } from '@playwright/test';
 import { parseBoolean } from './utils/helpers';
+import 'dotenv/config';
 
-const { CI, BASE_URL, NO_SETUP, ERP_PRO } = process.env;
-const isCI = parseBoolean(CI);
-const isPro = parseBoolean(ERP_PRO);
-const dep = (deps: string[]): string[] => (parseBoolean(NO_SETUP) ? [] : deps);
+const { CI, BASE_URL } = process.env;
+const ci = parseBoolean(CI);
 
-/**
- * WP ERP REST suite. Reuses the e2e setup chain (it produces the admin
- * storageState + X-WP-Nonce that ApiUtils needs), then runs tests/api specs.
- */
+/** REST suite: erp/v1 (284 routes) + erp_pro/v1/admin (5). No browser involved. */
 export default defineConfig({
     testDir: 'tests/api',
+    outputDir: 'test-results/api',
+    timeout: ci ? 90 * 1000 : 45 * 1000,
+    expect: { timeout: 10 * 1000 },
     fullyParallel: true,
-    forbidOnly: isCI,
-    timeout: (isCI ? 30 : 20) * 1000,
-    expect: { timeout: 10_000 },
-    retries: isCI ? 2 : 1,
-    workers: isCI ? 1 : 4,
-    globalSetup: './global-setup',
-    grep: [/@lite/, /@liteOnly/, /@pro/],
-    grepInvert: isPro ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
-    reporter: isCI ? [['list'], ['blob'], ['./utils/summaryReporter.ts']] : [['list'], ['html', { open: 'never' }]],
+    forbidOnly: ci,
+    retries: ci ? 1 : 0,
+    workers: ci ? 4 : 4,
+
+    reporter: ci
+        ? [
+              ['blob', { outputDir: 'blob-report/api' }],
+              ['list', { printSteps: true }],
+          ]
+        : [
+              ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],
+              ['list'],
+          ],
+
     use: {
-        ...devices['Desktop Chrome'],
-        baseURL: BASE_URL ?? 'http://localhost:9999',
+        baseURL: BASE_URL ?? 'http://localhost:8888',
         ignoreHTTPSErrors: true,
+        extraHTTPHeaders: { 'Content-Type': 'application/json' },
+        trace: 'on-first-retry',
     },
-    projects: [
-        // local_site_setup MUST lead the chain: it sets pretty permalinks
-        // (rewrite structure /%postname%/) + timezone. Without it a fresh wp-env
-        // stays on PLAIN permalinks, so every SERVER_URL=/wp-json REST call 404s.
-        // (The e2e config already runs this; the api config previously skipped it,
-        // which only ever worked locally against an already-provisioned site.)
-        { name: 'local_site_setup', testDir: 'tests/e2e', testMatch: ['**/_localSite.setup.ts'] },
-        { name: 'site_setup', testDir: 'tests/e2e', testMatch: ['**/_site.setup.ts'], dependencies: dep(['local_site_setup']) },
-        { name: 'auth_setup', testDir: 'tests/e2e', testMatch: ['**/_auth.setup.ts'], dependencies: dep(['site_setup']), retries: 1 },
-        { name: 'api_tests', testMatch: /.*\.spec\.ts/, dependencies: dep(['auth_setup']) },
-    ],
+
+    projects: [{ name: 'api_tests', testMatch: /.*\.spec\.ts/ }],
 });

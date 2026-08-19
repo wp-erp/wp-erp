@@ -1,0 +1,195 @@
+{
+  "url": "http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact",
+  "heading": "CRM",
+  "subnav": [
+    "Overview :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=dashboard",
+    "People :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=people",
+    "Leave :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=leave",
+    "Payroll :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=payroll",
+    "Attendance :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=attendance",
+    "Assets :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=asset",
+    "Documents :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=documents",
+    "Training :: http://localhost:8888/wp-admin/edit.php?post_type=erp_hr_training",
+    "Recruitment :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=recruitment",
+    "Reports :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=report",
+    "Help :: http://localhost:8888/wp-admin/admin.php?page=erp-hr&section=help",
+    "Overview :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=dashboard",
+    "Contacts :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact",
+    "Tasks :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=task",
+    "Deals :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=deals",
+    "Integrations :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=integration",
+    "Reports :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=reports",
+    "Help :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=help",
+    "Dashboard :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/dashboard",
+    "Users :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/users",
+    "Transactions :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/transactions",
+    "Products :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/products",
+    "Settings :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/settings",
+    "Reports :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/reports",
+    "Help :: http://localhost:8888/wp-admin/admin.php?page=erp-accounting#/erp-ac-help",
+    "Dashboard :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=deals&sub-section=dashboard",
+    "All Deals :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=deals&sub-section=all-deals",
+    "Activities :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=deals&sub-section=activities",
+    "Settings :: http://localhost:8888/wp-admin/admin.php?page=erp-settings#/erp-crm/erp_deals",
+    "Activity Report :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=reports&sub-section=reports&type=activity-report",
+    "Customer Report :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=reports&sub-section=reports&type=customer-report",
+    "Growth Report :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=reports&sub-section=reports&type=growth-report",
+    "Contacts :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact&sub-section=contacts",
+    "Companies :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact&sub-section=companies",
+    "Activities :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact&sub-section=activities",
+    "Contact Groups :: http://localhost:8888/wp-admin/admin.php?page=erp-crm&section=contact&sub-section=contact-groups",
+    "Life Stages :: http://localhost:8888/wp-admin/admin.php?page=erp-settings#/erp-crm/crm_life_stages",
+    "All (0) :: #",
+    "Customer (0) :: #",
+    "Lead (0) :: #",
+    "Opportunity (0) :: #",
+    "Subscriber (0) :: #",
+    "Trash (0) :: #"
+  ],
+  "fields": [
+    {
+      "tag": "input",
+      "type": "search",
+      "name": "s",
+      "id": "search-input",
+      "cls": "",
+      "label": "Search Contact",
+      "placeholder": "Search Contact",
+      "visible": true
+    },
+    {
+      "tag": "select",
+      "type": "select",
+      "name": "filter_assign_contact",
+      "id": "erp-select-user-for-assign-contact",
+      "cls": "v-select-field erp-filter-contact-owner select2-hidden-accessible",
+      "label": "",
+      "placeholder": "",
+      "visible": false,
+      "options": [
+        {
+          "value": "",
+          "label": ""
+        }
+      ]
+    },
+    {
+      "tag": "select",
+      "type": "select",
+      "name": "filter_save_filter",
+      "id": "erp-select-save-advance-filter",
+      "cls": "v-select-field erp-save-advance-filter select2-hidden-accessible",
+      "label": "",
+      "placeholder": "",
+      "visible": false,
+      "options": [
+        {
+          "value": "",
+          "label": "--Select save filter --"
+        }
+      ]
+    },
+    {
+      "tag": "select",
+      "type": "select",
+      "name": "filter_contact_company",
+      "id": "erp-select-contact-company",
+      "cls": "v-select-field erp-filter-contact-company select2-hidden-accessible",
+      "label": "",
+      "placeholder": "",
+      "visible": false,
+      "options": [
+        {
+          "value": "",
+          "label": ""
+        }
+      ]
+    },
+    {
+      "tag": "input",
+      "type": "submit",
+      "name": "",
+      "id": "",
+      "cls": "wperp-btn btn--cancel btn--filter",
+      "label": "",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "tag": "input",
+      "type": "submit",
+      "name": "",
+      "id": "",
+      "cls": "wperp-btn btn--reset btn--filter",
+      "label": "",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "tag": "input",
+      "type": "submit",
+      "name": "",
+      "id": "filter",
+      "cls": "wperp-btn btn--primary",
+      "label": "",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "tag": "input",
+      "type": "text",
+      "name": "",
+      "id": "current-page-selector",
+      "cls": "current-page",
+      "label": "",
+      "placeholder": "",
+      "visible": false
+    },
+    {
+      "tag": "input",
+      "type": "checkbox",
+      "name": "",
+      "id": "cb-select-all-1",
+      "cls": "",
+      "label": "Select All",
+      "placeholder": "",
+      "visible": true
+    },
+    {
+      "tag": "input",
+      "type": "checkbox",
+      "name": "",
+      "id": "cb-select-all-2",
+      "cls": "",
+      "label": "Select All",
+      "placeholder": "",
+      "visible": true
+    }
+  ],
+  "tables": [
+    {
+      "cls": "vtable wp-list-table widefat fixed striped customers",
+      "columns": [
+        "Select All",
+        "Contact name",
+        "Email Address",
+        "Phone",
+        "Life stage",
+        "Owner",
+        "Created At"
+      ]
+    }
+  ],
+  "buttons": [
+    "More",
+    "Import",
+    "Export",
+    "Add Filter",
+    "Or Filter",
+    "Cancel",
+    "Reset",
+    "Apply"
+  ],
+  "filters": [],
+  "emptyState": "No result found"
+}

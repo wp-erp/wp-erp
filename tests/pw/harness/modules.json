@@ -1,0 +1,219 @@
+{
+  "free": [
+    {
+      "id": "hrm",
+      "name": "HR Management",
+      "pro": false,
+      "active": true
+    },
+    {
+      "id": "crm",
+      "name": "CR Management",
+      "pro": false,
+      "active": true
+    },
+    {
+      "id": "accounting",
+      "name": "Accounting",
+      "pro": false,
+      "active": true
+    }
+  ],
+  "pro": [
+    {
+      "id": "inventory",
+      "name": "Inventory",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "payment_gateway",
+      "name": "Payment Gateway",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "woocommerce",
+      "name": "WooCommerce",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "deals",
+      "name": "Deals",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "asset_management",
+      "name": "Asset Manager",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "attendance",
+      "name": "Attendance",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "custom_field_builder",
+      "name": "Custom Field Builder",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "document_manager",
+      "name": "Document Manager",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "hr_training",
+      "name": "HR Training",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "payroll",
+      "name": "Payroll",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "recruitment",
+      "name": "Recruitment",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "reimbursement",
+      "name": "Reimbursement",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "sms_notification",
+      "name": "SMS Notification",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "workflow",
+      "name": "Workflow",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "advanced_leave",
+      "name": "Advanced Leave Management",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "awesome_support",
+      "name": "Awesome Support",
+      "category": "",
+      "active": false,
+      "pro": true
+    },
+    {
+      "id": "gravity_forms",
+      "name": "Gravity Forms Integration",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "help_scout",
+      "name": "HelpScout Integration",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "hr_frontend",
+      "name": "HR Frontend",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "hubspot",
+      "name": "HubSpot Contacts Sync",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "mailchimp",
+      "name": "Mailchimp Contacts Sync",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "salesforce",
+      "name": "Salesforce Contacts Sync",
+      "category": "",
+      "active": true,
+      "pro": true
+    },
+    {
+      "id": "zendesk",
+      "name": "Zendesk",
+      "category": "",
+      "active": true,
+      "pro": true
+    }
+  ],
+  "license": {
+    "users": 100,
+    "tier": "scale",
+    "extensions": [
+      "pro/advanced-leave",
+      "pro/hr-frontend",
+      "hrm/hr-training",
+      "hrm/asset-management",
+      "hrm/attendance",
+      "hrm/custom-field-builder",
+      "hrm/document-manager",
+      "hrm/recruitment",
+      "hrm/reimbursement",
+      "hrm/sms-notification",
+      "hrm/payroll",
+      "hrm/workflow",
+      "crm/deals",
+      "accounting/woocommerce",
+      "pro/gravity_forms",
+      "pro/mailchimp",
+      "pro/hubspot",
+      "accounting/payment-gateway",
+      "accounting/inventory",
+      "pro/zendesk",
+      "pro/help-scout",
+      "pro/salesforce",
+      "pro/awesome-support"
+    ]
+  },
+  "counts": {
+    "free": 3,
+    "pro": 23,
+    "proActive": 22
+  }
+}

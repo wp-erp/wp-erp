@@ -1,0 +1,31 @@
+{
+  "url": "http://localhost:8888/wp-admin/admin.php?page=erp-company",
+  "heading": "Company Details",
+  "tabs": [
+    "Overview",
+    "People",
+    "Leave",
+    "Payroll",
+    "Attendance",
+    "Assets",
+    "Documents",
+    "Training",
+    "Recruitment",
+    "Reports",
+    "Help",
+    "Contacts",
+    "Tasks",
+    "Deals",
+    "Integrations",
+    "Dashboard",
+    "Users",
+    "Transactions",
+    "Products",
+    "Settings"
+  ],
+  "fieldCount": 0,
+  "fields": [],
+  "tables": [],
+  "buttons": [],
+  "bodyText": "jQuery('.wp-erp-insights-data-we-collect').on('click', function(e) { e.preventDefault(); jQuery(this).parents('.updated').find('p.description').slideToggle('fast'); }); Company DetailsWant to help make WP ERP even more awesome? Allow WP ERP to collect diagnostic data and usage information. (what we collect)Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and URL, Your name and email address. We are using Appsero to collect your data. Learn more about how Appsero collects and handle"
+}

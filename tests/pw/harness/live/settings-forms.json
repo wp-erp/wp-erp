@@ -1,0 +1,3296 @@
+[
+  {
+    "route": "#/general",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration"
+    ],
+    "fieldCount": 8,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "erp-gen_com_start",
+        "label": "Company Start Date The date the company officially started.",
+        "placeholder": "Select date",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Financial Year Starts",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Date Format",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Currency",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Country (HRM, CRM, AC)",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Role Based Login Redirection",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Enable Debug Mode",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 8,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Monday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Tuesday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Wednesday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Thursday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Friday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Saturday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Sunday",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-crm",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals"
+    ],
+    "fieldCount": 17,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Auto Import",
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Administrator",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Editor",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Author",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Contributor",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Subscriber",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "HR Manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Employee",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "CRM Manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "CRM Agent",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Accounting Manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Customer",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Shop manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Recruiter",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Contact Owner",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Life Stage",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting",
+      "Order Synchronization :: #/erp-woocommerce/wc_sync/orders",
+      "Product Synchronization :: #/erp-woocommerce/wc_sync/products"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "btn-rebuild",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Synchronize Orders"
+    ]
+  },
+  {
+    "route": "#/erp-ac",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Auto Import",
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Contact",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Company",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-email",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "General :: #/erp-email/general",
+      "Email Connect :: #/erp-email/email_connect",
+      "Notifications & Templates :: #/erp-email/notification",
+      "HRM Digest Email :: #/erp-email/hrm_digest_email",
+      "Email Templates :: #/erp-email/templates"
+    ],
+    "fieldCount": 5,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-from_name",
+        "label": "Sender Name The senders name appears on the outgoing emails",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-from_email",
+        "label": "Sender Address The senders email appears on the outgoing emails",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-header_image",
+        "label": "Header Image Upload a logo/banner and provide the URL here.",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-footer_text",
+        "label": "Footer Text The text apears on each emails footer area.",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-integration",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration"
+    ],
+    "fieldCount": 1,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Configure"
+    ]
+  },
+  {
+    "route": "#/erp-hr/workdays",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 8,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Monday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Tuesday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Wednesday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Thursday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Friday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Saturday",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Sunday",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/leave",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-enable_extra_leave",
+        "label": "Extra Unpaid Leave",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-enable_auto_leave_policy_assignment_on_type_change",
+        "label": "Auto Assign Leave Policy",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pro_accrual_leave",
+        "label": "Enable Accrual",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pro_carry_encash_leave",
+        "label": "Enable Carry / Encash",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pro_half_leave",
+        "label": "Enable Half-Day Request",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pro_multilevel_approval",
+        "label": "Enable Multilevel Approval",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pro_seg_leave",
+        "label": "Enable Segregation",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pro_sandwich_leave",
+        "label": "Enable Sandwich Rule",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/financial",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "dp1787046901139",
+        "label": "",
+        "placeholder": "Start date",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "dp1787046901140",
+        "label": "",
+        "placeholder": "End date",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "+ Add New",
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/remote_work",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_hr_remote_work_enable",
+        "label": "Enable Remote Work",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/miscellaneous",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_hrm_remove_wp_user",
+        "label": "Remove WP User",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_hrm_hide_pay_rate",
+        "label": "Hide Pay Rate",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/hr_frontend",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 5,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-hr_frontend_slug",
+        "label": "HR Dashboard Slug",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-hr_frontend_dashboard_title",
+        "label": "HR Dashboard Title",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "file",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-hr_frontend_redirect",
+        "label": "Redirect to frontend",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/recruitment",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-recruitment_api_url",
+        "label": "Global Api",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/payroll",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance",
+      "Payment Settings :: #/erp-hr/payroll/payment",
+      "Pay Item Settings :: #/erp-hr/payroll/payitem"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "erp_payroll_payment_method_settings",
+        "label": "Select a method",
+        "placeholder": "",
+        "visible": true,
+        "options": [
+          {
+            "value": "cash",
+            "label": "Cash"
+          },
+          {
+            "value": "cheque",
+            "label": "Cheque"
+          },
+          {
+            "value": "bank",
+            "label": "Bank"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "erp_payroll_payment_bank_settings",
+        "label": "Select a bank",
+        "placeholder": "",
+        "visible": true,
+        "options": []
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/attendance",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance"
+    ],
+    "fieldCount": 10,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-grace_before_checkin",
+        "label": "Grace Before Checkin",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-grace_after_checkin",
+        "label": "Grace After Checkin",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_att_diff_threshhold",
+        "label": "Threshhold between checkout & checkin",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-grace_before_checkout",
+        "label": "Grace Before Checkout",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-grace_after_checkout",
+        "label": "Grace After Checkout",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-enable_self_att",
+        "label": "Self Attendance",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_at_enable_ip_restriction",
+        "label": "IP Restriction",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-erp_at_whitelisted_ips",
+        "label": "Whitelisted IP\\'s",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-attendance_reminder",
+        "label": "Attendance Reminder",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-crm/contacts",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals"
+    ],
+    "fieldCount": 17,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Auto Import",
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Administrator",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Editor",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Author",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Contributor",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Subscriber",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "HR Manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Employee",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "CRM Manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "CRM Agent",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Accounting Manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Customer",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Shop manager",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Recruiter",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Contact Owner",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Life Stage",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-crm/contact_forms",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals"
+    ],
+    "fieldCount": 1,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      }
+    ],
+    "buttons": []
+  },
+  {
+    "route": "#/erp-crm/subscription",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals"
+    ],
+    "fieldCount": 11,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-is_enabled",
+        "label": "Enable signup confirmation If you enable this option, your subscribers will first receive a confirmation email after they subscribe. Once they confirm their subscription (via this email), they will be marked as 'subscribed'.",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-email_subject",
+        "label": "Email subject",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-email_content",
+        "label": "Email content",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Subscription Page",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-confirm_page_title",
+        "label": "Confirmation Page",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-confirm_page_content",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-unsubs_page_title",
+        "label": "Unsubscribe Page",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-unsubs_page_content",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-edit_sub_page_title",
+        "label": "Edit Subscription Page",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-edit_sub_page_content",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-crm/crm_life_stages",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Title",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Title (Plural)",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Slug",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add more",
+      "Edit",
+      "Delete",
+      "Save",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-crm/erp_deals",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals",
+      "Pipeline :: #/erp-crm/erp_deals/pipelines",
+      "Activity Types :: #/erp-crm/erp_deals/activity_types",
+      "Lost Reasons :: #/erp-crm/erp_deals/lost_reasons"
+    ],
+    "fieldCount": 14,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Pipeline title",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Stage Name",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Customer",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Lead",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Opportunity",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Subscriber",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Do not change",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Stage Name",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Customer",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Lead",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Opportunity",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Subscriber",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Do not change",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add new pipeline",
+      "Add Stage",
+      "Edit Pipeline",
+      "Save",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce/wc_sync",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting",
+      "Order Synchronization :: #/erp-woocommerce/wc_sync/orders",
+      "Product Synchronization :: #/erp-woocommerce/wc_sync/products"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "btn-rebuild",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Synchronize Orders"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce/wc_subscription",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-show_wc_signup_option",
+        "label": "Show signup on checkout",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-wc_signup_option_label",
+        "label": "Signup option label",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default contact group",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce/crm",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting"
+    ],
+    "fieldCount": 6,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select When registers as a customer",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select When placed an order",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select When becomes a paid user",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Contact Owner",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce/accounting",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting"
+    ],
+    "fieldCount": 8,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Product Type",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Product Owner",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Product Category",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Default Tax Category",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce/wc_sync/orders",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting",
+      "Order Synchronization :: #/erp-woocommerce/wc_sync/orders",
+      "Product Synchronization :: #/erp-woocommerce/wc_sync/products"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "submit",
+        "name": "",
+        "id": "btn-rebuild",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Synchronize Orders"
+    ]
+  },
+  {
+    "route": "#/erp-woocommerce/wc_sync/products",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Synchronization :: #/erp-woocommerce/wc_sync",
+      "Subscription :: #/erp-woocommerce/wc_subscription",
+      "CRM :: #/erp-woocommerce/crm",
+      "Accounting :: #/erp-woocommerce/accounting",
+      "Order Synchronization :: #/erp-woocommerce/wc_sync/orders",
+      "Product Synchronization :: #/erp-woocommerce/wc_sync/products"
+    ],
+    "fieldCount": 7,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please search",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please search",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please search",
+        "visible": false
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please search",
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "btn-rebuild",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": []
+  },
+  {
+    "route": "#/erp-ac/customers",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Auto Import",
+        "visible": false
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Contact",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-undefined",
+        "label": "Company",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-ac/currency_option",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Currency Position",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_ac_th_separator",
+        "label": "Thousand Separator",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_ac_de_separator",
+        "label": "Decimal Separator",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-ac/opening_balance",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "dp1787046901141",
+        "label": "",
+        "placeholder": "Start date",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "dp1787046901142",
+        "label": "",
+        "placeholder": "End date",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "+ Add New",
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-ac/payment",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment",
+      "General Settings :: #/erp-ac/payment/general",
+      "Paypal Settings :: #/erp-ac/payment/paypal",
+      "Stripe Settings :: #/erp-ac/payment/stripe"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Payment account",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-email/general",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "General :: #/erp-email/general",
+      "Email Connect :: #/erp-email/email_connect",
+      "Notifications & Templates :: #/erp-email/notification",
+      "HRM Digest Email :: #/erp-email/hrm_digest_email",
+      "Email Templates :: #/erp-email/templates"
+    ],
+    "fieldCount": 5,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-from_name",
+        "label": "Sender Name The senders name appears on the outgoing emails",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-from_email",
+        "label": "Sender Address The senders email appears on the outgoing emails",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-header_image",
+        "label": "Header Image Upload a logo/banner and provide the URL here.",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "textarea",
+        "name": "",
+        "id": "erp-footer_text",
+        "label": "Footer Text The text apears on each emails footer area.",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-email/email_connect",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "General :: #/erp-email/general",
+      "Email Connect :: #/erp-email/email_connect",
+      "Notifications & Templates :: #/erp-email/notification",
+      "HRM Digest Email :: #/erp-email/hrm_digest_email",
+      "Email Templates :: #/erp-email/templates"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "email",
+        "name": "",
+        "id": "erp_wpmail_test_email",
+        "label": "Test Mail",
+        "placeholder": "Email here",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Send Test Email",
+      "Save Changes",
+      "Test Connection"
+    ]
+  },
+  {
+    "route": "#/erp-email/notification",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "General :: #/erp-email/general",
+      "Email Connect :: #/erp-email/email_connect",
+      "Notifications & Templates :: #/erp-email/notification",
+      "HRM Digest Email :: #/erp-email/hrm_digest_email",
+      "Email Templates :: #/erp-email/templates"
+    ],
+    "fieldCount": 14,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Configure"
+    ]
+  },
+  {
+    "route": "#/erp-email/hrm_digest_email",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "General :: #/erp-email/general",
+      "Email Connect :: #/erp-email/email_connect",
+      "Notifications & Templates :: #/erp-email/notification",
+      "HRM Digest Email :: #/erp-email/hrm_digest_email",
+      "Email Templates :: #/erp-email/templates"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "switchRounded",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Email sending schedule",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-email/templates",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "General :: #/erp-email/general",
+      "Email Connect :: #/erp-email/email_connect",
+      "Notifications & Templates :: #/erp-email/notification",
+      "HRM Digest Email :: #/erp-email/hrm_digest_email",
+      "Email Templates :: #/erp-email/templates"
+    ],
+    "fieldCount": 7,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Name *",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Subject",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "label": "Short Codes",
+        "placeholder": "",
+        "visible": false,
+        "options": [
+          {
+            "value": "{first_name}",
+            "label": "{first_name}"
+          },
+          {
+            "value": "{last_name}",
+            "label": "{last_name}"
+          },
+          {
+            "value": "{company}",
+            "label": "{company}"
+          },
+          {
+            "value": "{email}",
+            "label": "{email}"
+          },
+          {
+            "value": "{phone}",
+            "label": "{phone}"
+          },
+          {
+            "value": "{mobile}",
+            "label": "{mobile}"
+          },
+          {
+            "value": "{website}",
+            "label": "{website}"
+          },
+          {
+            "value": "{fax}",
+            "label": "{fax}"
+          },
+          {
+            "value": "{street_1}",
+            "label": "{street_1}"
+          },
+          {
+            "value": "{street_2}",
+            "label": "{street_2}"
+          },
+          {
+            "value": "{country}",
+            "label": "{country}"
+          },
+          {
+            "value": "{state}",
+            "label": "{state}"
+          },
+          {
+            "value": "{postal_code}",
+            "label": "{postal_code}"
+          }
+        ]
+      },
+      {
+        "type": "url",
+        "name": "href",
+        "id": "",
+        "label": "",
+        "placeholder": "Enter a URL…",
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "button",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add New",
+      "Bold",
+      "Italic",
+      "Strikethrough",
+      "Link",
+      "Heading",
+      "Quote",
+      "Code",
+      "Bullets",
+      "Numbers",
+      "Decrease Level",
+      "Increase Level",
+      "Attach Files",
+      "Undo",
+      "Redo",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-hr/payroll/payment",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance",
+      "Payment Settings :: #/erp-hr/payroll/payment",
+      "Pay Item Settings :: #/erp-hr/payroll/payitem"
+    ],
+    "fieldCount": 3,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "erp_payroll_payment_method_settings",
+        "label": "Select a method",
+        "placeholder": "",
+        "visible": true,
+        "options": [
+          {
+            "value": "cash",
+            "label": "Cash"
+          },
+          {
+            "value": "cheque",
+            "label": "Cheque"
+          },
+          {
+            "value": "bank",
+            "label": "Bank"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "erp_payroll_payment_bank_settings",
+        "label": "Select a bank",
+        "placeholder": "",
+        "visible": true,
+        "options": []
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-hr/payroll/payitem",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Workdays :: #/erp-hr/workdays",
+      "Leave :: #/erp-hr/leave",
+      "Leave Years :: #/erp-hr/financial",
+      "Remote Work :: #/erp-hr/remote_work",
+      "Miscellaneous :: #/erp-hr/miscellaneous",
+      "HR Frontend :: #/erp-hr/hr_frontend",
+      "Recruitment :: #/erp-hr/recruitment",
+      "Payroll :: #/erp-hr/payroll",
+      "Attendance :: #/erp-hr/attendance",
+      "Payment Settings :: #/erp-hr/payroll/payment",
+      "Pay Item Settings :: #/erp-hr/payroll/payitem"
+    ],
+    "fieldCount": 4,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "select",
+        "name": "",
+        "id": "",
+        "label": "Pay Type",
+        "placeholder": "",
+        "visible": true,
+        "options": [
+          {
+            "value": "Allowance",
+            "label": "Allowance"
+          },
+          {
+            "value": "Deduction",
+            "label": "Deduction"
+          },
+          {
+            "value": "Tax",
+            "label": "Tax"
+          },
+          {
+            "value": "Non-Taxable Payments",
+            "label": "Non-Taxable Payments"
+          }
+        ]
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Pay Item",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Pay Item",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add Pay Item",
+      "Update",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-crm/erp_deals/pipelines",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals",
+      "Pipeline :: #/erp-crm/erp_deals/pipelines",
+      "Activity Types :: #/erp-crm/erp_deals/activity_types",
+      "Lost Reasons :: #/erp-crm/erp_deals/lost_reasons"
+    ],
+    "fieldCount": 14,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Pipeline title",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Stage Name",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Customer",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Lead",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Opportunity",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Subscriber",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Do not change",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Stage Name",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Customer",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Lead",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Opportunity",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Subscriber",
+        "placeholder": "",
+        "visible": false
+      },
+      {
+        "type": "radio",
+        "name": "",
+        "id": "",
+        "label": "Do not change",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add new pipeline",
+      "Add Stage",
+      "Edit Pipeline",
+      "Save",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-crm/erp_deals/activity_types",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals",
+      "Pipeline :: #/erp-crm/erp_deals/pipelines",
+      "Activity Types :: #/erp-crm/erp_deals/activity_types",
+      "Lost Reasons :: #/erp-crm/erp_deals/lost_reasons"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Name",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add Activity Type",
+      "Edit",
+      "Delete",
+      "Save",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-crm/erp_deals/lost_reasons",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Contacts :: #/erp-crm/contacts",
+      "Contact Forms :: #/erp-crm/contact_forms",
+      "Subscription :: #/erp-crm/subscription",
+      "Life Stages :: #/erp-crm/crm_life_stages",
+      "Deals :: #/erp-crm/erp_deals",
+      "Pipeline :: #/erp-crm/erp_deals/pipelines",
+      "Activity Types :: #/erp-crm/erp_deals/activity_types",
+      "Lost Reasons :: #/erp-crm/erp_deals/lost_reasons"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "",
+        "label": "Name",
+        "placeholder": "",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Add New",
+      "Save",
+      "Cancel"
+    ]
+  },
+  {
+    "route": "#/erp-ac/payment/general",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment",
+      "General Settings :: #/erp-ac/payment/general",
+      "Paypal Settings :: #/erp-ac/payment/paypal",
+      "Stripe Settings :: #/erp-ac/payment/stripe"
+    ],
+    "fieldCount": 2,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "text",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Please select Payment account",
+        "visible": false
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-ac/payment/paypal",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment",
+      "General Settings :: #/erp-ac/payment/general",
+      "Paypal Settings :: #/erp-ac/payment/paypal",
+      "Stripe Settings :: #/erp-ac/payment/stripe"
+    ],
+    "fieldCount": 6,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pg_paypal_enable_disable",
+        "label": "Enable/Disable",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_paypal_title",
+        "label": "Title This is the title which user see on payment options",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_paypal_description",
+        "label": "Description This is the description which user see on payment options",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_paypal_receiver_email",
+        "label": "Paypal Email Please enter your PayPal email address",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pg_paypal_sandbox",
+        "label": "Paypal Sandbox",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  },
+  {
+    "route": "#/erp-ac/payment/stripe",
+    "heading": "Settings",
+    "sectionTabs": [
+      "General :: #/general",
+      "HR :: #/erp-hr",
+      "CRM :: #/erp-crm",
+      "WooCommerce :: #/erp-woocommerce",
+      "Accounting :: #/erp-ac",
+      "Emails :: #/erp-email",
+      "Integration :: #/erp-integration",
+      "Customers :: #/erp-ac/customers",
+      "Currency Settings :: #/erp-ac/currency_option",
+      "Financial Years :: #/erp-ac/opening_balance",
+      "Payment :: #/erp-ac/payment",
+      "General Settings :: #/erp-ac/payment/general",
+      "Paypal Settings :: #/erp-ac/payment/paypal",
+      "Stripe Settings :: #/erp-ac/payment/stripe"
+    ],
+    "fieldCount": 9,
+    "fields": [
+      {
+        "type": "search",
+        "name": "",
+        "id": "",
+        "label": "",
+        "placeholder": "Search",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pg_stripe_enable_disable",
+        "label": "Enable/Disable",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_stripe_title",
+        "label": "Title This is the title which user see on payment options",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_stripe_description",
+        "label": "Description This is the description which user see on payment options",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_stripe_live_secret_key",
+        "label": "Live Secret Key Enter your Stripe Live Secret Key",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_stripe_live_publishable_key",
+        "label": "Live Publishable Key Enter your Stripe Live Publishable Key",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "checkbox",
+        "name": "",
+        "id": "erp-erp_pg_stripe_enable_testmode",
+        "label": "Test Mode",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_stripe_test_secret_key",
+        "label": "Test Secret Key Enter your Stripe Test Secret Key",
+        "placeholder": "",
+        "visible": true
+      },
+      {
+        "type": "input",
+        "name": "",
+        "id": "erp-erp_pg_stripe_test_publishable_key",
+        "label": "Test Publishable Key Enter your Stripe Test Publishable Key",
+        "placeholder": "",
+        "visible": true
+      }
+    ],
+    "buttons": [
+      "Save Changes"
+    ]
+  }
+]

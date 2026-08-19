@@ -1,35 +1,64 @@
-/** Shared types for the WP ERP Playwright suite. */
+/** Shapes the suite passes around. Kept narrow on purpose — widen when a spec needs it. */
 
-export type Headers = Record<string, string>;
-
-/** Options forwarded to APIRequestContext verbs (JSON REST). */
-export interface ReqOptions {
-    data?: unknown;
-    headers?: Headers;
-    params?: Record<string, string | number | boolean>;
-    failOnStatusCode?: boolean;
-    ignoreHTTPSErrors?: boolean;
-    timeout?: number;
+export interface ErpLicense {
+    email: string;
+    key: string;
+    subscription_type: string;
 }
 
-export type ResponseBody = any;
-
-/** A WP user/role login. */
-export interface UserCredentials {
-    username: string;
-    password: string;
+export interface ErpLicenseStatus {
+    success: boolean;
+    license: string;
+    item_id: number;
+    item_name: string;
+    checksum: string;
+    expires: string;
+    customer_name: string;
+    customer_email: string;
+    license_limit: number;
+    site_count: number;
+    activations_left: number;
+    subscription_status: string;
+    users: number;
+    license_id: number;
+    tier: string;
+    extensions: string[];
 }
 
-/** Map of seeded entity IDs written back to .env via createEnvVar. */
-export type IdMap = Record<string, string>;
+export interface ErpUserCount {
+    counted_roles: string[];
+    count_users: number;
+    licensed_user: number;
+}
 
-/** Roles the suite logs in as. */
-export type Role = 'admin' | 'hrManager' | 'crmManager' | 'accManager' | 'employee';
+export interface SeededUser {
+    id: number;
+    login: string;
+    email: string;
+    role: string;
+}
 
-export interface AuthFiles {
-    admin: string;
-    hrManager: string;
-    crmManager: string;
-    accManager: string;
-    employee: string;
+export interface Employee {
+    first_name: string;
+    last_name: string;
+    email: string;
+    designation?: number | string;
+    department?: number | string;
+    location?: number | string;
+    hiring_source?: string;
+    hiring_date?: string;
+    date_of_birth?: string;
+    type?: string;
+    status?: string;
+    pay_rate?: string;
+    pay_type?: string;
+}
+
+export interface Contact {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone?: string;
+    life_stage?: string;
+    contact_owner?: number;
 }

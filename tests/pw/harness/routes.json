@@ -1,0 +1,1949 @@
+{
+  "/erp/v1": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/utility/get-active-plugins": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/crm/contacts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/crm/contacts/bulk": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/crm/contacts/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/crm/contacts/groups": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/crm/contacts/groups/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/crm/contacts/groups/(?P<id>[\\d]+)/subscribes": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/crm/contacts/groups/(?P<group_id>[\\d]+)/subscribes/(?P<contact_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/crm/activities": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/crm/activities/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/crm/schedules": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/crm/todays-schedules": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/crm/upcoming-schedules": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/jobs": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/jobs/(?P<job_id>\\d+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/jobs/(?P<job_id>\\d+)/status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/jobs/(?P<job_id>\\d+)/candidates": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/stages/(?P<stage_id>\\d+)/candidates": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/shortlist": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/stage": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/statuses": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/cv/download": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/cv/preview": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/interview": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/candidates/(?P<id>\\d+)/interviews": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/stages": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/stages/(?P<id>\\d+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/recruitment/stages/(?P<id>\\d+)/jobs": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/employees": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/bulk": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/experiences": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/experiences/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/educations": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/educations/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/dependents": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/dependents/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/job_histories": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/job_histories/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/performances": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/performances/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/events": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/terminate": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/announcements": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/policies": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/leaves": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/notes": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/notes/(?P<note_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/employees/(?P<user_id>[\\d]+)/roles": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/employees/upload": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/departments": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/departments/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/designations": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/designations/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/birthdays": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/reports/age-profiles": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/reports/gender-profiles": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/reports/head-counts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/reports/salary-histories": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/reports/year-of-services": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/leaves/entitlements": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/leaves/entitlements/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/leaves/holidays": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/leaves/holidays/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/leaves/policies": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/leaves/policies/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/(?P<id>[\\d]+)/approve": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/(?P<id>[\\d]+)/reject": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/bulk-approve": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/bulk-reject": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/bulk-delete": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/leaves/requests/calculate-days": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/announcements": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/announcements/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/announcements/my": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/announcements/my/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/company-locations": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/employee-statuses": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/employee-types": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/pay-types": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/hiring-sources": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/pay-change-reasons": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/termination-types": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/termination-reasons": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/rehire-options": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/genders": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/marital-statuses": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/education-result-types": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/performance-ratings": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/company/work-days": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/docs/(?P<user_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/docs/(?P<user_id>[\\d]+)/file/(?P<target_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/docs/(?P<user_id>[\\d]+)/move": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/docs/(?P<user_id>[\\d]+)/search": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/docs/dropbox": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/customers": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/customers/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/customers/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/customers/(?P<id>[\\d]+)/transactions": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/customers/(?P<id>[\\d]+)/transactions/filter": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/customers/country": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/vendors": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/vendors/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/vendors/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/vendors/(?P<id>[\\d]+)/transactions": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/vendors/(?P<id>[\\d]+)/transactions/filter": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/vendors/(?P<id>[\\d]+)/products": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employees": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employees/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employees/(?P<id>[\\d]+)/transactions": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/products": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/products/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/products/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/products/types": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/products/csv/validate": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/products/csv/import": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/product-cats": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/product-cats/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/product-cats/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/ledgers": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/ledgers/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/ledgers/(?P<chart_id>[\\d]+)/accounts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/ledgers/accounts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/ledgers/bank-accounts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/ledgers/cash-accounts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/opening-balances": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/opening-balances/names": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/opening-balances/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/opening-balances/(?P<id>[\\d]+)/count": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/opening-balances/virtual-accts/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/opening-balances/acc-payable-receivable": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/closing-balance": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/closing-balance/closest-fn-year": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/closing-balance/next-fn-year": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/invoices": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/invoices/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/invoices/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/invoices/due/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/invoices/attachments": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/invoices/overview-receivable": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/payments": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/payments/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/payments/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/bills": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/bills/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/bills/due/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/bills/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/bills/overview-payable": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/pay-bills": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/pay-bills/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/pay-bills/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchases": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchases/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchases/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchases/due/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/pay-purchases": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/pay-purchases/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/pay-purchases/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/type/(?P<voucher_no>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/statuses": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/sales": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/expenses": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/purchases": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/sales/chart-status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/sales/chart-payment": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/income-expense-overview": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/expense/chart-expense": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/expense/chart-status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/purchase/chart-purchase": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/purchase/chart-status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/payment-methods": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/send-pdf/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/people-chart/trn-amount/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/people-chart/trn-status/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/transactions/voucher-type/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/(?P<id>[\\d]+)/quick-edit": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/(?P<id>[\\d]+)/line-add": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/(?P<id>[\\d]+)/line-edit": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/(?P<id>[\\d]+)/line-delete/(?P<db_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/tax-records": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/tax-records/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/pay-tax": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/taxes/summary": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts/transfer": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts/transfers/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts/transfers/list": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts/bank-accounts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/accounts/cash-at-bank": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/company": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/currencies": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/journals": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/journals/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/journals/next": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/expenses": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/expenses/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/expenses/(?P<id>[\\d]+)/void": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/expenses/checks/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-agencies": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-agencies/due/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-agencies/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-agencies/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-cats": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-cats/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-cats/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-rate-names": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-rate-names/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/tax-rate-names/delete/(?P<ids>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/accounting/v1/people": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people/(?P<id>[\\d]+)/address": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people/(?P<id>[\\d]+)/opening-balance": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people/check-email": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/trial-balance": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/ledger-report": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/sales-tax": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/income-statement": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/balance-sheet": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/closest-fn-year": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchase-return/list": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchase-return/create": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchase-return/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/purchase-return/search-invoice/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/sales-return/create": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/sales-return/list": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/sales-return/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/sales-return/search-invoice/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/sales/return": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/purchase/return": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/reports/purchase-vat": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory/stock-overview": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory/transactions-overview": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory/reports/sales": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory/reports/purchase": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory/reports/item-list": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/inventory/reports/item-summary": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people-transactions": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/people-transactions/balances": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people-transactions/report": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people-transactions/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people-transactions/chart-requests": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/people-transactions/chart-status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests/attachments": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests/employee/chart-requests": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests/employee/chart-status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests/manager/chart-requests": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/employee-requests/manager/chart-status": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/shifts": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/shifts/(?P<shift_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/attendance/shifts/(?P<shift_id>[\\d]+)/assign": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/shifts/delete/(?P<shifts_id>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/attendance/shifts/(?P<shift_id>[\\d]+)/assign/delete/(?P<users_id>[\\d,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/attendance/logs": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/logs/(?P<user_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/reports/(?P<user_id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/hrentry": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/hrentry/(?P<date>[\\w\\-]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp/v1/hrm/attendance/hrentry/delete/(?P<dates>[\\w\\-?,?]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "DELETE"
+    ]
+  },
+  "/erp/v1/hrm/attendance/employees_user_id": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/dept_employees_user_id": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/degn_employees_user_id": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/get_employees": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/attendance/bulk_shift_assign": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/att_data_migration": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/att_data_migration_total": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/update_grace_time": {
+    "namespace": "erp/v1",
+    "methods": [
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/self-attendance": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/hrm/attendance/import_export_file": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp/v1/accounting/v1/field-builder": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/accounting/v1/field-builder/(?P<type>[\\w]+)/(?P<id>[\\d]+)": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp/v1/hrm/hr-frontend/settings": {
+    "namespace": "erp/v1",
+    "methods": [
+      "GET",
+      "POST"
+    ]
+  },
+  "/erp_pro/v1/admin": {
+    "namespace": "erp_pro/v1/admin",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp_pro/v1/admin/modules": {
+    "namespace": "erp_pro/v1/admin",
+    "methods": [
+      "GET"
+    ]
+  },
+  "/erp_pro/v1/admin/modules/activate": {
+    "namespace": "erp_pro/v1/admin",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp_pro/v1/admin/modules/deactivate": {
+    "namespace": "erp_pro/v1/admin",
+    "methods": [
+      "POST",
+      "PUT",
+      "PATCH"
+    ]
+  },
+  "/erp_pro/v1/admin/modules/installed": {
+    "namespace": "erp_pro/v1/admin",
+    "methods": [
+      "GET"
+    ]
+  }
+}
