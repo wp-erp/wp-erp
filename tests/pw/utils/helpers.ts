@@ -109,6 +109,19 @@ export function upcomingMonday(weeksAhead = 2): string {
     return toDate(date);
 }
 
+/**
+ * A DATE column from mysql2, as YYYY-MM-DD.
+ *
+ * The driver hydrates `DATE`/`DATETIME` columns into JS `Date` objects, so
+ * `String(row.trn_date)` yields "Thu Aug 20 2026 00:00:00 GMT+0600 (…)" and a
+ * comparison against an ISO string fails for a row that is perfectly correct.
+ * Formatting goes through `toDate()` so it inherits the local-components rule.
+ */
+export function dbDate(value: unknown): string {
+    if (value instanceof Date) return toDate(value);
+    return String(value ?? '').slice(0, 10);
+}
+
 /** N days after the given YYYY-MM-DD. */
 export function daysAfter(isoDate: string, days: number): string {
     const date = new Date(`${isoDate}T00:00:00Z`);

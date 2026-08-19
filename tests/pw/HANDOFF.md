@@ -39,6 +39,9 @@ projects add ~18 more — `crmAgent2` joined the auth chain).
 | crm-deals — single deal: notes, competitors, stage move, won/reopen/trash, authz | 10 | 10 | — |
 | crm-deals — agent-vs-agent access control (6 positive controls + 2 guards) | 8 | 8 | — |
 | harness — date helpers (no browser; guards the timezone bug in trap 41) | 4 | 4 | — |
+| hrm — admin router (status probes, ERP-148 guard) | 4 | 4 | — |
+| accounting — 29 screens, chart classes, reports, authz | 33 | 33 | — |
+| accounting — invoice create, line maths, double entry, customer ledger, validation | 8 | 8 | — |
 
 The 3 skips are deliberate and recorded in `COVERAGE.md`: licence cases that need the site to be
 UNlicensed (the activation form is not rendered while licensed).
@@ -255,7 +258,29 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
     days. **The product was right; the harness was wrong, and only at night.** Fixed at the root in
     `helpers.toDate()`; guarded by `tests/e2e/core/dateHelpers.spec.ts`. Note CI runners are UTC, so
     CI would have stayed green while a local evening run went red.
-42. **Ordering matters when probing access control.** A probe that ran `save_deal` before
+42. **Accounting is a HASH-ROUTER SPA** — `admin.php?page=erp-accounting#/users/customers`, not
+    `section=`. A hash-only change does NOT reload, so `AccountingPage.gotoRoute()` sets
+    `location.hash` and dispatches `hashchange`. Take the route list from the app's own nav anchors;
+    `router/index.js` nests 124 path fragments and hand-assembling them is guesswork.
+43. **Accounting's `Save` is `class="btn-fake"` and a HIDDEN `Save as Draft` shares that class** — a
+    loose `button:has-text("Save")` resolves to the hidden one and times out. Match visible buttons on
+    an exact `/^Save$/`.
+44. **An invoice's double entry SPANS TWO TABLES** — the receivable debit in
+    `erp_acct_invoice_account_details`, the income credit in `erp_acct_ledger_details`. Summing either
+    alone looks unbalanced and reads like a defect. And the customer ledger row goes to
+    `erp_acct_people_trn_**details**`, NOT `erp_acct_people_trn` — both tables exist and only the
+    `_details` one is written on create.
+45. **mysql2 hydrates DATE columns into JS `Date` objects.** `String(row.trn_date)` is
+    `"Thu Aug 20 2026 00:00:00 GMT+0600 (…)"` and never equals an ISO string — use `helpers.dbDate()`.
+46. **`hasNoPhpFatal()` cannot see a fatal inside an AJAX/REST response** — it only reads rendered
+    body text. That blind spot hid ERP-147 through 29 occurrences of green payroll runs. Screen-level
+    smoke cases should call `BasePage.watchServerErrors()` and assert `serverErrorList()` is empty;
+    that one assertion found ERP-147, ERP-148 and ERP-150.
+47. **When a form silently does nothing, find its validator before blaming the submit.** The invoice
+    form sent no request and showed no error under my selectors; reading `validateForm()` in
+    `InvoiceCreate.vue` is what turned "the save button is broken" into ERP-149. The error panel
+    renders above the fold with no `.error` class.
+48. **Ordering matters when probing access control.** A probe that ran `save_deal` before
     `delete_deal` made the delete look unguarded; it is guarded, but the earlier write had already
     made the caller the owner. Attempt the guarded action BOTH before and after the suspected
     escalation, or the chain reads as two independent holes.
@@ -275,6 +300,10 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
 | ERP-143 | [#958](https://github.com/wp-erp/erp-pro/issues/958) | Major | CRM Tasks/Schedules cannot be created — the composer's submit never enables (`trix-change` bound to the wrong editor) |
 | ERP-144 | [#959](https://github.com/wp-erp/erp-pro/issues/959) | Major | Default deal pipeline seeded out of order (`Proposal Made` gets `order = 0`) — the board, settings, modal and Deal Progress all open at stage four, and every deal records having REACHED Proposal Made, so the funnel reports 2 deals there with 0 at the stage before it |
 | ERP-145 | [#960](https://github.com/wp-erp/erp-pro/issues/960) | Minor | Add New Deal overwrites a title the user already typed — the contact watcher assigns unconditionally |
+| ERP-147 | [#964](https://github.com/wp-erp/erp-pro/issues/964) | Major | Payroll Overview chart 500s where PHP lacks the optional `calendar` extension — `cal_days_in_month()` unguarded at `AjaxHandler.php:138`; the history panel stays blank |
+| ERP-148 | [#965](https://github.com/wp-erp/erp-pro/issues/965) | Minor | HR router fatals on redirect-only submenus (`'callback' => ''`) — `?section=payroll|attendance&sub-section=settings` is 500; the CRM router handles the same shape |
+| ERP-149 | [#966](https://github.com/wp-erp/erp-pro/issues/966) | Major | **Typed dates are ignored on every Accounting form** — `Datepicker.vue:86` emits only when the field is emptied; save says the date is required while showing it. 34 usages, 21 screens |
+| ERP-150 | [#967](https://github.com/wp-erp/erp-pro/issues/967) | **Major / P1** | Invoice create answers 500 and sends **no invoice email** — `erp-pdf-invoice` calls `get_magic_quotes_runtime()`, removed in PHP 8. The invoice IS created, so the screen looks fine |
 | ERP-146 | [#963](https://github.com/wp-erp/erp-pro/issues/963) | **Major / P1** | A CRM agent can take over another agent's deal — `save_deal` is the one path that skips `Deal::scopeReadable()`, and it reassigns `owner_id` to the caller, so the write transfers the deal and unlocks the trash/read/note paths that DO check |
 
 **Filed 2026-07-21 against 1.6.0, re-verified on 1.7.0, and POSTED 2026-08-19** (the two that were re-tested):
@@ -286,7 +315,7 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
 | ERP-045 | Major | **Not re-tested** — needs a second pipeline; still unposted | Stage/pipeline delete transfer accepts a `transfer_to_stage_id` from a different pipeline |
 | ERP-066 | Minor | **Not re-tested** — needs a media fixture; still unposted | `add_attachment()` persists a row for a non-existent WP media id |
 
-Bug files: `~/.claude/skills/wp-erp-qa/bugs/2026-08-18/` and `2026-08-19/`. Register: `bugs/REGISTER.md`, **next ID `ERP-147`**. Filing needs the user's explicit go-ahead per issue; identity gate is `gh auth status`
+Bug files: `~/.claude/skills/wp-erp-qa/bugs/2026-08-18/` and `2026-08-19/`. Register: `bugs/REGISTER.md`, **next ID `ERP-151`**. Filing needs the user's explicit go-ahead per issue; identity gate is `gh auth status`
 = `shohan0120`. Screenshots are attached by loading the PNG onto the macOS clipboard
 (`osascript … as «class PNGf»`) and sending a real Cmd+V into the GitHub comment box — `gh` cannot
 upload images, and the React editor exposes no file input. Two things make this reliable, both
@@ -314,25 +343,27 @@ was filed, because nothing was a product defect. Full write-up in `COVERAGE.md`.
 The lesson is the same one D4 taught: **when an oracle disagrees with the UI, check the oracle is
 reading the table the product reads.**
 
-## RESUME HERE — the next pass is contact groups, subscribers and CRM reports
+## RESUME HERE — Accounting is started, not finished
 
-Deals is now covered at three levels — board, single deal, and agent-vs-agent access control. What
-remains inside CRM:
+Accounting went from **zero specs to 41** tonight: every screen, and the invoice money path end to
+end. The next things, in the order I would take them:
 
-1. **Contact groups and subscribers** — `admin.php?page=erp-crm&section=contact-group`. Completely
-   untouched; nothing gathered yet, so this one starts cold.
-2. **CRM reports** — `section=reports`. Untouched.
-3. **Schedules** — the contact feed's Schedule composer. **Expect a `test.fail()` guard, not
-   coverage:** ERP-143 / erp-pro#958 records that Create Schedule never enables, the same defect as
-   Tasks.
-4. **The same agent-vs-agent question on the FREE side** — contacts, companies and activities, which
-   use `contact_owner` rather than the deals model. Deals turned out to be mostly correct; do not
-   assume the free side matches, and do not assume it is broken either.
-5. **Deals leftovers**, each blocked on a fixture the suite does not have: Lost + lost reasons (needs
-   a reason created in ERP Settings), attachments (needs a media fixture; ERP-066's ground), the Add
-   activity composer, the deal `agents` sharing list (the intended grant path in `scopeReadable()`),
-   and pipeline administration with a SECOND pipeline — which is where ERP-045 and the cross-pipeline
-   half of ERP-043 live.
+1. **Invoice → payment settlement** — tier-1 case `ACCOUNTING-F1-001`, and the most valuable case
+   still unwritten. Receive Payment (`#/payments/new`) against an existing unpaid invoice, then assert
+   the invoice's due falls to zero and the payment posts its own balanced entry. `pickDate()` and the
+   invoice helpers already exist; what is missing is the payment form's own field map.
+2. **Bills, purchases, expenses, checks, journals, transfers, estimates** — every create form RENDERS
+   (covered), but only invoices have a money oracle. Each needs its posting rules read first; do not
+   copy the invoice oracle blindly, because the tables differ per voucher type.
+3. **Reports' numbers.** Trial Balance, Balance Sheet, Income Statement and Ledger Report all render
+   and nothing asserts a figure. This is where the real accounting risk sits, and it is now cheap —
+   the invoice flow can seed known amounts.
+4. **Opening balance** (118 fields on one screen) feeding the trial balance.
+5. **Multi-line invoices, discounts, line tax** — single-line only so far.
+
+Then: the rest of CRM (contact groups/subscribers, CRM reports, the free-side agent visibility
+question), the Pro non-HRM modules (inventory, payment gateway, WooCommerce), and the 7 external
+integrations, which still need sandbox credentials before they can be more than recorded skips.
 
 ## Next steps, in order
 
@@ -344,10 +375,15 @@ remains inside CRM:
 2. Payroll pay RUN — **blocked by ERP-141 / erp-pro#956** on this MariaDB environment; the schema is
    broken, so no pay-run assertions were written. Revisit once it is fixed, or run that pass against
    MySQL. Pay items/categories and payroll settings are still open regardless.
-3. **CRM in progress** — Contacts, Companies, Activities, Tasks and Deals (board, single-deal AND
-   agent access control) done. Remaining is listed in RESUME HERE above. Then Accounting — which has
-   **zero specs today**, though its tier-1 cases are authored and 161 REST routes are harvested —
-   then the remaining Pro modules.
+3. **CRM** — Contacts, Companies, Activities, Tasks and Deals (board, single-deal AND agent access
+   control) done. Remaining: contact groups/subscribers, CRM reports, schedules (expect a `test.fail()`
+   guard — ERP-143/#958), and the same agent-vs-agent question on the FREE side, which uses
+   `contact_owner` rather than the deals model.
+4. **Accounting — started tonight**, 41 cases: all 29 screens plus the invoice money path. What is
+   left is in RESUME HERE above; invoice → payment settlement is the top item.
+5. **Untouched entirely:** the Pro non-HRM modules (inventory, payment gateway, WooCommerce) and the
+   7 external integrations, which need sandbox credentials before they can be more than recorded
+   skips.
 4. The 100/101-seat licence test is designed (6 cases in `test-cases/`) but **not implemented** — it
    belongs in the separate `license_limit` project so it never runs inside the normal suite.
 5. CI: `.github/workflows/pw-suite.yml` exists but has **never been run**. Needs `ERP_PRO_TOKEN`,

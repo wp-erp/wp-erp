@@ -471,6 +471,112 @@ belongs to `cleanupAll()` only.** Worth noting it was found by reading, not by a
 - **ERP-045** (cross-pipeline stage transfer on delete) — needs a second pipeline, deliberately left
   to the pipeline-administration pass so it is not confused with ERP-043 or ERP-144.
 
+### Accounting — first pass (41 cases, all green — 3 known-defect guards)
+
+Accounting had **zero specs** before tonight despite tier-1 cases being authored and 161 REST routes
+harvested. This pass covers every screen plus the invoice money path.
+
+**It is a hash-router Vue SPA**, unlike every other ERP module — screens are
+`admin.php?page=erp-accounting#/users/customers`, not `section=`/`sub-section=`. Two consequences:
+a hash-only change does NOT reload, so `AccountingPage.gotoRoute()` sets `location.hash` and fires
+`hashchange` by hand; and the route list was taken from **the app's own navigation anchors** rather
+than reconstructed from `router/index.js`, whose 124 nested path declarations I started to
+hand-assemble and abandoned as guesswork.
+
+**Screens (33 cases):** all 29 routes render their captured heading with real content and **no 5xx**,
+the chart of accounts groups all five account classes, the reports screen offers its five reports, and
+Accounting is closed to both an employee and an HR manager — the second being a real
+separation-of-duties check rather than a repeat, since HR and Accounting are different capability
+domains.
+
+**The money path (8 cases):** an invoice is created from the UI and stored against its customer with
+the chosen dates; the line records qty x unit price and agrees with the invoice total; the posting is
+a **balanced double entry**; and the customer's transaction ledger gains the matching row. Plus two
+validation refusals (no customer, no line item).
+
+**Three defects found and filed:**
+
+- **ERP-149 / erp-pro#966 (Major)** — typed dates are ignored on every Accounting form. Written up
+  below; it shaped the whole page object.
+- **ERP-150 / erp-pro#967 (Major, P1)** — invoice create answers HTTP 500 and sends no invoice email.
+  Written up below.
+- **ERP-147 / erp-pro#964** and **ERP-148 / erp-pro#965** came out of the same 5xx sweep — see the
+  HRM sections.
+
+**Three assertions I got wrong, all caught before they became bug reports.** Recorded because each
+one would have been a false accusation against the product:
+
+1. **"The invoice posts an unbalanced entry."** It does not — the double entry **spans two tables**:
+   the receivable debit lands in `erp_acct_invoice_account_details` and the income credit in
+   `erp_acct_ledger_details`. Summing either alone looks unbalanced. The oracle now sums both.
+2. **"The customer ledger is never written."** Wrong table: the row goes to
+   `erp_acct_people_trn_**details**` (`transactions.php:1735`), not `erp_acct_people_trn`. Both tables
+   exist, which is what made the mistake easy.
+3. **"The save button does nothing."** That was ERP-149 — but I only got there by reading
+   `validateForm()`; the error panel renders above the fold and carries no `.error` class, so my first
+   check saw nothing at all. **When a form silently does nothing, find its validator before blaming
+   the submit.**
+
+**Harness traps paid for here:**
+
+- **The `Save` button is `class="btn-fake"`, and there is a hidden `Save as Draft` with the same
+  class.** A loose `button:has-text("Save")` resolves to the hidden one and times out.
+  `AccountingPage.save()` matches visible buttons on an exact `/^Save$/`.
+- **mysql2 hydrates DATE columns into JS `Date` objects**, so `String(row.trn_date)` is
+  `"Thu Aug 20 2026 00:00:00 GMT+0600 (…)"` and never equals an ISO string. `helpers.dbDate()` exists
+  for this and routes through `toDate()` so it inherits the local-components rule.
+- The transaction forms are label-anchored with no ids and no names except `qty` — payroll and the
+  deals modal again.
+
+**Not covered in Accounting, and why:**
+
+- **Payments, bills, purchases, expenses, checks, journals, transfers and estimates** — the create
+  forms all render and are covered by the screens pass, but only the INVOICE flow has an end-to-end
+  money oracle. Each of the others needs its own posting rules understood before an oracle can be
+  written, and inventing one would be worse than leaving the gap stated.
+- **The invoice → payment settlement** (tier-1 case ACCOUNTING-F1-001) — the next thing I would write.
+  Receive Payment needs an existing unpaid invoice and its own ledger oracle.
+- **Opening balance and the trial balance** — 118 fields on one screen, and the report it feeds.
+- **Tax rates, agencies, categories and tax payments** beyond rendering.
+- **Reports' actual numbers.** They render; nothing asserts the figures yet, which is where the real
+  accounting risk lives.
+- **Multi-line invoices, discounts and tax on a line** — single-line only so far.
+
+### ERP-149 → erp-pro#966 — typed dates are ignored on every Accounting form (filed 2026-08-20)
+
+`components/base/Datepicker.vue:86` emits to the parent v-model **only when the field is emptied**:
+
+```js
+onChangeDate() {
+    if (this.selectedDate.length === 0) { … this.$emit('input', this.selectedDate); }
+}
+```
+
+So typing a date updates what the user sees and nothing else. Saving reports *"Transaction Date is
+required. Due Date is required."* with both boxes visibly showing dates — **0 POSTs sent, 3/3**. Only
+a calendar day click (`pickerSelect()`) emits a usable value. **34 usages across 21 screens**:
+invoice, bill, expense, purchase, check, journal, pay-bill, pay-purchase, receive-payment, transfer,
+tax payment, the transaction filters and every dated report.
+
+`AccountingPage.pickDate()` drives the calendar so the suite can create transactions despite this;
+`typeDate()` exists only to reproduce it in the guard. **The workaround is in the harness, the defect
+is on the ledger.**
+
+### ERP-150 → erp-pro#967 — invoice create returns 500 and sends no invoice email (filed 2026-08-20)
+
+`erp-pdf-invoice 1.2.1` calls `get_magic_quotes_runtime()` — **removed in PHP 8.0** — at
+`class-tfpdf.php:1265`, reached from accounting's `erp_acct_new_transaction_sales` hook via
+`erp_acct_send_email_on_transaction()` → `erp_acct_generate_pdf()`.
+
+The invoice commits BEFORE the hook, so it is created correctly and appears in Sales Transactions:
+the screen looks like a success. What is lost is the response and the mail — `POST
+erp/v1/accounting/v1/invoices` answers **500, 3/3**, and after four invoices the site's email log
+holds **zero** invoice emails, only WordPress's own "Your Site is Experiencing a Technical Issue"
+notice. An API consumer is told a successful create failed.
+
+**Stated, not claimed:** whether bill/purchase/estimate/payment emails break identically was not
+tested — the code path is shared and it is likely, but likely is not measured.
+
 ### A harness bug that only fires at night — `toDate()` and the timezone (found 2026-08-20)
 
 Two leave specs went red on a full run with `"Mon–Wed counts as three working days — expected 3,

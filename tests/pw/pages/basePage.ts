@@ -11,6 +11,10 @@ export class BasePage {
     private readonly dialogs: string[] = [];
     private dialogsWired = false;
 
+    /** Server errors seen since `watchServerErrors()` was called. */
+    private readonly serverErrors: string[] = [];
+    private serverErrorsWired = false;
+
     constructor(protected readonly page: Page) {}
 
     /**
@@ -41,6 +45,42 @@ export class BasePage {
 
     clearDialogs(): void {
         this.dialogs.length = 0;
+    }
+
+    // ---- server errors ----------------------------------------------------
+    //
+    // A PHP fatal inside an AJAX response is invisible to `hasNoPhpFatal()`,
+    // which can only read the rendered body. ERP-147 (erp-pro#964) sat in
+    // `debug.log` for 29 occurrences across GREEN suite runs for exactly that
+    // reason: the payroll dashboard's chart endpoint 500s on every load and no
+    // assertion could see it.
+
+    /**
+     * Records every response with a 5xx status from here on.
+     *
+     * Call before navigating. Cheap — one listener, no polling — so screen-level
+     * smoke cases should use it as a matter of course.
+     */
+    watchServerErrors(): void {
+        if (this.serverErrorsWired) return;
+        this.serverErrorsWired = true;
+
+        this.page.on('response', (response) => {
+            if (response.status() < 500) return;
+
+            const url = response.url();
+            const action = url.match(/[?&]action=([^&]+)/)?.[1];
+            this.serverErrors.push(`${response.status()} ${action ? `action=${action}` : url.split('?')[0]}`);
+        });
+    }
+
+    /** Every 5xx seen since `watchServerErrors()`, de-duplicated. */
+    serverErrorList(): string[] {
+        return [...new Set(this.serverErrors)];
+    }
+
+    clearServerErrors(): void {
+        this.serverErrors.length = 0;
     }
 
     // ---- navigation -------------------------------------------------------

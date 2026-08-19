@@ -32,6 +32,31 @@ test.describe('HR — Payroll @pro', () => {
         });
     }
 
+    test.fail(
+        'the payroll screens load without a server error',
+        { tag: ['@tier1', '@pro', '@hrm-payroll', '@known-defect'] },
+        async ({ page: p }) => {
+            // KNOWN DEFECT — ERP-147 / erp-pro#964. `AjaxHandler::get_payrun()`
+            // calls `cal_days_in_month()` unguarded, and the `calendar` PHP
+            // extension is optional — absent from the official WordPress Docker
+            // image — so the dashboard's chart endpoint 500s on every load and
+            // the "Payroll History of Current Month" panel stays blank.
+            //
+            // This is the case the suite was MISSING: payroll was 13/13 green
+            // while 29 of these fatals piled up in debug.log, because
+            // `hasNoPhpFatal()` reads rendered body text and cannot see a fatal
+            // inside an AJAX response.
+            const watched = new PayrollPage(p);
+            watched.watchServerErrors();
+
+            await watched.goto('dashboard');
+            await p.waitForTimeout(4000);
+
+            expect(await watched.hasNoPhpFatal(), 'precondition: the page itself renders').toBe(true);
+            expect(watched.serverErrorList(), 'no request during the load returns 5xx').toEqual([]);
+        }
+    );
+
     test('the pay run list renders its captured columns', { tag: ['@tier1', '@hrm-payroll'] }, async () => {
         await page.goto('payrun');
 
