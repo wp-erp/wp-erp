@@ -444,16 +444,16 @@ reading the table the product reads.**
 ## RESUME HERE — the EDIT paths (payment done; expense/bill/purchase next)
 
 Accounting is at **70 cases** (`--list`: 33 in `accounting_money`, 37 in `e2e_tests`). The payment
-EDIT path is **done** and produced two bugs, both filed locally and **not yet posted**:
+EDIT path is **done** and produced two bugs, both posted as sub-issues of #844:
 
-- **ERP-152 (Critical)** — `PUT /accounting/v1/payments/{id}` answers `200`, updates the receipt
+- **ERP-152 (Critical) — [erp-pro#969](https://github.com/wp-erp/erp-pro/issues/969)** — `PUT /accounting/v1/payments/{id}` answers `200`, updates the receipt
   header, and leaves everything else on the old amount while ADDING a second cash ledger row with
   `trn_no = 0`. Editing 1,800 down to 900 leaves **Trial Balance Dr $2,700.00 vs Cr $1,800.00**.
   Cause: `rec-payments.php:336` passes `( $data, $voucher_no, $invoice_no )` to a function declared
   `( $data, $invoice_no, $voucher_no )` at `:368`, and `$invoice_no[$key]` reads `$item['invoice_id']`
   (`:332`) — a key the payload never carries. `erp_acct_update_payment_data_in_ledger()` (`:591`) is
   dead code. `erp_acct_people_trn_details` is never touched. **3/3.**
-- **ERP-153 (Major)** — `#/payments/{id}/edit` asks for `GET /invoices/{payment voucher no}`, shows
+- **ERP-153 (Major) — [erp-pro#970](https://github.com/wp-erp/erp-pro/issues/970)** — `#/payments/{id}/edit` asks for `GET /invoices/{payment voucher no}`, shows
   `Invoice does not exists!` and renders a wholly blank form. `setDataForEdit()` is called
   (`RecPaymentCreate.vue:281`) but never defined in that file; the component's only write is
   `HTTP.post('/payments')` (`:424`), so it has no update path at all. **6/6, canary green 6/6.**
