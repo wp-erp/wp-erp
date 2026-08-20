@@ -441,30 +441,40 @@ was filed, because nothing was a product defect. Full write-up in `COVERAGE.md`.
 The lesson is the same one D4 taught: **when an oracle disagrees with the UI, check the oracle is
 reading the table the product reads.**
 
-## RESUME HERE — Accounting: both money cycles and the reports are done
+## RESUME HERE — the payment EDIT path (`erp_acct_update_payment`)
 
-Accounting now has **62 cases**: all 29 screens, invoice → payment, bill → pay bill, and the reports
-checked against figures the suite controls — including the two invariants that matter most, `debits =
-credits` and `Assets = Liability + Equity`, plus a cross-report agreement case that catches an
-aggregation error neither report would reveal alone.
+Accounting has **62 cases**: all 29 screens, invoice → payment, bill → pay bill, and the reports.
+The next pass is the payment EDIT path, and the reading below was already done — start from it rather
+than re-deriving.
 
-What is left, in the order I would take it:
+**Why it is the top item:** it is completely untested, and it carries the same shape as ERP-151.
 
-1. **The payment EDIT path.** `erp_acct_update_payment()` (`rec-payments.php:330`) carries the SAME
-   `$total = 0`-inside-the-loop shape as ERP-151 and is **completely untested**. Highest-probability
-   place for a sibling Critical, and cheap now that the payment helpers exist.
-2. **Expenses, purchases, checks, journals, transfers, estimates** — every create form renders
-   (covered) but none has a money oracle. Purchases and estimates are also the two transaction types
-   whose 500 behaviour is still unmeasured for ERP-150.
-3. **Report date ranges.** Every report query is `trn_date BETWEEN` and all seeded data is dated
-   today, so the range is never exercised at its edges. Needs the calendar helper wired to the report
-   filters first (typing a date is ERP-149).
-4. **Over-payment and refunds** — ERP-046's territory, unverified on this build.
-5. **Sales Tax reports and opening balances** — both need fixtures the suite does not create yet
-   (tax rates; 118 opening-balance fields).
+**What was read in `modules/accounting/includes/functions/rec-payments.php:297` (`erp_acct_update_payment`):**
 
-Then the rest of CRM (contact groups/subscribers, CRM reports, free-side agent visibility) and the Pro
-non-HRM modules (inventory, payment gateway, WooCommerce).
+1. **The same `$total = 0` INSIDE the line-item `foreach`** (`:330`), so after the loop
+   `$payment_data['amount']` holds only the LAST line's total — identical to the ERP-151 shape at
+   `:171`. Here it is passed to `erp_acct_update_payment_line_items()` per line, so the impact needs
+   measuring rather than assuming; it is NOT obviously the same bug.
+2. **The receipt header is updated BEFORE the loop**, using the amount from
+   `erp_acct_get_formatted_payment_data()` — so the header total looks correct even if the lines are
+   not. Check header vs lines vs ledger separately.
+3. ⚠️ **The update path never writes `erp_acct_people_trn_details` at all** — `grep -c people_trn`
+   over the whole function returns **0**. The customer ledger is what ERP-151 proved the balance is
+   computed from, so an edited payment may leave the customer's balance showing the OLD amount.
+   **This is the highest-value hypothesis to test first:** create a payment for X, edit it to Y,
+   then check `SUM(debit) - SUM(credit)` for that customer.
+4. ⚠️ **`erp_acct_update_data_into_people_trn_details()` (`transactions.php:1764`) only DELETES.** Its
+   whole body is one `$wpdb->delete()` — it never re-inserts. Any caller relying on it to "update"
+   the ledger silently removes the row instead. Find its callers before writing the case.
+
+**How to reach the edit UI:** the router has `/payments` but no obvious edit route in the path dump —
+open a receipt from **Transactions → Sales** (the `Receive` rows) and look for its edit control, or
+drive `erp_acct_update_payment` through the REST route. Capture the real route before writing the
+spec.
+
+**Where the spec goes:** `tests/e2e/accounting/payments.spec.ts` (it owns Harbourline Logistics and
+Meridian Office Supplies), and therefore the `accounting_money` project — **which must be run with
+`--workers=1 --no-deps`**, see "How to run". A new file would need its own party per the one-party-per-file rule.
 
 ## Next steps, in order
 
