@@ -2,6 +2,28 @@ import { execute, prefix, query } from '@utils/dbUtils';
 import type { RowDataPacket } from 'mysql2/promise';
 
 /**
+ * The people id behind a seeded customer's display name.
+ *
+ * Accounting specs SCOPE THEIR CLEANUP BY CUSTOMER so two of them can run in
+ * parallel without deleting each other's in-flight transactions — the sixth time
+ * this class of collision has bitten this suite. Each spec owns one seeded
+ * customer and never touches another's.
+ */
+export async function customerIdFor(name: string): Promise<number> {
+    const rows = await query<RowDataPacket[]>(
+        `SELECT p.id FROM ${prefix()}erp_peoples p
+           JOIN ${prefix()}erp_people_type_relations r ON r.people_id = p.id
+           JOIN ${prefix()}erp_people_types t ON t.id = r.people_types_id
+          WHERE t.name = 'customer' AND CONCAT(p.first_name, ' ', p.last_name) = ?`,
+        [name]
+    );
+
+    if (!rows.length) throw new Error(`no seeded customer named "${name}"`);
+
+    return Number(rows[0]!.id);
+}
+
+/**
  * Accounting transactions the suite created, plus every child row.
  *
  * Unlike the CRM tables there is no title to mark, so the scope is the
@@ -11,27 +33,94 @@ import type { RowDataPacket } from 'mysql2/promise';
  * check rather than assumed, and the parameterised form exists for the day that
  * stops being true.
  */
-export async function cleanupInvoices(ids: number[] = []): Promise<number> {
+export async function cleanupInvoices(customerId?: number): Promise<number> {
     const invoices = `${prefix()}erp_acct_invoices`;
 
-    const targets = ids.length
-        ? ids
-        : (await query<RowDataPacket[]>(`SELECT id FROM ${invoices}`)).map((row) => Number(row.id));
+    const rows = customerId
+        ? await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${invoices} WHERE customer_id = ?`, [customerId])
+        : await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${invoices}`);
+
+    if (!rows.length) return 0;
+
+    const ids = rows.map((row) => Number(row.id));
+
+    // CHILDREN KEY ON `voucher_no`, NOT ON THE INVOICE'S PRIMARY KEY. The two are
+    // equal on a young site and drift apart later — invoice id 102 carries
+    // voucher 134 here — so deleting children by `id` quietly stops matching and
+    // leaves ledger rows behind that still count toward the customer balance.
+    // That is what produced the orphans `cleanupLedgerOrphans()` had to sweep.
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const voucherList = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_invoice_details WHERE trn_no IN (${voucherList})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_invoice_account_details WHERE invoice_no IN (${voucherList})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${voucherList})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${voucherList})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${voucherList})`, vouchers);
+
+    const result = await execute(`DELETE FROM ${invoices} WHERE id IN (${ids.map(() => '?').join(', ')})`, ids);
+
+    return result.affectedRows ?? 0;
+}
+
+/**
+ * Payments (invoice receipts) the suite created, plus their children.
+ *
+ * Called BEFORE `cleanupInvoices()` — a receipt references the invoice it
+ * settles, so removing invoices first strands the receipt rows.
+ */
+export async function cleanupPayments(customerId?: number): Promise<number> {
+    const receipts = `${prefix()}erp_acct_invoice_receipts`;
+
+    const rows = customerId
+        ? await query<RowDataPacket[]>(`SELECT voucher_no FROM ${receipts} WHERE customer_id = ?`, [customerId])
+        : await query<RowDataPacket[]>(`SELECT voucher_no FROM ${receipts}`);
+
+    const targets = rows.map((row) => Number(row.voucher_no));
 
     if (!targets.length) return 0;
 
     const list = targets.map(() => '?').join(', ');
 
-    // Children first — nothing here is ON DELETE CASCADE.
-    await execute(`DELETE FROM ${prefix()}erp_acct_invoice_details WHERE trn_no IN (${list})`, targets);
-    await execute(`DELETE FROM ${prefix()}erp_acct_invoice_account_details WHERE invoice_no IN (${list})`, targets);
+    await execute(`DELETE FROM ${prefix()}erp_acct_invoice_receipts_details WHERE voucher_no IN (${list})`, targets);
     await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, targets);
     await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${list})`, targets);
     await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, targets);
 
-    const result = await execute(`DELETE FROM ${invoices} WHERE id IN (${list})`, targets);
+    const result = await execute(`DELETE FROM ${receipts} WHERE voucher_no IN (${list})`, targets);
 
     return result.affectedRows ?? 0;
+}
+
+/**
+ * Ledger rows whose parent transaction is already gone.
+ *
+ * `cleanupInvoices()` and `cleanupPayments()` derive their ids FROM the parent
+ * tables, so anything that removed an invoice or receipt without its children
+ * leaves `people_trn_details` and `ledger_details` rows that neither function
+ * can ever find again. Those orphans keep counting toward the customer balance:
+ * six of them made a fresh 1,800 invoice read as 10,800 outstanding, which looks
+ * exactly like a ledger defect.
+ *
+ * Safe to run unconditionally on this install because the seed creates NO
+ * accounting transactions — verified at baseline (invoices 0, ledger_details 0).
+ * If that ever changes, scope it.
+ */
+export async function cleanupLedgerOrphans(): Promise<number> {
+    const invoices = `${prefix()}erp_acct_invoices`;
+    const receipts = `${prefix()}erp_acct_invoice_receipts`;
+
+    // Compared against `voucher_no` on BOTH sides. The children key on the
+    // voucher number, so an earlier version of this sweep — which compared
+    // against the invoice PRIMARY KEY — treated every legitimate ledger row as an
+    // orphan and deleted it. Running in parallel, it emptied another spec's
+    // customer ledger mid-test and looked like the product failing to post.
+    const live = `(SELECT voucher_no FROM ${invoices}) UNION (SELECT voucher_no FROM ${receipts})`;
+
+    const people = await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no NOT IN (${live})`);
+    const ledger = await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no NOT IN (${live})`);
+
+    return (people.affectedRows ?? 0) + (ledger.affectedRows ?? 0);
 }
 
 /** Every accounting transaction table the suite writes to, for a residue check. */
@@ -42,6 +131,8 @@ export async function accountingRowCounts(): Promise<Record<string, number>> {
         'erp_acct_invoice_account_details',
         'erp_acct_ledger_details',
         'erp_acct_people_trn_details',
+        'erp_acct_invoice_receipts',
+        'erp_acct_invoice_receipts_details',
     ];
 
     const counts: Record<string, number> = {};

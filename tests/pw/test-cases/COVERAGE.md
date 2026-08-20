@@ -577,6 +577,89 @@ notice. An API consumer is told a successful create failed.
 **Stated, not claimed:** whether bill/purchase/estimate/payment emails break identically was not
 tested — the code path is shared and it is likely, but likely is not measured.
 
+### Accounting — invoice settlement (6 cases, all green — 2 known-defect guards)
+
+The money path end to end: raise an invoice, receive a payment, and check the customer's ledger.
+`ACCOUNTING-F1-001` and `F1-002` from the tier-1 plan.
+
+**The oracle is the customer's own ledger**, `erp_acct_people_trn_details`: an invoice writes a DEBIT,
+a payment writes a CREDIT, and the two net to zero when settled. That sum is what "the customer owes
+nothing" actually means in this schema, and it is far harder to fake than a status label — which is
+exactly what ERP-151 turned out to exploit.
+
+Covered: paying in full clears the balance; the receipt is applied to the right invoice; a partial
+payment leaves exactly the remainder with no rounding drift; and a payment missing its method or
+deposit account is refused with the product's own message.
+
+**Payments need FOUR fields, not the two the screen emphasises.** `validateForm()` in
+`RecPaymentCreate.vue` also requires **Payment Method** and **Deposit to**, and omitting either makes
+the form refuse silently — the same above-the-fold error panel as the invoice form.
+
+### ERP-151 → erp-pro#968 — a multi-invoice payment credits only the last line (filed 2026-08-20)
+
+**Critical, and the most serious thing found in Accounting.**
+`erp_acct_insert_payment_data()` resets `$total = 0` INSIDE its line-item loop
+(`rec-payments.php:170`), so after the loop `$payment_data['amount']` holds only the LAST line's
+total — and `:196` credits that to the customer ledger.
+
+Pay two invoices of 1,800 and 3,600 in full: the receipt records **5,400**, both invoices show
+**Paid**, and the customer is credited **3,600**, still owing **1,800** forever. The customer screen
+contradicts itself — summary `Outstanding $0.00`, ledger total `Debit 5,400 / Credit 3,600 /
+Balance 1800 Dr`. Single-invoice payments are unaffected, which is why it hides.
+
+**How it surfaced is the part worth keeping.** A tier-2 case failed with `expected 3600, received
+5400`, and my first assumption was that my own test had leaked state — because **three earlier cases
+in that same file genuinely had.** I fixed the isolation, saw it again, and only then read
+`rec-payments.php`. The intermediate observation that made it unmistakable: zeroing the second line
+produced a ledger credit of **0.00** against a receipt of 1,800 — the last line's value, whatever it
+happens to be.
+
+Being wrong three times in a row about that file is precisely why the fourth failure got read
+properly instead of being explained away. **A test that has cried wolf is not thereby always wrong.**
+
+**A sixth cross-file cleanup collision, and the fix that finally generalises.** `transactions.spec.ts`
+and `payments.spec.ts` both cleaned ALL invoices and run in parallel, so each wiped the other's
+in-flight rows. Accounting rows carry no title to mark, so the scope is the **customer**: each file
+now owns one seeded customer — Verdant Foods and Harbourline Logistics — and every query and cleanup
+in it is scoped by `customer_id`. Same principle as the marker scoping in CRM and HRM, different key.
+
+**Three harness faults fixed along the way, all the same family:**
+
+1. **Per-file cleanup was not enough — it had to be per TEST.** The payment screen lists EVERY
+   outstanding invoice for the customer and pre-fills each with its full balance, so a balance left by
+   an earlier case is silently settled by the next one. Three cases read as ledger defects until each
+   started from a customer who owes nothing.
+2. **Orphaned ledger rows — and the ROOT CAUSE was mine.** Six orphans made a fresh 1,800 invoice
+   read as **10,800** outstanding. I first patched it with a `cleanupLedgerOrphans()` sweep, which
+   was treating the symptom: `cleanupInvoices()` was deleting children by the invoice's PRIMARY KEY
+   when **every child table keys on `voucher_no`**. The two are equal on a young site and drift apart
+   later — invoice id 102 carries voucher 134 — so the child deletes silently stopped matching and
+   left the rows behind. Fixed at the source; the sweep stays as a backstop.
+   Then the sweep itself had the same bug in mirror image: it compared against invoice `id`, so it
+   considered every LEGITIMATE ledger row an orphan and deleted it. Running in parallel it emptied
+   the other accounting spec's customer ledger mid-test, which looked exactly like the product
+   failing to post. **The same wrong assumption produced both a false pass and a false failure.**
+3. **A fixed sleep raced the due-invoice list.** Choosing a customer fires `GET /invoices/due/{id}`
+   and the rows paint only when it returns; a 2.5s wait sometimes saw zero rows, and the payment then
+   covered nothing. `receivePayment()` now waits for the rows.
+
+**The schema fact that cost the most time, stated once and plainly:**
+
+**Every accounting child table keys on `voucher_no`, never on the parent's primary key** —
+`invoice_details.trn_no`, `invoice_account_details.invoice_no`/`trn_no`, `ledger_details.trn_no`,
+`people_trn_details.voucher_no`, and `invoice_receipts_details.invoice_no` all hold the voucher.
+Measured directly: invoice `id` 102 → `voucher_no` 134, and all five children carry 134.
+
+Voucher numbers come from a sequence shared across every transaction type, so `id` and `voucher_no`
+are **equal on a young site and drift apart as other vouchers are issued**. That is the worst kind of
+trap: every query keyed on `id` works at first and silently stops matching later. It cost three
+separate failures here — a query that found no line items, a cleanup that left orphans, and an orphan
+sweep that deleted live rows.
+
+**Not covered in settlement, and why:** over-payment (ERP-046's territory — pay more than the
+balance), payment against a partially-paid invoice, payment reversal/refund, and bill payments, which
+are the vendor-side mirror and need `pay-bills.php`'s own posting rules read first.
+
 ### A harness bug that only fires at night — `toDate()` and the timezone (found 2026-08-20)
 
 Two leave specs went red on a full run with `"Mon–Wed counts as three working days — expected 3,

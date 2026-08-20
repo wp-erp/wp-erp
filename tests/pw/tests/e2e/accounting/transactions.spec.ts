@@ -2,7 +2,7 @@ import { test, expect } from '@utils/test';
 import { AccountingPage } from '@pages/accounting/accountingPage';
 import { ADMIN_STATE } from '@utils/authStates';
 import { toDate, dateOffset, dbDate } from '@utils/helpers';
-import { cleanupInvoices } from '@utils/cleanupAccounting';
+import { cleanupInvoices, customerIdFor } from '@utils/cleanupAccounting';
 import { query, prefix, closeDb } from '@utils/dbUtils';
 import type { RowDataPacket } from 'mysql2/promise';
 
@@ -19,14 +19,23 @@ test.use({ storageState: ADMIN_STATE });
  * A seeded customer and a seeded product are used read-only; the suite creates
  * only the transaction, and removes it plus its five child tables afterwards.
  */
+/**
+ * This file OWNS this customer. `payments.spec.ts` owns a different one, so the
+ * two can run in parallel without deleting each other's invoices — an unscoped
+ * `cleanupInvoices()` in one wiped the other's in-flight rows and turned three
+ * green cases red on a four-worker run.
+ */
 const CUSTOMER = 'Verdant Foods';
 const PRODUCT = 'Custom Dashboard Build';
 
 test.describe('Accounting — transactions', () => {
     let page: AccountingPage;
 
+    let customerId = 0;
+
     test.beforeAll(async () => {
-        await cleanupInvoices();
+        customerId = await customerIdFor(CUSTOMER);
+        await cleanupInvoices(customerId);
     });
 
     test.beforeEach(async ({ page: p }) => {
@@ -35,7 +44,7 @@ test.describe('Accounting — transactions', () => {
     });
 
     test.afterAll(async () => {
-        await cleanupInvoices();
+        await cleanupInvoices(customerId);
         await closeDb();
     });
 
@@ -60,7 +69,8 @@ test.describe('Accounting — transactions', () => {
         await page.save();
 
         const invoices = await query<RowDataPacket[]>(
-            `SELECT id, customer_name, trn_date, due_date, amount, status FROM ${prefix()}erp_acct_invoices ORDER BY id DESC`
+            `SELECT id, customer_name, trn_date, due_date, amount, status FROM ${prefix()}erp_acct_invoices WHERE customer_id = ? ORDER BY id DESC`,
+            [customerId]
         );
 
         expect(invoices, 'exactly one invoice is written').toHaveLength(1);
@@ -81,12 +91,13 @@ test.describe('Accounting — transactions', () => {
         await page.setLineQty(0, 3);
         await page.save();
 
-        const invoices = await query<RowDataPacket[]>(`SELECT id, amount FROM ${prefix()}erp_acct_invoices ORDER BY id DESC LIMIT 1`);
+        const invoices = await query<RowDataPacket[]>(`SELECT id, voucher_no, amount FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId} ORDER BY id DESC LIMIT 1`);
         expect(invoices, 'precondition: the invoice was created').toHaveLength(1);
 
         const lines = await query<RowDataPacket[]>(
+            // Children key on the VOUCHER number, not the invoice's primary key.
             `SELECT qty, unit_price, item_total FROM ${prefix()}erp_acct_invoice_details WHERE trn_no = ?`,
-            [Number(invoices[0]!.id)]
+            [Number(invoices[0]!.voucher_no)]
         );
 
         expect(lines, 'one line item is written').toHaveLength(1);
@@ -111,10 +122,10 @@ test.describe('Accounting — transactions', () => {
         await page.setLineQty(0, 1);
         await page.save();
 
-        const invoices = await query<RowDataPacket[]>(`SELECT id, amount FROM ${prefix()}erp_acct_invoices ORDER BY id DESC LIMIT 1`);
+        const invoices = await query<RowDataPacket[]>(`SELECT id, voucher_no, amount FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId} ORDER BY id DESC LIMIT 1`);
         expect(invoices, 'precondition: the invoice was created').toHaveLength(1);
 
-        const invoiceId = Number(invoices[0]!.id);
+        const invoiceId = Number(invoices[0]!.voucher_no);
 
         // The double entry SPANS TWO TABLES, which is the thing to know before
         // writing an oracle here: the receivable (debit) lands in
@@ -154,7 +165,7 @@ test.describe('Accounting — transactions', () => {
         await page.save();
 
         const invoices = await query<RowDataPacket[]>(
-            `SELECT id, customer_id, amount FROM ${prefix()}erp_acct_invoices ORDER BY id DESC LIMIT 1`
+            `SELECT id, voucher_no, customer_id, amount FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId} ORDER BY id DESC LIMIT 1`
         );
         expect(invoices, 'precondition: the invoice was created').toHaveLength(1);
 
@@ -164,7 +175,7 @@ test.describe('Accounting — transactions', () => {
         // and looks exactly like a missing ledger entry.
         const people = await query<RowDataPacket[]>(
             `SELECT people_id, debit, credit FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no = ?`,
-            [Number(invoices[0]!.id)]
+            [Number(invoices[0]!.voucher_no)]
         );
 
         expect(people, "the customer's transaction ledger gains a row").toHaveLength(1);
@@ -193,7 +204,7 @@ test.describe('Accounting — transactions', () => {
             await page.setLineQty(0, 1);
             await page.save();
 
-            const invoices = await query<RowDataPacket[]>(`SELECT id FROM ${prefix()}erp_acct_invoices ORDER BY id DESC LIMIT 1`);
+            const invoices = await query<RowDataPacket[]>(`SELECT id FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId} ORDER BY id DESC LIMIT 1`);
             expect(invoices, 'precondition: the invoice was created despite the response').toHaveLength(1);
 
             expect(page.serverErrorList(), 'the create answers without a server error').toEqual([]);
@@ -209,12 +220,12 @@ test.describe('Accounting — transactions', () => {
         await page.pickLineProduct(0, PRODUCT);
         await page.setLineQty(0, 1);
 
-        const before = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices`);
+        const before = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId}`);
         await page.save();
 
         expect(await page.bodyText(), 'the form names the missing field').toContain('Customer Name is required');
 
-        const after = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices`);
+        const after = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId}`);
         expect(Number(after[0]!.n), 'and nothing is written').toBe(Number(before[0]!.n));
     });
 
@@ -224,7 +235,7 @@ test.describe('Accounting — transactions', () => {
         await page.pickDate('Transaction Date', toDate());
         await page.pickDate('Due Date', dateOffset(30));
 
-        const before = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices`);
+        const before = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId}`);
         await page.save();
 
         const body = await page.bodyText();
@@ -233,7 +244,7 @@ test.describe('Accounting — transactions', () => {
             'the form refuses an empty invoice'
         ).toBe(true);
 
-        const after = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices`);
+        const after = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoices WHERE customer_id = ${customerId}`);
         expect(Number(after[0]!.n), 'and nothing is written').toBe(Number(before[0]!.n));
     });
 

@@ -197,12 +197,17 @@ export class AccountingPage extends BasePage {
     // payroll and the deals modal have to be. Pickers are **vue-multiselect**,
     // the identical component the Add New Deal modal uses.
 
-    /** The form group whose label matches, e.g. "Customer", "Due Date". */
+    /**
+     * The field block whose label matches, e.g. "Customer", "Deposit to".
+     *
+     * Anchored on the LABEL and stepped up one level, rather than on a wrapper
+     * class. The wrappers are inconsistent — `.wperp-form-group` on some fields,
+     * bare `.wperp-col-sm-4` on others — and a class-based selector silently
+     * missed Payment Method and Deposit to, which are the two fields the payment
+     * form refuses to save without.
+     */
     private group(label: string): Locator {
-        return this.page
-            .locator('.wperp-form-group, .form-group, .wperp-col')
-            .filter({ has: this.page.locator('label', { hasText: label }) })
-            .first();
+        return this.page.locator('label', { hasText: label }).first().locator('xpath=..');
     }
 
     /** Fills a label-anchored text input (addresses, references). */
@@ -352,6 +357,82 @@ export class AccountingPage extends BasePage {
         await this.page.locator('button:visible').filter({ hasText: /^Save$/ }).first().click();
         await this.page.waitForTimeout(4500);
         await this.settle();
+    }
+
+    // ---- receive payment ---------------------------------------------------
+
+    /**
+     * The outstanding-invoice rows the payment screen lists once a customer is
+     * chosen. Each row's amount input is PRE-FILLED with the full balance, so a
+     * settlement in full needs no typing at all.
+     */
+    async outstandingRows(): Promise<string[]> {
+        return (await this.page.locator('table tbody tr').allTextContents())
+            .map((t) => t.replace(/\s+/g, ' ').trim())
+            .filter((t) => t.startsWith('#'));
+    }
+
+    /** Overrides the amount being paid against the nth listed invoice. */
+    async setPaymentAmount(index: number, amount: number): Promise<void> {
+        await this.page.locator('table tbody tr input[type="number"]').nth(index).fill(String(amount));
+        await this.page.waitForTimeout(600);
+    }
+
+    /** The screen's own computed total for the payment. */
+    async paymentTotal(): Promise<string> {
+        return this.page.locator('input[name="finalamount"]').first().inputValue();
+    }
+
+    /**
+     * Receives a payment against a customer's outstanding invoices.
+     *
+     * FOUR fields are required, not the two the screen makes obvious:
+     * `validateForm()` in `RecPaymentCreate.vue` also demands **Payment Method**
+     * and **Deposit to**, and omitting either makes the form refuse silently —
+     * no request, and the error panel sits above the fold.
+     *
+     * `amounts` overrides the invoice rows POSITIONALLY. Left out, every row
+     * keeps the full balance the screen pre-fills — which settles all of the
+     * customer's outstanding invoices, not just the newest. Pass an explicit
+     * array (zeroes included) whenever the test means to pay only some of them.
+     */
+    async receivePayment(customer: string, paymentDate: string, amounts?: number[]): Promise<boolean> {
+        await this.gotoRoute('newPayment');
+
+        if (!(await this.pickFromMultiselect('Customer', customer))) return false;
+
+        // WAIT for the outstanding-invoice rows rather than sleeping: choosing a
+        // customer fires `GET /invoices/due/{id}` and the rows paint only when it
+        // returns. A fixed delay raced it — the screen showed zero rows and the
+        // payment silently covered nothing.
+        await this.page
+            .locator('table tbody tr input[type="number"]')
+            .first()
+            .waitFor({ state: 'visible', timeout: 15_000 })
+            .catch(() => undefined);
+        await this.page.waitForTimeout(600);
+
+        await this.pickDate('Payment Date', paymentDate);
+
+        for (const label of ['Payment Method', 'Deposit to']) {
+            const box = this.group(label).locator('.multiselect').first();
+            await box.click();
+            await this.page.waitForTimeout(800);
+
+            const option = box.locator('.multiselect__option').first();
+            if (!(await option.isVisible().catch(() => false))) return false;
+
+            await option.click();
+            await this.page.waitForTimeout(600);
+        }
+
+        if (amounts) {
+            for (const [index, value] of amounts.entries()) await this.setPaymentAmount(index, value);
+        }
+
+        await this.save();
+
+        return true;
     }
 
     // ---- REST -------------------------------------------------------------

@@ -42,6 +42,7 @@ projects add ~18 more — `crmAgent2` joined the auth chain).
 | hrm — admin router (status probes, ERP-148 guard) | 4 | 4 | — |
 | accounting — 29 screens, chart classes, reports, authz | 33 | 33 | — |
 | accounting — invoice create, line maths, double entry, customer ledger, validation | 8 | 8 | — |
+| accounting — invoice settlement: full, partial, receipt application, validation | 6 | 6 | — |
 
 The 3 skips are deliberate and recorded in `COVERAGE.md`: licence cases that need the site to be
 UNlicensed (the activation form is not rendered while licensed).
@@ -280,7 +281,32 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
     form sent no request and showed no error under my selectors; reading `validateForm()` in
     `InvoiceCreate.vue` is what turned "the save button is broken" into ERP-149. The error panel
     renders above the fold with no `.error` class.
-48. **Ordering matters when probing access control.** A probe that ran `save_deal` before
+48. **Accounting cleanup must be per TEST, not per file, and must sweep ORPHANS.** The payment screen
+    lists every outstanding invoice for a customer and pre-fills each with its full balance, so a
+    balance left by an earlier case is silently settled by the next — three cases read as ledger
+    defects until each started from a customer owing nothing. And `cleanupInvoices()`/`cleanupPayments()`
+    derive ids FROM the parent tables, so a parent removed without its children leaves
+    `people_trn_details` rows they can never find again: six orphans made a fresh 1,800 invoice read
+    as **10,800** outstanding. `cleanupLedgerOrphans()` exists for that.
+49. **EVERY accounting child table keys on `voucher_no`, never on the parent's primary key** —
+    `invoice_details.trn_no`, `invoice_account_details.invoice_no`/`trn_no`, `ledger_details.trn_no`,
+    `people_trn_details.voucher_no`, `invoice_receipts_details.invoice_no`. Measured: invoice `id`
+    102 → `voucher_no` 134, children all 134. Voucher numbers come from a sequence shared across
+    every transaction type, so id and voucher_no are **equal on a young site and drift apart later** —
+    every `id`-keyed query works at first and silently stops matching. It caused three separate
+    failures here: a query that found no line items, a cleanup that left orphans, and an orphan sweep
+    that deleted LIVE rows.
+50. **Accounting specs scope by CUSTOMER.** Accounting rows carry no title to mark, so
+    `transactions.spec.ts` owns Verdant Foods and `payments.spec.ts` owns Harbourline Logistics; every
+    query and cleanup is scoped by `customer_id`. Sixth occurrence of the cross-file cleanup
+    collision — same principle as marker scoping, different key.
+51. **The due-invoice list is a race.** Choosing a customer on the payment screen fires
+    `GET /invoices/due/{id}` and the rows paint only when it returns; a fixed sleep saw zero rows and
+    the payment then covered nothing. Wait for the rows.
+52. **A test that has cried wolf is not thereby always wrong.** Three cases in `payments.spec.ts`
+    failed on my own state leakage; the fourth failure looked identical and was ERP-151, a Critical
+    money bug. Fix the isolation, re-run, and if it still fails, READ THE SOURCE.
+53. **Ordering matters when probing access control.** A probe that ran `save_deal` before
     `delete_deal` made the delete look unguarded; it is guarded, but the earlier write had already
     made the caller the owner. Attempt the guarded action BOTH before and after the suspected
     escalation, or the chain reads as two independent holes.
@@ -303,6 +329,7 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
 | ERP-147 | [#964](https://github.com/wp-erp/erp-pro/issues/964) | Major | Payroll Overview chart 500s where PHP lacks the optional `calendar` extension — `cal_days_in_month()` unguarded at `AjaxHandler.php:138`; the history panel stays blank |
 | ERP-148 | [#965](https://github.com/wp-erp/erp-pro/issues/965) | Minor | HR router fatals on redirect-only submenus (`'callback' => ''`) — `?section=payroll|attendance&sub-section=settings` is 500; the CRM router handles the same shape |
 | ERP-149 | [#966](https://github.com/wp-erp/erp-pro/issues/966) | Major | **Typed dates are ignored on every Accounting form** — `Datepicker.vue:86` emits only when the field is emptied; save says the date is required while showing it. 34 usages, 21 screens |
+| ERP-151 | [#968](https://github.com/wp-erp/erp-pro/issues/968) | **CRITICAL / P1** | **A payment covering several invoices credits only the LAST line to the customer ledger** — `$total = 0` inside the line loop (`rec-payments.php:170`). Pay 1,800 + 3,600 in full: receipt 5,400, both invoices Paid, customer credited **3,600**, still owing 1,800 forever |
 | ERP-150 | [#967](https://github.com/wp-erp/erp-pro/issues/967) | **Major / P1** | Invoice create answers 500 and sends **no invoice email** — `erp-pdf-invoice` calls `get_magic_quotes_runtime()`, removed in PHP 8. The invoice IS created, so the screen looks fine |
 | ERP-146 | [#963](https://github.com/wp-erp/erp-pro/issues/963) | **Major / P1** | A CRM agent can take over another agent's deal — `save_deal` is the one path that skips `Deal::scopeReadable()`, and it reassigns `owner_id` to the caller, so the write transfers the deal and unlocks the trash/read/note paths that DO check |
 
@@ -315,7 +342,7 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
 | ERP-045 | Major | **Not re-tested** — needs a second pipeline; still unposted | Stage/pipeline delete transfer accepts a `transfer_to_stage_id` from a different pipeline |
 | ERP-066 | Minor | **Not re-tested** — needs a media fixture; still unposted | `add_attachment()` persists a row for a non-existent WP media id |
 
-Bug files: `~/.claude/skills/wp-erp-qa/bugs/2026-08-18/` and `2026-08-19/`. Register: `bugs/REGISTER.md`, **next ID `ERP-151`**. Filing needs the user's explicit go-ahead per issue; identity gate is `gh auth status`
+Bug files: `~/.claude/skills/wp-erp-qa/bugs/2026-08-18/` and `2026-08-19/`. Register: `bugs/REGISTER.md`, **next ID `ERP-152`**. Filing needs the user's explicit go-ahead per issue; identity gate is `gh auth status`
 = `shohan0120`. Screenshots are attached by loading the PNG onto the macOS clipboard
 (`osascript … as «class PNGf»`) and sending a real Cmd+V into the GitHub comment box — `gh` cannot
 upload images, and the React editor exposes no file input. Two things make this reliable, both
@@ -343,27 +370,33 @@ was filed, because nothing was a product defect. Full write-up in `COVERAGE.md`.
 The lesson is the same one D4 taught: **when an oracle disagrees with the UI, check the oracle is
 reading the table the product reads.**
 
-## RESUME HERE — Accounting is started, not finished
+## RESUME HERE — Accounting: transactions and settlement done, the rest is open
 
-Accounting went from **zero specs to 41** tonight: every screen, and the invoice money path end to
-end. The next things, in the order I would take them:
+Accounting now has **47 cases**: all 29 screens, invoice creation with a full ledger oracle, and
+invoice → payment settlement. The invoice money path is the template for everything below — copy its
+SHAPE (UI action, DB oracle on the ledger, precondition assertions) but read each voucher type's own
+posting rules first, because the tables differ.
 
-1. **Invoice → payment settlement** — tier-1 case `ACCOUNTING-F1-001`, and the most valuable case
-   still unwritten. Receive Payment (`#/payments/new`) against an existing unpaid invoice, then assert
-   the invoice's due falls to zero and the payment posts its own balanced entry. `pickDate()` and the
-   invoice helpers already exist; what is missing is the payment form's own field map.
-2. **Bills, purchases, expenses, checks, journals, transfers, estimates** — every create form RENDERS
-   (covered), but only invoices have a money oracle. Each needs its posting rules read first; do not
-   copy the invoice oracle blindly, because the tables differ per voucher type.
-3. **Reports' numbers.** Trial Balance, Balance Sheet, Income Statement and Ledger Report all render
-   and nothing asserts a figure. This is where the real accounting risk sits, and it is now cheap —
-   the invoice flow can seed known amounts.
-4. **Opening balance** (118 fields on one screen) feeding the trial balance.
-5. **Multi-line invoices, discounts, line tax** — single-line only so far.
+1. **Bill → pay bill** — the vendor-side mirror of what is done. `pay-bills.php` has its own posting
+   rules; do NOT assume they match `rec-payments.php`.
+   **Already checked, so nobody repeats it:** ERP-151's `$total = 0`-inside-the-loop pattern is NOT
+   in `pay-bills.php` or `pay-purchases.php` — both take `$pay_bill_data['amount']` straight from the
+   request (`pay-bills.php:212`, set at `:382`) rather than recomputing it per line. `grep -rn
+   '\$total *= *0'` across `modules/accounting/includes/functions/` finds only the two in
+   `rec-payments.php`. The second of those is in `erp_acct_update_payment()` (`:330`) — the payment
+   EDIT path — where the same reset feeds only the line-item update in the code read, not a ledger
+   credit. **Editing a payment was not tested at all; that is the place to look for a sibling bug.**
+2. **Expenses, purchases, checks, journals, transfers, estimates** — every create form RENDERS
+   (covered by the screens pass) but none has a money oracle.
+3. **Reports' numbers** — Trial Balance, Balance Sheet, Income Statement, Ledger Report. They render
+   and nothing asserts a figure. Now cheap: the invoice and payment helpers can seed known amounts,
+   so a trial balance can be checked against arithmetic the suite controls.
+4. **Over-payment and refunds** — ERP-046's territory, still unverified on this build.
+5. **Opening balance** (118 fields) feeding the trial balance.
 
-Then: the rest of CRM (contact groups/subscribers, CRM reports, the free-side agent visibility
-question), the Pro non-HRM modules (inventory, payment gateway, WooCommerce), and the 7 external
-integrations, which still need sandbox credentials before they can be more than recorded skips.
+Then the rest of CRM (contact groups/subscribers, CRM reports, free-side agent visibility), the Pro
+non-HRM modules (inventory, payment gateway, WooCommerce), and the 7 integrations, which need sandbox
+credentials.
 
 ## Next steps, in order
 
@@ -379,8 +412,9 @@ integrations, which still need sandbox credentials before they can be more than 
    control) done. Remaining: contact groups/subscribers, CRM reports, schedules (expect a `test.fail()`
    guard — ERP-143/#958), and the same agent-vs-agent question on the FREE side, which uses
    `contact_owner` rather than the deals model.
-4. **Accounting — started tonight**, 41 cases: all 29 screens plus the invoice money path. What is
-   left is in RESUME HERE above; invoice → payment settlement is the top item.
+4. **Accounting — 47 cases**: all 29 screens, invoice creation with a ledger oracle, and invoice →
+   payment settlement. What is left is in RESUME HERE above; bill → pay bill is the top item, and it
+   should be checked for a repeat of ERP-151's line-loop bug.
 5. **Untouched entirely:** the Pro non-HRM modules (inventory, payment gateway, WooCommerce) and the
    7 external integrations, which need sandbox credentials before they can be more than recorded
    skips.
