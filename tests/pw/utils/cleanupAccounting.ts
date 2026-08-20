@@ -137,6 +137,38 @@ export async function cleanupBills(vendorId?: number): Promise<number> {
     return result.affectedRows ?? 0;
 }
 
+/**
+ * Expenses raised against a payee, with their line items and ledger entries.
+ *
+ * The orphan sweep at the end is not defensive padding: editing an expense
+ * re-inserts its line items with no `trn_no` at all (ERP-154), so rows keyed to
+ * nothing accumulate on every edit and no voucher-scoped delete can reach them.
+ */
+export async function cleanupExpenses(peopleId?: number): Promise<number> {
+    const expenses = `${prefix()}erp_acct_expenses`;
+
+    const rows = peopleId
+        ? await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${expenses} WHERE people_id = ?`, [peopleId])
+        : await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${expenses}`);
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_expense_details WHERE trn_no = 0 OR trn_no IS NULL`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_expense_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const ids = rows.map((row) => Number(row.id));
+    const result = await execute(`DELETE FROM ${expenses} WHERE id IN (${ids.map(() => '?').join(', ')})`, ids);
+
+    return result.affectedRows ?? 0;
+}
+
 /** Bill payments made to a vendor. Run BEFORE `cleanupBills()`. */
 export async function cleanupPayBills(vendorId?: number): Promise<number> {
     const payBills = `${prefix()}erp_acct_pay_bill`;

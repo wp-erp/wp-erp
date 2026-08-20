@@ -443,7 +443,7 @@ reading the table the product reads.**
 
 ## RESUME HERE — the EDIT paths (payment done; expense/bill/purchase next)
 
-Accounting is at **70 cases** (`--list`: 33 in `accounting_money`, 37 in `e2e_tests`). The payment
+Accounting is at **77 cases** (`--list`: 40 in `accounting_money`, 37 in `e2e_tests`). The payment
 EDIT path is **done** and produced two bugs, both posted as sub-issues of #844:
 
 - **ERP-152 (Critical) — [erp-pro#969](https://github.com/wp-erp/erp-pro/issues/969)** — `PUT /accounting/v1/payments/{id}` answers `200`, updates the receipt
@@ -463,14 +463,31 @@ Four cases were added to `tests/e2e/accounting/payments.spec.ts` — one plain c
 ("the payment edit screen opens") and three `test.fail()` guards. New page-object helpers:
 `gotoPaymentEdit()`, `updatePaymentViaRest()`, `multiselectValue()`.
 
-**The next lead, read but NOT measured:** `erp_acct_update_expense()` (`expenses.php:520-537`)
-deletes and re-inserts `expense_details`, but then calls `erp_acct_insert_expense_data_into_ledger()`
-and `erp_acct_insert_data_into_people_trn_details()` **without deleting the old ledger rows first** —
-the same doubling shape as ERP-152, in a different module. Bill-payment and purchase-payment edits
-are unchecked too. Also unmeasured and separate: `erp_acct_update_data_into_people_trn_details()`
+**The expense edit path is now done too** — it was the lead recorded here, and it produced two more
+bugs (see below). ⚠️ **That lead cited the wrong function:** `expenses.php:520-537` is
+`erp_acct_convert_draft_to_expense()`, not `erp_acct_update_expense()` (`:361-439`). The
+draft-conversion path does call the ledger inserts without clearing the old rows first and is **still
+unmeasured** — as are the bill-payment and purchase-payment edits.
+
+Also unmeasured and separate: `erp_acct_update_data_into_people_trn_details()`
 (`transactions.php:1764`) is one `$wpdb->delete()` with **no re-insert**, and invoices, bills and
-purchases all call it on edit (`invoices.php:570`, `bills.php:361`, `purchases.php:502`) — editing
-any of those three may simply erase the customer's ledger row.
+purchases all call it on edit (`invoices.php:570`, `bills.php:361`, `purchases.php:502`) — editing any
+of those three may simply erase the customer's ledger row.
+
+- **ERP-154 (Critical)** — editing an expense never reaches `erp_acct_ledger_details` at all, so the
+  Trial Balance keeps `Utilities Dr $600.00` while the Expenses list shows `$250.00`; and the update
+  re-inserts the line items **without `trn_no`** (`expenses.php:414-426`), so after one edit the
+  expense has no lines on any screen. `erp_acct_update_expense_data_into_ledger()` (`:688`) is dead
+  code. **5/5.**
+- **ERP-155 (Major)** — the expense edit screen never loads the date: the controller publishes it as
+  `date`, `ExpenseCreate.vue:322` reads `trn_date`. Pressing Update untouched is refused with
+  `Transaction Date is required.` Not a duplicate of ERP-149/#966. **5/5.**
+
+New file `tests/e2e/accounting/expenses.spec.ts` (7 cases: 3 green, 4 `test.fail()` guards), added to
+the `accounting_money` project. New helpers: `createExpense()`, `gotoExpenseEdit()`,
+`cleanupExpenses()`, and `setLineAmount(..., { replace: true })`. `pickLineAccount()` now scopes to
+the line-item table instead of counting `.multiselect` from the top of the page — the positional form
+only held on the bill form; bills re-run green after the change.
 
 Run the accounting money cases with:
 `npx playwright test --project=accounting_money --workers=1 --no-deps`
@@ -489,7 +506,7 @@ Run the accounting money cases with:
    control) done. Remaining: contact groups/subscribers, CRM reports, schedules (expect a `test.fail()`
    guard — ERP-143/#958), and the same agent-vs-agent question on the FREE side, which uses
    `contact_owner` rather than the deals model.
-4. **Accounting — 70 cases**: all 29 screens, both money cycles end to end, and the reports asserted
+4. **Accounting — 77 cases**: all 29 screens, both money cycles end to end, and the reports asserted
    against controlled figures, plus the payment EDIT path (ERP-152 / ERP-153). What is left is in
    RESUME HERE above — the expense, bill and purchase edit paths, which the source suggests carry the
    same shape and which are NOT yet measured.

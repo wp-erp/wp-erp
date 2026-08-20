@@ -167,7 +167,16 @@ export class AccountingPage extends BasePage {
      * a reload, which is the only sequence that re-runs `prepareDataLoad()`.
      */
     async gotoPaymentEdit(voucherNo: number): Promise<void> {
-        const url = `/wp-admin/admin.php?page=erp-accounting#/payments/${voucherNo}/edit`;
+        await this.gotoEditRoute('payments', voucherNo);
+    }
+
+    /** Opens the edit screen for an existing expense: `#/expenses/{id}/edit`. */
+    async gotoExpenseEdit(voucherNo: number): Promise<void> {
+        await this.gotoEditRoute('expenses', voucherNo);
+    }
+
+    private async gotoEditRoute(section: string, voucherNo: number): Promise<void> {
+        const url = `/wp-admin/admin.php?page=erp-accounting#/${section}/${voucherNo}/edit`;
 
         await this.page.goto(url, { waitUntil: 'domcontentloaded' });
         await this.page.reload({ waitUntil: 'domcontentloaded' });
@@ -462,9 +471,17 @@ export class AccountingPage extends BasePage {
      * hidden `button.btn-fake` labelled "Save as Draft", and a loose
      * `:has-text("Save")` resolves to that one and then times out waiting for it
      * to become visible.
+     *
+     * `label` overrides the button text. The edit screens relabel the primary
+     * action — an expense being edited offers **Update**, not Save — and the
+     * exact match is what keeps "Update" from resolving to "Update and New".
      */
-    async save(): Promise<void> {
-        await this.page.locator('button:visible').filter({ hasText: /^Save$/ }).first().click();
+    async save(label = 'Save'): Promise<void> {
+        await this.page
+            .locator('button:visible')
+            .filter({ hasText: new RegExp(`^${label}$`) })
+            .first()
+            .click();
         await this.page.waitForTimeout(4500);
         await this.settle();
     }
@@ -477,7 +494,12 @@ export class AccountingPage extends BasePage {
 
     /** Picks the expense account on the nth bill line. */
     async pickLineAccount(index: number, account: string): Promise<boolean> {
-        const box = this.page.locator('.multiselect').nth(index + 1);
+        /* Scoped to the line-item TABLE, not counted from the top of the page.
+           A positional `.multiselect` index only held on the bill form, where the
+           header has exactly one picker before the lines. The expense form has
+           three (Pay To, Payment Method, Transaction From), so the same index
+           landed on the funding account and silently picked the wrong thing. */
+        const box = this.page.locator('table tbody tr .multiselect').nth(index);
         await box.click();
         await this.page.waitForTimeout(900);
 
@@ -499,8 +521,16 @@ export class AccountingPage extends BasePage {
      * `finalTotalAmount` stays 0 and the form refuses with "Total amount can't be
      * zero" next to a line that visibly shows the amount.
      */
-    async setLineAmount(index: number, amount: number): Promise<void> {
+    async setLineAmount(index: number, amount: number, options: { replace?: boolean } = {}): Promise<void> {
         const field = this.page.locator('table tbody tr input[name="amount"]').nth(index);
+
+        // `replace` is for the EDIT screens, where the field already holds the
+        // original figure. Cleared with `fill('')` rather than a select-all
+        // keystroke: `Control+a` moves the caret on macOS instead of selecting,
+        // so the new digits were prepended and a 600 edited to 250 submitted as
+        // 250600 — which then failed a balance check for entirely fictional
+        // reasons.
+        if (options.replace) await field.fill('');
 
         await field.click();
         await field.pressSequentially(String(amount), { delay: 40 });
@@ -539,6 +569,37 @@ export class AccountingPage extends BasePage {
 
         await this.pickDate('Bill Date', billDate);
         await this.pickDate('Due Date', dueDate);
+
+        if (!(await this.pickLineAccount(0, account))) return false;
+
+        await this.setLineAmount(0, amount);
+        await this.save();
+
+        return true;
+    }
+
+    /**
+     * Raises an expense against a payee, charged to one expense account.
+     *
+     * **Pay To is required here**, unlike the bill form's optional contact — the
+     * label carries the same asterisk the date and payment method do, and the
+     * form refuses without it.
+     *
+     * The funding account is picked as the first option of **Transaction From**,
+     * which is Cash on this site's seeded chart. An expense is spent money, so
+     * the account has to hold enough already: the product refuses with "Not
+     * enough balance in selected account" otherwise.
+     */
+    async createExpense(payee: string, account: string, amount: number, expenseDate: string): Promise<boolean> {
+        await this.gotoRoute('newExpense');
+
+        if (!(await this.pickFromMultiselect('Pay To', payee))) return false;
+
+        await this.pickDate('Expense Date', expenseDate);
+
+        for (const label of ['Payment Method', 'Transaction From']) {
+            if (!(await this.pickFirstOption(label))) return false;
+        }
 
         if (!(await this.pickLineAccount(0, account))) return false;
 

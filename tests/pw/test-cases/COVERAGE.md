@@ -1547,17 +1547,67 @@ it would have been indistinguishable from a measurement in the filed text.
 
 **Not covered here, and why:**
 
-- **The expense, bill and purchase edit paths.** `erp_acct_update_expense()`
-  (`expenses.php:520-537`) deletes and re-inserts `expense_details` but calls
-  `erp_acct_insert_expense_data_into_ledger()` and `erp_acct_insert_data_into_people_trn_details()`
-  without clearing the old ledger rows — the ERP-152 shape in another module. Separately,
-  `erp_acct_update_data_into_people_trn_details()` (`transactions.php:1764`) is a single
+- **The bill and purchase edit paths, and draft conversion.** The expense edit path is covered in
+  its own section below. ⚠️ **A correction to what this section said when first written:** it cited
+  `erp_acct_update_expense()` as `expenses.php:520-537`. Those lines are
+  `erp_acct_convert_draft_to_expense()`; the update function is `:361-439`. The draft-conversion path
+  does call the ledger inserts without clearing the old rows first and is **still unmeasured**, as
+  are the bill-payment and purchase-payment edits. The mis-citation is left visible rather than
+  quietly corrected, because it is exactly the kind of specific an Engineer would trust without
+  re-checking.
+- **`erp_acct_update_data_into_people_trn_details()`** (`transactions.php:1764`) is a single
   `$wpdb->delete()` with **no re-insert**, and invoices, bills and purchases all call it on edit.
-  Both are **read, not measured**; neither is filed, and neither may be reported as a defect until it
-  has been.
+  **Read, not measured**; not filed, and it may not be reported as a defect until it has been.
 - **Editing a payment upward, and editing one that covers several invoices.** Only the downward
   single-invoice case is asserted. ERP-151 showed multi-invoice payments have their own arithmetic
   fault on the create side, so the edit side of that is likely worse, not better — untested.
+
+### Accounting — expenses and the expense edit path (7 cases: 3 green, 4 known-defect guards)
+
+Expenses had no money oracle at all before this pass — the screens were covered, the double entry
+was not. An expense DEBITS its expense account and CREDITS the account it is paid from, and that pair
+is what the trial balance and the income statement are built from, so it is the oracle here.
+
+The edit path is why the file exists, and it fails in two unrelated ways:
+
+- **ERP-155 — the screen drops one field.** `ExpensesController::prepare_item_for_response()`
+  publishes the transaction date as `date`; `ExpenseCreate.vue:322` reads `trn_date`. Everything else
+  loads, so the screen looks correct until **Update** is refused with `Transaction Date is required.`
+  — about a field the user never touched. **5/5.**
+- **ERP-154 — the edit never reaches the books.** `erp_acct_update_expense()` (`expenses.php:361`)
+  updates the header, rewrites the line items, and references `erp_acct_ledger_details` nowhere. It
+  also re-inserts the lines **without `trn_no`** while the create path sets it, so after one edit the
+  expense has no line items on any screen and the orphaned row is unreachable forever. **5/5.**
+
+**The trial balance still balances, and that is the point.** Unlike ERP-152, where a duplicate ledger
+row pushed the debit and credit columns apart, this edit writes nothing at all — so the report is
+internally consistent and quietly wrong. `Utilities Dr $600.00` sits beside an Expenses list showing
+`$250.00` with no warning anywhere. A test that only asserted "debits equal credits" would pass on
+this. The assertion that catches it is the one that compares the ledger against the figure the screen
+claims.
+
+**Cash is asserted as a DELTA, never as an absolute.** Every accounting spec deposits into and spends
+out of the same Cash ledger, so only the change across one operation is this file's to claim. The
+absolute figure would be a hidden dependency on which files ran first.
+
+**Two harness faults this pass exposed, both affecting other specs:**
+
+1. **`pickLineAccount()` counted `.multiselect` from the top of the page** (`index + 1`). That held
+   only on the bill form, which has exactly one picker above its lines; the expense form has three,
+   so the same index silently selected the funding account instead of the line's expense account. Now
+   scoped to `table tbody tr .multiselect`. `bills.spec.ts` re-run green after the change.
+2. **`setLineAmount()` had no way to REPLACE an existing value**, which every edit screen needs. The
+   first attempt used `Control+a`, which moves the caret on macOS rather than selecting — so 600
+   edited to 250 submitted as **250600** and failed a balance check for entirely fictional reasons. It
+   now takes `{ replace: true }` and clears with `fill('')`.
+
+**Not covered here, and why:**
+
+- **Editing an expense upward, changing its account, or adding and removing lines.** Only a downward
+  amount change on a single line is asserted. Multi-line expenses are where the missing `trn_no` will
+  do the most damage, and they are untested.
+- **Check-type expenses** (`voucher_type = check`), which take a different branch in both the create
+  and update functions.
 
 ---
 
