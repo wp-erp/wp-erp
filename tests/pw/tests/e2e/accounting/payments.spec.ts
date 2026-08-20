@@ -348,4 +348,154 @@ test.describe('Accounting — invoice settlement', () => {
             expect(page.serverErrorList(), 'the payment answers without a server error').toEqual([]);
         }
     );
+
+    // ---- the edit path -----------------------------------------------------
+    //
+    // Raising a payment is only half of the cycle: an amount keyed wrong has to
+    // be correctable. These cases follow the correction all the way through,
+    // and they split into two independent failures — the screen that cannot
+    // load a payment (ERP-153) and the server route that corrupts one when it
+    // is asked to (ERP-152). They are kept apart because fixing either leaves
+    // the other standing.
+
+    /** Raises an invoice, settles it in full, and returns both voucher numbers. */
+    async function settledInvoice(): Promise<{ invoiceVoucher: number; paymentVoucher: number; amount: number }> {
+        const invoice = await raiseInvoice();
+
+        expect(await page.receivePayment(CUSTOMER, toDate()), 'precondition: the payment form accepted the entry').toBe(
+            true
+        );
+
+        const receipts = await query<RowDataPacket[]>(
+            `SELECT voucher_no FROM ${prefix()}erp_acct_invoice_receipts WHERE customer_id = ${customerId} ORDER BY id DESC LIMIT 1`
+        );
+        expect(receipts, 'precondition: a receipt exists to edit').toHaveLength(1);
+
+        return {
+            invoiceVoucher: invoice.voucherNo,
+            paymentVoucher: Number(receipts[0]!.voucher_no),
+            amount: invoice.amount,
+        };
+    }
+
+    /** The receipt header's own recorded amount. */
+    async function receiptAmount(voucherNo: number): Promise<number> {
+        const rows = await query<RowDataPacket[]>(
+            `SELECT amount FROM ${prefix()}erp_acct_invoice_receipts WHERE voucher_no = ?`,
+            [voucherNo]
+        );
+
+        return Number(rows[0]!.amount);
+    }
+
+    test('the payment edit screen opens', { tag: ['@tier2', '@accounting', '@flow'] }, async () => {
+        // The canary for the two guards below: it proves the route resolves and
+        // the component paints, so a failure there is about the payment not
+        // being loaded, never about the screen being unreachable.
+        const settled = await settledInvoice();
+
+        await page.gotoPaymentEdit(settled.paymentVoucher);
+
+        expect(await page.headings(), 'the edit route renders the payment screen').toContain('Payment');
+    });
+
+    test.fail(
+        'the payment edit screen loads the payment it names',
+        { tag: ['@tier2', '@accounting', '@flow', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-153. `#/payments/{id}/edit` reuses
+            // `RecPaymentCreate.vue`, which asks for `GET /invoices/{id}` with
+            // the PAYMENT's voucher number. No invoice carries that number, so
+            // the response has no line items, the component bails with
+            // "Invoice does not exists!" and never calls `setDataForEdit` —
+            // which the file does not define in any case. Every field renders
+            // empty, and Save then POSTs a brand new payment.
+            const settled = await settledInvoice();
+
+            await page.gotoPaymentEdit(settled.paymentVoucher);
+
+            expect(await page.headings(), 'precondition: the edit route rendered').toContain('Payment');
+
+            expect(
+                await page.multiselectValue('Customer'),
+                'the screen shows the customer whose payment is being edited'
+            ).toContain(CUSTOMER);
+        }
+    );
+
+    test.fail(
+        'editing a payment down leaves the cash ledger holding both amounts',
+        { tag: ['@tier2', '@accounting', '@money', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-152, and the most damaging thing in this file
+            // after ERP-151. `erp_acct_update_payment()` calls
+            // `erp_acct_update_payment_line_items( $payment_data, $voucher_no,
+            // $invoice_no[$key] )` while the function is declared
+            // `( $data, $invoice_no, $voucher_no )` — the last two arguments are
+            // swapped, and `$invoice_no[$key]` reads `$item['invoice_id']`,
+            // a key the payload never carries. Every UPDATE inside therefore
+            // matches nothing, and the ledger write is
+            // `erp_acct_insert_payment_data_into_ledger()` — an INSERT — so the
+            // edit ADDS a second cash row instead of correcting the first.
+            //
+            // Everything before the last assertion is a precondition, so this
+            // guard can only fail for the reason it names.
+            const settled = await settledInvoice();
+            const half = Math.round((settled.amount / 2) * 100) / 100;
+
+            expect(await cashBalance(), 'precondition: cash holds the payment as received').toBeCloseTo(
+                settled.amount,
+                2
+            );
+
+            const response = await page.updatePaymentViaRest(settled.paymentVoucher, {
+                customerId,
+                trnDate: toDate(),
+                depositTo: CASH_LEDGER_ID,
+                lineItems: [{ invoiceNo: settled.invoiceVoucher, lineTotal: half }],
+            });
+
+            expect(response.status, 'precondition: the server accepted the edit').toBe(200);
+            expect(await receiptAmount(settled.paymentVoucher), 'precondition: the receipt now records the new amount').toBeCloseTo(
+                half,
+                2
+            );
+
+            // The defect: cash holds the old amount PLUS the new one.
+            expect(await cashBalance(), 'cash holds only the corrected amount').toBeCloseTo(half, 2);
+        }
+    );
+
+    test.fail(
+        'editing a payment down puts the difference back on the customer',
+        { tag: ['@tier2', '@accounting', '@money', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-152, second face. The update path never touches
+            // `erp_acct_people_trn_details` at all — `erp_acct_update_payment()`
+            // does not mention it, and the one helper that could
+            // (`erp_acct_update_payment_data_in_ledger()`) has no callers
+            // anywhere in the plugin. Halve a payment and the customer is still
+            // credited with the whole of it, so the money is owed by nobody.
+            const settled = await settledInvoice();
+            const half = Math.round((settled.amount / 2) * 100) / 100;
+
+            expect(await outstandingFor(customerId), 'precondition: the invoice is settled in full').toBeCloseTo(0, 2);
+
+            const response = await page.updatePaymentViaRest(settled.paymentVoucher, {
+                customerId,
+                trnDate: toDate(),
+                depositTo: CASH_LEDGER_ID,
+                lineItems: [{ invoiceNo: settled.invoiceVoucher, lineTotal: half }],
+            });
+
+            expect(response.status, 'precondition: the server accepted the edit').toBe(200);
+            expect(await receiptAmount(settled.paymentVoucher), 'precondition: the receipt now records the new amount').toBeCloseTo(
+                half,
+                2
+            );
+
+            // The defect: the customer's ledger still shows the original credit.
+            expect(await outstandingFor(customerId), 'the customer owes the half that was un-paid').toBeCloseTo(half, 2);
+        }
+    );
 });

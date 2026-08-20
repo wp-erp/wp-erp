@@ -1507,6 +1507,58 @@ exercise the list itself rather than re-failing on this.
 leave policies are inserted into the schema directly. Those workarounds live in test code only; no
 product source was touched (RULE 1).
 
+### Accounting — the payment edit path (4 cases: 1 green canary, 3 known-defect guards)
+
+Raising a payment is only half of the cycle. An amount keyed wrong has to be correctable, and until
+this pass nothing in the suite had ever tried to correct one. It splits cleanly into two independent
+failures, and **fixing either leaves the other standing**:
+
+- **ERP-153 — the screen.** `#/payments/{id}/edit` reuses `RecPaymentCreate.vue`, which asks for
+  `GET /invoices/{id}` using the **payment's** voucher number. Invoices and payments draw from one
+  voucher sequence, so no invoice can ever carry a payment's number — the lookup fails on every
+  payment, on every site. The component shows `Invoice does not exists!` and returns early, which
+  also skips the `pay_methods` assignment on the line above it, so even the method list is empty.
+  Past that it could not populate anyway: `setDataForEdit()` is called at `:281` and is never defined
+  in the file, though every sibling create/edit screen defines its own. And it has no update path at
+  all — `editMode` is set and never read, and the only write is `HTTP.post('/payments')`. **6/6.**
+- **ERP-152 — the route underneath.** `PUT /accounting/v1/payments/{id}` answers `200` and updates
+  the receipt header, but `erp_acct_update_payment()` passes its arguments to
+  `erp_acct_update_payment_line_items()` in the wrong order, and fills the invoice number from
+  `$item['invoice_id']` — a key the payload does not carry. Both `$wpdb->update()` calls inside then
+  match no rows, and the ledger write is an INSERT, so the edit **appends** a second cash row with
+  `trn_no = 0` instead of correcting the first. **3/3.**
+
+**The oracle is the Trial Balance, not the database.** Editing an 1,800.00 payment down to 900.00
+leaves the product printing `Total $2,700.00 / $1,800.00` on its own report — a trial balance that
+does not balance is a statement the product makes about itself, and it needs no arithmetic from me.
+Transactions → Sales says the same thing twice over on one screen: `$1,800.00 Received` in the
+summary above a payment row reading `$900.00`.
+
+**Why the canary exists.** `test.fail()` reports a PASS on ANY failure, so a guard that breaks for
+the wrong reason is indistinguishable from one that proves its defect. "The payment edit screen
+opens" runs the same setup and asserts only that the route rendered; it stayed green 6/6 while the
+guard beside it failed 6/6, which is what makes the guard's failure attributable.
+
+**A claim I had to withdraw before filing.** The first draft of ERP-153 said saving from the blank
+edit screen creates a duplicate payment. The code supports it — the component's only write is a
+`POST` — but when I actually re-entered the fields and saved, nothing was created and nothing
+changed. The report now says what was observed. The code-read inference was plausible and wrong, and
+it would have been indistinguishable from a measurement in the filed text.
+
+**Not covered here, and why:**
+
+- **The expense, bill and purchase edit paths.** `erp_acct_update_expense()`
+  (`expenses.php:520-537`) deletes and re-inserts `expense_details` but calls
+  `erp_acct_insert_expense_data_into_ledger()` and `erp_acct_insert_data_into_people_trn_details()`
+  without clearing the old ledger rows — the ERP-152 shape in another module. Separately,
+  `erp_acct_update_data_into_people_trn_details()` (`transactions.php:1764`) is a single
+  `$wpdb->delete()` with **no re-insert**, and invoices, bills and purchases all call it on edit.
+  Both are **read, not measured**; neither is filed, and neither may be reported as a defect until it
+  has been.
+- **Editing a payment upward, and editing one that covers several invoices.** Only the downward
+  single-invoice case is asserted. ERP-151 showed multi-invoice payments have their own arithmetic
+  fault on the create side, so the edit side of that is likely worse, not better — untested.
+
 ---
 
 ## What "done" will mean

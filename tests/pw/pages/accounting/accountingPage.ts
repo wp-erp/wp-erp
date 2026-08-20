@@ -158,6 +158,24 @@ export class AccountingPage extends BasePage {
     }
 
     /**
+     * Opens the edit screen for an existing payment.
+     *
+     * Not in `accountingRoutes` because the path carries the payment's voucher
+     * number: `#/payments/{voucherNo}/edit`. The SPA builds the component on
+     * `created()` only, so a hash change alone leaves whatever the previous
+     * route rendered still on screen — this always does a real load followed by
+     * a reload, which is the only sequence that re-runs `prepareDataLoad()`.
+     */
+    async gotoPaymentEdit(voucherNo: number): Promise<void> {
+        const url = `/wp-admin/admin.php?page=erp-accounting#/payments/${voucherNo}/edit`;
+
+        await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+        await this.page.reload({ waitUntil: 'domcontentloaded' });
+
+        await this.settle();
+    }
+
+    /**
      * Waits for the SPA to finish painting the current route.
      *
      * Waits for the route's own CONTENT — a heading with text — not just a
@@ -387,6 +405,21 @@ export class AccountingPage extends BasePage {
         return true;
     }
 
+    /**
+     * What a labelled picker currently shows.
+     *
+     * vue-multiselect renders the chosen value and the placeholder through the
+     * same box, so this returns whichever is painted — "Harbourline Logistics"
+     * on a populated form, "Please search" on an empty one. That distinction is
+     * the whole assertion when the question is whether a screen loaded its own
+     * record.
+     */
+    async multiselectValue(label: string): Promise<string> {
+        const box = this.group(label).locator('.multiselect').first();
+
+        return (await box.innerText()).replace(/\s+/g, ' ').trim();
+    }
+
     /** The nth line-item row's product picker (rows are positional). */
     async pickLineProduct(index: number, search: string): Promise<boolean> {
         const box = this.page.locator('.multiselect').nth(index + 1);
@@ -614,6 +647,61 @@ export class AccountingPage extends BasePage {
         await this.save();
 
         return true;
+    }
+
+    /**
+     * Sends `PUT /accounting/v1/payments/{voucherNo}` — the update the edit
+     * screen is supposed to send and never does.
+     *
+     * The request goes through the page rather than a Playwright API context so
+     * it carries the SPA's own REST nonce (`erp_acct_var.rest.nonce`) and the
+     * admin's cookies: the same credentials the screen would have used. Only the
+     * fields the payment form sends are included, so the payload is the one the
+     * server actually has to handle.
+     */
+    async updatePaymentViaRest(
+        voucherNo: number,
+        payload: {
+            customerId: number;
+            trnDate: string;
+            depositTo: number;
+            lineItems: { invoiceNo: number; lineTotal: number }[];
+            particulars?: string;
+        }
+    ): Promise<{ status: number; body: string }> {
+        return this.page.evaluate(
+            async ({ voucherNo, payload }) => {
+                const v = (window as unknown as { erp_acct_var: { rest: { root: string; version: string; nonce: string } } })
+                    .erp_acct_var;
+
+                const response = await fetch(`${v.rest.root}${v.rest.version}/accounting/v1/payments/${voucherNo}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': v.rest.nonce },
+                    body: JSON.stringify({
+                        customer_id: payload.customerId,
+                        trn_date: payload.trnDate,
+                        type: 'payment',
+                        status: 4,
+                        particulars: payload.particulars ?? 'edited',
+                        deposit_to: payload.depositTo,
+                        trn_by: 1,
+                        check_no: 0,
+                        bank_trn_charge: 0,
+                        line_items: payload.lineItems.map((item) => ({
+                            id: 0,
+                            invoice_no: item.invoiceNo,
+                            due_date: payload.trnDate,
+                            amount: item.lineTotal,
+                            due: item.lineTotal,
+                            line_total: item.lineTotal,
+                        })),
+                    }),
+                });
+
+                return { status: response.status, body: (await response.text()).slice(0, 500) };
+            },
+            { voucherNo, payload }
+        );
     }
 
     // ---- reports -------------------------------------------------------------

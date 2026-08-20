@@ -441,40 +441,39 @@ was filed, because nothing was a product defect. Full write-up in `COVERAGE.md`.
 The lesson is the same one D4 taught: **when an oracle disagrees with the UI, check the oracle is
 reading the table the product reads.**
 
-## RESUME HERE — the payment EDIT path (`erp_acct_update_payment`)
+## RESUME HERE — the EDIT paths (payment done; expense/bill/purchase next)
 
-Accounting has **62 cases**: all 29 screens, invoice → payment, bill → pay bill, and the reports.
-The next pass is the payment EDIT path, and the reading below was already done — start from it rather
-than re-deriving.
+Accounting is at **70 cases** (`--list`: 33 in `accounting_money`, 37 in `e2e_tests`). The payment
+EDIT path is **done** and produced two bugs, both filed locally and **not yet posted**:
 
-**Why it is the top item:** it is completely untested, and it carries the same shape as ERP-151.
+- **ERP-152 (Critical)** — `PUT /accounting/v1/payments/{id}` answers `200`, updates the receipt
+  header, and leaves everything else on the old amount while ADDING a second cash ledger row with
+  `trn_no = 0`. Editing 1,800 down to 900 leaves **Trial Balance Dr $2,700.00 vs Cr $1,800.00**.
+  Cause: `rec-payments.php:336` passes `( $data, $voucher_no, $invoice_no )` to a function declared
+  `( $data, $invoice_no, $voucher_no )` at `:368`, and `$invoice_no[$key]` reads `$item['invoice_id']`
+  (`:332`) — a key the payload never carries. `erp_acct_update_payment_data_in_ledger()` (`:591`) is
+  dead code. `erp_acct_people_trn_details` is never touched. **3/3.**
+- **ERP-153 (Major)** — `#/payments/{id}/edit` asks for `GET /invoices/{payment voucher no}`, shows
+  `Invoice does not exists!` and renders a wholly blank form. `setDataForEdit()` is called
+  (`RecPaymentCreate.vue:281`) but never defined in that file; the component's only write is
+  `HTTP.post('/payments')` (`:424`), so it has no update path at all. **6/6, canary green 6/6.**
+  ⚠️ **Fix order:** repairing this screen without ERP-152 exposes the ledger corruption to everyone.
 
-**What was read in `modules/accounting/includes/functions/rec-payments.php:297` (`erp_acct_update_payment`):**
+Four cases were added to `tests/e2e/accounting/payments.spec.ts` — one plain canary
+("the payment edit screen opens") and three `test.fail()` guards. New page-object helpers:
+`gotoPaymentEdit()`, `updatePaymentViaRest()`, `multiselectValue()`.
 
-1. **The same `$total = 0` INSIDE the line-item `foreach`** (`:330`), so after the loop
-   `$payment_data['amount']` holds only the LAST line's total — identical to the ERP-151 shape at
-   `:171`. Here it is passed to `erp_acct_update_payment_line_items()` per line, so the impact needs
-   measuring rather than assuming; it is NOT obviously the same bug.
-2. **The receipt header is updated BEFORE the loop**, using the amount from
-   `erp_acct_get_formatted_payment_data()` — so the header total looks correct even if the lines are
-   not. Check header vs lines vs ledger separately.
-3. ⚠️ **The update path never writes `erp_acct_people_trn_details` at all** — `grep -c people_trn`
-   over the whole function returns **0**. The customer ledger is what ERP-151 proved the balance is
-   computed from, so an edited payment may leave the customer's balance showing the OLD amount.
-   **This is the highest-value hypothesis to test first:** create a payment for X, edit it to Y,
-   then check `SUM(debit) - SUM(credit)` for that customer.
-4. ⚠️ **`erp_acct_update_data_into_people_trn_details()` (`transactions.php:1764`) only DELETES.** Its
-   whole body is one `$wpdb->delete()` — it never re-inserts. Any caller relying on it to "update"
-   the ledger silently removes the row instead. Find its callers before writing the case.
+**The next lead, read but NOT measured:** `erp_acct_update_expense()` (`expenses.php:520-537`)
+deletes and re-inserts `expense_details`, but then calls `erp_acct_insert_expense_data_into_ledger()`
+and `erp_acct_insert_data_into_people_trn_details()` **without deleting the old ledger rows first** —
+the same doubling shape as ERP-152, in a different module. Bill-payment and purchase-payment edits
+are unchecked too. Also unmeasured and separate: `erp_acct_update_data_into_people_trn_details()`
+(`transactions.php:1764`) is one `$wpdb->delete()` with **no re-insert**, and invoices, bills and
+purchases all call it on edit (`invoices.php:570`, `bills.php:361`, `purchases.php:502`) — editing
+any of those three may simply erase the customer's ledger row.
 
-**How to reach the edit UI:** the router has `/payments` but no obvious edit route in the path dump —
-open a receipt from **Transactions → Sales** (the `Receive` rows) and look for its edit control, or
-drive `erp_acct_update_payment` through the REST route. Capture the real route before writing the
-spec.
-
-**Where the spec goes:** `tests/e2e/accounting/payments.spec.ts` (it owns Harbourline Logistics and
-Meridian Office Supplies), and therefore the `accounting_money` project — **which must be run with
-`--workers=1 --no-deps`**, see "How to run". A new file would need its own party per the one-party-per-file rule.
+Run the accounting money cases with:
+`npx playwright test --project=accounting_money --workers=1 --no-deps`
 
 ## Next steps, in order
 
@@ -490,9 +489,10 @@ Meridian Office Supplies), and therefore the `accounting_money` project — **wh
    control) done. Remaining: contact groups/subscribers, CRM reports, schedules (expect a `test.fail()`
    guard — ERP-143/#958), and the same agent-vs-agent question on the FREE side, which uses
    `contact_owner` rather than the deals model.
-4. **Accounting — 62 cases**: all 29 screens, both money cycles end to end, and the reports asserted
-   against controlled figures. What is left is in RESUME HERE above; the payment EDIT path is the top
-   item and the likeliest place for a sibling to ERP-151.
+4. **Accounting — 70 cases**: all 29 screens, both money cycles end to end, and the reports asserted
+   against controlled figures, plus the payment EDIT path (ERP-152 / ERP-153). What is left is in
+   RESUME HERE above — the expense, bill and purchase edit paths, which the source suggests carry the
+   same shape and which are NOT yet measured.
 5. **Integrations — half done.** Everything reachable without a third-party account is green (12
    cases); the connect flows are written and gated on credentials (8 skips). See the credential table
    above.
