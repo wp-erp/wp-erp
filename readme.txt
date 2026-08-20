@@ -5,7 +5,7 @@ Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.8
+Stable tag: 1.17.9
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -327,6 +327,10 @@ We strive to respond to all queries within 12 hours. Our response time may be ju
 It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured of the best service.
 
 == Changelog ==
+= v1.17.9 → Aug 20, 2026
+--------------------------
+* [Fixed] Prevented privilege escalation through the CRM "Make WP User" action, where a CRM agent could promote a contact they own to a higher-privileged WordPress role such as Editor.
+
 = v1.17.8 → Aug 13, 2026
 --------------------------
 * [Fixed] The "Latest ERP Blogs" dashboard widget printed libxml parser warnings when wperp.com returned a non-feed response, and cached that broken response for 24 hours.
