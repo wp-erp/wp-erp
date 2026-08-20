@@ -55,12 +55,14 @@ class ERPSettingsContactForms {
         $crm_contact_forms_settings = [
             'nonce'             => wp_create_nonce( 'erp_settings_contact_forms' ),
             'plugins'           => array_keys( $this->active_plugin_list ),
+            'proPlugins'        => $this->get_pro_plugin_meta(),
             'forms'             => $this->forms,
             'mappedData'        => get_option( 'wperp_crm_contact_forms', '' ),
             'crmOptions'        => $this->crm_options,
             'scriptDebug'       => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
             'contactGroups'     => erp_crm_get_contact_groups_list(),
             'contactOwners'     => erp_crm_get_crm_user_dropdown(),
+            'lifeStages'        => erp_crm_get_life_stages_dropdown_raw(),
             'i18n'              => [
                 'notMapped'             => __( 'Not Set', 'erp' ),
                 'labelOK'               => __( 'OK', 'erp' ),
@@ -68,10 +70,42 @@ class ERPSettingsContactForms {
                 'labelSelectGroup'      => __( 'Select Contact Group', 'erp' ),
                 'labelContactOwner'     => __( 'Contact Owner', 'erp' ),
                 'labelSelectOwner'      => __( 'Select Owner', 'erp' ),
+                'labelLifeStage'        => __( 'Life Stage', 'erp' ),
+                'labelSelectLifeStage'  => __( 'Select Life Stage', 'erp' ),
+                'proUpsellHeading'      => __( 'This is a Pro feature', 'erp' ),
+                'proUpsellText'         => __( 'Connect %s with WP ERP CRM and automatically create contacts from form submissions. Upgrade to WP ERP Pro to unlock this integration.', 'erp' ),
+                'proInstallHint'        => __( 'Note: the %s plugin is not active on this site yet.', 'erp' ),
+                'proUpgradeButton'      => __( 'Upgrade to Pro', 'erp' ),
             ],
         ];
 
         return $crm_contact_forms_settings;
+    }
+
+    /**
+     * Per-plugin pro/upsell metadata for the contact form tabs
+     *
+     * Lets the UI know which tabs are locked behind erp-pro, where to send the
+     * user to upgrade, and whether the underlying form plugin is installed.
+     *
+     * @return array
+     */
+    public function get_pro_plugin_meta() {
+        $meta = [];
+
+        foreach ( $this->active_plugin_list as $slug => $plugin ) {
+            if ( empty( $plugin['is_pro'] ) ) {
+                continue;
+            }
+
+            $meta[ $slug ] = [
+                'is_pro'             => true,
+                'upgrade_url'        => isset( $plugin['upgrade_url'] ) ? $plugin['upgrade_url'] : '',
+                'form_plugin_active' => ! empty( $plugin['form_plugin_active'] ),
+            ];
+        }
+
+        return $meta;
     }
 
     /**
@@ -104,7 +138,23 @@ class ERPSettingsContactForms {
 
         $keys        = array_keys( $plugins );
         $sub_section = isset( $_GET['sub-section'] ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : $keys[0];
-        $forms       = $this->forms[ $sub_section ];
+        $forms       = isset( $this->forms[ $sub_section ] ) ? $this->forms[ $sub_section ] : [];
+
+        // Pro-only integration that isn't unlocked by erp-pro: show the upsell.
+        if ( ! empty( $plugins[ $sub_section ]['is_pro'] ) ) {
+            $fields['contact_forms']['sub_sections']   = $this->sub_sections;
+            $fields['contact_forms']['localized_data'] = $this->get_scripts_data();
+            $fields['contact_forms'][]                 = [
+                'type'               => 'contact_form_pro_upsell',
+                'plugin'             => $sub_section,
+                'title'              => $plugins[ $sub_section ]['title'],
+                'upgrade_url'        => isset( $plugins[ $sub_section ]['upgrade_url'] ) ? $plugins[ $sub_section ]['upgrade_url'] : '',
+                'form_plugin_active' => ! empty( $plugins[ $sub_section ]['form_plugin_active'] ),
+                'id'                 => 'section_' . $sub_section,
+            ];
+
+            return $fields;
+        }
 
         if ( empty( $forms ) ) {
             /* If no form created with respective plugin this notice will show.
@@ -221,6 +271,7 @@ class ERPSettingsContactForms {
                     'map'           => $map_data,
                     'contact_group' => isset( $_POST['contactGroup'] ) ? sanitize_text_field( wp_unslash( $_POST['contactGroup'] ) ) : '',
                     'contact_owner' => isset( $_POST['contactOwner'] ) ? sanitize_text_field( wp_unslash( $_POST['contactOwner'] ) ) : '',
+                    'life_stage'    => isset( $_POST['lifeStage'] ) ? sanitize_text_field( wp_unslash( $_POST['lifeStage'] ) ) : '',
                 ];
 
                 update_option( 'wperp_crm_contact_forms', $settings );
@@ -277,6 +328,7 @@ class ERPSettingsContactForms {
                     'map'          => $map,
                     'contactGroup' => 0,
                     'contactOwner' => 0,
+                    'lifeStage'    => '',
                 ];
             } else {
                 $response['msg'] = __( 'Nothing to reset', 'erp' );

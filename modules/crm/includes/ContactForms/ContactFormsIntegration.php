@@ -92,6 +92,7 @@ class ContactFormsIntegration {
             $settings       =  $cfi_settings[ $plugin ][ $form_id ]['map'];
             $contact_owner  =  $cfi_settings[ $plugin ][ $form_id ]['contact_owner'];
             $contact_group  =  $cfi_settings[ $plugin ][ $form_id ]['contact_group'];
+            $life_stage     =  ! empty( $cfi_settings[ $plugin ][ $form_id ]['life_stage'] ) ? $cfi_settings[ $plugin ][ $form_id ]['life_stage'] : 'lead';
 
             $contact = [
                 'type' => 'contact',
@@ -142,7 +143,7 @@ class ContactFormsIntegration {
             if ( ! is_wp_error( $people_id ) ) {
                 $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ), 'contact' );
 
-                $customer->update_life_stage( 'lead' );
+                $customer->update_life_stage( $life_stage );
                 $customer->update_meta( 'source', 'contact_form' );
 
                 if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] ) ) {
