@@ -44,6 +44,7 @@ projects add ~18 more — `crmAgent2` joined the auth chain).
 | accounting — invoice create, line maths, double entry, customer ledger, validation | 8 | 8 | — |
 | accounting — invoice settlement: full, partial, receipt application, validation | 6 | 6 | — |
 | accounting — bills: create, double entry, pay in full, unfunded refusal, validation | 7 | 7 | — |
+| accounting — reports: trial balance, income statement, balance sheet, cross-report agreement | 8 | 8 | — |
 | pro — integrations: settings list, 8 configure screens, CRM subset | 12 | 12 | 8 gated |
 
 The 3 skips are deliberate and recorded in `COVERAGE.md`: licence cases that need the site to be
@@ -55,18 +56,27 @@ UNlicensed (the activation form is not rendered while licensed).
 cd wp-content/plugins/wp-erp/tests/pw
 npx wp-env start                 # docker: 8888 dev / 8889 mysql, 8890/8891 tests
 npm run setup                    # site_setup -> auth_setup -> env_setup (licence, WooCommerce, seed)
-npx playwright test --project=e2e_tests --project=accounting_money   # everything
+npx playwright test --project=e2e_tests                              # the main suite
+npx playwright test --project=accounting_money --workers=1 --no-deps # the money specs, SERIAL
 NO_SETUP=true npx playwright test --project=e2e_tests <file>        # one spec, skip the setup chain
 ```
 
 **Two e2e projects, and both must be named to run the whole suite.** `accounting_money` holds
-`transactions|payments|bills`; `e2e_tests` `testIgnore`s them.
+`transactions|payments|bills|reports`; `e2e_tests` `testIgnore`s them.
 
-It runs **single-worker AND after `e2e_tests`** (`dependencies: ['e2e_tests']`). Two separate reasons,
-both measured:
+⚠️ **`--workers=1` on the command line is REQUIRED, and is not expressible in the config.** `workers`
+is a top-level Playwright option only — it is **not** per-project. `fullyParallel: false` serialises
+tests *within* a file, not files against each other. A `workers: 1` inside the project block was
+silently ignored for several runs while I read the resulting failures as product faults and then as
+scoping faults; the diagnosis only landed when the same four Cash-dependent tests kept failing after
+every other explanation had been fixed. **Run the money project with the flag, or its files race.**
 
-1. Those three files post to one shared **Cash ledger** and one voucher sequence — global state no
-   customer or vendor scoping can isolate. Run beside each other, one file's funding broke another's
+It also runs **after `e2e_tests`** (`dependencies: ['e2e_tests']`). Two separate reasons, both
+measured:
+
+1. Those files post to one shared **Cash ledger** and one voucher sequence — global state no
+   customer or vendor scoping can isolate. `reports.spec.ts` goes further: it aggregates EVERY
+   transaction on the site, so its cleanup is deliberately **unscoped**, which is safe only here. Run beside each other, one file's funding broke another's
    "the account is empty" precondition and one file's cleanup emptied the account another was about
    to pay from.
 2. Single-worker alone was **not enough**: Playwright runs projects concurrently, so one accounting
@@ -359,7 +369,15 @@ answer whether another agent's data is reachable. `_auth.setup.ts` is data-drive
 55. **A bill line with an account but no amount is refused by the BROWSER, not the product.** Picking
     an account sets `:required` on the amount, so no request is sent and the Vue error panel never
     renders. Assert the browser's refusal, not the product's.
-56. **Ordering matters when probing access control.** A probe that ran `save_deal` before
+56. **`AccountingPage.gotoRoute()` must force a RELOAD when re-entering the route it is already on.**
+    A hash that does not change fires no navigation, Vue reuses the component instance, and the screen
+    keeps the previous test's half-filled form with stale account lists. It looked like a broken
+    picker on the last test of a file.
+57. **`settle()` waits for a heading with TEXT, not for a spinner and a pause.** A full reload outruns
+    a fixed delay, so form interactions began on a half-rendered screen and the save failed validation
+    silently — the assertion then read as "the record was never created". Two files, two records, one
+    cause.
+58. **Ordering matters when probing access control.** A probe that ran `save_deal` before
     `delete_deal` made the delete look unguarded; it is guarded, but the earlier write had already
     made the caller the owner. Attempt the guarded action BOTH before and after the suspected
     escalation, or the chain reads as two independent holes.
@@ -423,25 +441,27 @@ was filed, because nothing was a product defect. Full write-up in `COVERAGE.md`.
 The lesson is the same one D4 taught: **when an oracle disagrees with the UI, check the oracle is
 reading the table the product reads.**
 
-## RESUME HERE — Accounting: both money cycles done, reports are the gap
+## RESUME HERE — Accounting: both money cycles and the reports are done
 
-Accounting now has **54 cases**: all 29 screens, invoice → payment (customer side) and bill → pay bill
-(vendor side), both with full ledger oracles. Those two files are the template for what is left —
-copy their SHAPE (UI action, DB oracle on the ledger, precondition assertions that pin what IS
-correct) but read each voucher type's own posting rules first, because the tables and the SIGNS
-differ.
+Accounting now has **62 cases**: all 29 screens, invoice → payment, bill → pay bill, and the reports
+checked against figures the suite controls — including the two invariants that matter most, `debits =
+credits` and `Assets = Liability + Equity`, plus a cross-report agreement case that catches an
+aggregation error neither report would reveal alone.
 
-1. **Reports' actual numbers** — the biggest remaining risk in Accounting, and now cheap. Trial
-   Balance, Balance Sheet, Income Statement and Ledger Report all render and **nothing asserts a
-   figure**. The invoice and bill helpers can seed known amounts, so a trial balance can be checked
-   against arithmetic the suite controls. Start here.
+What is left, in the order I would take it:
+
+1. **The payment EDIT path.** `erp_acct_update_payment()` (`rec-payments.php:330`) carries the SAME
+   `$total = 0`-inside-the-loop shape as ERP-151 and is **completely untested**. Highest-probability
+   place for a sibling Critical, and cheap now that the payment helpers exist.
 2. **Expenses, purchases, checks, journals, transfers, estimates** — every create form renders
    (covered) but none has a money oracle. Purchases and estimates are also the two transaction types
    whose 500 behaviour is still unmeasured for ERP-150.
-3. **The payment EDIT path** — `erp_acct_update_payment()` carries the same `$total = 0`-in-loop shape
-   as ERP-151 and is completely untested. Most likely place for a sibling Critical.
+3. **Report date ranges.** Every report query is `trn_date BETWEEN` and all seeded data is dated
+   today, so the range is never exercised at its edges. Needs the calendar helper wired to the report
+   filters first (typing a date is ERP-149).
 4. **Over-payment and refunds** — ERP-046's territory, unverified on this build.
-5. **Opening balance** (118 fields) feeding the trial balance.
+5. **Sales Tax reports and opening balances** — both need fixtures the suite does not create yet
+   (tax rates; 118 opening-balance fields).
 
 Then the rest of CRM (contact groups/subscribers, CRM reports, free-side agent visibility) and the Pro
 non-HRM modules (inventory, payment gateway, WooCommerce).
@@ -460,9 +480,9 @@ non-HRM modules (inventory, payment gateway, WooCommerce).
    control) done. Remaining: contact groups/subscribers, CRM reports, schedules (expect a `test.fail()`
    guard — ERP-143/#958), and the same agent-vs-agent question on the FREE side, which uses
    `contact_owner` rather than the deals model.
-4. **Accounting — 54 cases**: all 29 screens, plus BOTH money cycles end to end — invoice → payment
-   and bill → pay bill, each with a ledger oracle. What is left is in RESUME HERE above; reports'
-   numbers is the top item.
+4. **Accounting — 62 cases**: all 29 screens, both money cycles end to end, and the reports asserted
+   against controlled figures. What is left is in RESUME HERE above; the payment EDIT path is the top
+   item and the likeliest place for a sibling to ERP-151.
 5. **Integrations — half done.** Everything reachable without a third-party account is green (12
    cases); the connect flows are written and gated on credentials (8 skips). See the credential table
    above.

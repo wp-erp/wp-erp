@@ -49,6 +49,10 @@ export const accountingRoutes = {
     taxRates: '/settings/taxes/tax-rates',
     taxPayments: '/settings/taxes/tax-records',
     reports: '/reports',
+    trialBalance: '/reports/trial-balance',
+    incomeStatement: '/reports/income-statement',
+    balanceSheet: '/reports/balance-sheet',
+    ledgerReport: '/reports/ledgers',
     newInvoice: '/invoices/new',
     newEstimate: '/estimates/new',
     newPayment: '/payments/new',
@@ -87,6 +91,10 @@ export const routeHeadings: Record<AccountingRoute, string> = {
     taxRates: 'Tax Rates',
     taxPayments: 'Tax Payments',
     reports: 'Trial Balance',
+    trialBalance: 'Trial Balance',
+    incomeStatement: 'Income Statement',
+    balanceSheet: 'Balance Sheet',
+    ledgerReport: 'Ledger Report',
     newInvoice: 'New Invoice',
     newEstimate: 'New Estimate',
     newPayment: 'Payment',
@@ -124,9 +132,21 @@ export class AccountingPage extends BasePage {
     async gotoRoute(route: AccountingRoute): Promise<void> {
         const hash = accountingRoutes[route];
         const base = '/wp-admin/admin.php?page=erp-accounting';
+        const current = this.page.url();
 
-        if (!this.page.url().includes('page=erp-accounting')) {
+        // Three cases, and the third one is the trap. Arriving from elsewhere
+        // needs a real navigation. Moving BETWEEN routes inside the SPA only
+        // needs the hash and a `hashchange`. But navigating to the route the app
+        // is ALREADY on does neither: the hash does not change, Vue keeps the
+        // same component instance, and the screen keeps whatever the previous
+        // test left in it — a half-filled form whose account lists are never
+        // refetched. That surfaced as `receivePayment()` returning false on the
+        // last test of a file and reading as a broken picker.
+        const alreadyOnRoute = current.includes('page=erp-accounting') && current.endsWith(`#${hash}`);
+
+        if (!current.includes('page=erp-accounting') || alreadyOnRoute) {
             await this.page.goto(`${base}#${hash}`, { waitUntil: 'domcontentloaded' });
+            if (alreadyOnRoute) await this.page.reload({ waitUntil: 'domcontentloaded' });
         } else {
             await this.page.evaluate((h) => {
                 window.location.hash = h;
@@ -137,15 +157,34 @@ export class AccountingPage extends BasePage {
         await this.settle();
     }
 
-    /** Waits for the SPA to finish painting the current route. */
+    /**
+     * Waits for the SPA to finish painting the current route.
+     *
+     * Waits for the route's own CONTENT — a heading with text — not just a
+     * spinner and a delay. A full reload (which `gotoRoute()` now does when
+     * re-entering the route the app is already on) takes longer than a hash
+     * change, and a fixed pause let form interactions start against a
+     * half-rendered screen: the save then failed validation silently and the
+     * assertion read as "the record was never created".
+     */
     async settle(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded');
+
         await this.page
             .locator(accountingSelectors.spinner)
             .first()
             .waitFor({ state: 'hidden', timeout: 10_000 })
             .catch(() => undefined);
-        await this.page.waitForTimeout(2500);
+
+        // A heading with actual text means the Vue route has rendered.
+        await this.page
+            .locator('#wpbody-content h1, #wpbody-content h2, #wpbody-content h3')
+            .filter({ hasText: /\S/ })
+            .first()
+            .waitFor({ state: 'visible', timeout: 20_000 })
+            .catch(() => undefined);
+
+        await this.page.waitForTimeout(1500);
     }
 
     /** Headings currently rendered, trimmed. */
@@ -575,6 +614,72 @@ export class AccountingPage extends BasePage {
         await this.save();
 
         return true;
+    }
+
+    // ---- reports -------------------------------------------------------------
+    //
+    // Every figure is rendered as "<label> Dr./Cr. $1,800.00". The reports carry
+    // no ids, so amounts are read out of the tables' text — which is also what a
+    // human reads, so an assertion that passes here is an assertion about what
+    // the accountant actually sees.
+
+    /** Flattened text of every table on the current report. */
+    async reportText(): Promise<string> {
+        const tables = await this.page.locator('table').allTextContents();
+        return tables.join(' | ').replace(/\s+/g, ' ').trim();
+    }
+
+    /**
+     * The amount printed against a label, as a number.
+     *
+     * `Dr.`/`Cr.` is deliberately NOT folded into the sign: the reports use it as
+     * a presentational marker and each caller knows which side it expects. The
+     * sign is returned as printed, so a caller comparing two figures compares
+     * like with like.
+     */
+    async reportFigure(label: string): Promise<number> {
+        const text = await this.reportText();
+        const pattern = new RegExp(`${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*(?:Dr\\.|Cr\\.)?\\s*\\$([0-9,]+\\.?[0-9]*)`, 'i');
+        const match = text.match(pattern);
+
+        if (!match) throw new Error(`no amount printed for "${label}" in: ${text.slice(0, 300)}`);
+
+        return Number(match[1]!.replace(/,/g, ''));
+    }
+
+    /** True when the report prints the label at all. */
+    async reportHas(label: string): Promise<boolean> {
+        return (await this.reportText()).includes(label);
+    }
+
+    /**
+     * The trial balance's own totals row — the pair that must agree.
+     *
+     * Rendered as "Total $2,200.00 $2,200.00", so both are taken from one match
+     * rather than two lookups that could land on different rows.
+     */
+    async trialBalanceTotals(): Promise<{ debit: number; credit: number }> {
+        const text = await this.reportText();
+        const match = text.match(/Total\s*\$([0-9,]+\.?[0-9]*)\s*\$([0-9,]+\.?[0-9]*)/);
+
+        if (!match) throw new Error(`no trial balance totals row in: ${text.slice(0, 300)}`);
+
+        return { debit: Number(match[1]!.replace(/,/g, '')), credit: Number(match[2]!.replace(/,/g, '')) };
+    }
+
+    /** The balance sheet's closing equation, as the screen states it. */
+    async balanceSheetEquation(): Promise<{ assets: number; liabilitiesPlusEquity: number }> {
+        const text = await this.reportText();
+        const match = text.match(
+            /Assets\s*=\s*(?:Dr\.|Cr\.)?\s*\$([0-9,]+\.?[0-9]*)\s*(?:\|)?\s*Liability \+ Equity\s*=\s*(?:Dr\.|Cr\.)?\s*\$([0-9,]+\.?[0-9]*)/
+        );
+
+        if (!match) throw new Error(`no balance sheet equation in: ${text.slice(0, 400)}`);
+
+        return {
+            assets: Number(match[1]!.replace(/,/g, '')),
+            liabilitiesPlusEquity: Number(match[2]!.replace(/,/g, '')),
+        };
     }
 
     // ---- REST -------------------------------------------------------------

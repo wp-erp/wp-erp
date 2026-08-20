@@ -25,7 +25,13 @@ export default defineConfig({
     fullyParallel: false,
     forbidOnly: ci,
     retries: ci ? 2 : 0,
-    workers: ci ? 4 : 4,
+    /* Two locally, not four. One wp-env container serves every worker, and at
+       ~340 tests four of them saturated it: plain `page.goto` calls started
+       failing with `net::ERR_ABORTED` and a different handful of tests went red
+       on each run — never the same ones, never a logic fault. Two is
+       deterministic here. CI keeps four because its runner has not been
+       measured yet; revisit when the workflow first runs. */
+    workers: ci ? 4 : 2,
     preserveOutput: 'always',
     reportSlowTests: { max: 5, threshold: 30_000 },
 
@@ -78,7 +84,7 @@ export default defineConfig({
                sequence — global state no customer or vendor scoping can isolate.
                Run beside each other they broke each other's preconditions, so
                they get their own single-worker project below. */
-            testIgnore: /accounting\/(transactions|payments|bills)\.spec\.ts/,
+            testIgnore: /accounting\/(transactions|payments|bills|reports)\.spec\.ts/,
             dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
         },
         {
@@ -87,9 +93,18 @@ export default defineConfig({
                preconditions are only meaningful when nothing else is spending or
                funding it at the same time. */
             name: 'accounting_money',
-            testMatch: /accounting\/(transactions|payments|bills)\.spec\.ts/,
+            testMatch: /accounting\/(transactions|payments|bills|reports)\.spec\.ts/,
             fullyParallel: false,
-            workers: 1,
+            /* NOTE: `workers` is NOT a per-project option in Playwright — only
+               `fullyParallel` is, and that serialises tests WITHIN a file, not
+               files against each other. A `workers: 1` here was silently ignored
+               for several runs while I read its failures as product or scoping
+               faults. This project MUST be run with the CLI flag:
+
+                   npx playwright test --project=accounting_money --workers=1
+
+               See "How to run". Without it these four files run concurrently and
+               fight over the shared Cash ledger. */
             /* AFTER `e2e_tests`, not beside it. Projects run concurrently by
                default, so a single-worker project still competed with four e2e
                workers for one Docker site — these cases passed 21/21 alone and

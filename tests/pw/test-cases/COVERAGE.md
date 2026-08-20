@@ -702,6 +702,76 @@ way.
 other occurrence is in `erp_acct_update_payment()`, the payment EDIT path, which is untested and is
 where a sibling would be.
 
+### Accounting — reports (8 cases, all green)
+
+Every other accounting spec asserts what ONE transaction wrote. These assert what the books SAY,
+which is what an accountant relies on and the last place an error can hide: a transaction can post
+correctly and still be reported wrongly.
+
+**The strongest assertions here need no arithmetic from me, because the product states them itself:**
+
+| Invariant | Where it comes from |
+|---|---|
+| debits equal credits | the trial balance's own Total row |
+| `Assets = Liability + Equity` | the line the balance sheet prints at its foot |
+| profit equals income minus expense | the income statement's own three figures |
+| the two reports agree on profit | the balance sheet's equity vs the income statement |
+
+That last one is the most valuable case in the file. Two reports are computed independently from the
+same ledger; if either aggregation is wrong they diverge, and **neither report alone would reveal it**
+— which is exactly the class of error that survives to a year-end.
+
+Seeded from figures the suite controls: one invoice (1,800 revenue) and one bill (400 expense). The
+trial balance then reads `Accounts Receivable 1,800 Dr · Sales Revenue 1,800 Cr · Accounts Payable
+400 Cr · Advertising 400 Dr · Total 2,200 / 2,200`, the income statement `Income 1,800 · Expense 400
+· Profit 1,400`, and the balance sheet `Assets 1,800 = Liability 400 + Equity 1,400`.
+
+**The empty-ledger case is a precondition, not padding.** If the reports showed stale figures on an
+empty ledger, a seeded number matching later would prove nothing.
+
+**This file owns the WHOLE ledger for its duration**, which is why its cleanup is UNSCOPED — the one
+place in this suite where that is correct rather than a bug. Reports aggregate every transaction on
+the site, so they cannot be scoped to a customer or vendor the way the other accounting specs are. It
+is safe only because `accounting_money` is single-worker and runs after `e2e_tests`; the unscoped
+clean would be a defect in any other file, and the comment in the spec says so.
+
+**One assumption of mine the product corrected.** I asserted that an expense with no revenue still
+prints a "Profit" line. It does not — it switches the line to **Loss** and carries it into equity as a
+DEBIT, so `Liability Cr 400 + Equity Dr 400` nets to the Assets figure of 0 and the equation still
+holds. Entirely correct behaviour; the assumption was mine. The case now asserts the loss and the
+equation through it, which is a better test than the one I set out to write.
+
+**Two harness faults the reports pass exposed, both in `AccountingPage` and both affecting every
+accounting spec:**
+
+1. **`gotoRoute()` was a no-op when re-entering the route the SPA was already on.** The hash does not
+   change, so Vue keeps the same component instance and the screen keeps whatever the previous test
+   left in it — a half-filled form whose account lists are never refetched. It surfaced as
+   `receivePayment()` returning false on the LAST test of a file and reading as a broken picker. Now
+   forces a real reload in that case.
+2. **`settle()` waited on a spinner and a fixed pause, which a full reload outruns.** With the reload
+   above in place, form interactions started against a half-rendered screen, the save failed
+   validation silently, and the assertion read as "the record was never created" — twice, in two
+   different files, for two different records. It now waits for a heading with actual text, i.e. for
+   the Vue route to have rendered.
+
+The second was caused by the first: fixing the staleness made pages slower to be ready and exposed a
+wait that had always been too weak. Worth stating plainly — **a fix that surfaces a second fault is
+not a regression, but it does mean the first run after it cannot be trusted as a verdict on either.**
+
+**Not covered in reports, and why:**
+
+- **Date-range filtering.** Every report query is `trn_date BETWEEN`, and all seeded transactions are
+  dated today, so the default range is never exercised at its edges. A transaction dated outside the
+  range appearing or vanishing is untested — and given ERP-149 (typed dates ignored), setting a
+  custom range through the UI needs the calendar helper on the report filters first.
+- **Sales Tax reports** — four of them (`agency`, `category`, `customer`, `transaction` based), all
+  needing tax rates configured, which nothing in the suite creates yet.
+- **The Ledger Report's figures.** It renders and is covered by the no-5xx case, but asserting its
+  numbers needs an account selected in its filter; only the empty state is exercised today.
+- **Opening balances** feeding the trial balance — 118 fields on one screen, still untouched.
+- **Multi-currency**, which the plugin flags as a `@todo` in its own source.
+
 ### The accounting money specs need their own project — measured, not assumed
 
 `transactions`, `payments` and `bills` post to one shared **Cash ledger** and one voucher sequence.
