@@ -474,12 +474,12 @@ Also unmeasured and separate: `erp_acct_update_data_into_people_trn_details()`
 purchases all call it on edit (`invoices.php:570`, `bills.php:361`, `purchases.php:502`) — editing any
 of those three may simply erase the customer's ledger row.
 
-- **ERP-154 (Critical)** — editing an expense never reaches `erp_acct_ledger_details` at all, so the
+- **ERP-154 (Critical) — [erp-pro#971](https://github.com/wp-erp/erp-pro/issues/971)** — editing an expense never reaches `erp_acct_ledger_details` at all, so the
   Trial Balance keeps `Utilities Dr $600.00` while the Expenses list shows `$250.00`; and the update
   re-inserts the line items **without `trn_no`** (`expenses.php:414-426`), so after one edit the
   expense has no lines on any screen. `erp_acct_update_expense_data_into_ledger()` (`:688`) is dead
   code. **5/5.**
-- **ERP-155 (Major)** — the expense edit screen never loads the date: the controller publishes it as
+- **ERP-155 (Major) — [erp-pro#972](https://github.com/wp-erp/erp-pro/issues/972)** — the expense edit screen never loads the date: the controller publishes it as
   `date`, `ExpenseCreate.vue:322` reads `trn_date`. Pressing Update untouched is refused with
   `Transaction Date is required.` Not a duplicate of ERP-149/#966. **5/5.**
 
