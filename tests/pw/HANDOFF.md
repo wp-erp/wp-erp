@@ -477,7 +477,7 @@ unmeasured**.
   writes NO ledger row at all, and re-inserts line items without `trn_no`. **5/5.**
 - **ERP-155 (Major) — [erp-pro#972](https://github.com/wp-erp/erp-pro/issues/972)** — the expense
   edit screen never loads the date (`date` vs `trn_date`). **5/5.**
-- **ERP-156 (Critical) — NOT YET POSTED** — bill-payment edit fails four ways at once: the payment
+- **ERP-156 (Critical) — [erp-pro#973](https://github.com/wp-erp/erp-pro/issues/973)** — bill-payment edit fails four ways at once: the payment
   record never updates (`Unknown column 'bill_no' in 'SET'` — the table has no such column), the
   whole payment is returned to Cash (controller sums `$item['total']`, the form sends `amount`), a
   multi-bill payment collapses onto one bill (both `$wpdb->update()` calls keyed on the payment, not
