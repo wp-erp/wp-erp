@@ -92,6 +92,75 @@ export async function cleanupPayments(customerId?: number): Promise<number> {
     return result.affectedRows ?? 0;
 }
 
+/** The people id behind a seeded vendor's display name. */
+export async function vendorIdFor(name: string): Promise<number> {
+    const rows = await query<RowDataPacket[]>(
+        `SELECT p.id FROM ${prefix()}erp_peoples p
+           JOIN ${prefix()}erp_people_type_relations r ON r.people_id = p.id
+           JOIN ${prefix()}erp_people_types t ON t.id = r.people_types_id
+          WHERE t.name = 'vendor' AND CONCAT(p.first_name, ' ', p.last_name) = ?`,
+        [name]
+    );
+
+    if (!rows.length) throw new Error(`no seeded vendor named "${name}"`);
+
+    return Number(rows[0]!.id);
+}
+
+/**
+ * Bills raised against a vendor, plus their children.
+ *
+ * Children key on `voucher_no`, like every other accounting table — see
+ * `cleanupInvoices()` for what happens when that is got wrong.
+ */
+export async function cleanupBills(vendorId?: number): Promise<number> {
+    const bills = `${prefix()}erp_acct_bills`;
+
+    const rows = vendorId
+        ? await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${bills} WHERE vendor_id = ?`, [vendorId])
+        : await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${bills}`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_bill_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_bill_account_details WHERE bill_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const ids = rows.map((row) => Number(row.id));
+    const result = await execute(`DELETE FROM ${bills} WHERE id IN (${ids.map(() => '?').join(', ')})`, ids);
+
+    return result.affectedRows ?? 0;
+}
+
+/** Bill payments made to a vendor. Run BEFORE `cleanupBills()`. */
+export async function cleanupPayBills(vendorId?: number): Promise<number> {
+    const payBills = `${prefix()}erp_acct_pay_bill`;
+
+    const rows = vendorId
+        ? await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${payBills} WHERE vendor_id = ?`, [vendorId])
+        : await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${payBills}`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_pay_bill_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const ids = rows.map((row) => Number(row.id));
+    const result = await execute(`DELETE FROM ${payBills} WHERE id IN (${ids.map(() => '?').join(', ')})`, ids);
+
+    return result.affectedRows ?? 0;
+}
+
 /**
  * Ledger rows whose parent transaction is already gone.
  *
@@ -115,7 +184,11 @@ export async function cleanupLedgerOrphans(): Promise<number> {
     // against the invoice PRIMARY KEY — treated every legitimate ledger row as an
     // orphan and deleted it. Running in parallel, it emptied another spec's
     // customer ledger mid-test and looked like the product failing to post.
-    const live = `(SELECT voucher_no FROM ${invoices}) UNION (SELECT voucher_no FROM ${receipts})`;
+    const bills = `${prefix()}erp_acct_bills`;
+    const payBills = `${prefix()}erp_acct_pay_bill`;
+
+    const live = `(SELECT voucher_no FROM ${invoices}) UNION (SELECT voucher_no FROM ${receipts})
+                  UNION (SELECT voucher_no FROM ${bills}) UNION (SELECT voucher_no FROM ${payBills})`;
 
     const people = await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no NOT IN (${live})`);
     const ledger = await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no NOT IN (${live})`);

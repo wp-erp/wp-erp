@@ -2,7 +2,15 @@ import { test, expect } from '@utils/test';
 import { AccountingPage } from '@pages/accounting/accountingPage';
 import { ADMIN_STATE } from '@utils/authStates';
 import { toDate, dateOffset } from '@utils/helpers';
-import { cleanupInvoices, cleanupPayments, cleanupLedgerOrphans, customerIdFor } from '@utils/cleanupAccounting';
+import {
+    cleanupInvoices,
+    cleanupPayments,
+    cleanupBills,
+    cleanupPayBills,
+    cleanupLedgerOrphans,
+    customerIdFor,
+    vendorIdFor,
+} from '@utils/cleanupAccounting';
 import { query, prefix, closeDb } from '@utils/dbUtils';
 import type { RowDataPacket } from 'mysql2/promise';
 
@@ -32,6 +40,24 @@ test.use({ storageState: ADMIN_STATE });
 const CUSTOMER = 'Harbourline Logistics';
 const PRODUCT = 'Custom Dashboard Build';
 
+/**
+ * Bill payment lives HERE, not in `bills.spec.ts`, because it spends the same
+ * Cash ledger these customer payments deposit into. Cash is global state that no
+ * customer or vendor scoping can isolate — run in parallel, one file's funding
+ * broke the other's "the account is empty" precondition, and one file's cleanup
+ * emptied the account the other was about to pay from. Inside one file the cases
+ * are serial and the balance is deterministic.
+ *
+ * It uses its OWN vendor. The first attempt at this fix reused `bills.spec.ts`'s
+ * vendor, so both files cleaned the same bills and destroyed each other's rows —
+ * trading one collision for another. One party per file, always.
+ */
+const VENDOR = 'Meridian Office Supplies';
+const EXPENSE_ACCOUNT = 'Advertising';
+
+/** The Cash ledger — what "Deposit to" and "Transaction From" use by default. */
+const CASH_LEDGER_ID = 7;
+
 /** The customer's outstanding balance: debits raised minus credits paid. */
 async function outstandingFor(customerId: number): Promise<number> {
     const rows = await query<RowDataPacket[]>(
@@ -47,13 +73,17 @@ test.describe('Accounting — invoice settlement', () => {
     let page: AccountingPage;
 
     let customerId = 0;
+    let vendorId = 0;
 
     test.beforeAll(async () => {
         customerId = await customerIdFor(CUSTOMER);
+        vendorId = await vendorIdFor(VENDOR);
 
         // Payments first: a receipt points at the invoice it settles.
         await cleanupPayments(customerId);
         await cleanupInvoices(customerId);
+        await cleanupPayBills(vendorId);
+        await cleanupBills(vendorId);
         await cleanupLedgerOrphans();
     });
 
@@ -68,12 +98,16 @@ test.describe('Accounting — invoice settlement', () => {
         // first run. Each case starts from a customer who owes nothing.
         await cleanupPayments(customerId);
         await cleanupInvoices(customerId);
+        await cleanupPayBills(vendorId);
+        await cleanupBills(vendorId);
         await cleanupLedgerOrphans();
     });
 
     test.afterAll(async () => {
         await cleanupPayments(customerId);
         await cleanupInvoices(customerId);
+        await cleanupPayBills(vendorId);
+        await cleanupBills(vendorId);
         await cleanupLedgerOrphans();
         await closeDb();
     });
@@ -229,6 +263,69 @@ test.describe('Accounting — invoice settlement', () => {
 
         const after = await query<RowDataPacket[]>(`SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_invoice_receipts WHERE customer_id = ${customerId}`);
         expect(Number(after[0]!.n), 'and no receipt is written').toBe(Number(before[0]!.n));
+    });
+
+    // ---- the vendor side of the same Cash ledger ---------------------------
+
+    async function cashBalance(): Promise<number> {
+        const rows = await query<RowDataPacket[]>(
+            `SELECT COALESCE(SUM(debit) - SUM(credit), 0) AS balance
+               FROM ${prefix()}erp_acct_ledger_details WHERE ledger_id = ?`,
+            [CASH_LEDGER_ID]
+        );
+
+        return Number(rows[0]!.balance);
+    }
+
+    /** What the vendor is owed: credits raised minus debits paid. */
+    async function owedToVendor(): Promise<number> {
+        const rows = await query<RowDataPacket[]>(
+            `SELECT COALESCE(SUM(credit), 0) AS credits, COALESCE(SUM(debit), 0) AS debits
+               FROM ${prefix()}erp_acct_people_trn_details WHERE people_id = ?`,
+            [vendorId]
+        );
+
+        return Number(rows[0]!.credits) - Number(rows[0]!.debits);
+    }
+
+    test('a bill cannot be paid from an account with no funds', { tag: ['@tier2', '@accounting', '@validation', '@money'] }, async () => {
+        await page.createBill(VENDOR, EXPENSE_ACCOUNT, 750, toDate(), dateOffset(30));
+
+        expect(await cashBalance(), 'precondition: cash is empty').toBeCloseTo(0, 2);
+
+        await page.payBill(VENDOR, toDate());
+
+        expect(await page.bodyText(), 'the product refuses and says why').toContain('Not enough balance in selected account');
+
+        const payments = await query<RowDataPacket[]>(
+            `SELECT COUNT(*) AS n FROM ${prefix()}erp_acct_pay_bill WHERE vendor_id = ?`,
+            [vendorId]
+        );
+        expect(Number(payments[0]!.n), 'and nothing is paid').toBe(0);
+        expect(await owedToVendor(), 'so the vendor is still owed the bill').toBeCloseTo(750, 2);
+    });
+
+    test('paying a bill in full clears the vendor balance', { tag: ['@tier1', '@accounting', '@flow', '@money'] }, async () => {
+        // Money in, then money out. This site seeds no opening balances, so the
+        // cash to pay a bill is collected from a customer first — which makes
+        // this a real end-to-end cycle rather than a mocked balance.
+        await page.createBill(VENDOR, EXPENSE_ACCOUNT, 750, toDate(), dateOffset(30));
+        expect(await owedToVendor(), 'precondition: the vendor is owed the bill').toBeCloseTo(750, 2);
+
+        await raiseInvoice(2);
+        expect(await page.receivePayment(CUSTOMER, toDate()), 'precondition: cash was collected').toBe(true);
+        expect(await cashBalance(), 'precondition: cash is funded').toBeGreaterThanOrEqual(750);
+
+        expect(await page.payBill(VENDOR, toDate()), 'the pay-bill form accepted the entry').toBe(true);
+
+        const payments = await query<RowDataPacket[]>(
+            `SELECT voucher_no, amount FROM ${prefix()}erp_acct_pay_bill WHERE vendor_id = ? ORDER BY id DESC LIMIT 1`,
+            [vendorId]
+        );
+
+        expect(payments, 'a bill payment is written').toHaveLength(1);
+        expect(Number(payments[0]!.amount), 'for the bill amount').toBeCloseTo(750, 2);
+        expect(await owedToVendor(), 'and the vendor is owed nothing').toBeCloseTo(0, 2);
     });
 
     test.fail(

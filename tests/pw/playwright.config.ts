@@ -74,7 +74,30 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
+            /* The accounting money specs share one Cash ledger and one voucher
+               sequence — global state no customer or vendor scoping can isolate.
+               Run beside each other they broke each other's preconditions, so
+               they get their own single-worker project below. */
+            testIgnore: /accounting\/(transactions|payments|bills)\.spec\.ts/,
             dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
+        },
+        {
+            /* Invoice, settlement and bill flows. Serial by necessity: they all
+               post to the shared Cash ledger, and the "account is empty"
+               preconditions are only meaningful when nothing else is spending or
+               funding it at the same time. */
+            name: 'accounting_money',
+            testMatch: /accounting\/(transactions|payments|bills)\.spec\.ts/,
+            fullyParallel: false,
+            workers: 1,
+            /* AFTER `e2e_tests`, not beside it. Projects run concurrently by
+               default, so a single-worker project still competed with four e2e
+               workers for one Docker site — these cases passed 21/21 alone and
+               flaked whenever the rest of the suite ran alongside them. The
+               dependency makes the ordering explicit and the money assertions
+               deterministic; it costs wall-clock, which is the right trade for a
+               ledger oracle. */
+            dependencies: ['e2e_tests'],
         },
         {
             /* Leaves 100 users behind and must not run in parallel with anything.

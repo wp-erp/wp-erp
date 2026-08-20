@@ -290,6 +290,44 @@ export class AccountingPage extends BasePage {
      * The list is rendered only while the control is open, and the customer
      * picker filters as you type, so the search term is typed rather than set.
      */
+    /**
+     * Opens a label-anchored multiselect and picks its first option, WAITING for
+     * the options to render rather than sleeping.
+     *
+     * The account and payment-method lists are populated from AJAX, so a fixed
+     * delay is a race: it held under a single worker and failed under four,
+     * where `payBill()` silently returned false because the list was still
+     * empty and the case read as a broken form.
+     */
+    private async pickFirstOption(label: string): Promise<boolean> {
+        // RETRIED, because a single click is not reliable here under load. The
+        // account and payment-method lists come from AJAX and the panel reflows
+        // as they arrive, so the click that opens the dropdown can land on a
+        // moved element and silently do nothing — which showed up only under
+        // four workers, as `payBill()`/`receivePayment()` returning false and the
+        // case reading as a broken form.
+        const box = this.group(label).locator('.multiselect').first();
+        const option = box.locator('.multiselect__option').first();
+
+        for (let attempt = 0; attempt < 3; attempt++) {
+            await box.click().catch(() => undefined);
+
+            try {
+                await option.waitFor({ state: 'visible', timeout: 6_000 });
+            } catch {
+                await this.page.waitForTimeout(800);
+                continue;
+            }
+
+            await option.click();
+            await this.page.waitForTimeout(500);
+
+            return true;
+        }
+
+        return false;
+    }
+
     async pickFromMultiselect(label: string, search: string): Promise<boolean> {
         const box = this.group(label).locator('.multiselect').first();
         await box.click();
@@ -359,6 +397,118 @@ export class AccountingPage extends BasePage {
         await this.settle();
     }
 
+    // ---- bills ---------------------------------------------------------------
+    //
+    // A bill's line items are LEDGER ACCOUNTS, not products — the vendor side
+    // charges expense accounts directly — and the amount is
+    // `input[name="amount"]`, a TEXT field, unlike the invoice's numeric `qty`.
+
+    /** Picks the expense account on the nth bill line. */
+    async pickLineAccount(index: number, account: string): Promise<boolean> {
+        const box = this.page.locator('.multiselect').nth(index + 1);
+        await box.click();
+        await this.page.waitForTimeout(900);
+
+        const option = box.locator('.multiselect__option', { hasText: account }).first();
+        if (!(await option.isVisible().catch(() => false))) return false;
+
+        await option.click();
+        await this.page.waitForTimeout(600);
+
+        return true;
+    }
+
+    /**
+     * Sets the amount charged on the nth bill line.
+     *
+     * TYPED, not filled. The grand total is recomputed by
+     * `@keyup="updateFinalAmount"` (`BillCreate.vue:73`), and `fill()` dispatches
+     * `input` but never `keyup` — so the line's own value updates while
+     * `finalTotalAmount` stays 0 and the form refuses with "Total amount can't be
+     * zero" next to a line that visibly shows the amount.
+     */
+    async setLineAmount(index: number, amount: number): Promise<void> {
+        const field = this.page.locator('table tbody tr input[name="amount"]').nth(index);
+
+        await field.click();
+        await field.pressSequentially(String(amount), { delay: 40 });
+        await this.page.keyboard.press('Tab');
+        await this.page.waitForTimeout(700);
+    }
+
+    /** Bill lines the BROWSER has marked invalid (an account with no amount). */
+    async invalidAmountCount(): Promise<number> {
+        return this.page.locator('table tbody tr input[name="amount"]:invalid').count();
+    }
+
+    /** The browser's own message for the first invalid amount field. */
+    async amountValidationMessage(): Promise<string> {
+        return this.page
+            .locator('table tbody tr input[name="amount"]')
+            .first()
+            .evaluate((element) => (element as HTMLInputElement).validationMessage);
+    }
+
+    /** The grand total the bill form has computed, as shown in its footer. */
+    async billTotal(): Promise<string> {
+        return this.page.locator('input[name="finalamount"]').first().inputValue();
+    }
+
+    /**
+     * Raises a bill against a vendor for a single expense line.
+     *
+     * Required fields mirror the invoice: Pay To, Bill Date, Due Date, plus a
+     * line with an account and a non-zero amount.
+     */
+    async createBill(vendor: string, account: string, amount: number, billDate: string, dueDate: string): Promise<boolean> {
+        await this.gotoRoute('newBill');
+
+        if (!(await this.pickFromMultiselect('Pay To', vendor))) return false;
+
+        await this.pickDate('Bill Date', billDate);
+        await this.pickDate('Due Date', dueDate);
+
+        if (!(await this.pickLineAccount(0, account))) return false;
+
+        await this.setLineAmount(0, amount);
+        await this.save();
+
+        return true;
+    }
+
+    /**
+     * Pays a vendor's outstanding bills.
+     *
+     * Mirrors `receivePayment()` but the fields are named differently — the
+     * vendor picker is **Pay To** (the same label the bill form uses for it) and
+     * the funding account is **Transaction From**, not "Deposit to".
+     *
+     * The outstanding-bill rows are pre-filled with each bill's full balance,
+     * exactly like the customer side.
+     */
+    async payBill(vendor: string, paymentDate: string): Promise<boolean> {
+        await this.gotoRoute('newPayBill');
+
+        if (!(await this.pickFromMultiselect('Pay To', vendor))) return false;
+
+        await this.page
+            .locator('table tbody tr')
+            .first()
+            .waitFor({ state: 'visible', timeout: 15_000 })
+            .catch(() => undefined);
+        await this.page.waitForTimeout(1200);
+
+        await this.pickDate('Payment Date', paymentDate);
+
+        for (const label of ['Payment Method', 'Transaction From']) {
+            if (!(await this.pickFirstOption(label))) return false;
+        }
+
+        await this.save();
+
+        return true;
+    }
+
     // ---- receive payment ---------------------------------------------------
 
     /**
@@ -415,15 +565,7 @@ export class AccountingPage extends BasePage {
         await this.pickDate('Payment Date', paymentDate);
 
         for (const label of ['Payment Method', 'Deposit to']) {
-            const box = this.group(label).locator('.multiselect').first();
-            await box.click();
-            await this.page.waitForTimeout(800);
-
-            const option = box.locator('.multiselect__option').first();
-            if (!(await option.isVisible().catch(() => false))) return false;
-
-            await option.click();
-            await this.page.waitForTimeout(600);
+            if (!(await this.pickFirstOption(label))) return false;
         }
 
         if (amounts) {

@@ -660,6 +660,104 @@ sweep that deleted live rows.
 balance), payment against a partially-paid invoice, payment reversal/refund, and bill payments, which
 are the vendor-side mirror and need `pay-bills.php`'s own posting rules read first.
 
+### Accounting — bills and bill payments (7 cases, all green — 1 known-defect guard)
+
+The vendor side, and deliberately NOT a parameterised copy of the customer side. Four real
+differences shape it:
+
+1. **Line items are LEDGER ACCOUNTS, not products.** A bill charges an expense account directly.
+2. **The signs invert.** A bill CREDITS the vendor (we owe them) and a payment DEBITS them — the
+   mirror of an invoice debiting a customer.
+3. **The line amount is `input[name="amount"]` and its grand total recomputes on `keyup` only**
+   (`BillCreate.vue:73`). `fill()` updates the line and leaves `finalTotalAmount` at 0, so the form
+   refuses with "Total amount can't be zero" beside a line visibly showing the amount. Typed, not
+   filled — the same jQuery-keyup family as the CRM search box and the recruitment wizard.
+4. **Paying a bill needs FUNDS.** The product refuses with *"Not enough balance in selected account"*
+   when the paying account is empty, and this site seeds no opening balances.
+
+That last point is the interesting one. Rather than fake a balance, the happy-path case earns it: it
+invoices a funding customer, collects the payment into Cash, and only then pays the bill — a genuine
+money-in-then-money-out cycle. Found while building the file, and asserted on its own as a tier-2
+case (bill raised, cash empty, payment refused, vendor still owed).
+
+Covered: a bill is created and credited to the vendor with the dates chosen; the posting is a
+balanced double entry (expense debit in `ledger_details`, payable credit in `bill_account_details`);
+paying in full clears the vendor balance; payment from an unfunded account is refused; a bill with no
+vendor is refused by the product; and a bill with no amount is refused **by the browser**.
+
+**That last distinction is deliberate.** Picking an account sets `:required` on the line's amount, so
+constraint validation blocks the submit and no request is sent — the product's own "Total amount
+can't be zero" rule never runs. Claiming the product refused it would overstate what was tested. Same
+shape as the CRM companies life-stage case.
+
+**ERP-150 now covers the whole transaction family.** The original report left bills, purchases,
+estimates and payments as "likely but unverified". Measured since: `POST` to **invoices, payments,
+bills and pay-bills** all answer **500** from the same `get_magic_quotes_runtime()` call, while every
+record commits correctly. Both confirmations were added as comments to erp-pro#967 rather than
+silently folded into the body. Estimates and purchases remain untested and are still described that
+way.
+
+**Checked so nobody repeats it:** ERP-151's `$total = 0`-inside-the-loop pattern is **not** in
+`pay-bills.php` or `pay-purchases.php` — both take the amount straight from the request. The only
+other occurrence is in `erp_acct_update_payment()`, the payment EDIT path, which is untested and is
+where a sibling would be.
+
+### The accounting money specs need their own project — measured, not assumed
+
+`transactions`, `payments` and `bills` post to one shared **Cash ledger** and one voucher sequence.
+That is global state no customer or vendor scoping can isolate, and it took two fixes to settle:
+
+1. **Own project, single worker.** Run beside each other, one file's funding broke another's "the
+   account is empty" precondition and one file's cleanup emptied the account another was about to pay
+   from. `accounting_money` runs them serially; `e2e_tests` `testIgnore`s them.
+2. **`dependencies: ['e2e_tests']` — and this was the part I got wrong first.** Single-worker alone
+   did NOT fix it, because Playwright runs projects **concurrently**: one accounting worker still
+   competed with four e2e workers for one Docker site. Measured plainly — **21/21 green running the
+   project alone, 3–4 failures every time it ran alongside the rest.** Ordering it after `e2e_tests`
+   is what made the ledger assertions deterministic.
+
+**A false fix I shipped and had to undo in between:** moving bill PAYMENT into `payments.spec.ts` was
+correct (it spends the same Cash), but I gave it `bills.spec.ts`'s vendor — so both files then cleaned
+the same bills and destroyed each other's rows. One collision traded for another. **One party per
+file, always.**
+
+**The wider lesson, and the next harness task.** These were not the only load-sensitive failures: the
+CRM deals board also went red at ~300 tests, asserting an empty stage list because the SPA had not
+painted. The suite's fixed `waitForTimeout()` calls held at 200 tests and are marginal at 300. The
+deals board and the accounting pickers now wait on their own content; **the rest of the fixed sleeps
+should be converted the same way before the suite grows again.** Recorded here rather than left as
+folklore.
+
+### Pro — integrations (12 cases green, 8 gated skips)
+
+The seven externally-authenticated integrations plus Dropbox, written in two halves on the lead's
+instruction: cover what needs no third-party account now, and write the credential-dependent half so
+it runs the day sandbox credentials arrive.
+
+**Green today** — everything reachable without an account: ERP Settings → Integration lists all eight
+bundled integrations, each has exactly one Configure control (counted, so a missing row cannot pass by
+a label appearing elsewhere on the page), clicking Configure opens that integration's own panel, each
+of the eight configuration screens loads without a fatal or a 5xx, and CRM → Integrations renders its
+own subset.
+
+**Gated** — one connect case per integration, skipped with a reason naming the exact variables that
+are missing (`Salesforce sandbox credentials not configured — set SALESFORCE_CLIENT_ID,
+SALESFORCE_CLIENT_SECRET in .env`). They appear in every report as skips rather than being absent,
+because a silent gap is indistinguishable from coverage.
+
+**What the gated cases deliberately do NOT do:** script a speculative connect flow. Field names, the
+connect control and the success signal differ per integration and must be captured against a live
+sandbox. A guessed selector would fail for the wrong reason on the first real run and cost more than
+it saved. Each gated case therefore fails loudly with instructions if credentials ARE present and the
+flow has not yet been captured — so the day the variables land, the report says exactly what to finish
+rather than going quietly green.
+
+**One assertion corrected here too:** the first version checked that opening a panel "reveals its
+credential fields", and it failed against a perfectly healthy screen — on a DISABLED integration the
+only visible controls are the enable toggles, and the token field appears once it is switched on.
+Enabling an integration just to satisfy the assertion would have been changing product state to fit
+the test. It now asserts the panel's own heading instead.
+
 ### A harness bug that only fires at night — `toDate()` and the timezone (found 2026-08-20)
 
 Two leave specs went red on a full run with `"Mon–Wed counts as three working days — expected 3,

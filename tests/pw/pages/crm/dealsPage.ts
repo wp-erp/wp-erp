@@ -92,7 +92,7 @@ export class DealsPage extends BasePage {
 
     async goto(subSection: (typeof dealSubSections)[number] = 'all-deals'): Promise<void> {
         await this.gotoAdmin('erp-crm', { section: 'deals', 'sub-section': subSection });
-        await this.waitForApp();
+        await this.waitForApp(subSection);
     }
 
     /**
@@ -100,7 +100,7 @@ export class DealsPage extends BasePage {
      * once its first AJAX round-trip lands. Waiting on the app root alone is not
      * enough — it exists in the PHP view — so this waits for real content.
      */
-    async waitForApp(): Promise<void> {
+    async waitForApp(subSection?: string): Promise<void> {
         // A refused role never gets the app root at all, and an authorization
         // test has to reach `isAccessDenied()` to say so — so a refusal returns
         // immediately instead of burning two 20s waits on markup that will never
@@ -113,7 +113,19 @@ export class DealsPage extends BasePage {
             .first()
             .waitFor({ state: 'visible', timeout: 20_000 })
             .catch(() => undefined);
-        await this.page.waitForTimeout(1500);
+        // Wait for the ROUTE'S OWN content, not a fixed delay. The board paints
+        // its stage columns from an AJAX round-trip, and under a loaded
+        // four-worker run 1.5s was not always enough — the assertion then saw an
+        // empty column list and read as "the product renders no stages".
+        if (subSection === 'all-deals') {
+            await this.page
+                .locator(dealSelectors.stageHeaders)
+                .first()
+                .waitFor({ state: 'visible', timeout: 20_000 })
+                .catch(() => undefined);
+        }
+
+        await this.page.waitForTimeout(1200);
     }
 
     async gotoSettings(): Promise<void> {
