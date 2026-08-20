@@ -730,38 +730,101 @@ export class AccountingPage extends BasePage {
             particulars?: string;
         }
     ): Promise<{ status: number; body: string }> {
+        return this.restRequest('PUT', `/accounting/v1/payments/${voucherNo}`, {
+            customer_id: payload.customerId,
+            trn_date: payload.trnDate,
+            type: 'payment',
+            status: 4,
+            particulars: payload.particulars ?? 'edited',
+            deposit_to: payload.depositTo,
+            trn_by: 1,
+            check_no: 0,
+            bank_trn_charge: 0,
+            line_items: payload.lineItems.map((item) => ({
+                id: 0,
+                invoice_no: item.invoiceNo,
+                due_date: payload.trnDate,
+                amount: item.lineTotal,
+                due: item.lineTotal,
+                line_total: item.lineTotal,
+            })),
+        });
+    }
+
+    /**
+     * Sends `PUT /accounting/v1/pay-bills/{voucherNo}`.
+     *
+     * There is no screen behind this one: the router has no `:id/edit` child for
+     * pay-bills and the transaction list offers a bill payment only **Void**, so
+     * the REST route is the only way in and an API consumer is the only caller.
+     *
+     * `includeTotal` decides which of two payload shapes is sent, and the two
+     * behave completely differently. `PayBillsController::update_pay_bill()`
+     * sums `$item['total']` to get the payment amount, but the product's own
+     * pay-bill form sends `amount` and never sends `total`
+     * (`PayBillCreate.vue:305`). Mirroring the form therefore makes the server
+     * read an undefined key and treat the payment as **zero** — which is the
+     * shape any integration built from the create payload would use, so both are
+     * worth exercising.
+     */
+    async updatePayBillViaRest(
+        voucherNo: number,
+        payload: {
+            vendorId: number;
+            trnDate: string;
+            depositTo: number;
+            lines: { billNo: number; amount: number }[];
+            includeTotal?: boolean;
+            particulars?: string;
+        }
+    ): Promise<{ status: number; body: string }> {
+        const includeTotal = payload.includeTotal ?? true;
+
+        return this.restRequest('PUT', `/accounting/v1/pay-bills/${voucherNo}`, {
+            vendor_id: payload.vendorId,
+            trn_date: payload.trnDate,
+            type: 'pay_bill',
+            status: 4,
+            particulars: payload.particulars ?? 'edited',
+            deposit_to: payload.depositTo,
+            trn_by: 1,
+            check_no: 0,
+            bill_details: payload.lines.map((line) => ({
+                voucher_no: line.billNo,
+                amount: line.amount,
+                due: line.amount,
+                ...(includeTotal ? { total: line.amount } : {}),
+            })),
+        });
+    }
+
+    /**
+     * One REST call, issued from inside the page.
+     *
+     * Deliberately not a Playwright API context: going through the page carries
+     * the SPA's own nonce (`erp_acct_var.rest.nonce`) and the admin's cookies,
+     * so the request is the one the screen would have made rather than a
+     * differently-authenticated lookalike.
+     */
+    private async restRequest(
+        method: string,
+        path: string,
+        body: Record<string, unknown>
+    ): Promise<{ status: number; body: string }> {
         return this.page.evaluate(
-            async ({ voucherNo, payload }) => {
+            async ({ method, path, body }) => {
                 const v = (window as unknown as { erp_acct_var: { rest: { root: string; version: string; nonce: string } } })
                     .erp_acct_var;
 
-                const response = await fetch(`${v.rest.root}${v.rest.version}/accounting/v1/payments/${voucherNo}`, {
-                    method: 'PUT',
+                const response = await fetch(`${v.rest.root}${v.rest.version}${path}`, {
+                    method,
                     headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': v.rest.nonce },
-                    body: JSON.stringify({
-                        customer_id: payload.customerId,
-                        trn_date: payload.trnDate,
-                        type: 'payment',
-                        status: 4,
-                        particulars: payload.particulars ?? 'edited',
-                        deposit_to: payload.depositTo,
-                        trn_by: 1,
-                        check_no: 0,
-                        bank_trn_charge: 0,
-                        line_items: payload.lineItems.map((item) => ({
-                            id: 0,
-                            invoice_no: item.invoiceNo,
-                            due_date: payload.trnDate,
-                            amount: item.lineTotal,
-                            due: item.lineTotal,
-                            line_total: item.lineTotal,
-                        })),
-                    }),
+                    body: JSON.stringify(body),
                 });
 
                 return { status: response.status, body: (await response.text()).slice(0, 500) };
             },
-            { voucherNo, payload }
+            { method, path, body }
         );
     }
 

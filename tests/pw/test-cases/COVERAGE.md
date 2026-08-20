@@ -1609,6 +1609,54 @@ absolute figure would be a hidden dependency on which files ran first.
 - **Check-type expenses** (`voucher_type = check`), which take a different branch in both the create
   and update functions.
 
+### Accounting — the bill-payment edit path (4 known-defect guards)
+
+The money-out mirror of the payment edit section, and the worst of the three edit paths measured. It
+is also the only one with **no screen behind it**: the SPA router gives `/pay-bills` only `new` and
+`:id` children (`router/index.js:592-611`), and a bill-payment row in the transaction list offers
+only **Void**. `PUT /accounting/v1/pay-bills/{id}` is reachable by an API consumer and nobody else.
+
+All four guards are **ERP-156** — one function, four ways of being wrong:
+
+1. **The payment never updates.** `erp_acct_update_pay_bill()` writes `bill_no` and `type` into
+   `erp_acct_pay_bill`, which has neither column. MySQL rejects the statement, `$wpdb->update()`
+   returns `false` **without throwing**, and the surrounding `try` block commits everything after it.
+   `debug.log` carries `Unknown column 'bill_no' in 'SET'` on every edit.
+2. **The money comes back.** The controller sums `$item['total']`; the product's own pay-bill form
+   sends `amount` and never `total`. `array_sum` over an undefined key gives 0, so the cash credit is
+   written as `0.00` and the entire payment returns to Cash while the payment record still stands.
+3. **A multi-bill payment collapses onto one bill.** Both `$wpdb->update()` calls in the line loop
+   use a WHERE keyed on the payment, never the line, so every pass rewrites every row.
+4. **The vendor ledger is never written, and the sides are reversed.** Create debits
+   `bill_account_details`, update credits it, and `erp_acct_get_bill_due()` is `SUM(debit - credit)` —
+   so an edited payment ADDS to the bill it was meant to settle.
+
+**The oracle is the Trial Balance and the Expenses list, not the database.** Editing a 750.00 payment
+to 250.00 leaves the product printing `Total $2,550.00 / $2,800.00`, Cash back up by the **full**
+750.00, the payment still listed at `$750.00 · Paid`, and the $750.00 bill showing `$1,000.00` due —
+more than it was ever raised for. Every one of those is a statement the product makes about itself.
+
+**Severity was argued both ways and written down.** No administrator can reach this today, which is a
+real argument for downgrading it. It is filed **Critical** anyway: the endpoint is published, the
+corruption is silent (`200 OK`), the cash it invents is unattributable afterwards, and nothing in the
+product would surface the damage. Downgrading would be a bet that no integration calls a documented
+route.
+
+**One thing here works, and the report says so.** `erp_acct_update_pay_bill_data_into_ledger()`
+(`pay-bills.php:445`) is a correct keyed UPDATE. A review that reads "the edit path is broken" and
+rewrites the lot would throw away the one piece that is right.
+
+**Not filed separately, and why:** that no edit UI exists for bill payments at all, when invoices and
+expenses both have one. A user can Void and re-enter, so it is a gap rather than a defect — but it is
+recorded here so the absence is deliberate rather than overlooked, and it is what makes ERP-156
+invisible in normal use.
+
+**Not covered here, and why:**
+
+- **The pay-purchase edit path** (`pay-purchases.php`) — same shape, read but **not measured**.
+- **Editing a bill payment upward**, and editing one paid from a bank rather than cash (`trn_by = 2`,
+  which takes the transaction-charge branch).
+
 ---
 
 ## What "done" will mean

@@ -498,4 +498,206 @@ test.describe('Accounting — invoice settlement', () => {
             expect(await outstandingFor(customerId), 'the customer owes the half that was un-paid').toBeCloseTo(half, 2);
         }
     );
+
+    // ---- the bill-payment edit path ---------------------------------------
+    //
+    // The money-out mirror of the section above, and the worst of the three edit
+    // paths measured so far. It is also the only one with NO screen behind it:
+    // the router has no `:id/edit` child for pay-bills and the transaction list
+    // offers a bill payment only **Void**, so `PUT /accounting/v1/pay-bills/{id}`
+    // is reachable by an API consumer and nobody else. All four guards below are
+    // ERP-156 — one function, four ways of being wrong.
+
+    /** Raises one bill, pays it in full, and returns both voucher numbers. */
+    async function settledBill(amount = 750): Promise<{ billVoucher: number; payVoucher: number; amount: number }> {
+        await raiseInvoice(2);
+        expect(await page.receivePayment(CUSTOMER, toDate()), 'precondition: cash was collected').toBe(true);
+
+        expect(await page.createBill(VENDOR, EXPENSE_ACCOUNT, amount, toDate(), dateOffset(30)), 'precondition: a bill exists').toBe(
+            true
+        );
+
+        const bills = await query<RowDataPacket[]>(
+            `SELECT voucher_no FROM ${prefix()}erp_acct_bills WHERE vendor_id = ? ORDER BY id DESC LIMIT 1`,
+            [vendorId]
+        );
+        expect(bills, 'precondition: the bill was written').toHaveLength(1);
+
+        expect(await page.payBill(VENDOR, toDate()), 'precondition: the bill was paid').toBe(true);
+
+        const pays = await query<RowDataPacket[]>(
+            `SELECT voucher_no FROM ${prefix()}erp_acct_pay_bill WHERE vendor_id = ? ORDER BY id DESC LIMIT 1`,
+            [vendorId]
+        );
+        expect(pays, 'precondition: the bill payment was written').toHaveLength(1);
+
+        return { billVoucher: Number(bills[0]!.voucher_no), payVoucher: Number(pays[0]!.voucher_no), amount };
+    }
+
+    /** What a bill payment records for itself. */
+    async function payBillAmount(voucherNo: number): Promise<number> {
+        const rows = await query<RowDataPacket[]>(
+            `SELECT amount FROM ${prefix()}erp_acct_pay_bill WHERE voucher_no = ?`,
+            [voucherNo]
+        );
+
+        return Number(rows[0]!.amount);
+    }
+
+    test.fail(
+        'editing a bill payment changes the payment itself',
+        { tag: ['@tier2', '@accounting', '@money', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-156. `erp_acct_update_pay_bill()`
+            // (`pay-bills.php:249`) writes `bill_no` and `type` into
+            // `erp_acct_pay_bill`, and that table has neither column. MySQL
+            // rejects the whole statement, `$wpdb->update()` returns false
+            // without throwing, and the function carries on and COMMITs — so the
+            // payment keeps its original amount and date while everything
+            // downstream of it moves.
+            const settled = await settledBill();
+            const reduced = settled.amount / 3;
+
+            expect(await payBillAmount(settled.payVoucher), 'precondition: the payment records the full bill').toBeCloseTo(
+                settled.amount,
+                2
+            );
+
+            const response = await page.updatePayBillViaRest(settled.payVoucher, {
+                vendorId,
+                trnDate: toDate(),
+                depositTo: CASH_LEDGER_ID,
+                lines: [{ billNo: settled.billVoucher, amount: reduced }],
+            });
+
+            expect(response.status, 'precondition: the server accepted the edit').toBe(200);
+
+            // The defect: the payment still records the old figure.
+            expect(await payBillAmount(settled.payVoucher), 'the payment records the amount it was edited to').toBeCloseTo(
+                reduced,
+                2
+            );
+        }
+    );
+
+    test.fail(
+        'editing a bill payment does not hand the money back',
+        { tag: ['@tier2', '@accounting', '@money', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-156, and the most damaging face of it.
+            // `PayBillsController::update_pay_bill()` sums `$item['total']` for
+            // the payment amount, but the product's own pay-bill form sends
+            // `amount` and never `total` (`PayBillCreate.vue:305`). An integration
+            // built from that create payload therefore makes the server read an
+            // undefined key, `array_sum()` returns 0, and
+            // `erp_acct_update_pay_bill_data_into_ledger()` writes a cash credit
+            // of ZERO — returning the entire payment to cash while the payment
+            // record itself still stands.
+            const settled = await settledBill();
+
+            const before = await cashBalance();
+
+            const response = await page.updatePayBillViaRest(settled.payVoucher, {
+                vendorId,
+                trnDate: toDate(),
+                depositTo: CASH_LEDGER_ID,
+                lines: [{ billNo: settled.billVoucher, amount: settled.amount / 3 }],
+                includeTotal: false,
+            });
+
+            expect(response.status, 'precondition: the server accepted the edit').toBe(200);
+
+            // The defect: cash goes UP by the whole original payment.
+            expect(await cashBalance(), 'cash does not rise when a payment is edited downwards').toBeLessThanOrEqual(
+                before
+            );
+        }
+    );
+
+    test.fail(
+        'editing a bill payment keeps its bills apart',
+        { tag: ['@tier2', '@accounting', '@money', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-156. The line loop in
+            // `erp_acct_update_pay_bill()` runs `$wpdb->update()` with the SAME
+            // WHERE clause on every pass — `voucher_no = $pay_bill_id` for the
+            // details and `trn_no = $pay_bill_id` for the account details, never
+            // the individual bill — so each iteration rewrites EVERY row of the
+            // payment. After the loop all of them carry the last line's bill and
+            // amount, and the other bills lose their payment entirely.
+            await raiseInvoice(3);
+            expect(await page.receivePayment(CUSTOMER, toDate()), 'precondition: cash was collected').toBe(true);
+
+            expect(await page.createBill(VENDOR, EXPENSE_ACCOUNT, 750, toDate(), dateOffset(30))).toBe(true);
+            expect(await page.createBill(VENDOR, EXPENSE_ACCOUNT, 400, toDate(), dateOffset(30))).toBe(true);
+
+            const bills = await query<RowDataPacket[]>(
+                `SELECT voucher_no FROM ${prefix()}erp_acct_bills WHERE vendor_id = ? ORDER BY id`,
+                [vendorId]
+            );
+            expect(bills, 'precondition: two bills are outstanding').toHaveLength(2);
+
+            expect(await page.payBill(VENDOR, toDate()), 'precondition: both were paid together').toBe(true);
+
+            const pays = await query<RowDataPacket[]>(
+                `SELECT voucher_no FROM ${prefix()}erp_acct_pay_bill WHERE vendor_id = ? ORDER BY id DESC LIMIT 1`,
+                [vendorId]
+            );
+            const payVoucher = Number(pays[0]!.voucher_no);
+
+            const response = await page.updatePayBillViaRest(payVoucher, {
+                vendorId,
+                trnDate: toDate(),
+                depositTo: CASH_LEDGER_ID,
+                lines: [
+                    { billNo: Number(bills[0]!.voucher_no), amount: 700 },
+                    { billNo: Number(bills[1]!.voucher_no), amount: 100 },
+                ],
+            });
+
+            expect(response.status, 'precondition: the server accepted the edit').toBe(200);
+
+            const applied = await query<RowDataPacket[]>(
+                `SELECT bill_no FROM ${prefix()}erp_acct_pay_bill_details WHERE voucher_no = ?`,
+                [payVoucher]
+            );
+            expect(applied, 'precondition: the payment still names two lines').toHaveLength(2);
+
+            // The defect: both lines now point at the same bill.
+            expect(
+                new Set(applied.map((row) => Number(row.bill_no))).size,
+                'the payment still names two different bills'
+            ).toBe(2);
+        }
+    );
+
+    test.fail(
+        'editing a bill payment moves the vendor balance with it',
+        { tag: ['@tier2', '@accounting', '@money', '@known-defect'] },
+        async () => {
+            // KNOWN DEFECT — ERP-156. `erp_acct_update_pay_bill()` never mentions
+            // `erp_acct_people_trn_details`, which the create path does write
+            // (`pay-bills.php:213`). The vendor's statement therefore keeps
+            // showing the original payment however the payment is edited.
+            const settled = await settledBill();
+            const reduced = settled.amount / 3;
+
+            expect(await owedToVendor(), 'precondition: the bill was settled in full').toBeCloseTo(0, 2);
+
+            const response = await page.updatePayBillViaRest(settled.payVoucher, {
+                vendorId,
+                trnDate: toDate(),
+                depositTo: CASH_LEDGER_ID,
+                lines: [{ billNo: settled.billVoucher, amount: reduced }],
+            });
+
+            expect(response.status, 'precondition: the server accepted the edit').toBe(200);
+
+            // The defect: the vendor is still credited with the whole payment.
+            expect(await owedToVendor(), 'the vendor is owed the part that is no longer paid').toBeCloseTo(
+                settled.amount - reduced,
+                2
+            );
+        }
+    );
 });
