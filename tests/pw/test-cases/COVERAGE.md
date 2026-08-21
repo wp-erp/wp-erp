@@ -1733,6 +1733,48 @@ credentials to confirm and the connection is **not** claimed.
 (`erp_crm_send_schedule_notification`), and per-gateway send semantics — all behind the same
 credential gate.
 
+### Pro — Workflow (6 cases: 5 green, 1 known-defect guard)
+
+The module is driven entirely by `admin-ajax.php` — there is no REST controller in this build — so
+the handlers are the surface worth testing, not the builder UI.
+
+**Five of six handlers verify a nonce. `erp_wf_fetch_workflow` verifies nothing**, and it is the one
+that returns a workflow's whole definition including its email actions (`to`, `subject`, `message`).
+An account holding only `employee`, which cannot open the workflow screen at all, reads it in full.
+Filed as **ERP-158 / [erp-pro#975](https://github.com/wp-erp/erp-pro/issues/975)**. **5/5.**
+
+**Three green controls make that guard attributable**, and each one is load bearing: the screen IS
+properly closed to an employee; the five guarded handlers DO refuse a nonce-less request from the
+same session; and a genuinely logged-out visitor IS refused. Without them, "an employee read a
+workflow" could equally mean the module has no gating at all.
+
+**A harness fault this pass exposed, worth knowing across the suite.** `browser.newContext()` inside
+a file that declares `test.use({ storageState: ADMIN_STATE })` comes up **as the admin**, not
+anonymous. The "anonymous visitor" case therefore passed while quietly testing an administrator —
+and on the first run it *returned the workflow*, which for a few minutes looked like unauthenticated
+disclosure. It is not: a real logged-out context gets `400`. The case now passes
+`storageState: undefined` explicitly and asserts `users/me` → `401` as a precondition, so it cannot
+silently re-authenticate itself. Any other spec creating contexts this way needs the same treatment.
+
+**Two older register entries checked against this build:**
+
+- **ERP-028** (Critical, Open) — workflow REST IDOR in `Api/V2/WorkflowControllerV2.php`. That file
+  and the whole `Api/` directory are **absent from erp-pro 1.7.0**, and there is no `erp/v2`
+  namespace (`404 rest_no_route`). Not reproducible here; ERP-158 is a different path and not a
+  re-file.
+- **ERP-017** (Blocker, Open) — the `update_field` action escalating a user to administrator. The
+  action name is still present at `functions.php:724`. **Not re-verified this pass** — confirming it
+  needs a workflow to actually fire, which this file does not do.
+
+⚠️ **Both are marked "Not auto-posted to GitHub" in their own bug files.** A Blocker and a Critical
+found on 2026-07-21 that the Engineer has never seen. Raised with the lead; recorded here so it is
+not lost again.
+
+**Not covered:** running a workflow end to end (event → condition → action), the delay/scheduling
+path, and the action catalogue beyond Send Email. Also noted and unmeasured:
+`erp_wf_get_where_clause()` (`functions.php:169`) builds its SQL unprepared from stored condition
+names and operators — it runs from stored data rather than a request, so it is a lead, not a finding.
+
 ---
 
 ## What "done" will mean
