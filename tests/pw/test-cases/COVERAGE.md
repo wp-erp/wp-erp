@@ -1775,6 +1775,44 @@ path, and the action catalogue beyond Send Email. Also noted and unmeasured:
 `erp_wf_get_where_clause()` (`functions.php:169`) builds its SQL unprepared from stored condition
 names and operators — it runs from stored data rather than a request, so it is a lead, not a finding.
 
+### Pro — Advanced Leave (6 cases, all green, no defects found)
+
+Five optional behaviours bolted onto core leave: half-day requests, multilevel approval,
+segregation, carry/encash forwarding, and unpaid-leave tracking.
+
+**Every feature is OFF by default and gates itself in its own constructor**, so a disabled feature
+registers nothing at all — no menu, no ajax handler, no form field. "The screen is missing" and "the
+feature is off" are therefore indistinguishable from outside, which is why two cases assert **both
+directions**: the screen is absent while the toggle is off, and present once it is on. A test that
+only checked the "on" state would pass on a module that ignored the toggle entirely.
+
+**A hypothesis this pass disproved, recorded because it nearly became a bug report.** Each feature
+reads a **bare `get_option()`**, not ERP's nested settings array, while the settings screen writes
+through the ERP settings framework. That mismatch is exactly the shape of the SMS gateway defect
+(erp-pro#238), and I expected the toggles never to take effect. Measured: the framework writes each
+field as its own top-level option — `erp_pro_half_leave = yes` — precisely where the module reads it.
+It works. The pairing is fragile and invisible from the screen if it ever breaks, so the tier-2 case
+pins it.
+
+**This module is the counter-example to the two audited before it.** Every one of its four ajax
+handlers checks a nonce **and** `erp_leave_manage` (or department lead), unlike Workflow's
+`fetch_workflow` (ERP-158) and the Reimbursement routes (ERP-157). The tier-3 cases are green on
+purpose — they hold correct behaviour in place rather than assuming it stays correct.
+
+**A naming trap worth knowing:** the Unpaid feature gates on `enable_extra_leave` — the CORE "Extra
+Unpaid Leave" setting — not on a toggle of its own. The option name and the on-screen label do not
+correspond, and looking for an "Unpaid" setting finds nothing.
+
+**Harness notes:** the settings checkboxes are visually hidden behind `.form-check-sign`, so
+Playwright refuses to `check()` them — the clickable element is the wrapping `label.form-check-label`.
+Saving the tab writes **every** toggle on it as `yes`/`no`, not only the one touched, so the spec
+restores all five to their defaults in `afterAll` and the site is left as it was found.
+
+**Not covered:** the behaviours themselves once enabled — a half-day request actually consuming half
+a day, a multilevel approval chain forwarding between approvers, segregation splitting an
+entitlement, and carry-forward moving unused days across a financial year. Those need seeded
+entitlements and a leave cycle; only registration and authorization are asserted here.
+
 ---
 
 ## What "done" will mean
