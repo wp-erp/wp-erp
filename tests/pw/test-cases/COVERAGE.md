@@ -2443,3 +2443,85 @@ route (it is a query-string page) and has its own separate bug, ERP-161.
 - **`api.config.ts` runs against `?rest_route=`** with Basic-Auth; the specs here
   use anonymous `request.newContext()`, so the Basic-Auth path in `apiUtils.ts` is
   still unexercised by any spec.
+
+## API — per-role authorization matrix (`tests/api/roleMatrix.spec.ts`) — 12 cases, all green
+
+The walls BETWEEN the logged-in roles, where the anonymous sweep only covered
+the wall around them. Two assertions per role, all six non-admin roles:
+
+- **positive** — one canary route in the role's own area answers 200 (hrManager
+  → employees, crmManager/crmAgent → contacts, accountManager → invoices,
+  recruiter → recruitment/candidates, employee → employees). One route by
+  design, not a blanket own-module sweep — see "why positive is one canary"
+  below.
+- **deny** — every foreign GET route refuses the role (401/403), via the shared
+  `classify()` oracle in `utils/permissionOracle.ts`.
+
+**What it confirmed — the walls that matter hold.** Every role is refused (403)
+on the other teams' crown jewels: the salaried employee directory
+(`hrm/employees` and all its sub-resources — educations, dependents, job
+histories, performances, roles), `accounting/invoices`, `crm/contacts`, payroll.
+A CRM agent cannot read a salary; an accountant cannot read the CRM; a recruiter
+is boxed into recruitment. Those routes are all still IN the deny sweep, not
+carved out — verified after the carve-outs were applied.
+
+**Deny is GET-only, deliberately.** A cross-module READ is where disclosure lives
+and a GET creates nothing. The first all-methods version POSTed empty bodies into
+the reimbursement self-service and left four junk `people_id = 0` rows behind
+before it was caught and cleaned. Where a role is refused it is refused on every
+method — the callbacks check a module capability, not a verb — so GET refusal is
+strong evidence for the whole route. **Cross-module WRITE denial is therefore
+NOT directly asserted** and is called out here rather than pretended.
+
+**Why positive is one canary, not the whole own module.** The own-module side is
+a minefield of things that pass or fail for the wrong reason: the employee reads
+the HR directory with `pay_rate` redacted (200, not 403), the recruiter sees only
+the recruitment subset, per-record visibility varies. Asserting "every own route
+returns 200" would be false; that breadth belongs to the per-module CRUD layer.
+
+**Reachable-by-design, carved out with the capability that grants it — verified
+in source, never to force a green:**
+
+- The `accounting/v1/employee*` family (`EmployeesController`,
+  `EmployeeRequestsController`) gates on `erp_view_list`, held by HR manager and
+  every `employee` (`functions-capabilities.php:70,149,222`). It is the
+  accounting module's HR-facing surface: the employee directory (`pay_rate`
+  redacted for non-privileged callers — checked: 0 populated for an employee, 19
+  for admin), an employee's own reimbursement requests, own transactions.
+  Reimbursement self-service is the feature working as intended.
+- `utility/get-active-plugins` gates on the same `erp_view_list`.
+- `hrm/announcements/my` is self-scoped — the caller's own announcements only.
+
+**Real finding, recorded not filed (low):** `GET /erp/v1/hrm/attendance/shifts/{id}`
+is guarded by `fn() => is_user_logged_in()` (`AttendanceController.php:56-64`)
+while every WRITE method on the same route requires `erp_hr_manager`. So any
+logged-in user reads a shift's configuration. Low sensitivity (work schedules),
+so it is recorded as a named known-weakness and held out of the deny sweep
+explicitly — the distinction from a carve-out being that this one IS a gap, just
+a small one. Worth a minor issue if the shift record ever carries more than
+scheduling data.
+
+**Candidate concerns surfaced, recorded not filed:**
+
+- `utility/get-active-plugins` returns the full active-plugin list to a plain
+  employee (and HR) while refusing CRM/Accounting managers — an inconsistency and
+  a mild fingerprinting surface. Low.
+- The HR directory (`hrm/employees`, and the accounting mirror) exposes personal
+  fields — date of birth, father/mother/spouse names, address, blood group — to
+  any employee, salary aside. Whether an employee should see a colleague's DOB is
+  a privacy question; many HR directories do. Per-record, not cross-module.
+
+**Not proven, and why**
+
+- **Cross-module WRITE escalation** — a CRM agent creating an invoice, a
+  recruiter posting a payroll entry — is not directly asserted (GET-only sweep,
+  above). The strongest available proxy (module callbacks refuse uniformly across
+  methods) is in place, but a verb-specific hole would be missed. This is the
+  first thing to add if the matrix is extended.
+- **Per-record visibility within a shared surface** — can employee A read
+  employee B's reimbursement request or transactions — is ERP-157 / erp-pro#974
+  territory and not re-tested here.
+- **Admin is not swept.** The matrix is about non-admin walls; an administrator
+  is expected to reach everything.
+- The canary proves a role reaches ONE own-area route. It is not evidence the
+  role can perform every operation its module offers — again, the CRUD layer.
