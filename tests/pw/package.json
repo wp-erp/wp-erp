@@ -29,7 +29,7 @@
         "cli": "wp-env run cli wp",
         "setup": "npx playwright test --project=site_setup --project=auth_setup --project=env_setup",
         "harness": "node bin/harness-report.mjs",
-        "test": "npx playwright test",
+        "test": "npx playwright test --project=e2e_tests --project=accounting_money",
         "test:e2e": "NO_SETUP=true npx playwright test --project=e2e_tests",
         "test:tier1": "NO_SETUP=true npx playwright test --project=e2e_tests --grep @tier1",
         "test:tier2": "NO_SETUP=true npx playwright test --project=e2e_tests --grep @tier2",

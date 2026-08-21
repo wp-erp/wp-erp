@@ -133,7 +133,13 @@ export default defineConfig({
                which is what keeps these cases out of the normal suite — but it
                also silently emptied this project, which listed zero tests while
                looking perfectly configured. Clearing it here re-enables them for
-               the one project that is meant to run them. */
+               the one project that is meant to run them.
+
+               CONSEQUENCE, and the reason `npm test` names its projects: a bare
+               `npx playwright test` runs EVERY project, and this one is no longer
+               held back by the grep. `npm test` therefore passes
+               `--project=e2e_tests --project=accounting_money` explicitly, so the
+               destructive spec runs only when asked for by name. */
             grepInvert: [],
             fullyParallel: false,
             workers: 1,
