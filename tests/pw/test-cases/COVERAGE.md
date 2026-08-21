@@ -2369,3 +2369,77 @@ passing-looking test that proved nothing**
   real WordPress users for counting purposes, but they have **no ERP employee
   record**, so any behaviour that depends on `erp_hr_employees` rows for those
   users is out of scope here.
+
+## API — who is allowed in (`tests/api/permissions.spec.ts`) — 5 cases, all green + 1 bug found
+
+The first API-layer coverage in the suite. A permission sweep of every ERP-owned
+route the running site registers — 289 patterns, ~502 route/method pairs, read
+from `harness/routes.json` and made callable by `utils/routeTable.ts` — each
+called by someone who should not be able to use it.
+
+**The oracle, and why it holds.** A WordPress `permission_callback` runs before
+the handler. A guarded route answers 401/403 whether or not the record exists;
+an unguarded one falls through to its handler and answers 404/400/200. Every
+parameterised route is called with an id (`999999`) that cannot exist, so for an
+unauthorised caller **anything other than 401/403 is the door opening**.
+
+**Covered** — one case per area (hrm, crm, accounting, pro, core), each asserting
+no route answers an anonymous stranger. Accounting, CRM, Pro and core are clean.
+
+**The one hole it found — filed.** `POST /erp/v1/hrm/employees/upload` answers 200
+to an anonymous request and creates a media attachment (`post_author = 0`). The
+permission callback treats "no user" as "an employee" (`0 === 0`). Not RCE —
+WordPress MIME filtering blocks php/svg/html — so it is unauthenticated image
+upload: **ERP-165 / erp-pro#985**, 5/5 deterministic.
+
+**Two traps the sweep walked into, both fixed, both worth keeping in mind for the
+next person who extends this file**
+
+1. **WordPress validates required/typed params BEFORE the permission callback.**
+   The first run counted 15 routes as holes because an empty POST answers
+   `400 rest_missing_callback_param` — including, alarmingly, "anonymous module
+   activation" and "anonymous money transfer". Every one was re-probed with a
+   well-formed payload and every one answered 401 with nothing written. Those
+   400s now go to a separate `unproven` list that is logged, never counted as a
+   pass and never counted as a hole. **A 400 on a parameter proves the guard was
+   never reached — it is not evidence either way.**
+2. **A synthetic id has to match the route's own pattern.** The `[\w]+` slug
+   parameters reject a hyphen, so `pw-absent` produced `rest_no_route` (404) that
+   read exactly like a permission hole. The value is now `pwabsent`.
+
+**Deliberately excluded, and why** — `GET /erp/v1` and `GET /erp_pro/v1/admin` are
+WordPress's own namespace index, public by core design, so they are allow-listed.
+The one genuinely public ERP surface, the read-only invoice link, is not a REST
+route (it is a query-string page) and has its own separate bug, ERP-161.
+
+**Adjacent findings, recorded not filed**
+
+- `GET /erp/v1/hrm/employees/{id}/experiences/{id}` and the announcements write
+  methods answer **500 `rest_invalid_handler`** — identical for admin, so a
+  broken route registration (a handler method that does not exist), not an auth
+  hole. A candidate minor bug in its own right; not chased in this pass.
+- `GET /erp/v1/hrm/company/{genders,marital-statuses,education-result-types,
+  performance-ratings}` and `GET /erp/v1/hrm/recruitment/jobs` answer 200 to
+  anonymous. The first four are static enums; `recruitment/jobs` exposes
+  department names. Low-sensitivity disclosure, noted.
+- **The employee HR-directory read is correctly redacted, not leaked.** An
+  `employee`-role token can `GET /erp/v1/hrm/employees` (200, 20 records) but
+  every `pay_rate`/`pay_type`/`date_of_birth` comes back `null`; the admin
+  control on the same record shows `pay_rate = '9500.00'`. Real role-based field
+  redaction — checked before it could be mistaken for a disclosure bug.
+
+**Not proven, and why**
+
+- **This is the anonymous pass only.** The plan's per-role matrix — the same sweep
+  as `employee`, `erp_crm_agent`, `erp_hr_manager` etc., checking that a role
+  cannot reach another module's routes — is **not built**. The scaffolding
+  (`routeTable.ts`, the area split, the actors in `authStates.ts`) is designed to
+  extend to it, but only the anonymous caller is exercised here. A logged-in
+  low-privilege user reaching a route they should not is therefore **untested**.
+- **This sweep proves refusal, not correctness.** A route answering 401 to a
+  stranger says nothing about whether it validates input, enforces its own rules,
+  or returns the right data to someone who IS allowed. That is the per-module CRUD
+  layer the plan describes, and none of it exists yet.
+- **`api.config.ts` runs against `?rest_route=`** with Basic-Auth; the specs here
+  use anonymous `request.newContext()`, so the Basic-Auth path in `apiUtils.ts` is
+  still unexercised by any spec.
