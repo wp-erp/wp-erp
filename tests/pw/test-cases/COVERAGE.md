@@ -2010,6 +2010,41 @@ counts all history, not "this month".
 **Not covered:** the date-range filter (POST-driven), the Growth report's chart canvas as opposed to
 its table, and per-source / per-assignee breakdowns of the Customer report.
 
+### CRM — schedules (7 cases: 6 green, 1 known-defect guard)
+
+A schedule is not its own record: it is an activity of type `log_activity` whose `start_date` is in
+the FUTURE. The same type dated in the past is a log, and the product draws that line at
+`functions-customer.php:756-758`. Ownership is `created_by`, which is what the **My Schedules** /
+**All Schedules** scopes switch on.
+
+**Covered:** the calendar renders with all four views and both scopes; a seeded schedule is drawn; the
+future/past split matches the product's own rule; another user's schedule stays off my calendar,
+**with a positive control** proving my own schedule is drawn — without that control, "not drawn"
+could just mean the calendar never draws anything; and the screen is closed to an employee.
+
+**ERP-143 / [erp-pro#958](https://github.com/wp-erp/erp-pro/issues/958)** — the schedule half of the
+disabled-submit defect `tasks.spec.ts` guards for tasks. Both flip green together when the
+`trix-change` listener is fixed.
+
+**That guard was wrong before it was right, and the fix matters more than the case.** It located the
+submit as a `<button>`; the control is actually an `<input type="submit" value="Create Schedule">`.
+So the locator matched nothing and the guard failed on its own **precondition** — meaning it would
+have kept "failing" (and therefore kept passing as a `test.fail`) even after the defect was fixed,
+signalling a bug that no longer existed. It now targets the input and fails on the real assertion:
+`disabled: true`. **Any `test.fail()` needs its failure reason checked, not just its failure.**
+
+**Two wrong oracles corrected during this pass**, both mine, both of which read as product faults:
+
+1. A calendar event is titled from its **`log_type` and time** — "8:30 am Meeting" — never from the
+   activity's `message`. Asserting the message looked for text the calendar never renders and read as
+   "the schedule did not paint" when it had painted correctly.
+2. The calendar opens on **My Schedules**, not All. A schedule owned by another user is *correctly*
+   absent; my first version asserted it should appear. The case now asserts the scoping the product
+   actually implements, which is the more useful test anyway.
+
+**Not covered:** creating a schedule from the calendar itself (as opposed to from a contact feed),
+the All Schedules scope as a distinct view, and schedule notification emails.
+
 ---
 
 ## What "done" will mean
