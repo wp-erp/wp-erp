@@ -1941,6 +1941,39 @@ orders removed from both HPOS and legacy tables).
 guest-vs-registered customer handling, and the bulk "sync existing orders" ajax — all downstream of
 the completion path being fixed, since exercising them means completing orders.
 
+### CRM — contact groups and subscribers (5 cases, all green, no defects found)
+
+Groups are mailing lists; a subscriber row joins a contact to a group with a status and a
+per-subscription hash that an emailed unsubscribe link carries.
+
+**Covered:** the groups screen lists what is on file, a subscribed contact appears on that group's
+register, unsubscribing sets the status and stamps `unsubscribe_at` while clearing `subscribe_at`,
+private groups carry the flag the public unsubscribe handler reads, and the screen is refused to an
+employee.
+
+**A security question this module gets RIGHT, and the contrast is the point.** The unsubscribe and
+manage-subscription links are keyed on
+`sha1( microtime() . 'erp-subscription' . $group_id . $user_id )`
+(`functions-customer.php:1491`, and the same shape at `:1658` and `Subscription.php:402`). Seeding
+with `microtime()` makes the token unpredictable — it cannot be derived from the ids. That is exactly
+what the read-only invoice token in **ERP-161** fails to do. Same product, same problem, two
+different answers; the CRM one is correct.
+
+**A case I wrote, ran green, and then deleted.** I had a case asserting "a subscription carries an
+unpredictable hash" — and it was worthless: the fixture writes the subscriber rows, so it was
+asserting the uniqueness of a hash *this file generated*, and would have passed no matter what the
+product did. It is gone. The construction above is recorded as a **source read**, not dressed up as a
+test. A green case that proves nothing is worse than an admitted gap, because only one of the two
+tells you where you actually stand.
+
+**What that leaves genuinely unproven, stated plainly:** because the fixture seeds subscriptions
+directly, this file does not exercise `erp_crm_create_new_contact_subscriber()`, the double opt-in
+confirm flow, or the public unsubscribe handler end to end — all of which need a real emailed link
+with a product-generated hash.
+
+**Not covered:** creating a group through the segment builder (saved-search driven, a separate
+feature), bulk subscriber assignment, and the CRM email-campaign side that consumes these lists.
+
 ---
 
 ## What "done" will mean
