@@ -1699,6 +1699,40 @@ end to end. Field *types* beyond Text and Dropdown (Radio, Checkbox, Date, Url, 
 number) are offered by the builder and untested on the rendering side. Minor and unfiled: the type
 list prints `number` in lower case among nine Title-Case entries.
 
+### Pro — SMS notification (8 cases: 4 green, 2 known-defect guards, 2 credential-gated)
+
+`integrations.spec.ts` already covers SMS appearing in the integration list and its panel opening.
+This file covers the module's own surface: seven gateways share one panel, each with its own
+credential fields, and exactly one is active at a time.
+
+**The picker lists all seven; only one of them works.** Choosing anything other than the default
+clears the picker back to its `Please search` placeholder, leaves the previous gateway's fields on
+screen, and saves `erp_sms_selected_gateway: "twilio"`. So Clickatell, SMSGlobal, Nexmo, Hoiio,
+Intellisms and Infobip are unreachable — a user cannot even get to a field to type their API key.
+
+**Already reported: [erp-pro#238](https://github.com/wp-erp/erp-pro/issues/238), open since
+2024-06-04** against 1.13.2 / 1.3.6. Evidence added there rather than minting a new ID, per the
+duplicate rule. What the original lacked and this pass supplied: it is all six non-default gateways
+rather than Nexmo alone; the selection fails *before* the save rather than the credentials being lost
+by it; and the stored option value. Two `test.fail()` guards hold the regression so they flip green
+when it is fixed. **5/5.**
+
+**Not filed, kept as a guard:** every credential field in `SmsSettings::get_fields()` is declared
+`'type' => 'text'` — Twilio's Auth Token, Nexmo's API Secret and four gateways' Password fields all
+render as plain inputs. Reaching this screen already needs `manage_options`, so the exposure is
+shoulder-surfing and DOM inspection rather than privilege escalation; it is a `test.fail()` guard on
+the field TYPE, and deliberately makes no claim about how the value is stored.
+
+**Gated on a live gateway account (2 cases, written and skipping):** sending an announcement as an
+SMS (`hr_announcement_insert_assignment`) and sending from a CRM contact timeline
+(`erp_crm_feeds_nav_content`). Related and unverified: **#239** reports announcements not sending —
+plausibly downstream of #238 if the only selectable gateway is an unconfigured Twilio, but that needs
+credentials to confirm and the connection is **not** claimed.
+
+**Not covered:** the workflow `erp_wf_send_sms_action`, scheduled CRM sends
+(`erp_crm_send_schedule_notification`), and per-gateway send semantics — all behind the same
+credential gate.
+
 ---
 
 ## What "done" will mean
