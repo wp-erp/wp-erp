@@ -2045,6 +2045,39 @@ signalling a bug that no longer existed. It now targets the input and fails on t
 **Not covered:** creating a schedule from the calendar itself (as opposed to from a contact feed),
 the All Schedules scope as a distinct view, and schedule notification emails.
 
+### Core — settings (6 cases, all green, no defects found)
+
+**The cleanest module audited in this run.** All **eleven** settings ajax handlers —
+`erp-settings-save`, `erp-settings-get-data`, the four email-template handlers, the three
+test-connection handlers, `get_email_providers` and `save_licenses` — verify a nonce **and** a
+capability. Contrast Workflow's `fetch_workflow` (ERP-158) and the Reimbursement routes (ERP-157),
+which check neither. The standard plainly exists in this codebase; it is applied unevenly.
+
+**Covered:** every module tab is listed, an administrator can save, a save persists, the screen is
+administrator-only, and an employee is refused every module.
+
+**A false-positive I built and then removed.** I wrote an authorization matrix — "an HR manager CAN
+save HR settings, CANNOT save general/accounting/CRM" — because `erp_settings_save()` really does
+grant `erp-hr` to `erp_hr_manager`, `erp-ac` to `erp_ac_manager` and `erp-crm` to `erp_crm_manager`
+(`Settings/Ajax.php:66-79`). The positive half failed, which is what exposed the problem: an
+`erp_hr_manager` **cannot load the settings screen at all** (it is registered with `manage_options`,
+`AdminMenu.php:132`), so no `erp-settings-nonce` ever reaches them and the save is refused at the
+NONCE check — before any capability branch is consulted. My "cannot save outside HR" cases were
+therefore passing because the manager can't save *anything*, not because of scoping.
+
+Those cases are gone. In their place is one that states what is actually true: **the module-manager
+branches are unreachable**, and the refusal is a nonce refusal. Recorded as behaviour, **not filed**:
+the menu is hidden rather than shown-and-refused, so nothing is promised to a manager and then
+withdrawn. If a settings nonce ever becomes reachable by a manager, those branches go live and want
+re-testing.
+
+**Three more cases deleted for being tautological** — they compared this file's own
+`managerScopedModules` constant to itself, proving nothing about the product. Same fault as the
+subscription-hash case removed from the contact-groups spec, and removed for the same reason.
+
+**Not covered:** the Email tab's templates and the three test-connection handlers (SMTP, Mailgun,
+wp_mail) — each needs a live mail transport — and the per-field validation of individual settings.
+
 ---
 
 ## What "done" will mean
