@@ -1875,6 +1875,40 @@ overlooked.
 `..._sale_return`), the transaction-update paths, and the Inventory Stocks / Inventory Transactions
 tabs — all of them downstream of being able to record a purchase, which currently nothing can.
 
+### Pro — Payment Gateway (4 cases: 3 green, 1 known-defect guard)
+
+Stripe and PayPal buttons on a customer's invoice. **No case charges anything** — a real charge needs
+live gateway credentials and moves real money, so the connect/charge flow is out of scope for an
+automated run by design and belongs with the credential-gated integration work. What is testable
+without a gateway account is the settings surface and, more importantly, the public page the gateways
+decorate.
+
+**That public page is where the serious finding lives — ERP-161 /
+[erp-pro#979](https://github.com/wp-erp/erp-pro/issues/979), Critical.** The read-only invoice link a
+customer follows is guarded by `sha256(trans_id . type)` with no secret. Proven end to end from a
+**fully anonymous** browser (`users/me` → 401): a locally-computed `sha256("915invoice")` opened
+Kestrel Manufacturing's complete invoice — name, address, line items, amount. A wrong token is
+correctly refused, which is the green control that makes the forgery guard mean something; the
+forgery guard proves the token the product accepts is one anyone can compute. **5/5.** The Payment
+Gateway module amplifies it by rendering the Pay button on that same forgeable page.
+
+**The finding is really wp-erp core**, in `erp_acct_get_invoice_link_hash` /
+`erp_acct_verify_invoice_link_hash`. It surfaced here because this was the module that made me read
+what secures that page. Filed against the accounting link, with the gateway noted as amplifier.
+
+**A restraint worth recording: no screenshot.** For every other bug this run a render is the best
+evidence; here it would republish the customer billing details the report exists to protect, into an
+issue with its own audience. The evidence is the anonymous-session status, the request/response, and
+the two-line hash — all reproducible without the image.
+
+**Secondary, not its own bug:** the gateway credential fields — Stripe's Live/Test Secret Key
+included — are declared `type: text` (`Gateways/Stripe.php:90`), the same plain-text-secret shape
+noted for SMS. Reaching that screen needs `manage_options`, so it is a hardening note, not what makes
+ERP-161 critical.
+
+**Not covered:** connecting a gateway, rendering the Pay button with a live gateway enabled, and any
+charge — all behind the credential/real-money gate.
+
 ---
 
 ## What "done" will mean
