@@ -1842,6 +1842,39 @@ inside — and the effect of the `hr_frontend_redirect` setting, which sends emp
 dashboard instead of wp-admin on login. Both need the slug question settled first, since changing it
 is what the module does when saving settings.
 
+### Pro — Inventory (6 cases: 4 green, 2 known-defect guards)
+
+Stock is not a screen you edit — it moves because a transaction happened. Every movement is one row
+in `erp_acct_product_details` (`stock_in` / `stock_out`) against a voucher, stock on hand is the
+difference, and only products of type **Inventory** (`product_type_id = 1`) are tracked. All eight
+seeded products are Inventory type, which is why this suite's invoices have been moving stock all
+along without anyone asking them to.
+
+**Selling works; buying cannot happen at all.** Filed as **ERP-160 /
+[erp-pro#978](https://github.com/wp-erp/erp-pro/issues/978)**, Critical: New Purchase and New Purchase
+Order never issue a `/products` request, so every Product/Service picker is empty — and saving then
+refuses with `Please select a product.` The invoice form, which calls the same endpoint, populates
+correctly, and that contrast is the precondition inside the guard so it can only fail on the purchase
+form's own omission. Since purchases are the **only** writer of `stock_in`, stock can only ever fall.
+**5/5.**
+
+**A number that looks alarming and is partly ours.** The register prints `Custom Dashboard Build:
+-593`. That figure is real and the arithmetic behind it is correct, but the volume comes from this
+suite's own invoices over many runs — it is not evidence of a production problem. What it *does*
+evidence is that nothing stops stock going arbitrarily negative.
+
+**Deliberately NOT filed: the absence of stock validation.** There is no availability check anywhere
+in either plugin — grepping both for "insufficient stock", "not enough stock" and "available stock"
+returns nothing — so an invoice for goods you have never bought is accepted silently. I did not file
+it: plenty of accounting systems allow negative stock on purpose, the Inventory register **displays**
+the negative figure plainly rather than hiding it, and whether to permit it is a product decision
+rather than a defect QA should assert. It is recorded here so the absence is deliberate rather than
+overlooked.
+
+**Not covered:** purchase returns and sale returns (`erp_acct_inventory_purchase_return` /
+`..._sale_return`), the transaction-update paths, and the Inventory Stocks / Inventory Transactions
+tabs — all of them downstream of being able to record a purchase, which currently nothing can.
+
 ---
 
 ## What "done" will mean

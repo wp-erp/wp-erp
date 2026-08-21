@@ -610,6 +610,38 @@ export class AccountingPage extends BasePage {
     }
 
     /**
+     * Raises a purchase — the transaction that puts stock IN.
+     *
+     * Mirrors the invoice form (product picker, qty, unit price on each line)
+     * but the party is a **Vendor**, and it carries a Due Date the invoice form
+     * also wants. Unit price is set explicitly because a purchase records what
+     * was PAID, which need not be the product's sale price.
+     */
+    async createPurchase(
+        vendor: string,
+        product: string,
+        qty: number,
+        unitPrice: number,
+        trnDate: string,
+        dueDate: string
+    ): Promise<boolean> {
+        await this.gotoRoute('newPurchase');
+
+        if (!(await this.pickFromMultiselect('Vendor', vendor))) return false;
+
+        await this.pickDate('Transaction Date', trnDate);
+        await this.pickDate('Due Date', dueDate);
+
+        if (!(await this.pickLineProduct(0, product))) return false;
+
+        await this.setLineQty(0, qty);
+        await this.setLinePrice(0, unitPrice);
+        await this.save();
+
+        return true;
+    }
+
+    /**
      * Pays a vendor's outstanding bills.
      *
      * Mirrors `receivePayment()` but the fields are named differently — the
