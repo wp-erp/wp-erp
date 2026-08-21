@@ -1,0 +1,1520 @@
+# Copyright (C) 2020 WP ERP
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP ERP - HR Frontend 2.1.2\n"
+"Report-Msgid-Bugs-To: https://example.com\n"
+"POT-Creation-Date: 2020-05-29 11:26:47+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+
+#: languages/erp-hr-frontend.php:331
+msgid "12332"
+msgstr ""
+
+#: includes/class-settings.php:25 includes/class-settings.php:41
+msgid "HR Frontend"
+msgstr ""
+
+#: includes/class-settings.php:46
+msgid "HR Dashbord Slug"
+msgstr ""
+
+#: includes/class-settings.php:49
+msgid "Your custom slug"
+msgstr ""
+
+#: includes/class-settings.php:53
+msgid "HR Dashbord Title"
+msgstr ""
+
+#: includes/class-settings.php:56
+msgid "Your custom title"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WP ERP"
+msgstr ""
+
+#: includes/class-settings.php:60
+msgid "HR Dashbord Logo"
+msgstr ""
+
+#: includes/class-settings.php:63
+msgid "Your dashbord custom logo"
+msgstr ""
+
+#: includes/class-settings.php:66
+msgid "Redirect to frontend"
+msgstr ""
+
+#: includes/class-settings.php:69
+msgid "Check if you want to redirect to frontend"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:4
+msgid "Could not find the account"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:5
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:6
+msgid "HR Management"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:7
+msgid "Employees"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:8
+msgid "Departments"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:9
+msgid "Designations"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:10
+msgid "You have %1$d available leaves under %2$s policy."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:11
+msgid "Leave request sent!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:12
+msgid "Today"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:13
+msgid "Yesterday"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:14
+msgid "This Month"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:15
+msgid "Last Month"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:16
+msgid "Last Quarter"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:17
+msgid "Last Year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:18
+msgid "In-time"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:19
+msgid "Late"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:20
+msgid "Absents"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:21
+msgid " You checkin Successfully!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:22
+msgid " You checkout Successfully!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:23
+msgid "You do not have permission to delete user"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:24
+msgid "Active"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:25
+msgid "Terminated"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:26
+msgid "Deceased"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:27
+msgid "Resigned"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:28
+msgid "Trash"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:29
+msgid "All"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:30
+msgid "Full Time"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:31
+msgid "Part Time"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:32
+msgid "On Contract"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:33
+msgid "Temporary"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:34
+msgid "Trainee"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:35
+msgid "Attendance"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:36
+msgid "Better Employment Conditions"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:37
+msgid "Career Prospect"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:38
+msgid "Death"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:39
+msgid "Desertion"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:40
+msgid "Dismissed"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:41
+msgid "Dissatisfaction with the job"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:42
+msgid "Higher Pay"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:43
+msgid "Other Employment"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:44
+msgid "Personality Conflicts"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:45
+msgid "Relocation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:46
+msgid "Retirement"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:47
+msgid "Yes"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:48
+msgid "No"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:49
+msgid "Upon Review"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:50
+msgid "Employee Terminated!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:51
+msgid "Do you really want to remove this experience?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:52
+msgid "Experience Removed!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:53
+msgid "Experience added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:54
+msgid "Education Updated!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:55
+msgid "Do you really want to remove this education?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:56
+msgid "Education Removed!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:57
+msgid "Education added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:58
+msgid "Dependent updated!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:59
+msgid "Do you really want to remove this dependent?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:60
+msgid "Dependent Removed!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:61
+msgid "Dependent added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:62
+msgid "Do you really want to remove this employment?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:63
+msgid "Status Removed Successfully!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:64
+msgid "Status added Successfully!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:65
+msgid "Do you really want to remove this compensation?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:66
+msgid "Compensation Removed!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:67
+msgid "Compensation added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:68
+msgid "Do you really want to remove this information?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:69
+msgid "Information removed!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:70
+msgid "Information added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:71
+msgid "Very Bad"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:72
+msgid "Poor"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:73
+msgid "Average"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:74
+msgid "Good"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:75
+msgid "Excellent"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:76
+msgid "Do you really want to remove this goals?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:77
+msgid "Employee created!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:78
+msgid "New Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:79
+msgid "Create Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:80
+msgid "Edit Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:81
+msgid "Update Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:82
+msgid "Do you really want to remove this department?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:83
+msgid "Do you really want to remove selected departments?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:84
+msgid "Department updated!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:85
+msgid "Department added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:86
+msgid "New Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:87
+msgid "Create Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:88
+msgid "Edit Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:89
+msgid "Update Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:90
+msgid "Do you really want to remove this designation?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:91
+msgid "Designation updated!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:92
+msgid "Designation added!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:93
+msgid "Do you really want to remove selected announcements?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:94
+msgid "Do you really want to remove this announcement?"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:95
+msgid "Under 18 year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:96
+msgid "18 to 25 year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:97
+msgid "26 to 35 year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:98
+msgid "36 to 45 year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:99
+msgid "46 to 55 year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:100
+msgid "56 to 65 year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:101
+msgid "65+ year"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:102
+msgid "Overall Age Breakdown"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:103
+msgid "Head Count By Month"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:104
+msgid "Age Profile"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:105
+msgid "Head Count"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:106
+msgid "Gender Profile"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:107
+msgid "Year Of Service"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:108
+msgid "Salary History"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:109
+msgid "Employee Gender Ratio By Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:110
+msgid "Male"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:111
+msgid "Female"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:112
+msgid "Others"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:113
+msgid "Add New Announcement"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:114
+msgid "Enter Title Here"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:115
+msgid "Announcement Settings"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:116
+msgid "Send Announcement to"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:117
+msgid "All Employees"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:118
+msgid "Notify All Employees"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:119
+msgid "Publish"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:120
+msgid "Cancel"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:121
+msgid "Remove Announcements"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:122
+msgid "Edit Announcement"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:123
+msgid "Update"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:124
+msgid "Title"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:125
+msgid "Description"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:126
+msgid "No announcement founds"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:127
+msgid "Employee Name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:128
+msgid "Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:129
+msgid "Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:130
+msgid "Employment Type"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:131
+msgid "Joined"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:132
+msgid "Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:133
+msgid "No employee founds"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:134
+msgid "Move to Trash"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:135
+msgid "Choose Employee Type"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:136
+msgid "Select Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:137
+msgid "Select Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:138
+msgid "Select Location"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:139
+msgid "Nothing found."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:140
+msgid "Attendance Service"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:141
+msgid "Out-time"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:142
+msgid "Total time"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:143
+msgid "Hours"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:144
+msgid "Checkin"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:145
+msgid "Checkout"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:146
+msgid "Attendance Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:147
+msgid "Filter by"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:148
+msgid "Birthday Buddies"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:149
+msgid "Upcoming Birthdays"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:150
+msgid "No one has birthdays this week!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:151
+msgid "Load"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:152
+msgid "Few"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:153
+msgid "My Leave Calendar"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:154
+msgid "Take a Leave"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:155
+msgid "Leave Request"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:156
+msgid "From"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:157
+msgid "Select date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:158
+msgid "Reason"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:159
+msgid "Type here"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:160
+msgid "Document"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:161
+msgid "Send Leave Request"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:162
+msgid "View"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:163
+msgid "Reports"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:164
+msgid "Age"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:165
+msgid "Profile"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:166
+msgid "Head"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:167
+msgid "Count"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:168
+msgid "Gender"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:169
+msgid "Salary"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:170
+msgid "History"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:171
+msgid "Years"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:172
+msgid "Of Service"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:173
+msgid "Who is Out"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:174
+msgid "Who Is Out"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:175
+msgid "No one is on vacation!"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:176
+msgid "Previous Page"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:177
+msgid "Next Page"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:178
+msgid "Total Employees:"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:179
+msgid "HRM"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:180
+msgid "Overview"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:181
+msgid "Announcements"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:182
+msgid "Reporting"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:183
+msgid "Log out"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:184
+msgid "Basic Info"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:185
+msgid "First Name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:186
+msgid "Last Name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:187
+msgid "Employee ID"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:188
+msgid "Email"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:189
+msgid "Dependents"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:190
+msgid "Name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:191
+msgid "Relationship"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:192
+msgid "Date of Birth"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:193
+msgid "Actions"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:194
+msgid "Add Dependent"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:195
+msgid "Education"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:196
+msgid "School Name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:197
+msgid "Degree"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:198
+msgid "Field(s) of Study"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:199
+msgid "Year of Completion"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:200
+msgid "Additional Notes"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:201
+msgid "Interests"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:202
+msgid "Add Education"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:203
+msgid "Save Education"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:204
+msgid "ABC School"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:205
+msgid "Bachelor in Science"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:206
+msgid "Field of Study"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:207
+msgid "Physics"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:208
+msgid "Notes"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:209
+msgid "Additional notes"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:210
+msgid "Personal Details"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:211
+msgid "Street 1"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:212
+msgid "Street 2"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:213
+msgid "Address"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:214
+msgid "City"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:215
+msgid "Country"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:216
+msgid "State"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:217
+msgid "Postal Code"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:218
+msgid "Mobile"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:219
+msgid "Phone"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:220
+msgid "Other Email"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:221
+msgid "Nationality"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:222
+msgid "Marital Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:223
+msgid "Driving License"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:224
+msgid "Hobbies"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:225
+msgid "Select"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:226
+msgid "Other"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:227
+msgid "Single"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:228
+msgid "Married"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:229
+msgid "Widowed"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:230
+msgid "Driving license"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:231
+msgid "Work"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:232
+msgid "Reporting To"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:233
+msgid "Date of Hire"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:234
+msgid "Source of Hire"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:235
+msgid "Employee Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:236
+msgid "Work Phone"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:237
+msgid "Employee Type"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:238
+msgid "Save"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:239
+msgid "Work Experience"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:240
+msgid "Company"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:241
+msgid "Job Title"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:242
+msgid "To"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:243
+msgid "Job Description"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:244
+msgid "Add Experience"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:245
+msgid "Save Experience"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:246
+msgid "ABC Corporation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:247
+msgid "Project Manager"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:248
+msgid "Details about the job"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:249
+msgid "Compensation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:250
+msgid "Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:251
+msgid "Pay Rate"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:252
+msgid "Pay Type"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:253
+msgid "Change Reason"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:254
+msgid "Comment"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:255
+msgid "Add Compensation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:256
+msgid "Save Compensation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:257
+msgid "No compensations found"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:258
+msgid "Employment Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:259
+msgid "Add Employment Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:260
+msgid "Save Status"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:261
+msgid "No employments found"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:262
+msgid "Job Information"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:263
+msgid "Location"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:264
+msgid "Reports To"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:265
+msgid "Add Information"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:266
+msgid "-- select --"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:267
+msgid "Balances"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:268
+msgid "Leave"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:269
+msgid "Days"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:270
+msgid "Spent"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:271
+msgid "Scheduled"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:272
+msgid "Available"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:273
+msgid "Period"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:274
+msgid "Policy"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:275
+msgid "Nothing Found"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:276
+msgid "Delete"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:277
+msgid "No content found"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:278
+msgid "Performance Comments"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:279
+msgid "Reviewer"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:280
+msgid "Comments"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:281
+msgid "Action"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:282
+msgid "Add Performance Comments"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:283
+msgid "Reference Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:284
+msgid "No reviews found"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:285
+msgid "Performance Goals"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:286
+msgid "Set Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:287
+msgid "Completion Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:288
+msgid "Goal Description"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:289
+msgid "Employee Assessment"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:290
+msgid "Supervisor"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:291
+msgid "Supervisor Assessment"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:292
+msgid "Add Performance Goals"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:293
+msgid "Performance Reviews"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:294
+msgid "Job Knowledge"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:295
+msgid "Work Quality"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:296
+msgid "Attendance / Punctuality"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:297
+msgid "Communication / Listening"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:298
+msgid "Dependability"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:299
+msgid "Add Performance Reviews"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:300
+msgid "Review Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:301
+msgid "Attendance/Punctuality"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:302
+msgid "Communication/Listening"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:303
+msgid "Permission Management"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:304
+msgid "Latest Announcements"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:305
+msgid "My Profile"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:306
+msgid "Oops! No elements found."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:307
+msgid "Type to search"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:308
+msgid "Add New Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:309
+msgid "Remove Departments"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:310
+msgid "Department Title"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:311
+msgid "optional"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:312
+msgid "Department Head"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:313
+msgid "Parent Department"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:314
+msgid "No. of Employees"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:315 languages/erp-hr-frontend.php:323
+msgid "A"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:316 languages/erp-hr-frontend.php:324
+msgid "N"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:317 languages/erp-hr-frontend.php:325
+msgid "S"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:318 languages/erp-hr-frontend.php:326
+msgid "M"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:319
+msgid "No department founds"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:320
+msgid "Add New Designation"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:321
+msgid "Remove Designations"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:322
+msgid "Designation Title"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:327
+msgid "No designation founds"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:328
+msgid "Basic info"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:329
+msgid "first name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:330
+msgid "last name"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:332
+msgid "Personal details"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:333
+msgid "Type Here"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:334
+msgid "Website"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:335
+msgid "Address 1"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:336
+msgid "Address 2"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:337
+msgid "Province/State"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:338
+msgid "Post/Zip Code"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:339
+msgid "Biography"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:340
+msgid "Send the employee an welcome email."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:341
+msgid "Send the login details as well. If login_info present."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:342
+msgid "Next"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:343
+msgid "Create Employee"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:344
+msgid "Add New Employee"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:345
+msgid "No report found"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:346
+msgid "Percentage"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:347
+msgid "Unspecified"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:348
+msgid "Hire Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:349
+msgid "Main Location"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:350
+msgid "Employee"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:351
+msgid "21+"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:352
+msgid "Shows age breakdown data in your company in different departments."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:353
+msgid "View Report"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:354
+msgid ""
+"Displays actual number of individuals in your company in different "
+"departments."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:355
+msgid "Shows differentiation data by age in your company."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:356
+msgid "Shows longevity and experience report of the employees of your company."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:357
+msgid "Shows Salary History of the employees of your company."
+msgstr ""
+
+#: languages/erp-hr-frontend.php:358 languages/erp-hr-frontend.php:360
+msgid "Terminate"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:359
+msgid "Terminate Employee"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:361
+msgid "Termination Date"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:362
+msgid "Termination Type"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:363
+msgid "-- Select --"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:364
+msgid "Voluntary"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:365
+msgid "Involuntary"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:366
+msgid "Termination Reason"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:367
+msgid "Eligible for Rehire"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:368
+msgid "General Info"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:369
+msgid "Job"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:370
+msgid "Performance"
+msgstr ""
+
+#: languages/erp-hr-frontend.php:371
+msgid "Permissions"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WP ERP - HR Frontend"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://wperp.com/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Provides a brand new dashboard experience for WordPress ERP"
+msgstr ""
