@@ -1029,6 +1029,96 @@ export class AccountingPage extends BasePage {
         return true;
     }
 
+    // ---- journals, transfers and checks --------------------------------------
+    //
+    // The three money movements that involve no customer or vendor ledger.
+    //
+    // A journal line is four inputs wide: the account multiselect's own search
+    // box, then Particulars, Debit and Credit — the row has no names or ids, so
+    // they are addressed by position, which is what the column order gives.
+    //
+    // A CHECK is not its own record: `CheckCreate.vue:391` posts it to
+    // `/expenses` with a `check_no`, so a check lands in `erp_acct_expenses`
+    // and its oracle is the expense tables.
+
+    /** Fills one journal line — an account, and one of debit or credit. */
+    async setJournalLine(index: number, account: string, amount: number, side: 'debit' | 'credit'): Promise<void> {
+        const row = this.page.locator('table tbody tr').nth(index);
+
+        await row.locator('.multiselect').first().click();
+        await this.page.waitForTimeout(600);
+        await row.locator('.multiselect__option', { hasText: account }).first().click();
+
+        await row.locator('input').nth(side === 'debit' ? 2 : 3).fill(String(amount));
+        await this.page.waitForTimeout(400);
+    }
+
+    /** Posts a journal from a list of lines. Returns nothing; read the ledger. */
+    async createJournal(lines: Array<{ account: string; amount: number; side: 'debit' | 'credit' }>, trnDate: string): Promise<void> {
+        await this.gotoRoute('newJournal');
+        await this.page.waitForTimeout(2000);
+        await this.pickDate('Transaction Date', trnDate);
+
+        for (const [index, line] of lines.entries()) {
+            await this.setJournalLine(index, line.account, line.amount, line.side);
+        }
+
+        await this.save();
+    }
+
+    /**
+     * Moves money between two cash/bank accounts.
+     *
+     * The funding pickers read from `/accounts`, which lists Cash plus every
+     * ledger filed under the **Bank** chart — so a second account has to exist
+     * before a transfer is possible at all.
+     */
+    async transferMoney(from: string, to: string, amount: number, trnDate: string): Promise<boolean> {
+        await this.gotoRoute('newTransfer');
+        await this.page.waitForTimeout(2000);
+
+        if (!(await this.pickFromMultiselect('Transfer Funds From', from))) return false;
+        if (!(await this.pickFromMultiselect('Transfer Funds To', to))) return false;
+
+        await this.fillField('Transfer Amount', String(amount));
+        await this.pickDate('Transfer Date', trnDate);
+        await this.save('Transfer Money');
+
+        return true;
+    }
+
+    /**
+     * Writes a check against a bank account.
+     *
+     * `From Account` reads from `/ledgers/7/accounts` — chart 7 is **Bank** —
+     * so unlike every other funding picker in accounting it does NOT offer
+     * Cash, and it is empty until a Bank account exists.
+     */
+    async createCheck(
+        payee: string,
+        checkNo: string,
+        fromAccount: string,
+        expenseAccount: string,
+        amount: number,
+        paymentDate: string
+    ): Promise<boolean> {
+        await this.gotoRoute('newCheck');
+        await this.page.waitForTimeout(2000);
+
+        if (!(await this.pickFromMultiselect('Pay To', payee))) return false;
+
+        await this.fillField('Check No', checkNo);
+        await this.pickDate('Payment Date', paymentDate);
+
+        if (!(await this.pickFromMultiselect('From Account', fromAccount))) return false;
+
+        await this.pickLineAccount(0, expenseAccount);
+        await this.setLineAmount(0, amount);
+        await this.save();
+
+        return true;
+    }
+
     // ---- reports -------------------------------------------------------------
     //
     // Every figure is rendered as "<label> Dr./Cr. $1,800.00". The reports carry

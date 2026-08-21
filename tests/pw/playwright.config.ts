@@ -84,7 +84,7 @@ export default defineConfig({
                sequence — global state no customer or vendor scoping can isolate.
                Run beside each other they broke each other's preconditions, so
                they get their own single-worker project below. */
-            testIgnore: /accounting\/(transactions|payments|bills|reports|expenses|purchases)\.spec\.ts/,
+            testIgnore: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts/,
             dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
         },
         {
@@ -93,7 +93,7 @@ export default defineConfig({
                preconditions are only meaningful when nothing else is spending or
                funding it at the same time. */
             name: 'accounting_money',
-            testMatch: /accounting\/(transactions|payments|bills|reports|expenses|purchases)\.spec\.ts/,
+            testMatch: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts/,
             fullyParallel: false,
             /* NOTE: `workers` is NOT a per-project option in Playwright — only
                `fullyParallel` is, and that serialises tests WITHIN a file, not

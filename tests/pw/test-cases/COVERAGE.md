@@ -2222,3 +2222,72 @@ Pinewood by `reports.spec.ts` and `inventory.spec.ts`. The purchase seed in
 - The stock arithmetic here is asserted per transaction (`stock_in = qty` for the
   purchase's own voucher), NOT against the inventory register's printed figure —
   that register is `inventory.spec.ts`'s subject and it owns a different product.
+
+## Accounting — journals, transfers and checks (`tests/e2e/accounting/journals.spec.ts`) — 8 cases, all green
+
+The three money movements that involve no customer or vendor: a journal posts
+straight to the ledger, a transfer moves money between the company's own
+accounts, and a check spends from a bank account. Their oracle is the ledger
+itself, because none of them has a party balance to read.
+
+**Covered**
+
+- The journals screen renders with its four columns.
+- A balanced journal posts equal debits and credits, the entry nets to zero, and
+  both named accounts move in opposite directions by the full amount.
+- A posted journal appears on the journals list at its amount.
+- An unbalanced journal (400 debit against 250 credit) posts **nothing** — the UI
+  refuses it.
+- A transfer moves money without creating or destroying any: cash falls, the bank
+  account rises, and the two together are unchanged.
+- The transfers screen names the destination account and the amount moved.
+- A check drawn on a bank account pays out of that account and lands on the
+  expense account, carrying its check number.
+- Journals are closed to an employee.
+
+**A stock install cannot do two of these three, and that is a prerequisite rather
+than a defect** — established rather than assumed. `Cash` is filed under the
+**Asset** chart, and chart 7 (**Bank**) ships empty. The transfer form's pickers
+read `/accounts` and so offer Cash alone, with nothing to transfer *to*; the check
+form's `From Account` reads `/ledgers/7/accounts` — Bank only — and is therefore
+completely empty, showing `Oops! No elements found.`
+
+That last one looked exactly like ERP-160 (a required picker that never
+populates) and was one step from being filed as such. What settled it: creating a
+single ledger under the Bank chart made **both** forms work immediately — the
+check's From Account offered the new account and the transfer form offered two.
+So the empty picker is missing setup, not a broken request. **Not filed.** The
+spec seeds its own bank account in `beforeAll` and removes it after.
+
+**Two defects found here and filed**
+
+- **ERP-163 / erp-pro#983** (Major) — the single journal page prints
+  `Journal No: #11` from the database **row id** while the list and the entry's
+  own particulars line say **1030**. It is the page with the Print button.
+- **ERP-164 / erp-pro#984** (Minor) — the list prints `1234.5` for $1,234.50:
+  no currency, no separator, and a dropped decimal, while `moneyFormat()` is
+  already used for the Balance on the same record.
+
+The list case asserts the literal `400` the product prints, with a comment
+pointing at ERP-164 — the first draft asserted `400.00` and failed, and
+normalising that away silently would have buried the bug the test had just found.
+
+**Not proven, and why**
+
+- **ERP-009 — an unbalanced journal accepted over REST — was NOT retested.** The
+  UI path is covered here and correctly refuses one, but that says nothing about
+  the REST route ERP-009 describes, and the two must not be confused: a green
+  test on this file is not evidence that ERP-009 is fixed.
+- **Editing and voiding** a journal, a transfer or a check are all untouched.
+- **Transfer validation** is not covered: transferring more than the balance,
+  transferring to the same account, and a zero or negative amount were not tried.
+- **The check's own screens** beyond creation are not covered — a check is stored
+  as an expense (`CheckCreate.vue:391` posts to `/expenses`), and how it appears
+  in Expenses Transactions, whether it is editable there, and what the check
+  number does on that screen were not exercised.
+- **Bank transaction charges** (`bank_trn_charge`, applied when the transaction
+  method is a bank) are not covered on any of the three.
+- The seeded bank account is written straight to `erp_acct_ledgers`. Creating one
+  through the Chart of Accounts UI works — it is how the prerequisite above was
+  established — but that path has **no test of its own**, so the Chart of
+  Accounts create form remains uncovered.

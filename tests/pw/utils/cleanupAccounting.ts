@@ -384,3 +384,69 @@ export async function seedVendor(firstName: string, lastName: string, email: str
 
     return peopleId;
 }
+
+/**
+ * Creates a ledger under the **Bank** chart and returns its id.
+ *
+ * A stock install has none: `Cash` is filed under Asset, and chart 7 (Bank) is
+ * empty. Transfers need two accounts to move between and the check form's
+ * `From Account` reads Bank accounts only, so both are untestable until one
+ * exists. Written straight to the table because this runs in `beforeAll`.
+ */
+export async function seedBankLedger(name: string): Promise<number> {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    const existing = await query<RowDataPacket[]>(`SELECT id FROM ${prefix()}erp_acct_ledgers WHERE slug = ?`, [slug]);
+
+    if (existing.length) return Number(existing[0]!.id);
+
+    const inserted = await execute(
+        `INSERT INTO ${prefix()}erp_acct_ledgers (chart_id, name, slug, created_at, created_by)
+         VALUES (7, ?, ?, NOW(), 1)`,
+        [name, slug]
+    );
+
+    return Number(inserted.insertId);
+}
+
+/** Removes a seeded ledger and any entries posted against it. */
+export async function cleanupLedger(ledgerId: number): Promise<void> {
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE ledger_id = ?`, [ledgerId]);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledgers WHERE id = ?`, [ledgerId]);
+}
+
+/** Journals, with their lines and ledger entries. */
+export async function cleanupJournals(): Promise<number> {
+    const journals = `${prefix()}erp_acct_journals`;
+    const rows = await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${journals}`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_journal_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const result = await execute(`DELETE FROM ${journals}`);
+
+    return result.affectedRows ?? 0;
+}
+
+/** Money transfers between cash and bank accounts, with their ledger entries. */
+export async function cleanupTransfers(): Promise<number> {
+    const transfers = `${prefix()}erp_acct_transfer_voucher`;
+    const rows = await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${transfers}`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const result = await execute(`DELETE FROM ${transfers}`);
+
+    return result.affectedRows ?? 0;
+}
