@@ -1909,6 +1909,38 @@ ERP-161 critical.
 **Not covered:** connecting a gateway, rendering the Pay button with a live gateway enabled, and any
 charge — all behind the credential/real-money gate.
 
+### Pro — WooCommerce integration (3 cases green; order-sync flow verified by hand, blocked from automation by #967)
+
+Syncs WC orders into ERP as CRM contacts and accounting invoices. Both sync toggles default to `yes`
+(`functions.php:249,264`), so it is on out of the box.
+
+**The automated cases cover the configuration surface:** the WooCommerce settings tab renders its
+four sub-sections (Synchronization, Subscription, CRM, Accounting), sync defaults to on (asserted as
+a default, since the options are unset until saved), and the settings tab is closed to an employee.
+
+**The order-sync flow itself is verified manually and deliberately kept out of the suite.** Completing
+a WC order on this PHP-8 build **fatals** in the invoice PDF path — the same
+`get_magic_quotes_runtime()` sink as **ERP-150 / [erp-pro#967](https://github.com/wp-erp/erp-pro/issues/967)**
+— so driving an order to completion in a spec would throw a fatal on every run. What I measured by
+hand, and added to #967 as a third confirmed surface:
+
+- A completed WC order **does** sync: the buyer became ERP contact #263 and ERP invoice #930 ($3,600,
+  2× a £1,800 product) was created. The sync works.
+- But completion **fatals** afterward, `3/3` on clean reproductions (orders 252/253/254), on every
+  `woocommerce_order_status_changed` into `processing` or `completed`. The data lands before the
+  fatal (the ERP-150 pattern), so an admin marking an order Completed sees a critical-error page even
+  though the status and the invoice persisted, and an automatic completion via a gateway's
+  `payment_complete` would fatal on the customer-facing side of checkout.
+
+Not a new ID — same root cause and fix as #967; the value added there is that the blast radius now
+provably includes the storefront order path, not just admin accounting. **Every test order, contact
+and the synced invoice were deleted afterwards** (verified: 0 test contacts, invoice 930 gone, all 8
+orders removed from both HPOS and legacy tables).
+
+**Not covered:** product sync (`erp_woocommerce_is_product_active`), the subscription sub-section,
+guest-vs-registered customer handling, and the bulk "sync existing orders" ajax — all downstream of
+the completion path being fixed, since exercising them means completing orders.
+
 ---
 
 ## What "done" will mean
