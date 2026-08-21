@@ -84,7 +84,7 @@ export default defineConfig({
                sequence — global state no customer or vendor scoping can isolate.
                Run beside each other they broke each other's preconditions, so
                they get their own single-worker project below. */
-            testIgnore: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts/,
+            testIgnore: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts|license\/userLimit\.spec\.ts/,
             dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
         },
         {
@@ -115,13 +115,30 @@ export default defineConfig({
             dependencies: ['e2e_tests'],
         },
         {
-            /* Leaves 100 users behind and must not run in parallel with anything.
-               Invoked explicitly: npm run test:license-limit */
+            /* OPT-IN ONLY, and destructive: it seeds enough users to stand the
+               site ON its licensed seat limit so the guards can be exercised at
+               all, then removes them in teardown. While it runs the site is AT
+               its limit and no other spec can create an employee, so nothing may
+               run beside it — `e2e_tests` excludes this file by name.
+
+                   npm run test:license-limit
+
+               NOTE: `workers` is not a per-project option in Playwright (see the
+               same trap documented on `accounting_money` above); it is kept here
+               only as intent. The npm script passes `--workers=1`, which is what
+               actually enforces it. */
             name: 'license_limit',
-            testMatch: ['license/userLimit.spec.ts'],
+            testMatch: /license\/userLimit\.spec\.ts/,
+            /* The top-level `grepInvert` drops `@license-limit` from EVERY run,
+               which is what keeps these cases out of the normal suite — but it
+               also silently emptied this project, which listed zero tests while
+               looking perfectly configured. Clearing it here re-enables them for
+               the one project that is meant to run them. */
+            grepInvert: [],
             fullyParallel: false,
             workers: 1,
             retries: 0,
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
         },
     ],
 });

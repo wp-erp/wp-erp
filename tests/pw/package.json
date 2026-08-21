@@ -35,7 +35,7 @@
         "test:tier2": "NO_SETUP=true npx playwright test --project=e2e_tests --grep @tier2",
         "test:tier3": "NO_SETUP=true npx playwright test --project=e2e_tests --grep @tier3",
         "test:api": "npx playwright test --config=api.config.ts",
-        "test:license-limit": "npx playwright test --project=license_limit",
+        "test:license-limit": "npx playwright test --project=license_limit --workers=1",
         "test:headed": "NO_SETUP=true npx playwright test --project=e2e_tests --headed",
         "test:ui": "NO_SETUP=true npx playwright test --project=e2e_tests --ui",
         "test:debug": "NO_SETUP=true npx playwright test --project=e2e_tests --debug",

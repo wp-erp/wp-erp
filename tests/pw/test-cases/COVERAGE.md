@@ -2291,3 +2291,81 @@ normalising that away silently would have buried the bug the test had just found
   through the Chart of Accounts UI works — it is how the prerequisite above was
   established — but that path has **no test of its own**, so the Chart of
   Accounts create form remains uncovered.
+
+## Licence — purchased user limit (`tests/e2e/license/userLimit.spec.ts`) — 7 cases, all green
+
+**Opt-in and destructive.** It seeds ~69 users to stand the site ON its licensed
+seat limit, then removes them. While it runs the site is AT its limit and no
+other spec can create an employee, so it has its own `license_limit` project and
+is excluded from `e2e_tests` by name:
+
+```
+npm run test:license-limit
+```
+
+Verified after the run: 33 users, exactly the baseline, with no seeded users and
+no orphaned usermeta left behind.
+
+**Covered**
+
+- One seat short of the limit, an employee can still be created through the real
+  HR screen — and the site lands exactly on its limit.
+- At the limit, the HR screen refuses with the product's own words: *"Current WP
+  ERP PRO user limit has been exceeded. Please upgrade the number of users in
+  order to add new Employee."* — and no user is left behind.
+- **The REST route is guarded too**, answering `user-limit-exceeded` and writing
+  nothing. This is the point of the guard living in `Update` rather than `Admin`
+  (its own comment at `Update.php:545-547` says the `Admin` copy only runs under
+  `is_admin()`), so it is worth an explicit case.
+- The Users screen prints the limit notice naming both figures, and **the
+  product's own "Current Site Users" is asserted to equal the number this spec
+  seeded to** — the cross-check that keeps the SQL mirror of `count_users()`
+  honest.
+- At the limit the role dropdown withholds the counted ERP roles, while leaving
+  `editor`, `subscriber` and the rest alone.
+- A terminated employee gives their seat back.
+- An uncounted role (`erp_recruiter`) consumes no seat.
+
+**Three traps this file walked into, all recorded because each one produced a
+passing-looking test that proved nothing**
+
+1. The first draft of the role case **forced the role with a raw SQL UPDATE** and
+   then asserted the count went up. That bypasses `set_role` entirely — the exact
+   hook the guard lives on — so it tested nothing while passing, and its own
+   comment claimed the opposite of what the code did. Replaced with the dropdown
+   check, which is a real UI oracle.
+2. The replacement asserted that all five counted roles vanish at the limit. It
+   failed, and the failure was informative: **only `employee` and
+   `erp_ac_manager` are WordPress-editable roles at all**; `erp_crm_manager`,
+   `erp_crm_agent` and `erp_hr_manager` never appear in that dropdown whatever
+   the seat count. The case now scopes to the roles genuinely on offer and
+   asserts that set is **non-empty**, so it cannot pass vacuously.
+3. The REST case first sent `user_email` and got `invalid-email` — a refusal that
+   would have satisfied a sloppier assertion while never reaching the licence
+   guard at all. The field is `email` (`EmployeesController:1904`), and the
+   payload has to be valid for the test to mean anything.
+
+**Not proven, and why**
+
+- **The role-revert path** (`Update::maybe_revert_role`, `:627-690`) is NOT
+  covered. It fires on `set_role`/`add_role`, and at the limit the UI removes
+  those roles from the dropdown — so the revert is a defence against
+  *programmatic* assignment (wp-cli, another plugin, custom code), which this
+  suite has no route to trigger. Its transient notice is likewise untested.
+- **The hour-long cache lag is untestable here.**
+  `Update::erp_hr_get_employees()` caches under `erp-pro-get-employees-count` for
+  `HOUR_IN_SECONDS`, which on a site running Redis or Memcached would mean a
+  terminated employee keeps holding a seat for up to an hour. This install has no
+  `object-cache.php` drop-in — `wp_using_ext_object_cache()` reports
+  `per-request` — so each request recomputes and the seat frees immediately. The
+  production behaviour is therefore **unverified**, not verified-as-fine.
+- **Module deactivation** changes which roles count
+  (`get_counted_roles()` is built from the active modules), so turning CRM off
+  should drop `erp_crm_manager`/`erp_crm_agent` from the count. Not exercised.
+- **An invalid or expired licence** disables every guard — all four checks start
+  with `is_valid_license()`. Not exercised: the licence on this install is valid
+  and deactivating it is not something a test should do to a shared seat.
+- The seeded users are written straight to `wp_users`/`wp_usermeta`. They are
+  real WordPress users for counting purposes, but they have **no ERP employee
+  record**, so any behaviour that depends on `erp_hr_employees` rows for those
+  users is out of scope here.
