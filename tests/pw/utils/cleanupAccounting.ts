@@ -249,3 +249,50 @@ export async function accountingRowCounts(): Promise<Record<string, number>> {
 
     return counts;
 }
+
+/**
+ * Removes a person and everything hanging off them, addressed by e-mail.
+ *
+ * People are shared across CRM and Accounting, so a test that converts a
+ * contact into a customer leaves rows in three tables. Deleting the relations
+ * first keeps the person from lingering as an untyped orphan if the run is
+ * interrupted between statements.
+ */
+export async function cleanupPersonByEmail(email: string): Promise<number> {
+    const rows = await query<RowDataPacket[]>(`SELECT id FROM ${prefix()}erp_peoples WHERE email = ?`, [email]);
+
+    for (const row of rows) {
+        const id = Number(row.id);
+
+        await execute(`DELETE FROM ${prefix()}erp_people_type_relations WHERE people_id = ?`, [id]);
+        await execute(`DELETE FROM ${prefix()}erp_peoplemeta WHERE erp_people_id = ?`, [id]);
+        await execute(`DELETE FROM ${prefix()}erp_peoples WHERE id = ?`, [id]);
+    }
+
+    return rows.length;
+}
+
+/** The type names a person currently holds, e.g. `['contact', 'customer']`. */
+export async function personTypes(email: string): Promise<string[]> {
+    const rows = await query<RowDataPacket[]>(
+        `SELECT t.name
+           FROM ${prefix()}erp_peoples p
+           JOIN ${prefix()}erp_people_type_relations r ON r.people_id = p.id
+           JOIN ${prefix()}erp_people_types t ON t.id = r.people_types_id
+          WHERE p.email = ?
+          ORDER BY t.name`,
+        [email]
+    );
+
+    return rows.map((row) => String(row.name));
+}
+
+/** How many rows in `erp_peoples` carry this e-mail. Should never exceed one. */
+export async function personRowCount(email: string): Promise<number> {
+    const rows = await query<RowDataPacket[]>(
+        `SELECT COUNT(*) AS c FROM ${prefix()}erp_peoples WHERE email = ?`,
+        [email]
+    );
+
+    return Number(rows[0]!.c);
+}

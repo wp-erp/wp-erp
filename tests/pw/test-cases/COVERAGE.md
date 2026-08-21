@@ -2087,3 +2087,64 @@ A module is reported as covered only when: its page objects exist, its specs exi
 `authored / run / green / bugs found`. A spec that cannot pass because of a product defect is filed
 as a bug (reproduced twice, screenshot attached) — never deleted, never `skip`ped to make the run
 green.
+
+## Core — people (`tests/e2e/core/people.spec.ts`) — 6 cases, 5 green + 1 known-defect guard
+
+The seam where CRM and Accounting write the same row. A contact, a customer and a
+vendor are one `erp_peoples` row wearing one or more **types** joined through
+`erp_people_type_relations`, so the invariant under test is **one person per
+e-mail, many types** — asserted against the database, because a second people row
+is exactly the corruption a list screen hides behind its `GROUP BY`.
+
+**Covered**
+
+- A CRM contact's e-mail entered as a new customer is recognised, offered for
+  import, and on confirmation attaches `customer` to the SAME person — one people
+  row, both types. Driven entirely through the two real UIs (CRM Contacts modal,
+  then the Accounting customer modal).
+- A two-type person is listed exactly once by each module — once on Customers,
+  still present on CRM Contacts.
+- Deleting the customer leaves the person and their CRM type standing
+  (`types === ['contact']`), and removes both duplicate relation rows.
+- An e-mail already held by a **vendor** is refused as a customer with the exact
+  message `Email already exists as customer/vendor`, the modal stays open, and no
+  second people row appears.
+- An empty submit is refused and creates nobody.
+- **Known defect, guarded:** ERP-162 / erp-pro#980 — the conversion writes the
+  `customer` relation twice.
+
+**Product rules read from source, not guessed** — `PeopleModal.vue:236-272`
+branches on `/people/check-email`: a `contact`/`company` match offers
+"Import & Update"; a `customer`/`vendor` match refuses flatly. So a person may
+hold several types but never customer AND vendor. `erp_acct_exist_people()`
+(`common.php:548-567`) defaults its `$types` to `['customer','vendor']`, which is
+what both `CustomersController.php:261` and `VendorsController.php:261` gate on.
+
+**Recorded as a design decision, deliberately NOT filed:** a company that both
+buys from you and sells to you cannot exist under one e-mail. That is a real
+business shape the data model would support — the many-to-many table imposes no
+such limit — but the product blocks it *deliberately and says so plainly* in the
+UI, naming both types in the message. A clear, intentional constraint is a
+feature request, not a defect, so it is written down here instead of being filed.
+
+**Not proven, and why**
+
+- The per-field Vue messages `First name is required` / `Last name is required` /
+  `Email is required` (`PeopleModal.vue:313-321`) are **unreachable from the UI**:
+  the three inputs carry the HTML `required` attribute, so the browser's own
+  constraint validation stops the submit and `checkForm()` never runs. The first
+  draft of the empty-submit case asserted those strings and failed — a test
+  written from the source rather than from the product. It now asserts what a
+  user actually meets (`input:invalid`, modal held open, nobody created), and the
+  Vue strings are recorded here as uncovered.
+- `erp_is_people_trashed()` (`functions-people.php:1007-1019`) reads `deleted_at`
+  with `get_var(... WHERE people_id = %d)` — no type filter, no ordering — so for
+  any multi-type person it answers from an arbitrary relation row. Inspected and
+  left alone: no failing user-visible path was demonstrated, so it is neither
+  tested nor filed, only recorded.
+- The trash/restore lifecycle for a multi-type person (soft delete via
+  `softDeleteType()` / `updateExistingPivot`) is **not covered**. Whether a
+  soft-delete touches one relation row or all of them was not measured.
+- Employee is a people type too (`erp_people_types` holds it), but employees are
+  created through HR with a WordPress user attached, a different write path
+  entirely. Not exercised here.

@@ -248,6 +248,85 @@ export class AccountingPage extends BasePage {
         return (await this.bodyText()).includes(text);
     }
 
+    // ---- people modal (customers / vendors) ---------------------------------
+    //
+    // Customers and Vendors are both created from a modal on their own list
+    // screen, opened by "Add New Customer" / "Add New Vendor" and submitted by a
+    // button that reads plain "Add New" either way. It takes three starred
+    // fields.
+    //
+    // The modal is also where ERP decides what an already-known e-mail means
+    // (`components/people/PeopleModal.vue:236-272`). It asks
+    // `/people/check-email` first, and branches on the answer:
+    //   contact / company  -> a SweetAlert offering "Import & Update", which
+    //                         adds the new type to the SAME person;
+    //   customer / vendor  -> a flat refusal, "Email already exists as
+    //                         customer/vendor", rendered into `ul.errors`.
+    // So one person may hold several types, but never customer AND vendor.
+
+    private get personModalSubmit(): Locator {
+        return this.page.locator('button:visible').filter({ hasText: /^Add New$/ }).first();
+    }
+
+    /** Opens the create modal on the customers or vendors list. */
+    async openPersonModal(kind: 'customers' | 'vendors'): Promise<void> {
+        const noun = kind === 'customers' ? 'Customer' : 'Vendor';
+
+        await this.gotoRoute(kind);
+        await this.page
+            .locator('#wpbody-content a, #wpbody-content button')
+            .filter({ hasText: new RegExp(`^Add New ${noun}$`) })
+            .first()
+            .click();
+        await this.page.locator('label', { hasText: 'First Name' }).first().waitFor({ state: 'visible' });
+    }
+
+    /** Fills the three fields the modal requires. */
+    async fillPerson(person: { firstName: string; lastName: string; email: string }): Promise<void> {
+        await this.fillField('First Name', person.firstName);
+        await this.fillField('Last Name', person.lastName);
+        await this.fillField('Email', person.email);
+    }
+
+    /** Submits the modal. Leaves any confirm or error on screen for the caller. */
+    async submitPerson(): Promise<void> {
+        await this.personModalSubmit.click();
+        await this.page.waitForTimeout(3000);
+    }
+
+    /** The validation messages the modal is showing, if any. */
+    async personModalErrors(): Promise<string[]> {
+        return (await this.page.locator('.errors li').allTextContents()).map((t) => t.replace(/^\*\s*/, '').trim());
+    }
+
+    /** True while the modal is still up — i.e. the save did not go through. */
+    async personModalIsOpen(): Promise<boolean> {
+        return this.page
+            .locator('label', { hasText: 'First Name' })
+            .first()
+            .isVisible()
+            .catch(() => false);
+    }
+
+    /**
+     * Accepts the "already exists in CRM" prompt, which is a SweetAlert rather
+     * than a native dialog, so it is clicked like any other element. Returns
+     * false when no prompt appeared.
+     */
+    async confirmCrmImport(): Promise<boolean> {
+        const confirm = this.page.locator('button:visible').filter({ hasText: /^Import & Update$/ }).first();
+
+        if (!(await confirm.isVisible().catch(() => false))) {
+            return false;
+        }
+
+        await confirm.click();
+        await this.page.waitForTimeout(4000);
+        await this.settle();
+
+        return true;
+    }
+
     // ---- chart of accounts ------------------------------------------------
 
     /** The account-class tabs/sections the chart of accounts groups by. */
