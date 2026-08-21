@@ -1974,6 +1974,42 @@ with a product-generated hash.
 **Not covered:** creating a group through the segment builder (saved-search driven, a separate
 feature), bulk subscriber assignment, and the CRM email-campaign side that consumes these lists.
 
+### CRM — reports (7 cases, all green, no defects found)
+
+Activity, Customer and Growth. All three are server-rendered tables with no REST behind them, so the
+table text IS the oracle — checked against the data each claims to summarise, not against itself.
+
+**Customer and Growth are correct**, and they are cross-checked against each other as well as against
+the contacts: two aggregations computed independently from the same rows, so if either drifts they
+disagree and neither alone would reveal it — the same reasoning as the accounting balance-sheet /
+income-statement cross-check.
+
+**A trap that would have produced a false bug report.** The life stages are stored in TWO places: a
+`life_stage` COLUMN on `erp_peoples`, and a `life_stage` key in `erp_peoplemeta`. For every seeded
+contact the **meta is null** while the column holds the real value. My first oracle read the meta,
+which would have shown "8 contacts, report says 1/4/2/1" and looked exactly like a reporting fault.
+The reports read the column, and they are right. Asserting against the wrong store is how a correct
+report gets filed as broken — the same lesson the leave-request oracle taught earlier in this suite.
+
+**Two table SHAPES, which the page object now handles explicitly.** Activity is label/value pairs
+(`Notes | 3`); Customer and Growth are matrices with life stages as column headers and figures in a
+period row. A flattened-text regex reads the wrong cell on the matrices and nothing on some rows —
+`countFor()` maps the header to its column index and falls back to the adjacent cell for the pair
+shape.
+
+**Observed and deliberately NOT filed:** the Activity report drops activity types it does not know.
+Its `switch` (`views/reports/activity-report.php:10-28`) recognises only `email`, `log_activity`,
+`tasks` and `new_note`; anything else never reaches the Total. With only WooCommerce-generated
+`order_note` activities on file the report reads **Total 0** while the contact timelines show them.
+Whether WC order notes belong in a CRM activity report is a product decision, not a defect QA should
+assert — so it is recorded here rather than filed. The tier-2 case deliberately uses `new_note`, a
+type the report *does* claim to count, so it proves the counting works rather than passing for the
+wrong reason. Note also that `$start` defaults to `false`, meaning **no** date filter — the report
+counts all history, not "this month".
+
+**Not covered:** the date-range filter (POST-driven), the Growth report's chart canvas as opposed to
+its table, and per-source / per-assignee breakdowns of the Customer report.
+
 ---
 
 ## What "done" will mean
