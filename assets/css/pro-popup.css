@@ -103,6 +103,9 @@ li.dropdown-nav:hover .erp-nav-dropdown .pro-popup {
     display: flex !important;
     align-items: center;
 }
+.settings-sub-menu .pro-label {
+    margin-left: 6px !important;
+}
 
 .erp-pro-tooltip:hover {
 
@@ -477,4 +480,564 @@ input#img-4:checked ~ .nav-dots label#img-dot-4
     max-width: 200px;
     text-decoration: none;
     text-align:center;
+}
+
+/* ============================================
+   Pro Feature Preview Pages
+   ============================================ */
+
+/* Preview banner at top of each preview page */
+.erp-pro-preview-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    margin: 15px 0 20px;
+    background: linear-gradient(135deg, #FFF7ED, #FEF3C7);
+    border: 1px solid #F59E0B;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #92400E;
+    font-weight: 500;
+}
+
+.erp-pro-preview-banner .dashicons {
+    color: #D97706;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.erp-pro-preview-banner .button-primary {
+    margin-left: auto;
+    background: #FF9000 !important;
+    border-color: #e68200 !important;
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.erp-pro-preview-banner .button-primary:hover {
+    background: #e68200 !important;
+    border-color: #cc7300 !important;
+}
+
+/* Wrapper that adds subtle overlay effect to preview content */
+.erp-pro-preview-wrapper {
+    position: relative;
+}
+
+/* Clickable preview elements — open upgrade popup on click */
+.erp-pro-preview-action {
+    cursor: pointer;
+}
+
+/* Pro badge for navigable (non-popup) menu items — hidden by default, shown on hover */
+.erp-pro-badge-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 0;
+    height: 18px;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 18px;
+    letter-spacing: 0.3px;
+    color: #B45309;
+    background: #FFF3E0;
+    border: 0 solid #F59E0B;
+    border-radius: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: width 0.2s ease, border-width 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+    vertical-align: middle;
+    margin: 0;
+}
+/* Show nav badge on hover — top nav menu items */
+div.erp-nav-container li:hover > a > .erp-pro-badge-nav,
+div.erp-nav-container li:hover > a .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 4px;
+}
+/* Show nav badge on hover — dropdown items */
+.erp-nav-dropdown li:hover > a > .erp-pro-badge-nav,
+.erp-nav-dropdown li:hover .erp-pro-badge-nav,
+li.dropdown-nav:hover .erp-nav-dropdown .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 4px;
+}
+/* Show nav badge on hover — report cards */
+.postbox:hover .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 6px;
+}
+/* Show nav badge on hover — people sub-nav */
+.erp-nav-list li:hover .erp-pro-badge-nav {
+    width: 32px;
+    border-width: 1.2px;
+    margin: 0 0 0 6px;
+}
+
+/* Pro form footer — disabled save button + upgrade notice */
+.erp-pro-form-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 0 5px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+}
+.erp-pro-form-footer .button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.erp-pro-save-notice {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #92400E;
+}
+.erp-pro-save-notice .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #D97706;
+}
+.erp-pro-save-notice a {
+    color: #FF9000;
+    font-weight: 600;
+    text-decoration: none;
+}
+.erp-pro-save-notice a:hover {
+    color: #e68200;
+    text-decoration: underline;
+}
+
+/* ============================================
+   Payroll Step Progress — from Pro stylesheet
+   ============================================ */
+#erp-payrun-steps-section {
+    padding: 0 20px 30px;
+}
+.erp-payroll-steps .erp-payrun-step-content {
+    overflow: hidden;
+}
+.erp-payroll-steps ul.payroll-step-progress {
+    overflow: hidden;
+    counter-reset: step;
+    margin: 0 auto;
+    max-width: 1075px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    list-style: none;
+    padding: 0;
+}
+.erp-payroll-steps ul.payroll-step-progress li {
+    list-style-type: none;
+    width: 25%;
+    float: left;
+    box-sizing: border-box;
+    position: relative;
+    text-align: center;
+    color: #444;
+    background-color: #fafafa;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    cursor: pointer;
+}
+.erp-payroll-steps ul.payroll-step-progress li:hover:not(.active) {
+    background-color: #f0f0f0;
+}
+.erp-payroll-steps ul.payroll-step-progress li.active {
+    background-color: #0073AA;
+    color: #fff;
+}
+.erp-payroll-steps ul.payroll-step-progress li .step-number {
+    background-color: #E5E5E5;
+    border-radius: 11px;
+    color: #adadad;
+    padding: 3px 8px;
+}
+.erp-payroll-steps ul.payroll-step-progress li .step-content {
+    color: #a6a6a6;
+    padding-left: 5px;
+}
+.erp-payroll-steps ul.payroll-step-progress li.active .step-number {
+    background-color: white;
+    border-radius: 11px;
+    color: #0073AA;
+    padding: 3px 8px;
+}
+.erp-payroll-steps ul.payroll-step-progress li.active .step-content {
+    color: #fff;
+    padding-left: 5px;
+}
+.erp-payroll-steps ul.payroll-step-progress li.active::after {
+    background-color: #0073aa;
+    content: "";
+    height: 34px;
+    position: absolute;
+    right: -17px;
+    top: 7px;
+    transform: rotate(135deg);
+    width: 34px;
+    z-index: 1;
+}
+.erp-payroll-steps ul.payroll-step-progress li.not-active::after {
+    background-color: #fafafa;
+    border-left: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    content: "";
+    height: 34px;
+    position: absolute;
+    right: -17px;
+    top: 7px;
+    transform: rotate(135deg);
+    width: 34px;
+    z-index: 1;
+}
+.erp-payroll-steps ul.payroll-step-progress li.not-active:last-child::after {
+    background-color: transparent;
+    border: 0;
+}
+/* Status badges */
+.cal_status {
+    padding-left: 10px;
+    font-size: 12px;
+    padding-right: 10px;
+}
+.cal_status_not_approve {
+    background-color: #c4c4c4;
+    color: #32373c;
+    font-weight: bold;
+}
+.cal_status_approved {
+    background-color: #4ab866;
+    color: #fff;
+    font-weight: bold;
+}
+/* Employees tab — date separator rows */
+.erp-payroll-steps .nv-holder-top {
+    float: left;
+    width: 97%;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.erp-payroll-steps .nv-holder-top .separator {
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.erp-payroll-steps .nv-holder-top .separator span {
+    float: left;
+    width: 140px;
+    background-color: #e5e5e5;
+    padding: 5px 0 5px 15px;
+    font-weight: 600;
+    border-radius: 3px;
+    color: #555;
+}
+.erp-payroll-steps .nv-holder-top .separator span.second-field {
+    margin-left: 5px;
+}
+.erp-payroll-steps .nv-holder-top .separator input {
+    float: left;
+}
+.erp-payroll-steps .nv-holder-top .separator button {
+    border: 1px solid rgba(196, 196, 196, 0.87) !important;
+    line-height: 2 !important;
+    min-height: 20px !important;
+    width: 286px;
+    margin: 0 5px;
+    font-weight: 600;
+}
+.erp-payroll-steps .nv-holder-top .separator .erp-payroll-date {
+    min-height: 20px !important;
+    font-size: small !important;
+    width: 130px !important;
+    font-weight: 300 !important;
+    line-height: 2 !important;
+    padding: 0 3px 0 10px !important;
+    color: #757575;
+}
+@media screen and (min-width: 1276px) {
+    .erp-payroll-steps .nv-holder-top .separator {
+        margin-left: 25%;
+    }
+}
+/* Employees table */
+.erp-payroll-steps .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border-collapse: collapse;
+}
+.erp-payroll-steps .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    text-align: left;
+}
+.erp-payroll-steps .table tbody td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+/* Pay item checkbox row */
+.erp-payroll-steps .wrapper_pay_item {
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+.erp-payroll-steps .wrapper_pay_item .wrapper_pay_item_row .wrapper_pay_item_col {
+    float: left;
+    margin-right: 25px;
+}
+/* Nav holder — Next/Back buttons */
+.erp-payroll-steps .nv-holder {
+    float: left;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.erp-payroll-steps .nv-holder .row a.nbutton:first-child,
+.erp-payroll-steps .nv-holder a.nbutton:first-child,
+.erp-payroll-steps .nv-holder .rrow button:first-child {
+    margin-left: 5px;
+}
+/* Variable Input — two-column layout */
+.erp-payroll-steps .single-emp-info-left-side {
+    float: left;
+    width: 35%;
+}
+.erp-payroll-steps .single-emp-info-left-side .postbox {
+    padding-top: 0 !important;
+    margin: 0 auto;
+}
+.erp-payroll-steps .single-emp-info-left-side .postbox .inside {
+    overflow-y: hidden;
+    min-height: 400px;
+}
+.erp-payroll-steps .single-emp-info-left-side .add_ded_info li {
+    float: left;
+    width: 100%;
+    list-style: none;
+}
+.erp-payroll-steps .single-emp-info-left-side .add_ded_info li .lpart-normal { float: left; }
+.erp-payroll-steps .single-emp-info-left-side .add_ded_info li .rpart-normal { float: right; }
+.erp-payroll-steps .single-emp-info-left-side .add_ded_info li .lpart {
+    float: left;
+    font-weight: bold;
+    border-top: 1px solid #c4c4c4;
+    margin-bottom: 15px;
+}
+.erp-payroll-steps .single-emp-info-left-side .add_ded_info li .rpart {
+    float: right;
+    border-top: 1px solid #c4c4c4;
+}
+.erp-payroll-steps .single-emp-info-left-side .add_ded_info li.net-pay {
+    background: #f9f9f9;
+    padding: 5px 0;
+}
+.erp-payroll-steps .single-emp-info-right-side {
+    float: left;
+    width: 64%;
+    margin-left: 1%;
+}
+.erp-payroll-steps .single-emp-info-right-side .postbox {
+    padding-top: 0 !important;
+    margin: 0 auto;
+}
+.erp-payroll-steps .single-emp-info-right-side .postbox .inside {
+    overflow-y: hidden;
+}
+.erp-payroll-steps .single-emp-info-right-side .postbox .inside .row {
+    float: left;
+    width: 100%;
+}
+.erp-payroll-steps .single-emp-info-right-side .postbox .inside .row select {
+    width: 37%;
+}
+.erp-payroll-steps .single-emp-info-right-side .postbox .inside .row .dynamic-header {
+    background-color: #E5E5E5;
+    padding: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+/* Payslips */
+.erp-payroll-steps .payslip-postbox .inside {
+    overflow-y: hidden;
+}
+.erp-payroll-steps .payslip-postbox .inside .row {
+    float: left;
+    width: 100%;
+}
+.erp-payroll-steps .payslip-postbox .inside .seventy-left-row {
+    float: left;
+    width: 70%;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .draft-text {
+    float: left;
+    font-size: 21px;
+    color: #c4c4c4;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .payslip-list li {
+    float: left;
+    width: 100%;
+    padding: 5px;
+    list-style: none;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .payslip-list li:first-child {
+    background-color: #f5f5f5;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .payslip-list li label {
+    float: left;
+    width: 25%;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row {
+    float: left;
+    width: 48%;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row {
+    float: left;
+    width: 48%;
+    margin-left: 20px;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row .paylist li,
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row .paylist li {
+    float: left;
+    width: 100%;
+    padding: 5px;
+    list-style: none;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row .paylist li:first-child,
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row .paylist li:first-child {
+    background-color: #f5f5f5;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row .paylist li label,
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row .paylist li label {
+    float: left;
+    width: 50%;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row .paylist li .text-alignleft,
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row .paylist li .text-alignleft {
+    text-align: left;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row .paylist li .text-alignright,
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row .paylist li .text-alignright {
+    text-align: right;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .half-left-row .paylist li.final-total-row,
+.erp-payroll-steps .payslip-postbox .inside .row .half-right-row .paylist li.final-total-row {
+    font-weight: bold;
+    border-top: 1px solid #c4c4c4;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .paylist-final-amount li {
+    background-color: #f5f5f5 !important;
+    border: 2px solid #c4c4c4;
+    margin-top: 10px;
+}
+.erp-payroll-steps .payslip-postbox .inside .row .paylist-final-amount li label {
+    font-weight: bold;
+}
+/* Global paylist rules */
+.erp-payroll-steps ul.paylist li {
+    display: flex;
+    margin-top: 10px;
+}
+.erp-payroll-steps .paylist-final-amount {
+    border-bottom: 1px solid #c4c4c4;
+    margin-top: 0;
+}
+/* Back button spacing */
+.erp-payroll-steps .bbutton {
+    margin-right: 5px;
+}
+/* Print button */
+.erp-payroll-steps .print-btn {
+    float: left;
+    margin-left: 5px;
+    height: 38px;
+}
+/* Payslip label (visible in preview) */
+.erp-payroll-steps .erp-pay-slip-label {
+    text-align: center;
+}
+/* Inner row clearing */
+.erp-payroll-steps .inner-row {
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+}
+/* Approve tab nv-holder-top */
+.erp-payroll-steps .nv-holder-top span {
+    float: left;
+    width: 140px;
+    background-color: #e5e5e5;
+    padding: 5px 0 5px 15px;
+    font-weight: 600;
+    border-radius: 3px;
+    color: #555;
+}
+.erp-payroll-steps .nv-holder-top input {
+    float: left;
+}
+
+/* ============================================
+   Bulk Pay Item Edit — from Pro stylesheet
+   ============================================ */
+.payroll-report-container h1 {
+    margin-bottom: 15px;
+}
+.payroll-report-container .information-container {
+    float: left;
+    margin-left: 1%;
+    margin-top: 10px;
+    padding-bottom: 15px;
+    position: relative;
+    width: 99%;
+}
+.payroll-report-container .postbox .inside {
+    margin-bottom: 0;
+    margin-top: 0;
+    overflow-y: hidden;
+    padding-bottom: 0;
+    padding-left: 0;
+    min-height: 500px;
+}
+.payroll-report-container .information-container .wp-list-table th,
+.payroll-report-container .information-container .wp-list-table td {
+    font-size: 11px;
+}
+.payroll-report-container .wp-list-table {
+    margin-top: 10px;
+}
+.payroll-report-container .nv-holder {
+    float: left;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.payroll-report-container #candidate-overview-zone .erp-select-field {
+    margin-right: 5px;
+}
+.payroll-report-container #candidate-overview-zone input[type="search"] {
+    margin-right: 5px;
+}
+.payroll-report-container .pay_item_value {
+    width: 80px;
+    text-align: right;
 }

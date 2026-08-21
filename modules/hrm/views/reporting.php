@@ -28,6 +28,8 @@
                             $pro_popup = '<span class="pro-popup-nav">Pro</span>';
                             $class     .= ' pro-popup-main ';
                             $href      = '#';
+                        } elseif ( ! empty( $report['pro_preview'] ) ) {
+                            $pro_popup = '<span class="pro-popup-nav erp-pro-badge-nav">Pro</span>';
                         }
                         ?>
                         <div class="postbox">
@@ -56,6 +58,8 @@
                             $pro_popup = '<span class="pro-popup-nav">Pro</span>';
                             $class     .= ' pro-popup-main ';
                             $href      = '#';
+                        } elseif ( ! empty( $report['pro_preview'] ) ) {
+                            $pro_popup = '<span class="pro-popup-nav erp-pro-badge-nav">Pro</span>';
                         }
                         ?>
                         <div class="postbox">
