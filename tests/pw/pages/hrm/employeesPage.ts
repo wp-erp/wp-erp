@@ -214,6 +214,36 @@ export class EmployeesPage extends BasePage {
         await this.openModal(this.addNewButton, employeeSelectors.firstName);
     }
 
+    /**
+     * Expands the create modal's collapsed half.
+     *
+     * The modal opens showing Basic Information only; Work, Personal and Address
+     * live behind **Show Advanced Fields**. Anything asserting on those — a
+     * custom field placed in the Personal section, for one — reads an empty
+     * modal without this, which looks exactly like the field never rendering.
+     */
+    async showAdvancedFields(): Promise<void> {
+        await this.page
+            .locator('.erp-modal:visible')
+            .getByText('Show Advanced Fields')
+            .first()
+            .click()
+            .catch(() => undefined);
+        await this.page.waitForTimeout(1200);
+    }
+
+    /**
+     * Text of the create modal that is actually on screen.
+     *
+     * The page carries TWO `.erp-modal` nodes — a hidden "Loading" shell and the
+     * real one — so an unqualified `.first()` reads the placeholder and every
+     * assertion against it fails for a reason that has nothing to do with the
+     * product.
+     */
+    async modalText(): Promise<string> {
+        return (await this.page.locator('.erp-modal:visible').first().innerText()).replace(/\s+/g, ' ').trim();
+    }
+
     /** Every field the create modal marks as required. */
     get requiredFields(): Locator[] {
         return [

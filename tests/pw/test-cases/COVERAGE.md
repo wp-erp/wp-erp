@@ -1657,6 +1657,48 @@ invisible in normal use.
 - **Editing a bill payment upward**, and editing one paid from a bank rather than cash (`trn_by = 2`,
   which takes the transaction-charge branch).
 
+### Pro — Custom Field Builder (11 cases, all green, no defects found)
+
+The module that adds fields to the employee, contact, company, customer and vendor forms. Its whole
+point is that a field defined in one place appears in another, so the oracle is never the builder
+screen — it is the **form the field was added to**. A test that only checked the builder listed what
+it was told would pass on a module that writes nothing.
+
+Covered: all five people-type tabs; a field's storage against its own type and no other; the meta key
+derived from the label; a dropdown's options round-tripping; persistence across a reload; deletion
+removing it from both the builder and the employee form; the page being closed to an employee; the
+save endpoint refusing a request with a bad nonce; and a script payload in a field label never
+executing.
+
+**Two harness traps, and the first nearly became a false bug report.**
+
+1. **`deleteModel()` opens a native `confirm()`, and Playwright dismisses dialogs by default.** The
+   click landed, no error was raised, and nothing was removed — indistinguishable from a dead button.
+   I had it half-written up as "the trash button does nothing" before reading the source and finding
+   the `confirm()`. What saved it was checking the cause before filing; what would have caught it
+   sooner is that a dead button usually leaves *some* trace, and this left none.
+2. The trash button lives in a holder the stylesheet keeps at `display: none` until the row is
+   **hovered**, so it cannot be clicked without hovering first.
+
+Also worth knowing: deleting a field **persists on its own** — `deleteModel()` calls `sendToServer()`
+immediately — while adding one does not, and needs **Save Changes**. The delete case deliberately
+does not call `save()`, so it would fail if that ever changed.
+
+**Read and deliberately NOT filed:** `erp_field_builder_handler()` (`Module.php:376`) verifies a
+nonce but performs **no capability check**, and builds its option name from unsanitised
+`$_REQUEST['people']`. That is a hardening gap rather than a reachable defect: the
+`erp-form-builder` nonce is printed only by `enqueue_scripts`, hooked on
+`admin_print_styles-{$page_hook}` for a page registered with `manage_options`, so a lower role has no
+way to obtain a valid nonce for their own user, and the handler is `wp_ajax_` only (no `nopriv`). The
+tier-3 case asserts the refusal path holds. If the nonce ever gets printed on a wider screen this
+becomes exploitable, which is why it is written down rather than dropped.
+
+**Not covered, and why:** the Contact, Company, Customer and Vendor forms are asserted only through
+the stored definition, not by opening each of those four forms — the Employee form is the one driven
+end to end. Field *types* beyond Text and Dropdown (Radio, Checkbox, Date, Url, Email, Password,
+number) are offered by the builder and untested on the rendering side. Minor and unfiled: the type
+list prints `number` in lower case among nine Title-Case entries.
+
 ---
 
 ## What "done" will mean
