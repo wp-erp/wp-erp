@@ -7,7 +7,7 @@ add_action( 'wp_ajax_erp_crm_track_email_opened', 'erp_crm_track_email_opened' )
 add_action( 'wp_ajax_nopriv_erp_crm_track_email_opened', 'erp_crm_track_email_opened' );
 add_action( 'erp_crm_dashboard_widgets_right', 'erp_crm_dashboard_right_widgets_area' );
 add_action( 'erp_crm_dashboard_widgets_left', 'erp_crm_dashboard_left_widgets_area' );
-add_action( 'plugins_loaded', 'erp_crm_contact_forms' );
+add_action( 'init', 'erp_crm_contact_forms' );
 add_action( 'erp_settings_pages', 'erp_crm_settings_pages' );
 add_action( 'load-wp-erp_page_erp-settings', 'erp_crm_contact_form_section' );
 add_action( 'erp_hr_permission_management', 'erp_crm_permission_management_field' );
