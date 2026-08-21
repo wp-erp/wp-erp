@@ -1813,6 +1813,35 @@ a day, a multilevel approval chain forwarding between approvers, segregation spl
 entitlement, and carry-forward moving unused days across a financial year. Those need seeded
 entitlements and a leave cycle; only registration and authorization are asserted here.
 
+### Pro — HR Frontend (6 cases: 5 green, 1 known-defect guard)
+
+The employee self-service dashboard served on the public site at `/{slug}/` via a rewrite rule,
+rather than in wp-admin.
+
+**Its access control is correct and layered**, and three green cases hold it there: an anonymous
+visitor goes to the login screen; an ERP employee is served the dashboard (the point of the module);
+a logged-in CRM manager — no employee record, no `erp_hr_manager`, no `manage_options` — is bounced
+into wp-admin. The settings route is properly gated on `manage_options` and answers **403** to an
+employee.
+
+**The defect is the slug, filed as ERP-159 / [erp-pro#977](https://github.com/wp-erp/erp-pro/issues/977).**
+One option, `hr_frontend_slug`, has three fallbacks and two of them disagree with the one that
+registers the rewrite: the dashboard is served at `/wp-erp/` while the settings screen reports
+`wp-erp-dashboard`, which 404s. **5/5.**
+
+**The second half of that bug is deliberately not automated.** Saving the settings unchanged writes
+the option without flushing rewrites, and the dashboard then relocates at the next unrelated flush —
+breaking every existing link. Proving it means mutating a site-wide URL and needing a rewrite flush
+to undo. It was reproduced **once by hand** with wp-cli, fully restored (`hr_frontend_*` options
+deleted, rewrites flushed, `/wp-erp/` verified working again), and written into the report. The
+automated guard is **read-only**: fetch the reported slug, request it, expect 200. A suite that
+relocated the dashboard on every run would be worse than the bug.
+
+**Not covered:** the dashboard's own React application — what an employee can see and do once
+inside — and the effect of the `hr_frontend_redirect` setting, which sends employees to the frontend
+dashboard instead of wp-admin on login. Both need the slug question settled first, since changing it
+is what the module does when saving settings.
+
 ---
 
 ## What "done" will mean
