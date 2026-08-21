@@ -7,6 +7,8 @@ import {
     cleanupPayments,
     cleanupBills,
     cleanupPayBills,
+    cleanupPayPurchases,
+    cleanupPurchases,
     cleanupLedgerOrphans,
     customerIdFor,
     vendorIdFor,
@@ -39,6 +41,13 @@ test.use({ storageState: ADMIN_STATE });
  */
 const CUSTOMER = 'Harbourline Logistics';
 const PRODUCT = 'Custom Dashboard Build';
+
+/**
+ * The same product, by id, for the REST purchase seed. Deliberately NOT product
+ * 1 — `inventory.spec.ts` owns that one and asserts on its stock, and a purchase
+ * is the only thing in ERP that writes `stock_in`.
+ */
+const PRODUCT_ID_FOR_PURCHASE = 6;
 
 /**
  * Bill payment lives HERE, not in `bills.spec.ts`, because it spends the same
@@ -84,6 +93,8 @@ test.describe('Accounting — invoice settlement', () => {
         await cleanupInvoices(customerId);
         await cleanupPayBills(vendorId);
         await cleanupBills(vendorId);
+        await cleanupPayPurchases(vendorId);
+        await cleanupPurchases(vendorId);
         await cleanupLedgerOrphans();
     });
 
@@ -100,6 +111,8 @@ test.describe('Accounting — invoice settlement', () => {
         await cleanupInvoices(customerId);
         await cleanupPayBills(vendorId);
         await cleanupBills(vendorId);
+        await cleanupPayPurchases(vendorId);
+        await cleanupPurchases(vendorId);
         await cleanupLedgerOrphans();
     });
 
@@ -108,6 +121,8 @@ test.describe('Accounting — invoice settlement', () => {
         await cleanupInvoices(customerId);
         await cleanupPayBills(vendorId);
         await cleanupBills(vendorId);
+        await cleanupPayPurchases(vendorId);
+        await cleanupPurchases(vendorId);
         await cleanupLedgerOrphans();
         await closeDb();
     });
@@ -700,4 +715,79 @@ test.describe('Accounting — invoice settlement', () => {
             );
         }
     );
+    // ---- pay purchase ------------------------------------------------------
+    //
+    // Purchase payment lives here for the same reason bill payment does: it
+    // spends the Cash ledger, which is global state this file owns. The
+    // purchase it settles has to be SEEDED over REST — New Purchase cannot save
+    // at all (ERP-160, erp-pro#978) — and that seed answers 500 while
+    // committing (erp-pro#967), which is asserted in `purchases.spec.ts` rather
+    // than repeated here. What is tested here is the part that genuinely works:
+    // the pay-purchase screen.
+
+    /** Raises one purchase over REST and returns its voucher number. */
+    async function raisePurchase(amount: number): Promise<number> {
+        await page.createPurchaseViaRest(vendorId, VENDOR, PRODUCT_ID_FOR_PURCHASE, 1, amount, toDate(), dateOffset(30));
+
+        const rows = await query<RowDataPacket[]>(
+            `SELECT voucher_no FROM ${prefix()}erp_acct_purchase WHERE vendor_id = ? ORDER BY id DESC LIMIT 1`,
+            [vendorId]
+        );
+
+        return Number(rows[0]!.voucher_no);
+    }
+
+    /** What is still owed on a purchase: credits raised, less debits paid. */
+    async function owedOnPurchase(voucherNo: number): Promise<number> {
+        const rows = await query<RowDataPacket[]>(
+            `SELECT COALESCE(SUM(credit) - SUM(debit), 0) AS due
+               FROM ${prefix()}erp_acct_purchase_account_details WHERE purchase_no = ?`,
+            [voucherNo]
+        );
+
+        return Number(rows[0]!.due);
+    }
+
+    test('paying a purchase in full clears its balance and spends the cash', { tag: ['@tier1', '@accounting', '@flow', '@money'] }, async () => {
+        const voucherNo = await raisePurchase(300);
+
+        expect(await owedOnPurchase(voucherNo), 'precondition: the purchase is unpaid').toBeCloseTo(300, 2);
+
+        await raiseInvoice(2);
+        expect(await page.receivePayment(CUSTOMER, toDate()), 'precondition: cash was collected').toBe(true);
+
+        const funded = await cashBalance();
+
+        expect(funded, 'precondition: cash covers the purchase').toBeGreaterThanOrEqual(300);
+
+        expect(await page.payPurchase(VENDOR, toDate()), 'the pay-purchase form accepted the entry').toBe(true);
+
+        const payments = await query<RowDataPacket[]>(
+            `SELECT voucher_no, purchase_no, amount FROM ${prefix()}erp_acct_pay_purchase_details ORDER BY id DESC LIMIT 1`
+        );
+
+        expect(payments, 'a purchase payment is written').toHaveLength(1);
+        expect(Number(payments[0]!.purchase_no), 'against the purchase it settles').toBe(voucherNo);
+        expect(Number(payments[0]!.amount), 'for the full amount').toBeCloseTo(300, 2);
+
+        expect(await owedOnPurchase(voucherNo), 'the purchase is settled').toBeCloseTo(0, 2);
+        expect(await cashBalance(), 'and the cash left the account').toBeCloseTo(funded - 300, 2);
+    });
+
+    test('a paid purchase is marked Paid on the transactions screen', { tag: ['@tier2', '@accounting', '@flow'] }, async () => {
+        const voucherNo = await raisePurchase(300);
+
+        await raiseInvoice(2);
+        await page.receivePayment(CUSTOMER, toDate());
+
+        expect(await page.payPurchase(VENDOR, toDate()), 'precondition: the payment was accepted').toBe(true);
+        expect(await owedOnPurchase(voucherNo), 'precondition: the purchase is settled').toBeCloseTo(0, 2);
+
+        await page.gotoRoute('purchases');
+        const table = (await page.reportText()).replace(/\s+/g, ' ');
+        const marker = `#${voucherNo}`;
+        const row = table.slice(table.indexOf(marker), table.indexOf(marker) + 220);
+
+        expect(row, `the purchase row reads Paid, row read: ${row}`).toContain('Paid');
+    });
 });

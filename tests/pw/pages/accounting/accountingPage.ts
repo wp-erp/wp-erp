@@ -46,6 +46,8 @@ export const accountingRoutes = {
     inventory: '/products/inventory',
     chartOfAccounts: '/settings/charts',
     bankAccounts: '/settings/banks',
+    transfers: '/settings/banks/transfers',
+    newTransfer: '/settings/banks/transfers/new',
     taxRates: '/settings/taxes/tax-rates',
     taxPayments: '/settings/taxes/tax-records',
     reports: '/reports',
@@ -88,6 +90,8 @@ export const routeHeadings: Record<AccountingRoute, string> = {
     inventory: 'Inventory Products',
     chartOfAccounts: 'Chart of Accounts',
     bankAccounts: 'Accounts',
+    transfers: 'Transfers',
+    newTransfer: 'New Transfer',
     taxRates: 'Tax Rates',
     taxPayments: 'Tax Payments',
     reports: 'Trial Balance',
@@ -937,6 +941,92 @@ export class AccountingPage extends BasePage {
             },
             { method, path, body }
         );
+    }
+
+    // ---- purchases ----------------------------------------------------------
+    //
+    // Purchases cannot be raised through the UI at all — New Purchase never
+    // loads its product list and then refuses to save without one (ERP-160,
+    // erp-pro#978) — so a purchase can only be SEEDED over REST. That create
+    // answers HTTP 500 while committing the record in full (erp-pro#967), which
+    // is why the seeder returns the status instead of throwing on it: the
+    // caller asserts on the status where that is the point, and ignores it
+    // where the purchase is merely a fixture.
+    //
+    // Paying a purchase is a different story: that form needs no product
+    // picker, so it works, and the payment cases below drive the real screen.
+
+    /**
+     * Seeds a purchase over REST, in the exact shape `PurchaseCreate.vue:560-574`
+     * sends. Returns the HTTP status; read the voucher number from the database.
+     */
+    async createPurchaseViaRest(
+        vendorId: number,
+        vendorName: string,
+        productId: number,
+        qty: number,
+        unitPrice: number,
+        trnDate: string,
+        dueDate: string
+    ): Promise<{ status: number; body: string }> {
+        await this.gotoRoute('purchases');
+
+        return this.restRequest('POST', '/accounting/v1/purchases', {
+            vendor_id: vendorId,
+            vendor_name: vendorName,
+            trn_date: trnDate,
+            due_date: dueDate,
+            ref: '',
+            billing_address: {},
+            line_items: [
+                {
+                    product_id: productId,
+                    qty,
+                    unit_price: unitPrice,
+                    item_total: qty * unitPrice,
+                    tax_cat_id: null,
+                    apply_tax: false,
+                    tax_amount: 0,
+                },
+            ],
+            particulars: '',
+            attachments: [],
+            type: 'purchase',
+            status: 2,
+            purchase_order: 0,
+            tax_rate: 0,
+        });
+    }
+
+    /**
+     * Pays a vendor's outstanding purchases through the real screen.
+     *
+     * Mirrors `payBill()`, but this form labels the vendor picker **Vendor**
+     * rather than "Pay To", and its due rows arrive only after the vendor is
+     * chosen. Each row's Amount is pre-filled with the full balance, so paying
+     * in full needs no typing.
+     */
+    async payPurchase(vendor: string, paymentDate: string): Promise<boolean> {
+        await this.gotoRoute('newPayPurchase');
+
+        if (!(await this.pickFromMultiselect('Vendor', vendor))) return false;
+
+        await this.page
+            .locator('table tbody tr')
+            .first()
+            .waitFor({ state: 'visible', timeout: 15_000 })
+            .catch(() => undefined);
+        await this.page.waitForTimeout(1200);
+
+        await this.pickDate('Payment Date', paymentDate);
+
+        for (const label of ['Payment Method', 'Transaction From']) {
+            if (!(await this.pickFirstOption(label))) return false;
+        }
+
+        await this.save();
+
+        return true;
     }
 
     // ---- reports -------------------------------------------------------------

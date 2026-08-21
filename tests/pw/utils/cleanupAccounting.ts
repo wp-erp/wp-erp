@@ -296,3 +296,91 @@ export async function personRowCount(email: string): Promise<number> {
 
     return Number(rows[0]!.c);
 }
+
+/**
+ * Purchases raised against a vendor, with their line items, ledger entries and
+ * STOCK MOVEMENTS.
+ *
+ * The stock rows matter: a purchase is the only thing in ERP that writes
+ * `stock_in`, so leaving them behind silently inflates the inventory register
+ * for every later run.
+ */
+export async function cleanupPurchases(vendorId?: number): Promise<number> {
+    const purchases = `${prefix()}erp_acct_purchase`;
+
+    const rows = vendorId
+        ? await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${purchases} WHERE vendor_id = ?`, [vendorId])
+        : await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${purchases}`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_purchase_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_purchase_account_details WHERE purchase_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_product_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const ids = rows.map((row) => Number(row.id));
+    const result = await execute(`DELETE FROM ${purchases} WHERE id IN (${ids.map(() => '?').join(', ')})`, ids);
+
+    return result.affectedRows ?? 0;
+}
+
+/** Payments made against purchases, with their ledger entries. */
+export async function cleanupPayPurchases(vendorId?: number): Promise<number> {
+    const payPurchases = `${prefix()}erp_acct_pay_purchase`;
+
+    const rows = vendorId
+        ? await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${payPurchases} WHERE vendor_id = ?`, [vendorId])
+        : await query<RowDataPacket[]>(`SELECT id, voucher_no FROM ${payPurchases}`);
+
+    if (!rows.length) return 0;
+
+    const vouchers = rows.map((row) => Number(row.voucher_no));
+    const list = vouchers.map(() => '?').join(', ');
+
+    await execute(`DELETE FROM ${prefix()}erp_acct_pay_purchase_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_ledger_details WHERE trn_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_people_trn_details WHERE voucher_no IN (${list})`, vouchers);
+    await execute(`DELETE FROM ${prefix()}erp_acct_voucher_no WHERE id IN (${list})`, vouchers);
+
+    const ids = rows.map((row) => Number(row.id));
+    const result = await execute(`DELETE FROM ${payPurchases} WHERE id IN (${ids.map(() => '?').join(', ')})`, ids);
+
+    return result.affectedRows ?? 0;
+}
+
+/**
+ * Creates a vendor directly in the database and returns its people id.
+ *
+ * Every seeded vendor is already spoken for by another accounting spec — Cash
+ * and the vendor balances are global, so one party per file is the rule this
+ * suite learned the hard way. A spec that needs a vendor nobody else touches
+ * makes its own. Written straight to the tables because the REST create is a
+ * browser call and this runs in `beforeAll`, where there is no page.
+ */
+export async function seedVendor(firstName: string, lastName: string, email: string): Promise<number> {
+    const existing = await query<RowDataPacket[]>(`SELECT id FROM ${prefix()}erp_peoples WHERE email = ?`, [email]);
+
+    if (existing.length) return Number(existing[0]!.id);
+
+    const inserted = await execute(
+        `INSERT INTO ${prefix()}erp_peoples (first_name, last_name, email, hash, created_by, created)
+         VALUES (?, ?, ?, MD5(?), 1, NOW())`,
+        [firstName, lastName, email, email]
+    );
+
+    const peopleId = Number(inserted.insertId);
+    const types = await query<RowDataPacket[]>(`SELECT id FROM ${prefix()}erp_people_types WHERE name = 'vendor'`);
+
+    await execute(
+        `INSERT INTO ${prefix()}erp_people_type_relations (people_id, people_types_id) VALUES (?, ?)`,
+        [peopleId, Number(types[0]!.id)]
+    );
+
+    return peopleId;
+}

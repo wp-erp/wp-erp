@@ -2148,3 +2148,77 @@ feature request, not a defect, so it is written down here instead of being filed
 - Employee is a people type too (`erp_people_types` holds it), but employees are
   created through HR with a WordPress user attached, a different write path
   entirely. Not exercised here.
+
+## Accounting — purchases (`tests/e2e/accounting/purchases.spec.ts`) — 7 cases, 6 green + 1 known-defect guard
+
+Plus two pay-purchase cases added to `payments.spec.ts` (see below for why they
+live there).
+
+A purchase is the vendor-side mirror of an invoice — it credits the vendor,
+debits a purchase account, and is **the only thing in ERP that ever writes
+`stock_in`**. Nothing else can put a product into stock.
+
+**Covered**
+
+- The purchases screen renders with all seven of its columns.
+- A purchase credits the vendor for the line total and moves the product into
+  stock (`stock_in = qty`).
+- A purchase posts a balanced double entry: the purchase account is debited the
+  full amount with nothing left unbalanced against it.
+- A raised purchase shows on screen naming the vendor and the amount owed.
+- The pay-purchase screen offers the vendor their outstanding purchase at its
+  full balance.
+- Purchases are closed to an employee — the accounting app never loads.
+- **Known defect, guarded:** erp-pro#967 — the REST create answers 500 for a
+  write that fully succeeded.
+- In `payments.spec.ts`: paying a purchase in full clears its balance and spends
+  the cash (asserted against the Cash ledger, both sides), and the settled
+  purchase is marked **Paid** on the transactions screen.
+
+**Two filed defects shape this file, and both are guarded rather than worked
+around**
+
+- **ERP-160 / erp-pro#978** — New Purchase never loads its product list and then
+  refuses to save without one, so **a purchase cannot be raised through the UI at
+  all**. Every purchase here is therefore seeded over REST. That is a stated
+  limitation, not a preference: the create screen has no working path to assert
+  against, so *no UI creation case exists for purchases* and none can until #978
+  is fixed. The screen itself is guarded in `inventory.spec.ts`.
+- **erp-pro#967** — the REST create answers HTTP 500 while committing the record
+  in full. Proven here for the first time and **posted to #967 as its fourth
+  follow-up**, together with estimates: both were on that issue's own
+  "still untested" list, and both were assumed to fail rather than measured. They
+  do. The purchase committed its header, line item, vendor credit of $300.00 and
+  its stock movement before the request died.
+
+**Why pay-purchase is in `payments.spec.ts` and not here** — it spends the Cash
+ledger, which is global state no vendor scoping can isolate, and that file owns
+Cash deliberately (bill payment lives there for the same reason). One party per
+file is a rule this suite learned by breaking it.
+
+**This file owns its own vendor** (`Northgate Timber Supply`, seeded and removed
+by the spec) because all four seeded vendors are already claimed — Meridian by
+`payments.spec.ts`, Bluewave by `bills.spec.ts`, Skyline by `expenses.spec.ts`,
+Pinewood by `reports.spec.ts` and `inventory.spec.ts`. The purchase seed in
+`payments.spec.ts` deliberately uses product 6, not product 1, because
+`inventory.spec.ts` asserts on product 1's stock.
+
+**Not proven, and why**
+
+- **Purchase Orders** (`/purchase-orders/new`, and the `purchase_order` field on
+  the create payload) are untouched. The PO form has the same empty product
+  picker as New Purchase, so it cannot be driven either, and converting a PO into
+  a purchase was not exercised.
+- **Editing a purchase** is not covered. Given what editing does to expenses
+  (ERP-154) and to bill payments (ERP-156) this is a likely defect site, but it
+  was not opened — the purchase edit route was never reached in this pass.
+- **Voiding a purchase** (`/purchases/{id}/void`, registered at
+  `PurchasesController.php:81-90`) is not covered.
+- **Partial payment** of a purchase is not covered — every payment case pays the
+  pre-filled full balance. The amount input accepts less, and that path is
+  untested.
+- **Tax on a purchase** is not covered: every seed sends `tax_rate: 0` and
+  `apply_tax: false`.
+- The stock arithmetic here is asserted per transaction (`stock_in = qty` for the
+  purchase's own voucher), NOT against the inventory register's printed figure —
+  that register is `inventory.spec.ts`'s subject and it owns a different product.
