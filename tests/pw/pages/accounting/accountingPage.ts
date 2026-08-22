@@ -251,6 +251,18 @@ export class AccountingPage extends BasePage {
             .trim();
     }
 
+    /**
+     * The list row containing this text, as an element.
+     *
+     * Prefer this to slicing `reportText()`: a voucher marker like `#781` is a
+     * substring of `#7812`, so a string slice silently reads a DIFFERENT
+     * transaction's cells once the list grows. That shape passes when a spec runs
+     * alone and fails in a full suite.
+     */
+    rowContaining(text: string): Locator {
+        return this.page.locator(accountingSelectors.rows).filter({ hasText: text }).first();
+    }
+
     async hasRowContaining(text: string): Promise<boolean> {
         return (await this.bodyText()).includes(text);
     }

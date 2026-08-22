@@ -784,10 +784,14 @@ test.describe('Accounting — invoice settlement', () => {
         expect(await owedOnPurchase(voucherNo), 'precondition: the purchase is settled').toBeCloseTo(0, 2);
 
         await page.gotoRoute('purchases');
-        const table = (await page.reportText()).replace(/\s+/g, ' ');
-        const marker = `#${voucherNo}`;
-        const row = table.slice(table.indexOf(marker), table.indexOf(marker) + 220);
 
-        expect(row, `the purchase row reads Paid, row read: ${row}`).toContain('Paid');
+        // The ROW element, not a slice of the flattened table. `#781` is a
+        // substring of `#7812`, so slicing by the marker landed on a different
+        // transaction once the list had grown — it passed alone and failed in a
+        // full run, which is the giveaway. A row-scoped locator cannot drift.
+        const row = page.rowContaining(`#${voucherNo}`);
+
+        await expect(row, 'the purchase row is listed').toBeVisible();
+        await expect(row, 'and reads Paid').toContainText('Paid');
     });
 });

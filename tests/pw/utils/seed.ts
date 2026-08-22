@@ -318,8 +318,14 @@ export async function seedCrmContacts(api: ApiUtils): Promise<number> {
     for (const c of data.crmContacts) {
         if (existing.has(c.email.toLowerCase())) continue;
 
+        // `postJson`, NOT `post`: the first version used `post()`, ignored the
+        // status and incremented `created` regardless — so when the CRM module
+        // was off and every POST answered 404, this reported seeding eight
+        // contacts while creating none. A seeder that cannot fail is how a
+        // broken environment looks healthy.
+        //
         // `owner` is required by the controller; it is the CRM agent user id.
-        await api.post(endPoints.crm.contacts, {
+        await api.postJson(endPoints.crm.contacts, {
             first_name: c.firstName,
             last_name: c.lastName,
             email: c.email,

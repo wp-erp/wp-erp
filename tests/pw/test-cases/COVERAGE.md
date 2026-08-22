@@ -2525,3 +2525,88 @@ scheduling data.
   is expected to reach everything.
 - The canary proves a role reaches ONE own-area route. It is not evidence the
   role can perform every operation its module offers — again, the CRUD layer.
+
+## Environment reproducibility — the suite now stands up its own site
+
+Rebuilding the Docker site from nothing (`wp-env destroy` → `start` → `npm run
+setup`) used to produce a site the suite could not run against. **Eight** manual
+steps stood between a fresh install and a runnable one, and every one of them
+would have hit a CI runner too. They are now done by
+`POST /erp-pw/v1/bootstrap` (`mu-plugins/erp-test-helpers.php`), called from
+`_site.setup.ts`:
+
+1. **wp-erp and erp-pro are never activated.** `.wp-env.json` puts them on disk
+   through `mappings`; only the `plugins` array auto-activates.
+2. **ERP enables the HRM core module only** (`WeDevsERPInstaller.php:2158`).
+   With CRM off the entire `/erp/v1/crm/*` namespace is never registered — 113
+   routes instead of 264.
+3. **All 22 Pro modules start inactive**, and `erp_recruiter` does not exist as a
+   role until the recruitment module is on, so `auth_setup` cannot seed actors.
+4. **Three setup wizards hijack the first admin login** and break every login the
+   suite performs: ERP's, ERP Payroll's, and **WooCommerce onboarding**. The last
+   one only appears on a site that has never completed it, so it stayed invisible
+   until the site was rebuilt.
+5. **Pretty permalinks** are not set.
+6. **The company record is empty** — the ERP wizard would have collected it.
+7. **The currency is empty**, which is not cosmetic: it makes
+   `erp_get_currency_symbol()` return the whole symbol array and fatals the CRM
+   Deals board (reported, plugin-internal-tasks#2301).
+8. **`seedCrmContacts()` swallowed failures** — it used `api.post()` and counted
+   `created++` regardless of status, so with CRM off it reported seeding eight
+   contacts while every POST 404'd. Now `postJson()`, which throws.
+
+**Ordering is the trap, not the steps.** `Module::activate_modules()` refuses a
+Pro module whose parent core module is inactive (`erp-pro/includes/Module.php:880-906`)
+**and** bails without a valid licence. Activating Pro modules before enabling
+CRM/Accounting silently activates only the 11 HRM-dependent ones and leaves
+inventory, deals, reimbursement and every integration off — which surfaces as 26
+unrelated-looking test failures. So the bootstrap runs in two passes: everything
+that does not need a licence first, then the Pro modules after `_site.setup.ts`
+has activated the seat.
+
+**Verified end to end:** the environment was destroyed and rebuilt, and
+`npm run setup` took it from a bare WordPress install to 26/26 green with no
+manual intervention, activating 22/22 Pro modules on its own.
+
+### CI workflow — four faults, all of which would have failed a fresh runner
+
+`.github/workflows/pw-suite.yml`:
+
+- It copied **`.wp-env.ci.json`, a file that does not exist** in the repo. The
+  step would fail before the site ever started. Removed.
+- It set **`ADMIN_USERNAME`** while the suite reads `env('ADMIN')`, which throws
+  on a missing required variable — so the suite could never have started. It also
+  never set `USER_PASSWORD` or any of the seven role logins, all required.
+- It **never ran the accounting money project at all.** Those specs are a
+  separate project and were simply absent from CI. Added, with the `--workers=1`
+  the shared Cash ledger requires.
+- The licence teardown targeted **`--project=teardown:license`, which does not
+  exist** (the project is `license_teardown`), and `|| true` swallowed the error
+  so the step went green while releasing nothing. With one seat on the licence
+  that strands it for every later run. It now calls the npm script and prints a
+  GitHub warning if release genuinely fails.
+
+**Still not proven:** the workflow has not been executed. These are fixes to
+faults found by reading it against a from-scratch local rebuild, not a green CI
+run, and it should be exercised with `workflow_dispatch` before anyone relies on
+it.
+
+### One more the rebuild exposed: the site and the runner must share a timezone
+
+A fresh WordPress installs as **UTC**; the suite builds its dates from the
+**runner's local clock**. On a UTC+6 laptop at 01:38 local the site still thinks
+it is the previous day, and anything date-ranged quietly disagrees. The income
+statement defaults to "this month up to today"
+(`ReportsController.php:133`), so it requested `2026-08-01 .. 2026-08-22` while
+the suite raised an invoice dated `2026-08-23` — and the report showed
+**$0.00 income against a real invoice**. Three reports cases failed on nothing
+but the clock.
+
+The bootstrap now sets `timezone_string` from
+`Intl.DateTimeFormat().resolvedOptions().timeZone`, so the site adopts whatever
+timezone the runner is in. Passed in rather than hardcoded deliberately: a UTC CI
+runner and a UTC+6 laptop then both end up self-consistent, which a fixed
+`Asia/Dhaka` would not achieve.
+
+Worth keeping in mind when reading any date-scoped failure: check whether the
+site and the runner agree on what day it is *before* suspecting the product.

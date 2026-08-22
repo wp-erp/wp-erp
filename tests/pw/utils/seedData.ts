@@ -16,6 +16,45 @@ export const SEED_DOMAIN = 'northwind-analytics.test';
 // the start of an inline comment, which silently truncated it to `Erp@Test`.
 export const SEED_PASSWORD = 'Erp@Test#2026';
 
+/**
+ * The Pro modules the suite expects active — the documented 22.
+ *
+ * `awesome_support` is deliberately absent: it ships with erp-pro but depends on
+ * the Awesome Support plugin, which this environment does not install, so
+ * activating it would fail every run.
+ *
+ * ORDER OF ACTIVATION MATTERS, and is handled by the bootstrap endpoint rather
+ * than here: `Module::activate_modules()` refuses any Pro module whose parent
+ * CORE module (hrm/crm/accounting) is inactive, so the core modules go on first.
+ * Getting that backwards silently activates only the 11 HRM-dependent ones and
+ * leaves inventory, deals, reimbursement and every integration off — which
+ * reads as 26 unrelated test failures.
+ */
+export const proModules = [
+    'advanced_leave',
+    'asset_management',
+    'attendance',
+    'custom_field_builder',
+    'deals',
+    'document_manager',
+    'gravity_forms',
+    'help_scout',
+    'hr_frontend',
+    'hr_training',
+    'hubspot',
+    'inventory',
+    'mailchimp',
+    'payment_gateway',
+    'payroll',
+    'recruitment',
+    'reimbursement',
+    'salesforce',
+    'sms_notification',
+    'woocommerce',
+    'workflow',
+    'zendesk',
+] as const;
+
 export const company = {
     name: 'Northwind Analytics Ltd.',
     address1: '18 Kemal Ataturk Avenue',

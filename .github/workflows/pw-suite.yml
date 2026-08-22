@@ -1,4 +1,4 @@
-name: Playwright suite (e2e + API)
+name: Playwright suite (e2e + money + API)
 
 on:
     push:
@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
     e2e:
-        name: e2e + API on wp-env :8888
+        name: e2e + money + API on wp-env :8888
         runs-on: ubuntu-latest
         timeout-minutes: 90
 
@@ -38,8 +38,23 @@ jobs:
             DB_PASSWORD: password
             DB_NAME: wordpress
             DB_PREFIX: wp_
-            ADMIN_USERNAME: admin
+            # `ADMIN`, not `ADMIN_USERNAME` — utils/helpers.ts reads env('ADMIN')
+            # and throws on a missing required variable, so the old name meant the
+            # suite could never have started on a runner.
+            ADMIN: admin
             ADMIN_PASSWORD: password
+            ADMIN_EMAIL: admin@erp.test
+            # Required: every non-admin actor authenticates with this.
+            USER_PASSWORD: ${{ secrets.ERP_USER_PASSWORD || 'Erp@Test#2026' }}
+            HR_MANAGER: erp_hr_manager
+            CRM_MANAGER: erp_crm_manager
+            CRM_AGENT: erp_crm_agent
+            CRM_AGENT_2: erp_crm_agent_2
+            ACCOUNT_MANAGER: erp_ac_manager
+            RECRUITER: erp_recruiter
+            EMPLOYEE: erp_employee
+            ERP_PRO: 'true'
+            ERP_TEST_KEY: erp-pw-local
             ERP_LICENSE_EMAIL: ${{ secrets.ERP_LICENSE_EMAIL }}
             ERP_LICENSE_KEY: ${{ secrets.ERP_LICENSE_KEY }}
             ERP_LICENSE_USERS: ${{ vars.ERP_LICENSE_USERS || '100' }}
@@ -75,7 +90,6 @@ jobs:
 
             - name: Start wp-env
               run: |
-                  cp .wp-env.ci.json .wp-env.override.json
                   npm run start:env
                   curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
 
@@ -89,6 +103,15 @@ jobs:
             - name: e2e
               run: npm run test:e2e -- ${{ github.event.inputs.tier == 'tier1' && '--grep @tier1' || github.event.inputs.tier == 'tier2' && '--grep @tier2' || github.event.inputs.tier == 'tier3' && '--grep @tier3' || '' }}
 
+            # The money specs are a SEPARATE project and were never run by CI at
+            # all. They share one Cash ledger and one voucher sequence, so they
+            # must run single-worker: `workers` is not a per-project option in
+            # Playwright, only the CLI flag enforces it. `npm run test:money`
+            # carries the flag.
+            - name: Accounting (money, serial)
+              if: always()
+              run: npm run test:money
+
             - name: API
               if: always()
               run: npm run test:api
@@ -101,9 +124,18 @@ jobs:
 
             # Runs even when the job fails or is cancelled, so the single licence
             # seat is always released back to the account.
+            # `--project=teardown:license` named a project that does not exist —
+            # teardown.config.ts defines `license_teardown` — and `|| true`
+            # swallowed the resulting error, so this step went green while
+            # releasing nothing. With one seat on the licence, that strands it for
+            # every later run. Use the npm script, which targets the real project.
+            #
+            # `|| true` is kept ONLY so a teardown failure cannot mask the suite's
+            # own result; the step now prints a warning when it fails instead of
+            # passing silently.
             - name: Deactivate licence
               if: always()
-              run: npx playwright test --project=teardown:license --config=teardown.config.ts || true
+              run: npm run teardown:license || echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand" 
 
             - name: Upload reports
               if: always()

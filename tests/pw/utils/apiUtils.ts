@@ -145,4 +145,39 @@ export class ApiUtils {
     async deleteUser(id: number, reassign = 1): Promise<APIResponse> {
         return this.request.delete(restPath(endPoints.wp.user(id), { force: 'true', reassign }), { headers: adminAuth });
     }
+    /**
+     * Stands a fresh WordPress install up as the suite expects to find it —
+     * plugins, core modules, Pro modules, wizards, permalinks, company and
+     * currency. Safe to call repeatedly.
+     *
+     * Called in a LOOP because activating a plugin does not load its code into
+     * the request that activated it: the first call switches wp-erp/erp-pro on,
+     * the second finds ERP loaded and configures it.
+     */
+    async bootstrapSite(payload: {
+        company: Record<string, unknown>;
+        settings: Record<string, string>;
+        timezone?: string;
+        pro_modules: readonly string[];
+    }): Promise<{ done: boolean; did: string[]; pro_modules?: unknown; currency?: string | null }> {
+        let last: { done: boolean; did: string[] } = { done: false, did: [] };
+
+        for (let attempt = 0; attempt < 3; attempt++) {
+            const response = await this.request.post(restPath(endPoints.testHelper.bootstrap, this.testKey()), {
+                headers: adminAuth,
+                data: payload as unknown as Record<string, unknown>,
+            });
+
+            if (!response.ok()) {
+                throw new Error(`bootstrap -> ${response.status()} ${await response.text()}`);
+            }
+
+            last = (await response.json()) as { done: boolean; did: string[] };
+
+            if (last.done) return last;
+        }
+
+        return last;
+    }
+
 }

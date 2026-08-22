@@ -75,5 +75,6 @@ export const endPoints = {
         cleanupUsers: '/erp-pw/v1/users/cleanup',
         options: '/erp-pw/v1/options',
         flushCache: '/erp-pw/v1/flush-cache',
+        bootstrap: '/erp-pw/v1/bootstrap',
     },
 } as const;
