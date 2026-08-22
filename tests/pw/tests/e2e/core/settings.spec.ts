@@ -1,7 +1,7 @@
 import { test, expect } from '@utils/test';
 import { SettingsPage, settingsTabs } from '@pages/core/settingsPage';
 import { ADMIN_STATE, HR_MANAGER_STATE, EMPLOYEE_STATE } from '@utils/authStates';
-import { getOption, closeDb } from '@utils/dbUtils';
+import { getOption, closeDb, setOption } from '@utils/dbUtils';
 
 test.use({ storageState: ADMIN_STATE });
 
@@ -21,12 +21,37 @@ test.use({ storageState: ADMIN_STATE });
 test.describe('Core — settings', () => {
     let page: SettingsPage;
 
+    /**
+     * The general settings as they stood before this file ran.
+     *
+     * `erp-settings-save` writes EVERY field of the module it is given, so a
+     * save that omits a field blanks it — and these cases deliberately post a
+     * near-empty payload to exercise the permission model. That wiped
+     * `erp_currency`, which made `erp_get_currency_symbol()` return the whole
+     * symbol ARRAY, which fatals the CRM Deals board inside
+     * `html_entity_decode()` (`deals/includes/Deal_Ajax.php:105`) — 22 deals
+     * cases failed in a full run while passing in isolation.
+     *
+     * The blanking-fatals-Deals chain is a product finding in its own right and
+     * is reported separately. What belongs here is the discipline: a spec that
+     * writes global configuration puts it back.
+     */
+    let generalBefore: Record<string, unknown> | null = null;
+
+    test.beforeAll(async () => {
+        generalBefore = await getOption<Record<string, unknown>>('erp_settings_general');
+    });
+
     test.beforeEach(async ({ page: p }) => {
         page = new SettingsPage(p);
         page.watchServerErrors();
     });
 
     test.afterAll(async () => {
+        if (generalBefore) {
+            await setOption('erp_settings_general', generalBefore);
+        }
+
         await closeDb();
     });
 

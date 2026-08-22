@@ -90,8 +90,11 @@ export const routeHeadings: Record<AccountingRoute, string> = {
     inventory: 'Inventory Products',
     chartOfAccounts: 'Chart of Accounts',
     bankAccounts: 'Accounts',
-    transfers: 'Transfers',
-    newTransfer: 'New Transfer',
+    // Both transfer screens title themselves "Transfer Money" — the list and the
+    // create form share one heading. Read off the running screens, not guessed:
+    // the first draft assumed "Transfers"/"New Transfer" and screens.spec caught it.
+    transfers: 'Transfer Money',
+    newTransfer: 'Transfer Money',
     taxRates: 'Tax Rates',
     taxPayments: 'Tax Payments',
     reports: 'Trial Balance',

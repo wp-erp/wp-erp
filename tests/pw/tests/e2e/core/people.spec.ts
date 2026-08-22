@@ -187,7 +187,13 @@ test.describe('Core — people', () => {
         // "First name is required" strings in `PeopleModal.vue:313-321` — those
         // are unreachable from the UI, and asserting them would have been a
         // test written from the source instead of from the product.
-        const before = await query<RowDataPacket[]>(`SELECT COUNT(*) AS c FROM ${prefix()}erp_peoples`);
+        // Scoped to this file's OWN domain, never a global people count: the
+        // suite runs fullyParallel and other specs create people while this one
+        // runs, so a site-wide COUNT(*) fails intermittently for a reason that
+        // has nothing to do with the empty submit. It passed alone and failed in
+        // the full run — the classic shape of a shared-state assertion.
+        const scoped = `SELECT COUNT(*) AS c FROM ${prefix()}erp_peoples WHERE email LIKE '%@people-spec.test'`;
+        const before = await query<RowDataPacket[]>(scoped);
 
         await page.openPersonModal('customers');
         await page.submitPerson();
@@ -198,7 +204,7 @@ test.describe('Core — people', () => {
             'the browser marks the empty required fields invalid'
         ).toBeGreaterThan(0);
 
-        const after = await query<RowDataPacket[]>(`SELECT COUNT(*) AS c FROM ${prefix()}erp_peoples`);
+        const after = await query<RowDataPacket[]>(scoped);
 
         expect(Number(after[0]!.c), 'and nobody was created').toBe(Number(before[0]!.c));
     });
