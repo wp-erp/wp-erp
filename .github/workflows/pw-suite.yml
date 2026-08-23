@@ -90,6 +90,12 @@ jobs:
 
             - name: Start wp-env
               run: |
+                  # `.wp-env.ci.json` lists wp-erp and erp-pro under `plugins`
+                  # rather than only `mappings`, which is what ACTIVATES them on a
+                  # runner — the local `.wp-env.json` maps them, so they land on
+                  # disk inactive. The setup bootstrap also activates them, so this
+                  # is belt and braces rather than the only path.
+                  cp .wp-env.ci.json .wp-env.override.json
                   npm run start:env
                   curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
 
