@@ -1,4 +1,12 @@
-name: Playwright suite (e2e + money + API)
+# Kept at .github/workflows/playwright.yml deliberately.
+#
+# GitHub keys a workflow by its FILE PATH and only lists or dispatches workflows
+# whose file is on the default branch. Introducing a new filename would mean the
+# suite could not be triggered manually until after this branch merged, and would
+# start a fresh entry with no run history. Reusing this path means the existing
+# "E2E_API Tests" entry updates in place, keeps its history, and can be dispatched
+# against this branch before the merge.
+name: E2E_API Tests
 
 on:
     # Runs once a day, plus the "Run workflow" button below for on-demand runs.
