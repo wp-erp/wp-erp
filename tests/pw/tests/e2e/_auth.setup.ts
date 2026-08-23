@@ -2,7 +2,7 @@ import { test as setup, expect, request } from '@utils/test';
 import { actors, ActorKey } from '@utils/authStates';
 import { ApiUtils } from '@utils/apiUtils';
 import { LoginPage } from '@pages/core/loginPage';
-import { env } from '@utils/helpers';
+import { env, parseBoolean } from '@utils/helpers';
 
 /**
  * Creates one user per ERP role (idempotent) and saves a storageState for each,
@@ -18,6 +18,10 @@ setup('seed role users', async () => {
             const actor = actors[key];
             if (key === 'admin') continue;
 
+            // Pro-only roles are registered by erp-pro modules; without Pro the
+            // role does not exist and seeding it fails.
+            if ('pro' in actor && actor.pro && !parseBoolean(env('ERP_PRO', 'true'))) continue;
+
             const login = env(actor.envUser);
             const password = env(actor.envPass);
 
@@ -32,6 +36,11 @@ setup('seed role users', async () => {
 for (const key of Object.keys(actors) as ActorKey[]) {
     setup(`authenticate ${key}`, async ({ page }) => {
         const actor = actors[key];
+
+        setup.skip(
+            'pro' in actor && Boolean(actor.pro) && !parseBoolean(env('ERP_PRO', 'true')),
+            `${key} needs a role that only erp-pro registers`
+        );
         const loginPage = new LoginPage(page);
 
         await loginPage.login(env(actor.envUser), env(actor.envPass));

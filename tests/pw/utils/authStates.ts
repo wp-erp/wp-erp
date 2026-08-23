@@ -26,7 +26,13 @@ export const actors = {
      */
     crmAgent2: { envUser: 'CRM_AGENT_2', envPass: 'USER_PASSWORD', role: 'erp_crm_agent', state: CRM_AGENT_2_STATE },
     accountManager: { envUser: 'ACCOUNT_MANAGER', envPass: 'USER_PASSWORD', role: 'erp_ac_manager', state: ACCOUNT_MANAGER_STATE },
-    recruiter: { envUser: 'RECRUITER', envPass: 'USER_PASSWORD', role: 'erp_recruiter', state: RECRUITER_STATE },
+    /**
+     * PRO-ONLY. `erp_recruiter` is registered by the erp-pro recruitment module,
+     * so on a free-only install the role simply does not exist and seeding it
+     * fails with "erp_recruiter holds erp_recruiter". Marked so the setup can
+     * skip it rather than break the whole chain.
+     */
+    recruiter: { envUser: 'RECRUITER', envPass: 'USER_PASSWORD', role: 'erp_recruiter', state: RECRUITER_STATE, pro: true },
     employee: { envUser: 'EMPLOYEE', envPass: 'USER_PASSWORD', role: 'employee', state: EMPLOYEE_STATE },
 } as const;
 
