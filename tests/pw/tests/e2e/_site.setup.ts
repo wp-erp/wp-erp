@@ -117,6 +117,13 @@ setup('the Pro modules the suite needs are active', async () => {
 });
 
 setup('ERP modules and pretty permalinks are in place', async () => {
+    // `/erp_pro/v1/admin/modules` only exists while erp-pro is installed, so
+    // this asserts nothing about the FREE plugin and must not run without Pro.
+    // Without the skip it answered `rest_no_route` 404 and failed the whole
+    // setup chain on a runner that had deliberately fallen back to the free
+    // suite — the suite claimed to support ERP_PRO=false and then broke on it.
+    setup.skip(!parseBoolean(env('ERP_PRO', 'true')), 'ERP_PRO is off — the Pro modules endpoint does not exist');
+
     const apiUtils = new ApiUtils(await request.newContext({ baseURL: env('BASE_URL') }));
     try {
         const modules = await apiUtils.activeModules();
