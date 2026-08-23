@@ -92,7 +92,7 @@ test.describe('HR — Leave → Requests', () => {
         // I have not established whether that is a product rule I have not found
         // (an advance-notice or entitlement-validity window) or a harness timing
         // problem, so it is NOT being claimed as a defect and NOT asserted as
-        // correct. Tracked in test-cases/COVERAGE.md.
+        // correct. Tracked in the QA coverage ledger.
 
         const policy = leavePolicies[0]!;
         const employee = employeeName(7);
@@ -124,7 +124,7 @@ test.describe('HR — Leave → Requests', () => {
         // I have not established whether that is a product rule I have not found
         // (an advance-notice or entitlement-validity window) or a harness timing
         // problem, so it is NOT being claimed as a defect and NOT asserted as
-        // correct. Tracked in test-cases/COVERAGE.md.
+        // correct. Tracked in the QA coverage ledger.
 
         const policy = leavePolicies[0]!;
         const employee = employeeName(8);
@@ -183,7 +183,7 @@ test.describe('HR — Leave → Requests', () => {
         // I have not established whether that is a product rule I have not found
         // (an advance-notice or entitlement-validity window) or a harness timing
         // problem, so it is NOT being claimed as a defect and NOT asserted as
-        // correct. Tracked in test-cases/COVERAGE.md.
+        // correct. Tracked in the QA coverage ledger.
 
         const policy = leavePolicies[2]!;
         const employee = employeeName(9);

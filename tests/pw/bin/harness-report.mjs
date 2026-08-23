@@ -6,6 +6,9 @@
  * Input : harness/*.json + harness/live/*.json  (captured via Playwright MCP)
  * Output: harness/report/<area>.md + harness/report/INDEX.md
  *
+ * That directory is gitignored: this repository is public and the reports dump
+ * every screen, field and route. Generate them locally when you need them.
+ *
  * It invents nothing: every field, label, option and button below was read off
  * the running site. A screen that could not be captured is listed as such.
  */

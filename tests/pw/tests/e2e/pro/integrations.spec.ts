@@ -23,7 +23,7 @@ test.use({ storageState: ADMIN_STATE });
  * keeps them visible in the report instead of quietly absent, which is the
  * whole point: a silent gap is indistinguishable from coverage.
  *
- * To enable one, add its variables to `.env` (see the table in HANDOFF.md) and
+ * To enable one, add its variables to `.env` (see `.env.example`) and
  * re-run. Nothing else changes.
  */
 

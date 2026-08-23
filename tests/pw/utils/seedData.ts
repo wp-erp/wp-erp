@@ -11,10 +11,22 @@
  * from `helpers.ts` so it is obviously transient.
  */
 
+import { env } from '@utils/helpers';
+
 export const SEED_DOMAIN = 'northwind-analytics.test';
-// NOTE: in .env this value MUST be quoted — dotenv treats an unquoted `#` as
-// the start of an inline comment, which silently truncated it to `Erp@Test`.
-export const SEED_PASSWORD = 'Erp@Test#2026';
+
+/**
+ * The password every seeded non-admin actor uses, read from `USER_PASSWORD`.
+ *
+ * Not hardcoded: this repository is public, and a literal here would publish a
+ * working credential pattern even though it only ever unlocks throwaway users on
+ * a disposable local site. `.env` is gitignored; `.env.example` documents the key.
+ *
+ * NOTE: in `.env` the value MUST be quoted if it contains a `#` — dotenv treats
+ * an unquoted `#` as the start of an inline comment, which silently truncated an
+ * earlier value at that character and produced a stream of failed logins.
+ */
+export const SEED_PASSWORD = env('USER_PASSWORD');
 
 /**
  * The Pro modules the suite expects active — the documented 22.

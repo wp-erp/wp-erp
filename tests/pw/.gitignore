@@ -9,3 +9,18 @@ wp-data/*
 !wp-data/.gitkeep
 *.tsbuildinfo
 .DS_Store
+
+# Internal QA artefacts — this repository is PUBLIC.
+#
+# The coverage ledger and the tier test-case files describe, in detail, defects
+# that are filed and in several cases still UNFIXED — an unauthenticated upload,
+# an auth bypass, an invoice token that is an unsalted hash of public values.
+# Publishing that here would hand over working exploit notes for live bugs.
+#
+# The harness reports are raw dumps of every screen, field and route, and the
+# handover notes are internal working context. None of it is needed to RUN the
+# suite; all of it is kept locally and shared through the QA workspace instead.
+test-cases/
+harness/report/
+HANDOFF.md
+harness/screenshots/

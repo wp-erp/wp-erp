@@ -71,7 +71,10 @@ jobs:
             ADMIN_PASSWORD: password
             ADMIN_EMAIL: admin@erp.test
             # Required: every non-admin actor authenticates with this.
-            USER_PASSWORD: ${{ secrets.ERP_USER_PASSWORD || 'Erp@Test#2026' }}
+            # No literal fallback: this repository is public. Set the
+            # ERP_USER_PASSWORD secret; without it the suite fails fast on the
+            # missing variable rather than running under a published credential.
+            USER_PASSWORD: ${{ secrets.ERP_USER_PASSWORD }}
             HR_MANAGER: erp_hr_manager
             CRM_MANAGER: erp_crm_manager
             CRM_AGENT: erp_crm_agent

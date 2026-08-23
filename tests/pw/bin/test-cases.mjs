@@ -13,6 +13,9 @@
  * hand from `flows.mjs` — a generator cannot infer an oracle it was never told.
  *
  * Output: test-cases/tier{1,2,3}/<area>.md
+ *
+ * That directory is gitignored: this repository is public and the tier-3 files
+ * describe defects that are filed and still open. Generate them locally.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
