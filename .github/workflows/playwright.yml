@@ -89,28 +89,15 @@ jobs:
             - name: Checkout wp-erp
               uses: actions/checkout@v4
 
-            - name: Use Node 20
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: npm
-
+            # composer only — NO npm build, and that is not an oversight.
+            #
+            # wp-erp SHIPS its built assets (assets/js/erp-all.min.js and friends
+            # are committed), so there is nothing for a build to produce. Running
+            # one actively breaks the job: the plugin pins node-sass ^4.13, a
+            # native module that cannot compile on any modern Node, so `npm i`
+            # dies in node-gyp. All CI needs is vendor/ for the autoloader.
             - name: Composer install (wp-erp)
               run: composer install --no-dev -o || composer update --no-dev -o
-
-            - name: Cache node_modules (wp-erp)
-              id: erp-nm
-              uses: actions/cache@v4
-              with:
-                  path: node_modules
-                  key: erp-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-            - name: Npm install (wp-erp)
-              if: steps.erp-nm.outputs.cache-hit != 'true'
-              run: npm ci --prefer-offline --no-audit --no-fund || npm i
-
-            - name: Npm build (wp-erp)
-              run: npm run build
 
             - name: Tar wp-erp build output
               run: |
@@ -146,28 +133,11 @@ jobs:
                   ref: develop
                   token: ${{ secrets.ERP_PRO_TOKEN }}
 
-            - name: Use Node 20
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: npm
-
+            # Same as wp-erp: erp-pro ships its built assets (58 committed
+            # .min.js files) and pins node-sass ^4.7, so a build would only
+            # fail. composer install for the autoloader is all that is needed.
             - name: Composer install (erp-pro)
               run: composer install --no-dev -o || composer update --no-dev -o || true
-
-            - name: Cache node_modules (erp-pro)
-              id: pro-nm
-              uses: actions/cache@v4
-              with:
-                  path: node_modules
-                  key: pro-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-            - name: Npm install (erp-pro)
-              if: steps.pro-nm.outputs.cache-hit != 'true'
-              run: npm ci --prefer-offline --no-audit --no-fund || npm i
-
-            - name: Npm build (erp-pro)
-              run: npm run build
 
             - name: Tar erp-pro build output
               run: |
