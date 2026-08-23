@@ -1,0 +1,94 @@
+name: Set up an ERP site for testing
+description: >
+    Unpacks the pre-built plugins, boots wp-env, installs Playwright and seeds
+    the site. Every test job needs exactly this, so it lives in one place rather
+    than being repeated five times and drifting.
+
+inputs:
+    pro-built:
+        description: Result of the build_erp_pro job — Pro is skipped when it did not succeed.
+        required: false
+        default: 'success'
+
+runs:
+    using: composite
+    steps:
+        - name: Download wp-erp build
+          uses: actions/download-artifact@v4
+          with:
+              name: wp-erp-build
+              path: /tmp/
+
+        - name: Extract wp-erp build
+          shell: bash
+          run: |
+              tar -xzf /tmp/wp-erp-build.tar.gz
+              rm /tmp/wp-erp-build.tar.gz
+
+        - name: Download erp-pro build
+          if: inputs.pro-built == 'success'
+          uses: actions/download-artifact@v4
+          with:
+              name: erp-pro-build
+              path: /tmp/
+
+        # `.wp-env.json` maps `../../../erp-pro`, i.e. a sibling of the wp-erp
+        # checkout, so the tarball is unpacked one level up.
+        - name: Extract erp-pro build
+          if: inputs.pro-built == 'success'
+          shell: bash
+          run: |
+              mkdir -p ../erp-pro
+              tar -xzf /tmp/erp-pro-build.tar.gz -C ../erp-pro
+              rm /tmp/erp-pro-build.tar.gz
+
+        - name: Run the free suite only when Pro is unavailable
+          if: inputs.pro-built != 'success'
+          shell: bash
+          run: echo "ERP_PRO=false" >> "$GITHUB_ENV"
+
+        - name: Use Node 20
+          uses: actions/setup-node@v4
+          with:
+              node-version: 20
+              cache: npm
+              cache-dependency-path: tests/pw/package-lock.json
+
+        - name: Install suite dependencies
+          shell: bash
+          working-directory: tests/pw
+          run: npm ci --prefer-offline --no-audit --no-fund || npm i
+
+        # Keyed on the Playwright version so a bump fetches fresh browsers
+        # instead of silently reusing incompatible ones.
+        - name: Cache Playwright browsers
+          id: pw-browsers
+          uses: actions/cache@v4
+          with:
+              path: ~/.cache/ms-playwright
+              key: pw-browsers-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+        - name: Install Chromium
+          shell: bash
+          working-directory: tests/pw
+          run: npx playwright install --with-deps chromium
+
+        # `.wp-env.ci.json` lists wp-erp and erp-pro under `plugins` rather than
+        # only `mappings`, which is what ACTIVATES them on a runner — the local
+        # config maps them onto disk inactive. The setup bootstrap activates them
+        # too, so this is belt and braces rather than the only path.
+        - name: Start wp-env
+          shell: bash
+          working-directory: tests/pw
+          run: |
+              cp .wp-env.ci.json .wp-env.override.json
+              npm run start:env
+              curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
+
+        # Activates the licence and stands a bare WordPress install up into a
+        # runnable site: plugins, core modules, Pro modules, three setup wizards,
+        # permalinks, company, currency, timezone.
+        - name: Seed site (licence, modules, actors, fixtures)
+          shell: bash
+          working-directory: tests/pw
+          run: npm run setup

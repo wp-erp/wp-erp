@@ -1,11 +1,11 @@
 # Kept at .github/workflows/playwright.yml deliberately.
 #
 # GitHub keys a workflow by its FILE PATH and only lists or dispatches workflows
-# whose file is on the default branch. Introducing a new filename would mean the
-# suite could not be triggered manually until after this branch merged, and would
-# start a fresh entry with no run history. Reusing this path means the existing
-# "E2E_API Tests" entry updates in place, keeps its history, and can be dispatched
-# against this branch before the merge.
+# whose file is on the default branch. A new filename would mean the suite could
+# not be triggered manually until after its branch merged, and would start a
+# fresh entry with no run history. Reusing this path keeps the existing
+# "E2E_API Tests" entry, its history, and the ability to dispatch it against a
+# feature branch before merging.
 name: E2E_API Tests
 
 on:
@@ -13,10 +13,9 @@ on:
     #
     # Push and pull_request triggers are deliberately ABSENT, for a reason
     # sharper here than on other repositories: the erp-pro licence grants ONE
-    # active site (`license_limit: 1`), and every run activates it. A run on
+    # active site (`license_limit: 1`), and every test job activates it. A run on
     # every push would hold that seat more or less permanently and block the
-    # developers' own sites, on top of the Actions cost. Test a branch with the
-    # button instead.
+    # developers' own sites, on top of the Actions cost.
     schedule:
         # 02:00 UTC. GitHub queues scheduled runs and releases them when capacity
         # frees up, so the real start drifts later than the nominal time — check
@@ -38,201 +37,446 @@ on:
                     - License
 
 # The erp-pro licence allows ONE active site at a time (license_limit: 1), so two
-# runs must never hold it at once. Queue instead of cancelling: a cancelled run
-# skips its deactivate step and would strand the seat.
+# RUNS must never overlap. Queue instead of cancelling: a cancelled run skips its
+# deactivate step and would strand the seat.
 concurrency:
     group: erp-pro-license
     cancel-in-progress: false
 
+env:
+    BASE_URL: http://localhost:8888
+    SERVER_URL: http://localhost:8888
+    DB_HOST: 127.0.0.1
+    DB_PORT: '8889'
+    DB_USER: root
+    DB_PASSWORD: password
+    DB_NAME: wordpress
+    DB_PREFIX: wp_
+    # `ADMIN`, not `ADMIN_USERNAME` — utils/helpers.ts reads env('ADMIN') and
+    # throws on a missing required variable.
+    ADMIN: admin
+    ADMIN_PASSWORD: password
+    ADMIN_EMAIL: admin@erp.test
+    # No literal fallback: this repository is public. Without the secret the
+    # suite fails fast rather than running under a published credential.
+    USER_PASSWORD: ${{ secrets.ERP_USER_PASSWORD }}
+    HR_MANAGER: erp_hr_manager
+    CRM_MANAGER: erp_crm_manager
+    CRM_AGENT: erp_crm_agent
+    CRM_AGENT_2: erp_crm_agent_2
+    ACCOUNT_MANAGER: erp_ac_manager
+    RECRUITER: erp_recruiter
+    EMPLOYEE: erp_employee
+    ERP_PRO: 'true'
+    ERP_TEST_KEY: erp-pw-local
+    ERP_LICENSE_EMAIL: ${{ secrets.ERP_LICENSE_EMAIL }}
+    ERP_LICENSE_KEY: ${{ secrets.ERP_LICENSE_KEY }}
+    ERP_LICENSE_USERS: ${{ vars.ERP_LICENSE_USERS || '100' }}
+    CI: 'true'
+    HEADLESS: 'true'
+
 jobs:
-    e2e:
-        name: e2e + money + API on wp-env :8888
+    # ---------------------------------------------------------------------
+    # 1. Build each plugin once, cache its dependencies, hand the result to
+    #    every test job as a tarball. Without this each shard would repeat the
+    #    same composer + npm build.
+    # ---------------------------------------------------------------------
+    build_wp_erp:
+        name: build wp-erp
         runs-on: ubuntu-latest
-        timeout-minutes: 90
-
-        defaults:
-            run:
-                working-directory: wp-erp/tests/pw
-
-        env:
-            BASE_URL: http://localhost:8888
-            SERVER_URL: http://localhost:8888
-            DB_HOST: 127.0.0.1
-            DB_PORT: '8889'
-            DB_USER: root
-            DB_PASSWORD: password
-            DB_NAME: wordpress
-            DB_PREFIX: wp_
-            # `ADMIN`, not `ADMIN_USERNAME` — utils/helpers.ts reads env('ADMIN')
-            # and throws on a missing required variable, so the old name meant the
-            # suite could never have started on a runner.
-            ADMIN: admin
-            ADMIN_PASSWORD: password
-            ADMIN_EMAIL: admin@erp.test
-            # Required: every non-admin actor authenticates with this.
-            # No literal fallback: this repository is public. Set the
-            # ERP_USER_PASSWORD secret; without it the suite fails fast on the
-            # missing variable rather than running under a published credential.
-            USER_PASSWORD: ${{ secrets.ERP_USER_PASSWORD }}
-            HR_MANAGER: erp_hr_manager
-            CRM_MANAGER: erp_crm_manager
-            CRM_AGENT: erp_crm_agent
-            CRM_AGENT_2: erp_crm_agent_2
-            ACCOUNT_MANAGER: erp_ac_manager
-            RECRUITER: erp_recruiter
-            EMPLOYEE: erp_employee
-            ERP_PRO: 'true'
-            ERP_TEST_KEY: erp-pw-local
-            ERP_LICENSE_EMAIL: ${{ secrets.ERP_LICENSE_EMAIL }}
-            ERP_LICENSE_KEY: ${{ secrets.ERP_LICENSE_KEY }}
-            ERP_LICENSE_USERS: ${{ vars.ERP_LICENSE_USERS || '100' }}
-            CI: 'true'
-            HEADLESS: 'true'
-
+        timeout-minutes: 20
         steps:
-            - name: Checkout wp-erp (free)
+            - name: Checkout wp-erp
               uses: actions/checkout@v4
-              with:
-                  path: wp-erp
 
-            # .wp-env.json maps ../../../erp-pro, i.e. a sibling of the wp-erp checkout.
+            - name: Use Node 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            - name: Composer install (wp-erp)
+              run: composer install --no-dev -o || composer update --no-dev -o
+
+            - name: Cache node_modules (wp-erp)
+              id: erp-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: erp-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install (wp-erp)
+              if: steps.erp-nm.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Npm build (wp-erp)
+              run: npm run build
+
+            - name: Tar wp-erp build output
+              run: |
+                  tar --exclude=./.git \
+                      --exclude=./node_modules \
+                      --exclude=./tests/pw/node_modules \
+                      --exclude=./tests/pw/playwright \
+                      --exclude=./tests/pw/playwright-report \
+                      --exclude=./tests/pw/wp-data \
+                      --exclude=./tests/pw/test-results \
+                      -czf /tmp/wp-erp-build.tar.gz .
+
+            - name: Upload wp-erp build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: wp-erp-build
+                  path: /tmp/wp-erp-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    build_erp_pro:
+        name: build erp-pro
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            # Needs a token with read access to the PRIVATE wp-erp/erp-pro repo.
+            # A 403 here means ERP_PRO_TOKEN is missing, expired, or lacks that
+            # repository — it is not a problem with the suite.
             - name: Checkout erp-pro
               uses: actions/checkout@v4
               with:
                   repository: wp-erp/erp-pro
                   ref: develop
                   token: ${{ secrets.ERP_PRO_TOKEN }}
-                  path: erp-pro
 
-            - uses: actions/setup-node@v4
+            - name: Use Node 20
+              uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
-                  cache-dependency-path: wp-erp/tests/pw/package-lock.json
 
-            - name: Install dependencies
-              run: npm ci
+            - name: Composer install (erp-pro)
+              run: composer install --no-dev -o || composer update --no-dev -o || true
+
+            - name: Cache node_modules (erp-pro)
+              id: pro-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: pro-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install (erp-pro)
+              if: steps.pro-nm.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Npm build (erp-pro)
+              run: npm run build
+
+            - name: Tar erp-pro build output
+              run: |
+                  tar --exclude=./.git --exclude=./node_modules \
+                      -czf /tmp/erp-pro-build.tar.gz .
+
+            - name: Upload erp-pro build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: erp-pro-build
+                  path: /tmp/erp-pro-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    # ---------------------------------------------------------------------
+    # 2. E2E, sharded. Each shard stands up its own wp-env and runs a slice.
+    # ---------------------------------------------------------------------
+    e2e_tests:
+        name: e2e tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 60
+        needs: [build_wp_erp, build_erp_pro]
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E')
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2, 3, 4]
+                shardTotal: [4]
+        steps:
+            # A local composite action only exists once the repo is on disk, so
+            # the checkout has to come first. The build tarball is unpacked over
+            # the top of it by the action below.
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup-erp-site
+              id: site
+              with:
+                  pro-built: ${{ needs.build_erp_pro.result }}
+
+            - name: e2e (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+              working-directory: tests/pw
+              env:
+                  PW_JSON_OUT: playwright-report/results-e2e.json
+              run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+            - name: Upload blob report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-e2e-${{ matrix.shardIndex }}
+                  path: tests/pw/blob-report
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+            - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-e2e-${{ matrix.shardIndex }}
+                  path: tests/pw/playwright-report/results-e2e.json
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+    # ---------------------------------------------------------------------
+    # 3. Money. NOT sharded, and it cannot be: these specs share one Cash
+    #    ledger and one voucher sequence, which no scoping can isolate. Run in
+    #    parallel they break each other's preconditions.
+    # ---------------------------------------------------------------------
+    money_tests:
+        name: accounting money tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 60
+        needs: [build_wp_erp, build_erp_pro]
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'Money')
+        steps:
+            # A local composite action only exists once the repo is on disk, so
+            # the checkout has to come first. The build tarball is unpacked over
+            # the top of it by the action below.
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup-erp-site
+              with:
+                  pro-built: ${{ needs.build_erp_pro.result }}
+
+            - name: money (serial)
+              working-directory: tests/pw
+              env:
+                  PW_JSON_OUT: playwright-report/results-money.json
+              run: npm run test:money
+
+            - name: Upload blob report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-money
+                  path: tests/pw/blob-report
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+            - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-money
+                  path: tests/pw/playwright-report/results-money.json
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+    # ---------------------------------------------------------------------
+    # 4. REST API.
+    # ---------------------------------------------------------------------
+    api_tests:
+        name: api tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        needs: [build_wp_erp, build_erp_pro]
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'API')
+        steps:
+            # A local composite action only exists once the repo is on disk, so
+            # the checkout has to come first. The build tarball is unpacked over
+            # the top of it by the action below.
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup-erp-site
+              with:
+                  pro-built: ${{ needs.build_erp_pro.result }}
+
+            - name: api
+              working-directory: tests/pw
+              env:
+                  PW_JSON_OUT: playwright-report/results-api.json
+              run: npm run test:api
+
+            - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-api
+                  path: tests/pw/playwright-report/results-api.json
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+    # ---------------------------------------------------------------------
+    # 5. Licence limit. MANUAL ONLY, never on the schedule and never in "All":
+    #    it seeds ~69 users to stand the site on its purchased seat limit, and
+    #    while it runs no other spec can create an employee.
+    # ---------------------------------------------------------------------
+    license_tests:
+        name: licence limit tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        needs: [build_wp_erp, build_erp_pro]
+        if: always() && needs.build_wp_erp.result == 'success' && github.event.inputs.testsuite == 'License'
+        steps:
+            # A local composite action only exists once the repo is on disk, so
+            # the checkout has to come first. The build tarball is unpacked over
+            # the top of it by the action below.
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup-erp-site
+              with:
+                  pro-built: ${{ needs.build_erp_pro.result }}
+
+            - name: licence limit
+              working-directory: tests/pw
+              env:
+                  PW_JSON_OUT: playwright-report/results-license.json
+              run: npm run test:license-limit
+
+            - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-license
+                  path: tests/pw/playwright-report/results-license.json
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+    # ---------------------------------------------------------------------
+    # 6. Release the licence seat, exactly once, after every test job.
+    #
+    #    This is a JOB rather than a step inside each test job on purpose. With
+    #    one seat and several jobs running at once, a per-job deactivate would
+    #    let the first shard to finish pull the licence out from under the ones
+    #    still running. Releasing once, at the end, is the only safe shape.
+    #
+    #    `if: always()` — a run that dies mid-suite must still hand the seat
+    #    back, or the next run cannot activate at all.
+    # ---------------------------------------------------------------------
+    license_teardown:
+        name: release the licence seat
+        if: always()
+        needs: [e2e_tests, money_tests, api_tests, license_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Use Node 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Install suite dependencies
+              working-directory: tests/pw
+              run: npm ci --prefer-offline --no-audit --no-fund || npm i
 
             - name: Install Chromium
+              working-directory: tests/pw
               run: npx playwright install --with-deps chromium
 
+            # The teardown drives the real admin form, so it needs a site to
+            # drive. Booting a throwaway one is cheaper than leaving the seat
+            # stranded, which blocks every later run and the developers' sites.
             - name: Start wp-env
+              working-directory: tests/pw
               run: |
-                  # `.wp-env.ci.json` lists wp-erp and erp-pro under `plugins`
-                  # rather than only `mappings`, which is what ACTIVATES them on a
-                  # runner — the local `.wp-env.json` maps them, so they land on
-                  # disk inactive. The setup bootstrap also activates them, so this
-                  # is belt and braces rather than the only path.
                   cp .wp-env.ci.json .wp-env.override.json
                   npm run start:env
                   curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
 
-            # Activates the real licence exactly once for the whole run.
-            - name: Seed site (licence, modules, actors, fixtures)
-              run: npm run setup
+            - name: Deactivate licence
+              working-directory: tests/pw
+              run: npm run teardown:license || echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand"
 
-            - name: Regenerate harness facts
-              run: npm run harness
+    # ---------------------------------------------------------------------
+    # 7. Merge every shard's report and render the WP ERP Quality Report.
+    # ---------------------------------------------------------------------
+    merge_reports:
+        name: merge-reports
+        if: ${{ !cancelled() }}
+        needs: [e2e_tests, money_tests, api_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Checkout wp-erp
+              uses: actions/checkout@v4
 
-            # On a scheduled run `inputs.testsuite` is empty, so every suite runs.
-            # A manual run honours the choice.
-            - name: e2e
-              if: ${{ github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E' }}
-              run: npm run test:e2e
+            - name: Use Node 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
 
-            # The money specs are a SEPARATE project and were never run by CI at
-            # all. They share one Cash ledger and one voucher sequence, so they
-            # must run single-worker: `workers` is not a per-project option in
-            # Playwright, only the CLI flag enforces it. `npm run test:money`
-            # carries the flag.
-            - name: Accounting (money, serial)
-              if: ${{ always() && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'Money') }}
-              run: npm run test:money
+            - name: Download every result artifact
+              uses: actions/download-artifact@v4
+              with:
+                  path: /tmp/all-reports
+                  pattern: results-*
+                  merge-multiple: false
 
-            - name: API
-              if: ${{ always() && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'API') }}
-              run: npm run test:api
+            # One results.json per e2e shard. The generator reads a single file
+            # per suite, so the shards are combined first — summing each bucket
+            # rather than trusting any one shard's totals.
+            - name: Combine e2e shards
+              run: |
+                  mkdir -p tests/pw/playwright-report
+                  node -e '
+                    const fs = require("fs"), path = require("path");
+                    const base = "/tmp/all-reports";
+                    if (!fs.existsSync(base)) process.exit(0);
+                    const merged = { stats: { duration: 0 }, suites: [] };
+                    let found = 0;
+                    for (const dir of fs.readdirSync(base)) {
+                      if (!dir.startsWith("results-e2e")) continue;
+                      const f = path.join(base, dir, "results-e2e.json");
+                      if (!fs.existsSync(f)) continue;
+                      try {
+                        const j = JSON.parse(fs.readFileSync(f, "utf8"));
+                        merged.suites.push(...(j.suites || []));
+                        merged.stats.duration = Math.max(merged.stats.duration, Number(j.stats?.duration) || 0);
+                        found++;
+                      } catch (e) { console.warn("skip", f, e.message); }
+                    }
+                    if (found) {
+                      fs.writeFileSync("tests/pw/playwright-report/results-e2e.json", JSON.stringify(merged));
+                      console.log(`combined ${found} e2e shard report(s)`);
+                    }
+                    for (const [suite, file] of [["money", "results-money.json"], ["api", "results-api.json"], ["license", "results-license.json"]]) {
+                      const src = path.join(base, `results-${suite}`, file);
+                      if (fs.existsSync(src)) {
+                        fs.copyFileSync(src, path.join("tests/pw/playwright-report", file));
+                        console.log(`took ${suite} report`);
+                      }
+                    }
+                  '
 
-            # Licence-limit suite: MANUAL ONLY, never on the schedule. It seeds
-            # ~69 users to stand the site on its purchased seat limit and removes
-            # them again, and while it runs no other spec can create an employee.
-            # Deliberately excluded from "All" so a daily run never trips over it.
-            - name: Licence limit (destructive, on request)
-              if: ${{ always() && github.event.inputs.testsuite == 'License' }}
-              run: npm run test:license-limit
-
-            # Renders the branded HTML report (uploaded as an artifact) and a
-            # markdown variant for the run page. GitHub strips CSS from job
-            # summaries, so the two are generated separately rather than one
-            # being an inline copy of the other.
-            #
-            # `if: always()` — a report is most useful precisely when something
-            # failed, and the generator never gates the run itself.
             - name: Generate WP ERP Quality Report
               id: quality-report
-              if: always()
               working-directory: tests/pw
               env:
-                  E2E_RESULT: playwright-report/results-e2e.json
-                  MONEY_RESULT: playwright-report/results-money.json
-                  API_RESULT: playwright-report/results-api.json
-                  LICENSE_RESULT: playwright-report/results-license.json
                   OUTPUT_FILE: playwright-report/quality-report.html
                   SUMMARY_FILE: playwright-report/quality-report.md
                   SHA: ${{ github.sha }}
               run: node ./utils/generateQualityReport.js
 
             - name: Upload WP ERP Quality Report
-              if: always() && steps.quality-report.outcome == 'success'
+              if: always()
               uses: actions/upload-artifact@v4
               with:
                   name: wp-erp-quality-report
                   path: tests/pw/playwright-report/quality-report.html
-                  if-no-files-found: ignore
                   retention-days: 30
+                  if-no-files-found: ignore
 
             - name: Append Quality Report to job summary
-              if: always() && steps.quality-report.outcome == 'success'
+              if: always()
               run: |
                   if [ -f tests/pw/playwright-report/quality-report.md ]; then
                       cat tests/pw/playwright-report/quality-report.md >> "$GITHUB_STEP_SUMMARY"
                   fi
-
-            - name: Collect WordPress debug.log
-              if: always()
-              run: |
-                  cp wp-data/debug.log debug.log 2>/dev/null || echo "no debug.log produced" > debug.log
-                  tail -c 200000 debug.log > debug.tail.log || true
-
-            # Runs even when the job fails or is cancelled, so the single licence
-            # seat is always released back to the account.
-            # `--project=teardown:license` named a project that does not exist —
-            # teardown.config.ts defines `license_teardown` — and `|| true`
-            # swallowed the resulting error, so this step went green while
-            # releasing nothing. With one seat on the licence, that strands it for
-            # every later run. Use the npm script, which targets the real project.
-            #
-            # `|| true` is kept ONLY so a teardown failure cannot mask the suite's
-            # own result; the step now prints a warning when it fails instead of
-            # passing silently.
-            - name: Deactivate licence
-              if: always()
-              run: npm run teardown:license || echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand" 
-
-            - name: Upload reports
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: pw-reports
-                  path: |
-                      wp-erp/tests/pw/playwright-report/
-                      wp-erp/tests/pw/blob-report/
-                      wp-erp/tests/pw/summary-report/
-                      wp-erp/tests/pw/test-results/
-                      wp-erp/tests/pw/harness/
-                      wp-erp/tests/pw/debug.tail.log
-                  retention-days: 14
-
-            - name: Stop wp-env
-              if: always()
-              run: npm run stop:env || true
