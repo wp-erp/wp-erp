@@ -94,6 +94,16 @@ export default defineConfig({
                funding it at the same time. */
             name: 'accounting_money',
             testMatch: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts/,
+            /* These drive multi-step money forms end to end — raise an expense,
+               reopen its edit screen, re-read the ledger — and land around 50-60s
+               each even on an idle machine. Against the 90s default that is under
+               2x headroom, so any contention on a shared laptop tips a passing
+               test into a timeout: the expense cases passed 7/7 alone and timed
+               out inside a full run. CI already allows 180s; matching it here
+               removes the flake WITHOUT touching a single assertion — the tests
+               still prove exactly what they proved before, they are just given
+               the time they genuinely take. */
+            timeout: 180 * 1000,
             fullyParallel: false,
             /* NOTE: `workers` is NOT a per-project option in Playwright — only
                `fullyParallel` is, and that serialises tests WITHIN a file, not
