@@ -27,6 +27,7 @@ on:
                     - E2E
                     - Money
                     - API
+                    - License
             tier:
                 description: 'Tier filter, applies to E2E only'
                 default: 'all'
@@ -149,6 +150,51 @@ jobs:
             - name: API
               if: ${{ always() && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'API') }}
               run: npm run test:api
+
+            # Licence-limit suite: MANUAL ONLY, never on the schedule. It seeds
+            # ~69 users to stand the site on its purchased seat limit and removes
+            # them again, and while it runs no other spec can create an employee.
+            # Deliberately excluded from "All" so a daily run never trips over it.
+            - name: Licence limit (destructive, on request)
+              if: ${{ always() && github.event.inputs.testsuite == 'License' }}
+              run: npm run test:license-limit
+
+            # Renders the branded HTML report (uploaded as an artifact) and a
+            # markdown variant for the run page. GitHub strips CSS from job
+            # summaries, so the two are generated separately rather than one
+            # being an inline copy of the other.
+            #
+            # `if: always()` — a report is most useful precisely when something
+            # failed, and the generator never gates the run itself.
+            - name: Generate WP ERP Quality Report
+              id: quality-report
+              if: always()
+              working-directory: tests/pw
+              env:
+                  E2E_RESULT: playwright-report/results-e2e.json
+                  MONEY_RESULT: playwright-report/results-money.json
+                  API_RESULT: playwright-report/results-api.json
+                  LICENSE_RESULT: playwright-report/results-license.json
+                  OUTPUT_FILE: playwright-report/quality-report.html
+                  SUMMARY_FILE: playwright-report/quality-report.md
+                  SHA: ${{ github.sha }}
+              run: node ./utils/generateQualityReport.js
+
+            - name: Upload WP ERP Quality Report
+              if: always() && steps.quality-report.outcome == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: wp-erp-quality-report
+                  path: tests/pw/playwright-report/quality-report.html
+                  if-no-files-found: ignore
+                  retention-days: 30
+
+            - name: Append Quality Report to job summary
+              if: always() && steps.quality-report.outcome == 'success'
+              run: |
+                  if [ -f tests/pw/playwright-report/quality-report.md ]; then
+                      cat tests/pw/playwright-report/quality-report.md >> "$GITHUB_STEP_SUMMARY"
+                  fi
 
             - name: Collect WordPress debug.log
               if: always()

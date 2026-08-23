@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WP ERP Quality Report</title>
+<style>
+    :root {
+        --bg: #f6f7f9;
+        --card: #ffffff;
+        --ink: #1d2327;
+        --muted: #6b7280;
+        --line: #e2e4e7;
+        --brand: #0073aa;
+        --ok: #1e8e3e;
+        --bad: #d63638;
+        --guard: #b26a00;
+        --fixed: #6d28d9;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    header.hero {
+        background: linear-gradient(135deg, #0073aa 0%, #005177 100%);
+        color: #fff;
+        border-radius: 10px;
+        padding: 28px 30px;
+        margin-bottom: 22px;
+    }
+    header.hero h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: -0.2px; }
+    header.hero .meta { opacity: 0.9; font-size: 13.5px; }
+    header.hero .meta a { color: #fff; }
+
+    .verdict {
+        display: inline-flex; align-items: center; gap: 10px;
+        margin-top: 16px; padding: 9px 16px; border-radius: 999px;
+        background: rgba(255, 255, 255, 0.15); font-weight: 700; font-size: 15px;
+    }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .card {
+        background: var(--card); border: 1px solid var(--line); border-radius: 9px;
+        padding: 16px 18px;
+    }
+    .card .n { font-size: 27px; font-weight: 700; line-height: 1.15; }
+    .card .k { font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .card.ok .n { color: var(--ok); }
+    .card.bad .n { color: var(--bad); }
+    .card.guard .n { color: var(--guard); }
+    .card.fixed .n { color: var(--fixed); }
+
+    section {
+        background: var(--card); border: 1px solid var(--line); border-radius: 9px;
+        padding: 20px 22px; margin-bottom: 18px;
+    }
+    section h2 { margin: 0 0 14px; font-size: 16px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+    th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+    td:not(:first-child), th:not(:first-child) { text-align: right; }
+    .ok { color: var(--ok); font-weight: 600; }
+    .bad { color: var(--bad); font-weight: 600; }
+    .guard { color: var(--guard); font-weight: 600; }
+    .fixed { color: var(--fixed); font-weight: 600; }
+    .muted { color: var(--muted); }
+
+    ul { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 10px; }
+    code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
+
+    .legend { font-size: 13.5px; color: var(--muted); }
+    .legend b { color: var(--ink); }
+    .legend li { margin-bottom: 7px; }
+
+    footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 26px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <header class="hero">
+        <h1>WP ERP Quality Report</h1>
+        <div class="meta">
+            branch <strong>{{BRANCH_NAME}}</strong> &middot; commit <strong>{{COMMIT_HASH}}</strong>
+            &middot; {{DATE}} &middot; {{RUN_LINK}}
+        </div>
+        <div class="verdict">{{STATUS_ICON}} {{STATUS}} &middot; {{PASS_RATE}}% of executed tests green</div>
+    </header>
+
+    <div class="cards">
+        <div class="card ok"><div class="n">{{TOTAL_PASSED}}</div><div class="k">Passed</div></div>
+        <div class="card guard"><div class="n">{{TOTAL_GUARDED}}</div><div class="k">Known-defect guards</div></div>
+        <div class="card fixed"><div class="n">{{TOTAL_FIXED}}</div><div class="k">Guards now passing</div></div>
+        <div class="card bad"><div class="n">{{TOTAL_FAILED}}</div><div class="k">Failed</div></div>
+        <div class="card"><div class="n">{{TOTAL_SKIPPED}}</div><div class="k">Skipped</div></div>
+        <div class="card"><div class="n">{{DURATION}}</div><div class="k">Duration</div></div>
+    </div>
+
+    <section>
+        <h2>By suite</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Suite</th><th>Passed</th><th>Guarded</th><th>Fixed</th>
+                    <th>Failed</th><th>Skipped</th><th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{SUITE_ROWS}}
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Guards that passed &mdash; these filed bugs look fixed</h2>
+        <p class="muted">A <code>test.fail()</code> guard passing means the defect it pins no longer
+        reproduces. Verify it, close the issue, and remove the guard.</p>
+        {{FIXED_GUARDS}}
+    </section>
+
+    <section>
+        <h2>Failures</h2>
+        {{FAILURES}}
+    </section>
+
+    <section>
+        <h2>Skipped, with a reason</h2>
+        <p class="muted">Declined deliberately &mdash; most of these are the externally
+        authenticated integrations waiting on sandbox credentials. A skip is never
+        counted as a pass.</p>
+        {{SKIPPED_LIST}}
+    </section>
+
+    <section class="legend">
+        <h2>How to read this</h2>
+        <ul>
+            <li><b>Passed</b> &mdash; normal green tests.</li>
+            <li><b>Known-defect guards</b> &mdash; <code>test.fail()</code> tests pinning a filed
+            defect. They fail on purpose while the bug is open, so they are <b>not</b> a
+            regression. Each names its issue in a comment and asserts on its own final
+            assertion, never on a precondition.</li>
+            <li><b>Guards now passing</b> &mdash; the bug appears fixed. This is how a closed
+            defect announces itself without anyone re-testing by hand.</li>
+            <li><b>Failed</b> &mdash; the only bucket that gates a run.</li>
+            <li><b>Skipped</b> &mdash; declined with a recorded reason, never a silent pass.</li>
+        </ul>
+        <p>What the suite deliberately does <b>not</b> cover, and why, is recorded in
+        <code>tests/pw/test-cases/COVERAGE.md</code> alongside the traps that previously
+        produced tests passing for the wrong reason.</p>
+    </section>
+
+    <footer>Generated by <code>tests/pw/utils/generateQualityReport.js</code></footer>
+
+</div>
+</body>
+</html>

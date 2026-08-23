@@ -35,15 +35,20 @@ export default defineConfig({
     preserveOutput: 'always',
     reportSlowTests: { max: 5, threshold: 30_000 },
 
+    /* JSON is emitted in BOTH modes, and its path comes from `PW_JSON_OUT` so
+       each suite writes its own file: `npm test` runs e2e and money as separate
+       invocations, and a fixed path would have the second silently overwrite the
+       first. The quality report reads these four files. */
     reporter: ci
         ? [
               ['blob', { outputDir: 'blob-report' }],
               ['list', { printSteps: true }],
-              ['json', { outputFile: 'playwright-report/e2e/results.json' }],
+              ['json', { outputFile: process.env.PW_JSON_OUT ?? 'playwright-report/e2e/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
               ['list', { printSteps: true }],
+              ['json', { outputFile: process.env.PW_JSON_OUT ?? 'playwright-report/e2e/results.json' }],
           ],
 
     use: {

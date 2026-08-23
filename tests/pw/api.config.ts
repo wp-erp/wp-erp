@@ -16,13 +16,17 @@ export default defineConfig({
     retries: ci ? 1 : 0,
     workers: ci ? 4 : 4,
 
+    /* JSON in both modes, path from `PW_JSON_OUT` — the quality report reads it.
+       See the same note in playwright.config.ts. */
     reporter: ci
         ? [
               ['blob', { outputDir: 'blob-report/api' }],
               ['list', { printSteps: true }],
+              ['json', { outputFile: process.env.PW_JSON_OUT ?? 'playwright-report/api/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],
+              ['json', { outputFile: process.env.PW_JSON_OUT ?? 'playwright-report/api/results.json' }],
               ['list'],
           ],
 
