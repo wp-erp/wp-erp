@@ -1,9 +1,13 @@
 {
-  "plugins": [
-    "../../",
-    "../../erp-pro"
-  ],
-  "mappings": {
-    "wp-content/plugins/erp-pro": "../../erp-pro"
-  }
+    "plugins": [
+        "https://github.com/WP-API/Basic-Auth/archive/master.zip",
+        "https://downloads.wordpress.org/plugin/woocommerce.11.0.1.zip",
+        "https://downloads.wordpress.org/plugin/erp-pdf-invoice.zip",
+        "https://downloads.wordpress.org/plugin/email-log.zip",
+        "../../",
+        "../../erp-pro"
+    ],
+    "mappings": {
+        "wp-content/plugins/erp-pro": "../../erp-pro"
+    }
 }
