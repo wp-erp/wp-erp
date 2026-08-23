@@ -2610,3 +2610,27 @@ runner and a UTC+6 laptop then both end up self-consistent, which a fixed
 
 Worth keeping in mind when reading any date-scoped failure: check whether the
 site and the runner agree on what day it is *before* suspecting the product.
+
+### Two harness faults found by running the whole suite repeatedly
+
+Neither is a product defect; both made green runs look red, which costs exactly
+as much trust as the reverse.
+
+**The money specs sat too close to their timeout.** They drive multi-step forms
+end to end — raise an expense, reopen its edit screen, re-read the ledger — and
+land around 50-60s each on an idle machine. Against the 90s default that is under
+2x headroom, so any contention tipped a passing test into a timeout: the expense
+cases passed **7/7 alone** and timed out inside a full run. The `accounting_money`
+project now allows 180s, matching what CI already allowed. **No assertion
+changed** — the tests prove what they always proved, they are simply given the
+time they genuinely take. That distinction matters: raising a timeout to hide a
+hang would be exactly the fake green this suite exists to prevent, so it was only
+done after confirming the same tests pass with room and fail only for want of it.
+
+**Overlapping runs starve the machine, and the symptom looks like a product
+problem.** Leaving several suite runs going at once left ~30 Playwright processes
+competing for CPU; a file that takes 1.4 minutes took **27.8 minutes**, and one
+test was reported at 16 minutes against a 90s timeout. Nothing was wrong with the
+site (it answered in 0.12s throughout) or the tests. **Run one suite at a time**,
+and if a run is inexplicably slow, count the stray processes before suspecting
+anything else.
