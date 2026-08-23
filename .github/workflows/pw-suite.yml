@@ -1,16 +1,41 @@
 name: Playwright suite (e2e + money + API)
 
 on:
-    push:
-        branches: [develop, 'test/**']
-    pull_request:
-        branches: [develop, master]
+    # Runs once a day, plus the "Run workflow" button below for on-demand runs.
+    #
+    # Push and pull_request triggers are deliberately ABSENT, for a reason
+    # sharper here than on other repositories: the erp-pro licence grants ONE
+    # active site (`license_limit: 1`), and every run activates it. A run on
+    # every push would hold that seat more or less permanently and block the
+    # developers' own sites, on top of the Actions cost. Test a branch with the
+    # button instead.
+    schedule:
+        # 02:00 UTC. GitHub queues scheduled runs and releases them when capacity
+        # frees up, so the real start drifts later than the nominal time — check
+        # the actual start times of recent scheduled runs before "correcting"
+        # this to a different hour.
+        - cron: '0 2 * * *'
+    # Manual runs: pick a suite and a tier.
     workflow_dispatch:
         inputs:
+            testsuite:
+                description: 'Which suite to run'
+                default: 'All'
+                type: choice
+                options:
+                    - All
+                    - E2E
+                    - Money
+                    - API
             tier:
-                description: 'Tier to run (all | tier1 | tier2 | tier3)'
-                required: false
+                description: 'Tier filter, applies to E2E only'
                 default: 'all'
+                type: choice
+                options:
+                    - all
+                    - tier1
+                    - tier2
+                    - tier3
 
 # The erp-pro licence allows ONE active site at a time (license_limit: 1), so two
 # runs must never hold it at once. Queue instead of cancelling: a cancelled run
@@ -106,7 +131,10 @@ jobs:
             - name: Regenerate harness facts
               run: npm run harness
 
+            # On a scheduled run `inputs.testsuite` is empty, so every suite runs.
+            # A manual run honours the choice.
             - name: e2e
+              if: ${{ github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E' }}
               run: npm run test:e2e -- ${{ github.event.inputs.tier == 'tier1' && '--grep @tier1' || github.event.inputs.tier == 'tier2' && '--grep @tier2' || github.event.inputs.tier == 'tier3' && '--grep @tier3' || '' }}
 
             # The money specs are a SEPARATE project and were never run by CI at
@@ -115,11 +143,11 @@ jobs:
             # Playwright, only the CLI flag enforces it. `npm run test:money`
             # carries the flag.
             - name: Accounting (money, serial)
-              if: always()
+              if: ${{ always() && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'Money') }}
               run: npm run test:money
 
             - name: API
-              if: always()
+              if: ${{ always() && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'API') }}
               run: npm run test:api
 
             - name: Collect WordPress debug.log
