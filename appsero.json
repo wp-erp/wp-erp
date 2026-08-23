@@ -13,6 +13,7 @@
         ".svnignore",
         ".wordpress-org",
         "appsero.json",
+        "codeception.yml",
         "composer.json",
         "composer.lock",
         "CONTRIBUTING.md",

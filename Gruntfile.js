@@ -120,6 +120,7 @@ module.exports = function(grunt) {
                     '!phpcs.xml',
                     '!.env',
                     '!.env.example',
+                    '!codeception.yml',
                     '!eslintrc.js',
                     '!webpack.config.js',
                     '!includes/Settings/assets/**',
