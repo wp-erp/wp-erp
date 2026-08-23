@@ -23,7 +23,7 @@ on:
         # the actual start times of recent scheduled runs before "correcting"
         # this to a different hour.
         - cron: '0 2 * * *'
-    # Manual runs: pick a suite and a tier.
+    # Manual runs: pick which suite to run. E2E always runs in full.
     workflow_dispatch:
         inputs:
             testsuite:
@@ -36,15 +36,6 @@ on:
                     - Money
                     - API
                     - License
-            tier:
-                description: 'Tier filter, applies to E2E only'
-                default: 'all'
-                type: choice
-                options:
-                    - all
-                    - tier1
-                    - tier2
-                    - tier3
 
 # The erp-pro licence allows ONE active site at a time (license_limit: 1), so two
 # runs must never hold it at once. Queue instead of cancelling: a cancelled run
@@ -147,7 +138,7 @@ jobs:
             # A manual run honours the choice.
             - name: e2e
               if: ${{ github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E' }}
-              run: npm run test:e2e -- ${{ github.event.inputs.tier == 'tier1' && '--grep @tier1' || github.event.inputs.tier == 'tier2' && '--grep @tier2' || github.event.inputs.tier == 'tier3' && '--grep @tier3' || '' }}
+              run: npm run test:e2e
 
             # The money specs are a SEPARATE project and were never run by CI at
             # all. They share one Cash ledger and one voucher sequence, so they
