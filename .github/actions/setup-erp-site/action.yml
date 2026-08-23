@@ -32,20 +32,38 @@ runs:
               name: erp-pro-build
               path: /tmp/
 
-        # `.wp-env.json` maps `../../../erp-pro`, i.e. a sibling of the wp-erp
-        # checkout, so the tarball is unpacked one level up.
+        # `.wp-env.ci.json` resolves paths from tests/pw, and points at
+        # `../../erp-pro` — that is $GITHUB_WORKSPACE/erp-pro, exactly where the
+        # old workflow's `path: erp-pro` checkout put it. Unpacking anywhere else
+        # leaves wp-env pointing at nothing.
         - name: Extract erp-pro build
           if: inputs.pro-built == 'success'
           shell: bash
           run: |
-              mkdir -p ../erp-pro
-              tar -xzf /tmp/erp-pro-build.tar.gz -C ../erp-pro
+              mkdir -p erp-pro
+              tar -xzf /tmp/erp-pro-build.tar.gz -C erp-pro
               rm /tmp/erp-pro-build.tar.gz
 
+        # Without erp-pro on disk, `.wp-env.ci.json` still lists it under
+        # `plugins`, and wp-env aborts the whole boot with "No plugins
+        # activated" rather than skipping the missing one. So the free-only run
+        # needs an override that does not mention it at all.
         - name: Run the free suite only when Pro is unavailable
           if: inputs.pro-built != 'success'
           shell: bash
-          run: echo "ERP_PRO=false" >> "$GITHUB_ENV"
+          run: |
+              echo "ERP_PRO=false" >> "$GITHUB_ENV"
+              node -e '
+                const fs = require("fs");
+                const path = "tests/pw/.wp-env.ci.json";
+                const cfg = JSON.parse(fs.readFileSync(path, "utf8"));
+                cfg.plugins = (cfg.plugins || []).filter(p => !String(p).includes("erp-pro"));
+                for (const key of Object.keys(cfg.mappings || {})) {
+                  if (key.includes("erp-pro")) delete cfg.mappings[key];
+                }
+                fs.writeFileSync(path, JSON.stringify(cfg, null, 2));
+                console.log("erp-pro unavailable — running the free suite only");
+              '
 
         - name: Use Node 20
           uses: actions/setup-node@v4
