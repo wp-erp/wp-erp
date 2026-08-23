@@ -421,6 +421,30 @@ add_action( 'rest_api_init', function () {
                 update_option( 'erp_settings_general', $general );
             }
 
+            // ---- 5b. module data-update notices ----------------------------
+            // Three Pro modules stamp a version option and, until it matches the
+            // running constant, print a "data update is required / Run the
+            // updater" notice at the TOP of every ERP screen. A fresh install has
+            // none of them set, so all three notices appear — and they push the
+            // forms below them down, which is enough to make a multiselect click
+            // land on the wrong element. That showed up as `receivePayment()` and
+            // `payBill()` returning false in a long run while passing alone.
+            //
+            // Stamping the current version is what the updater itself ends with;
+            // on a fresh install there is nothing to migrate.
+            $version_stamps = [
+                'erp-woocommerce-version' => defined( 'WPERP_WOOCOMMERCE_VERSION' ) ? WPERP_WOOCOMMERCE_VERSION : null,
+                'erp-attendance-version'  => defined( 'WPERP_ATTEND_VERSION' ) ? WPERP_ATTEND_VERSION : null,
+                'erp-recruitment-version' => defined( 'WPERP_REC_VERSION' ) ? WPERP_REC_VERSION : null,
+            ];
+
+            foreach ( $version_stamps as $option => $version ) {
+                if ( $version && (string) get_option( $option ) !== (string) $version ) {
+                    update_option( $option, $version );
+                    $did[] = "stamped {$option}={$version}";
+                }
+            }
+
             // ---- 6. Pro modules --------------------------------------------
             $pro_report = 'erp-pro not present';
 
