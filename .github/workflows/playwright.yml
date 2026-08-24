@@ -89,25 +89,26 @@ jobs:
             - name: Checkout wp-erp
               uses: actions/checkout@v4
 
-            # Node 14, deliberately, and it is load-bearing.
+            # Node comes from the repo's own .nvmrc (12.1.0), confirmed with the
+            # plugin developer — not a version picked here. Reading the file
+            # rather than hardcoding a number means CI follows the project when
+            # that pin moves.
             #
             # The build is REQUIRED: nine bundles are gitignored, not committed —
             # the Settings SPA (assets/js/erp-settings.js, vendor.js) and the
             # Accounting SPA (modules/accounting/assets/js/admin.js, bootstrap.js).
-            # Without them those screens render no JavaScript at all, which shows
+            # Without them those screens render no JavaScript at all, which showed
             # up as "the General tab is offered" and every accounting screen
             # failing. The workflow previously on develop skipped this build,
             # which is why its scheduled runs had been red.
             #
-            # But wp-erp pins node-sass ^4.13, whose native module has no
-            # prebuilt binary beyond Node 14 and cannot compile on a modern one —
-            # `npm i` dies in node-gyp. Node 14 is the newest that satisfies both,
-            # and it matches the v1 lockfile. Raising this needs node-sass
-            # replaced with the `sass` package first.
-            - name: Use Node 14
+            # The version also has to satisfy node-sass ^4.13, whose native module
+            # has no prebuilt binary past Node 14 and dies in node-gyp on anything
+            # newer. Node 20 was the original mistake here.
+            - name: Use the Node version the project pins
               uses: actions/setup-node@v4
               with:
-                  node-version: 14
+                  node-version-file: .nvmrc
 
             - name: Composer install (wp-erp)
               run: composer install --no-dev -o || composer update --no-dev -o
@@ -117,7 +118,7 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: node_modules
-                  key: erp-nm-node14-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+                  key: erp-nm-${{ runner.os }}-${{ hashFiles('.nvmrc', 'package-lock.json') }}
 
             - name: Npm install (wp-erp)
               if: steps.erp-nm.outputs.cache-hit != 'true'
