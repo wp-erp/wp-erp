@@ -463,6 +463,50 @@ export class AccountingPage extends BasePage {
      * where `payBill()` silently returned false because the list was still
      * empty and the case read as a broken form.
      */
+
+    /**
+     * The options a multiselect is REALLY offering.
+     *
+     * vue-multiselect keeps its two empty-state entries, "Oops! No elements
+     * found." and "List is empty.", permanently in the DOM and merely hides
+     * them, so `.multiselect__option` counts them even on a fully loaded list.
+     * Measured on this build: the Customer picker reports 8 options of which 6
+     * are visible, and after searching "Beacon" it reports 3 of which 1 is
+     * visible. `:visible` is therefore the discriminator, not the text.
+     *
+     * The text filter stays as a second line of defence for the case that
+     * matters most — a list that came back genuinely empty, where the
+     * placeholder IS shown. It matches on a prefix because the real strings
+     * carry trailing punctuation that an anchored pattern misses.
+     */
+    private async visibleOptions(box: Locator): Promise<string[]> {
+        return (await box.locator('.multiselect__option:visible').allTextContents())
+            .map((text) => text.replace(/\s+/g, ' ').trim())
+            .filter((text) => text && !/^(oops|list is empty|no elements found|please search)/i.test(text));
+    }
+
+    /**
+     * Waits for a box to actually offer something, which is the only honest
+     * signal that its AJAX list has landed. Returns a boolean so callers keep
+     * their contract instead of throwing.
+     */
+    private async waitForOptions(box: Locator, timeout = 8_000): Promise<boolean> {
+        const deadline = Date.now() + timeout;
+
+        while (Date.now() < deadline) {
+            if ((await this.visibleOptions(box)).length) return true;
+            await this.page.waitForTimeout(200);
+        }
+
+        return false;
+    }
+
+    /** Closes an open picker between attempts; vue-multiselect clears its search on close. */
+    private async closePicker(): Promise<void> {
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        await this.page.waitForTimeout(400);
+    }
+
     private async pickFirstOption(label: string): Promise<boolean> {
         // RETRIED, because a single click is not reliable here under load. The
         // account and payment-method lists come from AJAX and the panel reflows
@@ -471,19 +515,20 @@ export class AccountingPage extends BasePage {
         // four workers, as `payBill()`/`receivePayment()` returning false and the
         // case reading as a broken form.
         const box = this.group(label).locator('.multiselect').first();
-        const option = box.locator('.multiselect__option').first();
 
         for (let attempt = 0; attempt < 3; attempt++) {
             await box.click().catch(() => undefined);
 
-            try {
-                await option.waitFor({ state: 'visible', timeout: 6_000 });
-            } catch {
-                await this.page.waitForTimeout(800);
+            // Waiting on a VISIBLE option. The previous version waited on
+            // `.multiselect__option` first, which is satisfied by a hidden
+            // placeholder — so it returned the moment the box opened, whether or
+            // not the list had arrived, and then clicked whatever was there.
+            if (!(await this.waitForOptions(box))) {
+                await this.closePicker();
                 continue;
             }
 
-            await option.click();
+            await box.locator('.multiselect__option:visible').first().click();
             await this.page.waitForTimeout(500);
 
             return true;
@@ -518,39 +563,44 @@ export class AccountingPage extends BasePage {
      */
     async pickFromMultiselect(label: string, search: string): Promise<boolean> {
         const box = this.group(label).locator('.multiselect').first();
-        const anyOption = box.locator('.multiselect__option').first();
 
         for (let attempt = 0; attempt < 3; attempt++) {
             await box.click().catch(() => undefined);
 
-            // The list is ready when it paints ANY option. Its own empty state
-            // is rendered as an option too, so that is checked separately below.
-            await anyOption.waitFor({ state: 'visible', timeout: 6_000 }).catch(() => undefined);
+            // The list must be OFFERING something before it is searched. Typing
+            // into a list that has not arrived filters nothing and finds
+            // nothing, and the method then reports the party as missing — which
+            // is how inventory.spec came to say "the customer picker offered
+            // Beacon Retail Group" about a customer that was there all along.
+            if (!(await this.waitForOptions(box))) {
+                await this.closePicker();
+                continue;
+            }
 
             const input = box.locator('.multiselect__input');
             if (await input.count()) {
-                await input.fill('');
+                // NOT `fill('')` first: these inputs are readonly on the
+                // non-searchable variants and fill() throws on those. Escape
+                // between attempts already clears the search.
                 await input.pressSequentially(search, { delay: 30 });
-                await this.page.waitForTimeout(1500);
             }
 
-            const option = box.locator('.multiselect__option', { hasText: search }).first();
-            if (await option.isVisible().catch(() => false)) {
-                await option.click();
-                await this.page.waitForTimeout(500);
+            const option = box.locator('.multiselect__option:visible', { hasText: search }).first();
 
-                return true;
+            try {
+                await option.waitFor({ state: 'visible', timeout: 6_000 });
+            } catch {
+                // The list HAD loaded before the search — checked above — so a
+                // term with no match is a genuine absence, not a slow request.
+                // Returning now keeps the negative cases quick instead of
+                // burning three timeouts to reach the same answer.
+                return false;
             }
 
-            // "Oops! No elements found" is vue-multiselect's empty state. Seeing
-            // it means the list is loaded and genuinely lacks the search term, OR
-            // that it has not loaded at all — indistinguishable from here, so it
-            // is worth another attempt rather than an immediate false.
-            const empty = await box.getByText('No elements found').isVisible().catch(() => false);
-            if (!empty && attempt === 2) break;
+            await option.click();
+            await this.page.waitForTimeout(500);
 
-            await this.page.keyboard.press('Escape').catch(() => undefined);
-            await this.page.waitForTimeout(1_000);
+            return true;
         }
 
         return false;
@@ -574,16 +624,32 @@ export class AccountingPage extends BasePage {
     /** The nth line-item row's product picker (rows are positional). */
     async pickLineProduct(index: number, search: string): Promise<boolean> {
         const box = this.page.locator('.multiselect').nth(index + 1);
-        await box.click();
-        await this.page.waitForTimeout(400);
 
-        const option = box.locator('.multiselect__option', { hasText: search }).first();
-        if (!(await option.isVisible().catch(() => false))) return false;
+        for (let attempt = 0; attempt < 3; attempt++) {
+            await box.click().catch(() => undefined);
 
-        await option.click();
-        await this.page.waitForTimeout(600);
+            // Same hidden-placeholder trap as the pickers above; the product
+            // list is fetched too, and a flat sleep was a bet on that fetch.
+            if (!(await this.waitForOptions(box))) {
+                await this.closePicker();
+                continue;
+            }
 
-        return true;
+            const option = box.locator('.multiselect__option:visible', { hasText: search }).first();
+
+            try {
+                await option.waitFor({ state: 'visible', timeout: 6_000 });
+            } catch {
+                return false;
+            }
+
+            await option.click();
+            await this.page.waitForTimeout(600);
+
+            return true;
+        }
+
+        return false;
     }
 
     /** Sets quantity on the nth line item. `qty` is the one named field here. */

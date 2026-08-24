@@ -3,117 +3,138 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WP ERP Quality Report</title>
+<title>WP ERP QA — Quality Report</title>
 <style>
     :root {
-        --bg: #f6f7f9;
-        --card: #ffffff;
-        --ink: #1d2327;
-        --muted: #6b7280;
-        --line: #e2e4e7;
-        --brand: #0073aa;
-        --ok: #1e8e3e;
-        --bad: #d63638;
-        --guard: #b26a00;
-        --fixed: #6d28d9;
-        --flaky: #b45309;
+        --bg: #0d1117;
+        --panel: #161b22;
+        --panel-2: #11161d;
+        --line: #30363d;
+        --ink: #e6edf3;
+        --muted: #8b949e;
+        --ok: #3fb950;
+        --bad: #f85149;
+        --guard: #d29922;
+        --flaky: #db6d28;
+        --fixed: #a371f7;
+        --accent: #a371f7;
     }
     * { box-sizing: border-box; }
     body {
         margin: 0;
         background: var(--bg);
         color: var(--ink);
-        font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 26px 22px 70px; }
+    a { color: #58a6ff; }
+    h1 { font-size: 22px; margin: 0 0 14px; letter-spacing: -0.2px; }
+    h2 { font-size: 16px; margin: 30px 0 12px; }
+    code { background: #1f242c; padding: 1px 6px; border-radius: 4px; font-size: 12.5px; }
 
-    header.hero {
-        background: linear-gradient(135deg, #0073aa 0%, #005177 100%);
-        color: #fff;
-        border-radius: 10px;
-        padding: 28px 30px;
-        margin-bottom: 22px;
-    }
-    header.hero h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: -0.2px; }
-    header.hero .meta { opacity: 0.9; font-size: 13.5px; }
-    header.hero .meta a { color: #fff; }
+    .topline { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+
+    /* ---- flat shields-style badges, drawn in CSS (no external images) ---- */
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .badge { display: inline-flex; border-radius: 4px; overflow: hidden; font-size: 11px;
+             font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; }
+    .badge span { padding: 4px 9px; }
+    .badge .k { background: #30363d; color: #d7dde5; }
+    .badge .v { background: var(--accent); color: #fff; }
+    .badge.ok  .v { background: var(--ok);   color: #06210d; }
+    .badge.bad .v { background: var(--bad);  color: #2b0a08; }
+    .badge.warn .v{ background: var(--flaky);color: #251003; }
+    .badge.grey .v{ background: #6e7681; color: #fff; }
 
     .verdict {
-        display: inline-flex; align-items: center; gap: 10px;
-        margin-top: 16px; padding: 9px 16px; border-radius: 999px;
-        background: rgba(255, 255, 255, 0.15); font-weight: 700; font-size: 15px;
+        margin: 16px 0 4px; padding: 11px 16px; border-radius: 6px; font-weight: 700;
+        font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase;
+        border: 1px solid;
     }
+    .verdict.pass { background: rgba(63,185,80,.12); border-color: rgba(63,185,80,.4); color: var(--ok); }
+    .verdict.warn { background: rgba(219,109,40,.12); border-color: rgba(219,109,40,.45); color: var(--flaky); }
+    .verdict.fail { background: rgba(248,81,73,.12); border-color: rgba(248,81,73,.45); color: var(--bad); }
 
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 22px; }
-    .card {
-        background: var(--card); border: 1px solid var(--line); border-radius: 9px;
-        padding: 16px 18px;
-    }
-    .card .n { font-size: 27px; font-weight: 700; line-height: 1.15; }
-    .card .k { font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-    .card.ok .n { color: var(--ok); }
-    .card.bad .n { color: var(--bad); }
-    .card.guard .n { color: var(--guard); }
-    .card.fixed .n { color: var(--fixed); }
-    .card.flaky .n { color: var(--flaky); }
+    section.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
 
-    section {
-        background: var(--card); border: 1px solid var(--line); border-radius: 9px;
-        padding: 20px 22px; margin-bottom: 18px;
-    }
-    section h2 { margin: 0 0 14px; font-size: 16px; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
-    th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 600; }
     td:not(:first-child), th:not(:first-child) { text-align: right; }
+    tbody tr:last-child td { border-bottom: 0; }
     .ok { color: var(--ok); font-weight: 600; }
     .bad { color: var(--bad); font-weight: 600; }
     .guard { color: var(--guard); font-weight: 600; }
-    .fixed { color: var(--fixed); font-weight: 600; }
     .flaky { color: var(--flaky); font-weight: 600; }
+    .fixed { color: var(--fixed); font-weight: 600; }
     .muted { color: var(--muted); }
+    .scroll { overflow-x: auto; }
 
-    ul { margin: 0; padding-left: 20px; }
-    li { margin-bottom: 10px; }
-    code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
+    .chartrow { display: flex; gap: 26px; align-items: center; flex-wrap: wrap; justify-content: center; }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 7px; }
+    .legend div { margin-bottom: 7px; font-size: 13px; }
 
-    .legend { font-size: 13.5px; color: var(--muted); }
-    .legend b { color: var(--ink); }
-    .legend li { margin-bottom: 7px; }
+    ul { margin: 0; padding-left: 19px; }
+    li { margin-bottom: 9px; }
 
-    footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 26px; }
+    footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 34px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-    <header class="hero">
-        <h1>WP ERP Quality Report</h1>
-        <div class="meta">
-            branch <strong>{{BRANCH_NAME}}</strong> &middot; commit <strong>{{COMMIT_HASH}}</strong>
-            &middot; {{DATE}} &middot; {{RUN_LINK}}
-        </div>
-        <div class="verdict">{{STATUS_ICON}} {{STATUS}} &middot; {{PASS_RATE}}% of executed tests green</div>
-    </header>
+    <div class="topline">Branch: <strong>{{BRANCH_NAME}}</strong> &middot; Commit: <strong>{{COMMIT_HASH}}</strong> &middot; Run: {{RUN_LINK}}</div>
 
-    <div class="cards">
-        <div class="card ok"><div class="n">{{TOTAL_PASSED}}</div><div class="k">Passed</div></div>
-        <div class="card guard"><div class="n">{{TOTAL_GUARDED}}</div><div class="k">Known-defect guards</div></div>
-        <div class="card fixed"><div class="n">{{TOTAL_FIXED}}</div><div class="k">Guards now passing</div></div>
-        <div class="card flaky"><div class="n">{{TOTAL_FLAKY}}</div><div class="k">Flaky</div></div>
-        <div class="card bad"><div class="n">{{TOTAL_FAILED}}</div><div class="k">Failed</div></div>
-        <div class="card"><div class="n">{{TOTAL_SKIPPED}}</div><div class="k">Skipped</div></div>
-        <div class="card"><div class="n">{{DURATION}}</div><div class="k">Duration</div></div>
+    <section class="panel">
+        <div style="font-size:15px;margin-bottom:4px;"><strong>{{STATUS_ICON}} {{STATUS}}</strong> &mdash; {{HEADLINE}}</div>
+        <div class="muted" style="font-size:13px;">pass rate {{PASS_RATE}}% of the {{TOTAL_EXECUTED}} tests run</div>
+    </section>
+
+    <h1 style="margin-top:26px;">🟣 WP ERP QA &mdash; Quality Report</h1>
+
+    <div class="badges">
+        <span class="badge"><span class="k">branch</span><span class="v">{{BRANCH_NAME}}</span></span>
+        <span class="badge"><span class="k">commit</span><span class="v">{{COMMIT_HASH}}</span></span>
+        <span class="badge grey"><span class="k">date</span><span class="v">{{DATE}}</span></span>
+        <span class="badge grey"><span class="k">duration</span><span class="v">{{DURATION}}</span></span>
     </div>
 
-    <section>
-        <h2>By suite</h2>
+    <div class="verdict {{VERDICT_CLASS}}">{{VERDICT_TEXT}}</div>
+
+    <h2>📊 Key Metrics</h2>
+    <div class="badges">
+        <span class="badge grey"><span class="k">total tests</span><span class="v">{{TOTAL_TESTS}}</span></span>
+        <span class="badge ok"><span class="k">passed</span><span class="v">{{TOTAL_PASSED}}</span></span>
+        <span class="badge {{FAILED_BADGE}}"><span class="k">failed</span><span class="v">{{TOTAL_FAILED}}</span></span>
+        <span class="badge {{FLAKY_BADGE}}"><span class="k">flaky</span><span class="v">{{TOTAL_FLAKY}}</span></span>
+        <span class="badge warn"><span class="k">guards</span><span class="v">{{TOTAL_GUARDED}}</span></span>
+        <span class="badge grey"><span class="k">skipped</span><span class="v">{{TOTAL_SKIPPED}}</span></span>
+        <span class="badge grey"><span class="k">specs</span><span class="v">{{TOTAL_SPECS}}</span></span>
+    </div>
+
+    <section class="panel" style="margin-top:16px;">
+        <div style="text-align:center;color:var(--accent);font-weight:700;margin-bottom:12px;">Result mix</div>
+        <div class="chartrow">
+            {{PIE}}
+            <div class="legend">{{PIE_LEGEND}}</div>
+        </div>
+    </section>
+
+    <h2>⚠️ Flaky Tests</h2>
+    <section class="panel">
+        <p class="muted" style="margin-top:0;">Passed on retry &mdash; a green run here is retry-masked, not clean.
+        Each of these failed first and only passed on a second attempt, so it is counted on its own
+        and is deliberately <strong>not</strong> folded into the pass rate.</p>
+        {{FLAKY_LIST}}
+    </section>
+
+    <h2>🧪 Test Suites</h2>
+    <section class="panel scroll">
         <table>
             <thead>
                 <tr>
-                    <th>Suite</th><th>Passed</th><th>Guarded</th><th>Fixed</th>
-                    <th>Flaky</th><th>Failed</th><th>Skipped</th><th>Duration</th>
+                    <th>Suite</th><th>Total</th><th>Passed</th><th>Guarded</th><th>Fixed</th>
+                    <th>Flaky</th><th>Failed</th><th>Skipped</th><th>Specs</th><th>Duration</th><th>Pass rate</th>
                 </tr>
             </thead>
             <tbody>
@@ -122,57 +143,53 @@
         </table>
     </section>
 
-    <section>
-        <h2>Guards that passed &mdash; these filed bugs look fixed</h2>
-        <p class="muted">A <code>test.fail()</code> guard passing means the defect it pins no longer
-        reproduces. Verify it, close the issue, and remove the guard.</p>
+    <h2>❌ Failures</h2>
+    <section class="panel">{{FAILURES}}</section>
+
+    <h2>🎉 Guards that passed &mdash; these filed bugs look fixed</h2>
+    <section class="panel">
+        <p class="muted" style="margin-top:0;">A <code>test.fail()</code> guard passing means the defect it pins no
+        longer reproduces. Verify it, close the issue, and remove the guard.</p>
         {{FIXED_GUARDS}}
     </section>
 
-    <section>
-        <h2>Flaky &mdash; failed, then passed on a retry</h2>
-        <p class="muted">These did <strong>not</strong> pass first time. The job is green because
-        Playwright retries, but a flake is a real defect in either the test or the product. It is
-        counted on its own rather than folded into the pass rate, so it cannot quietly read as a
-        pass.</p>
-        {{FLAKY_LIST}}
+    <h2>🗺️ Spec map</h2>
+    <section class="panel scroll">
+        <p class="muted" style="margin-top:0;">Which spec files each suite actually executed in this run.</p>
+        <table>
+            <thead><tr><th>Suite</th><th>Specs</th><th>Files executed</th></tr></thead>
+            <tbody>{{SPEC_MAP}}</tbody>
+        </table>
     </section>
 
-    <section>
-        <h2>Failures</h2>
-        {{FAILURES}}
-    </section>
-
-    <section>
-        <h2>Skipped, with a reason</h2>
-        <p class="muted">Declined deliberately &mdash; most of these are the externally
-        authenticated integrations waiting on sandbox credentials. A skip is never
-        counted as a pass.</p>
+    <h2>⏭️ Skipped, with a reason</h2>
+    <section class="panel">
+        <p class="muted" style="margin-top:0;">Declined deliberately. A skip is never counted as a pass.</p>
         {{SKIPPED_LIST}}
     </section>
 
-    <section class="legend">
-        <h2>How to read this</h2>
+    <h2>📖 How to read this</h2>
+    <section class="panel">
         <ul>
-            <li><b>Passed</b> &mdash; normal green tests.</li>
-            <li><b>Known-defect guards</b> &mdash; <code>test.fail()</code> tests pinning a filed
-            defect. They fail on purpose while the bug is open, so they are <b>not</b> a
-            regression. Each names its issue in a comment and asserts on its own final
-            assertion, never on a precondition.</li>
-            <li><b>Guards now passing</b> &mdash; the bug appears fixed. This is how a closed
+            <li><strong class="ok">Passed</strong> &mdash; normal green tests.</li>
+            <li><strong class="guard">Known-defect guards</strong> &mdash; <code>test.fail()</code> tests pinning a filed
+            defect. They fail on purpose while the bug is open, so they are <strong>not</strong> a regression. Each names
+            its issue and asserts on its own final assertion, never on a precondition.</li>
+            <li><strong class="fixed">Guards now passing</strong> &mdash; the bug appears fixed. This is how a closed
             defect announces itself without anyone re-testing by hand.</li>
-            <li><b>Flaky</b> &mdash; failed, then passed on a retry. Does not gate, and is not a
-            pass either: it is the one result that used to be reported as a hard failure, which is
-            how a green run came back stamped FAILED.</li>
-            <li><b>Failed</b> &mdash; the only bucket that gates a run.</li>
-            <li><b>Skipped</b> &mdash; declined with a recorded reason, never a silent pass.</li>
+            <li><strong class="flaky">Flaky</strong> &mdash; failed, then passed on a retry. Does not gate the run, and is
+            not a pass either. It is counted separately so a retry cannot quietly launder a failure into green.</li>
+            <li><strong class="bad">Failed</strong> &mdash; the only bucket that gates a run.</li>
+            <li><strong>Skipped</strong> &mdash; declined with a recorded reason, never a silent pass.</li>
         </ul>
-        <p>What the suite deliberately does <b>not</b> cover, and why, is recorded in
-        the QA coverage ledger, which is kept out of this repository because it
+        <p class="muted">There is deliberately <strong>no coverage percentage</strong> here. Nothing in this run measures
+        how much of the product the suite exercises, and a number with no definition behind it would be invented. The
+        <em>Specs</em> column counts spec files that actually executed, which is a fact this run does produce. What the
+        suite knowingly does not cover is recorded in the QA coverage ledger, kept out of this repository because it
         details defects that are still open.</p>
     </section>
 
-    <footer>Generated by <code>tests/pw/utils/generateQualityReport.js</code></footer>
+    <footer>Generated by <code>tests/pw/utils/generateQualityReport.js</code> &middot; WP ERP QA</footer>
 
 </div>
 </body>

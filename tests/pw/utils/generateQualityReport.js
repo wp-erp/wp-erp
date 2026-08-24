@@ -194,10 +194,42 @@ const totals = {
 // rounded away.
 const gating = totals.failed;
 const executed = totals.passed + totals.guarded + totals.fixed + totals.flaky + totals.failed;
-const passRate = executed ? Math.round(((totals.passed + totals.guarded + totals.fixed) / executed) * 100) : 0;
+/**
+ * NEVER ROUNDED UP. A run with 477 clean results out of 478 is 99.79%, and
+ * `Math.round` printed that as "100%" — next to a banner admitting one flaky
+ * test. Rounding is how a report launders the single result it exists to
+ * surface, so the rate is floored and only ever reads 100 when nothing at all
+ * flaked, failed or needed a retry.
+ */
+function rateOf(clean, ofTotal) {
+    if (!ofTotal) return '0';
+    if (clean === ofTotal) return '100';
+
+    return (Math.floor((clean / ofTotal) * 1000) / 10).toFixed(1);
+}
+
+const passRate = rateOf(totals.passed + totals.guarded + totals.fixed, executed);
 
 const status = gating > 0 ? 'FAILED' : ran.length === 0 ? 'NOT RUN' : totals.flaky > 0 ? 'PASSED WITH FLAKES' : 'PASSED';
 const statusIcon = gating > 0 ? '❌' : ran.length === 0 ? '⚠️' : totals.flaky > 0 ? '⚠️' : '✅';
+
+const totalTests = executed + totals.skipped;
+const totalSpecs = ran.reduce((sum, r) => sum + r.files.size, 0);
+
+const headline =
+    `${totals.passed} of ${totalTests} tests passed ` +
+    `(${totals.failed} failed, ${totals.skipped} skipped, ${totals.guarded} known-defect guards` +
+    (totals.flaky ? `, ${totals.flaky} flaky ⚠️` : '') +
+    ')';
+
+const verdictText =
+    gating > 0
+        ? `${totals.failed} FAILED · BUILD IS RED · ${passRate}% pass rate`
+        : totals.flaky > 0
+          ? `NO FAILURES, BUT ${totals.flaky} FLAKY · RETRY-MASKED, NOT CLEAN · ${passRate}% pass rate`
+          : `ALL TESTS PASSED · BUILD IS GREEN · ${passRate}% pass rate`;
+
+const verdictClass = gating > 0 ? 'fail' : totals.flaky > 0 ? 'warn' : 'pass';
 
 const repo = process.env.GITHUB_REPOSITORY || 'wp-erp/wp-erp';
 const server = process.env.GITHUB_SERVER_URL || 'https://github.com';
@@ -214,21 +246,79 @@ const date = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
 const suiteRowsHtml = results
     .map(r => {
         if (!r.ran) {
-            return `<tr class="muted"><td>${r.label}</td><td colspan="7">not run</td></tr>`;
+            return `<tr class="muted"><td>${r.label}</td><td colspan="10">not run</td></tr>`;
         }
+
+        const executed = r.passed + r.guarded + r.fixed + r.flaky + r.failed;
+        const rate = rateOf(r.passed + r.guarded + r.fixed, executed);
 
         return `<tr>
             <td><strong>${r.label}</strong></td>
+            <td>${executed + r.skipped}</td>
             <td class="ok">${r.passed}</td>
-            <td class="guard">${r.guarded}</td>
+            <td class="guard">${r.guarded || '—'}</td>
             <td class="fixed">${r.fixed || '—'}</td>
-            <td class="${r.flaky ? 'guard' : 'muted'}">${r.flaky || '—'}</td>
+            <td class="${r.flaky ? 'flaky' : 'muted'}">${r.flaky || '—'}</td>
             <td class="${r.failed ? 'bad' : 'ok'}">${r.failed}</td>
             <td class="muted">${r.skipped}</td>
+            <td class="muted">${r.files.size}</td>
             <td class="muted">${formatDuration(r.duration)}</td>
+            <td class="${rate === '100' ? 'ok' : 'flaky'}">${rate}%</td>
         </tr>`;
     })
     .join('\n');
+
+const specMapHtml = results
+    .filter(r => r.ran)
+    .map(r => {
+        const files = [...r.files].sort();
+        const shown = files.map(f => `<code>${escapeHtml(f)}</code>`).join(' ');
+
+        return `<tr><td><strong>${r.label}</strong></td><td>${files.length}</td><td style="text-align:left">${shown}</td></tr>`;
+    })
+    .join('\n') || '<tr><td colspan="3" class="muted">Nothing ran.</td></tr>';
+
+// A donut drawn with one stroked circle per slice — inline SVG, because the page
+// is a self-contained artifact and may not fetch a charting library.
+function donut(slices) {
+    const total = slices.reduce((sum, s) => sum + s.value, 0);
+    if (!total) return '<p class="muted">No results to chart.</p>';
+
+    const r = 70;
+    const circumference = 2 * Math.PI * r;
+    let offset = 0;
+
+    const rings = slices
+        .filter(s => s.value > 0)
+        .map(s => {
+            const len = (s.value / total) * circumference;
+            const dash = `${len} ${circumference - len}`;
+            const ring = `<circle cx="100" cy="100" r="${r}" fill="none" stroke="${s.color}"
+                stroke-width="30" stroke-dasharray="${dash}" stroke-dashoffset="${-offset}"
+                transform="rotate(-90 100 100)"><title>${s.label}: ${s.value}</title></circle>`;
+            offset += len;
+
+            return ring;
+        })
+        .join('');
+
+    return `<svg viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="result mix">${rings}</svg>`;
+}
+
+const slices = [
+    { label: 'Passed', value: totals.passed, color: '#3fb950' },
+    { label: 'Known-defect guards', value: totals.guarded, color: '#d29922' },
+    { label: 'Guards now passing', value: totals.fixed, color: '#a371f7' },
+    { label: 'Flaky', value: totals.flaky, color: '#db6d28' },
+    { label: 'Failed', value: totals.failed, color: '#f85149' },
+    { label: 'Skipped', value: totals.skipped, color: '#6e7681' },
+];
+
+const pieHtml = donut(slices);
+const pieLegendHtml = slices
+    .filter(s => s.value > 0)
+    .map(s => `<div><span class="legend-dot" style="background:${s.color}"></span>${s.label} — <strong>${s.value}</strong></div>`)
+    .join('');
 
 const listOrNone = (items, render) =>
     items.length ? `<ul>${items.map(render).join('')}</ul>` : '<p class="muted">None.</p>';
@@ -269,6 +359,16 @@ const replacements = {
     TOTAL_FAILED: String(totals.failed),
     TOTAL_SKIPPED: String(totals.skipped),
     TOTAL_EXECUTED: String(executed),
+    TOTAL_TESTS: String(totalTests),
+    TOTAL_SPECS: String(totalSpecs),
+    HEADLINE: headline,
+    VERDICT_TEXT: verdictText,
+    VERDICT_CLASS: verdictClass,
+    FAILED_BADGE: totals.failed ? 'bad' : 'ok',
+    FLAKY_BADGE: totals.flaky ? 'warn' : 'ok',
+    PIE: pieHtml,
+    PIE_LEGEND: pieLegendHtml,
+    SPEC_MAP: specMapHtml,
     DURATION: formatDuration(totals.duration),
     SUITE_ROWS: suiteRowsHtml,
     FAILURES: failuresHtml,
@@ -301,33 +401,47 @@ if (fs.existsSync(TEMPLATE_PATH)) {
 
 const md = [];
 
-md.push(`## ${statusIcon} WP ERP Quality Report — ${status}`);
+md.push(`## ${statusIcon} WP ERP QA — Quality Report`);
 md.push('');
-md.push(`\`${branch}\` · \`${sha}\` · ${date}${runUrl ? ` · [run #${runId}](${runUrl})` : ''}`);
+md.push(`Branch \`${branch}\` · Commit \`${sha}\` · ${date}${runUrl ? ` · [run #${runId}](${runUrl})` : ''}`);
 md.push('');
+md.push(`> **${statusIcon} ${status}** — ${headline}`);
+md.push(`> pass rate **${passRate}%** of the ${executed} tests run · ${formatDuration(totals.duration)}`);
+md.push('');
+md.push('### 📊 Key Metrics');
+md.push('');
+md.push('| Total | Passed | Guards | Fixed | Flaky | Failed | Skipped | Specs |');
+md.push('|---:|---:|---:|---:|---:|---:|---:|---:|');
 md.push(
-    `**${totals.passed} passed** · ${totals.guarded} known-defect guards` +
-        (totals.flaky ? ` · **${totals.flaky} flaky**` : '') +
-        ` · ${totals.failed} failed · ${totals.skipped} skipped · ${formatDuration(totals.duration)}`
+    `| ${totalTests} | ${totals.passed} | ${totals.guarded} | ${totals.fixed || '—'} | ` +
+        `${totals.flaky || '—'} | ${totals.failed} | ${totals.skipped} | ${totalSpecs} |`
 );
 md.push('');
-md.push('| Suite | Passed | Guarded | Fixed | Flaky | Failed | Skipped | Duration |');
-md.push('|---|---:|---:|---:|---:|---:|---:|---:|');
+md.push('### 🧪 Test Suites');
+md.push('');
+md.push('| Suite | Total | Passed | Guarded | Fixed | Flaky | Failed | Skipped | Specs | Duration | Pass rate |');
+md.push('|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
 
 for (const r of results) {
+    if (!r.ran) {
+        md.push(`| ${r.label} | — | — | — | — | — | — | — | — | — | not run |`);
+        continue;
+    }
+
+    const ex = r.passed + r.guarded + r.fixed + r.flaky + r.failed;
     md.push(
-        r.ran
-            ? `| ${r.label} | ${r.passed} | ${r.guarded} | ${r.fixed || '—'} | ${r.flaky || '—'} | ${r.failed} | ${r.skipped} | ${formatDuration(r.duration)} |`
-            : `| ${r.label} | — | — | — | — | — | — | not run |`
+        `| ${r.label} | ${ex + r.skipped} | ${r.passed} | ${r.guarded || '—'} | ${r.fixed || '—'} | ` +
+            `${r.flaky || '—'} | ${r.failed} | ${r.skipped} | ${r.files.size} | ${formatDuration(r.duration)} | ` +
+            `${rateOf(r.passed + r.guarded + r.fixed, ex)}% |`
     );
 }
 
 md.push('');
 
 if (totals.flaky) {
-    md.push('### ⚠️ Flaky — failed, then passed on a retry');
+    md.push('### ⚠️ Flaky Tests');
     md.push('');
-    md.push('These did NOT pass first time. The job is green because Playwright retries, but a flake is a real defect in either the test or the product, and it is counted separately from the pass rate rather than folded into it.');
+    md.push('Passed on retry — a green run here is retry-masked, not clean. Each failed first and only passed on a second attempt, so it is counted on its own and deliberately **not** folded into the pass rate.');
     md.push('');
     for (const r of ran) {
         for (const f of r.flakyTests) md.push(`- **${r.label}** — ${f.title} \`${f.where}\`  \n  first attempt: ${f.error}`);
