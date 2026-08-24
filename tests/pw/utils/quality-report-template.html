@@ -16,6 +16,7 @@
         --bad: #d63638;
         --guard: #b26a00;
         --fixed: #6d28d9;
+        --flaky: #b45309;
     }
     * { box-sizing: border-box; }
     body {
@@ -54,6 +55,7 @@
     .card.bad .n { color: var(--bad); }
     .card.guard .n { color: var(--guard); }
     .card.fixed .n { color: var(--fixed); }
+    .card.flaky .n { color: var(--flaky); }
 
     section {
         background: var(--card); border: 1px solid var(--line); border-radius: 9px;
@@ -69,6 +71,7 @@
     .bad { color: var(--bad); font-weight: 600; }
     .guard { color: var(--guard); font-weight: 600; }
     .fixed { color: var(--fixed); font-weight: 600; }
+    .flaky { color: var(--flaky); font-weight: 600; }
     .muted { color: var(--muted); }
 
     ul { margin: 0; padding-left: 20px; }
@@ -98,6 +101,7 @@
         <div class="card ok"><div class="n">{{TOTAL_PASSED}}</div><div class="k">Passed</div></div>
         <div class="card guard"><div class="n">{{TOTAL_GUARDED}}</div><div class="k">Known-defect guards</div></div>
         <div class="card fixed"><div class="n">{{TOTAL_FIXED}}</div><div class="k">Guards now passing</div></div>
+        <div class="card flaky"><div class="n">{{TOTAL_FLAKY}}</div><div class="k">Flaky</div></div>
         <div class="card bad"><div class="n">{{TOTAL_FAILED}}</div><div class="k">Failed</div></div>
         <div class="card"><div class="n">{{TOTAL_SKIPPED}}</div><div class="k">Skipped</div></div>
         <div class="card"><div class="n">{{DURATION}}</div><div class="k">Duration</div></div>
@@ -109,7 +113,7 @@
             <thead>
                 <tr>
                     <th>Suite</th><th>Passed</th><th>Guarded</th><th>Fixed</th>
-                    <th>Failed</th><th>Skipped</th><th>Duration</th>
+                    <th>Flaky</th><th>Failed</th><th>Skipped</th><th>Duration</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,6 +127,15 @@
         <p class="muted">A <code>test.fail()</code> guard passing means the defect it pins no longer
         reproduces. Verify it, close the issue, and remove the guard.</p>
         {{FIXED_GUARDS}}
+    </section>
+
+    <section>
+        <h2>Flaky &mdash; failed, then passed on a retry</h2>
+        <p class="muted">These did <strong>not</strong> pass first time. The job is green because
+        Playwright retries, but a flake is a real defect in either the test or the product. It is
+        counted on its own rather than folded into the pass rate, so it cannot quietly read as a
+        pass.</p>
+        {{FLAKY_LIST}}
     </section>
 
     <section>
@@ -148,6 +161,9 @@
             assertion, never on a precondition.</li>
             <li><b>Guards now passing</b> &mdash; the bug appears fixed. This is how a closed
             defect announces itself without anyone re-testing by hand.</li>
+            <li><b>Flaky</b> &mdash; failed, then passed on a retry. Does not gate, and is not a
+            pass either: it is the one result that used to be reported as a hard failure, which is
+            how a green run came back stamped FAILED.</li>
             <li><b>Failed</b> &mdash; the only bucket that gates a run.</li>
             <li><b>Skipped</b> &mdash; declined with a recorded reason, never a silent pass.</li>
         </ul>

@@ -422,16 +422,39 @@ jobs:
             # at all. The same composite action every test job uses unpacks both
             # builds, so the teardown gets a real site instead of a broken one.
             #
-            # `seed: false` because seeding ACTIVATES the licence, and this job's
-            # whole purpose is to release it.
+            # It IS seeded, despite seeding being what activates the licence.
+            #
+            # Skipping the seed looked like the obvious saving and was wrong: the
+            # activation lives in the site's own database, and a fresh unseeded
+            # site has no record of it, so `releaseLicense()` took its
+            # `isActivated() === false` branch, returned "nothing to deactivate"
+            # and the job went GREEN having released nothing. The seat stayed
+            # held. Run 32715510520 passed exactly that way.
+            #
+            # Seeding here activates the licence for http://localhost:8888 and the
+            # step below then deactivates it. Since EDD counts activations per
+            # site URL, and every job in the run uses that same URL, releasing it
+            # releases the seat the whole run was holding.
             - uses: ./.github/actions/setup-erp-site
               with:
                   pro-built: ${{ needs.build_erp_pro.result }}
-                  seed: false
 
+            # The output is INSPECTED, not just the exit code. This job's failure
+            # mode is silence: it can do nothing at all and still exit 0, which is
+            # how the fake green above went unnoticed. After a seed, "nothing to
+            # deactivate" is not a benign no-op, it means the release did not
+            # happen and the seat is stranded.
             - name: Deactivate licence
               working-directory: tests/pw
-              run: npm run teardown:license || echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand"
+              run: |
+                  npm run teardown:license 2>&1 | tee /tmp/teardown.log || true
+                  if grep -q "nothing to deactivate" /tmp/teardown.log; then
+                      echo "::warning::the licence was NOT released — the site reported nothing to deactivate after seeding. Release the seat by hand."
+                  elif grep -q "\[licence\] release:" /tmp/teardown.log; then
+                      echo "licence released"
+                  else
+                      echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand"
+                  fi
 
     # ---------------------------------------------------------------------
     # 7. Merge every job's report and render the WP ERP Quality Report.

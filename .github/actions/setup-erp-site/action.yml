@@ -9,13 +9,6 @@ inputs:
         description: Result of the build_erp_pro job — Pro is skipped when it did not succeed.
         required: false
         default: 'success'
-    seed:
-        description: >
-            Set to 'false' to boot the site without seeding it. The licence
-            teardown needs a running site to drive the deactivate form, but
-            seeding would ACTIVATE the seat it is about to release.
-        required: false
-        default: 'true'
 
 runs:
     using: composite
@@ -141,7 +134,6 @@ runs:
         # runnable site: plugins, core modules, Pro modules, three setup wizards,
         # permalinks, company, currency, timezone.
         - name: Seed site (licence, modules, actors, fixtures)
-          if: inputs.seed != 'false'
           shell: bash
           working-directory: tests/pw
           run: npm run setup

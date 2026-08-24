@@ -90,10 +90,12 @@ function classify(report) {
         passed: 0,
         guarded: 0,
         fixed: 0,
+        flaky: 0,
         failed: 0,
         skipped: 0,
         duration: 0,
         failures: [],
+        flakyTests: [],
         fixedGuards: [],
         skippedTests: [],
         files: new Set(),
@@ -132,15 +134,34 @@ function classify(report) {
 
                 if (status === 'expected') {
                     out.passed++;
-                } else {
-                    out.failed++;
-                    const error = test.results?.[0]?.error?.message || '';
-                    out.failures.push({
-                        title: spec.title,
-                        where,
-                        error: String(error).split('\n')[0].slice(0, 200),
-                    });
+                    continue;
                 }
+
+                const firstError = String(test.results?.[0]?.error?.message || '')
+                    .split('\n')[0]
+                    .slice(0, 200);
+
+                // FLAKY is its own bucket, and adding it fixed a real
+                // misreport: the reporter emits `expected`, `unexpected`,
+                // `flaky` and `skipped`, and everything that was not the first
+                // two used to fall into `failed`. So a test that failed once and
+                // passed on retry was counted as a hard failure and stamped the
+                // whole run FAILED, while Playwright — which does not fail a run
+                // for flakiness — reported every job green. Run 32715510520 read
+                // exactly that way.
+                //
+                // It is deliberately counted as NEITHER passed nor failed.
+                // Calling it passed would be a fake green, and a flaky @tier1
+                // money case is precisely what must not disappear into a pass
+                // rate. Calling it failed misstates a run whose jobs are green.
+                if (status === 'flaky') {
+                    out.flaky++;
+                    out.flakyTests.push({ title: spec.title, where, error: firstError });
+                    continue;
+                }
+
+                out.failed++;
+                out.failures.push({ title: spec.title, where, error: firstError });
             }
         }
     }
@@ -160,18 +181,23 @@ const totals = {
     passed: total('passed'),
     guarded: total('guarded'),
     fixed: total('fixed'),
+    flaky: total('flaky'),
     failed: total('failed'),
     skipped: total('skipped'),
     duration: ran.reduce((max, r) => Math.max(max, r.duration), 0),
 };
 
-// Only real regressions gate. Guards failing as documented do not.
+// Only real regressions gate. Guards failing as documented do not, and neither
+// does a flake — the jobs are green — but a flake is NOT folded into the pass
+// rate either, because "passed on the second go" is not the same claim as
+// "passed", and a flaky tier-1 money case is the last thing that should be
+// rounded away.
 const gating = totals.failed;
-const executed = totals.passed + totals.guarded + totals.fixed + totals.failed;
+const executed = totals.passed + totals.guarded + totals.fixed + totals.flaky + totals.failed;
 const passRate = executed ? Math.round(((totals.passed + totals.guarded + totals.fixed) / executed) * 100) : 0;
 
-const status = gating > 0 ? 'FAILED' : ran.length === 0 ? 'NOT RUN' : 'PASSED';
-const statusIcon = gating > 0 ? '❌' : ran.length === 0 ? '⚠️' : '✅';
+const status = gating > 0 ? 'FAILED' : ran.length === 0 ? 'NOT RUN' : totals.flaky > 0 ? 'PASSED WITH FLAKES' : 'PASSED';
+const statusIcon = gating > 0 ? '❌' : ran.length === 0 ? '⚠️' : totals.flaky > 0 ? '⚠️' : '✅';
 
 const repo = process.env.GITHUB_REPOSITORY || 'wp-erp/wp-erp';
 const server = process.env.GITHUB_SERVER_URL || 'https://github.com';
@@ -188,7 +214,7 @@ const date = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
 const suiteRowsHtml = results
     .map(r => {
         if (!r.ran) {
-            return `<tr class="muted"><td>${r.label}</td><td colspan="6">not run</td></tr>`;
+            return `<tr class="muted"><td>${r.label}</td><td colspan="7">not run</td></tr>`;
         }
 
         return `<tr>
@@ -196,6 +222,7 @@ const suiteRowsHtml = results
             <td class="ok">${r.passed}</td>
             <td class="guard">${r.guarded}</td>
             <td class="fixed">${r.fixed || '—'}</td>
+            <td class="${r.flaky ? 'guard' : 'muted'}">${r.flaky || '—'}</td>
             <td class="${r.failed ? 'bad' : 'ok'}">${r.failed}</td>
             <td class="muted">${r.skipped}</td>
             <td class="muted">${formatDuration(r.duration)}</td>
@@ -209,6 +236,11 @@ const listOrNone = (items, render) =>
 const failuresHtml = listOrNone(
     ran.flatMap(r => r.failures.map(f => ({ ...f, suite: r.label }))),
     f => `<li><strong>${f.suite}</strong> — ${escapeHtml(f.title)}<br><code>${escapeHtml(f.where)}</code><br><span class="muted">${escapeHtml(f.error)}</span></li>`
+);
+
+const flakyHtml = listOrNone(
+    ran.flatMap(r => r.flakyTests.map(f => ({ ...f, suite: r.label }))),
+    f => `<li><strong>${f.suite}</strong> — ${escapeHtml(f.title)}<br><code>${escapeHtml(f.where)}</code><br><span class="muted">first attempt: ${escapeHtml(f.error)}</span></li>`
 );
 
 const fixedHtml = listOrNone(
@@ -233,12 +265,14 @@ const replacements = {
     TOTAL_PASSED: String(totals.passed),
     TOTAL_GUARDED: String(totals.guarded),
     TOTAL_FIXED: String(totals.fixed),
+    TOTAL_FLAKY: String(totals.flaky),
     TOTAL_FAILED: String(totals.failed),
     TOTAL_SKIPPED: String(totals.skipped),
     TOTAL_EXECUTED: String(executed),
     DURATION: formatDuration(totals.duration),
     SUITE_ROWS: suiteRowsHtml,
     FAILURES: failuresHtml,
+    FLAKY_LIST: flakyHtml,
     FIXED_GUARDS: fixedHtml,
     SKIPPED_LIST: skippedHtml,
     BRANCH_NAME: branch,
@@ -271,20 +305,35 @@ md.push(`## ${statusIcon} WP ERP Quality Report — ${status}`);
 md.push('');
 md.push(`\`${branch}\` · \`${sha}\` · ${date}${runUrl ? ` · [run #${runId}](${runUrl})` : ''}`);
 md.push('');
-md.push(`**${totals.passed} passed** · ${totals.guarded} known-defect guards · ${totals.failed} failed · ${totals.skipped} skipped · ${formatDuration(totals.duration)}`);
+md.push(
+    `**${totals.passed} passed** · ${totals.guarded} known-defect guards` +
+        (totals.flaky ? ` · **${totals.flaky} flaky**` : '') +
+        ` · ${totals.failed} failed · ${totals.skipped} skipped · ${formatDuration(totals.duration)}`
+);
 md.push('');
-md.push('| Suite | Passed | Guarded | Fixed | Failed | Skipped | Duration |');
-md.push('|---|---:|---:|---:|---:|---:|---:|');
+md.push('| Suite | Passed | Guarded | Fixed | Flaky | Failed | Skipped | Duration |');
+md.push('|---|---:|---:|---:|---:|---:|---:|---:|');
 
 for (const r of results) {
     md.push(
         r.ran
-            ? `| ${r.label} | ${r.passed} | ${r.guarded} | ${r.fixed || '—'} | ${r.failed} | ${r.skipped} | ${formatDuration(r.duration)} |`
-            : `| ${r.label} | — | — | — | — | — | not run |`
+            ? `| ${r.label} | ${r.passed} | ${r.guarded} | ${r.fixed || '—'} | ${r.flaky || '—'} | ${r.failed} | ${r.skipped} | ${formatDuration(r.duration)} |`
+            : `| ${r.label} | — | — | — | — | — | — | not run |`
     );
 }
 
 md.push('');
+
+if (totals.flaky) {
+    md.push('### ⚠️ Flaky — failed, then passed on a retry');
+    md.push('');
+    md.push('These did NOT pass first time. The job is green because Playwright retries, but a flake is a real defect in either the test or the product, and it is counted separately from the pass rate rather than folded into it.');
+    md.push('');
+    for (const r of ran) {
+        for (const f of r.flakyTests) md.push(`- **${r.label}** — ${f.title} \`${f.where}\`  \n  first attempt: ${f.error}`);
+    }
+    md.push('');
+}
 
 if (totals.fixed) {
     md.push('### 🎉 Guards that passed — these filed bugs look fixed');
