@@ -6,6 +6,49 @@ const { CI, HEADLESS, BASE_URL, SLOWMO, NO_SETUP, ERP_PRO } = process.env;
 const ci = parseBoolean(CI);
 const pro = parseBoolean(ERP_PRO ?? 'true');
 
+/* The money specs, named once. `e2e_tests` excludes this list and the two
+   serial money projects below divide it, so a new money spec needs exactly one
+   edit here and cannot fall down the gap between the two jobs. */
+const MONEY_SPECS = ['transactions', 'payments', 'bills', 'reports', 'expenses', 'purchases', 'journals'];
+
+/* `payments.spec.ts` on its own is roughly half the money runtime — 14.5 minutes
+   of 30 in CI run 32696378665 — so it takes one job and the other six take
+   another, which lands them within about 90 seconds of each other.
+
+   Playwright's `--shard` cannot do this split. Shards are balanced by test
+   COUNT, not by duration, and the alphabetical order here would have put
+   payments together with bills, expenses and journals in shard 1 (24 minutes)
+   and left shard 2 finishing in 6. Two projects is the only way to divide these
+   files by how long they actually take. */
+const PAYMENT_SPECS = ['payments'];
+const LEDGER_SPECS = MONEY_SPECS.filter((spec) => !PAYMENT_SPECS.includes(spec));
+
+const specGroup = (names: string[]) => new RegExp(`accounting/(${names.join('|')})\\.spec\\.ts`);
+
+/* Both money projects run under identical rules; only their file list differs. */
+const moneyProject = {
+    /* These drive multi-step money forms end to end — raise an expense, reopen
+       its edit screen, re-read the ledger — and land around 50-60s each even on
+       an idle machine. Against the 90s default that is under 2x headroom, so any
+       contention on a shared laptop tips a passing test into a timeout: the
+       expense cases passed 7/7 alone and timed out inside a full run. CI already
+       allows 180s; matching it here removes the flake WITHOUT touching a single
+       assertion. */
+    timeout: 180 * 1000,
+    fullyParallel: false,
+    /* NOTE: `workers` is NOT a per-project option in Playwright — only
+       `fullyParallel` is, and that serialises tests WITHIN a file, not files
+       against each other. A `workers: 1` here was silently ignored. The npm
+       scripts pass `--workers=1`, which is what actually enforces it. Without it
+       these files run concurrently and fight over the shared Cash ledger. */
+    /* AFTER `e2e_tests`, not beside it. Projects run concurrently by default, so
+       a single-worker project still competed with four e2e workers for one
+       Docker site — these cases passed 21/21 alone and flaked whenever the rest
+       of the suite ran alongside them. CI passes `--no-deps` because each job
+       stands up its own site and seeds it first. */
+    dependencies: ['e2e_tests'],
+};
+
 export default defineConfig({
     testDir: 'tests/e2e',
 
@@ -89,45 +132,33 @@ export default defineConfig({
                sequence — global state no customer or vendor scoping can isolate.
                Run beside each other they broke each other's preconditions, so
                they get their own single-worker project below. */
-            testIgnore: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts|license\/userLimit\.spec\.ts/,
+            testIgnore: new RegExp(`${specGroup(MONEY_SPECS).source}|license/userLimit\\.spec\\.ts`),
             dependencies: parseBoolean(NO_SETUP) ? [] : ['env_setup'],
         },
         {
-            /* Invoice, settlement and bill flows. Serial by necessity: they all
-               post to the shared Cash ledger, and the "account is empty"
-               preconditions are only meaningful when nothing else is spending or
-               funding it at the same time. */
+            /* Bills, expenses, journals, purchases, reports and transactions.
+               Serial by necessity: they all post to the shared Cash ledger, and
+               the "account is empty" preconditions are only meaningful when
+               nothing else is spending or funding it at the same time.
+
+                   npm run test:money:ledgers
+
+               This project takes whatever is in MONEY_SPECS and not in
+               PAYMENT_SPECS, so a newly added money spec joins it automatically
+               rather than being silently dropped by both jobs. */
             name: 'accounting_money',
-            testMatch: /accounting\/(transactions|payments|bills|reports|expenses|purchases|journals)\.spec\.ts/,
-            /* These drive multi-step money forms end to end — raise an expense,
-               reopen its edit screen, re-read the ledger — and land around 50-60s
-               each even on an idle machine. Against the 90s default that is under
-               2x headroom, so any contention on a shared laptop tips a passing
-               test into a timeout: the expense cases passed 7/7 alone and timed
-               out inside a full run. CI already allows 180s; matching it here
-               removes the flake WITHOUT touching a single assertion — the tests
-               still prove exactly what they proved before, they are just given
-               the time they genuinely take. */
-            timeout: 180 * 1000,
-            fullyParallel: false,
-            /* NOTE: `workers` is NOT a per-project option in Playwright — only
-               `fullyParallel` is, and that serialises tests WITHIN a file, not
-               files against each other. A `workers: 1` here was silently ignored
-               for several runs while I read its failures as product or scoping
-               faults. This project MUST be run with the CLI flag:
+            testMatch: specGroup(LEDGER_SPECS),
+            ...moneyProject,
+        },
+        {
+            /* Invoice, bill and purchase settlement. Split out of the project
+               above only because of its runtime — same rules, same ledger, same
+               single worker; see PAYMENT_SPECS for the measurement.
 
-                   npx playwright test --project=accounting_money --workers=1
-
-               See "How to run". Without it these four files run concurrently and
-               fight over the shared Cash ledger. */
-            /* AFTER `e2e_tests`, not beside it. Projects run concurrently by
-               default, so a single-worker project still competed with four e2e
-               workers for one Docker site — these cases passed 21/21 alone and
-               flaked whenever the rest of the suite ran alongside them. The
-               dependency makes the ordering explicit and the money assertions
-               deterministic; it costs wall-clock, which is the right trade for a
-               ledger oracle. */
-            dependencies: ['e2e_tests'],
+                   npm run test:money:payments */
+            name: 'accounting_payments',
+            testMatch: specGroup(PAYMENT_SPECS),
+            ...moneyProject,
         },
         {
             /* OPT-IN ONLY, and destructive: it seeds enough users to stand the

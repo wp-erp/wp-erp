@@ -192,19 +192,27 @@ jobs:
                   compression-level: 0
 
     # ---------------------------------------------------------------------
-    # 2. E2E, sharded. Each shard stands up its own wp-env and runs a slice.
+    # 2. E2E and API, in one job on one site.
+    #
+    #    Deliberately NOT sharded, which is the opposite of the obvious choice
+    #    and needs its reason on the record. Standing up a site costs about 2m50s
+    #    of Docker boot, install and seed on EVERY job, and it buys nothing that
+    #    is shared between them. Four shards therefore spent roughly eleven
+    #    runner-minutes on setup to save about seven minutes of testing, and
+    #    still finished around 12 minutes before the money jobs — which are
+    #    serial and set the run's length no matter what happens here.
+    #
+    #    Unsharded, the whole e2e suite runs about 9-12 minutes on four workers
+    #    against one site, which lands it alongside the money jobs instead of
+    #    idling. API rides along at the end of the same job: it is 85 seconds of
+    #    work and did not justify a fifth site of its own.
     # ---------------------------------------------------------------------
     e2e_tests:
-        name: e2e tests
+        name: e2e + api tests
         runs-on: ubuntu-latest
         timeout-minutes: 60
         needs: [build_wp_erp, build_erp_pro]
-        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E')
-        strategy:
-            fail-fast: false
-            matrix:
-                shardIndex: [1, 2, 3, 4]
-                shardTotal: [4]
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'API')
         steps:
             # A local composite action only exists once the repo is on disk, so
             # the checkout has to come first. The build tarball is unpacked over
@@ -216,101 +224,42 @@ jobs:
               with:
                   pro-built: ${{ needs.build_erp_pro.result }}
 
-            - name: e2e (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+            - name: e2e
+              if: github.event.inputs.testsuite != 'API'
               working-directory: tests/pw
               env:
                   PW_JSON_OUT: playwright-report/results-e2e.json
-              run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+              run: npm run test:e2e
 
-            - name: Upload blob report
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: blob-e2e-${{ matrix.shardIndex }}
-                  path: tests/pw/blob-report
-                  retention-days: 1
-                  if-no-files-found: ignore
-
-            - name: Upload results json
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: results-e2e-${{ matrix.shardIndex }}
-                  path: tests/pw/playwright-report/results-e2e.json
-                  retention-days: 1
-                  if-no-files-found: ignore
-
-    # ---------------------------------------------------------------------
-    # 3. Money. NOT sharded, and it cannot be: these specs share one Cash
-    #    ledger and one voucher sequence, which no scoping can isolate. Run in
-    #    parallel they break each other's preconditions.
-    # ---------------------------------------------------------------------
-    money_tests:
-        name: accounting money tests
-        runs-on: ubuntu-latest
-        timeout-minutes: 60
-        needs: [build_wp_erp, build_erp_pro]
-        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'Money')
-        steps:
-            # A local composite action only exists once the repo is on disk, so
-            # the checkout has to come first. The build tarball is unpacked over
-            # the top of it by the action below.
-            - uses: actions/checkout@v4
-
-            - uses: ./.github/actions/setup-erp-site
-              with:
-                  pro-built: ${{ needs.build_erp_pro.result }}
-
-            - name: money (serial)
-              working-directory: tests/pw
-              env:
-                  PW_JSON_OUT: playwright-report/results-money.json
-              run: npm run test:money
-
-            - name: Upload blob report
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: blob-money
-                  path: tests/pw/blob-report
-                  retention-days: 1
-                  if-no-files-found: ignore
-
-            - name: Upload results json
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: results-money
-                  path: tests/pw/playwright-report/results-money.json
-                  retention-days: 1
-                  if-no-files-found: ignore
-
-    # ---------------------------------------------------------------------
-    # 4. REST API.
-    # ---------------------------------------------------------------------
-    api_tests:
-        name: api tests
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        needs: [build_wp_erp, build_erp_pro]
-        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'API')
-        steps:
-            # A local composite action only exists once the repo is on disk, so
-            # the checkout has to come first. The build tarball is unpacked over
-            # the top of it by the action below.
-            - uses: actions/checkout@v4
-
-            - uses: ./.github/actions/setup-erp-site
-              with:
-                  pro-built: ${{ needs.build_erp_pro.result }}
-
+            # `!cancelled()` rather than `always()`: API must still run when e2e
+            # FAILED — the two are independent and a red e2e says nothing about
+            # the REST layer — but a cancelled run should stop, not carry on.
             - name: api
+              if: ${{ !cancelled() && github.event.inputs.testsuite != 'E2E' }}
               working-directory: tests/pw
               env:
                   PW_JSON_OUT: playwright-report/results-api.json
               run: npm run test:api
 
+            - name: Upload blob report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-e2e
+                  path: tests/pw/blob-report
+                  retention-days: 1
+                  if-no-files-found: ignore
+
             - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-e2e
+                  path: tests/pw/playwright-report/results-e2e.json
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+            - name: Upload api results json
               if: always()
               uses: actions/upload-artifact@v4
               with:
@@ -320,16 +269,86 @@ jobs:
                   if-no-files-found: ignore
 
     # ---------------------------------------------------------------------
-    # 5. Licence limit. MANUAL ONLY, never on the schedule and never in "All":
-    #    it seeds ~69 users to stand the site on its purchased seat limit, and
-    #    while it runs no other spec can create an employee.
+    # 3. Money, in two jobs. Each still runs SERIALLY on its own site: these
+    #    specs share one Cash ledger and one voucher sequence, which no scoping
+    #    can isolate, so parallel workers break each other's preconditions.
+    #
+    #    Two SITES, however, are genuinely independent — nothing crosses between
+    #    runners — so the files can be divided even though the tests inside each
+    #    job cannot. The division is by measured runtime, not by `--shard`:
+    #    payments.spec.ts alone was 14.5 minutes of the 30 in run 32694034777,
+    #    and shards balance by test count, which would have left one job at 24
+    #    minutes and the other at 6. See PAYMENT_SPECS in playwright.config.ts.
+    # ---------------------------------------------------------------------
+    money_tests:
+        name: money tests (${{ matrix.slice }})
+        runs-on: ubuntu-latest
+        timeout-minutes: 45
+        needs: [build_wp_erp, build_erp_pro]
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'Money')
+        strategy:
+            # One slice failing must not cancel the other: they cover different
+            # ledgers and both results are wanted.
+            fail-fast: false
+            matrix:
+                include:
+                    - slice: payments
+                      script: test:money:payments
+                      results: results-payments.json
+                    - slice: ledgers
+                      script: test:money:ledgers
+                      results: results-money.json
+        steps:
+            # A local composite action only exists once the repo is on disk, so
+            # the checkout has to come first. The build tarball is unpacked over
+            # the top of it by the action below.
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup-erp-site
+              with:
+                  pro-built: ${{ needs.build_erp_pro.result }}
+
+            - name: money (serial, ${{ matrix.slice }})
+              working-directory: tests/pw
+              run: npm run ${{ matrix.script }}
+
+            - name: Upload blob report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: blob-money-${{ matrix.slice }}
+                  path: tests/pw/blob-report
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+            # Named `results-money-<slice>` so the merge job's prefix match picks
+            # both slices up and sums them, the same way it used to sum shards.
+            - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-money-${{ matrix.slice }}
+                  path: tests/pw/playwright-report/${{ matrix.results }}
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+    # ---------------------------------------------------------------------
+    # 4. Licence limit. Runs on the schedule and in "All".
+    #
+    #    It used to be manual-only, because it seeds ~69 users to stand the site
+    #    ON its purchased seat limit and while it runs no other spec can create
+    #    an employee. That constraint is real but it is a SITE constraint, and
+    #    this job stands up a site of its own — nothing crosses between runners,
+    #    so it cannot reach the e2e or money sites. Held back from the nightly it
+    #    simply never ran, which is the worse failure: the seat guards are the
+    #    one thing here that protects a paid limit.
     # ---------------------------------------------------------------------
     license_tests:
         name: licence limit tests
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: [build_wp_erp, build_erp_pro]
-        if: always() && needs.build_wp_erp.result == 'success' && github.event.inputs.testsuite == 'License'
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'License')
         steps:
             # A local composite action only exists once the repo is on disk, so
             # the checkout has to come first. The build tarball is unpacked over
@@ -369,48 +388,38 @@ jobs:
     license_teardown:
         name: release the licence seat
         if: always()
-        needs: [e2e_tests, money_tests, api_tests, license_tests]
+        needs: [build_erp_pro, e2e_tests, money_tests, license_tests]
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
             - uses: actions/checkout@v4
 
-            - name: Use Node 20
-              uses: actions/setup-node@v4
+            # This job used to boot wp-env from a bare checkout, and it FAILED
+            # every run with `Failed opening required '.../wp-erp/vendor/
+            # autoload.php'`. A checkout is source only: composer has not run, so
+            # wp-erp fatals the moment WordPress loads it, and erp-pro — which
+            # owns the licence screen this job exists to drive — is not on disk
+            # at all. The same composite action every test job uses unpacks both
+            # builds, so the teardown gets a real site instead of a broken one.
+            #
+            # `seed: false` because seeding ACTIVATES the licence, and this job's
+            # whole purpose is to release it.
+            - uses: ./.github/actions/setup-erp-site
               with:
-                  node-version: 20
-                  cache: npm
-                  cache-dependency-path: tests/pw/package-lock.json
-
-            - name: Install suite dependencies
-              working-directory: tests/pw
-              run: npm ci --prefer-offline --no-audit --no-fund || npm i
-
-            - name: Install Chromium
-              working-directory: tests/pw
-              run: npx playwright install --with-deps chromium
-
-            # The teardown drives the real admin form, so it needs a site to
-            # drive. Booting a throwaway one is cheaper than leaving the seat
-            # stranded, which blocks every later run and the developers' sites.
-            - name: Start wp-env
-              working-directory: tests/pw
-              run: |
-                  cp .wp-env.ci.json .wp-env.override.json
-                  npm run start:env
-                  curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
+                  pro-built: ${{ needs.build_erp_pro.result }}
+                  seed: false
 
             - name: Deactivate licence
               working-directory: tests/pw
               run: npm run teardown:license || echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand"
 
     # ---------------------------------------------------------------------
-    # 7. Merge every shard's report and render the WP ERP Quality Report.
+    # 6. Merge every job's report and render the WP ERP Quality Report.
     # ---------------------------------------------------------------------
     merge_reports:
         name: merge-reports
         if: ${{ !cancelled() }}
-        needs: [e2e_tests, money_tests, api_tests]
+        needs: [e2e_tests, money_tests, license_tests]
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:
@@ -429,39 +438,40 @@ jobs:
                   pattern: results-*
                   merge-multiple: false
 
-            # One results.json per e2e shard. The generator reads a single file
-            # per suite, so the shards are combined first — summing each bucket
-            # rather than trusting any one shard's totals.
-            - name: Combine e2e shards
+            # A suite can arrive as one artifact or several: money now runs
+            # as two jobs (payments / ledgers) exactly as e2e once ran as four
+            # shards. Rather than special-casing either, every `results-<suite>*`
+            # artifact is collected and summed into one file per suite, so the
+            # report generator keeps reading a single file and the job count can
+            # change again without touching this.
+            - name: Combine each suite's results
               run: |
                   mkdir -p tests/pw/playwright-report
                   node -e '
                     const fs = require("fs"), path = require("path");
                     const base = "/tmp/all-reports";
                     if (!fs.existsSync(base)) process.exit(0);
-                    const merged = { stats: { duration: 0 }, suites: [] };
-                    let found = 0;
-                    for (const dir of fs.readdirSync(base)) {
-                      if (!dir.startsWith("results-e2e")) continue;
-                      const f = path.join(base, dir, "results-e2e.json");
-                      if (!fs.existsSync(f)) continue;
-                      try {
-                        const j = JSON.parse(fs.readFileSync(f, "utf8"));
-                        merged.suites.push(...(j.suites || []));
-                        merged.stats.duration = Math.max(merged.stats.duration, Number(j.stats?.duration) || 0);
-                        found++;
-                      } catch (e) { console.warn("skip", f, e.message); }
-                    }
-                    if (found) {
-                      fs.writeFileSync("tests/pw/playwright-report/results-e2e.json", JSON.stringify(merged));
-                      console.log(`combined ${found} e2e shard report(s)`);
-                    }
-                    for (const [suite, file] of [["money", "results-money.json"], ["api", "results-api.json"], ["license", "results-license.json"]]) {
-                      const src = path.join(base, `results-${suite}`, file);
-                      if (fs.existsSync(src)) {
-                        fs.copyFileSync(src, path.join("tests/pw/playwright-report", file));
-                        console.log(`took ${suite} report`);
+                    const dirs = fs.readdirSync(base);
+                    for (const suite of ["e2e", "money", "api", "license"]) {
+                      const mine = dirs.filter(d => d === `results-${suite}` || d.startsWith(`results-${suite}-`));
+                      const merged = { stats: { duration: 0 }, suites: [] };
+                      let found = 0;
+                      for (const dir of mine) {
+                        const full = path.join(base, dir);
+                        for (const file of fs.readdirSync(full).filter(f => f.endsWith(".json"))) {
+                          try {
+                            const j = JSON.parse(fs.readFileSync(path.join(full, file), "utf8"));
+                            merged.suites.push(...(j.suites || []));
+                            // Jobs run concurrently, so the suite took as long as
+                            // its SLOWEST part, not the sum of all of them.
+                            merged.stats.duration = Math.max(merged.stats.duration, Number(j.stats && j.stats.duration) || 0);
+                            found++;
+                          } catch (e) { console.warn("skip", dir, file, e.message); }
+                        }
                       }
+                      if (!found) { console.log(`no ${suite} report`); continue; }
+                      fs.writeFileSync(`tests/pw/playwright-report/results-${suite}.json`, JSON.stringify(merged));
+                      console.log(`combined ${found} ${suite} report(s) from ${mine.join(", ")}`);
                     }
                   '
 
