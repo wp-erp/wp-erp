@@ -90,18 +90,38 @@ test.describe('Accounting — inventory', () => {
         expect(await onHand(), 'precondition: this product has no movement history').toBe(0);
 
         await page.gotoRoute('newInvoice');
-        await page.pickFromMultiselect('Customer', CUSTOMER);
+
+        // Both pickers RETURN whether they found what they were asked for, and
+        // this test used to discard both. When the customer or the product could
+        // not be selected, the invoice was never raised and the failure surfaced
+        // twelve lines later as "the invoice was raised", which names the symptom
+        // and hides the step that actually broke. Assert them where they happen.
+        expect(await page.pickFromMultiselect('Customer', CUSTOMER), `the customer picker offered ${CUSTOMER}`).toBe(true);
         await page.pickDate('Transaction Date', toDate());
         await page.pickDate('Due Date', dateOffset(30));
-        await page.pickLineProduct(0, PRODUCT);
+        expect(await page.pickLineProduct(0, PRODUCT), `the line picker offered ${PRODUCT}`).toBe(true);
         await page.setLineQty(0, 4);
         await page.save();
 
-        const invoices = await query<RowDataPacket[]>(
-            `SELECT voucher_no FROM ${prefix()}erp_acct_invoices WHERE customer_id = ? ORDER BY id DESC LIMIT 1`,
-            [customerId]
-        );
-        expect(invoices, 'precondition: the invoice was raised').toHaveLength(1);
+        // Polled, not read once. `save()` clicks and waits a FIXED 4.5s, which
+        // is a bet on how long the server takes to commit — it held while this
+        // file ran in a shard of eleven and broke when the whole suite moved to
+        // one site, where four workers make the same save slower. Waiting for
+        // the row itself removes the bet. The assertion is unchanged: the
+        // invoice must exist, and an absent row still fails, just after a bounded
+        // wait rather than at a moment chosen by a sleep.
+        await expect
+            .poll(
+                async () =>
+                    (
+                        await query<RowDataPacket[]>(
+                            `SELECT voucher_no FROM ${prefix()}erp_acct_invoices WHERE customer_id = ? ORDER BY id DESC LIMIT 1`,
+                            [customerId]
+                        )
+                    ).length,
+                { message: 'precondition: the invoice was raised', timeout: 20_000 }
+            )
+            .toBe(1);
 
         expect(await onHand(), 'four units left stock').toBe(-4);
     });

@@ -102,12 +102,39 @@ runs:
         # only `mappings`, which is what ACTIVATES them on a runner — the local
         # config maps them onto disk inactive. The setup bootstrap activates them
         # too, so this is belt and braces rather than the only path.
+        # Retried, because wp-env BUILDS its images on every fresh runner and one
+        # of those layers is `composer global require phpunit/phpunit`, pulled
+        # unauthenticated from api.github.com. That returns HTTP 504 often enough
+        # to matter, and composer runs with source fallback disabled, so a single
+        # 504 fails the whole boot:
+        #
+        #   Failed to download sebastian/recursion-context from dist:
+        #   ... could not be downloaded (HTTP/2 504)
+        #   Source fallback is disabled. Not trying alternative sources.
+        #
+        # It took down the teardown job in run 32706762121 while four other jobs
+        # in the same run built the identical image without trouble.
+        #
+        # This retries the ENVIRONMENT only. It never re-runs a test or hides an
+        # assertion; a suite failure still fails the job on the first attempt.
         - name: Start wp-env
           shell: bash
           working-directory: tests/pw
           run: |
               cp .wp-env.ci.json .wp-env.override.json
-              npm run start:env
+              for attempt in 1 2 3; do
+                  if npm run start:env; then
+                      booted=yes
+                      break
+                  fi
+                  echo "::warning::wp-env boot attempt ${attempt} failed"
+                  npx wp-env destroy --scripts false || true
+                  sleep $(( attempt * 20 ))
+              done
+              if [ "${booted:-no}" != yes ]; then
+                  echo "::error::wp-env did not boot after 3 attempts"
+                  exit 1
+              fi
               curl --retry 12 --retry-delay 5 --retry-all-errors -sf http://localhost:8888/ > /dev/null
 
         # Activates the licence and stands a bare WordPress install up into a

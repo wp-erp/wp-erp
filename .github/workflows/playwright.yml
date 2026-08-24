@@ -192,27 +192,27 @@ jobs:
                   compression-level: 0
 
     # ---------------------------------------------------------------------
-    # 2. E2E and API, in one job on one site.
+    # 2. E2E, in two shards.
     #
-    #    Deliberately NOT sharded, which is the opposite of the obvious choice
-    #    and needs its reason on the record. Standing up a site costs about 2m50s
-    #    of Docker boot, install and seed on EVERY job, and it buys nothing that
-    #    is shared between them. Four shards therefore spent roughly eleven
-    #    runner-minutes on setup to save about seven minutes of testing, and
-    #    still finished around 12 minutes before the money jobs — which are
-    #    serial and set the run's length no matter what happens here.
-    #
-    #    Unsharded, the whole e2e suite runs about 9-12 minutes on four workers
-    #    against one site, which lands it alongside the money jobs instead of
-    #    idling. API rides along at the end of the same job: it is 85 seconds of
-    #    work and did not justify a fifth site of its own.
+    #    Two rather than four. Every job pays about 2m50s to stand up its own
+    #    site (build download, Docker boot, install, seed) and shares none of it,
+    #    so shards are only worth adding while they still shorten the RUN, and
+    #    the run is as long as the money jobs take. Four shards finished around
+    #    twelve minutes before money and spent roughly eleven runner-minutes on
+    #    duplicate setup to do it; two land nearer the money jobs at a third of
+    #    that overhead.
     # ---------------------------------------------------------------------
     e2e_tests:
-        name: e2e + api tests
+        name: e2e tests
         runs-on: ubuntu-latest
         timeout-minutes: 60
         needs: [build_wp_erp, build_erp_pro]
-        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'API')
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'E2E')
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2]
+                shardTotal: [2]
         steps:
             # A local composite action only exists once the repo is on disk, so
             # the checkout has to come first. The build tarball is unpacked over
@@ -224,47 +224,29 @@ jobs:
               with:
                   pro-built: ${{ needs.build_erp_pro.result }}
 
-            - name: e2e
-              if: github.event.inputs.testsuite != 'API'
+            - name: e2e (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
               working-directory: tests/pw
               env:
                   PW_JSON_OUT: playwright-report/results-e2e.json
-              run: npm run test:e2e
-
-            # `!cancelled()` rather than `always()`: API must still run when e2e
-            # FAILED — the two are independent and a red e2e says nothing about
-            # the REST layer — but a cancelled run should stop, not carry on.
-            - name: api
-              if: ${{ !cancelled() && github.event.inputs.testsuite != 'E2E' }}
-              working-directory: tests/pw
-              env:
-                  PW_JSON_OUT: playwright-report/results-api.json
-              run: npm run test:api
+              run: npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
             - name: Upload blob report
               if: always()
               uses: actions/upload-artifact@v4
               with:
-                  name: blob-e2e
+                  name: blob-e2e-${{ matrix.shardIndex }}
                   path: tests/pw/blob-report
                   retention-days: 1
                   if-no-files-found: ignore
 
+            # `results-e2e-<shard>`: the merge job sums every `results-e2e*`
+            # artifact, so the shard count can change without touching it.
             - name: Upload results json
               if: always()
               uses: actions/upload-artifact@v4
               with:
-                  name: results-e2e
+                  name: results-e2e-${{ matrix.shardIndex }}
                   path: tests/pw/playwright-report/results-e2e.json
-                  retention-days: 1
-                  if-no-files-found: ignore
-
-            - name: Upload api results json
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: results-api
-                  path: tests/pw/playwright-report/results-api.json
                   retention-days: 1
                   if-no-files-found: ignore
 
@@ -333,7 +315,45 @@ jobs:
                   if-no-files-found: ignore
 
     # ---------------------------------------------------------------------
-    # 4. Licence limit. Runs on the schedule and in "All".
+    # 4. REST API. Its own job and its own site.
+    #
+    #    It is only about 85 seconds of testing against 2m50s of setup, so it
+    #    rode inside the e2e job for one run. Split back out on request: a
+    #    separate job keeps an API failure legible on its own, instead of a red
+    #    tick that could mean either layer.
+    # ---------------------------------------------------------------------
+    api_tests:
+        name: api tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        needs: [build_wp_erp, build_erp_pro]
+        if: always() && needs.build_wp_erp.result == 'success' && (github.event.inputs.testsuite == '' || github.event.inputs.testsuite == 'All' || github.event.inputs.testsuite == 'API')
+        steps:
+            # A local composite action only exists once the repo is on disk, so
+            # the checkout has to come first.
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup-erp-site
+              with:
+                  pro-built: ${{ needs.build_erp_pro.result }}
+
+            - name: api
+              working-directory: tests/pw
+              env:
+                  PW_JSON_OUT: playwright-report/results-api.json
+              run: npm run test:api
+
+            - name: Upload results json
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: results-api
+                  path: tests/pw/playwright-report/results-api.json
+                  retention-days: 1
+                  if-no-files-found: ignore
+
+    # ---------------------------------------------------------------------
+    # 5. Licence limit. Runs on the schedule and in "All".
     #
     #    It used to be manual-only, because it seeds ~69 users to stand the site
     #    ON its purchased seat limit and while it runs no other spec can create
@@ -388,7 +408,7 @@ jobs:
     license_teardown:
         name: release the licence seat
         if: always()
-        needs: [build_erp_pro, e2e_tests, money_tests, license_tests]
+        needs: [build_erp_pro, e2e_tests, money_tests, api_tests, license_tests]
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
@@ -414,12 +434,12 @@ jobs:
               run: npm run teardown:license || echo "::warning::licence deactivation FAILED — the seat may be stranded, release it by hand"
 
     # ---------------------------------------------------------------------
-    # 6. Merge every job's report and render the WP ERP Quality Report.
+    # 7. Merge every job's report and render the WP ERP Quality Report.
     # ---------------------------------------------------------------------
     merge_reports:
         name: merge-reports
         if: ${{ !cancelled() }}
-        needs: [e2e_tests, money_tests, license_tests]
+        needs: [e2e_tests, money_tests, api_tests, license_tests]
         runs-on: ubuntu-latest
         timeout-minutes: 10
         steps:

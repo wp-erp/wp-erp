@@ -492,24 +492,68 @@ export class AccountingPage extends BasePage {
         return false;
     }
 
+    /**
+     * RETRIED and WAITED, for the same reason `pickFirstOption()` above is.
+     *
+     * This used to open the box, sleep a flat 400ms and then look for the
+     * option. Several of these lists are populated by AJAX after the box opens,
+     * and 400ms is a bet on that request, not a wait for it. When the bet lost,
+     * vue-multiselect was still painting its empty state and the method returned
+     * false, which reads at the call site as a form that refused a valid entry.
+     *
+     * That is exactly how it failed in CI run 32706762121: the pay-bill vendor
+     * picker was captured showing
+     *
+     *     Pay To*
+     *     Oops! No elements found.
+     *
+     * while the database showed that vendor owed 750. The list was empty because
+     * it had not arrived yet, not because the vendor was missing. It passed on a
+     * developer machine and failed on a slower runner, six attempts out of six.
+     *
+     * So: wait for the list to be POPULATED before deciding anything, and retry
+     * the open, because the panel reflows as the options land and a click can
+     * hit a moved element. A genuinely absent option still returns false, which
+     * keeps every negative case that relies on it honest.
+     */
     async pickFromMultiselect(label: string, search: string): Promise<boolean> {
         const box = this.group(label).locator('.multiselect').first();
-        await box.click();
-        await this.page.waitForTimeout(400);
+        const anyOption = box.locator('.multiselect__option').first();
 
-        const input = box.locator('.multiselect__input');
-        if (await input.count()) {
-            await input.pressSequentially(search, { delay: 30 });
-            await this.page.waitForTimeout(1500);
+        for (let attempt = 0; attempt < 3; attempt++) {
+            await box.click().catch(() => undefined);
+
+            // The list is ready when it paints ANY option. Its own empty state
+            // is rendered as an option too, so that is checked separately below.
+            await anyOption.waitFor({ state: 'visible', timeout: 6_000 }).catch(() => undefined);
+
+            const input = box.locator('.multiselect__input');
+            if (await input.count()) {
+                await input.fill('');
+                await input.pressSequentially(search, { delay: 30 });
+                await this.page.waitForTimeout(1500);
+            }
+
+            const option = box.locator('.multiselect__option', { hasText: search }).first();
+            if (await option.isVisible().catch(() => false)) {
+                await option.click();
+                await this.page.waitForTimeout(500);
+
+                return true;
+            }
+
+            // "Oops! No elements found" is vue-multiselect's empty state. Seeing
+            // it means the list is loaded and genuinely lacks the search term, OR
+            // that it has not loaded at all — indistinguishable from here, so it
+            // is worth another attempt rather than an immediate false.
+            const empty = await box.getByText('No elements found').isVisible().catch(() => false);
+            if (!empty && attempt === 2) break;
+
+            await this.page.keyboard.press('Escape').catch(() => undefined);
+            await this.page.waitForTimeout(1_000);
         }
 
-        const option = box.locator('.multiselect__option', { hasText: search }).first();
-        if (!(await option.isVisible().catch(() => false))) return false;
-
-        await option.click();
-        await this.page.waitForTimeout(500);
-
-        return true;
+        return false;
     }
 
     /**
