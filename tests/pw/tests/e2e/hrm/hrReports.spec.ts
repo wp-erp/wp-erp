@@ -56,9 +56,24 @@ test.describe('HR — Reports', () => {
             expect(names, `${employee.firstName} ${employee.lastName} is counted`).toContain(`${employee.firstName} ${employee.lastName}`);
         }
 
-        // The suite's own `erp_employee` actor has no department or hire date and
-        // is legitimately absent, so the report holds exactly the seeded staff.
-        expect(names, 'no one else is counted').toHaveLength(seededEmployees.length);
+        // NOT an exact-length check any more. That version demanded the report
+        // hold precisely the seeded staff, which made it depend on nothing else
+        // in the run having created an employee — true when the whole suite runs
+        // in file order, false as soon as it is sharded, because a shard can put
+        // employees.spec before this one. It passed locally and failed in CI for
+        // that reason alone.
+        //
+        // What the length was really guarding against was the report repeating
+        // or inventing rows, and that is checked directly instead: every seeded
+        // employee appears EXACTLY once. An extra employee created by another
+        // spec is legitimate and no longer breaks this.
+        for (const employee of seededEmployees) {
+            const fullName = `${employee.firstName} ${employee.lastName}`;
+            expect(
+                names.filter((name) => name === fullName),
+                `${fullName} is listed exactly once`
+            ).toHaveLength(1);
+        }
     });
 
     test('salary history reports each employee at their seeded pay rate', { tag: ['@tier2', '@hrm-reports', '@flow'] }, async () => {
