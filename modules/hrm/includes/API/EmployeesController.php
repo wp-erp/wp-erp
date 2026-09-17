@@ -72,11 +72,11 @@ class EmployeesController extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    $user_id = (int) $request['user_id'];
-                    $current_user_id = get_current_user_id();
-
-                    // Allow users to view their own profile or if they have erp_list_employee capability
-                    return ( $user_id === $current_user_id ) || current_user_can( 'erp_list_employee' );
+                    // Object-scoped: the employee themselves or an HR manager.
+                    // `erp_list_employee` is a blanket list-screen cap held by every
+                    // employee and is NOT scoped to the requested id, so using it here
+                    // let any employee read any other employee's record (incl. pay rate).
+                    return current_user_can( 'erp_view_employee', (int) $request['user_id'] );
                 },
             ],
             [
@@ -1775,6 +1775,31 @@ class EmployeesController extends REST_Controller {
             return !is_numeric($key);
         }, ARRAY_FILTER_USE_KEY);
 
+        // Field-level privacy (mirrors V2 EmployeesController::get_item): pay,
+        // personal, address and contact details are visible only to the employee
+        // themselves or an HR manager. The list route (`erp_view_list`) is held by
+        // every employee, so without this a peer row would leak pay_rate/pay_type
+        // and PII for the whole roster in a single call.
+        $target_user_id  = (int) $item->get_user_id();
+        $can_see_private = ( get_current_user_id() === $target_user_id )
+            || current_user_can( 'erp_edit_employee', $target_user_id );
+
+        if ( ! $can_see_private ) {
+            $private_fields = [
+                'pay_rate', 'pay_type',
+                'date_of_birth', 'gender', 'marital_status', 'blood_group', 'nationality',
+                'driving_license', 'hobbies', 'father_name', 'mother_name', 'spouse_name',
+                'street_1', 'street_2', 'city', 'state', 'country', 'postal_code',
+                'description', 'work_phone', 'phone', 'mobile', 'other_email', 'user_url',
+            ];
+
+            foreach ( $private_fields as $private_field ) {
+                if ( array_key_exists( $private_field, $data ) ) {
+                    $data[ $private_field ] = '';
+                }
+            }
+        }
+
         // Always add human-readable labels for enum fields
         // $data = $this->add_enum_labels($data, $item);
 
@@ -1806,8 +1831,10 @@ class EmployeesController extends REST_Controller {
                 $data['roles'] = $item->get_roles();
             }
 
-            // Include job histories if requested
-            if ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) {
+            // Include job histories if requested. Compensation history carries pay,
+            // so this is gated to the employee themselves or an HR manager.
+            if ( $can_see_private
+                && ( in_array( 'job_histories', $include_params ) || in_array( 'histories', $include_params ) ) ) {
                 $histories = $item->get_job_histories( 'all' );
 
                 // Convert IDs to names and add reporting_to_full_name for job histories
