@@ -4351,16 +4351,31 @@ function erp_crm_send_birthday_greetings() {
 function erp_crm_check_company_contact_relations( $id, $id_type ) {
     global $wpdb;
 
-    if ( isset( $id ) && isset( $id_type ) ) {
-        if ( ! empty( $id_type ) ) {
-            if ( $id_type === 'contact' ) {
-                $id_type = 'customer';
-            }
-            $rel_count = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_crm_customer_companies WHERE {$id_type}_id = {$id}" );
+    $id = absint( $id );
 
-            return $rel_count;
-        }
+    if ( ! $id || empty( $id_type ) || ! is_string( $id_type ) ) {
+        return;
     }
+
+    // Only these two columns exist on the relationship table. Never allow a
+    // request supplied value to reach the query as a column identifier.
+    $columns = array(
+        'contact' => 'customer_id',
+        'company' => 'company_id',
+    );
+
+    if ( ! isset( $columns[ $id_type ] ) ) {
+        return;
+    }
+
+    $column = $columns[ $id_type ];
+
+    return $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT count(*) FROM {$wpdb->prefix}erp_crm_customer_companies WHERE {$column} = %d",
+            $id
+        )
+    );
 }
 
 /**
