@@ -63,6 +63,7 @@ class CF7 {
                     'fields'       => [],
                     'contactGroup' => '0',
                     'contactOwner' => '0',
+                    'lifeStage'    => '',
                 ];
 
                 foreach ( $cf7->collect_mail_tags() as $tag ) {
@@ -83,6 +84,10 @@ class CF7 {
 
                 if ( !empty( $saved_settings['contact_form_7'][ $post->ID ]['contact_owner'] ) ) {
                     $forms[ $post->ID ]['contactOwner'] = $saved_settings['contact_form_7'][ $post->ID ]['contact_owner'];
+                }
+
+                if ( !empty( $saved_settings['contact_form_7'][ $post->ID ]['life_stage'] ) ) {
+                    $forms[ $post->ID ]['lifeStage'] = $saved_settings['contact_form_7'][ $post->ID ]['life_stage'];
                 }
             }
         }
