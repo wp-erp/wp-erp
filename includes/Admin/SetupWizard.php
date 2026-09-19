@@ -279,7 +279,7 @@ class SetupWizard {
                         <?php erp_html_form_input( [
                             'name'    => 'base_currency',
                             'type'    => 'select',
-                            'value'   => '1',
+                            'value'   => '148',
                             'options' => erp_get_currencies_for_dropdown(),
                             'desc'    => esc_html__( 'Format of date to show accross the system.', 'erp' ),
                         ] ); ?>
@@ -336,7 +336,7 @@ class SetupWizard {
                     <th scope="row"><label for="share_essentials"><?php esc_html_e( 'Share Essentials', 'erp' ); ?></label></th>
 
                     <td class="updated">
-                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input">
+                        <input type="checkbox" name="share_essentials" id="share_essentials" class="switch-input" checked>
                         <label for="share_essentials" class="switch-label">
                             <span class="toggle--on"><?php esc_html_e( 'On', 'erp' ); ?></span>
                             <span class="toggle--off"><?php esc_html_e( 'Off', 'erp' ); ?></span>
