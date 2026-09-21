@@ -38,3 +38,6 @@ add_action('admin_init', 'intercept_bulk_wpuser_delete', 8);
 
 // Intercept single user deletion
 add_action('delete_user',  'intercept_single_user_delete', 9);
+
+// Bulk approve/reject leave requests from the employee requests screen
+add_filter( 'erp_hr_employee_leave_request_bulk_action', 'erp_hr_leave_request_bulk_action', 10, 2 );

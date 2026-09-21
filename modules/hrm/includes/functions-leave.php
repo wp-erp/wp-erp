@@ -1670,12 +1670,13 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         return new WP_Error( 'no-permission', esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
     }
 
-    $request  = LeaveRequest::find( $request_id );
-    $old_data = $request->toArray();
+    $request = LeaveRequest::find( $request_id );
 
     if ( empty( $request ) ) {
         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
     }
+
+    $old_data = $request->toArray();
 
     if ( erp_hr_is_current_user_dept_lead() && current_user_can( 'erp_leave_manage' ) === false ) {
         $is_valid = erp_hr_match_user_dept_lead_with_current_user( $request->user_id );
@@ -1700,7 +1701,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     }
 
     // get entitlements
-    if ( ! $request->entitlement->id ) {
+    if ( empty( $request->entitlement->id ) ) {
         return new WP_Error( 'invalid-entitlement', __( 'No Entitlement found for given request.', 'erp' ) );
     }
 
@@ -1761,7 +1762,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         case 1: // approved
             if ( $status === 3 ) { // reject this request
                 // 1. Get latest approval_status_id for current request
-                if ( ! $request->latest_approval_status->id ) {
+                if ( empty( $request->latest_approval_status->id ) ) {
                     return new WP_Error( 'no-approval-status', esc_attr__( 'Invalid Request: No previous records found for given request.', 'erp' ) );
                 }
                 $old_approval_status_id = $request->latest_approval_status->id;
@@ -3427,4 +3428,60 @@ function transfer_requests_to_new_entitlements( $old_entitlement, $new_entitleme
         $new_entitlement->leave_requests()->save( $request );
         $leave->requests()->save( $request );
     }
+}
+
+/**
+ * Bulk action handler for leave requests on the employee requests screen
+ *
+ * Mirrors the resignation and remote work handlers: takes the selected request
+ * ids and returns only the ones that were actually updated, so the ajax
+ * handler can report an accurate count.
+ *
+ * @since 1.17.10
+ *
+ * @param array  $req_ids
+ * @param string $action approved|rejected|deleted
+ *
+ * @return array processed request ids
+ */
+function erp_hr_leave_request_bulk_action( $req_ids, $action ) {
+    $req_ids = array_filter( array_map( 'absint', (array) $req_ids ) );
+
+    if ( empty( $req_ids ) ) {
+        return [];
+    }
+
+    $statuses = [
+        'approved' => 1,
+        'rejected' => 3,
+    ];
+
+    if ( 'deleted' !== $action && ! isset( $statuses[ $action ] ) ) {
+        return [];
+    }
+
+    $processed = [];
+
+    foreach ( $req_ids as $req_id ) {
+        if ( empty( \WeDevs\ERP\HRM\Models\LeaveRequest::find( $req_id ) ) ) {
+            continue;
+        }
+
+        if ( 'deleted' === $action ) {
+            $result = erp_hr_delete_leave_request( $req_id );
+        } else {
+            // A reject reason is required, so always pass a comment.
+            $comment = 'approved' === $action
+                ? __( 'Approved from bulk action', 'erp' )
+                : __( 'Rejected from bulk action', 'erp' );
+
+            $result = erp_hr_leave_request_update_status( $req_id, $statuses[ $action ], $comment );
+        }
+
+        if ( ! is_wp_error( $result ) ) {
+            $processed[] = $req_id;
+        }
+    }
+
+    return $processed;
 }
