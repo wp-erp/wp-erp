@@ -1700,7 +1700,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
     }
 
     // get entitlements
-    if ( ! $request->entitlement->id ) {
+    if ( empty( $request->entitlement->id ) ) {
         return new WP_Error( 'invalid-entitlement', __( 'No Entitlement found for given request.', 'erp' ) );
     }
 
@@ -1761,7 +1761,7 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         case 1: // approved
             if ( $status === 3 ) { // reject this request
                 // 1. Get latest approval_status_id for current request
-                if ( ! $request->latest_approval_status->id ) {
+                if ( empty( $request->latest_approval_status->id ) ) {
                     return new WP_Error( 'no-approval-status', esc_attr__( 'Invalid Request: No previous records found for given request.', 'erp' ) );
                 }
                 $old_approval_status_id = $request->latest_approval_status->id;
