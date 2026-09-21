@@ -106,7 +106,7 @@
             $( 'body' ).on( 'erp-hr-after-new-desig', this.designation.afterNew );
 
             $( 'body' ).on( 'change', '.wp-list-table', function(e) {
-                var selector = $('.wp-list-table tbody tr th input[type="checkbox"]');
+                var selector = $('.wp-list-table tbody tr .check-column input[type="checkbox"]');
 
                 if ( selector.is(':checked') ) {
                     $('.tablenav .bulkactions').show();

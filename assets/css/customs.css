@@ -728,10 +728,6 @@ div.erp-custom-menu-container.--show-secondary .-secondary {
     opacity: 1 !important;
 }
 
-.tablenav .bulkactions {
-    display: none;
-}
-
 .bulkactions > select[name="action"],
 .bulkactions > select[name="action2"],
 .bulkactions > input[type="submit"] {
