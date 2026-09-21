@@ -198,7 +198,7 @@
                 },
 
                 bulkactions: function() {
-                    if ( this.activeTopNav == 'resigned' || this.activeTopNav == 'remote_work' ) {
+                    if ( this.activeTopNav == 'resigned' || this.activeTopNav == 'remote_work' || this.activeTopNav == 'leave' ) {
                         return this.bulkActionMap;
                     }
 
@@ -749,7 +749,7 @@
 
             watch: {
                 activeTopNav: function(val) {
-                    this.hideCb = ( val !== 'resigned' && val !== 'remote_work' );
+                    this.hideCb = ( val !== 'resigned' && val !== 'remote_work' && val !== 'leave' );
                 }
             },
         });
