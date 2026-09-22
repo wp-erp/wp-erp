@@ -5,7 +5,7 @@ Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.9
+Stable tag: 1.17.10
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -327,6 +327,15 @@ We strive to respond to all queries within 12 hours. Our response time may be ju
 It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured of the best service.
 
 == Changelog ==
+= v1.17.10 → Sep 22, 2026
+--------------------------
+* [Fixed] PHP object injection when reading purchase attachments in Accounting, reachable by the erp_ac_manager role.
+* [Fixed] SQL injection in the CRM contact/company relation check, reachable by a CRM Agent through the contact delete action.
+* [Fixed] Employee REST endpoints exposed pay rate and PII to any logged-in employee; reads are now scoped to the record owner or an HR manager.
+* [Fixed] Bulk actions did not appear on ERP list tables, so leave requests could only be approved or rejected one at a time.
+* [Fixed] Leave entitlement validation raised false errors on unset IDs, and added bulk approve/reject for leave requests.
+* [Fixed] Paying an invoice in full created two payment vouchers and left the invoice stuck on "Partially Paid".
+
 = v1.17.9 → Aug 20, 2026
 --------------------------
 * [Fixed] Prevented privilege escalation through the CRM "Make WP User" action, where a CRM agent could promote a contact they own to a higher-privileged WordPress role such as Editor.
