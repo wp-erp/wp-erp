@@ -145,10 +145,12 @@ export default {
                  * * taxRateID: Selected value from `Tax Rate Dropdown` dropdown
                  * |-------------------------------------------------------------------------
                  */
+            // The API returns these ids as strings while the line and the store
+            // hold numbers, so compare them coerced -- a strict match here never
+            // succeeds and silently leaves the rate at 0.
             const taxInfo = this.taxSummary.find(tax => {
-                if (tax.sales_tax_category_id === this.line.taxCatID && tax.tax_rate_id === this.taxRateID) {
-                    return tax;
-                }
+                return parseInt(tax.sales_tax_category_id, 10) === parseInt(this.line.taxCatID, 10) &&
+                    parseInt(tax.tax_rate_id, 10) === parseInt(this.taxRateID, 10);
             });
 
             this.taxRate = 0;
