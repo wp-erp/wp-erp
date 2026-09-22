@@ -2,7 +2,7 @@
     <div class="wperp-select-container select-primary combo-btns" v-click-outside="outside">
         <div class="wperp-selected-option">
               <div class="left-part" @click="optionSelected(options[0])">
-                <button type="submit" class="btn-fake">{{ options[0].text }}</button>
+                <button type="button" class="btn-fake">{{ options[0].text }}</button>
             </div>
 
               <div class="right-part" @click="toggleButtons">
@@ -12,7 +12,7 @@
 
         <ul class="wperp-options" v-show="showMenu">
             <li :key="index" @click="optionSelected(option)" v-for="(option, index) in options.slice(1)">
-                <button type="submit" class="btn-fake">{{ option.text }}</button>
+                <button type="button" class="btn-fake">{{ option.text }}</button>
             </li>
         </ul>
     </div>
@@ -44,6 +44,17 @@ export default {
             this.showMenu = false;
 
             this.$store.dispatch('combo/setBtnID', option.id);
+
+            // The buttons are type="button" so they never submit implicitly.
+            // Submit the enclosing form once, after the chosen action id has
+            // been committed to the store, so the handler reads the right one.
+            this.$nextTick(() => {
+                const form = this.$el.closest('form');
+
+                if (form) {
+                    form.requestSubmit();
+                }
+            });
         },
 
         toggleButtons() {
