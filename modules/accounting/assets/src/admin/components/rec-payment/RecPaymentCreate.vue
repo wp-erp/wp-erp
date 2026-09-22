@@ -18,7 +18,7 @@
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <form action="" class="wperp-form" method="post">
+                <div class="wperp-form">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -61,7 +61,7 @@
 
                         <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
-                </form>
+                </div>
 
             </div>
         </div>
@@ -385,6 +385,12 @@ export default {
         },
 
         SubmitForPayment(event) {
+            // Guard against a second submit while the first request is in
+            // flight, which would post the same payment twice.
+            if (this.isWorking) {
+                return;
+            }
+
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -394,6 +400,8 @@ export default {
                 });
                 return;
             }
+
+            this.isWorking = true;
 
             this.invoices.forEach((element, index) => {
                 element['line_total'] = this.negativeAmount[index] ? (-1 * parseFloat(this.totalAmounts[index])) : parseFloat(this.totalAmounts[index]);
@@ -438,6 +446,7 @@ export default {
                 bank_trn_charge: bank_trn_charge
             }).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
+                this.isWorking = false;
 
                 this.showAlert('success', __('Payment Created!', 'erp'));
                 this.reset = true;
@@ -449,6 +458,7 @@ export default {
                 }
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
+                this.isWorking = false;
                 throw error;
             });
         },
