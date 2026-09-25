@@ -187,10 +187,31 @@ function erp_hr_leave_insert_policy( $args = [] ) {
     }
 
     $defaults = [
-        'id' => null,
+        'id'                  => null,
+        'leave_id'            => 0,
+        'employee_type'       => '-1',
+        'department_id'       => '-1',
+        'designation_id'      => '-1',
+        'location_id'         => '-1',
+        'gender'              => '-1',
+        'marital'             => '-1',
+        'f_year'              => 0,
+        'description'         => '',
+        'days'                => 0,
+        'color'               => '',
+        'applicable_from'     => 0,
+        'apply_for_new_users' => 0,
     ];
 
     $args = wp_parse_args( $args, $defaults );
+
+    if ( empty( $args['id'] ) && empty( $args['leave_id'] ) ) {
+        return new WP_Error( 'no-leave-id', esc_html__( 'A leave type is required to create a leave policy.', 'erp' ), [ 'status' => 400 ] );
+    }
+
+    if ( empty( $args['id'] ) && empty( $args['f_year'] ) ) {
+        return new WP_Error( 'no-financial-year', esc_html__( 'A financial year is required to create a leave policy.', 'erp' ), [ 'status' => 400 ] );
+    }
 
     $common = [
         'leave_id'       => $args['leave_id'],
