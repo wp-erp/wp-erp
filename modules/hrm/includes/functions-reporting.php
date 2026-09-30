@@ -128,6 +128,9 @@ function erp_hr_get_gender_count( $department = null ) {
     }
 
     if ( $all_user_id ) {
+        // One meta query for the whole list instead of one per employee.
+        update_meta_cache( 'user', array_map( 'intval', $all_user_id ) );
+
         foreach ( $all_user_id as $user_id ) {
             $gender_single = get_user_meta( $user_id, 'gender', true );
 
@@ -330,6 +333,178 @@ function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
     }
 
     return $count;
+}
+
+/**
+ * Display fields for a set of employees, loaded in a fixed number of queries.
+ *
+ * The reports, the org chart and the department / designation lists only need a
+ * name, an avatar and a few titles per row. Building one
+ * `\WeDevs\ERP\HRM\Employee` per row costs several queries each, which adds up
+ * to thousands per request on a few hundred employees. Every value here matches
+ * what the `Employee` accessor of the same name returns.
+ *
+ * Nothing is hidden per viewer (the `erp_hr_employee_restricted_data` filter is
+ * not applied), so callers must gate the fields they expose.
+ *
+ * @since 1.18.0
+ *
+ * @param int[] $user_ids    Employee WP user ids.
+ * @param int   $avatar_size Avatar size in pixels.
+ *
+ * @return array Keyed by the requested id. `user_id` is 0 when the WP user no
+ *               longer exists.
+ */
+function erp_hr_get_employee_display_data( $user_ids, $avatar_size = 32 ) {
+    global $wpdb;
+
+    $user_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $user_ids ) ) ) );
+
+    if ( empty( $user_ids ) ) {
+        return [];
+    }
+
+    // Users and their meta in two queries.
+    cache_users( $user_ids );
+
+    $in   = implode( ',', $user_ids );
+    $rows = [];
+
+    // Soft-deleted rows included, as `Employee` loads them `withTrashed()`.
+    $results = $wpdb->get_results(
+        "SELECT user_id, employee_id, designation, department, location, reporting_to, hiring_date, status
+         FROM {$wpdb->prefix}erp_hr_employees
+         WHERE user_id IN ( {$in} )
+         ORDER BY id DESC"
+    );
+
+    foreach ( (array) $results as $row ) {
+        $rows[ (int) $row->user_id ] = $row;
+    }
+
+    $titles = [
+        'designation' => [ 'table' => "{$wpdb->prefix}erp_hr_designations", 'column' => 'title', 'map' => [] ],
+        'department'  => [ 'table' => "{$wpdb->prefix}erp_hr_depts", 'column' => 'title', 'map' => [] ],
+        'location'    => [ 'table' => "{$wpdb->prefix}erp_company_locations", 'column' => 'name', 'map' => [] ],
+    ];
+
+    foreach ( $titles as $field => $lookup ) {
+        $ids = array_values( array_unique( array_filter( array_map( 'absint', wp_list_pluck( $rows, $field ) ) ) ) );
+
+        if ( empty( $ids ) ) {
+            continue;
+        }
+
+        $found = $wpdb->get_results( "SELECT id, {$lookup['column']} AS label FROM {$lookup['table']} WHERE id IN ( " . implode( ',', $ids ) . ' )' );
+
+        foreach ( (array) $found as $item ) {
+            $titles[ $field ]['map'][ (int) $item->id ] = stripslashes( (string) $item->label );
+        }
+    }
+
+    $users     = [];
+    $photo_ids = [];
+
+    foreach ( $user_ids as $user_id ) {
+        $user = get_userdata( $user_id );
+
+        if ( ! $user ) {
+            continue;
+        }
+
+        $users[ $user_id ] = $user;
+
+        if ( isset( $user->photo_id ) && (int) $user->photo_id ) {
+            $photo_ids[] = (int) $user->photo_id;
+        }
+    }
+
+    if ( $photo_ids ) {
+        _prime_post_caches( array_unique( $photo_ids ), false, true );
+    }
+
+    $data = [];
+
+    foreach ( $user_ids as $user_id ) {
+        $item = [
+            'user_id'           => 0,
+            'full_name'         => '',
+            'display_name'      => null,
+            'email'             => '',
+            'avatar'            => '',
+            'employee_id'       => null,
+            'designation_title' => null,
+            'department_title'  => null,
+            'location_name'     => null,
+            'reporting_to'      => 0,
+            'hiring_date'       => null,
+            'status'            => null,
+        ];
+
+        if ( ! isset( $users[ $user_id ] ) ) {
+            $item['avatar']   = get_avatar_url( 0, [ 'size' => $avatar_size ] );
+            $data[ $user_id ] = $item;
+            continue;
+        }
+
+        $user = $users[ $user_id ];
+        $row  = isset( $rows[ $user_id ] ) ? $rows[ $user_id ] : null;
+        $name = [];
+
+        foreach ( [ 'first_name', 'middle_name', 'last_name' ] as $key ) {
+            $part = isset( $user->$key ) ? stripslashes( (string) $user->$key ) : '';
+
+            if ( $part ) {
+                $name[] = $part;
+            }
+        }
+
+        $full_name = implode( ' ', $name );
+
+        if ( '' === $full_name ) {
+            foreach ( [ $user->display_name, $user->user_login, $user->user_email ] as $fallback ) {
+                if ( '' !== (string) $fallback ) {
+                    $full_name = (string) $fallback;
+                    break;
+                }
+            }
+        }
+
+        $photo_id = isset( $user->photo_id ) ? (int) $user->photo_id : 0;
+
+        $item['user_id']      = $user_id;
+        $item['full_name']    = $full_name;
+        $item['display_name'] = stripslashes( (string) $user->display_name );
+        $item['email']        = $user->user_email;
+        $item['avatar']       = $photo_id ? wp_get_attachment_url( $photo_id ) : get_avatar_url( $user_id, [ 'size' => $avatar_size ] );
+
+        if ( isset( $user->employee_id ) ) {
+            $item['employee_id'] = stripslashes( (string) $user->employee_id );
+        }
+
+        if ( $row ) {
+            if ( null !== $row->employee_id ) {
+                $item['employee_id'] = stripslashes( (string) $row->employee_id );
+            }
+
+            foreach ( [ 'designation' => 'designation_title', 'department' => 'department_title', 'location' => 'location_name' ] as $field => $key ) {
+                if ( isset( $titles[ $field ]['map'][ (int) $row->$field ] ) ) {
+                    $item[ $key ] = $titles[ $field ]['map'][ (int) $row->$field ];
+                }
+            }
+
+            $item['reporting_to'] = (int) $row->reporting_to;
+            $item['status']       = $row->status;
+
+            if ( erp_is_valid_date( $row->hiring_date ) && '0000-00-00' !== $row->hiring_date ) {
+                $item['hiring_date'] = $row->hiring_date;
+            }
+        }
+
+        $data[ $user_id ] = $item;
+    }
+
+    return $data;
 }
 
 if ( ! function_exists( 'is_valid_date' ) ) :

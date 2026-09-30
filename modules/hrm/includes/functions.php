@@ -291,7 +291,10 @@ function erp_parent_sort( array $objects, array &$result = [], $parent = 0, $dep
         $parents[] = intval( $object->parent );
     }
 
-    if ( ! empty( $parents ) && min( $parents ) !== 0 ) {
+    // Only for the full set: on a recursive call the remaining items rarely
+    // include a top-level one, and returning here dropped every child of the
+    // last top-level item.
+    if ( 0 === $depth && ! empty( $parents ) && min( $parents ) !== 0 ) {
         return $objects;
     }
 

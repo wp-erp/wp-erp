@@ -15,7 +15,6 @@
 
 namespace WeDevs\ERP\HRM\API\V2;
 
-use WeDevs\ERP\HRM\Employee;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -140,17 +139,74 @@ class OrgChartController extends RestController {
 	}
 
 	/**
+	 * Active employees as `user_id => [ department, reporting_to ]`, in table
+	 * order. Loaded once per request.
+	 *
+	 * @var array|null
+	 */
+	private $employees = null;
+
+	/**
+	 * Node display data (name, title, avatar, email) keyed by user id.
+	 *
+	 * @var array
+	 */
+	private $people = [];
+
+	/**
+	 * Load every active employee and the display data of each possible node in
+	 * a fixed number of queries, instead of one `Employee` object and one
+	 * children query per node.
+	 *
+	 * @return void
+	 */
+	private function load_employees(): void {
+		global $wpdb;
+
+		if ( null !== $this->employees ) {
+			return;
+		}
+
+		$this->employees = [];
+
+		$rows = $wpdb->get_results(
+			"SELECT user_id, department, reporting_to
+			FROM {$wpdb->prefix}erp_hr_employees
+			WHERE status = 'active'
+			AND deleted_at IS NULL
+			ORDER BY id ASC"
+		);
+
+		foreach ( (array) $rows as $row ) {
+			if ( ! (int) $row->user_id ) {
+				continue;
+			}
+
+			$this->employees[ (int) $row->user_id ] = [
+				'department'   => (int) $row->department,
+				'reporting_to' => (int) $row->reporting_to,
+			];
+		}
+
+		// Department leads are nodes too, and need not be active employees.
+		$leads = $wpdb->get_col( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts" );
+
+		$this->people = erp_hr_get_employee_display_data( array_merge( array_keys( $this->employees ), (array) $leads ), 80 );
+	}
+
+	/**
 	 * Port of `Helpers::sort_employees()` — recursive `reporting_to` walk within a
 	 * department.
 	 *
-	 * @param int $emp_id  Manager user id (0 for the synthetic top of a team).
-	 * @param int $dept_id Department id.
-	 * @param int $depth   Recursion depth (1 = department top).
+	 * @param int   $emp_id  Manager user id (0 for the synthetic top of a team).
+	 * @param int   $dept_id Department id.
+	 * @param int   $depth   Recursion depth (1 = department top).
+	 * @param array $path    User ids already on this branch, as keys.
 	 *
 	 * @return array
 	 */
-	private function sort_employees( int $emp_id, int $dept_id = 0, int $depth = 1 ): array {
-		global $wpdb;
+	private function sort_employees( int $emp_id, int $dept_id = 0, int $depth = 1, array $path = [] ): array {
+		$this->load_employees();
 
 		$data = [
 			'id'        => 0,
@@ -164,64 +220,59 @@ class OrgChartController extends RestController {
 			'children'  => [],
 		];
 
-		$where = [ $wpdb->prepare( 'department = %d', $dept_id ) ];
-
 		if ( ! $emp_id ) {
 			$data['className'] .= ' no-content';
 
 			if ( 1 === $depth ) {
-				$where[] = $wpdb->prepare(
-					"(
-					reporting_to = 0
-					OR reporting_to IS NULL
-					OR reporting_to NOT IN (
-						SELECT emp.user_id
-						FROM {$wpdb->prefix}erp_hr_employees AS emp
-						WHERE emp.department = %d
-						AND emp.status = 'active'
-						AND emp.deleted_at IS NULL
-					)
-				)",
-					$dept_id
-				);
-
 				$data['className'] .= ' no-parent';
 			}
-		} else {
-			if ( 1 === $depth ) {
-				$where[] = $wpdb->prepare( '( reporting_to = %d OR reporting_to = 0 OR reporting_to IS NULL )', $emp_id );
-				$where[] = $wpdb->prepare( 'user_id != %d', $emp_id );
-			} else {
-				$where[] = $wpdb->prepare( 'reporting_to = %d', $emp_id );
-			}
-
-			$manager = new Employee( $emp_id );
-
-			if ( (int) $manager->get_user_id() ) {
-				$wp_user        = get_userdata( $emp_id );
-				$data['id']     = (int) $manager->get_user_id();
-				$data['name']   = $manager->get_full_name();
-				$data['title']  = $manager->get_job_title();
-				$data['lead']   = (int) $manager->get_reporting_to();
-				$data['avatar'] = $manager->get_avatar_url( 80 ) ?: '';
-				$data['email']  = $wp_user ? $wp_user->user_email : '';
-			}
+		} elseif ( ! empty( $this->people[ $emp_id ]['user_id'] ) ) {
+			$manager        = $this->people[ $emp_id ];
+			$data['id']     = (int) $manager['user_id'];
+			$data['name']   = $manager['full_name'];
+			$data['title']  = $manager['designation_title'];
+			$data['lead']   = (int) $manager['reporting_to'];
+			$data['avatar'] = $manager['avatar'] ?: '';
+			// Every employee can open the chart, only managers get the addresses.
+			$data['email']  = current_user_can( erp_hr_get_manager_role() ) ? $manager['email'] : '';
 		}
 
-		$where[] = "status = 'active'";
-		$where[] = "deleted_at IS NULL";
+		$path[ $emp_id ] = true;
 
-		$query   = "SELECT `user_id` FROM {$wpdb->prefix}erp_hr_employees WHERE " . implode( ' AND ', $where );
-		$emp_ids = $wpdb->get_col( $query );
+		foreach ( $this->employees as $id => $employee ) {
+			if ( $employee['department'] !== $dept_id ) {
+				continue;
+			}
 
-		foreach ( $emp_ids as $index => $id ) {
-			$child = $this->sort_employees( (int) $id, $dept_id, $depth + 1 );
+			$reporting_to = $employee['reporting_to'];
+
+			if ( ! $emp_id ) {
+				// Top of a team without a lead: everyone who reports to nobody
+				// inside the department.
+				if ( 1 === $depth && $reporting_to && isset( $this->employees[ $reporting_to ] ) && $this->employees[ $reporting_to ]['department'] === $dept_id ) {
+					continue;
+				}
+			} elseif ( 1 === $depth ) {
+				if ( $id === $emp_id || ( $reporting_to && $reporting_to !== $emp_id ) ) {
+					continue;
+				}
+			} elseif ( $reporting_to !== $emp_id ) {
+				continue;
+			}
+
+			// A reporting cycle (A reports to B, B reports to A) would recurse
+			// forever: never place someone under themselves.
+			if ( isset( $path[ $id ] ) ) {
+				continue;
+			}
+
+			$child = $this->sort_employees( $id, $dept_id, $depth + 1, $path );
 
 			if ( ! $emp_id ) {
 				$child['className'] = 'no-parent';
 			}
 
-			$data['children'][ $index ] = $child;
+			$data['children'][] = $child;
 		}
 
 		return $data;

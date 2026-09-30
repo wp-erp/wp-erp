@@ -40,7 +40,7 @@ class DashboardController extends RestController {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_dashboard' ],
-					'permission_callback' => [ $this, 'permission_logged_in' ],
+					'permission_callback' => [ $this, 'permission_view' ],
 				],
 			]
 		);
@@ -63,6 +63,17 @@ class DashboardController extends RestController {
 				],
 			]
 		);
+	}
+
+	/**
+	 * The overview names employees (birthdays, who is out), so it needs the same
+	 * capability as the employee list. Every HR role has it; a WordPress user
+	 * with no HR role does not.
+	 *
+	 * @return bool
+	 */
+	public function permission_view(): bool {
+		return $this->permission_cap( 'erp_list_employee' );
 	}
 
 	/**
@@ -124,7 +135,7 @@ class DashboardController extends RestController {
 		$is_manager = current_user_can( erp_hr_get_manager_role() );
 
 		// --- Summary badges ---------------------------------------------
-		$total_employees = (int) erp_hr_get_employees( [ 'count' => true, 'status' => 'active' ] );
+		$total_employees = (int) \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->count();
 		$departments     = erp_hr_get_departments( [ 'number' => '-1' ] );
 		$designations    = erp_hr_get_designations( [ 'number' => '-1' ] );
 
@@ -149,11 +160,27 @@ class DashboardController extends RestController {
 		// Mirrors the legacy "Who is out" widget, which lists both This Month
 		// and Next Month approved leave, each row optionally flagged half-day
 		// (day_status_id 2 = Morning, 3 = Afternoon).
+		$this_month_leaves = (array) erp_hr_get_current_month_leave_list();
+		$next_month_leaves = (array) erp_hr_get_next_month_leave_list();
+		$todays_birthdays  = (array) erp_hr_get_todays_birthday();
+		$coming_birthdays  = (array) erp_hr_get_next_seven_days_birthday();
+
+		// Resolve every row's designation in one batch rather than one
+		// `Employee` object per row.
+		$this->prime_designations(
+			array_merge(
+				wp_list_pluck( $this_month_leaves, 'user_id' ),
+				wp_list_pluck( $next_month_leaves, 'user_id' ),
+				wp_list_pluck( $todays_birthdays, 'user_id' ),
+				wp_list_pluck( $coming_birthdays, 'user_id' )
+			)
+		);
+
 		$on_leave = [];
-		foreach ( (array) erp_hr_get_current_month_leave_list() as $leave ) {
+		foreach ( $this_month_leaves as $leave ) {
 			$on_leave[] = $this->prepare_on_leave_row( $leave, 'this_month' );
 		}
-		foreach ( (array) erp_hr_get_next_month_leave_list() as $leave ) {
+		foreach ( $next_month_leaves as $leave ) {
 			$on_leave[] = $this->prepare_on_leave_row( $leave, 'next_month' );
 		}
 
@@ -166,8 +193,8 @@ class DashboardController extends RestController {
 		}
 
 		// --- Birthdays ---------------------------------------------------
-		$birthdays_today    = $this->birthday_people( erp_hr_get_todays_birthday() );
-		$birthdays_upcoming = $this->birthday_people( erp_hr_get_next_seven_days_birthday() );
+		$birthdays_today    = $this->birthday_people( $todays_birthdays, $is_manager );
+		$birthdays_upcoming = $this->birthday_people( $coming_birthdays, $is_manager );
 
 		// --- Upcoming holidays (today → +30 days) -----------------------
 		$holidays = [];
@@ -352,10 +379,11 @@ class DashboardController extends RestController {
 	 * the upcoming list), so the name + avatar are resolved per user.
 	 *
 	 * @param mixed $collection Birthday employee collection.
+	 * @param bool  $is_manager Whether the viewer is an HR manager.
 	 *
 	 * @return array
 	 */
-	private function birthday_people( $collection ): array {
+	private function birthday_people( $collection, bool $is_manager ): array {
 		$people = [];
 
 		// Recipients the current user has already wished this year (persisted
@@ -375,12 +403,42 @@ class DashboardController extends RestController {
 				'name'          => $user instanceof \WP_User ? ( $this->cast_string_or_null( $user->display_name ) ?? '' ) : '',
 				'avatar_url'    => get_avatar_url( $user_id, [ 'size' => 40 ] ) ?: '',
 				'designation'   => $this->designation_title( $user_id ),
-				'date_of_birth' => $this->cast_date_iso( $row->date_of_birth ?? null ),
+				// Coworkers get the day, only HR gets the year.
+				'date_of_birth' => $is_manager
+					? $this->cast_date_iso( $row->date_of_birth ?? null )
+					: $this->birthday_without_year( $row->date_of_birth ?? null ),
 				'wished'        => in_array( $user_id, $wished, true ),
 			];
 		}
 
 		return $people;
+	}
+
+	/**
+	 * A birthday as this year's calendar day (`YYYY-MM-DD`), so the list can
+	 * still print "October 7" without the payload carrying the year of birth.
+	 *
+	 * @param mixed $value Stored date of birth.
+	 *
+	 * @return string|null
+	 */
+	private function birthday_without_year( $value ): ?string {
+		$timestamp = \is_string( $value ) && 0 !== strpos( $value, '0000-00-00' ) ? strtotime( $value ) : false;
+
+		if ( ! $timestamp ) {
+			return null;
+		}
+
+		$month = (int) gmdate( 'n', $timestamp );
+		$day   = (int) gmdate( 'j', $timestamp );
+		$year  = (int) current_time( 'Y' );
+
+		// 29 February only exists in a leap year.
+		while ( ! checkdate( $month, $day, $year ) ) {
+			$year++;
+		}
+
+		return sprintf( '%04d-%02d-%02d', $year, $month, $day );
 	}
 
 	/**
@@ -421,6 +479,26 @@ class DashboardController extends RestController {
 	}
 
 	/**
+	 * Designation titles keyed by user id, filled by `prime_designations()`.
+	 *
+	 * @var array
+	 */
+	private $designations = [];
+
+	/**
+	 * Load the designation title of a set of employees in one batch.
+	 *
+	 * @param array $user_ids Employee WP user ids.
+	 *
+	 * @return void
+	 */
+	private function prime_designations( array $user_ids ): void {
+		foreach ( erp_hr_get_employee_display_data( $user_ids ) as $user_id => $employee ) {
+			$this->designations[ $user_id ] = $employee['designation_title'];
+		}
+	}
+
+	/**
 	 * Resolve an employee's designation title for the who-is-out / birthday rows.
 	 *
 	 * @param int $user_id Employee WP user id.
@@ -430,6 +508,10 @@ class DashboardController extends RestController {
 	private function designation_title( int $user_id ): string {
 		if ( ! $user_id ) {
 			return '';
+		}
+
+		if ( \array_key_exists( $user_id, $this->designations ) ) {
+			return $this->cast_string_or_null( $this->designations[ $user_id ] ) ?? '';
 		}
 
 		$employee = new \WeDevs\ERP\HRM\Employee( $user_id );
@@ -471,8 +553,12 @@ class DashboardController extends RestController {
 		$trainee  = [];
 
 		$today = date_create( current_time( 'Y-m-d' ) );
+		$users = (array) erp_hr_get_contractual_employee();
 
-		foreach ( (array) erp_hr_get_contractual_employee() as $user ) {
+		// One meta query for the whole list instead of one per employee.
+		update_meta_cache( 'user', array_map( 'intval', wp_list_pluck( $users, 'user_id' ) ) );
+
+		foreach ( $users as $user ) {
 			$user_id  = (int) ( $user->user_id ?? 0 );
 			$end_date = $user_id ? (string) get_user_meta( $user_id, 'end_date', true ) : '';
 

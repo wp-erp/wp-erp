@@ -183,6 +183,14 @@ class AnnouncementsController extends RestController {
 			return false;
 		}
 
+		// A recipient row outlives the post's status: once the announcement is
+		// moved back to draft or trashed it is no longer theirs to read.
+		$post = get_post( $post_id );
+
+		if ( ! $post || self::POST_TYPE !== $post->post_type || 'publish' !== $post->post_status ) {
+			return false;
+		}
+
 		return Announcement::where( 'post_id', $post_id )
 			->where( 'user_id', $user_id )
 			->exists();
@@ -270,6 +278,17 @@ class AnnouncementsController extends RestController {
 			'departments'  => array_map( 'intval', (array) get_post_meta( $post->ID, '_announcement_department', true ) ),
 			'designations' => array_map( 'intval', (array) get_post_meta( $post->ID, '_announcement_designation', true ) ),
 		];
+
+		// The audience and the SMS body are for the edit form. A recipient opening
+		// their own copy gets the announcement, not who else received it.
+		if ( ! $this->permission_cap( 'erp_view_announcement' ) ) {
+			$row['sms_content'] = '';
+			$row['recipients']  = [
+				'employees'    => [],
+				'departments'  => [],
+				'designations' => [],
+			];
+		}
 
 		return rest_ensure_response( $row );
 	}
@@ -413,7 +432,13 @@ class AnnouncementsController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function restore_item( $request ) {
-		$id = (int) $request['id'];
+		$id   = (int) $request['id'];
+		$post = get_post( $id );
+
+		// Without this the route untrashed any post or page by id.
+		if ( ! $post || self::POST_TYPE !== $post->post_type ) {
+			return new \WP_Error( 'rest_announcement_invalid_id', __( 'Invalid announcement id.', 'erp' ), [ 'status' => 404 ] );
+		}
 
 		$fail = erp_hr_restore_announcements( [ $id ] );
 
@@ -631,7 +656,7 @@ class AnnouncementsController extends RestController {
 	 */
 	private function get_item_payload( int $post_id ): array {
 		$post = get_post( $post_id );
-		if ( ! $post ) {
+		if ( ! $post || self::POST_TYPE !== $post->post_type ) {
 			return [ 'id' => $post_id ];
 		}
 
@@ -659,11 +684,16 @@ class AnnouncementsController extends RestController {
 		// Small avatar-stack preview (up to 3 recipients) for the audience column.
 		$recipients_preview = [];
 		$preview            = Announcement::where( 'post_id', (int) $post->ID )->take( 3 )->get( [ 'user_id' ] );
+		$people             = erp_hr_get_employee_display_data( wp_list_pluck( $preview->toArray(), 'user_id' ), 40 );
 		foreach ( $preview as $row ) {
-			$employee             = new \WeDevs\ERP\HRM\Employee( (int) $row->user_id );
+			if ( ! isset( $people[ (int) $row->user_id ] ) ) {
+				continue;
+			}
+
+			$employee             = $people[ (int) $row->user_id ];
 			$recipients_preview[] = [
-				'name'   => (string) $employee->get_full_name(),
-				'avatar' => $employee->get_avatar_url( 40 ) ?: null,
+				'name'   => (string) $employee['full_name'],
+				'avatar' => $employee['avatar'] ?: null,
 			];
 		}
 
@@ -726,7 +756,10 @@ class AnnouncementsController extends RestController {
 		return [
 			'title'        => [ 'description' => __( 'Announcement title.', 'erp' ), 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ],
 			'content'      => [ 'description' => __( 'Announcement body (HTML).', 'erp' ), 'type' => 'string' ],
-			'status'       => [ 'description' => __( 'publish or draft.', 'erp' ), 'type' => 'string', 'enum' => [ 'publish', 'draft' ], 'default' => 'publish' ],
+			// No `default`: a default makes `isset( $request['status'] )` true on every
+			// PUT, so saving only a title published a draft. Create falls back to
+			// publish on its own.
+			'status'       => [ 'description' => __( 'publish or draft.', 'erp' ), 'type' => 'string', 'enum' => [ 'publish', 'draft' ] ],
 			'assign_type'  => [ 'description' => __( 'Recipient strategy.', 'erp' ), 'type' => 'string', 'enum' => self::ASSIGN_TYPES ],
 			'employees'    => [ 'description' => __( 'Employee user IDs (selected_employee).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],
 			'departments'  => [ 'description' => __( 'Department IDs (by_department).', 'erp' ), 'type' => 'array', 'items' => [ 'type' => 'integer' ] ],

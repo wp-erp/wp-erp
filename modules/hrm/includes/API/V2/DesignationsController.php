@@ -127,27 +127,38 @@ class DesignationsController extends RestController {
 		$order   = strtoupper( (string) ( $request['order'] ?? 'asc' ) );
 		$order   = \in_array( $order, [ 'ASC', 'DESC' ], true ) ? $order : 'ASC';
 
-		$args = [
-			'number'  => $per_page,
-			'offset'  => ( $page - 1 ) * $per_page,
-			'orderby' => $orderby,
-			'order'   => $order,
-			's'       => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
-		];
+		$search = sanitize_text_field( (string) ( $request['search'] ?? '' ) );
 
-		$designations = (array) erp_hr_get_designations( $args );
-		$total        = (int) erp_hr_count_designation();
+		// `erp_hr_get_designations()` ignores its `s` argument and
+		// `erp_hr_count_designation()` counts every row, so a search returned
+		// the full list with the unfiltered total. Query the model directly.
+		$query = \WeDevs\ERP\HRM\Models\Designation::query();
 
-		// `erp_hr_get_designations()` returns plain objects (via erp_array_to_object),
-		// not `Designation` domain instances — so wrap each by id to get the model
-		// methods (`num_of_employees()`) the response shape needs.
+		if ( '' !== $search ) {
+			global $wpdb;
+
+			$query->where( 'title', 'LIKE', '%' . $wpdb->esc_like( $search ) . '%' );
+		}
+
+		$total = (int) $query->count();
+		$rows  = $query->orderBy( $orderby, $order )
+			->skip( ( $page - 1 ) * $per_page )
+			->take( $per_page )
+			->get()
+			->toArray();
+
+		$this->prime_rows( array_map( 'intval', wp_list_pluck( $rows, 'id' ) ) );
+
 		$items = [];
-		foreach ( $designations as $row ) {
-			$id = is_object( $row ) ? (int) ( $row->id ?? 0 ) : (int) ( is_array( $row ) ? ( $row['id'] ?? 0 ) : 0 );
-			if ( $id > 0 ) {
-				$items[] = $this->prepare_item_for_response( new Designation( $id ), $request );
+		foreach ( $rows as $row ) {
+			if ( (int) $row['id'] > 0 ) {
+				$items[] = $this->prepare_item_for_response( new Designation( (object) $row ), $request );
 			}
 		}
+
+		// The batch is for this page only: a later single-row response must
+		// read fresh values.
+		$this->primed = [];
 
 		$response = rest_ensure_response( $items );
 		return $this->paginate( $response, $request, $total );
@@ -320,13 +331,78 @@ class DesignationsController extends RestController {
 			return [];
 		}
 
+		$id = (int) $designation->id;
+
 		return [
-			'id'              => (int) $designation->id,
+			'id'              => $id,
 			'title'           => $this->cast_string_or_null( $designation->title ) ?? '',
 			'description'     => $this->cast_string_or_null( $designation->description ) ?? '',
-			'total_employees' => (int) $designation->num_of_employees(),
-			'employees'       => $this->employee_previews( 'designation', (int) $designation->id ),
+			'total_employees' => isset( $this->primed[ $id ] ) ? $this->primed[ $id ]['total'] : (int) $designation->num_of_employees(),
+			'employees'       => isset( $this->primed[ $id ] ) ? $this->primed[ $id ]['employees'] : $this->employee_previews( 'designation', $id ),
 		];
+	}
+
+	/**
+	 * Employee count and avatar previews for a page of designations, keyed by
+	 * designation id.
+	 *
+	 * @var array
+	 */
+	private $primed = [];
+
+	/**
+	 * Load the employee count and the first three employee previews of every
+	 * listed designation in a fixed number of queries. The per-row path built
+	 * three `Employee` objects per designation, about a thousand queries for a
+	 * page of 16.
+	 *
+	 * @param int[] $ids Designation ids.
+	 *
+	 * @return void
+	 */
+	private function prime_rows( array $ids ): void {
+		global $wpdb;
+
+		$ids = array_values( array_filter( array_map( 'absint', $ids ) ) );
+
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		$primed = array_fill_keys( $ids, [ 'total' => 0, 'users' => [], 'employees' => [] ] );
+
+		$rows = $wpdb->get_results(
+			"SELECT user_id, designation
+			 FROM {$wpdb->prefix}erp_hr_employees
+			 WHERE status = 'active'
+			   AND deleted_at IS NULL
+			   AND designation IN ( " . implode( ',', $ids ) . ' )
+			 ORDER BY id ASC'
+		);
+
+		$preview_ids = [];
+		foreach ( (array) $rows as $row ) {
+			$id = (int) $row->designation;
+			$primed[ $id ]['total']++;
+
+			if ( \count( $primed[ $id ]['users'] ) < 3 ) {
+				$primed[ $id ]['users'][] = (int) $row->user_id;
+				$preview_ids[]            = (int) $row->user_id;
+			}
+		}
+
+		$people = erp_hr_get_employee_display_data( $preview_ids, 40 );
+
+		foreach ( $primed as $id => $row ) {
+			foreach ( $row['users'] as $user_id ) {
+				$primed[ $id ]['employees'][] = [
+					'name'   => isset( $people[ $user_id ] ) ? (string) $people[ $user_id ]['full_name'] : '',
+					'avatar' => ( isset( $people[ $user_id ] ) ? $people[ $user_id ]['avatar'] : get_avatar_url( 0, [ 'size' => 40 ] ) ) ?: null,
+				];
+			}
+		}
+
+		$this->primed = $primed;
 	}
 
 	/**

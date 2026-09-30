@@ -93,6 +93,10 @@ class ReportsController extends RestController {
 						'year'       => [
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_text_field',
+							// Empty and -1 both mean "this year" (legacy select).
+							'validate_callback' => static function ( $value ) {
+								return \is_scalar( $value ) && ( \in_array( (string) $value, [ '', '-1' ], true ) || 1 === preg_match( '/^\d{4}$/', (string) $value ) );
+							},
 						],
 						'department' => [
 							'type'              => 'integer',
@@ -274,8 +278,8 @@ class ReportsController extends RestController {
 	/**
 	 * GET /reports/headcount?year=&department= .
 	 *
-	 * Mirrors views/reporting/headcount.php: a 12-month headcount series ending
-	 * on December of the selected year (current month when no year), the active
+	 * Mirrors views/reporting/headcount.php: the monthly headcount series of the
+	 * selected year (January to the current month for the running year), the active
 	 * total, the year dropdown range, and the filtered active employee list.
 	 *
 	 * @param WP_REST_Request $request Request.
@@ -294,6 +298,11 @@ class ReportsController extends RestController {
 			? (string) $raw_year
 			: gmdate( 'Y' );
 
+		// A year that has not started has no headcount yet.
+		if ( (int) $query_year > $current_year ) {
+			$query_year = (string) $current_year;
+		}
+
 		$raw_dept   = $request['department'];
 		$query_dept = ( $raw_dept !== null && '' !== $raw_dept && '-1' !== (string) $raw_dept )
 			? (int) $raw_dept
@@ -301,9 +310,18 @@ class ReportsController extends RestController {
 
 		$this_month = $query_year ? gmdate( $query_year . '-12-01' ) : current_time( 'Y-m-01' );
 
+		$current_month = current_time( 'Y-m' );
+
 		$chart = [];
 		for ( $i = 0; $i <= 11; $i++ ) {
 			$month   = gmdate( 'Y-m', strtotime( $this_month . " -$i months" ) );
+
+			// The running year stops at this month: a month that has not started
+			// has no headcount, and plotting one drew hires dated in the future.
+			if ( $month > $current_month ) {
+				continue;
+			}
+
 			$chart[] = [
 				'month' => $month,
 				'count' => (int) erp_hr_get_headcount( $month, $query_dept, 'month' ),
@@ -338,15 +356,22 @@ class ReportsController extends RestController {
 			$user_filtered[] = (int) $user->user_id;
 		}
 
+		// One batched load for the whole list: an `Employee` object per row cost
+		// thousands of queries on a few hundred employees.
+		$people    = erp_hr_get_employee_display_data( $user_filtered, 60 );
 		$employees = [];
 		foreach ( $user_filtered as $user_id ) {
-			$employee    = new Employee( $user_id );
+			if ( ! isset( $people[ $user_id ] ) ) {
+				continue;
+			}
+
+			$employee    = $people[ $user_id ];
 			$employees[] = [
-				'user_id'          => (int) $employee->get_user_id(),
-				'employee_id'      => $this->cast_string_or_null( $employee->employee_id ),
-				'name'             => $this->cast_string_or_null( $employee->display_name ) ?? '',
-				'avatar'           => $employee->get_avatar_url( 60 ) ?: null,
-				'hire_date'        => $this->cast_date_iso( $employee->hiring_date ),
+				'user_id'          => (int) $employee['user_id'],
+				'employee_id'      => $this->cast_string_or_null( $employee['employee_id'] ),
+				'name'             => $this->cast_string_or_null( $employee['display_name'] ) ?? '',
+				'avatar'           => $employee['avatar'] ?: null,
+				'hire_date'        => $this->cast_date_iso( $employee['hiring_date'] ),
 				// `Employee::__get()` resolves `foo` through `get_foo()`. There is no
 				// `get_designation_title()` and no `get_location_name()`, so those two
 				// names fell through every branch and returned null — both columns
@@ -354,10 +379,10 @@ class ReportsController extends RestController {
 				// location. `job_title` and `work_location` are the accessors that
 				// exist. (`department_title` works only because a deprecated
 				// `get_department_title()` happens to be there.)
-				'designation'      => $this->cast_string_or_null( $employee->job_title ),
-				'department'       => $this->cast_string_or_null( $employee->department_title ),
-				'location'         => $this->cast_string_or_null( $employee->work_location ),
-				'status'           => $this->cast_string_or_null( $employee->status ),
+				'designation'      => $this->cast_string_or_null( $employee['designation_title'] ),
+				'department'       => $this->cast_string_or_null( $employee['department_title'] ),
+				'location'         => $this->cast_string_or_null( $employee['location_name'] ),
+				'status'           => $this->cast_string_or_null( $employee['status'] ),
 			];
 		}
 
@@ -404,27 +429,44 @@ class ReportsController extends RestController {
 		$all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' ORDER BY hiring_date DESC" );
 		$rows        = [];
 
-		foreach ( (array) $all_user_id as $user_id ) {
-			$employee      = new Employee( (int) $user_id );
-			$compensations = $employee->get_job_histories( 'compensation' );
+		// Every compensation entry in one query, newest first, instead of one
+		// `Employee` object and one history query per employee.
+		$histories = [];
+		$history_rows = $wpdb->get_results(
+			"SELECT user_id, type, category, date
+			 FROM {$wpdb->prefix}erp_hr_employee_history
+			 WHERE module = 'compensation'
+			   AND user_id IN ( SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' )
+			 ORDER BY date DESC, id DESC"
+		);
+		foreach ( (array) $history_rows as $history ) {
+			$histories[ (int) $history->user_id ][] = $history;
+		}
 
-			if ( empty( $compensations['compensation'] ) ) {
+		$all_user_id = array_values( array_filter( array_map( 'intval', (array) $all_user_id ), static function ( $user_id ) use ( $histories ) {
+			return isset( $histories[ $user_id ] );
+		} ) );
+		$people      = erp_hr_get_employee_display_data( $all_user_id, 60 );
+
+		foreach ( $all_user_id as $user_id ) {
+			if ( empty( $people[ $user_id ]['user_id'] ) ) {
 				continue;
 			}
 
-			$line = 0;
-			foreach ( $compensations['compensation'] as $compensation ) {
+			$employee = $people[ $user_id ];
+
+			// `Employee::get_job_histories()` returns the 30 latest entries.
+			foreach ( \array_slice( $histories[ $user_id ], 0, 30 ) as $line => $compensation ) {
 				$rows[] = [
-					'user_id'     => (int) $employee->get_user_id(),
-					'employee_id' => $this->cast_string_or_null( $employee->employee_id ),
+					'user_id'     => (int) $employee['user_id'],
+					'employee_id' => $this->cast_string_or_null( $employee['employee_id'] ),
 					// Name shown only on the first row per employee (legacy rowspan behaviour).
-					'name'        => 0 === $line ? ( $this->cast_string_or_null( $employee->display_name ) ?? '' ) : '',
-					'avatar'      => 0 === $line ? ( $employee->get_avatar_url( 60 ) ?: null ) : null,
-					'date'        => $this->cast_date_iso( $compensation['date'] ?? '' ),
-					'pay_rate'    => $this->cast_string_or_null( $compensation['pay_rate'] ?? '' ),
-					'pay_type'    => $this->cast_string_or_null( $compensation['pay_type'] ?? '' ),
+					'name'        => 0 === $line ? ( $this->cast_string_or_null( $employee['display_name'] ) ?? '' ) : '',
+					'avatar'      => 0 === $line ? ( $employee['avatar'] ?: null ) : null,
+					'date'        => $this->cast_date_iso( $compensation->date ?? '' ),
+					'pay_rate'    => $this->cast_string_or_null( $compensation->type ?? '' ),
+					'pay_type'    => $this->cast_string_or_null( $compensation->category ?? '' ),
 				];
-				$line++;
 			}
 		}
 
@@ -446,12 +488,17 @@ class ReportsController extends RestController {
 	public function get_years_of_service(): WP_REST_Response {
 		global $wpdb;
 
-		$all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
+		$all_user_id = array_map( 'intval', (array) $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" ) );
+		$people      = erp_hr_get_employee_display_data( $all_user_id, 60 );
 		$hire_data   = [];
 
-		foreach ( (array) $all_user_id as $user_id ) {
-			$employee = new Employee( (int) $user_id );
-			$date     = date_parse_from_format( 'Y-m-d', $employee->hiring_date ?? '' );
+		foreach ( $all_user_id as $user_id ) {
+			if ( ! isset( $people[ $user_id ] ) ) {
+				continue;
+			}
+
+			$employee = $people[ $user_id ];
+			$date     = date_parse_from_format( 'Y-m-d', $employee['hiring_date'] ?? '' );
 			$month    = (int) $date['month'];
 			$day      = (int) $date['day'];
 
@@ -466,7 +513,7 @@ class ReportsController extends RestController {
 			// whose first anniversary is coming up is precisely the one that must
 			// not be dropped — v1 lists them too.
 			$years     = 0;
-			$hired_ts  = strtotime( (string) $employee->hiring_date );
+			$hired_ts  = strtotime( (string) $employee['hiring_date'] );
 
 			if ( $hired_ts ) {
 				$hired = date_create( gmdate( 'Y-m-d', $hired_ts ) );
@@ -478,10 +525,10 @@ class ReportsController extends RestController {
 			}
 
 			$hire_data[ $month ][ $day ][] = [
-				'user_id'     => (int) $employee->get_user_id(),
-				'name'        => $this->cast_string_or_null( $employee->display_name ) ?? '',
-				'avatar'      => $employee->get_avatar_url( 60 ) ?: null,
-				'hiring_date' => $this->cast_date_iso( $employee->hiring_date ),
+				'user_id'     => (int) $employee['user_id'],
+				'name'        => $this->cast_string_or_null( $employee['display_name'] ) ?? '',
+				'avatar'      => $employee['avatar'] ?: null,
+				'hiring_date' => $this->cast_date_iso( $employee['hiring_date'] ),
 				'years'       => $years,
 			];
 		}

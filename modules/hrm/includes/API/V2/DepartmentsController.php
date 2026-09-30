@@ -153,10 +153,16 @@ class DepartmentsController extends RestController {
 		$offset = ( $page - 1 ) * $per_page;
 		$page_departments = \array_slice( $departments, $offset, $per_page );
 
+		$this->prime_rows( $page_departments );
+
 		$items = [];
 		foreach ( $page_departments as $department ) {
 			$items[] = $this->prepare_item_for_response( $department, $request );
 		}
+
+		// The batch is for this page only: a later single-row response must
+		// read fresh values.
+		$this->primed = [];
 
 		$response = rest_ensure_response( $items );
 		return $this->paginate( $response, $request, $total );
@@ -194,6 +200,11 @@ class DepartmentsController extends RestController {
 			if ( $dup ) {
 				return $dup;
 			}
+		}
+
+		$invalid = $this->relation_error( $data, null );
+		if ( $invalid ) {
+			return $invalid;
 		}
 
 		$id = erp_hr_create_department( $data );
@@ -242,6 +253,11 @@ class DepartmentsController extends RestController {
 			}
 		}
 
+		$invalid = $this->relation_error( $data, $department );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$id = erp_hr_create_department( $data );
 
 		if ( is_wp_error( $id ) ) {
@@ -266,6 +282,58 @@ class DepartmentsController extends RestController {
 
 		if ( $exist && (int) $exist->id !== $exclude_id ) {
 			return new \WP_Error( 'rest_department_duplicate', __( 'Multiple department with the same name is not allowed.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
+	}
+
+	/**
+	 * A `WP_Error` when the submitted parent or lead cannot be saved, else null.
+	 *
+	 * The list is built by walking down from the top-level departments
+	 * (`erp_parent_sort()`), so a department whose parent is missing, or whose
+	 * parent chain loops back to itself, drops out of every list and dropdown.
+	 * A value that is not changing is left alone, so a department saved before
+	 * this check can still be renamed.
+	 *
+	 * @param array           $data       Prepared department data.
+	 * @param Department|null $department The department being updated (null on create).
+	 *
+	 * @return \WP_Error|null
+	 */
+	protected function relation_error( array $data, $department ) {
+		$dept_id = $department ? (int) $department->id : 0;
+
+		if ( ! empty( $data['parent'] ) && ( ! $department || (int) $department->parent !== (int) $data['parent'] ) ) {
+			$seen      = [];
+			$parent_id = (int) $data['parent'];
+
+			while ( $parent_id > 0 && ! isset( $seen[ $parent_id ] ) ) {
+				if ( $parent_id === $dept_id ) {
+					return new \WP_Error( 'rest_department_parent_cycle', __( 'A department cannot be placed under one of its own sub-departments.', 'erp' ), [ 'status' => 400 ] );
+				}
+
+				$seen[ $parent_id ] = true;
+				$parent             = \WeDevs\ERP\HRM\Models\Department::find( $parent_id );
+
+				if ( ! $parent ) {
+					// Only the submitted parent has to exist: a gap further up is
+					// old data, not something this request introduces.
+					if ( 1 === \count( $seen ) ) {
+						return new \WP_Error( 'rest_department_invalid_parent', __( 'The selected parent department does not exist.', 'erp' ), [ 'status' => 400 ] );
+					}
+
+					break;
+				}
+
+				$parent_id = (int) $parent->parent;
+			}
+		}
+
+		if ( ! empty( $data['lead'] ) && ( ! $department || (int) $department->lead !== (int) $data['lead'] ) ) {
+			if ( ! \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', (int) $data['lead'] )->exists() ) {
+				return new \WP_Error( 'rest_department_invalid_lead', __( 'The department lead must be an employee.', 'erp' ), [ 'status' => 400 ] );
+			}
 		}
 
 		return null;
@@ -340,11 +408,15 @@ class DepartmentsController extends RestController {
 			return [];
 		}
 
+		$id        = (int) $department->id;
 		$lead_id   = $this->cast_int_or_null( $department->lead );
 		$parent_id = $this->cast_int_or_null( $department->parent );
+		$primed    = isset( $this->primed[ $id ] ) ? $this->primed[ $id ] : null;
 
 		$lead_name = '';
-		if ( $lead_id ) {
+		if ( $primed ) {
+			$lead_name = $primed['lead_name'];
+		} elseif ( $lead_id ) {
 			$lead = $department->get_lead();
 			if ( $lead ) {
 				$lead_name = (string) $lead->get_full_name();
@@ -352,22 +424,126 @@ class DepartmentsController extends RestController {
 		}
 
 		$parent_title = '';
-		if ( $parent_id ) {
+		if ( $primed ) {
+			$parent_title = $primed['parent_title'];
+		} elseif ( $parent_id ) {
 			$parent       = new Department( $parent_id );
 			$parent_title = (string) $parent->title;
 		}
 
 		return [
-			'id'              => (int) $department->id,
+			'id'              => $id,
 			'title'           => $this->cast_string_or_null( $department->title ) ?? '',
 			'description'     => $this->cast_string_or_null( $department->description ) ?? '',
 			'lead'            => $lead_id,
 			'lead_name'       => $lead_name,
 			'parent'          => $parent_id,
 			'parent_title'    => $parent_title,
-			'total_employees' => (int) $department->num_of_employees(),
-			'employees'       => $this->employee_previews( 'department', (int) $department->id ),
+			'total_employees' => $primed ? $primed['total'] : (int) $department->num_of_employees(),
+			'employees'       => $primed ? $primed['employees'] : $this->employee_previews( 'department', $id ),
 		];
+	}
+
+	/**
+	 * Lead name, parent title, employee count and avatar previews for a page of
+	 * departments, keyed by department id.
+	 *
+	 * @var array
+	 */
+	private $primed = [];
+
+	/**
+	 * Load what the list rows need in a fixed number of queries. The per-row
+	 * path built an `Employee` object for the lead and for each of the three
+	 * previews, over 800 queries for a page of 10.
+	 *
+	 * @param Department[] $departments Departments on the page.
+	 *
+	 * @return void
+	 */
+	private function prime_rows( array $departments ): void {
+		global $wpdb;
+
+		$primed     = [];
+		$lead_ids   = [];
+		$parent_ids = [];
+
+		foreach ( $departments as $department ) {
+			$id = (int) $department->id;
+
+			if ( $id <= 0 ) {
+				continue;
+			}
+
+			$primed[ $id ] = [
+				'lead'         => (int) $department->lead,
+				'parent'       => (int) $department->parent,
+				'lead_name'    => '',
+				'parent_title' => '',
+				'total'        => 0,
+				'users'        => [],
+				'employees'    => [],
+			];
+
+			$lead_ids[]   = (int) $department->lead;
+			$parent_ids[] = (int) $department->parent;
+		}
+
+		if ( empty( $primed ) ) {
+			return;
+		}
+
+		$rows = $wpdb->get_results(
+			"SELECT user_id, department
+			 FROM {$wpdb->prefix}erp_hr_employees
+			 WHERE status = 'active'
+			   AND deleted_at IS NULL
+			   AND department IN ( " . implode( ',', array_keys( $primed ) ) . ' )
+			 ORDER BY id ASC'
+		);
+
+		$preview_ids = [];
+		foreach ( (array) $rows as $row ) {
+			$id = (int) $row->department;
+			$primed[ $id ]['total']++;
+
+			if ( \count( $primed[ $id ]['users'] ) < 3 ) {
+				$primed[ $id ]['users'][] = (int) $row->user_id;
+				$preview_ids[]            = (int) $row->user_id;
+			}
+		}
+
+		$parent_titles = [];
+		$parent_ids    = array_values( array_unique( array_filter( $parent_ids ) ) );
+
+		if ( $parent_ids ) {
+			$parents = $wpdb->get_results( "SELECT id, title FROM {$wpdb->prefix}erp_hr_depts WHERE id IN ( " . implode( ',', $parent_ids ) . ' )' );
+
+			foreach ( (array) $parents as $parent ) {
+				$parent_titles[ (int) $parent->id ] = stripslashes( (string) $parent->title );
+			}
+		}
+
+		$people = erp_hr_get_employee_display_data( array_merge( $preview_ids, $lead_ids ), 40 );
+
+		foreach ( $primed as $id => $row ) {
+			if ( ! empty( $people[ $row['lead'] ]['user_id'] ) ) {
+				$primed[ $id ]['lead_name'] = (string) $people[ $row['lead'] ]['full_name'];
+			}
+
+			if ( isset( $parent_titles[ $row['parent'] ] ) ) {
+				$primed[ $id ]['parent_title'] = $parent_titles[ $row['parent'] ];
+			}
+
+			foreach ( $row['users'] as $user_id ) {
+				$primed[ $id ]['employees'][] = [
+					'name'   => isset( $people[ $user_id ] ) ? (string) $people[ $user_id ]['full_name'] : '',
+					'avatar' => ( isset( $people[ $user_id ] ) ? $people[ $user_id ]['avatar'] : get_avatar_url( 0, [ 'size' => 40 ] ) ) ?: null,
+				];
+			}
+		}
+
+		$this->primed = $primed;
 	}
 
 	/**
