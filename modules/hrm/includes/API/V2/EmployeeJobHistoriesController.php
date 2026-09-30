@@ -97,15 +97,47 @@ class EmployeeJobHistoriesController extends RestController {
 	}
 
 	/**
-	 * Deleting a history row requires the edit-employee cap on the target — the
-	 * same gate `AjaxHandler::employee_remove_history()` enforced.
+	 * Deleting a history row requires the manage-jobinfo cap, same as adding or
+	 * editing one. The legacy `AjaxHandler::employee_remove_history()` gate
+	 * (`erp_edit_employee` on the target) is held by every employee for their own
+	 * record, which let them erase their own status and pay history.
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
 	public function permission_delete( $request ): bool {
-		return $this->permission_cap( 'erp_edit_employee', (int) $request['user_id'] );
+		return $this->permission_cap( 'erp_manage_jobinfo', (int) $request['user_id'] );
+	}
+
+	/**
+	 * Normalise the optional `date` param before it reaches the model, which
+	 * feeds it to `DateTimeImmutable::modify()` and fatals on a bad string.
+	 *
+	 * @param array $params Request params (by reference).
+	 *
+	 * @return \WP_Error|null WP_Error on an unparseable date, null otherwise.
+	 */
+	private function validate_date( array &$params ) {
+		if ( ! array_key_exists( 'date', $params ) ) {
+			return null;
+		}
+
+		$date = trim( (string) $params['date'] );
+
+		if ( '' === $date ) {
+			unset( $params['date'] );
+
+			return null;
+		}
+
+		if ( false === strtotime( $date ) ) {
+			return new \WP_Error( 'rest_invalid_date', __( 'Invalid date format', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$params['date'] = $date;
+
+		return null;
 	}
 
 	/**
@@ -191,6 +223,14 @@ class EmployeeJobHistoriesController extends RestController {
 
 		$params = $request->get_params();
 
+		// This route only creates: an `id` would make the model update a row instead.
+		unset( $params['id'] );
+
+		$invalid = $this->validate_date( $params );
+		if ( is_wp_error( $invalid ) ) {
+			return $invalid;
+		}
+
 		// Snapshot before the write so the `erp_hr_employee_update` action can carry
 		// the old data — the model methods below fire only their `*_create` hooks, so
 		// the legacy AjaxHandler fired this update action separately after each write.
@@ -251,6 +291,23 @@ class EmployeeJobHistoriesController extends RestController {
 
 		if ( empty( $params['id'] ) ) {
 			return new \WP_Error( 'rest_invalid_history', __( 'No valid history found!', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		// The model's updateOrCreate() silently INSERTS when the id is not one of
+		// this employee's rows, so the row has to be resolved here first.
+		$history = $employee->get_erp_user()->histories()->find( $params['id'] );
+
+		if ( ! $history ) {
+			return new \WP_Error( 'rest_invalid_history', __( 'No valid history found!', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		if ( (string) $history->module !== $module ) {
+			return new \WP_Error( 'rest_invalid_module', __( 'Invalid history module.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$invalid = $this->validate_date( $params );
+		if ( is_wp_error( $invalid ) ) {
+			return $invalid;
 		}
 
 		$old_data = $employee->get_data();

@@ -230,7 +230,13 @@ class EmployeePermissionController extends RestController {
 		$roles = (array) $request['roles'];
 
 		// Normalize the incoming map to plain booleans the legacy setters expect.
+		// Seed every role the acting user can manage with its current state first:
+		// the module setters treat a missing key as "off", so a partial map would
+		// revoke the roles it did not mention.
 		$params = [ 'employee_id' => $user_id ];
+		foreach ( $this->permission_catalog( $user_id ) as $entry ) {
+			$params[ (string) $entry['key'] ] = ! empty( $entry['enabled'] ) ? 'on' : 'off';
+		}
 		foreach ( $roles as $key => $value ) {
 			$params[ (string) $key ] = $this->cast_bool( $value ) ? 'on' : 'off';
 		}

@@ -148,7 +148,11 @@ class EmployeePerformanceController extends RestController {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
-		$result = $employee->add_performance( $request->get_params() );
+		// Only the declared fields reach the model: it mass-assigns its args, so a
+		// body `employee_id` would file the record under another employee and an
+		// `id` would overwrite an existing one.
+		$params = array_intersect_key( $request->get_params(), $this->get_create_params() );
+		$result = $employee->add_performance( $params );
 
 		if ( is_wp_error( $result ) ) {
 			return new \WP_Error(

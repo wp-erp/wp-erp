@@ -152,13 +152,15 @@ class EmployeeUserController extends RestController {
 			return new \WP_Error( 'rest_user_not_found', __( 'User not found', 'erp' ), [ 'status' => 404 ] );
 		}
 
-		$user->add_role( 'employee' );
-
-		$exists = EmployeeModel::where( 'user_id', '=', $user->ID )->first();
+		// Check first, trashed rows included: the table has no unique key on
+		// `user_id`, and a refused request must not leave the role behind.
+		$exists = EmployeeModel::withTrashed()->where( 'user_id', '=', $user->ID )->first();
 
 		if ( null !== $exists ) {
 			return new \WP_Error( 'rest_employee_exists', __( 'Employee already exist.', 'erp' ), [ 'status' => 409 ] );
 		}
+
+		$user->add_role( 'employee' );
 
 		EmployeeModel::create(
 			[

@@ -242,7 +242,15 @@ class EmployeeProfileController extends RestController {
 			return new \WP_Error( 'rest_invalid_id', __( 'Invalid record id.', 'erp' ), [ 'status' => 400 ] );
 		}
 
-		switch ( $this->section( $request ) ) {
+		// Resolve the row through the employee's own relation first: an id that is
+		// not theirs used to fire the delete action and then dereference null.
+		$section = $this->section( $request );
+
+		if ( ! $employee->get_erp_user()->{$section}()->find( $id ) ) {
+			return new \WP_Error( 'rest_invalid_id', __( 'Invalid record id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		switch ( $section ) {
 			case 'educations':
 				do_action( 'erp_hr_employee_education_delete', $id );
 				$employee->delete_education( $id );

@@ -39,6 +39,13 @@ class EmployeesController extends RestController {
 	protected $rest_base = 'employees';
 
 	/**
+	 * Per-request memo of department / designation / location names by id.
+	 *
+	 * @var array
+	 */
+	private $lookup_names = [];
+
+	/**
 	 * Allowed orderby keys (whitelisted against v1 model semantics).
 	 */
 	private const ORDERBY_MAP = [
@@ -267,6 +274,9 @@ class EmployeesController extends RestController {
 			return new \WP_Error( 'rest_avatar_upload_failed', $attachment_id->get_error_message(), [ 'status' => 400 ] );
 		}
 
+		// Mark the upload as this employee's photo: delete_avatar() only removes
+		// attachments it can tie back to the employee.
+		update_post_meta( (int) $attachment_id, '_erp_hr_employee_photo', $user_id );
 		update_user_meta( $user_id, 'photo_id', (int) $attachment_id );
 		clean_user_cache( $user_id );
 
@@ -300,7 +310,11 @@ class EmployeesController extends RestController {
 
 		$photo_id = (int) get_user_meta( $user_id, 'photo_id', true );
 		if ( $photo_id ) {
-			wp_delete_attachment( $photo_id, true );
+			// `photo_id` is plain user meta, so it can point at any attachment.
+			// Unlink it always, but only delete a file that is this employee's photo.
+			if ( null === $this->photo_error( $photo_id, $user_id ) ) {
+				wp_delete_attachment( $photo_id, true );
+			}
 			delete_user_meta( $user_id, 'photo_id' );
 			clean_user_cache( $user_id );
 		}
@@ -313,6 +327,73 @@ class EmployeesController extends RestController {
 				'avatar_url' => $fresh->get_avatar_url( 80 ) ?: null,
 			]
 		);
+	}
+
+	/**
+	 * Whether an attachment may be used (and later removed) as an employee's
+	 * profile photo: it must be an image, and either uploaded for that employee
+	 * through the avatar endpoint, authored by that employee, or deletable by the
+	 * current user anyway.
+	 *
+	 * @param int $photo_id Attachment ID.
+	 * @param int $user_id  Employee user ID (0 when the employee does not exist yet).
+	 *
+	 * @return \WP_Error|null WP_Error to reject, null when allowed.
+	 */
+	private function photo_error( int $photo_id, int $user_id ) {
+		if ( 'attachment' !== get_post_type( $photo_id ) || ! wp_attachment_is_image( $photo_id ) ) {
+			return new \WP_Error( 'rest_invalid_photo', __( 'The profile photo must be an image attachment.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$owned = $user_id && (
+			(int) get_post_meta( $photo_id, '_erp_hr_employee_photo', true ) === $user_id
+			|| (int) get_post_field( 'post_author', $photo_id ) === $user_id
+		);
+
+		if ( ! $owned && ! current_user_can( 'delete_post', $photo_id ) ) {
+			return new \WP_Error( 'rest_cannot_use_photo', __( 'You are not allowed to use this attachment as a profile photo.', 'erp' ), [ 'status' => 403 ] );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Whether the current user may change the login email of the target account.
+	 *
+	 * The login email is an account credential: whoever controls it can reset the
+	 * password. So an HR manager may correct it only for an account that holds no
+	 * role the manager could not grant themselves, and never for an administrator.
+	 *
+	 * @param int $user_id Target user ID.
+	 *
+	 * @return bool
+	 */
+	private function can_change_login_email( int $user_id ): bool {
+		$target = get_userdata( $user_id );
+
+		if ( ! $target ) {
+			return false;
+		}
+
+		if ( in_array( 'administrator', (array) $target->roles, true ) && ! current_user_can( 'administrator' ) ) {
+			return false;
+		}
+
+		if ( current_user_can( 'edit_user', $user_id ) ) {
+			return true;
+		}
+
+		if ( ! current_user_can( 'erp_edit_employee' ) ) {
+			return false;
+		}
+
+		foreach ( (array) $target->roles as $role ) {
+			if ( ! erp_can_current_user_assign_role( $role ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -518,6 +599,13 @@ class EmployeesController extends RestController {
 
 		$item_data = $this->prepare_item_for_database( $request );
 
+		if ( ! empty( $item_data['personal']['photo_id'] ) ) {
+			$photo_error = $this->photo_error( (int) $item_data['personal']['photo_id'], 0 );
+			if ( $photo_error ) {
+				return $photo_error;
+			}
+		}
+
 		$employee = new Employee( null );
 		$created  = $employee->create_employee( $item_data );
 
@@ -611,6 +699,9 @@ class EmployeesController extends RestController {
 			}
 
 			$data     = $this->prepare_item_for_database( $row );
+			if ( ! empty( $data['personal']['photo_id'] ) && $this->photo_error( (int) $data['personal']['photo_id'], 0 ) ) {
+				unset( $data['personal']['photo_id'] );
+			}
 			$employee = new Employee( null );
 			$result   = $employee->create_employee( $data );
 
@@ -740,6 +831,23 @@ class EmployeesController extends RestController {
 			unset( $data['personal']['employee_id'] );
 		}
 
+		if ( ! empty( $data['personal']['photo_id'] ) && (int) $data['personal']['photo_id'] !== (int) $employee->get_photo_id() ) {
+			$photo_error = $this->photo_error( (int) $data['personal']['photo_id'], $user_id );
+			if ( $photo_error ) {
+				return $photo_error;
+			}
+		}
+
+		if ( isset( $data['user_email'] )
+			&& 0 !== strcasecmp( (string) $data['user_email'], (string) $employee->user_email )
+			&& ! $this->can_change_login_email( $user_id ) ) {
+			return new \WP_Error(
+				'rest_cannot_change_email',
+				__( 'You are not allowed to change the email address of this user.', 'erp' ),
+				[ 'status' => 403 ]
+			);
+		}
+
 		$updated = $employee->update_employee( $data );
 
 		if ( is_wp_error( $updated ) ) {
@@ -787,10 +895,12 @@ class EmployeesController extends RestController {
 		// and fire the trash status hook.
 		$last_user_role = get_user_meta( $user->ID, 'erp_last_removed_role', true );
 
-		if ( in_array( 'employee', (array) $user->roles, true ) || 'employee' === $last_user_role ) {
-			$hard = apply_filters( 'erp_employee_delete_hard', $hard );
-			erp_employee_delete( $user_id, $hard );
+		if ( ! in_array( 'employee', (array) $user->roles, true ) && 'employee' !== $last_user_role ) {
+			return new \WP_Error( 'rest_employee_not_deletable', __( 'This user does not have the employee role and cannot be deleted from here.', 'erp' ), [ 'status' => 409 ] );
 		}
+
+		$hard = apply_filters( 'erp_employee_delete_hard', $hard );
+		erp_employee_delete( $user_id, $hard );
 
 		do_action( 'erp_hr_employee_after_update_status', $user_id, 'trash', erp_current_datetime()->format( 'Y-m-d' ) );
 
@@ -820,6 +930,10 @@ class EmployeesController extends RestController {
 		$user    = get_user_by( 'id', $user_id );
 
 		if ( ! $user ) {
+			return new \WP_Error( 'rest_employee_invalid_id', __( 'No employee found', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		if ( ! \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->exists() ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'No employee found', 'erp' ), [ 'status' => 404 ] );
 		}
 
@@ -1109,24 +1223,19 @@ class EmployeesController extends RestController {
 	 *
 	 * @param int    $user_id Employee user ID.
 	 * @param string $status  Current employee status slug.
+	 * @param mixed  $deleted_at The employee row's `deleted_at` value, if any.
 	 *
 	 * @return string|null ISO date or null.
 	 */
-	private function status_update_date( int $user_id, string $status ): ?string {
+	private function status_update_date( int $user_id, string $status, $deleted_at = null ): ?string {
 		global $wpdb;
 
 		// Trashing does not write an employee-history row and does not change the
 		// employee's own `status` — it only stamps `erp_hr_employees.deleted_at`,
 		// which is what the legacy list printed under "Trashed At", and what the
 		// trash tab itself filters on. So look at that column before anything else:
-		// a row carrying it IS trashed, whatever `status` still says.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$deleted_at = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT deleted_at FROM {$wpdb->prefix}erp_hr_employees WHERE user_id = %d LIMIT 1",
-				$user_id
-			)
-		);
+		// a row carrying it IS trashed, whatever `status` still says. The caller
+		// passes the column from the employee row it already loaded.
 
 		if ( ! empty( $deleted_at ) ) {
 			return $this->cast_date_iso( (string) $deleted_at ) ?? (string) $deleted_at;
@@ -1376,6 +1485,17 @@ class EmployeesController extends RestController {
 		$count_args['count'] = true;
 		$total               = (int) erp_hr_get_employees( $count_args );
 
+		// Prime the photo attachments in one query instead of two per row.
+		$photo_ids = [];
+		foreach ( $employees as $employee ) {
+			if ( $employee instanceof Employee && $employee->get_photo_id() ) {
+				$photo_ids[] = (int) $employee->get_photo_id();
+			}
+		}
+		if ( $photo_ids ) {
+			_prime_post_caches( array_unique( $photo_ids ), false, true );
+		}
+
 		$items = [];
 		foreach ( $employees as $employee ) {
 			if ( ! ( $employee instanceof Employee ) ) {
@@ -1413,7 +1533,8 @@ class EmployeesController extends RestController {
 		// Status-adaptive date (legacy list "Terminated At" / "Inactive From"
 		// column): the latest `erp_hr_employee_history` row whose category matches
 		// the current status. `active` has no such date.
-		$status_date = $this->status_update_date( $user_id, $status_slug );
+		$erp_row     = $employee->get_erp_user() ? $employee->get_erp_user()->getAttributes() : [];
+		$status_date = $this->status_update_date( $user_id, $status_slug, $erp_row['deleted_at'] ?? null );
 
 		$item = [
 			'id'               => $user_id,
@@ -1431,13 +1552,13 @@ class EmployeesController extends RestController {
 			'status_date'      => $status_date,
 			'is_active'        => 'active' === $status_slug,
 			'department'       => $department_id
-				? $this->embed_department( $department_id, (string) $employee->get_department( 'view' ) )
+				? $this->embed_department( $department_id, $this->lookup_name( 'department', $department_id, $employee ) )
 				: null,
 			'designation'      => $designation_id
-				? $this->embed_designation( $designation_id, (string) $employee->get_designation( 'view' ) )
+				? $this->embed_designation( $designation_id, $this->lookup_name( 'designation', $designation_id, $employee ) )
 				: null,
 			'location'         => $location_id
-				? $this->embed_location( $location_id, (string) $employee->get_location( 'view' ) )
+				? $this->embed_location( $location_id, $this->lookup_name( 'location', $location_id, $employee ) )
 				: null,
 			'reporting_to'     => $this->embed_reporting_to( $reporting_id ),
 			'phone'            => $this->cast_string_or_null( $employee->get_phone() ),
@@ -1493,6 +1614,24 @@ class EmployeesController extends RestController {
 		$item = (array) apply_filters( 'erp_hr_v2_employees_response_item', $item, $employee );
 
 		return $item;
+	}
+
+	/**
+	 * Resolve a department / designation / location name once per id per request.
+	 * The name depends only on the id, so rows sharing an id reuse the first lookup.
+	 *
+	 * @param string   $type     'department', 'designation' or 'location'.
+	 * @param int      $id       Lookup ID.
+	 * @param Employee $employee Employee carrying that ID.
+	 *
+	 * @return string
+	 */
+	private function lookup_name( string $type, int $id, Employee $employee ): string {
+		if ( ! isset( $this->lookup_names[ $type ][ $id ] ) ) {
+			$this->lookup_names[ $type ][ $id ] = (string) $employee->{"get_{$type}"}( 'view' );
+		}
+
+		return $this->lookup_names[ $type ][ $id ];
 	}
 
 	/**

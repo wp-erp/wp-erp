@@ -140,6 +140,29 @@ class EmployeeLeaveController extends RestController {
 	}
 
 	/**
+	 * Check that an entitlement exists, belongs to the employee the request is
+	 * for, and still has its financial year (the leave helpers dereference it).
+	 *
+	 * @param int $entitlement_id Entitlement ID (the `leave_policy` param).
+	 * @param int $user_id        Employee user ID.
+	 *
+	 * @return \WP_Error|null WP_Error to reject, null when usable.
+	 */
+	private function entitlement_error( int $entitlement_id, int $user_id ) {
+		$entitlement = $entitlement_id ? LeaveEntitlement::find( $entitlement_id ) : null;
+
+		if ( ! $entitlement || (int) $entitlement->user_id !== $user_id ) {
+			return new \WP_Error( 'rest_invalid_policy', __( 'Invalid leave policy.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		if ( ! $entitlement->financial_year ) {
+			return new \WP_Error( 'rest_invalid_year', __( 'Invalid financial year.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
+	}
+
+	/**
 	 * GET /erp/v2/employees/{user_id}/leave/assignable?f_year=X
 	 *
 	 * Returns the entitlements the employee can apply against in the given
@@ -219,6 +242,11 @@ class EmployeeLeaveController extends RestController {
 			return new \WP_Error( 'rest_leave_reason_required', __( 'Leave reason field can not be blank', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		$invalid = $this->entitlement_error( $leave_policy, $user_id );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		// Same date envelope the AJAX handler built (whole-day window).
 		$start_date = sanitize_text_field( (string) ( $request['leave_from'] ?? '' ) );
 		$end_date   = sanitize_text_field( (string) ( $request['leave_to'] ?? '' ) );
@@ -233,6 +261,15 @@ class EmployeeLeaveController extends RestController {
 		$post_prev  = [];
 		$post_absent = [];
 		if ( \is_array( $extra ) ) {
+			/**
+			 * Filters the `extra` request keys that may be bridged onto `$_POST`.
+			 * Anything else the client sends is ignored.
+			 *
+			 * @param string[] $keys Allowed keys.
+			 */
+			$allowed = (array) apply_filters( 'erp_hr_v2_leave_request_extra_keys', [ 'halfday', 'leave-period' ] );
+			$extra   = array_intersect_key( $extra, array_flip( $allowed ) );
+
 			foreach ( $extra as $key => $value ) {
 				$key = (string) $key;
 				if ( \array_key_exists( $key, $_POST ) ) {
@@ -317,10 +354,12 @@ class EmployeeLeaveController extends RestController {
 			return new \WP_Error( 'rest_invalid_range', __( 'Invalid date range', 'erp' ), [ 'status' => 400 ] );
 		}
 
-		$entitlement = LeaveEntitlement::find( $policy_id );
-		if ( ! $entitlement ) {
-			return new \WP_Error( 'rest_invalid_policy', __( 'Invalid leave policy.', 'erp' ), [ 'status' => 400 ] );
+		$invalid = $this->entitlement_error( $policy_id, $user_id );
+		if ( $invalid ) {
+			return $invalid;
 		}
+
+		$entitlement = LeaveEntitlement::find( $policy_id );
 
 		$f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
 		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );

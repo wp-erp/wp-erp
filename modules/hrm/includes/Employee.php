@@ -715,7 +715,11 @@ class Employee {
      */
     public function is_employee() {
         //exceptional case for admin
-        if ( in_array( 'administrator', $this->get_roles()['roles'], true ) ) {
+        // Read the roles straight off the user: get_roles() also resolves the
+        // editable-role list, which costs a user query on every call.
+        $wp_user = new WP_User( $this->user_id );
+
+        if ( in_array( 'administrator', (array) $wp_user->roles, true ) ) {
             return true;
         }
 

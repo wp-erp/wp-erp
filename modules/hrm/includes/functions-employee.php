@@ -78,6 +78,10 @@ function erp_hr_get_employees( $args = [] ) {
     $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
     $usermeta_table = apply_filters( 'erp_hrm_usermeta_table_name', $wpdb->prefix . 'usermeta' );
 
+    if ( $args['count'] && false !== $results_counts ) {
+        return $results_counts;
+    }
+
     if ( false === $results ) {
 
         $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
@@ -129,7 +133,8 @@ function erp_hr_get_employees( $args = [] ) {
         }
 
         if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-            $arg_s     = $args['s'];
+            // Escape LIKE wildcards so "%" or "_" in the term match literally.
+            $arg_s     = $wpdb->esc_like( $args['s'] );
             // Match the name or the HR Employee ID (grouped so it ANDs with the
             // status / department / designation filters above).
             $employees = $employees->where( function ( $query ) use ( $arg_s, $employee_tbl ) {
@@ -157,6 +162,9 @@ function erp_hr_get_employees( $args = [] ) {
             $results_counts = $employees->count();
 
             wp_cache_set( $cache_key_counts, $results_counts, 'erp', HOUR_IN_SECONDS );
+
+            // A count call only needs the number: skip loading and hydrating every row.
+            return $results_counts;
         }
 
         $results = $employees
@@ -167,6 +175,11 @@ function erp_hr_get_employees( $args = [] ) {
         $results = erp_array_to_object( $results );
 
         do_action( 'erp_hr_get_employees_result', $results );
+
+        if ( true !== $args['no_object'] && ! empty( $results ) ) {
+            // Prime the user + usermeta caches in one go instead of two queries per Employee.
+            cache_users( array_map( 'intval', wp_list_pluck( $results, 'user_id' ) ) );
+        }
 
         foreach ( $results as $key => $row ) {
             if ( true === $args['no_object'] ) {

@@ -117,14 +117,17 @@ class EmployeeNotesController extends RestController {
 	}
 
 	/**
-	 * Deleting a note requires the edit-employee cap on the target employee.
+	 * Deleting a note requires the review-management meta cap on the target
+	 * employee, same as reading or adding one. `erp_edit_employee` on the target
+	 * is held by every employee for their own record, which let them delete the
+	 * notes HR wrote about them.
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
 	public function permission_delete( $request ): bool {
-		return $this->permission_cap( 'erp_edit_employee', (int) $request['user_id'] );
+		return $this->permission_cap( 'erp_manage_review', (int) $request['user_id'] );
 	}
 
 	/**
