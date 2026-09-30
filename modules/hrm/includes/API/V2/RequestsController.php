@@ -9,9 +9,12 @@
  * - Totals per type come from the `erp_hr_request_total_count` filter (free seeds
  *   the Leave total; pro modules add their own — asset/reimbursement — via the
  *   same filter, PHP-only, no React build).
- * - Pending counts reuse `erp_hr_get_employee_pending_requests_count()` (which the
- *   pro Asset + Reimbursement modules already populate); their sum is the nav
- *   badge, mirroring the legacy badge.
+ * - Pending counts go through the `erp_hr_employee_pending_request_count` filter
+ *   (the one `erp_hr_get_employee_pending_requests_count()` applies, which the
+ *   pro Asset + Reimbursement modules populate); their sum is the nav badge,
+ *   mirroring the legacy badge.
+ * - Non-managers get Leave only, scoped to the departments they lead or to
+ *   their own requests.
  */
 
 namespace WeDevs\ERP\HRM\API\V2;
@@ -65,10 +68,27 @@ class RequestsController extends RestController {
 	public function get_counts( $request ) {
 		unset( $request );
 
+		// Org-wide numbers (and the pro modules' totals, which are org-wide) are
+		// for managers. A department lead counts the departments they lead, and
+		// anyone else only their own leave.
+		$is_manager = current_user_can( 'erp_leave_manage' ) || current_user_can( 'erp_hr_manager' );
+		$user_ids   = null;
+
+		if ( ! $is_manager ) {
+			$user_ids = erp_hr_is_current_user_dept_lead()
+				? (array) erp_hr_get_dept_lead_subordinate_employees( get_current_user_id() )
+				: [ get_current_user_id() ];
+		}
+
+		$leave = $this->leave_counts( $user_ids );
+
 		// Per-type pending counts (free Leave + pro Asset/Reimbursement via filter).
-		$pending = function_exists( 'erp_hr_get_employee_pending_requests_count' )
-			? (array) erp_hr_get_employee_pending_requests_count()
-			: [];
+		// Same filter `erp_hr_get_employee_pending_requests_count()` applies, fed
+		// with a counted Leave figure instead of a fully hydrated request list.
+		$pending = [ 'leave' => $leave['pending'] ];
+		if ( $is_manager ) {
+			$pending = (array) apply_filters( 'erp_hr_employee_pending_request_count', $pending );
+		}
 		$pending = array_map( 'intval', $pending );
 
 		// Nav badge = total pending across every type (mirrors the legacy badge).
@@ -87,20 +107,19 @@ class RequestsController extends RestController {
 
 		// Per-type TOTALS (all statuses) for the tab badges. Free seeds Leave; pro
 		// modules add their own via `erp_hr_request_total_count`.
-		$leave_total = 0;
-		if ( function_exists( 'erp_hr_get_leave_requests' ) ) {
-			$res         = erp_hr_get_leave_requests( [ 'number' => -1 ] );
-			$leave_total = ( is_array( $res ) && isset( $res['total'] ) ) ? (int) $res['total'] : 0;
+		$totals = [ 'leave' => $leave['total'] ];
+
+		if ( $is_manager ) {
+			/**
+			 * Filter per-type request totals for the Requests tab badges.
+			 *
+			 * Keyed by request-tab id (e.g. `leave`, `asset`, `reimbursement`).
+			 *
+			 * @param array $totals Map of tab id => total count.
+			 */
+			$totals = (array) apply_filters( 'erp_hr_request_total_count', $totals );
 		}
 
-		/**
-		 * Filter per-type request totals for the Requests tab badges.
-		 *
-		 * Keyed by request-tab id (e.g. `leave`, `asset`, `reimbursement`).
-		 *
-		 * @param array $totals Map of tab id => total count.
-		 */
-		$totals = (array) apply_filters( 'erp_hr_request_total_count', [ 'leave' => $leave_total ] );
 		$totals = array_map( 'intval', $totals );
 		$totals = $this->mirror_reimbursement_key( $totals );
 
@@ -111,6 +130,36 @@ class RequestsController extends RestController {
 				'pending_total' => (int) $pending_total,
 			]
 		);
+	}
+
+	/**
+	 * Leave request total + pending, counted with the same join and
+	 * `leave_policies` scope `erp_hr_get_leave_requests()` lists by.
+	 *
+	 * @param int[]|null $user_ids Restrict to these employees; null for everyone.
+	 *
+	 * @return array{total:int,pending:int}
+	 */
+	private function leave_counts( ?array $user_ids ): array {
+		global $wpdb;
+
+		$where = " WHERE entl.trn_type = 'leave_policies'";
+
+		if ( null !== $user_ids ) {
+			$where .= erp_hr_leave_request_user_in_clause( $user_ids );
+		}
+
+		$row = $wpdb->get_row(
+			"SELECT COUNT( request.id ) AS total, SUM( request.last_status = 2 ) AS pending
+			 FROM {$wpdb->prefix}erp_hr_leave_requests AS request
+			 LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id
+			 {$where}" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is built from prepared fragments.
+		);
+
+		return [
+			'total'   => (int) ( $row->total ?? 0 ),
+			'pending' => (int) ( $row->pending ?? 0 ),
+		];
 	}
 
 	/**

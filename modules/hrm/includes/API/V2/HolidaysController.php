@@ -173,9 +173,9 @@ class HolidaysController extends RestController {
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|\WP_Error
 	 */
-	public function get_items( $request ): WP_REST_Response {
+	public function get_items( $request ) {
 		$page     = max( 1, (int) ( $request['page'] ?? 1 ) );
 		$per_page = max( 1, min( 100, (int) ( $request['per_page'] ?? 20 ) ) );
 
@@ -191,7 +191,12 @@ class HolidaysController extends RestController {
 			's'       => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
 		];
 
-		[ $from, $to ] = $this->resolve_date_window( $request );
+		$window = $this->resolve_date_window( $request );
+		if ( null === $window ) {
+			return new \WP_Error( 'rest_invalid_date', __( 'Dates must be in Y-m-d format.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		[ $from, $to ] = $window;
 		if ( '' !== $from ) {
 			$args['from'] = $from;
 		}
@@ -586,16 +591,26 @@ class HolidaysController extends RestController {
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
-	 * @return array{0:string,1:string} [ from, to ] in `Y-m-d H:i:s`, or '' each.
+	 * @return array{0:string,1:string}|null [ from, to ] in `Y-m-d H:i:s`, or '' each; null when a date is invalid.
 	 */
-	private function resolve_date_window( $request ): array {
+	private function resolve_date_window( $request ): ?array {
 		$from = sanitize_text_field( (string) ( $request['from'] ?? '' ) );
 		$to   = sanitize_text_field( (string) ( $request['to'] ?? '' ) );
 
 		if ( '' !== $from || '' !== $to ) {
+			$from_day = '' !== $from ? \DateTimeImmutable::createFromFormat( '!Y-m-d', $from, wp_timezone() ) : null;
+			$to_day   = '' !== $to ? \DateTimeImmutable::createFromFormat( '!Y-m-d', $to, wp_timezone() ) : null;
+
+			// Reject anything that is not a real Y-m-d day, rather than letting
+			// strtotime() turn it into 1970-01-01.
+			if ( ( '' !== $from && ( ! $from_day || $from_day->format( 'Y-m-d' ) !== $from ) )
+				|| ( '' !== $to && ( ! $to_day || $to_day->format( 'Y-m-d' ) !== $to ) ) ) {
+				return null;
+			}
+
 			return [
-				'' !== $from ? gmdate( 'Y-m-d 00:00:00', strtotime( $from ) ) : '',
-				'' !== $to ? gmdate( 'Y-m-d 23:59:59', strtotime( $to ) ) : '',
+				$from_day ? $from_day->format( 'Y-m-d 00:00:00' ) : '',
+				$to_day ? $to_day->format( 'Y-m-d 23:59:59' ) : '',
 			];
 		}
 

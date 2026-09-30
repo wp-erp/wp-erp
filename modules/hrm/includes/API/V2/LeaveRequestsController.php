@@ -36,6 +36,13 @@ class LeaveRequestsController extends RestController {
 	protected $rest_base = 'leave-requests';
 
 	/**
+	 * Latest approval-status row per request id, filled by `prime_rows()`.
+	 *
+	 * @var array<int,object|null>
+	 */
+	private $latest_approvals = [];
+
+	/**
 	 * @return void
 	 */
 	public function register_routes() {
@@ -195,9 +202,17 @@ class LeaveRequestsController extends RestController {
 			'order'         => strtoupper( (string) ( $request['order'] ?? 'DESC' ) ) === 'ASC' ? 'ASC' : 'DESC',
 		];
 
+		// A department lead without the manage cap only sees the departments they
+		// lead, as the legacy list table scopes it.
+		if ( ! current_user_can( 'erp_leave_manage' ) ) {
+			$args['lead'] = get_current_user_id();
+		}
+
 		$result = erp_hr_get_leave_requests( $args );
 		$rows   = isset( $result['data'] ) ? (array) $result['data'] : [];
 		$total  = isset( $result['total'] ) ? (int) $result['total'] : \count( $rows );
+
+		$this->prime_rows( $rows );
 
 		$items = [];
 		foreach ( $rows as $row ) {
@@ -250,7 +265,7 @@ class LeaveRequestsController extends RestController {
 			return new \WP_Error(
 				$update->get_error_code() ?: 'rest_leave_request_error',
 				$update->get_error_message(),
-				[ 'status' => 400 ]
+				[ 'status' => $this->error_status( $update->get_error_code() ) ]
 			);
 		}
 
@@ -278,11 +293,33 @@ class LeaveRequestsController extends RestController {
 			return new \WP_Error(
 				$result->get_error_code() ?: 'rest_leave_request_error',
 				$result->get_error_message(),
-				[ 'status' => 400 ]
+				[ 'status' => $this->error_status( $result->get_error_code() ) ]
 			);
 		}
 
 		return rest_ensure_response( [ 'deleted' => true, 'id' => $id ] );
+	}
+
+	/**
+	 * HTTP status for an error code from the leave model functions.
+	 *
+	 * @param string|int $code Error code.
+	 *
+	 * @return int
+	 */
+	private function error_status( $code ): int {
+		switch ( (string) $code ) {
+			case 'no-permission':
+				return 403;
+			case 'no-request-found':
+			case 'invalid_leave_id':
+				return 404;
+			case 'no-leave-status':
+			case 'leave-status-changed':
+				return 409;
+			default:
+				return 400;
+		}
 	}
 
 	/**
@@ -354,9 +391,16 @@ class LeaveRequestsController extends RestController {
 	public function get_counts( $request ): WP_REST_Response {
 		$year = (int) ( $request['year'] ?? 0 );
 
+		// Same scope as the list: a lead without the manage cap counts only the
+		// departments they lead.
+		$user_ids = null;
+		if ( ! current_user_can( 'erp_leave_manage' ) ) {
+			$user_ids = array_map( 'absint', (array) erp_hr_get_dept_lead_subordinate_employees( get_current_user_id() ) );
+		}
+
 		// Calendar-year scope: count rows exactly as the list filters them.
 		if ( $year ) {
-			$counts = $this->calendar_year_counts( $year );
+			$counts = $this->scoped_counts( $user_ids, $year, 0 );
 
 			return rest_ensure_response(
 				[
@@ -378,6 +422,21 @@ class LeaveRequestsController extends RestController {
 			$f_year = $fy ? (int) $fy->id : 0;
 		}
 
+		if ( null !== $user_ids ) {
+			$counts = $this->scoped_counts( $user_ids, 0, $f_year );
+
+			return rest_ensure_response(
+				[
+					'all'       => $counts['all'],
+					'approved'  => $counts['1'],
+					'pending'   => $counts['2'],
+					'rejected'  => $counts['3'],
+					'forwarded' => $counts['4'],
+					'f_year'    => $f_year,
+				]
+			);
+		}
+
 		$counts = (array) erp_hr_leave_get_requests_count( $f_year );
 
 		$pick = static function ( $key ) use ( $counts ): int {
@@ -397,32 +456,40 @@ class LeaveRequestsController extends RestController {
 	}
 
 	/**
-	 * Per-status leave-request counts for a single calendar year, scoped exactly
-	 * like `erp_hr_get_leave_requests()` (same join + date bucketing) so the tab
+	 * Per-status leave-request counts, scoped exactly like
+	 * `erp_hr_get_leave_requests()` (same join + date bucketing) so the tab
 	 * counts agree with the list rows.
 	 *
-	 * @param int $year Calendar year (e.g. 2025).
+	 * @param int[]|null $user_ids Restrict to these employees (a lead's
+	 *                             departments); null for no restriction.
+	 * @param int        $year     Calendar year (e.g. 2025), 0 for none.
+	 * @param int        $f_year   Financial year id, used when no calendar year.
 	 *
-	 * @return array{all:int,1:int,2:int,3:int}
+	 * @return array{all:int,1:int,2:int,3:int,4:int}
 	 */
-	private function calendar_year_counts( int $year ): array {
+	private function scoped_counts( ?array $user_ids, int $year, int $f_year ): array {
 		global $wpdb;
 
-		$from = ( new \DateTime( $year . '-01-01 00:00:00', wp_timezone() ) )->getTimestamp();
-		$to   = ( new \DateTime( $year . '-12-31 23:59:59', wp_timezone() ) )->getTimestamp();
+		$where = " WHERE entl.trn_type = 'leave_policies'";
+
+		if ( $year ) {
+			$from   = ( new \DateTime( $year . '-01-01 00:00:00', wp_timezone() ) )->getTimestamp();
+			$to     = ( new \DateTime( $year . '-12-31 23:59:59', wp_timezone() ) )->getTimestamp();
+			$where .= $wpdb->prepare( ' AND request.start_date >= %d AND request.end_date <= %d', $from, $to );
+		} else {
+			$where .= $wpdb->prepare( ' AND entl.f_year = %d', $f_year );
+		}
+
+		if ( null !== $user_ids ) {
+			$where .= erp_hr_leave_request_user_in_clause( $user_ids );
+		}
 
 		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT request.last_status AS status, COUNT( request.id ) AS total
-				 FROM {$wpdb->prefix}erp_hr_leave_requests AS request
-				 LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id
-				 WHERE entl.trn_type = 'leave_policies'
-				   AND request.start_date >= %d
-				   AND request.end_date <= %d
-				 GROUP BY request.last_status",
-				$from,
-				$to
-			),
+			"SELECT request.last_status AS status, COUNT( request.id ) AS total
+			 FROM {$wpdb->prefix}erp_hr_leave_requests AS request
+			 LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id
+			 {$where}
+			 GROUP BY request.last_status", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is built from prepared fragments.
 			ARRAY_A
 		);
 
@@ -566,6 +633,79 @@ class LeaveRequestsController extends RestController {
 	}
 
 	/**
+	 * Load what the list rows need per row (latest approval entry, users, user
+	 * meta and employee photos) in a few batched queries instead of per row.
+	 *
+	 * @param array $rows Rows from `erp_hr_get_leave_requests()`.
+	 *
+	 * @return void
+	 */
+	private function prime_rows( array $rows ): void {
+		global $wpdb;
+
+		$request_ids = [];
+		$user_ids    = [];
+
+		foreach ( $rows as $row ) {
+			$request_ids[] = (int) ( $row->id ?? 0 );
+			$user_ids[]    = (int) ( $row->user_id ?? 0 );
+		}
+
+		$request_ids = array_values( array_unique( array_filter( $request_ids ) ) );
+		$user_ids    = array_values( array_unique( array_filter( $user_ids ) ) );
+
+		if ( $request_ids ) {
+			$placeholders = implode( ', ', array_fill( 0, \count( $request_ids ), '%d' ) );
+
+			$latest = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT las.leave_request_id, las.message, las.approved_by, las.created_at
+					 FROM {$wpdb->prefix}erp_hr_leave_approval_status AS las
+					 INNER JOIN (
+						SELECT MAX( id ) AS id FROM {$wpdb->prefix}erp_hr_leave_approval_status
+						WHERE leave_request_id IN ( {$placeholders} )
+						GROUP BY leave_request_id
+					 ) AS latest ON latest.id = las.id", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$request_ids
+				)
+			);
+
+			foreach ( $request_ids as $request_id ) {
+				$this->latest_approvals[ $request_id ] = null;
+			}
+
+			foreach ( (array) $latest as $row ) {
+				$this->latest_approvals[ (int) $row->leave_request_id ] = $row;
+
+				if ( null !== $row->approved_by ) {
+					$user_ids[] = (int) $row->approved_by;
+				}
+			}
+		}
+
+		$user_ids = array_values( array_unique( array_filter( $user_ids ) ) );
+
+		if ( ! $user_ids ) {
+			return;
+		}
+
+		cache_users( $user_ids );
+
+		$photo_ids = [];
+		foreach ( $user_ids as $user_id ) {
+			$photo_id = (int) get_user_meta( $user_id, 'photo_id', true );
+
+			if ( $photo_id ) {
+				$photo_ids[] = $photo_id;
+			}
+		}
+
+		if ( $photo_ids ) {
+			_prime_post_caches( $photo_ids, false, true );
+		}
+	}
+
+	/**
 	 * Latest approve/reject entry for a request (F8).
 	 *
 	 * Mirrors the legacy `approved_by` column: newest row from
@@ -585,16 +725,20 @@ class LeaveRequestsController extends RestController {
 			return $empty;
 		}
 
-		$row = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT message, approved_by, created_at
-				 FROM {$wpdb->prefix}erp_hr_leave_approval_status
-				 WHERE leave_request_id = %d
-				 ORDER BY id DESC
-				 LIMIT 1",
-				$request_id
-			)
-		);
+		if ( array_key_exists( $request_id, $this->latest_approvals ) ) {
+			$row = $this->latest_approvals[ $request_id ];
+		} else {
+			$row = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT message, approved_by, created_at
+					 FROM {$wpdb->prefix}erp_hr_leave_approval_status
+					 WHERE leave_request_id = %d
+					 ORDER BY id DESC
+					 LIMIT 1",
+					$request_id
+				)
+			);
+		}
 
 		if ( empty( $row ) || null === $row->approved_by ) {
 			return $empty;

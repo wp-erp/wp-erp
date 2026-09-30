@@ -40,6 +40,13 @@ class LeavePoliciesController extends RestController {
 	protected $rest_base = 'leave-policies';
 
 	/**
+	 * Sortable list columns (`name` sorts by the joined leave type name).
+	 *
+	 * @var string[]
+	 */
+	const ORDERBY = [ 'id', 'name', 'days', 'f_year', 'created_at', 'updated_at' ];
+
+	/**
 	 * @return void
 	 */
 	public function register_routes() {
@@ -141,11 +148,14 @@ class LeavePoliciesController extends RestController {
 	public function get_items( $request ): WP_REST_Response {
 		$page     = max( 1, (int) ( $request['page'] ?? 1 ) );
 		$per_page = max( 1, min( 100, (int) ( $request['per_page'] ?? 20 ) ) );
+		$orderby  = sanitize_key( (string) ( $request['orderby'] ?? 'id' ) );
 
 		$args = [
 			'number'         => $per_page,
 			'offset'         => ( $page - 1 ) * $per_page,
-			'orderby'        => sanitize_key( (string) ( $request['orderby'] ?? 'id' ) ),
+			// Whitelisted: the model hands `orderby` straight to Eloquent's
+			// orderBy(), so an unknown column is an uncaught QueryException.
+			'orderby'        => \in_array( $orderby, self::ORDERBY, true ) ? $orderby : 'id',
 			'order'          => strtoupper( (string) ( $request['order'] ?? 'ASC' ) ) === 'DESC' ? 'DESC' : 'ASC',
 			'f_year'         => (int) ( $request['f_year'] ?? 0 ),
 			'department_id'  => (int) ( $request['department_id'] ?? 0 ),
@@ -292,8 +302,12 @@ class LeavePoliciesController extends RestController {
 			];
 		}
 
+		// The self-service leave form only needs the financial years; the org
+		// structure lists are for the managers' policy form.
+		$is_manager = current_user_can( 'erp_leave_manage' );
+
 		$departments = [];
-		foreach ( (array) erp_hr_get_departments_dropdown_raw() as $dept_id => $title ) {
+		foreach ( $is_manager ? (array) erp_hr_get_departments_dropdown_raw() : [] as $dept_id => $title ) {
 			if ( '' === (string) $dept_id ) {
 				continue;
 			}
@@ -301,7 +315,7 @@ class LeavePoliciesController extends RestController {
 		}
 
 		$designations = [];
-		foreach ( (array) erp_hr_get_designation_dropdown_raw() as $desig_id => $title ) {
+		foreach ( $is_manager ? (array) erp_hr_get_designation_dropdown_raw() : [] as $desig_id => $title ) {
 			if ( '' === (string) $desig_id ) {
 				continue;
 			}
@@ -309,7 +323,7 @@ class LeavePoliciesController extends RestController {
 		}
 
 		$locations = [];
-		if ( function_exists( 'erp_company_get_location_dropdown_raw' ) ) {
+		if ( $is_manager && function_exists( 'erp_company_get_location_dropdown_raw' ) ) {
 			foreach ( (array) erp_company_get_location_dropdown_raw() as $loc_id => $title ) {
 				if ( '' === (string) $loc_id || '-1' === (string) $loc_id ) {
 					continue;

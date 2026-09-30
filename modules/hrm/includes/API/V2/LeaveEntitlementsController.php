@@ -38,6 +38,13 @@ class LeaveEntitlementsController extends RestController {
 	protected $rest_base = 'leave-entitlements';
 
 	/**
+	 * Balance figures per entitlement id, filled by `prime_balances()`.
+	 *
+	 * @var array<int,array{available:float,spent:mixed,extra_leave:mixed}>
+	 */
+	private $balances = [];
+
+	/**
 	 * @return void
 	 */
 	public function register_routes() {
@@ -162,11 +169,45 @@ class LeaveEntitlementsController extends RestController {
 			return new \WP_Error( 'rest_entitlement_bad_request', __( 'Provide at least one entitlement.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		$deleted = [];
+		$failed  = [];
+
+		// One bad id must not abort the rest of the batch.
 		foreach ( $ids as $id ) {
+			if ( is_wp_error( $this->get_policy_entitlement( $id ) ) ) {
+				$failed[] = $id;
+				continue;
+			}
+
 			erp_hr_delete_entitlement( $id, 0, $id );
+			$deleted[] = $id;
 		}
 
-		return rest_ensure_response( [ 'deleted' => $ids ] );
+		return rest_ensure_response( [ 'deleted' => $deleted, 'failed' => $failed ] );
+	}
+
+	/**
+	 * A policy entitlement row (`trn_type = leave_policies`), optionally owned by
+	 * `$user_id`. The ledger also holds approval and unpaid-leave rows; deleting
+	 * one of those by id would corrupt the balance, so they read as not found.
+	 *
+	 * @param int $id      Entitlement row id.
+	 * @param int $user_id Owning employee, 0 to skip the owner check.
+	 *
+	 * @return LeaveEntitlement|\WP_Error
+	 */
+	private function get_policy_entitlement( int $id, int $user_id = 0 ) {
+		$entitlement = $id ? LeaveEntitlement::find( $id ) : null;
+
+		if (
+			! $entitlement
+			|| 'leave_policies' !== (string) $entitlement->trn_type
+			|| ( $user_id && (int) $entitlement->user_id !== $user_id )
+		) {
+			return new \WP_Error( 'rest_entitlement_not_found', __( 'No leave entitlement found.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		return $entitlement;
 	}
 
 	/**
@@ -204,6 +245,8 @@ class LeaveEntitlementsController extends RestController {
 		$rows   = isset( $result['data'] ) ? (array) $result['data'] : [];
 		$total  = isset( $result['total'] ) ? (int) $result['total'] : \count( $rows );
 
+		$this->prime_balances( wp_list_pluck( $rows, 'id' ) );
+
 		$items = [];
 		foreach ( $rows as $row ) {
 			$items[] = $this->prepare_item_for_response( $row, $request );
@@ -211,6 +254,48 @@ class LeaveEntitlementsController extends RestController {
 
 		$response = rest_ensure_response( $items );
 		return $this->paginate( $response, $request, $total );
+	}
+
+	/**
+	 * Balance figures for a page of entitlements in one query, the same
+	 * aggregates `erp_hr_leave_get_balance_for_single_entitlement()` runs per id.
+	 *
+	 * @param array $ids Entitlement ids.
+	 *
+	 * @return void
+	 */
+	private function prime_balances( array $ids ): void {
+		global $wpdb;
+
+		$ids = array_values( array_unique( array_filter( array_map( 'absint', $ids ) ) ) );
+
+		if ( ! $ids ) {
+			return;
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, \count( $ids ), '%d' ) );
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT en.id,
+				IFNULL( ( SELECT sum(en2.day_in) FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_in,
+				IFNULL( ( SELECT sum(en2.day_out) FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_out,
+				IFNULL( ( SELECT sum(en2.day_in) FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year AND en2.trn_type = 'unpaid_leave' ), 0 ) AS extra_leaves,
+				IFNULL( ( SELECT sum(rq.days) FROM {$wpdb->prefix}erp_hr_leave_requests AS rq WHERE rq.user_id = en.user_id AND rq.leave_id = en.leave_id AND rq.last_status = 1 AND rq.start_date BETWEEN fy.start_date AND fy.end_date ), 0 ) AS leave_spent
+				FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en
+				LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
+				WHERE en.id IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$ids
+			)
+		);
+
+		foreach ( (array) $results as $result ) {
+			$this->balances[ (int) $result->id ] = [
+				'available'   => $result->total_day_in - $result->total_day_out,
+				'spent'       => $result->leave_spent,
+				'extra_leave' => $result->extra_leaves,
+			];
+		}
 	}
 
 	/**
@@ -366,6 +451,12 @@ class LeaveEntitlementsController extends RestController {
 			return new \WP_Error( 'rest_entitlement_bad_request', __( 'Something went wrong! Please try again later.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		$entitlement = $this->get_policy_entitlement( $id, $user_id );
+
+		if ( is_wp_error( $entitlement ) ) {
+			return $entitlement;
+		}
+
 		erp_hr_delete_entitlement( $id, $user_id, $id );
 
 		return rest_ensure_response( [ 'deleted' => true, 'id' => $id ] );
@@ -515,7 +606,8 @@ class LeaveEntitlementsController extends RestController {
 		// The base entitlement row's `day_out` is always 0 (it's only written into
 		// a separate approval-status row), so compute Available + Spent via the same
 		// aggregate helper the legacy list table and the profile Leave tab use.
-		$balance   = erp_hr_leave_get_balance_for_single_entitlement( (int) ( $row->id ?? 0 ) );
+		$balance   = $this->balances[ (int) ( $row->id ?? 0 ) ]
+			?? erp_hr_leave_get_balance_for_single_entitlement( (int) ( $row->id ?? 0 ) );
 		$has_bal   = ! empty( $balance ) && ! is_wp_error( $balance );
 		$available = $has_bal ? (float) ( $balance['available'] ?? 0 ) : 0;
 		$spent     = $has_bal ? (float) ( $balance['spent'] ?? 0 ) : 0;

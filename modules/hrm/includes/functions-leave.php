@@ -998,8 +998,14 @@ function erp_hr_count_holidays( $args ) {
 function erp_hr_holiday_filter_param( $holiday, $args ) {
     $args_s = isset( $args['s'] ) ? $args['s'] : '';
 
+    // Title OR description, grouped so the search stays inside the date window.
     if ( $args_s && ! empty( $args['s'] ) ) {
-        $holiday = $holiday->where( 'title', 'LIKE', "%$args_s%" );
+        $holiday = $holiday->where(
+            function ( $query ) use ( $args_s ) {
+                $query->where( 'title', 'LIKE', "%$args_s%" )
+                    ->orWhere( 'description', 'LIKE', "%$args_s%" );
+            }
+        );
     }
 
     if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
@@ -1008,10 +1014,6 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
 
     if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
         $holiday = $holiday->where( 'end', '<=', $args['to'] );
-    }
-
-    if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-        $holiday = $holiday->orWhere( 'description', 'LIKE', "%$args_s%" );
     }
 
     return $holiday;
@@ -1342,6 +1344,7 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         'lead'           => 0,
         's'              => '',
         'created_at'     => '',
+        'overlap'        => 0,
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -1407,10 +1410,18 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 
     $fields = 'SELECT SQL_CALC_FOUND_ROWS request.id, u.display_name, request.created_at as created_at';
     $fields .= ', policy.color';
+    // Everything the row formatter needs, read in this one query instead of
+    // hydrating a LeaveRequest (plus its leave, entitlement and latest approval
+    // status) per row.
+    $fields .= ', request.user_id, request.leave_id, request.leave_entitlement_id, request.start_date, request.end_date, request.days';
+    $fields .= ', request.last_status, request.reason, request.day_status_id, entl.f_year AS entl_f_year, leave_type.name AS leave_name';
+    $fields .= ", ( SELECT las.id FROM {$wpdb->prefix}erp_hr_leave_approval_status AS las WHERE las.leave_request_id = request.id ORDER BY las.id DESC LIMIT 1 ) AS latest_approval_id";
+    $fields .= ", ( SELECT las.message FROM {$wpdb->prefix}erp_hr_leave_approval_status AS las WHERE las.leave_request_id = request.id ORDER BY las.id DESC LIMIT 1 ) AS latest_approval_message";
 
     $join = " LEFT JOIN {$wpdb->users} AS u ON u.ID = request.user_id";
     $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS entl ON request.leave_entitlement_id = entl.id";
     $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS policy ON policy.id = entl.trn_id";
+    $join .= " LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS leave_type ON leave_type.id = request.leave_id";
 
     $where = ' WHERE 1=1';
     $where .= " AND entl.trn_type = 'leave_policies'";
@@ -1429,38 +1440,33 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         // get all user ids for this lead
         $args['users'] = erp_hr_get_dept_lead_subordinate_employees( $args['lead'] );
 
-        $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $args['users'] ) );
+        $where .= erp_hr_leave_request_user_in_clause( $args['users'] );
     }
 
-    if ( $args['department_id'] && $args['designation_id'] ) {
+    // A filter that matches nobody must return nothing, so an empty employee
+    // set still restricts the query (see erp_hr_leave_request_user_in_clause()).
+    if ( $args['department_id'] > 0 && $args['designation_id'] > 0 ) {
         $args['user'] = 0;
-        $users        = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+        $user_ids     = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
             ->where( 'department', $args['department_id'] )
-            ->where( 'designation', $args['designation_id'] );
+            ->where( 'designation', $args['designation_id'] )
+            ->pluck( 'user_id' )->toArray();
 
-        if ( $users->count() ) {
-            $user_ids = $users->pluck( 'user_id' )->toArray();
-            $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
-        }
-    } elseif ( $args['department_id'] ) {
+        $where .= erp_hr_leave_request_user_in_clause( $user_ids );
+    } elseif ( $args['department_id'] > 0 ) {
         $args['user'] = 0;
-        $users        = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
-            ->where( 'department', $args['department_id'] );
+        $user_ids     = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+            ->where( 'department', $args['department_id'] )
+            ->pluck( 'user_id' )->toArray();
 
-        if ( $users->count() ) {
-            $user_ids = $users->pluck( 'user_id' )->toArray();
-            $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
-        }
-    } elseif ( $args['designation_id'] ) {
+        $where .= erp_hr_leave_request_user_in_clause( $user_ids );
+    } elseif ( $args['designation_id'] > 0 ) {
         $args['user'] = 0;
-        $users        = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
-            ->where( 'designation', $args['designation_id'] );
+        $user_ids     = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+            ->where( 'designation', $args['designation_id'] )
+            ->pluck( 'user_id' )->toArray();
 
-        if ( $users->count() ) {
-            $user_ids = $users->pluck( 'user_id' )->toArray();
-            $where .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $user_ids ) );
-
-        }
+        $where .= erp_hr_leave_request_user_in_clause( $user_ids );
     }
 
     // filter by employment type (permanent, contract, trainee, …); composes
@@ -1470,16 +1476,15 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $type_users = \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
             ->where( 'type', $args['type'] );
 
-        if ( $args['department_id'] ) {
+        if ( $args['department_id'] > 0 ) {
             $type_users->where( 'department', $args['department_id'] );
         }
 
-        if ( $args['designation_id'] ) {
+        if ( $args['designation_id'] > 0 ) {
             $type_users->where( 'designation', $args['designation_id'] );
         }
 
-        $type_user_ids = $type_users->count() ? $type_users->pluck( 'user_id' )->toArray() : [ 0 ];
-        $where        .= $wpdb->prepare( " AND request.user_id in (%s)", implode( ', ', $type_user_ids ) );
+        $where .= erp_hr_leave_request_user_in_clause( $type_users->pluck( 'user_id' )->toArray() );
     }
 
     if ( is_numeric( $args['request_id'] ) && $args['request_id'] > 0 ) {
@@ -1543,7 +1548,13 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $to_date = $to_date->modify( $args['end_date'] )->setTime( 23, 59, 59 );
         }
 
-        $where .= $wpdb->prepare( " AND request.start_date >= %d AND request.start_date <= %d", $from_date->getTimestamp(), $to_date->getTimestamp() );
+        if ( ! empty( $args['overlap'] ) ) {
+            // Any leave that covers part of the window, including one that
+            // started before it and is still running.
+            $where .= $wpdb->prepare( " AND request.end_date >= %d AND request.start_date <= %d", $from_date->getTimestamp(), $to_date->getTimestamp() );
+        } else {
+            $where .= $wpdb->prepare( " AND request.start_date >= %d AND request.start_date <= %d", $from_date->getTimestamp(), $to_date->getTimestamp() );
+        }
     }
 
     $query = $fields . $tables . $join . $where . $orderby . $limit;
@@ -1558,35 +1569,35 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
         $available_leaves = [];
 
         foreach ( $requests as $single_request ) {
-            $request = LeaveRequest::find( $single_request['id'] );
+            $request = (object) $single_request;
 
             // get available days
-            if ( ! isset( $available_leaves[ $request->user_id ] ) || ! array_key_exists( $request->leave->id, $available_leaves[ $request->user_id ] ) ) {
+            if ( ! isset( $available_leaves[ $request->user_id ] ) || ! array_key_exists( $request->leave_id, $available_leaves[ $request->user_id ] ) ) {
                 $policy_data = erp_hr_leave_get_balance_for_single_entitlement( $request->leave_entitlement_id );
 
                 if ( ! is_array( $policy_data ) || empty( $policy_data ) ) {
                     continue;
                 }
 
-                $available_leaves[ $request->user_id ][ $request->leave->id ] = $policy_data;
+                $available_leaves[ $request->user_id ][ $request->leave_id ] = $policy_data;
             }
 
-            $available = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
-                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['available'] : 0;
-            $extra = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
-                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['extra_leave'] : 0;
-            $spent = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
-                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['spent'] : 0;
-            $entitlement = isset( $available_leaves[ $request->user_id ][ $request->leave->id ] )
-                ? $available_leaves[ $request->user_id ][ $request->leave->id ]['entitlement'] : 0;
+            $available = isset( $available_leaves[ $request->user_id ][ $request->leave_id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave_id ]['available'] : 0;
+            $extra = isset( $available_leaves[ $request->user_id ][ $request->leave_id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave_id ]['extra_leave'] : 0;
+            $spent = isset( $available_leaves[ $request->user_id ][ $request->leave_id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave_id ]['spent'] : 0;
+            $entitlement = isset( $available_leaves[ $request->user_id ][ $request->leave_id ] )
+                ? $available_leaves[ $request->user_id ][ $request->leave_id ]['entitlement'] : 0;
 
             $temp_data                   = [];
-            $temp_data['id']             = $request->id;
+            $temp_data['id']             = (int) $request->id; // Eloquent cast the key to int
             $temp_data['user_id']        = $request->user_id;
             $temp_data['name']           = $single_request['display_name'];
             $temp_data['display_name']   = $single_request['display_name'];
             $temp_data['leave_id']       = $request->leave_id;
-            $temp_data['policy_name']    = $request->leave->name;
+            $temp_data['policy_name']    = $request->leave_name;
             $temp_data['start_date']     = $request->start_date;
             $temp_data['end_date']       = $request->end_date;
             $temp_data['days']           = $request->days;
@@ -1596,10 +1607,10 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
             $temp_data['spent']          = $spent;
             $temp_data['status']         = $request->last_status;
             $temp_data['reason']         = $request->reason;
-            $temp_data['message']        = $request->latest_approval_status ? $request->latest_approval_status->message : '';
+            $temp_data['message']        = null !== $request->latest_approval_id ? $request->latest_approval_message : '';
             $temp_data['color']          = isset( $single_request['color'] ) ? $single_request['color'] : '';
             $temp_data['day_status_id']  = $request->day_status_id;
-            $temp_data['f_year']         = $request->entitlement->f_year;
+            $temp_data['f_year']         = $request->entl_f_year;
             $temp_data['created_at']     = $single_request['created_at'];
 
             $formatted_data[] = $temp_data;
@@ -1616,6 +1627,32 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
 }
 
 /**
+ * Build the `request.user_id IN (...)` restriction for erp_hr_get_leave_requests()
+ *
+ * One `%d` placeholder per id: a single `%s` quotes the whole list, and MySQL
+ * then compares against its first id only. An empty set matches nobody.
+ *
+ * @since 1.18.0
+ *
+ * @param array $user_ids
+ *
+ * @return string
+ */
+function erp_hr_leave_request_user_in_clause( $user_ids ) {
+    global $wpdb;
+
+    $user_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $user_ids ) ) ) );
+
+    if ( empty( $user_ids ) ) {
+        return ' AND 1=0';
+    }
+
+    $placeholders = implode( ', ', array_fill( 0, count( $user_ids ), '%d' ) );
+
+    return $wpdb->prepare( " AND request.user_id IN ($placeholders)", $user_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+}
+
+/**
  * Get leave requests count
  *
  * @since 0.1
@@ -1628,8 +1665,13 @@ function erp_hr_leave_get_requests_count( $f_year ) {
 
     $statuses = erp_hr_leave_request_get_statuses();
 
+    // One cache entry (the key erp_hrm_purge_cache() deletes) holding the
+    // counts per financial year, so one year's counts are never served for
+    // another.
     $cache_key = 'erp-hr-leave-request-counts';
-    $counts    = wp_cache_get( $cache_key, 'erp' );
+    $cached    = wp_cache_get( $cache_key, 'erp' );
+    $cached    = is_array( $cached ) && isset( $cached['by_f_year'] ) ? $cached : [ 'by_f_year' => [] ];
+    $counts    = isset( $cached['by_f_year'][ (int) $f_year ] ) ? $cached['by_f_year'][ (int) $f_year ] : false;
 
     if ( false === $counts ) {
         $counts   = [];
@@ -1670,7 +1712,8 @@ function erp_hr_leave_get_requests_count( $f_year ) {
             }
         }
 
-        wp_cache_set( $cache_key, $counts, 'erp' );
+        $cached['by_f_year'][ (int) $f_year ] = $counts;
+        wp_cache_set( $cache_key, $cached, 'erp' );
     }
 
     return $counts;
@@ -1785,6 +1828,28 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         'f_year'                    => $request->entitlement->f_year,
     ];
 
+    // Claim the transition before writing the approval and ledger rows. The
+    // UPDATE only matches while the row still holds the status read above, so
+    // when two moderators act at once only one of them gets to deduct.
+    $claim_status = function () use ( $request, $status ) {
+        global $wpdb;
+
+        $claimed = $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$wpdb->prefix}erp_hr_leave_requests SET last_status = %d WHERE id = %d AND last_status = %d",
+                $status,
+                $request->id,
+                $request->last_status
+            )
+        );
+
+        if ( 1 !== (int) $claimed ) {
+            return new WP_Error( 'leave-status-changed', __( 'This leave request has already been updated. Please reload and try again.', 'erp' ) );
+        }
+
+        return true;
+    };
+
     switch ( $request->last_status ) {
         case 1: // approved
             if ( $status === 3 ) { // reject this request
@@ -1793,6 +1858,12 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                     return new WP_Error( 'no-approval-status', esc_attr__( 'Invalid Request: No previous records found for given request.', 'erp' ) );
                 }
                 $old_approval_status_id = $request->latest_approval_status->id;
+
+                $claimed = $claim_status();
+
+                if ( is_wp_error( $claimed ) ) {
+                    return $claimed;
+                }
 
                 // 2. Add new approval status record
                 $approval_status_data['message'] = $comments;
@@ -1863,6 +1934,12 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                     $extra_days = $request->days - $balance['available'];
                 }
 
+                $claimed = $claim_status();
+
+                if ( is_wp_error( $claimed ) ) {
+                    return $claimed;
+                }
+
                 // 3. send data to leave approval status table
                 $approval_status_data['message'] = $comments;
                 $approval_status                 = LeaveApprovalStatus::create( $approval_status_data );
@@ -1911,6 +1988,12 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                     $unpaid_leave                                  = LeavesUnpaid::create( $unpaid_leave_data );
                 }
             } elseif ( $status === 3 ) { // reject this request
+                $claimed = $claim_status();
+
+                if ( is_wp_error( $claimed ) ) {
+                    return $claimed;
+                }
+
                 // 1. send data to leave approval status table
                 $approval_status_data['message'] = $comments;
                 $approval_status                 = LeaveApprovalStatus::create( $approval_status_data );
@@ -2479,6 +2562,7 @@ function erp_hr_get_current_month_leave_list() {
         'status'        => 1, // get only approved
         'start_date'    => erp_current_datetime()->setTime( 0, 0 )->getTimestamp(),
         'end_date'      => $end_of_current_month->getTimestamp(),
+        'overlap'       => 1, // include leave that started before today and is still running
     ];
     $leave_requests = erp_hr_get_leave_requests( $args );
 

@@ -32,6 +32,13 @@ class LeaveCalendarController extends RestController {
 	protected $rest_base = 'leave-calendar';
 
 	/**
+	 * Widest window one request may ask for.
+	 *
+	 * @var int
+	 */
+	const MAX_RANGE_DAYS = 92;
+
+	/**
 	 * @return void
 	 */
 	public function register_routes() {
@@ -99,18 +106,36 @@ class LeaveCalendarController extends RestController {
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|\WP_Error
 	 */
-	public function get_events( $request ): WP_REST_Response {
+	public function get_events( $request ) {
 		$start_in = (string) ( $request['start'] ?? '' );
 		$end_in   = (string) ( $request['end'] ?? '' );
 
 		$start = '' !== $start_in
-			? erp_current_datetime()->modify( $start_in )->setTime( 0, 0, 0 )
-			: erp_current_datetime()->modify( 'start of this month' )->setTime( 0, 0, 0 );
+			? $this->parse_day( $start_in )
+			: erp_current_datetime()->modify( 'first day of this month' );
 		$end   = '' !== $end_in
-			? erp_current_datetime()->modify( $end_in )->setTime( 23, 59, 59 )
-			: erp_current_datetime()->modify( 'end of this month' )->setTime( 23, 59, 59 );
+			? $this->parse_day( $end_in )
+			: erp_current_datetime()->modify( 'last day of this month' );
+
+		if ( ! $start || ! $end ) {
+			return new \WP_Error( 'rest_invalid_date', __( 'Dates must be in Y-m-d format.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$start = $start->setTime( 0, 0, 0 );
+		$end   = $end->setTime( 23, 59, 59 );
+
+		// The React month grid asks for 42 days; anything past a quarter is not a
+		// calendar view, and every day in the window is walked below.
+		if ( $end < $start || $start->diff( $end )->days > self::MAX_RANGE_DAYS ) {
+			return new \WP_Error(
+				'rest_invalid_date_range',
+				/* translators: %d: maximum number of days */
+				sprintf( __( 'The date range must run forward and span at most %d days.', 'erp' ), self::MAX_RANGE_DAYS ),
+				[ 'status' => 400 ]
+			);
+		}
 
 		$user_id = absint( $request['user_id'] ?? 0 ) ?: get_current_user_id();
 
@@ -278,5 +303,22 @@ class LeaveCalendarController extends RestController {
 		}
 
 		return rest_ensure_response( $events );
+	}
+
+	/**
+	 * A strict Y-m-d calendar day in the site timezone, or null.
+	 *
+	 * @param string $value Raw date.
+	 *
+	 * @return \DateTimeImmutable|null
+	 */
+	private function parse_day( string $value ): ?\DateTimeImmutable {
+		$date = \DateTimeImmutable::createFromFormat( '!Y-m-d', $value, wp_timezone() );
+
+		if ( ! $date || $date->format( 'Y-m-d' ) !== $value ) {
+			return null;
+		}
+
+		return $date;
 	}
 }
