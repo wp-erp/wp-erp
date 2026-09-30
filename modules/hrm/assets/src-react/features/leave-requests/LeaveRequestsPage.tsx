@@ -15,7 +15,7 @@
 
 import { addAction, removeAction } from '@wordpress/hooks';
 import { Button, Input, toast } from '@wedevs/plugin-ui';
-import { CalendarDays, Check, Filter, Plus, Search, Trash2, X } from 'lucide-react';
+import { CalendarDays, Check, Plus, Search, Trash2, X } from 'lucide-react';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -28,7 +28,10 @@ import type { LookupOption } from '@/features/employees/filters/lookups';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { FilterButton } from '@/shared/components/FilterButton';
+import { StatusTabs } from '@/shared/components/StatusTabs';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
+import { TextButton } from '@/shared/components/TextButton';
 import { useBoot } from '@/shared/hooks/useBoot';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -436,16 +439,13 @@ function LeaveRequestsInner(): JSX.Element {
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				{ /* Toolbar — status tabs (left) + search + filter funnel (right). */ }
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div
-						role="tablist"
-						aria-label={ __( 'Leave request status', 'erp' ) }
-						className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2"
-					>
-						{ STATUS_TABS.filter(
+					<StatusTabs
+						tabs={ STATUS_TABS.filter(
 							( tab ) => ! tab.module || activeModules.includes( tab.module )
-						).map( ( tab ) => {
-							const isSelected = status === tab.value;
-							const count =
+						).map( ( tab ) => ( {
+							value: tab.value,
+							label: tab.label,
+							count:
 								tab.value === 0
 									? counts.all
 									: tab.value === 1
@@ -454,35 +454,12 @@ function LeaveRequestsInner(): JSX.Element {
 									? counts.pending
 									: tab.value === 4
 									? counts.forwarded
-									: counts.rejected;
-							return (
-								<button
-									key={ tab.value }
-									role="tab"
-									type="button"
-									aria-selected={ isSelected }
-									onClick={ () => setStatus( tab.value ) }
-									className={ [
-										'relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium',
-										isSelected
-											? 'text-primary'
-											: 'text-muted-foreground hover:text-foreground',
-									].join( ' ' ) }
-								>
-									<span>{ tab.label }</span>
-									<span className="font-normal text-[#a5a5aa]">
-										({ count })
-									</span>
-									{ isSelected ? (
-										<span
-											aria-hidden="true"
-											className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary"
-										/>
-									) : null }
-								</button>
-							);
-						} ) }
-					</div>
+									: counts.rejected,
+						} ) ) }
+						value={ status }
+						onChange={ setStatus }
+						ariaLabel={ __( 'Leave request status', 'erp' ) }
+					/>
 					<div className="flex items-center gap-3">
 						<div className="relative">
 							<Search
@@ -504,31 +481,11 @@ function LeaveRequestsInner(): JSX.Element {
 								) }
 							/>
 						</div>
-						<button
-							type="button"
-							aria-label={ __( 'Toggle filters', 'erp' ) }
-							aria-pressed={ filterButtonActive }
-							onClick={ () =>
-								setShowFilters( ( prev ) => ! prev )
-							}
-							className={ [
-								'relative inline-flex size-5 items-center justify-center transition-colors',
-								filterButtonActive
-									? 'text-primary'
-									: 'text-muted-foreground hover:text-foreground',
-							].join( ' ' ) }
-						>
-							<Filter
-								size={ 20 }
-								strokeWidth={ 1.75 }
-								aria-hidden="true"
-							/>
-							{ activeFilterCount > 0 ? (
-								<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-									{ activeFilterCount }
-								</span>
-							) : null }
-						</button>
+						<FilterButton
+							active={ filterButtonActive }
+							count={ activeFilterCount }
+							onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+						/>
 					</div>
 				</div>
 
@@ -596,13 +553,9 @@ function LeaveRequestsInner(): JSX.Element {
 								{ __( 'Delete', 'erp' ) }
 							</Button>
 						</div>
-						<button
-							type="button"
-							className="text-sm text-muted-foreground hover:text-foreground"
-							onClick={ () => setSelected( new Set() ) }
-						>
+						<TextButton onClick={ () => setSelected( new Set() ) }>
 							{ __( 'Clear', 'erp' ) }
-						</button>
+						</TextButton>
 					</div>
 				) : null }
 

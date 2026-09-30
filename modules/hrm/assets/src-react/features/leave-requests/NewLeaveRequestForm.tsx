@@ -27,6 +27,8 @@ import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { useCan } from '@/shared/hooks/useCan';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
+import { FormLabel } from '@/shared/components/FieldLabels';
+import { FileInput } from '@/shared/components/NativeInputs';
 
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
@@ -270,14 +272,12 @@ export function NewLeaveRequestForm( {
 			<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } required disabled={ ! entitled } value={ reason } onChange={ setReason } />
 
 			<div className="flex flex-col gap-2.5">
-				<label htmlFor="leave_document" className="text-sm font-medium text-foreground">{ __( 'Supporting Documents', 'erp' ) }</label>
-				<input
+				<FormLabel htmlFor="leave_document">{ __( 'Supporting Documents', 'erp' ) }</FormLabel>
+				<FileInput
 					id="leave_document"
-					type="file"
 					multiple
 					disabled={ ! entitled }
 					onChange={ ( e ) => setFiles( e.target.files ? Array.from( e.target.files ) : [] ) }
-					className="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border file:border-border file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground"
 				/>
 				{ files.length > 0 ? (
 					<span className="text-xs text-muted-foreground">{ sprintf( __( '%d file(s) selected', 'erp' ), files.length ) }</span>

@@ -155,7 +155,7 @@ export function GeneralSectionDialog( {
 
 	return (
 		<Dialog open={ section !== null } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-2xl">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ section ? titleFor( section, editing ) : '' }
@@ -163,14 +163,14 @@ export function GeneralSectionDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
+				<form onSubmit={ handleSubmit } className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
 					{ section === 'experiences' ? (
 						<>
 							<TextField id="exp_company" label={ __( 'Company Name', 'erp' ) } required value={ form.company_name ?? '' } onChange={ set( 'company_name' ) } />
 							<TextField id="exp_title" label={ __( 'Job Title', 'erp' ) } required value={ form.job_title ?? '' } onChange={ set( 'job_title' ) } />
 							<TextField id="exp_from" label={ __( 'From', 'erp' ) } type="date" value={ form.from ?? '' } onChange={ set( 'from' ) } />
 							<TextField id="exp_to" label={ __( 'To', 'erp' ) } type="date" value={ form.to ?? '' } onChange={ set( 'to' ) } />
-							<TextareaField id="exp_desc" label={ __( 'Description', 'erp' ) } value={ form.description ?? '' } onChange={ set( 'description' ) } />
+							<TextareaField id="exp_desc" className="sm:col-span-2" label={ __( 'Description', 'erp' ) } value={ form.description ?? '' } onChange={ set( 'description' ) } />
 						</>
 					) : null }
 
@@ -185,7 +185,7 @@ export function GeneralSectionDialog( {
 								<TextField id="edu_scale" label={ __( 'Scale', 'erp' ) } value={ form.scale ?? '' } onChange={ set( 'scale' ) } />
 							) : null }
 							<TextField id="edu_finished" label={ __( 'Completion Year', 'erp' ) } type="number" required value={ form.finished ?? '' } onChange={ set( 'finished' ) } />
-							<TextareaField id="edu_notes" label={ __( 'Notes', 'erp' ) } value={ form.notes ?? '' } onChange={ set( 'notes' ) } />
+							<TextareaField id="edu_notes" className="sm:col-span-2" label={ __( 'Notes', 'erp' ) } value={ form.notes ?? '' } onChange={ set( 'notes' ) } />
 						</>
 					) : null }
 
@@ -198,12 +198,12 @@ export function GeneralSectionDialog( {
 					) : null }
 
 					{ error ? (
-						<Alert variant="destructive">
+						<Alert variant="destructive" className="sm:col-span-2">
 							<AlertDescription>{ error }</AlertDescription>
 						</Alert>
 					) : null }
 
-					<DialogFooter className="gap-5 sm:gap-5">
+					<DialogFooter className="gap-5 sm:col-span-2 sm:gap-5">
 						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>
 							{ __( 'Cancel', 'erp' ) }
 						</Button>

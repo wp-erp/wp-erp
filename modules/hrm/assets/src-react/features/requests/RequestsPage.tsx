@@ -20,6 +20,7 @@ import type { ComponentType, JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
+import { SegmentedTab } from '@/shared/components/SegmentedTab';
 import { HOOKS } from '@/shared/filters';
 import { useBoot } from '@/shared/hooks/useBoot';
 import { __ } from '@/shared/i18n';
@@ -102,16 +103,10 @@ function RequestsInner(): JSX.Element {
 						const locked = isLocked( tab );
 						const Icon = tab.icon;
 						return (
-							<button
+							<SegmentedTab
 								key={ tab.id }
-								role="tab"
-								type="button"
-								aria-selected={ active }
+								active={ active }
 								onClick={ () => ( locked ? openUpsell( tab.label ) : setTabParam( tab.id ) ) }
-								className={ [
-									'inline-flex shrink-0 flex-none items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
-									active ? 'bg-card text-primary shadow-sm ring-primary/40' : 'text-muted-foreground hover:text-foreground',
-								].join( ' ' ) }
 							>
 								{ Icon ? <Icon size={ 16 } aria-hidden="true" /> : null }
 								{ tab.label }
@@ -122,7 +117,7 @@ function RequestsInner(): JSX.Element {
 										({ counts[ tab.id ] ?? 0 })
 									</span>
 								) }
-							</button>
+							</SegmentedTab>
 						);
 					} ) }
 				</nav>

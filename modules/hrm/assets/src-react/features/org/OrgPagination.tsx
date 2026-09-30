@@ -7,16 +7,17 @@
  * rows-per-page select + prev / next icon buttons and a "page of total"
  * indicator.
  *
+ * The markup lives in the shared `TablePager`; this keeps the prop names the
+ * taxonomy pages already pass.
+ *
  * Client-side pagination over the already-fetched list — these are
  * low-cardinality entities, so the whole set is loaded once and paged in the
  * browser.
  */
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@wedevs/plugin-ui';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { JSX } from 'react';
 
-import { __, sprintf } from '@/shared/i18n';
+import { TablePager } from '@/shared/components/TablePager';
 
 interface OrgPaginationProps {
 	readonly page:       number;
@@ -28,66 +29,14 @@ interface OrgPaginationProps {
 }
 
 export function OrgPagination( { page, totalPages, total, perPage, onPage, onPerPage }: OrgPaginationProps ): JSX.Element {
-	const pages = Math.max( totalPages, 1 );
-	const start = total === 0 ? 0 : ( page - 1 ) * perPage + 1;
-	const end   = Math.min( page * perPage, total );
-
 	return (
-		<footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3 text-sm text-muted-foreground">
-			<span className="text-xs">
-				{ sprintf(
-					/* translators: 1: start row, 2: end row, 3: total */
-					__( 'Showing %1$d–%2$d of %3$d', 'erp' ),
-					start,
-					end,
-					total
-				) }
-			</span>
-			<div className="flex items-center gap-3">
-				<label className="flex items-center gap-2">
-					<span className="text-xs">{ __( 'Rows per page', 'erp' ) }</span>
-					<Select
-						items={ [ 10, 20, 50, 100 ].map( ( n ) => ( { value: String( n ), label: String( n ) } ) ) }
-						value={ String( perPage ) }
-						onValueChange={ ( v ) => onPerPage( parseInt( String( v ), 10 ) ) }
-					>
-						<SelectTrigger aria-label={ __( 'Rows per page', 'erp' ) } className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none">
-							<SelectValue placeholder={ __( 'Rows per page', 'erp' ) } />
-						</SelectTrigger>
-						<SelectContent align="start" alignItemWithTrigger={ false }>
-							{ [ 10, 20, 50, 100 ].map( ( n ) => (
-								<SelectItem key={ n } value={ String( n ) }>
-									{ n }
-								</SelectItem>
-							) ) }
-						</SelectContent>
-					</Select>
-				</label>
-
-				<div className="inline-flex items-center gap-1">
-					<button
-						type="button"
-						onClick={ () => onPage( Math.max( 1, page - 1 ) ) }
-						disabled={ page <= 1 }
-						className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted disabled:opacity-40"
-						aria-label={ __( 'Previous page', 'erp' ) }
-					>
-						<ChevronLeft size={ 14 } aria-hidden="true" />
-					</button>
-					<span className="min-w-20 px-2 text-center text-xs font-medium text-foreground">
-						{ sprintf( __( '%1$d of %2$d', 'erp' ), page, pages ) }
-					</span>
-					<button
-						type="button"
-						onClick={ () => onPage( Math.min( pages, page + 1 ) ) }
-						disabled={ page >= pages }
-						className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted disabled:opacity-40"
-						aria-label={ __( 'Next page', 'erp' ) }
-					>
-						<ChevronRight size={ 14 } aria-hidden="true" />
-					</button>
-				</div>
-			</div>
-		</footer>
+		<TablePager
+			page={ page }
+			perPage={ perPage }
+			total={ total }
+			totalPages={ totalPages }
+			onPage={ onPage }
+			onPerPage={ onPerPage }
+		/>
 	);
 }

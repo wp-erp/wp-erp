@@ -25,7 +25,9 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { CheckLabel, FormLabel } from '@/shared/components/FieldLabels';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
+import { DateTimeInput } from '@/shared/components/NativeInputs';
 import { __ } from '@/shared/i18n';
 
 import { SelectField, TextField } from '../employee-create/fields';
@@ -205,9 +207,9 @@ export function AnnouncementFormDialog( {
 					     `content` raw for the editor to bind to and a separate
 					     KSES'd `html_content` for display. */ }
 					<div className="flex min-w-0 flex-col gap-2.5">
-						<label className="text-sm font-medium text-foreground" htmlFor="announcement_content">
+						<FormLabel htmlFor="announcement_content">
 							{ __( 'Content', 'erp' ) }
-						</label>
+						</FormLabel>
 						<RichTextEditor
 							variant="full"
 							value={ form.content }
@@ -284,15 +286,13 @@ export function AnnouncementFormDialog( {
 					     Hidden for a draft, which ignores the date exactly as legacy did. */ }
 					{ form.status === 'publish' ? (
 						<div className="flex flex-col gap-2.5">
-							<label htmlFor="announcement_publish_date" className="text-sm font-medium text-foreground">
+							<FormLabel htmlFor="announcement_publish_date">
 								{ __( 'Publish date', 'erp' ) }
-							</label>
-							<input
+							</FormLabel>
+							<DateTimeInput
 								id="announcement_publish_date"
-								type="datetime-local"
 								value={ form.publishDate }
 								onChange={ ( e ) => setForm( ( p ) => ( { ...p, publishDate: e.target.value } ) ) }
-								className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
 							/>
 							<p className="text-xs text-muted-foreground">
 								{ __( 'Leave empty to publish now. A future date schedules the announcement.', 'erp' ) }
@@ -310,30 +310,30 @@ export function AnnouncementFormDialog( {
 							<span className="text-sm font-medium text-foreground">{ __( 'Also deliver as', 'erp' ) }</span>
 
 							{ options?.channels?.push ? (
-								<label className="flex items-center gap-2 text-sm text-foreground">
+								<CheckLabel>
 									<Checkbox
 										checked={ form.sendPush }
 										onCheckedChange={ ( v: boolean ) => setForm( ( p ) => ( { ...p, sendPush: v === true } ) ) }
 									/>
 									{ __( 'Push notification', 'erp' ) }
-								</label>
+								</CheckLabel>
 							) : null }
 
 							{ options?.channels?.sms ? (
-								<label className="flex items-center gap-2 text-sm text-foreground">
+								<CheckLabel>
 									<Checkbox
 										checked={ form.sendSms }
 										onCheckedChange={ ( v: boolean ) => setForm( ( p ) => ( { ...p, sendSms: v === true } ) ) }
 									/>
 									{ __( 'SMS', 'erp' ) }
-								</label>
+								</CheckLabel>
 							) : null }
 
 							{ options?.channels?.sms && form.sendSms ? (
 								<div className="flex flex-col gap-2.5">
-									<label htmlFor="announcement_sms_content" className="text-sm font-medium text-foreground">
+									<FormLabel htmlFor="announcement_sms_content">
 										{ __( 'SMS body', 'erp' ) }
-									</label>
+									</FormLabel>
 									<Textarea
 										id="announcement_sms_content"
 										rows={ 3 }

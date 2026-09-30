@@ -113,7 +113,7 @@ export function DepartmentFormDialog( {
 
 	return (
 		<Dialog open={ open } onOpenChange={ dismissGuard( onClose, busy ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ editing ? __( 'Edit Department', 'erp' ) : __( 'Add Department', 'erp' ) }

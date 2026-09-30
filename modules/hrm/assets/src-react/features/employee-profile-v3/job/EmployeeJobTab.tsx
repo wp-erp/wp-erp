@@ -15,6 +15,7 @@ import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
 import { EmptyState } from '@/shared/components/EmptyState';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -88,13 +89,17 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 	);
 }
 
-/** Trailing trash cell for a deletable history row. */
+/** Trailing actions cell for a deletable history row. */
 function DeleteCell( { onDelete }: { readonly onDelete: () => void } ): JSX.Element {
 	return (
 		<td className="px-4 align-middle text-right">
-			<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-				<Trash2 size={ 14 } aria-hidden="true" />
-			</Button>
+			<div className="flex justify-end">
+				<RowActionsMenu
+					actions={ [
+						{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: onDelete, variant: 'destructive' },
+					] }
+				/>
+			</div>
 		</td>
 	);
 }

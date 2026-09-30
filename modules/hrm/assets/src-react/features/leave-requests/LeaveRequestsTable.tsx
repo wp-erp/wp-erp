@@ -10,29 +10,23 @@
  */
 
 import {
-	Badge,
-	Button,
 	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
 import {
-	ChevronDown,
-	ChevronsUpDown,
-	ChevronUp,
-	MoreVertical,
+	Check,
 	Paperclip,
 	RotateCcw,
 	Trash2,
+	X,
 } from 'lucide-react';
 import { applyFilters } from '@wordpress/hooks';
 import type { JSX } from 'react';
 
-import { ApproveRejectSplit } from '@/features/requests/ApproveRejectSplit';
-
 import { PersonCell } from '@/shared/components/PersonCell';
+import { RowActionsMenu, type RowAction } from '@/shared/components/RowActionsMenu';
+import { SortHeader } from '@/shared/components/SortHeader';
+import { StatusPill } from '@/shared/components/StatusPill';
+import { leaveStatusTone } from '@/shared/components/status-tones';
 import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
 import { formatDisplayDate } from '@/shared/utils/date';
@@ -46,34 +40,6 @@ import type { LeaveRequest, LeaveRequestRowAction } from './types';
  */
 function fmt( value: string | null ): string {
 	return formatDisplayDate( value, ( value ?? '' ).slice( 0, 10 ) || '—' );
-}
-
-/**
- * Status pill — same plugin-ui `Badge` + semantic-token treatment as the
- * Employees `StatusCell` (no bespoke component). Approved → success, rejected →
- * destructive, pending → warning.
- * @param root0
- * @param root0.status
- * @param root0.label
- */
-function StatusPill( {
-	status,
-	label,
-}: {
-	status: number;
-	label: string;
-} ): JSX.Element {
-	const className =
-		status === 1
-			? 'bg-success-light text-success-on-light'
-			: status === 3
-			? 'bg-destructive-light text-destructive-on-light'
-			: status === 4
-			// Forwarded (Advanced Leave multilevel) — still open, but not the same
-			// thing as Pending, and it used to render with Pending's own label.
-			? 'bg-info-light text-info-on-light'
-			: 'bg-warning-light text-warning-on-light';
-	return <Badge className={ `${ className } rounded-md` }>{ label }</Badge>;
 }
 
 /**
@@ -121,48 +87,6 @@ function AvailableCell( {
 		);
 	}
 	return <span className="text-muted-foreground">—</span>;
-}
-
-interface SortThProps {
-	readonly label: string;
-	readonly column: string;
-	readonly orderby: string;
-	readonly order: 'asc' | 'desc';
-	readonly onSort: ( column: string ) => void;
-	readonly className?: string;
-}
-
-/**
- * Sortable column header — a raw button (per design canon: table sort-headers
- * stay native, not DS `Button`) with an ascending / descending / neutral chevron.
- * @param root0
- */
-function SortTh( {
-	label,
-	column,
-	orderby,
-	order,
-	onSort,
-	className,
-}: SortThProps ): JSX.Element {
-	const active = orderby === column;
-	const Icon = ! active ? ChevronsUpDown : order === 'asc' ? ChevronUp : ChevronDown;
-	return (
-		<th scope="col" className={ `whitespace-nowrap ${ className ?? 'px-2' } text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]` }>
-			<button
-				type="button"
-				onClick={ () => onSort( column ) }
-				className={ [
-					'inline-flex items-center gap-1 uppercase tracking-normal transition-colors',
-					active ? 'text-foreground' : 'hover:text-foreground',
-				].join( ' ' ) }
-				aria-label={ sprintf( __( 'Sort by %s', 'erp' ), label ) }
-			>
-				{ label }
-				<Icon size={ 12 } aria-hidden="true" className="shrink-0" />
-			</button>
-		</th>
-	);
 }
 
 interface LeaveRequestsTableProps {
@@ -217,51 +141,62 @@ export function LeaveRequestsTable( {
 								/>
 							</th>
 						) : null }
-						<SortTh
+						<SortHeader
 							label={ __( 'Employee', 'erp' ) }
-							column="name"
-							orderby={ orderby }
+							sortKey="name"
+							orderBy={ orderby }
 							order={ order }
 							onSort={ onSort }
-							className="px-4"
+							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Employee', 'erp' ) ) }
+							first
 						/>
 						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 							{ __( 'Leave Type', 'erp' ) }
 						</th>
-						<SortTh
+						<SortHeader
 							label={ __( 'Duration', 'erp' ) }
-							column="start_date"
-							orderby={ orderby }
+							sortKey="start_date"
+							orderBy={ orderby }
 							order={ order }
 							onSort={ onSort }
+							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Duration', 'erp' ) ) }
+							first={ false }
 						/>
-						<SortTh
+						<SortHeader
 							label={ __( 'Days', 'erp' ) }
-							column="days"
-							orderby={ orderby }
+							sortKey="days"
+							orderBy={ orderby }
 							order={ order }
 							onSort={ onSort }
+							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Days', 'erp' ) ) }
+							first={ false }
 						/>
-						<SortTh
+						<SortHeader
 							label={ __( 'Requested On', 'erp' ) }
-							column="created_at"
-							orderby={ orderby }
+							sortKey="created_at"
+							orderBy={ orderby }
 							order={ order }
 							onSort={ onSort }
+							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Requested On', 'erp' ) ) }
+							first={ false }
 						/>
-						<SortTh
+						<SortHeader
 							label={ __( 'Available', 'erp' ) }
-							column="available"
-							orderby={ orderby }
+							sortKey="available"
+							orderBy={ orderby }
 							order={ order }
 							onSort={ onSort }
+							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Available', 'erp' ) ) }
+							first={ false }
 						/>
-						<SortTh
+						<SortHeader
 							label={ __( 'Status', 'erp' ) }
-							column="last_status"
-							orderby={ orderby }
+							sortKey="last_status"
+							orderBy={ orderby }
 							order={ order }
 							onSort={ onSort }
+							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Status', 'erp' ) ) }
+							first={ false }
 						/>
 						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 							{ __( 'Reason', 'erp' ) }
@@ -351,10 +286,9 @@ export function LeaveRequestsTable( {
 								/>
 							</td>
 							<td className="whitespace-nowrap px-2 align-middle">
-								<StatusPill
-									status={ req.status }
-									label={ req.status_label }
-								/>
+								<StatusPill tone={ leaveStatusTone( req.status ) }>
+									{ req.status_label }
+								</StatusPill>
 							</td>
 							<td className="max-w-48 px-2 align-middle text-sm text-muted-foreground">
 								{ req.reason ? (
@@ -434,120 +368,25 @@ export function LeaveRequestsTable( {
 										     (`LeaveRequestsListTable::column_name()`). Gating on 2
 										     alone left a forwarded request with Delete as its only
 										     action — the approver it was forwarded to could not act. */ }
-										{ req.status === 2 || req.status === 4 ? (
-											<ApproveRejectSplit
-												onApprove={ () => onModerate( 'approve', req ) }
-												onReject={ () => onModerate( 'reject', req ) }
-											/>
-										) : null }
-										<DropdownMenu>
-											<DropdownMenuTrigger
-												render={
-													<Button
-														variant="ghost"
-														size="icon"
-														aria-label={ sprintf(
-															__(
-																'Actions for %s',
-																'erp'
-															),
-															req.name
-														) }
-													>
-														<MoreVertical
-															size={ 16 }
-															aria-hidden="true"
-														/>
-													</Button>
-												}
-											/>
-											<DropdownMenuContent
-												align="end"
-												className="min-w-44"
-											>
-												{ /* Reverse moderation — reject an approved request, or approve a rejected one (legacy list-table behaviour). */ }
-												{ req.status === 1 ? (
-													<DropdownMenuItem
-														variant="destructive"
-														className="gap-2"
-														onClick={ () =>
-															onModerate(
-																'reject',
-																req
-															)
-														}
-													>
-														<RotateCcw
-															size={ 14 }
-															aria-hidden="true"
-														/>
-														{ __(
-															'Reject',
-															'erp'
-														) }
-													</DropdownMenuItem>
-												) : null }
-												{ req.status === 3 ? (
-													<DropdownMenuItem
-														className="gap-2"
-														onClick={ () =>
-															onModerate(
-																'approve',
-																req
-															)
-														}
-													>
-														<RotateCcw
-															size={ 14 }
-															aria-hidden="true"
-														/>
-														{ __(
-															'Approve',
-															'erp'
-														) }
-													</DropdownMenuItem>
-												) : null }
-												{ /* Pro-appended row actions (Advanced Leave multilevel: Forward). */ }
-												{ (
-													applyFilters(
-														HOOKS.LEAVE_REQUEST_ROW_ACTIONS,
-														[],
-														{ request: req }
-													) as LeaveRequestRowAction[]
-												).map( ( action ) => (
-													<DropdownMenuItem
-														key={ action.id }
-														variant={
-															action.variant ===
-															'destructive'
-																? 'destructive'
-																: 'default'
-														}
-														className="gap-2"
-														onClick={ () =>
-															action.onSelect(
-																req
-															)
-														}
-													>
-														{ action.label }
-													</DropdownMenuItem>
-												) ) }
-												<DropdownMenuItem
-													variant="destructive"
-													className="gap-2"
-													onClick={ () =>
-														onDelete( req )
-													}
-												>
-													<Trash2
-														size={ 14 }
-														aria-hidden="true"
-													/>
-													{ __( 'Delete', 'erp' ) }
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<RowActionsMenu
+											label={ sprintf( __( 'Actions for %s', 'erp' ), req.name ) }
+											actions={ [
+												{ id: 'approve', label: __( 'Approve', 'erp' ), icon: Check, onSelect: () => onModerate( 'approve', req ), hidden: ! ( req.status === 2 || req.status === 4 ) },
+												{ id: 'reject', label: __( 'Reject', 'erp' ), icon: X, onSelect: () => onModerate( 'reject', req ), variant: 'destructive', hidden: ! ( req.status === 2 || req.status === 4 ) },
+												// Reverse moderation: reject an approved request, or approve a rejected one (legacy list-table behaviour).
+												{ id: 'reverse-reject', label: __( 'Reject', 'erp' ), icon: RotateCcw, onSelect: () => onModerate( 'reject', req ), variant: 'destructive', hidden: req.status !== 1 },
+												{ id: 'reverse-approve', label: __( 'Approve', 'erp' ), icon: RotateCcw, onSelect: () => onModerate( 'approve', req ), hidden: req.status !== 3 },
+												// Pro-appended row actions (Advanced Leave multilevel: Forward).
+												...( applyFilters( HOOKS.LEAVE_REQUEST_ROW_ACTIONS, [], { request: req } ) as LeaveRequestRowAction[] ).map( ( action ): RowAction => ( {
+													id:       action.id,
+													label:    action.label,
+													...( action.icon ? { icon: action.icon } : {} ),
+													onSelect: () => action.onSelect( req ),
+													variant:  action.variant === 'destructive' ? 'destructive' : 'default',
+												} ) ),
+												{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( req ), variant: 'destructive' },
+											] }
+										/>
 									</div>
 								) : null }
 							</td>

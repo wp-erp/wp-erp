@@ -5,9 +5,11 @@
  */
 
 import { Button, Input, SmartSelect } from '@wedevs/plugin-ui';
-import { Filter, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { FilterLabel } from '@/shared/components/FieldLabels';
+import { FilterButton } from '@/shared/components/FilterButton';
 import { __ } from '@/shared/i18n';
 
 import type { FinancialYearOption, IdOption, StringOption } from './types';
@@ -95,29 +97,17 @@ export function LeaveEntitlementsFilters( {
 							aria-label={ __( 'Search entitlements by employee', 'erp' ) }
 						/>
 					</div>
-					<button
-						type="button"
-						aria-label={ __( 'Toggle filters', 'erp' ) }
-						aria-pressed={ filterButtonActive }
-						onClick={ onToggleFilters }
-						className={ [
-							'relative inline-flex size-5 items-center justify-center transition-colors',
-							filterButtonActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-						].join( ' ' ) }
-					>
-						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						{ activeFilterCount > 0 ? (
-							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-								{ activeFilterCount }
-							</span>
-						) : null }
-					</button>
+					<FilterButton
+						active={ filterButtonActive }
+						count={ activeFilterCount }
+						onToggle={ onToggleFilters }
+					/>
 				</div>
 			</div>
 
 			{ filterButtonActive ? (
 				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+					<FilterLabel>
 						{ __( 'Year', 'erp' ) }
 						<SmartSelect
 							options={ yearFilterOpts }
@@ -128,8 +118,8 @@ export function LeaveEntitlementsFilters( {
 							className="h-9 w-44 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
-					</label>
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+					</FilterLabel>
+					<FilterLabel>
 						{ __( 'Employee Type', 'erp' ) }
 						<SmartSelect
 							options={ employeeTypeOpts }
@@ -140,8 +130,8 @@ export function LeaveEntitlementsFilters( {
 							className="h-9 w-48 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
-					</label>
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+					</FilterLabel>
+					<FilterLabel>
 						{ __( 'Policy', 'erp' ) }
 						<SmartSelect
 							options={ policyFilterOpts }
@@ -152,7 +142,7 @@ export function LeaveEntitlementsFilters( {
 							className="h-9 w-52 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
-					</label>
+					</FilterLabel>
 					{ activeFilterCount > 0 ? (
 						<Button
 							type="button"

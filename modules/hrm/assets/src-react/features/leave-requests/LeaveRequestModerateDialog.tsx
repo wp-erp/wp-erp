@@ -66,7 +66,7 @@ export function LeaveRequestModerateDialog( {
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onCancel() ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ isReject ? __( 'Reject leave request', 'erp' ) : __( 'Approve leave request', 'erp' ) }

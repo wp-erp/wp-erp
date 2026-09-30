@@ -12,7 +12,6 @@
  */
 
 import {
-	Badge,
 	Button,
 	Dialog,
 	DialogContent,
@@ -24,6 +23,7 @@ import {
 import type { JSX } from 'react';
 
 import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
+import { StatusPill, type StatusTone } from '@/shared/components/StatusPill';
 import { __ } from '@/shared/i18n';
 
 import { fmt } from './announcements-format';
@@ -49,6 +49,16 @@ function statusLabel( status: string ): string {
 	return __( 'Published', 'erp' );
 }
 
+function statusTone( status: string ): StatusTone {
+	if ( status === 'draft' ) {
+		return 'warning';
+	}
+	if ( status === 'trash' ) {
+		return 'neutral';
+	}
+	return 'success';
+}
+
 export function AnnouncementViewDialog( {
 	open,
 	loading,
@@ -59,7 +69,7 @@ export function AnnouncementViewDialog( {
 }: AnnouncementViewDialogProps ): JSX.Element {
 	return (
 		<Dialog open={ open } onOpenChange={ ( next: boolean ) => { if ( ! next ) { onClose(); } } }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-2xl">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-2xl">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ item?.title || __( '(no title)', 'erp' ) }</DialogTitle>
 					<DialogDescription>
@@ -75,7 +85,7 @@ export function AnnouncementViewDialog( {
 				) : (
 					<div className="flex flex-col gap-4">
 						<div className="flex flex-wrap items-center gap-2">
-							<Badge variant="secondary">{ statusLabel( item.status ) }</Badge>
+							<StatusPill tone={ statusTone( item.status ) }>{ statusLabel( item.status ) }</StatusPill>
 							<EmployeeAvatarStack
 								people={ item.recipients_preview }
 								total={ item.recipient_count }

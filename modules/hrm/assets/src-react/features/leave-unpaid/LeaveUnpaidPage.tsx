@@ -14,7 +14,7 @@
  */
 
 import { Button, SmartSelect, toast } from '@wedevs/plugin-ui';
-import { Calculator, CalendarDays, Filter, SquareArrowOutUpRight } from 'lucide-react';
+import { Calculator, CalendarDays, SquareArrowOutUpRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -22,6 +22,8 @@ import type { JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { FilterLabel } from '@/shared/components/FieldLabels';
+import { FilterButton } from '@/shared/components/FilterButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -166,7 +168,7 @@ function LeaveUnpaidInner(): JSX.Element {
 							{ __( 'Export CSV', 'erp' ) }
 						</Button>
 						{ salaryTypeOpts.length > 1 ? (
-							<label className="flex items-center gap-2 text-sm text-muted-foreground">
+							<FilterLabel>
 								{ __( 'Calculate On', 'erp' ) }
 								<SmartSelect
 									options={ salaryTypeOpts.map( ( o ) => ( { value: o.value, label: o.label } ) ) }
@@ -175,7 +177,7 @@ function LeaveUnpaidInner(): JSX.Element {
 									className="h-10 w-40 bg-background"
 									contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 								/>
-							</label>
+							</FilterLabel>
 						) : null }
 						<Button
 							className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5 shadow-sm"
@@ -199,24 +201,17 @@ function LeaveUnpaidInner(): JSX.Element {
 						</span>
 					</div>
 					{ yearFilterOpts.length > 0 ? (
-						<button
-							type="button"
-							aria-label={ __( 'Toggle filters', 'erp' ) }
-							aria-pressed={ showFilters }
-							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-							className={ [
-								'relative inline-flex size-5 items-center justify-center transition-colors',
-								showFilters || fYear ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-							].join( ' ' ) }
-						>
-							<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						</button>
+						<FilterButton
+							active={ showFilters || Boolean( fYear ) }
+							pressed={ showFilters }
+							onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+						/>
 					) : null }
 				</div>
 
 				{ showFilters && yearFilterOpts.length > 0 ? (
 					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+						<FilterLabel>
 							{ __( 'Year', 'erp' ) }
 							<SmartSelect
 								options={ yearFilterOpts }
@@ -227,7 +222,7 @@ function LeaveUnpaidInner(): JSX.Element {
 								className="h-9 w-40 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
-						</label>
+						</FilterLabel>
 					</div>
 				) : null }
 

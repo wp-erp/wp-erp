@@ -21,6 +21,7 @@ import { ArrowRight, FileSpreadsheet, Info } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
+import { CheckLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
 
 import {
@@ -107,14 +108,14 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 
 					<div className="h-px w-full bg-border" />
 
-					<label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-foreground">
+					<CheckLabel className="cursor-pointer font-medium">
 						<Checkbox
 							checked={ allSelected }
 							indeterminate={ someSelected }
 							onCheckedChange={ toggleAll }
 						/>
 						{ __( 'Select All Fields', 'erp' ) }
-					</label>
+					</CheckLabel>
 
 					<div className="flex items-center gap-2.5 rounded-md bg-primary/5 p-4 text-sm text-primary">
 						<Info size={ 16 } aria-hidden="true" />
@@ -123,16 +124,16 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 
 					<div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
 						{ EXPORT_FIELDS.map( ( field ) => (
-							<label
+							<CheckLabel
 								key={ field.key }
-								className="flex cursor-pointer items-center gap-2 text-sm text-foreground"
+								className="cursor-pointer"
 							>
 								<Checkbox
 									checked={ selected.has( field.key ) }
 									onCheckedChange={ () => toggleField( field.key ) }
 								/>
 								{ field.label }
-							</label>
+							</CheckLabel>
 						) ) }
 					</div>
 				</div>

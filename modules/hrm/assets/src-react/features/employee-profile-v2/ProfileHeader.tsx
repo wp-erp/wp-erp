@@ -10,11 +10,14 @@ import { Briefcase, CalendarDays, Check, Copy, Globe, Mail, Pencil, Phone, User,
 import { useState } from 'react';
 import type { JSX } from 'react';
 
+import { StatusPill } from '@/shared/components/StatusPill';
+import { employeeStatusTone } from '@/shared/components/status-tones';
+import { TextButton } from '@/shared/components/TextButton';
 import { __ } from '@/shared/i18n';
 
 import { AvatarUpload } from './AvatarUpload';
 import { GENDER_OPTIONS, STATUS_OPTIONS, TYPE_OPTIONS } from './options';
-import { ageFrom, initials, labelOf, statusVariant, str, type LucideIcon, type Record_ } from './profile-format';
+import { ageFrom, initials, labelOf, str, type LucideIcon, type Record_ } from './profile-format';
 
 /** Copy-to-clipboard button for the employee id. */
 function CopyId( { value }: { readonly value: string } ): JSX.Element | null {
@@ -23,8 +26,7 @@ function CopyId( { value }: { readonly value: string } ): JSX.Element | null {
 		return null;
 	}
 	return (
-		<button
-			type="button"
+		<TextButton
 			onClick={ () => {
 				void navigator.clipboard
 					?.writeText( value )
@@ -35,13 +37,13 @@ function CopyId( { value }: { readonly value: string } ): JSX.Element | null {
 					} )
 					.catch( () => toast.error( __( 'Could not copy.', 'erp' ) ) );
 			} }
-			className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+			className="inline-flex items-center gap-1 text-xs font-medium transition-colors"
 			aria-label={ __( 'Copy employee ID', 'erp' ) }
 			title={ __( 'Copy employee ID', 'erp' ) }
 		>
 			<span>{ value }</span>
 			{ copied ? <Check size={ 13 } aria-hidden="true" /> : <Copy size={ 13 } aria-hidden="true" /> }
-		</button>
+		</TextButton>
 	);
 }
 
@@ -140,7 +142,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 							<Badge variant="secondary" className="font-medium">{ designation }</Badge>
 						) : null }
 						{ status ? (
-							<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>
+							<StatusPill tone={ employeeStatusTone( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</StatusPill>
 						) : null }
 					</div>
 

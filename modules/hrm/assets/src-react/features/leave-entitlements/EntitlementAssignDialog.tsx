@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
 import { DependencyHint } from '@/shared/components/DependencyHint';
+import { CheckLabel } from '@/shared/components/FieldLabels';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { dismissGuard } from '@/shared/utils/dialog';
@@ -136,7 +137,7 @@ export function EntitlementAssignDialog( {
 
 	return (
 		<Dialog open={ open } onOpenChange={ dismissGuard( onClose, busy ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ __( 'Assign Leave Policy', 'erp' ) }
@@ -194,14 +195,14 @@ export function EntitlementAssignDialog( {
 							onValueChange={ ( v ) => setMode( v === 'all' ? 'all' : 'single' ) }
 							className="flex flex-col gap-2"
 						>
-							<label className="flex items-center gap-2 text-sm text-foreground">
+							<CheckLabel>
 								<RadioGroupItem value="single" />
 								{ __( 'A single employee', 'erp' ) }
-							</label>
-							<label className="flex items-center gap-2 text-sm text-foreground">
+							</CheckLabel>
+							<CheckLabel>
 								<RadioGroupItem value="all" />
 								{ __( 'All employees matching the policy scope', 'erp' ) }
-							</label>
+							</CheckLabel>
 						</RadioGroup>
 					</div>
 

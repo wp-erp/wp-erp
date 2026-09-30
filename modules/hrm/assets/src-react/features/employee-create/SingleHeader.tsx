@@ -6,15 +6,17 @@
  * data and the tab/edit handlers.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Button } from '@wedevs/plugin-ui';
 import { CalendarPlus, Pencil, StickyNote } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { StatusPill } from '@/shared/components/StatusPill';
+import { employeeStatusTone } from '@/shared/components/status-tones';
 import { __ } from '@/shared/i18n';
 
 import { AvatarUpload } from '../employee-profile-v3/AvatarUpload';
 import { STATUS_OPTIONS, TYPE_OPTIONS } from '../employee-profile-v0/options';
-import { initials, labelOf, statusVariant, str, type Record_ } from './single-format';
+import { initials, labelOf, str, type Record_ } from './single-format';
 
 interface SingleHeaderProps {
 	readonly record:          Record_;
@@ -75,7 +77,7 @@ export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, o
 					{ email ? <p className="m-0 mb-4 text-sm text-muted-foreground">{ email }</p> : null }
 					{ status ? (
 						<div className="mt-1">
-							<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>
+							<StatusPill tone={ employeeStatusTone( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</StatusPill>
 						</div>
 					) : null }
 

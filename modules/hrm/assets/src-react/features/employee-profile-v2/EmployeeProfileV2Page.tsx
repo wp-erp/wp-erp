@@ -26,6 +26,7 @@ import type { JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { PlainButton } from '@/shared/components/PlainButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
@@ -123,13 +124,12 @@ export function EmployeeProfileV2Inner( { userId }: { userId: number } ): JSX.El
 	return (
 		<div className="mx-auto w-full max-w-full">
 			<nav className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-				<button
-					type="button"
+				<PlainButton
 					onClick={ () => navigate( '/employees' ) }
 					className="transition-colors hover:text-foreground"
 				>
 					{ __( 'Employees', 'erp' ) }
-				</button>
+				</PlainButton>
 				<span aria-hidden="true">/</span>
 				<span className="font-medium text-foreground">{ __( 'Employee Profile', 'erp' ) }</span>
 			</nav>

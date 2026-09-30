@@ -8,6 +8,7 @@ import { Button, SmartSelect } from '@wedevs/plugin-ui';
 import { X } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { FilterLabel } from '@/shared/components/FieldLabels';
 import { DateRangeField } from '@/shared/DateRangeField';
 import { __ } from '@/shared/i18n';
 
@@ -74,7 +75,7 @@ export function LeaveRequestsFilters( {
 
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			<FilterLabel>
 				{ __( 'Leave Type', 'erp' ) }
 				<SmartSelect
 					options={ leaveTypeOptions }
@@ -85,8 +86,8 @@ export function LeaveRequestsFilters( {
 					className="h-9 w-48 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Year', 'erp' ) }
 				<SmartSelect
 					options={ yearOptions }
@@ -97,8 +98,8 @@ export function LeaveRequestsFilters( {
 					className="h-9 w-36 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Department', 'erp' ) }
 				<SmartSelect
 					options={ departmentOptions }
@@ -112,8 +113,8 @@ export function LeaveRequestsFilters( {
 					className="h-9 w-48 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Designation', 'erp' ) }
 				<SmartSelect
 					options={ designationOptions }
@@ -127,8 +128,8 @@ export function LeaveRequestsFilters( {
 					className="h-9 w-48 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Type', 'erp' ) }
 				<SmartSelect
 					options={ employmentTypeOptions }
@@ -139,8 +140,8 @@ export function LeaveRequestsFilters( {
 					className="h-9 w-48 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Date range', 'erp' ) }
 				<DateRangeField
 					value={ { from: startDate, to: endDate } }
@@ -150,7 +151,7 @@ export function LeaveRequestsFilters( {
 					} }
 					className="w-64 bg-background"
 				/>
-			</label>
+			</FilterLabel>
 			{ hasActiveFilters ? (
 				<Button
 					type="button"

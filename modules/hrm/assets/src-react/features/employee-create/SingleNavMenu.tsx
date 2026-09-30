@@ -6,6 +6,7 @@
 
 import type { JSX } from 'react';
 
+import { NavItemButton } from '@/shared/components/NavItemButton';
 import { __ } from '@/shared/i18n';
 
 import type { LucideIcon } from './single-format';
@@ -31,21 +32,15 @@ export function NavMenu( {
 				const isActive = current === item.value;
 				const Icon = item.icon;
 				return (
-					<button
+					<NavItemButton
 						key={ item.value }
-						type="button"
-						aria-current={ isActive ? 'page' : undefined }
+						active={ isActive }
 						onClick={ () => onSelect( item.value ) }
-						className={ [
-							'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors',
-							isActive
-								? 'bg-primary text-primary-foreground'
-								: 'text-foreground hover:bg-muted',
-						].join( ' ' ) }
+						className="rounded-lg"
 					>
 						<Icon size={ 18 } strokeWidth={ 2 } aria-hidden="true" />
 						{ item.label }
-					</button>
+					</NavItemButton>
 				);
 			} ) }
 		</nav>

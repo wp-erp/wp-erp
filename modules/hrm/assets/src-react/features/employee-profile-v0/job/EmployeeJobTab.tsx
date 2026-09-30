@@ -15,6 +15,7 @@ import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
 import { EmptyState } from '@/shared/components/EmptyState';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -110,15 +111,14 @@ interface RowActionCellProps {
 function RowActionCell( { isActive, onEdit, onDelete }: RowActionCellProps ): JSX.Element {
 	return (
 		<td className="px-4 align-middle text-right">
-			{ isActive ? (
-				<Button variant="ghost" size="icon" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
-					<Pencil size={ 16 } aria-hidden="true" />
-				</Button>
-			) : (
-				<Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-					<Trash2 size={ 16 } aria-hidden="true" />
-				</Button>
-			) }
+			<div className="flex justify-end">
+				<RowActionsMenu
+					actions={ [
+						{ id: 'edit', label: __( 'Edit', 'erp' ), icon: Pencil, onSelect: onEdit, hidden: ! isActive },
+						{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: onDelete, variant: 'destructive', hidden: isActive },
+					] }
+				/>
+			</div>
 		</td>
 	);
 }

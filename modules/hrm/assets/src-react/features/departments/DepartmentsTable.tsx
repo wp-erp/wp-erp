@@ -6,18 +6,15 @@
  */
 
 import {
-	Button,
 	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
 import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
+import { SortHeader } from '@/shared/components/SortHeader';
 import { __, sprintf } from '@/shared/i18n';
 
 import type { Department } from './types';
@@ -52,15 +49,6 @@ export function DepartmentsTable( {
 	onEdit,
 	onDelete,
 }: DepartmentsTableProps ): JSX.Element {
-	function sortIcon( key: SortKey ): JSX.Element {
-		if ( sort.key !== key ) {
-			return <ArrowUpDown size={ 12 } aria-hidden="true" />;
-		}
-		return sort.dir === 'asc'
-			? <ArrowUp size={ 12 } aria-hidden="true" />
-			: <ArrowDown size={ 12 } aria-hidden="true" />;
-	}
-
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
@@ -71,26 +59,10 @@ export function DepartmentsTable( {
 								<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
 							</th>
 						) : null }
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-							<button type="button" onClick={ () => onToggleSort( 'title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-								{ __( 'Name', 'erp' ) }{ sortIcon( 'title' ) }
-							</button>
-						</th>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-							<button type="button" onClick={ () => onToggleSort( 'lead_name' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-								{ __( 'Head', 'erp' ) }{ sortIcon( 'lead_name' ) }
-							</button>
-						</th>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-							<button type="button" onClick={ () => onToggleSort( 'parent_title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-								{ __( 'Parent', 'erp' ) }{ sortIcon( 'parent_title' ) }
-							</button>
-						</th>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-							<button type="button" onClick={ () => onToggleSort( 'total_employees' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-								{ __( 'Employees', 'erp' ) }{ sortIcon( 'total_employees' ) }
-							</button>
-						</th>
+						<SortHeader label={ __( 'Name', 'erp' ) } sortKey="title" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first={ false } />
+						<SortHeader label={ __( 'Head', 'erp' ) } sortKey="lead_name" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first={ false } />
+						<SortHeader label={ __( 'Parent', 'erp' ) } sortKey="parent_title" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first={ false } />
+						<SortHeader label={ __( 'Employees', 'erp' ) } sortKey="total_employees" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first={ false } />
 						<th scope="col" className="w-20 px-4">
 							<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 						</th>
@@ -136,29 +108,13 @@ export function DepartmentsTable( {
 							<td className="px-4 align-middle">
 								{ canManage ? (
 									<div className="flex justify-end">
-										<DropdownMenu>
-											<DropdownMenuTrigger
-												render={
-													<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), dept.title ) }>
-														<MoreVertical size={ 16 } aria-hidden="true" />
-													</Button>
-												}
-											/>
-											<DropdownMenuContent align="end" className="min-w-44">
-												<DropdownMenuItem className="gap-2" onClick={ () => onEdit( dept ) }>
-													<Pencil size={ 14 } aria-hidden="true" />
-													{ __( 'Edit', 'erp' ) }
-												</DropdownMenuItem>
-												<DropdownMenuItem
-													variant="destructive"
-													className="gap-2"
-													onClick={ () => onDelete( dept ) }
-												>
-													<Trash2 size={ 14 } aria-hidden="true" />
-													{ __( 'Delete', 'erp' ) }
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<RowActionsMenu
+											label={ sprintf( __( 'Actions for %s', 'erp' ), dept.title ) }
+											actions={ [
+												{ id: 'edit', label: __( 'Edit', 'erp' ), icon: Pencil, onSelect: () => onEdit( dept ) },
+												{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( dept ), variant: 'destructive' },
+											] }
+										/>
 									</div>
 								) : null }
 							</td>

@@ -7,13 +7,15 @@
  * already tracks.
  */
 
-import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Spinner, toast } from '@wedevs/plugin-ui';
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Spinner, toast } from '@wedevs/plugin-ui';
 import { useSelect } from '@wordpress/data';
 import { CalendarDays, Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
 import { EmptyState } from '@/shared/components/EmptyState';
+import { StatusPill } from '@/shared/components/StatusPill';
+import { leaveStatusTone } from '@/shared/components/status-tones';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { storeName as meStoreName } from '@/stores/me';
@@ -25,17 +27,6 @@ import { useEmployeeLeave } from './useEmployeeLeave';
 import type { LeaveFilters } from './useEmployeeLeave';
 
 // v1 leave-request status codes: 1 approved, 2 pending, 3 rejected.
-function statusVariant( code: number | null ): 'success' | 'secondary' | 'destructive' {
-	switch ( code ) {
-		case 1:
-			return 'success';
-		case 3:
-			return 'destructive';
-		default:
-			return 'secondary';
-	}
-}
-
 function formatDate( iso: string | null ): string {
 	const date = parseServerDate( iso );
 	if ( ! date ) {
@@ -250,7 +241,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 										</td>
 										<td className="px-2 align-middle">
 											{ row.status ? (
-												<Badge variant={ statusVariant( row.status_code ) }>{ row.status }</Badge>
+												<StatusPill tone={ leaveStatusTone( row.status_code ) }>{ row.status }</StatusPill>
 											) : '—' }
 										</td>
 									</tr>

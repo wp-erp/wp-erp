@@ -14,6 +14,7 @@ import type { JSX, ReactNode } from 'react';
 
 import { OrgDeleteDialog } from '@/features/org/OrgDeleteDialog';
 import { EmptyState } from '@/shared/components/EmptyState';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -129,15 +130,13 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 	const deleteCell = ( id: number ): ReactNode =>
 		canDelete ? (
 			<td className="px-4 align-middle text-right">
-				<Button
-					variant="ghost"
-					size="icon-sm"
-					className="text-destructive hover:text-destructive focus:text-destructive"
-					aria-label={ __( 'Delete', 'erp' ) }
-					onClick={ () => setDeleting( id ) }
-				>
-					<Trash2 size={ 14 } aria-hidden="true" />
-				</Button>
+				<div className="flex justify-end">
+					<RowActionsMenu
+						actions={ [
+							{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => setDeleting( id ), variant: 'destructive' },
+						] }
+					/>
+				</div>
 			</td>
 		) : null;
 

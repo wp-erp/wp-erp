@@ -5,17 +5,13 @@
  */
 
 import {
-	Button,
 	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { formatCalendarDate } from '@/shared/utils/date';
 import type { JSX } from 'react';
 
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { __, sprintf } from '@/shared/i18n';
 
 import type { LeaveType } from './types';
@@ -89,29 +85,13 @@ export function LeaveTypesTable( {
 						<td className="px-4 align-middle">
 							{ canManage ? (
 								<div className="flex justify-end">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), type.name ) }>
-													<MoreVertical size={ 16 } aria-hidden="true" />
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end" className="min-w-44">
-											<DropdownMenuItem className="gap-2" onClick={ () => onEdit( type ) }>
-												<Pencil size={ 14 } aria-hidden="true" />
-												{ __( 'Edit', 'erp' ) }
-											</DropdownMenuItem>
-											<DropdownMenuItem
-												variant="destructive"
-												className="gap-2"
-												onClick={ () => onDelete( type ) }
-											>
-												<Trash2 size={ 14 } aria-hidden="true" />
-												{ __( 'Delete', 'erp' ) }
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
+									<RowActionsMenu
+										label={ sprintf( __( 'Actions for %s', 'erp' ), type.name ) }
+										actions={ [
+											{ id: 'edit', label: __( 'Edit', 'erp' ), icon: Pencil, onSelect: () => onEdit( type ) },
+											{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( type ), variant: 'destructive' },
+										] }
+									/>
 								</div>
 							) : null }
 						</td>

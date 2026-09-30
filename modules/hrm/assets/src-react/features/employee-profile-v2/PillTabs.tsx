@@ -5,6 +5,7 @@
 
 import type { JSX } from 'react';
 
+import { PillTab } from '@/shared/components/PillTab';
 import { __ } from '@/shared/i18n';
 
 export interface TabDef {
@@ -30,21 +31,13 @@ export function PillTabs( {
 			{ tabs.map( ( t ) => {
 				const isActive = current === t.value;
 				return (
-					<button
+					<PillTab
 						key={ t.value }
-						type="button"
-						role="tab"
-						aria-selected={ isActive }
+						active={ isActive }
 						onClick={ () => onSelect( t.value ) }
-						className={ [
-							'rounded-full px-4 py-2 text-sm font-medium transition-colors',
-							isActive
-								? 'bg-primary text-primary-foreground shadow-sm'
-								: 'text-muted-foreground hover:text-foreground',
-						].join( ' ' ) }
 					>
 						{ t.label }
-					</button>
+					</PillTab>
 				);
 			} ) }
 		</div>

@@ -37,6 +37,8 @@ import { useState } from 'react';
 import type { ComponentType, JSX } from 'react';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { IconButton } from '@/shared/components/IconButton';
+import { PlainButton } from '@/shared/components/PlainButton';
 import { HOOKS } from '@/shared/filters';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -309,16 +311,15 @@ function DashboardInner(): JSX.Element {
 				</div>
 				<div className="flex items-center gap-3">
 					<WeatherWidget embedded />
-					<button
-						type="button"
+					<IconButton
 						onClick={ () => void reload() }
 						disabled={ loading }
 						aria-label={ __( 'Refresh dashboard', 'erp' ) }
 						title={ __( 'Refresh dashboard', 'erp' ) }
-						className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+						className="size-9 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
 					>
 						<RefreshCw className={ `size-4 ${ loading ? 'animate-spin' : '' }` } />
-					</button>
+					</IconButton>
 				</div>
 			</header>
 
@@ -600,8 +601,7 @@ function DashboardInner(): JSX.Element {
 												key={ a.id }
 												className="border-b border-border last:border-b-0"
 											>
-												<button
-													type="button"
+												<PlainButton
 													onClick={ () =>
 														openAnnouncement( a.id )
 													}
@@ -642,7 +642,7 @@ function DashboardInner(): JSX.Element {
 													<span className="shrink-0 text-xs text-muted-foreground">
 														{ fmtDate( a.date ) }
 													</span>
-												</button>
+												</PlainButton>
 											</li>
 										);
 									} ) }
@@ -682,7 +682,7 @@ function DashboardInner(): JSX.Element {
 					next ? undefined : setViewing( null )
 				}
 			>
-				<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+				<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 					<DialogHeader>
 						<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 							{ viewing?.title ?? __( 'Announcement', 'erp' ) }

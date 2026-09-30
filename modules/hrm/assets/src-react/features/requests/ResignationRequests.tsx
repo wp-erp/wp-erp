@@ -8,7 +8,6 @@
  */
 
 import {
-    Badge,
     Button,
     Dialog,
     DialogContent,
@@ -16,15 +15,13 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DropdownMenuItem,
     SmartSelect,
     Skeleton,
     Textarea,
     toast,
 } from "@wedevs/plugin-ui";
-import { LogOut, Plus, Trash2 } from "lucide-react";
+import { Check, LogOut, Plus, Trash2, X } from "lucide-react";
 
-import { ApproveRejectSplit } from "./ApproveRejectSplit";
 import { RequestsActionSlot } from "./RequestsActionSlot";
 import { useContext, useEffect, useState } from "react";
 import type { JSX } from "react";
@@ -32,12 +29,16 @@ import type { JSX } from "react";
 import { RequestsTabContext } from "./requests-tab-context";
 
 import { EmptyState } from "@/shared/components/EmptyState";
+import { RowActionsMenu } from "@/shared/components/RowActionsMenu";
+import { StatusPill } from "@/shared/components/StatusPill";
+import { requestStatusTone } from "@/shared/components/status-tones";
 import { DateField } from "@/shared/DateField";
 import { formatCalendarDate } from "@/shared/utils/date";
 import { __ } from "@/shared/i18n";
 import { request, restPath } from "@/shared/utils/apiFetch";
 import type { ApiError } from "@/shared/utils/apiFetch";
 import { useEmployeeSearch } from "@/features/employees/hooks/useEmployeeSearch";
+import { FormLabel } from "@/shared/components/FieldLabels";
 import { todaySiteYmd } from '@/shared/utils/date';
 
 interface ResignRow {
@@ -56,12 +57,6 @@ interface ReasonOption {
 }
 
 const BASE = "/hrm/resignations";
-
-function statusTone(s: string): string {
-    if ("approved" === s) return "bg-success/15 text-success";
-    if ("rejected" === s) return "bg-destructive/15 text-destructive";
-    return "bg-muted text-muted-foreground";
-}
 
 export function ResignationRequests(): JSX.Element {
     const inTabs = useContext(RequestsTabContext);
@@ -193,47 +188,44 @@ export function ResignationRequests(): JSX.Element {
                                             )}
                                         </td>
                                         <td className="px-2 align-middle">
-                                            <Badge
-                                                variant="secondary"
-                                                className={`capitalize ${statusTone(
-                                                    r.status,
-                                                )}`}
+                                            <StatusPill
+                                                tone={requestStatusTone(r.status)}
+                                                className="capitalize"
                                             >
                                                 {r.status || "—"}
-                                            </Badge>
+                                            </StatusPill>
                                         </td>
                                         <td className="pl-2 pr-4 text-right align-middle">
                                             <div className="inline-flex items-center justify-end gap-1">
-                                                {"pending" === r.status ? (
-                                                    <ApproveRejectSplit
-                                                        disabled={busy}
-                                                        onApprove={() => act(r.id, "approve")}
-                                                        onReject={() => act(r.id, "reject")}
-                                                        extraItems={
-                                                            <DropdownMenuItem
-                                                                variant="destructive"
-                            className="gap-2"
-                                                                onClick={() => act(r.id, "delete")}
-                                                            >
-                                                                <Trash2 size={14} aria-hidden="true" />
-                                                                {__("Delete", "erp")}
-                                                            </DropdownMenuItem>
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="h-9 gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                                                        disabled={busy}
-                                                        onClick={() =>
-                                                            act(r.id, "delete")
-                                                        }
-                                                    >
-                                                        <Trash2 size={16} aria-hidden="true" />
-                                                        {__("Delete", "erp")}
-                                                    </Button>
-                                                )}
+                                                <RowActionsMenu
+                                                    actions={[
+                                                        {
+                                                            id: "approve",
+                                                            label: __("Approve", "erp"),
+                                                            icon: Check,
+                                                            onSelect: () => act(r.id, "approve"),
+                                                            hidden: "pending" !== r.status,
+                                                            disabled: busy,
+                                                        },
+                                                        {
+                                                            id: "reject",
+                                                            label: __("Reject", "erp"),
+                                                            icon: X,
+                                                            onSelect: () => act(r.id, "reject"),
+                                                            variant: "destructive",
+                                                            hidden: "pending" !== r.status,
+                                                            disabled: busy,
+                                                        },
+                                                        {
+                                                            id: "delete",
+                                                            label: __("Delete", "erp"),
+                                                            icon: Trash2,
+                                                            onSelect: () => act(r.id, "delete"),
+                                                            variant: "destructive",
+                                                            disabled: busy,
+                                                        },
+                                                    ]}
+                                                />
                                             </div>
                                         </td>
                                     </tr>
@@ -319,9 +311,9 @@ function NewResignationDialog({
                 <div className="h-px w-full bg-border" />
 
                 <div className="flex flex-col gap-2.5">
-                    <label className="text-sm font-medium text-foreground">
+                    <FormLabel>
                         {__("Employee", "erp")}
-                    </label>
+                    </FormLabel>
                     <SmartSelect
                         options={employee.options}
                         value={employeeId}
@@ -334,9 +326,9 @@ function NewResignationDialog({
                     />
                 </div>
                 <div className="flex flex-col gap-2.5">
-                    <label className="text-sm font-medium text-foreground">
+                    <FormLabel>
                         {__("Reason", "erp")}
-                    </label>
+                    </FormLabel>
                     <SmartSelect
                         options={reasons}
                         value={reason}
@@ -348,9 +340,9 @@ function NewResignationDialog({
                     />
                 </div>
                 <div className="flex flex-col gap-2.5">
-                    <label className="text-sm font-medium text-foreground">
+                    <FormLabel>
                         {__("Resignation Date", "erp")}
-                    </label>
+                    </FormLabel>
                     <DateField
                         value={date}
                         onChange={setDate}
@@ -359,12 +351,9 @@ function NewResignationDialog({
                 </div>
 
                 <div className="flex flex-col gap-2.5">
-                    <label
-                        htmlFor="resign_details"
-                        className="text-sm font-medium text-foreground"
-                    >
+                    <FormLabel htmlFor="resign_details">
                         {__("Reason Details", "erp")}
-                    </label>
+                    </FormLabel>
                     <Textarea
                         id="resign_details"
                         rows={4}

@@ -5,18 +5,14 @@
  */
 
 import {
-	Button,
 	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { MoreVertical, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { __, sprintf } from '@/shared/i18n';
 import { formatCalendarDate } from '@/shared/utils/date';
 
@@ -112,25 +108,12 @@ export function LeaveEntitlementsTable( {
 						<td className="px-4 align-middle">
 							{ canManage ? (
 								<div className="flex justify-end">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), ent.employee_name ) }>
-													<MoreVertical size={ 16 } aria-hidden="true" />
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end" className="min-w-44">
-											<DropdownMenuItem
-												variant="destructive"
-												className="gap-2"
-												onClick={ () => onDelete( ent ) }
-											>
-												<Trash2 size={ 14 } aria-hidden="true" />
-												{ __( 'Delete', 'erp' ) }
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
+									<RowActionsMenu
+										label={ sprintf( __( 'Actions for %s', 'erp' ), ent.employee_name ) }
+										actions={ [
+											{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( ent ), variant: 'destructive' },
+										] }
+									/>
 								</div>
 							) : null }
 						</td>

@@ -17,6 +17,7 @@ import { Fragment } from 'react';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
+import { StatusPill, type StatusTone } from '@/shared/components/StatusPill';
 import { __ } from '@/shared/i18n';
 
 import { EmptyRow, PersonAvatar, WidgetCard } from './DashboardCards';
@@ -140,12 +141,12 @@ const PRO_WIDGET_ICONS: Readonly< Record< string, LucideIcon > > = {
  * `erp_hr_v2_dashboard` PHP filter; the free dashboard knows nothing about the
  * module — it just paints the stats row and/or item list it was handed.
  */
-/** Colored status pill for item rows (Approved / Pending / Rejected …). */
-const TONE_PILL: Readonly< Record< string, string > > = {
-	success: 'bg-success/10 text-success',
-	warning: 'bg-warning-light text-warning-on-light',
-	destructive: 'bg-destructive/10 text-destructive',
-	muted: 'bg-muted text-muted-foreground',
+/** Widget item tone (sent by the module) -> status pill tone (Approved / Pending / Rejected …). */
+const TONE_PILL: Readonly< Record< string, StatusTone > > = {
+	success: 'success',
+	warning: 'warning',
+	destructive: 'danger',
+	muted: 'neutral',
 };
 
 export function ProWidget( {
@@ -239,9 +240,9 @@ export function ProWidget( {
 			{ hasItems ? (
 				<ul>
 					{ widget.items?.map( ( it, i ) => {
-						const pillCls =
+						const pillTone =
 							( it.tone ? TONE_PILL[ it.tone ] : undefined ) ??
-							'bg-muted text-muted-foreground';
+							'neutral';
 						const row = (
 							<>
 								{ it.avatar_url !== undefined ? (
@@ -261,11 +262,9 @@ export function ProWidget( {
 									) : null }
 								</div>
 								{ it.status ? (
-									<span
-										className={ `shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${ pillCls }` }
-									>
+									<StatusPill tone={ pillTone }>
 										{ it.status }
-									</span>
+									</StatusPill>
 								) : null }
 								{ it.meta ? (
 									<span className="shrink-0 text-xs text-muted-foreground">

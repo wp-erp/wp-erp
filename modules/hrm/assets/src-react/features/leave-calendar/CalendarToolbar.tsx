@@ -8,6 +8,8 @@ import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue }
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { IconButton } from '@/shared/components/IconButton';
+import { SegmentedTab } from '@/shared/components/SegmentedTab';
 import { __ } from '@/shared/i18n';
 
 import type { LookupOption } from '../employees/filters/lookups';
@@ -58,41 +60,31 @@ export function CalendarToolbar( {
 			{ /* Date nav + view switch */ }
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
 				<div className="flex items-center gap-2">
-					<button
-						type="button"
+					<IconButton
 						onClick={ onPrev }
-						className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted"
 						aria-label={ __( 'Previous', 'erp' ) }
 					>
 						<ChevronLeft size={ 16 } aria-hidden="true" />
-					</button>
-					<button
-						type="button"
+					</IconButton>
+					<IconButton
 						onClick={ onNext }
-						className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted"
 						aria-label={ __( 'Next', 'erp' ) }
 					>
 						<ChevronRight size={ 16 } aria-hidden="true" />
-					</button>
+					</IconButton>
 					<span className="ml-2 text-base font-semibold text-foreground">{ label }</span>
 				</div>
 				<div className="flex items-center gap-3">
 					{ /* Month / Week / Day view switch — segmented pill group (matches the Requests tab bar). */ }
 					<div role="tablist" aria-label={ __( 'Calendar view', 'erp' ) } className="inline-flex w-fit items-center gap-1 rounded-lg border border-border bg-muted/60 p-1">
 						{ views.map( ( v ) => (
-							<button
+							<SegmentedTab
 								key={ v.value }
-								type="button"
-								role="tab"
-								aria-selected={ view === v.value }
+								active={ view === v.value }
 								onClick={ () => onView( v.value ) }
-								className={ [
-									'inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium ring-1 ring-transparent transition-all',
-									view === v.value ? 'bg-card text-primary shadow-sm ring-primary/40' : 'text-muted-foreground hover:text-foreground',
-								].join( ' ' ) }
 							>
 								{ v.label }
-							</button>
+							</SegmentedTab>
 						) ) }
 					</div>
 					<Button variant="outline" className="h-9 px-4 text-sm" onClick={ onToday }>

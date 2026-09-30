@@ -22,6 +22,7 @@ import type { JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { TextButton } from '@/shared/components/TextButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { useModalParam } from '@/shared/useModalParam';
@@ -255,9 +256,9 @@ function LeaveEntitlementsInner(): JSX.Element {
 						<Button size="sm" variant="outline" disabled={ busy } onClick={ () => setBulkDeleting( true ) } className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive">
 							<Trash2 size={ 16 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
 						</Button>
-						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
+						<TextButton onClick={ () => setSelected( new Set() ) }>
 							{ __( 'Clear', 'erp' ) }
-						</button>
+						</TextButton>
 					</div>
 				) : null }
 

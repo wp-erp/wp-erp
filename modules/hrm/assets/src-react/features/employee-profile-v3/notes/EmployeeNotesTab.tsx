@@ -15,6 +15,7 @@ import type { FormEvent, JSX } from 'react';
 
 import { OrgDeleteDialog } from '@/features/org/OrgDeleteDialog';
 import { EmptyState } from '@/shared/components/EmptyState';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -152,17 +153,11 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 												{ formatDate( note.created_at ) }
 											</time>
 										) : null }
-										{ canDelete ? (
-											<Button
-												variant="ghost"
-												size="icon-sm"
-												className="text-destructive hover:text-destructive focus:text-destructive"
-												aria-label={ __( 'Delete note', 'erp' ) }
-												onClick={ () => setDeleting( note ) }
-											>
-												<Trash2 size={ 14 } aria-hidden="true" />
-											</Button>
-										) : null }
+										<RowActionsMenu
+											actions={ [
+												{ id: 'delete', label: __( 'Delete note', 'erp' ), icon: Trash2, onSelect: () => setDeleting( note ), variant: 'destructive', hidden: ! canDelete },
+											] }
+										/>
 									</div>
 								</div>
 								<p className="mt-1 whitespace-pre-line text-sm text-foreground">{ note.comment }</p>

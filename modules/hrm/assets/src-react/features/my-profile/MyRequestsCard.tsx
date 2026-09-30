@@ -10,7 +10,6 @@
  */
 
 import {
-	Badge,
 	Button,
 	Dialog,
 	DialogContent,
@@ -26,6 +25,9 @@ import { Laptop, LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { FormLabel } from '@/shared/components/FieldLabels';
+import { StatusPill } from '@/shared/components/StatusPill';
+import { requestStatusTone } from '@/shared/components/status-tones';
 import { DateField } from '@/shared/DateField';
 import { useBoot } from '@/shared/hooks/useBoot';
 import { __ } from '@/shared/i18n';
@@ -79,12 +81,6 @@ function useReasons( base: string ): ReasonOption[] {
 
 interface HistRow { readonly id: number; readonly status: string; readonly date?: string; readonly startDate?: string; readonly endDate?: string }
 
-function statusTone( s: string ): string {
-	if ( 'approved' === s ) return 'bg-success/15 text-success';
-	if ( 'rejected' === s ) return 'bg-destructive/15 text-destructive';
-	return 'bg-muted text-muted-foreground';
-}
-
 /** The employee's own past/pending requests + their status (self-scoped GET). */
 function MyHistory( { base, primary }: { readonly base: string; readonly primary: ( r: HistRow ) => string } ): JSX.Element | null {
 	const [ rows, setRows ] = useState< HistRow[] >( [] );
@@ -104,7 +100,7 @@ function MyHistory( { base, primary }: { readonly base: string; readonly primary
 				{ rows.map( ( r ) => (
 					<li key={ r.id } className="flex items-center justify-between gap-2 px-3 py-2 text-sm">
 						<span className="text-foreground">{ primary( r ) }</span>
-						<Badge variant="secondary" className={ `capitalize ${ statusTone( r.status ) }` }>{ r.status }</Badge>
+						<StatusPill tone={ requestStatusTone( r.status ) } className="capitalize">{ r.status }</StatusPill>
 					</li>
 				) ) }
 			</ul>
@@ -136,11 +132,11 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 				<div className="h-px w-full bg-border" />
 				<MyHistory base="/hrm/resignations" primary={ ( r ) => r.date || '—' } />
 				<div className="flex flex-col gap-2.5">
-					<label className="text-sm font-medium text-foreground">{ __( 'Reason', 'erp' ) }</label>
+					<FormLabel>{ __( 'Reason', 'erp' ) }</FormLabel>
 					<SmartSelect options={ reasons } value={ reason } onValueChange={ ( v ) => setReason( v ?? '' ) } placeholder={ __( 'Select reason', 'erp' ) } searchPlaceholder={ __( 'Search…', 'erp' ) } emptyMessage={ __( 'No reasons.', 'erp' ) } className="h-10 w-full" />
 				</div>
 				<div className="flex flex-col gap-2.5">
-					<label className="text-sm font-medium text-foreground">{ __( 'Resignation Date', 'erp' ) }</label>
+					<FormLabel>{ __( 'Resignation Date', 'erp' ) }</FormLabel>
 					<DateField value={ date } onChange={ setDate } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 				</div>
 				<DialogFooter className="gap-5 sm:gap-5">
@@ -179,22 +175,22 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 				<div className="h-px w-full bg-border" />
 				<MyHistory base="/hrm/remote-work" primary={ ( r ) => `${ r.startDate ?? '' } → ${ r.endDate ?? '' }` } />
 				<div className="flex flex-col gap-2.5">
-					<label className="text-sm font-medium text-foreground">{ __( 'Reason', 'erp' ) }</label>
+					<FormLabel>{ __( 'Reason', 'erp' ) }</FormLabel>
 					<SmartSelect options={ reasons } value={ reason } onValueChange={ ( v ) => setReason( v ?? '' ) } placeholder={ __( 'Select reason', 'erp' ) } searchPlaceholder={ __( 'Search…', 'erp' ) } emptyMessage={ __( 'No reasons.', 'erp' ) } className="h-10 w-full" />
 				</div>
 				{ 'other' === reason ? (
 					<div className="flex flex-col gap-2.5">
-						<label htmlFor="my_rw_other" className="text-sm font-medium text-foreground">{ __( 'Other Reason', 'erp' ) }</label>
+						<FormLabel htmlFor="my_rw_other">{ __( 'Other Reason', 'erp' ) }</FormLabel>
 						<Textarea id="my_rw_other" rows={ 2 } value={ other } onChange={ ( e ) => setOther( e.target.value ) } className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
 					</div>
 				) : null }
 				<div className="grid grid-cols-2 gap-3">
 					<div className="flex flex-col gap-2.5">
-						<label className="text-sm font-medium text-foreground">{ __( 'From', 'erp' ) }</label>
+						<FormLabel>{ __( 'From', 'erp' ) }</FormLabel>
 						<DateField value={ from } onChange={ setFrom } max={ to || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 					<div className="flex flex-col gap-2.5">
-						<label className="text-sm font-medium text-foreground">{ __( 'To', 'erp' ) }</label>
+						<FormLabel>{ __( 'To', 'erp' ) }</FormLabel>
 						<DateField value={ to } onChange={ setTo } min={ from || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 				</div>

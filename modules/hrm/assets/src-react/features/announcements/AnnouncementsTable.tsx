@@ -5,17 +5,13 @@
  */
 
 import {
-	Button,
 	Checkbox,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { Eye, MoreVertical, Pencil, RotateCcw, Trash2 } from 'lucide-react';
+import { Eye, Pencil, RotateCcw, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
 import { EmployeeAvatarStack } from '@/shared/components/EmployeeAvatarStack';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { __, sprintf } from '@/shared/i18n';
 
 import { fmt } from './announcements-format';
@@ -80,44 +76,15 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 						     announcement used to mean opening the editor, which a viewer
 						     without the manage cap cannot do. Edit and Trash stay gated. */ }
 						<div className="flex justify-end">
-							<DropdownMenu>
-								<DropdownMenuTrigger
-									render={
-										<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), row.title ) }>
-											<MoreVertical size={ 16 } aria-hidden="true" />
-										</Button>
-									}
-								/>
-								<DropdownMenuContent align="end" className="min-w-44">
-									<DropdownMenuItem className="gap-2" onClick={ () => onView( row ) }>
-										<Eye size={ 14 } aria-hidden="true" />
-										{ __( 'View', 'erp' ) }
-									</DropdownMenuItem>
-									{ canManage ? (
-										<>
-											{ row.status === 'trash' ? (
-												<DropdownMenuItem className="gap-2" onClick={ () => onRestore( row ) }>
-													<RotateCcw size={ 14 } aria-hidden="true" />
-													{ __( 'Restore', 'erp' ) }
-												</DropdownMenuItem>
-											) : (
-												<DropdownMenuItem className="gap-2" onClick={ () => onEdit( row ) }>
-													<Pencil size={ 14 } aria-hidden="true" />
-													{ __( 'Edit', 'erp' ) }
-												</DropdownMenuItem>
-											) }
-											<DropdownMenuItem
-												variant="destructive"
-												className="gap-2"
-												onClick={ () => onDelete( row ) }
-											>
-												<Trash2 size={ 14 } aria-hidden="true" />
-												{ row.status === 'trash' ? __( 'Delete permanently', 'erp' ) : __( 'Trash', 'erp' ) }
-											</DropdownMenuItem>
-										</>
-									) : null }
-								</DropdownMenuContent>
-							</DropdownMenu>
+							<RowActionsMenu
+								label={ sprintf( __( 'Actions for %s', 'erp' ), row.title ) }
+								actions={ [
+									{ id: 'view', label: __( 'View', 'erp' ), icon: Eye, onSelect: () => onView( row ) },
+									{ id: 'restore', label: __( 'Restore', 'erp' ), icon: RotateCcw, onSelect: () => onRestore( row ), hidden: ! canManage || row.status !== 'trash' },
+									{ id: 'edit', label: __( 'Edit', 'erp' ), icon: Pencil, onSelect: () => onEdit( row ), hidden: ! canManage || row.status === 'trash' },
+									{ id: 'delete', label: row.status === 'trash' ? __( 'Delete permanently', 'erp' ) : __( 'Trash', 'erp' ), icon: Trash2, onSelect: () => onDelete( row ), variant: 'destructive', hidden: ! canManage },
+								] }
+							/>
 						</div>
 						</td>
 					</tr>

@@ -11,6 +11,7 @@ import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
 import { EmptyState } from '@/shared/components/EmptyState';
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -87,13 +88,13 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 function RowActions( { onEdit, onDelete }: { readonly onEdit: () => void; readonly onDelete: () => void } ): JSX.Element {
 	return (
 		<td className="px-4 align-middle">
-			<div className="flex items-center justify-end gap-1">
-				<Button variant="ghost" size="icon" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
-					<Pencil size={ 16 } aria-hidden="true" />
-				</Button>
-				<Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-					<Trash2 size={ 16 } aria-hidden="true" />
-				</Button>
+			<div className="flex justify-end">
+				<RowActionsMenu
+					actions={ [
+						{ id: 'edit', label: __( 'Edit', 'erp' ), icon: Pencil, onSelect: onEdit },
+						{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: onDelete, variant: 'destructive' },
+					] }
+				/>
 			</div>
 		</td>
 	);

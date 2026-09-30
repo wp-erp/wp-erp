@@ -7,6 +7,7 @@
 import { Checkbox } from '@wedevs/plugin-ui';
 import type { JSX } from 'react';
 
+import { CheckLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
 
 import { FormSection } from './fields';
@@ -26,7 +27,7 @@ export function EmployeeNotificationSection( {
 }: EmployeeNotificationSectionProps ): JSX.Element {
 	return (
 		<FormSection title={ __( 'Notification', 'erp' ) }>
-			<label className="flex items-start gap-2.5 sm:col-span-2 lg:col-span-3">
+			<CheckLabel className="items-start gap-2.5 sm:col-span-2 lg:col-span-3">
 				<Checkbox
 					checked={ notify }
 					onCheckedChange={ ( v ) =>
@@ -40,9 +41,9 @@ export function EmployeeNotificationSection( {
 						'erp'
 					) }
 				</span>
-			</label>
+			</CheckLabel>
 			{ notify ? (
-				<label className="flex items-start gap-2.5 sm:col-span-2 lg:col-span-3">
+				<CheckLabel className="items-start gap-2.5 sm:col-span-2 lg:col-span-3">
 					<Checkbox
 						checked={ sendLogin }
 						onCheckedChange={ ( v ) =>
@@ -56,7 +57,7 @@ export function EmployeeNotificationSection( {
 							'erp'
 						) }
 					</span>
-				</label>
+				</CheckLabel>
 			) : null }
 		</FormSection>
 	);

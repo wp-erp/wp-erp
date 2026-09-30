@@ -4,10 +4,12 @@
  * card + quick stat strip.
  */
 
-import { Badge, Button } from '@wedevs/plugin-ui';
+import { Button } from '@wedevs/plugin-ui';
 import { Pencil } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { StatusPill } from '@/shared/components/StatusPill';
+import { employeeStatusTone } from '@/shared/components/status-tones';
 import { __ } from '@/shared/i18n';
 
 import { OverviewStats } from './general/OverviewStats';
@@ -69,9 +71,9 @@ export function ProfileHeader( { record, userId, canEdit, onEdit }: ProfileHeade
 						</p>
 					</div>
 					{ status ? (
-						<Badge variant={ status === 'active' ? 'success' : status === 'terminated' || status === 'deceased' ? 'destructive' : 'secondary' }>
+						<StatusPill tone={ employeeStatusTone( status ) }>
 							{ labelOf( STATUS_OPTIONS, status ) }
-						</Badge>
+						</StatusPill>
 					) : null }
 				</section>
 

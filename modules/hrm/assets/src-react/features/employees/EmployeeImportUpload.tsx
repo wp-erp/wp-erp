@@ -15,6 +15,7 @@ import {
 import { CloudUpload, Download, Upload } from 'lucide-react';
 import type { ChangeEvent, DragEvent, JSX, ReactNode, RefObject } from 'react';
 
+import { TextButton } from '@/shared/components/TextButton';
 import { __ } from '@/shared/i18n';
 
 import { downloadCsv, importTemplateCsv } from './useEmployeeImportExport';
@@ -86,14 +87,13 @@ export function EmployeeImportUpload( {
 					className="sr-only"
 					onChange={ onFile }
 				/>
-				<button
-					type="button"
+				<TextButton
 					onClick={ () => downloadCsv( 'employees-template.csv', importTemplateCsv() ) }
-					className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+					className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium"
 				>
 					<Download size={ 13 } aria-hidden="true" />
 					{ __( 'Download Sample CSV', 'erp' ) }
-				</button>
+				</TextButton>
 			</div>
 
 			{ parseError ? (

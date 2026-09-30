@@ -37,19 +37,6 @@ export function initials( name: string ): string {
 	return ( first + last ).toUpperCase();
 }
 
-/** Status → Badge tone. */
-export function statusVariant( status: string ): 'success' | 'secondary' | 'destructive' {
-	switch ( status ) {
-		case 'active':
-			return 'success';
-		case 'terminated':
-		case 'deceased':
-			return 'destructive';
-		default:
-			return 'secondary';
-	}
-}
-
 /** Whole-year age from a YYYY-MM-DD birth date, or '' when unknown. */
 export function ageFrom( dob: string ): string {
 	const v = ( dob ?? '' ).trim();

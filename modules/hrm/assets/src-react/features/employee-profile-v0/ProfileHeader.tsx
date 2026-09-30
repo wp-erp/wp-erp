@@ -4,17 +4,20 @@
  * editable in place (for self / managers) via `AvatarUpload`.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button, toast } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Button, toast } from '@wedevs/plugin-ui';
 import { Activity, Building2, IdCard, Pencil, Phone, Printer, Smartphone, Tag, UserCheck, UserX } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PlainButton } from '@/shared/components/PlainButton';
+import { StatusPill } from '@/shared/components/StatusPill';
+import { employeeStatusTone } from '@/shared/components/status-tones';
 import { __ } from '@/shared/i18n';
 import type { LucideIcon } from './profile-format';
 
 import { AvatarUpload } from '../employee-profile/AvatarUpload';
 import { STATUS_OPTIONS } from '../employee-profile/options';
-import { initials, labelOf, str, statusVariant, type Record_ } from './profile-format';
+import { initials, labelOf, str, type Record_ } from './profile-format';
 
 interface ProfileHeaderProps {
 	readonly record:         Record_;
@@ -81,7 +84,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						{ status ? (
-							<Badge variant={ statusVariant( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</Badge>
+							<StatusPill tone={ employeeStatusTone( status ) }>{ labelOf( STATUS_OPTIONS, status ) }</StatusPill>
 						) : null }
 					</div>
 					<div className="flex flex-col gap-1">
@@ -229,9 +232,9 @@ function MetaPill( { icon: Icon, label, value, to, href, onClick, title }: MetaP
 	}
 	if ( onClick ) {
 		return (
-			<button type="button" onClick={ onClick } className={ interactive } title={ title }>
+			<PlainButton onClick={ onClick } className={ interactive } title={ title }>
 				{ inner }
-			</button>
+			</PlainButton>
 		);
 	}
 	return <span className={ base } title={ title }>{ inner }</span>;

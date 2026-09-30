@@ -27,6 +27,7 @@ import type { JSX } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { TextButton } from '@/shared/components/TextButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
@@ -119,14 +120,13 @@ export function EmployeeProfileInner( { userId }: { userId: number } ): JSX.Elem
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
-				<button
-					type="button"
+				<TextButton
 					onClick={ back }
-					className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+					className="inline-flex items-center gap-1.5 font-medium transition-colors"
 				>
 					<ArrowLeft size={ 16 } aria-hidden="true" />
 					{ __( 'Back to People', 'erp' ) }
-				</button>
+				</TextButton>
 
 				<ProfileHeader
 					record={ record }

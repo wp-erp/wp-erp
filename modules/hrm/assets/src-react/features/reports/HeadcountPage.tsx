@@ -8,12 +8,14 @@
  */
 
 import { Button, ChartContainer, ChartTooltip, ChartTooltipContent, SmartSelect } from '@wedevs/plugin-ui';
-import { Filter, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { EmptyState } from '@/shared/components/EmptyState';
+import { FilterLabel } from '@/shared/components/FieldLabels';
+import { FilterButton } from '@/shared/components/FilterButton';
 import { __, sprintf } from '@/shared/i18n';
 import { formatDisplayDate, siteToday, todaySiteYmd } from '@/shared/utils/date';
 
@@ -94,7 +96,7 @@ export function HeadcountPage(): JSX.Element {
 					</span>
 				</div>
 				<div className="flex items-center gap-3">
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+					<FilterLabel>
 						{ __( 'Year', 'erp' ) }
 						<SmartSelect
 							options={ yearOptions }
@@ -104,31 +106,17 @@ export function HeadcountPage(): JSX.Element {
 							className="h-9 w-32 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
-					</label>
-					<button
-						type="button"
-						aria-label={ __( 'Toggle filters', 'erp' ) }
-						aria-pressed={ filterButtonActive }
-						onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-						className={ [
-							'relative inline-flex size-5 items-center justify-center transition-colors',
-							filterButtonActive
-								? 'text-primary'
-								: 'text-muted-foreground hover:text-foreground',
-						].join( ' ' ) }
-					>
-						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						{ activeFilterCount > 0 ? (
-							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-								{ activeFilterCount }
-							</span>
-						) : null }
-					</button>
+					</FilterLabel>
+					<FilterButton
+						active={ filterButtonActive }
+						count={ activeFilterCount }
+						onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+					/>
 				</div>
 			</div>
 			{ filterButtonActive ? (
 				<div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-muted/20 p-3">
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+					<FilterLabel>
 						{ __( 'Department', 'erp' ) }
 						<SmartSelect
 							options={ deptOptions }
@@ -139,7 +127,7 @@ export function HeadcountPage(): JSX.Element {
 							className="h-9 w-56 bg-background"
 							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 						/>
-					</label>
+					</FilterLabel>
 				</div>
 			) : null }
 		</div>

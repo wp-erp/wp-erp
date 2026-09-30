@@ -34,6 +34,7 @@ import type { JSX, ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { TextButton } from '@/shared/components/TextButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import { __ } from '@/shared/i18n';
@@ -240,14 +241,13 @@ export function EmployeeProfileV0Inner( { userId, headerActions }: { userId: num
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
-			<button
-				type="button"
+			<TextButton
 				onClick={ back }
-				className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+				className="inline-flex items-center gap-1.5 font-medium transition-colors"
 			>
 				<ArrowLeft size={ 16 } aria-hidden="true" />
 				{ __( 'Back to People', 'erp' ) }
-			</button>
+			</TextButton>
 
 			<ProfileHeader
 				record={ record }

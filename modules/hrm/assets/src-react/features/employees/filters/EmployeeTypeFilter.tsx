@@ -11,6 +11,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import type { JSX } from 'react';
 
 import { TYPE_OPTIONS } from '@/features/employee-create/options';
+import { FormLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type {
@@ -40,9 +41,9 @@ export function EmployeeTypeFilter(): JSX.Element {
 
 	return (
 		<div className="flex items-center gap-2">
-			<label className="text-xs font-medium text-muted-foreground">
+			<FormLabel className="text-xs text-muted-foreground">
 				{ __( 'Type:', 'erp' ) }
-			</label>
+			</FormLabel>
 			<SmartSelect
 				options={ [ ...TYPE_OPTIONS ] }
 				value={ value }

@@ -3,6 +3,8 @@
  *
  * Status codes (legacy `last_status`): 1 = approved, 2 = pending, 3 = rejected.
  */
+import type { LucideIcon } from 'lucide-react';
+
 export type LeaveRequestStatus = 1 | 2 | 3;
 
 /** An uploaded supporting document on a leave request. */
@@ -20,6 +22,8 @@ export interface LeaveRequestAttachment {
 export interface LeaveRequestRowAction {
 	readonly id:        string;
 	readonly label:     string;
+	/** Optional lucide icon component, shown before the label like the built-in actions. */
+	readonly icon?:     LucideIcon;
 	readonly onSelect:  ( request: LeaveRequest ) => void;
 	readonly variant?:  'default' | 'destructive';
 }

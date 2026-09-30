@@ -27,7 +27,7 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { CalendarDays, Filter, SquareArrowOutUpRight } from 'lucide-react';
+import { CalendarDays, SquareArrowOutUpRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX, ReactNode } from 'react';
@@ -35,6 +35,8 @@ import type { JSX, ReactNode } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { FilterLabel } from '@/shared/components/FieldLabels';
+import { FilterButton } from '@/shared/components/FilterButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -194,24 +196,17 @@ function LeaveForwardInner(): JSX.Element {
 						</span>
 					</div>
 					{ yearFilterOpts.length > 0 ? (
-						<button
-							type="button"
-							aria-label={ __( 'Toggle filters', 'erp' ) }
-							aria-pressed={ showFilters }
-							onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-							className={ [
-								'relative inline-flex size-5 items-center justify-center transition-colors',
-								showFilters || fYear ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-							].join( ' ' ) }
-						>
-							<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						</button>
+						<FilterButton
+							active={ showFilters || Boolean( fYear ) }
+							pressed={ showFilters }
+							onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+						/>
 					) : null }
 				</div>
 
 				{ showFilters && yearFilterOpts.length > 0 ? (
 					<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-						<label className="flex items-center gap-2 text-sm text-muted-foreground">
+						<FilterLabel>
 							{ __( 'Year', 'erp' ) }
 							<SmartSelect
 								options={ yearFilterOpts }
@@ -222,7 +217,7 @@ function LeaveForwardInner(): JSX.Element {
 								className="h-9 w-56 bg-background"
 								contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 							/>
-						</label>
+						</FilterLabel>
 					</div>
 				) : null }
 
@@ -280,7 +275,7 @@ function LeaveForwardInner(): JSX.Element {
 			</div>
 
 			<Dialog open={ confirm } onOpenChange={ ( next ) => ( busy ? undefined : setConfirm( next ) ) }>
-				<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-md">
+				<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-md">
 					<DialogHeader>
 						<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 							{ __( 'Apply forward leaves?', 'erp' ) }

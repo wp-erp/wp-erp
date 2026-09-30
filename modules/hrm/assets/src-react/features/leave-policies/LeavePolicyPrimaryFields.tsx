@@ -10,6 +10,7 @@ import type { Dispatch, JSX, SetStateAction } from 'react';
 import { QuickAddButton } from '@/shared/components/QuickAddButton';
 import { __ } from '@/shared/i18n';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
+import { ColorInput } from '@/shared/components/NativeInputs';
 
 import { SmartSelectField, TextField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
@@ -120,12 +121,10 @@ export function LeavePolicyPrimaryFields( {
 						<span className="ml-0.5 text-destructive">*</span>
 					</Label>
 					<div className="flex items-center gap-3">
-						<input
+						<ColorInput
 							id="policy_color"
-							type="color"
 							value={ form.color }
 							onChange={ ( e ) => setForm( ( p ) => ( { ...p, color: e.target.value } ) ) }
-							className="h-10 w-16 cursor-pointer rounded-md border border-border bg-background p-1"
 						/>
 						<span className="text-sm text-muted-foreground">{ form.color }</span>
 					</div>

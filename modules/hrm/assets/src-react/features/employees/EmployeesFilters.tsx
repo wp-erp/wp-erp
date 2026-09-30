@@ -10,10 +10,11 @@
 
 import { Button, Input } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { Filter, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { FilterButton } from '@/shared/components/FilterButton';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type {
@@ -113,25 +114,11 @@ export function EmployeesFilters(): JSX.Element {
 							className="h-9 w-60 rounded-md border-border pl-9 text-sm"
 						/>
 					</div>
-					<button
-						type="button"
-						aria-label={ __( 'Toggle filters', 'erp' ) }
-						aria-pressed={ filterButtonActive }
-						onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-						className={ [
-							'relative inline-flex size-5 items-center justify-center transition-colors',
-							filterButtonActive
-								? 'text-primary'
-								: 'text-muted-foreground hover:text-foreground',
-						].join( ' ' ) }
-					>
-						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						{ activeFilterCount > 0 ? (
-							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-								{ activeFilterCount }
-							</span>
-						) : null }
-					</button>
+					<FilterButton
+						active={ filterButtonActive }
+						count={ activeFilterCount }
+						onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+					/>
 				</div>
 			</div>
 

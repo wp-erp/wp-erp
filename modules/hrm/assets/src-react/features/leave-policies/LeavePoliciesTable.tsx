@@ -4,16 +4,11 @@
  * delegated back to the page via callbacks.
  */
 
-import {
-	Button,
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@wedevs/plugin-ui';
-import { ArrowDown, ArrowUp, ArrowUpDown, Copy, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Copy, Pencil, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
+import { SortHeader } from '@/shared/components/SortHeader';
 import { __, sprintf } from '@/shared/i18n';
 
 import type { LeavePolicyListRow } from './types';
@@ -40,32 +35,13 @@ export function LeavePoliciesTable( {
 	onDuplicate,
 	onDelete,
 }: LeavePoliciesTableProps ): JSX.Element {
-	// Same affordance the Departments table uses — a plain button in the `th`,
-	// not a DS Button (sort headers are one of the documented raw-element cases).
-	function sortIcon( key: PolicySortKey ): JSX.Element {
-		if ( sort.key !== key ) {
-			return <ArrowUpDown size={ 12 } aria-hidden="true" />;
-		}
-		return sort.dir === 'asc'
-			? <ArrowUp size={ 12 } aria-hidden="true" />
-			: <ArrowDown size={ 12 } aria-hidden="true" />;
-	}
-
 	return (
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
 			<thead className="border-b border-border bg-card">
 				<tr className="h-10">
-					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-						<button type="button" onClick={ () => onToggleSort( 'name' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-							{ __( 'Name', 'erp' ) }{ sortIcon( 'name' ) }
-						</button>
-					</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-						<button type="button" onClick={ () => onToggleSort( 'days' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-							{ __( 'Days', 'erp' ) }{ sortIcon( 'days' ) }
-						</button>
-					</th>
+					<SortHeader label={ __( 'Name', 'erp' ) } sortKey="name" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first />
+					<SortHeader label={ __( 'Days', 'erp' ) } sortKey="days" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first={ false } />
 					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Department', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Designation', 'erp' ) }</th>
 					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Location', 'erp' ) }</th>
@@ -106,33 +82,14 @@ export function LeavePoliciesTable( {
 						<td className="px-4 align-middle">
 							{ canManage ? (
 								<div className="flex justify-end">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), policy.name ) }>
-													<MoreVertical size={ 16 } aria-hidden="true" />
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end" className="min-w-44">
-											<DropdownMenuItem className="gap-2" onClick={ () => onEdit( policy ) }>
-												<Pencil size={ 14 } aria-hidden="true" />
-												{ __( 'Edit', 'erp' ) }
-											</DropdownMenuItem>
-											<DropdownMenuItem className="gap-2" onClick={ () => onDuplicate( policy ) }>
-												<Copy size={ 14 } aria-hidden="true" />
-												{ __( 'Duplicate', 'erp' ) }
-											</DropdownMenuItem>
-											<DropdownMenuItem
-												variant="destructive"
-												className="gap-2"
-												onClick={ () => onDelete( policy ) }
-											>
-												<Trash2 size={ 14 } aria-hidden="true" />
-												{ __( 'Delete', 'erp' ) }
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
+									<RowActionsMenu
+										label={ sprintf( __( 'Actions for %s', 'erp' ), policy.name ) }
+										actions={ [
+											{ id: 'edit', label: __( 'Edit', 'erp' ), icon: Pencil, onSelect: () => onEdit( policy ) },
+											{ id: 'duplicate', label: __( 'Duplicate', 'erp' ), icon: Copy, onSelect: () => onDuplicate( policy ) },
+											{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( policy ), variant: 'destructive' },
+										] }
+									/>
 								</div>
 							) : null }
 						</td>

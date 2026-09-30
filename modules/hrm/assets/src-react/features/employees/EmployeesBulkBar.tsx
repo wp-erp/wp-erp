@@ -22,6 +22,7 @@ import { ArchiveRestore, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
+import { TextButton } from '@/shared/components/TextButton';
 import { __, sprintf } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeBulkAction } from '@/stores/employees';
@@ -108,13 +109,9 @@ export function EmployeesBulkBar(): JSX.Element | null {
 				} ) }
 			</div>
 
-			<button
-				type="button"
-				className="text-sm text-muted-foreground hover:text-foreground"
-				onClick={ () => setSelectedIds( [] ) }
-			>
+			<TextButton onClick={ () => setSelectedIds( [] ) }>
 				{ __( 'Clear', 'erp' ) }
-			</button>
+			</TextButton>
 
 			<AlertDialog
 				open={ pending !== null }

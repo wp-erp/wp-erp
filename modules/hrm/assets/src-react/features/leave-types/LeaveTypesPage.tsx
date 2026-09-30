@@ -23,6 +23,7 @@ import type { JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { TextButton } from '@/shared/components/TextButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { useModalParam } from '@/shared/useModalParam';
@@ -240,13 +241,9 @@ function LeaveTypesInner(): JSX.Element {
 							</Button>
 						</div>
 
-						<button
-							type="button"
-							className="text-sm text-muted-foreground hover:text-foreground"
-							onClick={ () => setSelected( new Set() ) }
-						>
+						<TextButton onClick={ () => setSelected( new Set() ) }>
 							{ __( 'Clear', 'erp' ) }
-						</button>
+						</TextButton>
 					</div>
 				) : null }
 

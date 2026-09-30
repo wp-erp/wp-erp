@@ -13,6 +13,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { FormLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type {
@@ -85,9 +86,9 @@ export function LookupFilter( {
 
 	return (
 		<div className="flex items-center gap-2">
-			<label className="text-xs font-medium text-muted-foreground">
+			<FormLabel className="text-xs text-muted-foreground">
 				{ label }
-			</label>
+			</FormLabel>
 			<SmartSelect
 				options={ selectOptions }
 				value={ value }

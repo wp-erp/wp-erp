@@ -16,6 +16,7 @@ import type { JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { DateField } from '@/shared/DateField';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { PlainLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -102,7 +103,7 @@ function FinancialYearsInner(): JSX.Element {
 						<div className="space-y-3">
 							{ draft.map( ( row, index ) => (
 								<div key={ index } className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1.1fr_1fr_1fr_1.3fr_auto]">
-									<label className="flex flex-col gap-2.5">
+									<PlainLabel className="flex flex-col gap-2.5">
 										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'Name', 'erp' ) }</span> : null }
 										<Input
 											value={ row.fy_name }
@@ -110,8 +111,8 @@ function FinancialYearsInner(): JSX.Element {
 											placeholder={ __( 'e.g. 2025-2026', 'erp' ) }
 											className="h-10 bg-background px-4 text-sm"
 										/>
-									</label>
-									<label className="flex flex-col gap-2.5">
+									</PlainLabel>
+									<PlainLabel className="flex flex-col gap-2.5">
 										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'Start date', 'erp' ) }</span> : null }
 										<DateField
 											value={ row.start_date }
@@ -119,8 +120,8 @@ function FinancialYearsInner(): JSX.Element {
 											max={ row.end_date || undefined }
 											className="h-10 bg-background px-4 text-sm"
 										/>
-									</label>
-									<label className="flex flex-col gap-2.5">
+									</PlainLabel>
+									<PlainLabel className="flex flex-col gap-2.5">
 										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'End date', 'erp' ) }</span> : null }
 										<DateField
 											value={ row.end_date }
@@ -128,8 +129,8 @@ function FinancialYearsInner(): JSX.Element {
 											min={ row.start_date || undefined }
 											className="h-10 bg-background px-4 text-sm"
 										/>
-									</label>
-									<label className="flex flex-col gap-2.5">
+									</PlainLabel>
+									<PlainLabel className="flex flex-col gap-2.5">
 										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'Description', 'erp' ) }</span> : null }
 										<Input
 											value={ row.description }
@@ -137,7 +138,7 @@ function FinancialYearsInner(): JSX.Element {
 											placeholder={ __( 'Optional', 'erp' ) }
 											className="h-10 bg-background px-4 text-sm"
 										/>
-									</label>
+									</PlainLabel>
 									<Button
 										variant="ghost"
 										size="icon"

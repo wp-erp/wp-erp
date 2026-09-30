@@ -28,6 +28,8 @@ import { Download, Upload } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
+import { PlainLabel } from '@/shared/components/FieldLabels';
+import { PlainButton } from '@/shared/components/PlainButton';
 import { __, _n, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -152,7 +154,7 @@ export function HolidayImportDialog( {
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : handleClose() ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-2xl">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-2xl">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ __( 'Import Holidays', 'erp' ) }
@@ -164,7 +166,7 @@ export function HolidayImportDialog( {
 				<div className="h-px w-full bg-border" />
 
 				{ ! parsed ? (
-					<label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/20 px-6 py-10 text-center hover:border-primary">
+					<PlainLabel className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/20 px-6 py-10 text-center hover:border-primary">
 						<Upload size={ 24 } className="text-muted-foreground" aria-hidden="true" />
 						<span className="text-sm font-medium text-foreground">
 							{ parsing ? __( 'Reading file…', 'erp' ) : __( 'Choose a .ics or .csv file', 'erp' ) }
@@ -179,7 +181,7 @@ export function HolidayImportDialog( {
 							disabled={ parsing }
 							onChange={ ( e ) => void handleFile( e ) }
 						/>
-					</label>
+					</PlainLabel>
 				) : rows.length === 0 ? (
 					<p className="p-6 text-center text-sm text-muted-foreground">
 						{ notice || __( 'No new holidays found in that file.', 'erp' ) }
@@ -239,14 +241,13 @@ export function HolidayImportDialog( {
 				) }
 
 				{ ! parsed ? (
-					<button
-						type="button"
+					<PlainButton
 						className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-primary hover:underline"
 						onClick={ downloadSampleCsv }
 					>
 						<Download size={ 14 } aria-hidden="true" />
 						{ __( 'Download a sample CSV', 'erp' ) }
-					</button>
+					</PlainButton>
 				) : null }
 
 				{ notice && rows.length > 0 ? (

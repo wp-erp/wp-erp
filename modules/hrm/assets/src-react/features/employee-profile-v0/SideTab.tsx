@@ -6,6 +6,8 @@
 
 import type { JSX } from 'react';
 
+import { NavItemButton } from '@/shared/components/NavItemButton';
+
 import type { LucideIcon } from './profile-format';
 
 export interface TabDef {
@@ -26,17 +28,9 @@ export function SideTab( {
 	const isActive = current === tab.value;
 	const Icon = tab.icon;
 	return (
-		<button
-			type="button"
-			onClick={ () => onSelect( tab.value ) }
-			aria-current={ isActive ? 'page' : undefined }
-			className={ [
-				'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-medium transition-colors',
-				isActive ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted',
-			].join( ' ' ) }
-		>
+		<NavItemButton active={ isActive } onClick={ () => onSelect( tab.value ) }>
 			<Icon size={ 16 } aria-hidden="true" />
 			{ tab.label }
-		</button>
+		</NavItemButton>
 	);
 }

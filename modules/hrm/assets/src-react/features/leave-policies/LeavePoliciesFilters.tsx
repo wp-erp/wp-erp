@@ -8,6 +8,7 @@ import { Button, SmartSelect } from '@wedevs/plugin-ui';
 import { X } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { FilterLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
 
 import type { PolicyFormOptions } from './types';
@@ -53,7 +54,7 @@ export function LeavePoliciesFilters( {
 
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			<FilterLabel>
 				{ __( 'Year', 'erp' ) }
 				<SmartSelect
 					options={ fYearFilterOpts }
@@ -64,8 +65,8 @@ export function LeavePoliciesFilters( {
 					className="h-9 w-40 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Department', 'erp' ) }
 				<SmartSelect
 					options={ deptFilterOpts }
@@ -76,8 +77,8 @@ export function LeavePoliciesFilters( {
 					className="h-9 w-48 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
-			<label className="flex items-center gap-2 text-sm text-muted-foreground">
+			</FilterLabel>
+			<FilterLabel>
 				{ __( 'Employee Type', 'erp' ) }
 				<SmartSelect
 					options={ empTypeFilterOpts }
@@ -88,7 +89,7 @@ export function LeavePoliciesFilters( {
 					className="h-9 w-40 bg-background"
 					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
 				/>
-			</label>
+			</FilterLabel>
 			{ hasActiveFilters ? (
 				<Button
 					type="button"

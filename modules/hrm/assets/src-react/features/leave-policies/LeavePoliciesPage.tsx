@@ -12,7 +12,7 @@ import {
 	Button,
 	toast,
 } from '@wedevs/plugin-ui';
-import { CalendarDays, Filter, Plus } from 'lucide-react';
+import { CalendarDays, Plus } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
@@ -20,6 +20,7 @@ import type { JSX } from 'react';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { FilterButton } from '@/shared/components/FilterButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { useModalParam } from '@/shared/useModalParam';
@@ -239,23 +240,11 @@ function LeavePoliciesInner(): JSX.Element {
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>
-					<button
-						type="button"
-						aria-label={ __( 'Toggle filters', 'erp' ) }
-						aria-pressed={ filterButtonActive }
-						onClick={ () => setShowFilters( ( prev ) => ! prev ) }
-						className={ [
-							'relative inline-flex size-5 items-center justify-center transition-colors',
-							filterButtonActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-						].join( ' ' ) }
-					>
-						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						{ activeFilterCount > 0 ? (
-							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-								{ activeFilterCount }
-							</span>
-						) : null }
-					</button>
+					<FilterButton
+						active={ filterButtonActive }
+						count={ activeFilterCount }
+						onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+					/>
 				</div>
 
 				{ filterButtonActive ? (

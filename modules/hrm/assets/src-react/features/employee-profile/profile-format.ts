@@ -35,16 +35,3 @@ export function initials( name: string ): string {
 	const last  = parts.length > 1 ? parts[ parts.length - 1 ]?.[ 0 ] ?? '' : '';
 	return ( first + last ).toUpperCase();
 }
-
-/** Status → Badge tone. */
-export function statusVariant( status: string ): 'success' | 'secondary' | 'destructive' {
-	switch ( status ) {
-		case 'active':
-			return 'success';
-		case 'terminated':
-		case 'deceased':
-			return 'destructive';
-		default:
-			return 'secondary';
-	}
-}

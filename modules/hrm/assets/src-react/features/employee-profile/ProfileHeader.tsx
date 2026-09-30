@@ -4,15 +4,17 @@
  * place (for self / managers) via `AvatarUpload`.
  */
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button } from '@wedevs/plugin-ui';
+import { Avatar, AvatarFallback, AvatarImage, Button } from '@wedevs/plugin-ui';
 import { Pencil } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { StatusPill } from '@/shared/components/StatusPill';
+import { employeeStatusTone } from '@/shared/components/status-tones';
 import { __ } from '@/shared/i18n';
 
 import { AvatarUpload } from '../employee-create/AvatarUpload';
 import { STATUS_OPTIONS } from '../employee-create/options';
-import { initials, labelOf, str, statusVariant, type Record_ } from './profile-format';
+import { initials, labelOf, str, type Record_ } from './profile-format';
 
 interface ProfileHeaderProps {
 	readonly record:         Record_;
@@ -50,9 +52,9 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 						{ fullName || __( 'Employee', 'erp' ) }
 					</h1>
 					{ status ? (
-						<Badge variant={ statusVariant( status ) }>
+						<StatusPill tone={ employeeStatusTone( status ) }>
 							{ labelOf( STATUS_OPTIONS, status ) }
-						</Badge>
+						</StatusPill>
 					) : null }
 				</div>
 				<div className="flex flex-col gap-1">

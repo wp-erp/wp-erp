@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
 import { EntitlementEmptyHint } from '@/shared/components/EntitlementEmptyHint';
+import { FormLabel } from '@/shared/components/FieldLabels';
 import { InfoTooltip } from '@/shared/components/InfoTooltip';
 import {
 	initLeaveFieldValues,
@@ -32,6 +33,7 @@ import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/Leav
 import { HOOKS } from '@/shared/filters';
 import { __, sprintf } from '@/shared/i18n';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
+import { FileInput } from '@/shared/components/NativeInputs';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { SelectField, TextField, TextareaField } from '../fields';
@@ -201,7 +203,7 @@ export function LeaveRequestDialog( {
 
 	return (
 		<Dialog open={ open } onOpenChange={ ( next ) => ( next || busy ? undefined : onClose() ) }>
-			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-lg">
+			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ __( 'Request Leave', 'erp' ) }
@@ -258,14 +260,12 @@ export function LeaveRequestDialog( {
 					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } disabled={ ! entitled } value={ reason } onChange={ setReason } />
 
 					<div className="flex flex-col gap-1.5">
-						<label htmlFor="leave_document" className="text-sm font-medium text-foreground">{ __( 'Document', 'erp' ) }</label>
-						<input
+						<FormLabel htmlFor="leave_document">{ __( 'Document', 'erp' ) }</FormLabel>
+						<FileInput
 							id="leave_document"
-							type="file"
 							multiple
 							disabled={ ! entitled }
 							onChange={ ( e ) => setDocuments( e.target.files ? Array.from( e.target.files ) : [] ) }
-							className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border file:border-border file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70 disabled:opacity-50"
 						/>
 					</div>
 

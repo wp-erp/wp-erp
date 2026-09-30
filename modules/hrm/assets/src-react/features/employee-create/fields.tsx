@@ -161,7 +161,7 @@ export function SelectField( {
 				required={ required }
 				disabled={ disabled }
 			>
-				<SelectTrigger id={ id } aria-invalid={ error ? true : undefined } className="h-10 w-full bg-background">
+				<SelectTrigger id={ id } aria-invalid={ error ? true : undefined } className="data-[size=default]:h-10 w-full bg-background">
 					<SelectValue placeholder={ placeholder ?? '—' } />
 				</SelectTrigger>
 				<SelectContent align="start" alignItemWithTrigger={ false }>

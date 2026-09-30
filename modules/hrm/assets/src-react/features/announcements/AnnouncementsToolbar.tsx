@@ -6,9 +6,12 @@
  */
 
 import { Input } from '@wedevs/plugin-ui';
-import { Filter, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import type { JSX } from 'react';
 
+import { FilterLabel } from '@/shared/components/FieldLabels';
+import { FilterButton } from '@/shared/components/FilterButton';
+import { StatusTabs } from '@/shared/components/StatusTabs';
 import { DateRangeField } from '@/shared/DateRangeField';
 import { __ } from '@/shared/i18n';
 
@@ -46,30 +49,12 @@ export function AnnouncementsToolbar( {
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-				<div role="tablist" aria-label={ __( 'Announcement status', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
-					{ STATUS_TABS.map( ( tab ) => {
-						const selected = status === tab.value;
-						return (
-							<button
-								key={ tab.value }
-								role="tab"
-								type="button"
-								aria-selected={ selected }
-								onClick={ () => onStatus( tab.value ) }
-								className={ [
-									'relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium',
-									selected ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-								].join( ' ' ) }
-							>
-								<span>{ tab.label }</span>
-								<span className="font-normal text-[#a5a5aa]">({ countFor( tab.value ) })</span>
-								{ selected ? (
-									<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
-								) : null }
-							</button>
-						);
-					} ) }
-				</div>
+				<StatusTabs
+					tabs={ STATUS_TABS.map( ( tab ) => ( { value: tab.value, label: tab.label, count: countFor( tab.value ) } ) ) }
+					value={ status }
+					onChange={ onStatus }
+					ariaLabel={ __( 'Announcement status', 'erp' ) }
+				/>
 				<div className="flex items-center gap-3">
 					<div className="relative">
 						<Search
@@ -86,29 +71,17 @@ export function AnnouncementsToolbar( {
 							aria-label={ __( 'Search announcements', 'erp' ) }
 						/>
 					</div>
-					<button
-						type="button"
-						aria-label={ __( 'Toggle filters', 'erp' ) }
-						aria-pressed={ filterButtonActive }
-						onClick={ onToggleFilters }
-						className={ [
-							'relative inline-flex size-5 items-center justify-center transition-colors',
-							filterButtonActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-						].join( ' ' ) }
-					>
-						<Filter size={ 20 } strokeWidth={ 1.75 } aria-hidden="true" />
-						{ activeFilterCount > 0 ? (
-							<span className="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-								{ activeFilterCount }
-							</span>
-						) : null }
-					</button>
+					<FilterButton
+						active={ filterButtonActive }
+						count={ activeFilterCount }
+						onToggle={ onToggleFilters }
+					/>
 				</div>
 			</div>
 
 			{ filterButtonActive ? (
 				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
-					<label className="flex items-center gap-2 text-sm text-muted-foreground">
+					<FilterLabel>
 						{ __( 'Date range', 'erp' ) }
 						<DateRangeField
 							value={ { from: startDate, to: endDate } }
@@ -118,7 +91,7 @@ export function AnnouncementsToolbar( {
 							} }
 							className="w-64 bg-background"
 						/>
-					</label>
+					</FilterLabel>
 				</div>
 			) : null }
 		</>

@@ -18,6 +18,7 @@ import { Camera, Trash2, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { JSX } from 'react';
 
+import { PlainButton } from '@/shared/components/PlainButton';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -78,8 +79,7 @@ export function PhotoUpload( { avatarUrl, fullName, initials, onChange, compact 
 	);
 
 	const avatarButton = (
-		<button
-			type="button"
+		<PlainButton
 			onClick={ () => inputRef.current?.click() }
 			disabled={ busy }
 			aria-label={ __( 'Upload photo', 'erp' ) }
@@ -96,7 +96,7 @@ export function PhotoUpload( { avatarUrl, fullName, initials, onChange, compact 
 					<Camera size={ 18 } className="text-white" aria-hidden="true" />
 				) }
 			</span>
-		</button>
+		</PlainButton>
 	);
 
 	if ( compact ) {

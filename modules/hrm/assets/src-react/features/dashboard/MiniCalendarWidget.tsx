@@ -21,6 +21,7 @@ import type { CalendarEvent } from '@/features/leave-calendar/types';
 import { LeaveChip } from '@/features/leave-calendar/CalendarGrid';
 import { useLeaveCalendar } from '@/features/leave-calendar/useLeaveCalendar';
 import { NewLeaveRequestDialog } from '@/features/leave-requests/NewLeaveRequestDialog';
+import { PlainButton } from '@/shared/components/PlainButton';
 import { siteToday } from '@/shared/utils/date';
 
 const WEEKDAYS = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
@@ -183,23 +184,21 @@ export function MiniCalendarWidget(): JSX.Element {
 						{ __( 'Today', 'erp' ) }
 					</Button>
 					<div className="inline-flex items-center rounded-md border border-border">
-						<button
-							type="button"
+						<PlainButton
 							onClick={ () => shiftMonth( -1 ) }
 							className="inline-flex size-8 items-center justify-center rounded-l-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 							aria-label={ __( 'Previous month', 'erp' ) }
 						>
 							<ChevronLeft size={ 16 } aria-hidden="true" />
-						</button>
+						</PlainButton>
 						<span className="px-2 text-center text-sm font-medium whitespace-nowrap text-foreground">{ monthLabel }</span>
-						<button
-							type="button"
+						<PlainButton
 							onClick={ () => shiftMonth( 1 ) }
 							className="inline-flex size-8 items-center justify-center rounded-r-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 							aria-label={ __( 'Next month', 'erp' ) }
 						>
 							<ChevronRight size={ 16 } aria-hidden="true" />
-						</button>
+						</PlainButton>
 					</div>
 				</div>
 			</header>

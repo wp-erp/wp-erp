@@ -6,12 +6,13 @@
  * re-export) is mechanical — pass the same columns + rows + sort + page state.
  */
 
-import { Checkbox, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@wedevs/plugin-ui';
+import { Checkbox } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { JSX } from 'react';
 
-import { __, sprintf } from '@/shared/i18n';
+import { SortArrow, SortButton } from '@/shared/components/SortHeader';
+import { TablePager } from '@/shared/components/TablePager';
+import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type {
 	EmployeeColumn,
@@ -67,8 +68,6 @@ export function EmployeesTable(): JSX.Element {
 	const currentOrderBy = query.orderby;
 	const currentOrder   = query.order;
 
-	const start = total === 0 ? 0 : ( page - 1 ) * perPage + 1;
-	const end   = Math.min( page * perPage, total );
 
 	const rowIds        = rows.map( ( r ) => r.id );
 	const selectedSet   = new Set( selectedIds );
@@ -121,8 +120,7 @@ export function EmployeesTable(): JSX.Element {
 								className={ `whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282] ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_HEAD } ${ STICKY_LEFT_NAME }` : '' }` }
 							>
 								{ col.sortable ? (
-									<button
-										type="button"
+									<SortButton
 										onClick={ () => {
 											const nextOrderBy = SORTABLE_COLUMN_TO_QUERY[ col.id ];
 											if ( ! nextOrderBy ) {
@@ -131,11 +129,10 @@ export function EmployeesTable(): JSX.Element {
 											const nextOrder = currentOrderBy === nextOrderBy && currentOrder === 'asc' ? 'desc' : 'asc';
 											setSort( { orderby: nextOrderBy, order: nextOrder } );
 										} }
-										className="inline-flex items-center gap-1 uppercase tracking-normal hover:text-foreground"
 									>
 										{ col.label }
 										{ sortIcon( col, currentOrderBy, currentOrder ) }
-									</button>
+									</SortButton>
 								) : (
 									<span className="uppercase">{ col.label }</span>
 								) }
@@ -180,64 +177,14 @@ export function EmployeesTable(): JSX.Element {
 			</table>
 			</div>
 
-			<footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3 text-sm text-muted-foreground">
-				<span className="text-xs">
-					{ sprintf(
-						/* translators: 1: start row, 2: end row, 3: total */
-						__( 'Showing %1$d–%2$d of %3$d', 'erp' ),
-						start,
-						end,
-						total
-					) }
-				</span>
-				<div className="flex items-center gap-3">
-					<label className="flex items-center gap-2">
-						<span className="text-xs">{ __( 'Rows per page', 'erp' ) }</span>
-						<Select
-							items={ [ 10, 20, 50, 100 ].map( ( n ) => ( { value: String( n ), label: String( n ) } ) ) }
-							value={ String( perPage ) }
-							onValueChange={ ( v ) =>
-								setPagination( { page: 1, perPage: parseInt( String( v ), 10 ) } )
-							}
-						>
-							<SelectTrigger aria-label={ __( 'Rows per page', 'erp' ) } className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none">
-								<SelectValue placeholder={ __( 'Rows per page', 'erp' ) } />
-							</SelectTrigger>
-							<SelectContent align="start" alignItemWithTrigger={ false }>
-								{ [ 10, 20, 50, 100 ].map( ( n ) => (
-									<SelectItem key={ n } value={ String( n ) }>
-										{ n }
-									</SelectItem>
-								) ) }
-							</SelectContent>
-						</Select>
-					</label>
-
-					<div className="inline-flex items-center gap-1">
-						<button
-							type="button"
-							onClick={ () => setPagination( { page: Math.max( 1, page - 1 ), perPage } ) }
-							disabled={ page <= 1 }
-							className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted disabled:opacity-40"
-							aria-label={ __( 'Previous page', 'erp' ) }
-						>
-							<ChevronLeft size={ 14 } aria-hidden="true" />
-						</button>
-						<span className="min-w-20 px-2 text-center text-xs font-medium text-foreground">
-							{ sprintf( __( '%1$d of %2$d', 'erp' ), page, Math.max( totalPages, 1 ) ) }
-						</span>
-						<button
-							type="button"
-							onClick={ () => setPagination( { page: page + 1, perPage } ) }
-							disabled={ page >= totalPages }
-							className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground hover:bg-muted disabled:opacity-40"
-							aria-label={ __( 'Next page', 'erp' ) }
-						>
-							<ChevronRight size={ 14 } aria-hidden="true" />
-						</button>
-					</div>
-				</div>
-			</footer>
+			<TablePager
+				page={ page }
+				perPage={ perPage }
+				total={ total }
+				totalPages={ totalPages }
+				onPage={ ( next ) => setPagination( { page: next, perPage } ) }
+				onPerPage={ ( next ) => setPagination( { page: 1, perPage: next } ) }
+			/>
 		</div>
 	);
 }
@@ -265,12 +212,10 @@ function sortIcon(
 	currentOrder:   string | undefined
 ): JSX.Element {
 	const mapped = SORTABLE_COLUMN_TO_QUERY[ col.id ];
-	if ( ! mapped || mapped !== currentOrderBy ) {
-		return <ArrowUpDown size={ 12 } aria-hidden="true" />;
-	}
-	return currentOrder === 'asc' ? (
-		<ArrowUp size={ 12 } aria-hidden="true" />
-	) : (
-		<ArrowDown size={ 12 } aria-hidden="true" />
+	return (
+		<SortArrow
+			active={ Boolean( mapped ) && mapped === currentOrderBy }
+			order={ currentOrder === 'asc' ? 'asc' : 'desc' }
+		/>
 	);
 }

@@ -12,6 +12,7 @@
 import { useDispatch, useSelect } from '@wordpress/data';
 import type { JSX } from 'react';
 
+import { StatusTabs } from '@/shared/components/StatusTabs';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName, toCountsQuery } from '@/stores/employees';
 import type {
@@ -61,48 +62,19 @@ export function StatusFilter(): JSX.Element {
 	const current: StatusTab = filters.status ?? 'all';
 
 	return (
-		<div
-			role="tablist"
-			aria-label={ __( 'Employee status', 'erp' ) }
-			className="-mb-2 flex min-w-0 max-w-full items-stretch overflow-x-auto pb-2 scrollbar-none"
-		>
-			{ TABS.map( ( tab ) => {
-				const active = tab.value === current;
-				const count  = countFor( counts, tab.value );
-				return (
-					<button
-						key={ tab.value }
-						type="button"
-						role="tab"
-						aria-selected={ active }
-						onClick={ () => {
-							setFilters( { ...filters, status: tab.value } );
-							setPagination( { page: 1, perPage: 20 } );
-						} }
-						className={ [
-							'relative inline-flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap px-4 text-sm font-medium transition-colors',
-							active
-								? 'text-primary'
-								: 'text-foreground hover:text-primary',
-						].join( ' ' ) }
-					>
-						<span>{ tab.label }</span>
-						{ count !== null ? (
-							<span className="font-normal text-[#a5a5aa]">
-								({ count })
-							</span>
-						) : null }
-						<span
-							aria-hidden="true"
-							className={ [
-								'absolute inset-x-0 -bottom-2 h-0.5',
-								active ? 'bg-primary' : 'bg-transparent',
-							].join( ' ' ) }
-						/>
-					</button>
-				);
-			} ) }
-		</div>
+		<StatusTabs
+			tabs={ TABS.map( ( tab ) => ( {
+				value: tab.value,
+				label: tab.label,
+				count: countFor( counts, tab.value ),
+			} ) ) }
+			value={ current }
+			onChange={ ( value ) => {
+				setFilters( { ...filters, status: value } );
+				setPagination( { page: 1, perPage: 20 } );
+			} }
+			ariaLabel={ __( 'Employee status', 'erp' ) }
+		/>
 	);
 }
 

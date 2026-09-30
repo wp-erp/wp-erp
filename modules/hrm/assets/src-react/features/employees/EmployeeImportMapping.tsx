@@ -80,7 +80,7 @@ export function EmployeeImportMapping( {
 									value={ selected }
 									onValueChange={ ( v ) => onChange( idx, v == null ? '' : String( v ) ) }
 								>
-									<SelectTrigger aria-label={ sprintf( __( 'Map column %s', 'erp' ), header || String( idx + 1 ) ) } className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
+									<SelectTrigger aria-label={ sprintf( __( 'Map column %s', 'erp' ), header || String( idx + 1 ) ) } className="data-[size=default]:h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground">
 										<SelectValue placeholder={ __( 'Don’t import', 'erp' ) } />
 									</SelectTrigger>
 									<SelectContent align="start" alignItemWithTrigger={ false }>
