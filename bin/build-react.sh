@@ -64,4 +64,15 @@ if [ -z "$(find "$OUT" -name '*.js' -size +0c 2>/dev/null | head -1)" ]; then
 	exit 1
 fi
 
+# Verify the stylesheet was generated from every `@source` it names (the app and
+# the design system). Tailwind prints nothing when one does not resolve: the build
+# exits 0 and ships those components unstyled.
+css_files=()
+while IFS= read -r css; do css_files+=("$css"); done < <(find "$OUT" -name '*.css' ! -name '*-rtl.css' 2>/dev/null)
+if [ "${#css_files[@]}" -eq 0 ]; then
+	echo "ERROR: no dist-react/*.css output produced." >&2
+	exit 1
+fi
+node "$ROOT/bin/check-react-css.mjs" "$DIR/assets/src-react/styles/main.css" "${css_files[@]}"
+
 echo "HRM React admin built + verified."
