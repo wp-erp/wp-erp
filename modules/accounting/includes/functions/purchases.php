@@ -87,7 +87,12 @@ function erp_acct_get_purchase( $purchase_no ) {
 
     $row                = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
-    $row['attachments'] = unserialize( $row['attachments'] );
+    // Never instantiate objects from stored attachment data. is_serialized()
+    // rejects the C: format that maybe_serialize() stores verbatim, and
+    // allowed_classes blocks object construction for anything that does pass.
+    $row['attachments'] = ! empty( $row['attachments'] ) && is_serialized( $row['attachments'] )
+        ? unserialize( $row['attachments'], [ 'allowed_classes' => false ] )
+        : $row['attachments'];
     $row['total_due']   = $row['credit'] - $row['debit'];
     $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $purchase_no );
 

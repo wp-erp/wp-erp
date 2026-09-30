@@ -17,6 +17,7 @@ export const data = {
         crmManagerFile: `${authDir}/crmManagerStorageState.json`,
         accManagerFile: `${authDir}/accManagerStorageState.json`,
         employeeFile: `${authDir}/employeeStorageState.json`,
+        crmAgentFile: `${authDir}/crmAgentStorageState.json`,
         noAuth: { storageState: { cookies: [], origins: [] } },
     },
 
@@ -26,6 +27,10 @@ export const data = {
         crmManager: { username: process.env.CRM_MANAGER ?? 'crm_manager1', password: process.env.USER_PASSWORD ?? '01erp01' },
         accManager: { username: process.env.ACC_MANAGER ?? 'acc_manager1', password: process.env.USER_PASSWORD ?? '01erp01' },
         employee: { username: process.env.EMPLOYEE ?? 'employee1', password: process.env.USER_PASSWORD ?? '01erp01' },
+        // Low-privileged CRM user: WordPress subscriber + ERP CRM agent. Used by the
+        // privilege-escalation specs (erp-pro#872), which assert that this account
+        // cannot mint WordPress users above its own capability level.
+        crmAgent: { username: process.env.CRM_AGENT ?? 'crm_agent1', password: process.env.USER_PASSWORD ?? '01erp01' },
     },
 
     // ── HRM factories ────────────────────────────────────────────────────────

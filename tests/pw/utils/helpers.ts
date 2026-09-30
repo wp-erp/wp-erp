@@ -83,6 +83,27 @@ export function ensureUser(username: string, email: string, role: string, passwo
     }
 }
 
+/**
+ * Ensure a WP user exists with a primary role PLUS additional roles layered on top
+ * (`wp user add-role`, which appends instead of replacing). WP ERP roles are meant
+ * to be combined with a WordPress role — a CRM agent is normally also a subscriber
+ * — and that combination is exactly what the privilege-escalation specs exercise.
+ * Returns the user ID.
+ */
+export function ensureUserWithRoles(username: string, email: string, baseRole: string, extraRoles: string[], password: string): string {
+    const id = ensureUser(username, email, baseRole, password);
+    if (!id) return id;
+    for (const role of extraRoles) {
+        // add-role is idempotent: re-adding an existing role is a no-op.
+        try {
+            exeCommandWpcli(`user add-role ${id} ${role}`);
+        } catch {
+            // A role that is not registered yet (module disabled) must not abort setup.
+        }
+    }
+    return id;
+}
+
 /** Log a user into wp-admin and (optionally) persist the session as storageState. */
 export async function login(
     page: Page,

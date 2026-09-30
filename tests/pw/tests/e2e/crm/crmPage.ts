@@ -293,8 +293,12 @@ export class CrmPage {
      * uses) and return its id. Storage-fidelity tests use this for deterministic
      * round-trips of edge values (charset, case, phone formatting, truncation),
      * independent of the modal's async select2 timing.
+     *
+     * `contact_owner` defaults to the admin (see insertPerson). Pass it when the spec
+     * needs a non-admin to own the contact — erp_crm_edit_contact maps to do_not_allow
+     * for a CRM agent unless the owner matches, so permission specs depend on it.
      */
-    static async insertContactRow(args: { first_name: string; last_name?: string; email: string; phone?: string; life_stage?: string }): Promise<string | undefined> {
+    static async insertContactRow(args: { first_name: string; last_name?: string; email: string; phone?: string; life_stage?: string; contact_owner?: number }): Promise<string | undefined> {
         return CrmPage.insertPerson({ type: 'contact', ...args });
     }
 

@@ -520,7 +520,10 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 
     $due = (float) erp_acct_get_invoice_due( $invoice_no );
 
-    if ( 0.00 === $due ) {
+    // Treat a fully paid or overpaid invoice as paid. The due is a SUM() of
+    // debit - credit, so it can carry a tiny float residue instead of an exact
+    // zero; anything at or below that epsilon means nothing is left owing.
+    if ( $due <= 0.00 || abs( $due ) < 0.00001 ) {
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoices',
             [

@@ -354,7 +354,12 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 		if ( ! empty( $tax_rate_agency ) ) {
 			foreach ( $tax_rate_agency as $rate_agency ) {
 				/*==== calculate tax amount ====*/
-				$tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
+				$item_tax_rate = (float) $item['tax_rate'];
+
+				// The item rate is the divisor used to split the item tax across
+				// agencies. It can arrive as zero when the rate could not be
+				// resolved, which is fatal on PHP 8; nothing is taxable then.
+				$tax_amount = empty( $item_tax_rate ) ? 0 : ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / $item_tax_rate;
 
 				if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
 					$tax_agency_details[ $rate_agency['agency_id'] ] += $tax_amount;
