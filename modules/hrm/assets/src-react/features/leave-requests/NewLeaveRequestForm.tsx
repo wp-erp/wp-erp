@@ -13,6 +13,7 @@ import {
 } from '@wedevs/plugin-ui';
 import type { Dispatch, FormEvent, JSX, SetStateAction } from 'react';
 
+import { DependencyHint } from '@/shared/components/DependencyHint';
 import { EntitlementEmptyHint } from '@/shared/components/EntitlementEmptyHint';
 import { InfoTooltip } from '@/shared/components/InfoTooltip';
 import {
@@ -37,6 +38,12 @@ interface NewLeaveRequestFormProps {
 	readonly hideEmployeePicker?: boolean;
 	/** Hide the Financial Year picker (self-service — auto-uses the current FY). */
 	readonly hideFinancialYear?: boolean;
+	/**
+	 * Self-service only: the year picker is hidden and no current financial year
+	 * resolved, so there is nothing to pick a policy from. Replaces the dead
+	 * policy select with a notice.
+	 */
+	readonly yearMissing?: boolean;
 	readonly employee:         ReturnType< typeof useEmployeeSearch >;
 	readonly employeeId:       string;
 	readonly setEmployeeId:    ( value: string ) => void;
@@ -77,6 +84,7 @@ export function NewLeaveRequestForm( {
 	error,
 	hideEmployeePicker,
 	hideFinancialYear,
+	yearMissing,
 	employee,
 	employeeId,
 	setEmployeeId,
@@ -161,6 +169,21 @@ export function NewLeaveRequestForm( {
 				/>
 			) }
 			{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
+			{ yearMissing ? (
+				canManageYears ? (
+					<DependencyHint
+						message={ __( 'Leave cannot be requested yet because no financial year covers today.', 'erp' ) }
+						steps={ [ { label: __( 'Add a financial year', 'erp' ), path: '/leave/financial-years' } ] }
+						onBeforeNavigate={ onClose }
+					/>
+				) : (
+					<Alert variant="destructive">
+						<AlertDescription>
+							{ __( 'Leave cannot be requested yet because no leave year is set up. Please contact your HR manager.', 'erp' ) }
+						</AlertDescription>
+					</Alert>
+				)
+			) : (
 			<SelectField
 				id="leave_policy"
 				labelAction={
@@ -182,6 +205,7 @@ export function NewLeaveRequestForm( {
 				onChange={ setPolicy }
 				placeholder={ policyPlaceholder }
 			/>
+			) }
 			{ entitled ? (
 				<LeaveExtraFields
 					fields={ extraFields }
@@ -267,7 +291,7 @@ export function NewLeaveRequestForm( {
 			) : null }
 
 			<DialogFooter className="items-center gap-5 sm:gap-5">
-				{ employeeId && ! entitled ? (
+				{ employeeId && ! entitled && ! yearMissing ? (
 					<span className="mr-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground">
 						<InfoTooltip text={ __( 'This employee has no leave entitlement for the selected year. Use the links above to create a policy and assign it, then come back.', 'erp' ) } />
 						{ __( 'Why can’t I submit?', 'erp' ) }

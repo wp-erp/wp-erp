@@ -206,6 +206,11 @@ function LeavePoliciesInner(): JSX.Element {
 
 	const activeFilterCount  = ( fYear ? 1 : 0 ) + ( departmentId ? 1 : 0 ) + ( employeeType ? 1 : 0 );
 	const filterButtonActive = showFilters || activeFilterCount > 0;
+	// "Nothing here yet" as opposed to "nothing matches": no filter the user set.
+	// The year filter defaults itself to the current financial year, so that
+	// default does not count as a filter.
+	const isUnfiltered =
+		! departmentId && ! employeeType && ( ! fYear || fYear === ( options?.currentFYear ?? 0 ) );
 
 	return (
 		<section className="mx-auto w-full max-w-full">
@@ -227,7 +232,7 @@ function LeavePoliciesInner(): JSX.Element {
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Leave Policies', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
+					<div role="tablist" aria-label={ __( 'Leave Policies', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ __( 'All', 'erp' ) }</span>
 							<span className="font-normal text-[#a5a5aa]">({ total })</span>
@@ -269,6 +274,23 @@ function LeavePoliciesInner(): JSX.Element {
 					<p className="p-6 text-sm text-destructive">{ error }</p>
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
+				) : rows.length === 0 && isUnfiltered ? (
+					<EmptyState
+						size="page"
+						icon={ CalendarDays }
+						title={ __( 'No leave policies yet.', 'erp' ) }
+						description={ __( 'A policy grants leave days for a financial year. Create a leave type first if you have none.', 'erp' ) }
+						action={ canManage ? (
+							<Button
+								onClick={ () => void openCreate() }
+								variant="default"
+								className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5 shadow-sm"
+							>
+								<Plus size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+								{ __( 'Add Leave Policy', 'erp' ) }
+							</Button>
+						) : undefined }
+					/>
 				) : rows.length === 0 ? (
 					<EmptyState size="page" icon={ CalendarDays } title={ __( 'No leave policies match these filters.', 'erp' ) } />
 				) : (

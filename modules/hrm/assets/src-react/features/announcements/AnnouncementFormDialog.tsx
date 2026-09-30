@@ -243,7 +243,7 @@ export function AnnouncementFormDialog( {
 								options={ deptMulti }
 								value={ form.departments }
 								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, departments: v } ) ); setRecipientErr( '' ); } }
-								placeholder={ __( 'Select departments…', 'erp' ) }
+								placeholder={ options && deptMulti.length === 0 ? __( 'No departments yet.', 'erp' ) : __( 'Select departments…', 'erp' ) }
 							/>
 							{ recipientErr ? <p className="text-xs text-destructive">{ recipientErr }</p> : null }
 						</div>
@@ -259,7 +259,7 @@ export function AnnouncementFormDialog( {
 								options={ desigMulti }
 								value={ form.designations }
 								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, designations: v } ) ); setRecipientErr( '' ); } }
-								placeholder={ __( 'Select designations…', 'erp' ) }
+								placeholder={ options && desigMulti.length === 0 ? __( 'No designations yet.', 'erp' ) : __( 'Select designations…', 'erp' ) }
 							/>
 							{ recipientErr ? <p className="text-xs text-destructive">{ recipientErr }</p> : null }
 						</div>
@@ -342,7 +342,7 @@ export function AnnouncementFormDialog( {
 										className="rounded-md border border-border bg-background px-3 py-2 text-sm"
 									/>
 									<p className="text-xs text-muted-foreground">
-										{ __( 'Sent as plain text — the announcement body is not used.', 'erp' ) }
+										{ __( 'Sent as plain text. The announcement body is not used.', 'erp' ) }
 									</p>
 								</div>
 							) : null }

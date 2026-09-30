@@ -60,6 +60,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 
 	const [ policies, setPolicies ]   = useState< readonly IdOption[] >( [] );
 	const [ financialYears, setFinancialYears ] = useState< readonly FinancialYearOption[] >( [] );
+	const [ yearsLoaded, setYearsLoaded ]       = useState( false );
 	const [ employeeTypes, setEmployeeTypes ]   = useState< readonly StringOption[] >( [] );
 	// Assign modal open-state lives in the URL (`?assign=open`) so a browser
 	// refresh re-opens it.
@@ -99,6 +100,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 				return;
 			}
 			setFinancialYears( list );
+			setYearsLoaded( true );
 			if ( ! didDefaultYear.current ) {
 				didDefaultYear.current = true;
 				const today   = todaySiteYmd();
@@ -309,6 +311,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 			<EntitlementAssignDialog
 				open={ assignParam !== null }
 				policies={ policies }
+				hasFinancialYear={ ! yearsLoaded || financialYears.length > 0 }
 				busy={ busy }
 				error={ formError }
 				onClose={ () => setAssignParam( null ) }

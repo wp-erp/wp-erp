@@ -57,7 +57,7 @@ export function EmployeeFormAlerts( {
 				<div className="mb-6">
 					<DependencyHint
 						message={ __(
-							'Set up your organisation before adding employees — Department and Designation are required.',
+							'Set up your organisation before adding employees. Department and Designation are required.',
 							'erp'
 						) }
 						steps={ missingOrgSteps }

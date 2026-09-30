@@ -70,7 +70,7 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 		buildEmployeesCsv( 'active', keys )
 			.then( ( csv ) => {
 				downloadCsv( 'employees.csv', csv );
-				toast.success( __( 'Export ready — check your downloads.', 'erp' ) );
+				toast.success( __( 'Export ready. Check your downloads.', 'erp' ) );
 				close();
 			} )
 			.catch( () => toast.error( __( 'Export failed. Please try again.', 'erp' ) ) )

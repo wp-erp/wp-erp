@@ -26,6 +26,8 @@ interface LeavePolicyPrimaryFieldsProps {
 	readonly fYearOpts:     Option[];
 	readonly busy:          boolean;
 	readonly onAddType:     () => void;
+	/** Opens the inline "New Financial Year" dialog. Omitted when the user cannot create one. */
+	readonly onAddYear?:    ( () => void ) | undefined;
 }
 
 export function LeavePolicyPrimaryFields( {
@@ -38,6 +40,7 @@ export function LeavePolicyPrimaryFields( {
 	fYearOpts,
 	busy,
 	onAddType,
+	onAddYear,
 }: LeavePolicyPrimaryFieldsProps ): JSX.Element {
 	return (
 		<>
@@ -69,7 +72,17 @@ export function LeavePolicyPrimaryFields( {
 				/>
 				<SmartSelectField
 					id="policy_f_year"
-					labelAction={ <FieldSourceAction source="financialYears" /> }
+					labelAction={
+						! editing && onAddYear ? (
+							<QuickAddButton
+								label={ __( 'Add new', 'erp' ) }
+								onClick={ onAddYear }
+								disabled={ busy }
+							/>
+						) : (
+							<FieldSourceAction source="financialYears" />
+						)
+					}
 					label={ __( 'Financial Year', 'erp' ) }
 					required
 					options={ fYearOpts }

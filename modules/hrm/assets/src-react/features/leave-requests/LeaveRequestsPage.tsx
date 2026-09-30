@@ -439,7 +439,7 @@ function LeaveRequestsInner(): JSX.Element {
 					<div
 						role="tablist"
 						aria-label={ __( 'Leave request status', 'erp' ) }
-						className="flex max-w-full items-stretch overflow-x-auto"
+						className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2"
 					>
 						{ STATUS_TABS.filter(
 							( tab ) => ! tab.module || activeModules.includes( tab.module )
@@ -611,7 +611,21 @@ function LeaveRequestsInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<EmptyState size="page" icon={ CalendarDays } title={ __( 'No leave requests match these filters.', 'erp' ) } />
+					activeFilterCount === 0 && ! search && counts.all === 0 ? (
+						<EmptyState
+							size="page"
+							icon={ CalendarDays }
+							title={ __( 'No leave requests yet.', 'erp' ) }
+							action={ canManage ? (
+								<Button className="h-10 gap-1.5 px-4" onClick={ () => setFormParam( 'new' ) }>
+									<Plus size={ 16 } aria-hidden="true" />
+									{ __( 'New Request', 'erp' ) }
+								</Button>
+							) : undefined }
+						/>
+					) : (
+						<EmptyState size="page" icon={ CalendarDays } title={ __( 'No leave requests match these filters.', 'erp' ) } />
+					)
 				) : (
 					<LeaveRequestsTable
 						rows={ rows }

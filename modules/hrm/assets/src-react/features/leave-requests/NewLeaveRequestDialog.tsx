@@ -64,6 +64,9 @@ interface NewLeaveRequestDialogProps {
 
 export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmployeeId }: NewLeaveRequestDialogProps ): JSX.Element {
 	const [ years, setYears ]         = useState< readonly RawFinancialYear[] >( [] );
+	// True once the form options answered, so "no current financial year" is a
+	// fact and not just the loading state.
+	const [ yearsLoaded, setYearsLoaded ] = useState( false );
 
 	const [ employeeId, setEmployeeId ] = useState( lockEmployeeId ? String( lockEmployeeId ) : '' );
 	const employee                      = useEmployeeSearch( open, undefined, employeeId );
@@ -115,6 +118,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 		setError( null );
 		setValidation( null );
 		setDateError( null );
+		setYearsLoaded( false );
 
 		let cancelled = false;
 		void request< { financial_years?: RawFinancialYear[]; current_f_year?: number } >( restPath( 'v2', '/leave-policies/form-options' ) )
@@ -128,6 +132,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 				if ( current && fys.some( ( fy ) => fy.id === current ) ) {
 					setYear( String( current ) );
 				}
+				setYearsLoaded( true );
 			} )
 			.catch( ( raw ) => {
 				if ( ! cancelled ) {
@@ -357,6 +362,7 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 					error={ error }
 					hideEmployeePicker={ Boolean( lockEmployeeId ) }
 					hideFinancialYear={ Boolean( lockEmployeeId ) }
+					yearMissing={ Boolean( lockEmployeeId ) && yearsLoaded && ! year }
 					employee={ employee }
 					employeeId={ employeeId }
 					setEmployeeId={ setEmployeeId }

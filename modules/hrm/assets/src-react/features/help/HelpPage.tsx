@@ -26,7 +26,7 @@ const RESOURCES: readonly Resource[] = [
 	{
 		icon:  BookOpen,
 		title: __( 'Documentation', 'erp' ),
-		desc:  __( 'Step-by-step guides for every HR module — employees, leave, holidays, reports and more.', 'erp' ),
+		desc:  __( 'Step-by-step guides for every HR module: employees, leave, holidays, reports and more.', 'erp' ),
 		href:  'https://wperp.com/docs/',
 		cta:   __( 'Browse docs', 'erp' ),
 	},

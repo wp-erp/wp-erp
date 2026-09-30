@@ -46,7 +46,7 @@ export function AnnouncementsToolbar( {
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-				<div role="tablist" aria-label={ __( 'Announcement status', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
+				<div role="tablist" aria-label={ __( 'Announcement status', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 					{ STATUS_TABS.map( ( tab ) => {
 						const selected = status === tab.value;
 						return (

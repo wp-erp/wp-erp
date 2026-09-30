@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
 import { DependencyHint } from '@/shared/components/DependencyHint';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { dismissGuard } from '@/shared/utils/dialog';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
@@ -37,6 +38,11 @@ import type { EntitlementAssignInput, IdOption } from './types';
 interface EntitlementAssignDialogProps {
 	readonly open:          boolean;
 	readonly policies:      readonly IdOption[];
+	/**
+	 * False when the site has no financial year at all, which is the first thing
+	 * a policy needs. Defaults to true so the hint keeps its two steps.
+	 */
+	readonly hasFinancialYear?: boolean;
 	readonly busy:          boolean;
 	readonly error:         string | null;
 	readonly onClose:       () => void;
@@ -47,12 +53,16 @@ interface EntitlementAssignDialogProps {
 export function EntitlementAssignDialog( {
 	open,
 	policies,
+	hasFinancialYear = true,
 	busy,
 	error,
 	onClose,
 	onSubmit,
 	loadEmployees,
 }: EntitlementAssignDialogProps ): JSX.Element {
+	// `/leave/financial-years` is an `erp_hr_manager` route; a leave manager
+	// without it would land on the No access panel, so they keep the two steps.
+	const canManageYears = useCan( 'erp_hr_manager' );
 	const [ policyId, setPolicyId ]   = useState( '' );
 	const [ mode, setMode ]           = useState< 'single' | 'all' >( 'single' );
 	const [ employeeId, setEmployeeId ] = useState( '' );
@@ -141,7 +151,11 @@ export function EntitlementAssignDialog( {
 					<div className="flex flex-col gap-4">
 						<DependencyHint
 							message={ __( 'No leave policy exists yet. A policy is required before you can assign an entitlement.', 'erp' ) }
-							steps={ [
+							steps={ ! hasFinancialYear && canManageYears ? [
+								{ label: __( '1. Add a financial year', 'erp' ), path: '/leave/financial-years' },
+								{ label: __( '2. Create a leave type', 'erp' ), path: '/leave/types' },
+								{ label: __( '3. Create a leave policy', 'erp' ), path: '/leave/policies' },
+							] : [
 								{ label: __( '1. Create a leave type', 'erp' ), path: '/leave/types' },
 								{ label: __( '2. Create a leave policy', 'erp' ), path: '/leave/policies' },
 							] }
@@ -211,7 +225,11 @@ export function EntitlementAssignDialog( {
 									: __( '- Select -', 'erp' )
 							}
 							searchPlaceholder={ __( 'Search employees…', 'erp' ) }
-							emptyMessage={ __( 'No matching employees.', 'erp' ) }
+							emptyMessage={
+								policyId && ! empLoading
+									? __( 'No employee matches this policy’s department, designation, type or gender. Edit the policy scope or add employees.', 'erp' )
+									: __( 'No matching employees.', 'erp' )
+							}
 						/>
 					) : null }
 

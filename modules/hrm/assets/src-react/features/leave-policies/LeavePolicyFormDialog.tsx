@@ -38,6 +38,7 @@ import {
 } from '@/shared/components/LeaveExtraFields';
 import type { LeaveExtraField, LeaveExtraValues } from '@/shared/components/LeaveExtraFields';
 import { HOOKS } from '@/shared/filters';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
@@ -45,6 +46,8 @@ import { dismissGuard } from '@/shared/utils/dialog';
 
 import { TextareaField } from '../employee-create/fields';
 import type { Option } from '../employee-create/options';
+import { FinancialYearQuickAddDialog } from '../financial-years/FinancialYearQuickAddDialog';
+import type { FinancialYear } from '../financial-years/types';
 import { LeaveTypeFormDialog } from '../leave-types/LeaveTypeFormDialog';
 import type { LeaveType, LeaveTypeInput } from '../leave-types/types';
 import { LeavePolicyPrimaryFields } from './LeavePolicyPrimaryFields';
@@ -99,6 +102,13 @@ export function LeavePolicyFormDialog( {
 	const [ quickTypeErr, setQuickTypeErr ]   = useState< string | null >( null );
 	const [ createdTypes, setCreatedTypes ]   = useState< Option[] >( [] );
 
+	// Same idea for the financial year. Creating one (and the screen that lists
+	// them) is `erp_hr_manager`, so only those users get the inline add and the
+	// link; a leave manager without it is told to ask HR.
+	const canManageYears                    = useCan( 'erp_hr_manager' );
+	const [ quickYearOpen, setQuickYearOpen ] = useState( false );
+	const [ createdYears, setCreatedYears ]   = useState< Option[] >( [] );
+
 	// Pro-injected fields (Advanced Leave). Definitions arrive via wp.hooks; the
 	// pro filter prefills each `default` from the saved policy (`saved`) on edit.
 	const [ extraFields, setExtraFields ] = useState< LeaveExtraField[] >( [] );
@@ -125,6 +135,8 @@ export function LeavePolicyFormDialog( {
 		setQuickTypeOpen( false );
 		setQuickTypeErr( null );
 		setCreatedTypes( [] );
+		setQuickYearOpen( false );
+		setCreatedYears( [] );
 		// On edit, prefill from the policy. On a Duplicate (create + `seed`),
 		// prefill the same scope/days/colour so the user saves a copy.
 		const source = editing ?? seed ?? null;
@@ -176,9 +188,23 @@ export function LeavePolicyFormDialog( {
 			.finally( () => setQuickTypeBusy( false ) );
 	}
 	const fYearOpts = useMemo< Option[] >(
-		() => ( options?.financialYears ?? [] ).map( ( y ) => ( { value: String( y.id ), label: y.label } ) ),
-		[ options ]
+		() => {
+			const base = ( options?.financialYears ?? [] ).map( ( y ) => ( { value: String( y.id ), label: y.label } ) );
+			// Merge inline-created years not yet reflected in the host's cached options.
+			const seen = new Set( base.map( ( o ) => o.value ) );
+			return [ ...base, ...createdYears.filter( ( o ) => ! seen.has( o.value ) ) ];
+		},
+		[ options, createdYears ]
 	);
+
+	function handleQuickYearCreated( created: FinancialYear ): void {
+		const opt: Option = { value: String( created.id ), label: created.fy_name };
+		setCreatedYears( ( prev ) => [ ...prev, opt ] );
+		setForm( ( p ) => ( { ...p, f_year: opt.value } ) );
+		setErrors( ( p ) => ( { ...p, f_year: undefined } ) );
+		setQuickYearOpen( false );
+		onOptionsStale?.();
+	}
 	const deptOpts = useMemo< Option[] >(
 		() => withAll( ( options?.departments ?? [] ).map( ( d ) => ( { value: String( d.id ), label: d.label } ) ) ),
 		[ options ]
@@ -272,6 +298,22 @@ export function LeavePolicyFormDialog( {
 					/>
 				) : null }
 
+				{ ! editing && options && fYearOpts.length === 0 ? (
+					canManageYears ? (
+						<DependencyHint
+							message={ __( 'No financial year exists yet. Add one before creating a leave policy.', 'erp' ) }
+							steps={ [ { label: __( 'Add a financial year', 'erp' ), path: '/leave/financial-years' } ] }
+							onBeforeNavigate={ onClose }
+						/>
+					) : (
+						<Alert variant="destructive">
+							<AlertDescription>
+								{ __( 'No financial year exists yet. Please contact your HR manager.', 'erp' ) }
+							</AlertDescription>
+						</Alert>
+					)
+				) : null }
+
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
 					<LeavePolicyPrimaryFields
 						form={ form }
@@ -283,6 +325,7 @@ export function LeavePolicyFormDialog( {
 						fYearOpts={ fYearOpts }
 						busy={ busy }
 						onAddType={ () => { setQuickTypeErr( null ); setQuickTypeOpen( true ); } }
+						onAddYear={ canManageYears ? () => setQuickYearOpen( true ) : undefined }
 					/>
 
 					<LeavePolicyScopeFields
@@ -332,6 +375,14 @@ export function LeavePolicyFormDialog( {
 						</Button>
 					</DialogFooter>
 				</form>
+
+				{ /* Inside the popup so Base UI treats it as a child dialog and
+				     opening it does not read as an outside press on this form. */ }
+				<FinancialYearQuickAddDialog
+					open={ quickYearOpen }
+					onClose={ () => setQuickYearOpen( false ) }
+					onCreated={ handleQuickYearCreated }
+				/>
 			</DialogContent>
 
 			<LeaveTypeFormDialog
