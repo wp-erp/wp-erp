@@ -112,13 +112,10 @@ test.describe('HRM REST — departments / designations / employees', () => {
     });
 
     // ── Negative: invalid id read-back ───────────────────────────────────────
-    test('GET a non-existent employee returns a blank record (lenient API)', { tag: ['@lite', '@hrm'] }, async () => {
-        // QA finding: WP ERP responds 200 with an EMPTY employee object (user_id="")
-        // for an unknown id instead of a 404 — a validation gap worth flagging.
-        const [response, body] = await api.get(endPoints.employee(99999999), undefined, false);
-        expect(response.status()).toBe(200);
-        expect(String(body?.user_id ?? '')).toBe('');
-        expect(String(body?.first_name ?? '')).toBe('');
+    test('GET a non-existent employee returns 404', { tag: ['@lite', '@hrm'] }, async () => {
+        // An unknown id used to answer 200 with an empty employee object; it is a 404 now.
+        const [response] = await api.get(endPoints.employee(99999999), undefined, false);
+        expect(response.status()).toBe(404);
     });
 
     // ── Negative: invalid create payload ─────────────────────────────────────

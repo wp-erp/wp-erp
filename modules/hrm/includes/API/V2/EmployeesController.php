@@ -332,8 +332,9 @@ class EmployeesController extends RestController {
 	/**
 	 * Whether an attachment may be used (and later removed) as an employee's
 	 * profile photo: it must be an image, and either uploaded for that employee
-	 * through the avatar endpoint, authored by that employee, or deletable by the
-	 * current user anyway.
+	 * through the avatar endpoint, authored by that employee, uploaded by the
+	 * current user (the create form uploads the photo before the employee
+	 * exists), or deletable by the current user anyway.
 	 *
 	 * @param int $photo_id Attachment ID.
 	 * @param int $user_id  Employee user ID (0 when the employee does not exist yet).
@@ -350,7 +351,9 @@ class EmployeesController extends RestController {
 			|| (int) get_post_field( 'post_author', $photo_id ) === $user_id
 		);
 
-		if ( ! $owned && ! current_user_can( 'delete_post', $photo_id ) ) {
+		$own_upload = (int) get_post_field( 'post_author', $photo_id ) === get_current_user_id();
+
+		if ( ! $owned && ! $own_upload && ! current_user_can( 'delete_post', $photo_id ) ) {
 			return new \WP_Error( 'rest_cannot_use_photo', __( 'You are not allowed to use this attachment as a profile photo.', 'erp' ), [ 'status' => 403 ] );
 		}
 
@@ -421,19 +424,21 @@ class EmployeesController extends RestController {
 		];
 
 		$statuses = $this->allowed_employee_status_keys();
+		$is_hr    = current_user_can( 'erp_view_employee' );
 		$counts   = [];
 		$total    = 0;
 		foreach ( $statuses as $status ) {
 			$args               = $base_args;
 			$args['status']     = $status;
-			$count              = (int) erp_hr_get_employees( $args );
+			// Same rule as the list: a non-HR viewer only learns about active staff.
+			$count              = ( $is_hr || 'active' === $status ) ? (int) erp_hr_get_employees( $args ) : 0;
 			$counts[ $status ]  = $count;
 			$total             += $count;
 		}
 
 		$trash_args           = $base_args;
 		$trash_args['status'] = 'trash';
-		$counts['trash']      = (int) erp_hr_get_employees( $trash_args );
+		$counts['trash']      = $is_hr ? (int) erp_hr_get_employees( $trash_args ) : 0;
 
 		$payload = [
 			'all'       => $total,
@@ -1452,6 +1457,12 @@ class EmployeesController extends RestController {
 
 		$status = (string) ( $request['status'] ?? 'active' );
 		$status = $this->cast_enum( $status, $this->allowed_statuses() ) ?? 'active';
+
+		// The directory an employee sees is the people working here now. Who was
+		// terminated, resigned or trashed is for HR only.
+		if ( ! current_user_can( 'erp_view_employee' ) ) {
+			$status = 'active';
+		}
 
 		$args = [
 			'number'      => $per_page,
