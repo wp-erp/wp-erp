@@ -248,10 +248,10 @@ export function LocationFormDialog( { open, onClose, onCreated }: LocationFormDi
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">
-						<Button type="button" variant="outline" className="h-10 px-4" disabled={ busy } onClick={ onClose }>
+						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>
 							{ __( 'Cancel', 'erp' ) }
 						</Button>
-						<Button type="submit" className="h-10 px-4" disabled={ busy }>
+						<Button type="submit" className="h-10 px-6" disabled={ busy }>
 							{ busy ? __( 'Saving…', 'erp' ) : __( 'Add Location', 'erp' ) }
 						</Button>
 					</DialogFooter>

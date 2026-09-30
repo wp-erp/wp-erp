@@ -25,7 +25,7 @@ export function UpgradeButton(): JSX.Element {
 			className="h-9 gap-1.5 rounded-md bg-[#f7941d] px-4 text-sm font-semibold text-[#1a1a1a] hover:bg-[#e8870f]"
 		>
 			{ __( 'Upgrade', 'erp' ) }
-			<Crown size={ 15 } strokeWidth={ 2 } aria-hidden="true" />
+			<Crown size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 		</Button>
 	);
 }

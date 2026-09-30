@@ -77,7 +77,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
 					<div className="flex flex-wrap items-center gap-3">
-						<h1 className="m-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
+						<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						{ status ? (
@@ -100,7 +100,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 								className="h-9 gap-1.5 px-4"
 								onClick={ onEdit }
 							>
-								<Pencil size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+								<Pencil size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 								{ __( 'Edit', 'erp' ) }
 							</Button>
 						) : null }
@@ -111,7 +111,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 								className="h-9 gap-1.5 px-4"
 								onClick={ onReactivate }
 							>
-								<UserCheck size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+								<UserCheck size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 								{ __( 'Reactivate', 'erp' ) }
 							</Button>
 						) : null }
@@ -122,7 +122,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 								className="h-9 gap-1.5 px-4"
 								onClick={ onTerminate }
 							>
-								<UserX size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+								<UserX size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 								{ __( 'Terminate', 'erp' ) }
 							</Button>
 						) : null }
@@ -133,7 +133,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 								className="h-9 gap-1.5 px-4"
 								onClick={ onPrint }
 							>
-								<Printer size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+								<Printer size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 								{ __( 'Print', 'erp' ) }
 							</Button>
 						) : null }

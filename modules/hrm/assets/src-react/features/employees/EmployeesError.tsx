@@ -39,7 +39,7 @@ export function EmployeesError( { error }: EmployeesErrorProps ): JSX.Element {
 						doAction( EMPLOYEES_ACTIONS.REFRESH_REQUESTED );
 					} }
 				>
-					<RefreshCw size={ 14 } aria-hidden="true" />
+					<RefreshCw size={ 16 } aria-hidden="true" />
 					{ __( 'Retry', 'erp' ) }
 				</Button>
 			</div>

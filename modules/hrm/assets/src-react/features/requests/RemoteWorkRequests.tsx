@@ -22,7 +22,7 @@ import {
     Textarea,
     toast,
 } from "@wedevs/plugin-ui";
-import { Plus, Trash2 } from "lucide-react";
+import { Laptop, Plus, Trash2 } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 
 import { ApproveRejectSplit } from "./ApproveRejectSplit";
@@ -30,6 +30,7 @@ import { RequestsActionSlot } from "./RequestsActionSlot";
 import { RequestsTabContext } from "./requests-tab-context";
 import type { JSX } from "react";
 
+import { EmptyState } from "@/shared/components/EmptyState";
 import { DateField } from "@/shared/DateField";
 import { __ } from "@/shared/i18n";
 import { request, restPath } from "@/shared/utils/apiFetch";
@@ -104,17 +105,17 @@ export function RemoteWorkRequests(): JSX.Element {
             {inTabs ? (
                 <RequestsActionSlot>
                     <Button className="h-10 gap-1.5" onClick={() => setCreating(true)}>
-                        <Plus size={15} aria-hidden="true" />
+                        <Plus size={16} aria-hidden="true" />
                         {__("New Request", "erp")}
                     </Button>
                 </RequestsActionSlot>
             ) : (
-                <header className="mb-6 flex items-center justify-between gap-4">
+                <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
                     <h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
                         {__("Remote Work Requests", "erp")}
                     </h1>
                     <Button className="h-10 gap-1.5" onClick={() => setCreating(true)}>
-                        <Plus size={15} aria-hidden="true" />
+                        <Plus size={16} aria-hidden="true" />
                         {__("New Request", "erp")}
                     </Button>
                 </header>
@@ -126,9 +127,21 @@ export function RemoteWorkRequests(): JSX.Element {
                         <Skeleton className="h-6 w-full" />
                     </div>
                 ) : rows.length === 0 ? (
-                    <p className="px-4 py-12 text-center text-sm text-muted-foreground">
-                        {__("No remote work requests.", "erp")}
-                    </p>
+                    <EmptyState
+                        size="page"
+                        icon={Laptop}
+                        title={__("No remote work requests.", "erp")}
+                        action={
+                            <Button
+                                variant="default"
+                                className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium shadow-sm"
+                                onClick={() => setCreating(true)}
+                            >
+                                <Plus size={16} aria-hidden="true" />
+                                {__("New Request", "erp")}
+                            </Button>
+                        }
+                    />
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-176 text-left text-sm">
@@ -216,7 +229,7 @@ export function RemoteWorkRequests(): JSX.Element {
                                                             act(r.id, "delete")
                                                         }
                                                     >
-                                                        <Trash2 size={14} aria-hidden="true" />
+                                                        <Trash2 size={16} aria-hidden="true" />
                                                         {__("Delete", "erp")}
                                                     </Button>
                                                 )}
@@ -311,6 +324,7 @@ function NewRemoteWorkDialog({
                         )}
                     </DialogDescription>
                 </DialogHeader>
+                <div className="h-px w-full bg-border" />
 
                 <div className="flex flex-col gap-2.5">
                     <label className="text-sm font-medium text-foreground">
@@ -383,11 +397,11 @@ function NewRemoteWorkDialog({
                     </div>
                 </div>
 
-                <DialogFooter className="gap-3">
-                    <Button variant="outline" disabled={busy} onClick={onClose}>
+                <DialogFooter className="gap-5 sm:gap-5">
+                    <Button variant="outline" className="h-10 px-6" disabled={busy} onClick={onClose}>
                         {__("Cancel", "erp")}
                     </Button>
-                    <Button disabled={busy} onClick={submit}>
+                    <Button className="h-10 px-6" disabled={busy} onClick={submit}>
                         {busy ? __("Submitting…", "erp") : __("Submit", "erp")}
                     </Button>
                 </DialogFooter>

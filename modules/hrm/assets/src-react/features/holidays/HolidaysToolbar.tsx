@@ -39,7 +39,7 @@ export function HolidaysToolbar( {
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-				<div role="tablist" aria-label={ __( 'Holidays', 'erp' ) } className="flex items-stretch">
+				<div role="tablist" aria-label={ __( 'Holidays', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 					<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 						<span>{ __( 'All', 'erp' ) }</span>
 						<span className="font-normal text-[#a5a5aa]">({ total })</span>
@@ -85,7 +85,7 @@ export function HolidaysToolbar( {
 			</div>
 
 			{ filterButtonActive ? (
-				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
+				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
 						{ __( 'Date range', 'erp' ) }
 						<DateRangeField

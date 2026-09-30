@@ -409,6 +409,9 @@ export function EmployeeForm( {
 					converting={ converting }
 					onConvert={ () => void handleConvert() }
 					errors={ errors }
+					extraLabels={ Object.fromEntries(
+						extraFields.map( ( f ) => [ f.key, f.label ] )
+					) }
 				/>
 
 				<div className="space-y-6">
@@ -449,7 +452,7 @@ export function EmployeeForm( {
 								/>
 							) }
 							<div className="min-w-0">
-								<h1 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ heading }</h1>
+								<h1 className="mt-0 text-2xl font-bold leading-8 text-foreground">{ heading }</h1>
 								<p className="mt-1 truncate text-sm text-muted-foreground">{ subheading }</p>
 							</div>
 						</div>

@@ -55,25 +55,25 @@ export function LeavePoliciesTable( {
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
 			<thead className="border-b border-border bg-card">
-				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-					<th scope="col" className="px-4">
+				<tr className="h-10">
+					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 						<button type="button" onClick={ () => onToggleSort( 'name' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
 							{ __( 'Name', 'erp' ) }{ sortIcon( 'name' ) }
 						</button>
 					</th>
-					<th scope="col" className="px-2">
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
 						<button type="button" onClick={ () => onToggleSort( 'days' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
 							{ __( 'Days', 'erp' ) }{ sortIcon( 'days' ) }
 						</button>
 					</th>
-					<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Designation', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Location', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Type', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Gender', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Marital', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Year', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Department', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Designation', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Location', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Type', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Gender', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Marital', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Year', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Description', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

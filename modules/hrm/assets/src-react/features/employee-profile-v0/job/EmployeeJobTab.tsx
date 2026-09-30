@@ -10,10 +10,11 @@
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Briefcase, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -71,7 +72,7 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 			</div>
 			<div className="mb-4 mt-4 h-px w-full bg-border" />
 			{ rowCount === 0 ? (
-				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
+				<EmptyState size="compact" icon={ Briefcase } title={ empty } />
 			) : (
 				<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
@@ -110,12 +111,12 @@ function RowActionCell( { isActive, onEdit, onDelete }: RowActionCellProps ): JS
 	return (
 		<td className="px-4 align-middle text-right">
 			{ isActive ? (
-				<Button variant="ghost" size="icon" className="size-8" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
-					<Pencil size={ 14 } aria-hidden="true" />
+				<Button variant="ghost" size="icon" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
+					<Pencil size={ 16 } aria-hidden="true" />
 				</Button>
 			) : (
-				<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-					<Trash2 size={ 14 } aria-hidden="true" />
+				<Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
+					<Trash2 size={ 16 } aria-hidden="true" />
 				</Button>
 			) }
 		</td>
@@ -206,7 +207,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 	const actionButton = ( target: JobAction, label: string ): ReactNode =>
 		canManage ? (
 			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => openAction( target ) }>
-				<Pencil size={ 14 } aria-hidden="true" />
+				<Pencil size={ 16 } aria-hidden="true" />
 				{ label }
 			</Button>
 		) : null;

@@ -159,7 +159,7 @@ export function LeaveRequestsFilters( {
 					onClick={ clearFilters }
 					className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
 				>
-					<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+					<X size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 					{ __( 'Clear', 'erp' ) }
 				</Button>
 			) : null }

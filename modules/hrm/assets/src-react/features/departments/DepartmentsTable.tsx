@@ -62,108 +62,110 @@ export function DepartmentsTable( {
 	}
 
 	return (
-		<table className="w-full text-left">
-			<thead className="border-b border-border bg-card">
-				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-					{ canManage ? (
-						<th scope="col" className="w-10 px-4">
-							<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
-						</th>
-					) : null }
-					<th scope="col" className="px-2">
-						<button type="button" onClick={ () => onToggleSort( 'title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-							{ __( 'Name', 'erp' ) }{ sortIcon( 'title' ) }
-						</button>
-					</th>
-					<th scope="col" className="px-2">
-						<button type="button" onClick={ () => onToggleSort( 'lead_name' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-							{ __( 'Head', 'erp' ) }{ sortIcon( 'lead_name' ) }
-						</button>
-					</th>
-					<th scope="col" className="px-2">
-						<button type="button" onClick={ () => onToggleSort( 'parent_title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-							{ __( 'Parent', 'erp' ) }{ sortIcon( 'parent_title' ) }
-						</button>
-					</th>
-					<th scope="col" className="px-2">
-						<button type="button" onClick={ () => onToggleSort( 'total_employees' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
-							{ __( 'Employees', 'erp' ) }{ sortIcon( 'total_employees' ) }
-						</button>
-					</th>
-					<th scope="col" className="w-20 px-4">
-						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				{ rows.map( ( dept ) => (
-					<tr key={ dept.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+		<div className="overflow-x-auto">
+			<table className="w-full min-w-160 text-left">
+				<thead className="border-b border-border bg-card">
+					<tr className="h-10">
 						{ canManage ? (
-							<td className="px-4 align-middle">
-								<Checkbox checked={ selected.has( dept.id ) } onCheckedChange={ () => onToggleOne( dept.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), dept.title ) } />
-							</td>
+							<th scope="col" className="w-10 px-4">
+								<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
+							</th>
 						) : null }
-						<td className="px-2 align-middle text-sm">
-							<div style={ { paddingLeft: `${ ( depthOf?.( dept.id ) ?? 0 ) * 20 }px` } }>
-								<Link
-									to={ `/employees?department_id=${ dept.id }` }
-									className="font-medium text-foreground hover:text-primary hover:underline"
-								>
-									{ ( depthOf?.( dept.id ) ?? 0 ) > 0 ? <span className="mr-1 text-muted-foreground" aria-hidden="true">└</span> : null }
-									{ dept.title }
-								</Link>
-								{ dept.description ? (
-									<div className="truncate text-xs text-muted-foreground">{ dept.description }</div>
-								) : null }
-							</div>
-						</td>
-						<td className="px-2 align-middle text-sm text-foreground">
-							{ dept.lead_name && dept.lead
-								? (
-									<Link to={ `/employees/${ dept.lead }` } className="text-foreground hover:text-primary hover:underline">
-										{ dept.lead_name }
-									</Link>
-								)
-								: ( dept.lead_name || <span className="text-muted-foreground">—</span> ) }
-						</td>
-						<td className="px-2 align-middle text-sm text-foreground">
-							{ dept.parent_title || <span className="text-muted-foreground">—</span> }
-						</td>
-						<td className="px-2 align-middle text-sm text-foreground">
-							<EmployeeAvatarStack people={ dept.employees } total={ dept.total_employees } />
-						</td>
-						<td className="px-4 align-middle">
-							{ canManage ? (
-								<div className="flex justify-end">
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), dept.title ) }>
-													<MoreVertical size={ 16 } aria-hidden="true" />
-												</Button>
-											}
-										/>
-										<DropdownMenuContent align="end" className="min-w-44">
-											<DropdownMenuItem className="gap-2" onClick={ () => onEdit( dept ) }>
-												<Pencil size={ 14 } aria-hidden="true" />
-												{ __( 'Edit', 'erp' ) }
-											</DropdownMenuItem>
-											<DropdownMenuItem
-												variant="destructive"
-												className="gap-2"
-												onClick={ () => onDelete( dept ) }
-											>
-												<Trash2 size={ 14 } aria-hidden="true" />
-												{ __( 'Delete', 'erp' ) }
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
-								</div>
-							) : null }
-						</td>
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+							<button type="button" onClick={ () => onToggleSort( 'title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
+								{ __( 'Name', 'erp' ) }{ sortIcon( 'title' ) }
+							</button>
+						</th>
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+							<button type="button" onClick={ () => onToggleSort( 'lead_name' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
+								{ __( 'Head', 'erp' ) }{ sortIcon( 'lead_name' ) }
+							</button>
+						</th>
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+							<button type="button" onClick={ () => onToggleSort( 'parent_title' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
+								{ __( 'Parent', 'erp' ) }{ sortIcon( 'parent_title' ) }
+							</button>
+						</th>
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+							<button type="button" onClick={ () => onToggleSort( 'total_employees' ) } className="inline-flex items-center gap-1 uppercase hover:text-foreground">
+								{ __( 'Employees', 'erp' ) }{ sortIcon( 'total_employees' ) }
+							</button>
+						</th>
+						<th scope="col" className="w-20 px-4">
+							<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
+						</th>
 					</tr>
-				) ) }
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{ rows.map( ( dept ) => (
+						<tr key={ dept.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+							{ canManage ? (
+								<td className="px-4 align-middle">
+									<Checkbox checked={ selected.has( dept.id ) } onCheckedChange={ () => onToggleOne( dept.id ) } aria-label={ sprintf( __( 'Select %s', 'erp' ), dept.title ) } />
+								</td>
+							) : null }
+							<td className="px-2 align-middle text-sm">
+								<div style={ { paddingLeft: `${ ( depthOf?.( dept.id ) ?? 0 ) * 20 }px` } }>
+									<Link
+										to={ `/employees?department_id=${ dept.id }` }
+										className="font-medium text-foreground hover:text-primary hover:underline"
+									>
+										{ ( depthOf?.( dept.id ) ?? 0 ) > 0 ? <span className="mr-1 text-muted-foreground" aria-hidden="true">└</span> : null }
+										{ dept.title }
+									</Link>
+									{ dept.description ? (
+										<div className="truncate text-xs text-muted-foreground">{ dept.description }</div>
+									) : null }
+								</div>
+							</td>
+							<td className="px-2 align-middle text-sm text-foreground">
+								{ dept.lead_name && dept.lead
+									? (
+										<Link to={ `/employees/${ dept.lead }` } className="text-foreground hover:text-primary hover:underline">
+											{ dept.lead_name }
+										</Link>
+									)
+									: ( dept.lead_name || <span className="text-muted-foreground">—</span> ) }
+							</td>
+							<td className="px-2 align-middle text-sm text-foreground">
+								{ dept.parent_title || <span className="text-muted-foreground">—</span> }
+							</td>
+							<td className="px-2 align-middle text-sm text-foreground">
+								<EmployeeAvatarStack people={ dept.employees } total={ dept.total_employees } />
+							</td>
+							<td className="px-4 align-middle">
+								{ canManage ? (
+									<div className="flex justify-end">
+										<DropdownMenu>
+											<DropdownMenuTrigger
+												render={
+													<Button variant="ghost" size="icon" aria-label={ sprintf( __( 'Actions for %s', 'erp' ), dept.title ) }>
+														<MoreVertical size={ 16 } aria-hidden="true" />
+													</Button>
+												}
+											/>
+											<DropdownMenuContent align="end" className="min-w-44">
+												<DropdownMenuItem className="gap-2" onClick={ () => onEdit( dept ) }>
+													<Pencil size={ 14 } aria-hidden="true" />
+													{ __( 'Edit', 'erp' ) }
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													variant="destructive"
+													className="gap-2"
+													onClick={ () => onDelete( dept ) }
+												>
+													<Trash2 size={ 14 } aria-hidden="true" />
+													{ __( 'Delete', 'erp' ) }
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</div>
+								) : null }
+							</td>
+						</tr>
+					) ) }
+				</tbody>
+			</table>
+		</div>
 	);
 }

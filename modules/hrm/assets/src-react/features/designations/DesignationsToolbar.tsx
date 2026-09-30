@@ -34,7 +34,7 @@ export function DesignationsToolbar( {
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-				<div role="tablist" aria-label={ __( 'Designations', 'erp' ) } className="flex items-stretch">
+				<div role="tablist" aria-label={ __( 'Designations', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 					<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 						<span>{ __( 'All', 'erp' ) }</span>
 						<span className="font-normal text-[#a5a5aa]">({ total })</span>

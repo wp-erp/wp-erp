@@ -218,12 +218,6 @@ export function LeaveRequestDialog( {
 				<div className="h-px w-full bg-border" />
 
 				<form onSubmit={ ( e ) => void handleSubmit( e ) } className="flex min-w-0 flex-col gap-4">
-					{ error ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ error }</AlertDescription>
-						</Alert>
-					) : null }
-
 					<SelectField
 						id="leave_year"
 						labelAction={ <FieldSourceAction source="financialYears" /> }
@@ -271,6 +265,12 @@ export function LeaveRequestDialog( {
 					) : null }
 
 					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } disabled={ ! entitled } value={ reason } onChange={ setReason } />
+
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
+					) : null }
 
 					<DialogFooter className="items-center gap-5 sm:gap-5">
 						{ year && ! entitled ? (

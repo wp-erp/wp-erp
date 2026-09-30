@@ -27,12 +27,13 @@ import {
 	SmartSelect,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Filter, SquareArrowOutUpRight } from 'lucide-react';
+import { CalendarDays, Filter, SquareArrowOutUpRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX, ReactNode } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -158,7 +159,7 @@ function LeaveForwardInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Forward Leaves', 'erp' ) }</h1>
 				{ canManage ? (
 					pending ? (
@@ -185,7 +186,7 @@ function LeaveForwardInner(): JSX.Element {
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Forward Leaves', 'erp' ) } className="flex items-stretch">
+					<div role="tablist" aria-label={ __( 'Forward Leaves', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ pending ? __( 'Pending', 'erp' ) : __( 'Applied', 'erp' ) }</span>
 							<span className="font-normal text-[#a5a5aa]">({ pending ? rows.length : total })</span>
@@ -230,12 +231,12 @@ function LeaveForwardInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">{ __( 'No forward leaves to process.', 'erp' ) }</p>
+					<EmptyState size="page" icon={ CalendarDays } title={ __( 'No forward leaves to process.', 'erp' ) } />
 				) : (
 					<div className="overflow-x-auto">
 						<table className="w-full min-w-3xl text-left">
 							<thead className="border-b border-border bg-card">
-								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+								<tr className="h-10">
 									<Th className="whitespace-nowrap px-4">{ __( 'Employee', 'erp' ) }</Th>
 									<Th>{ __( 'Policy', 'erp' ) }</Th>
 									{ pending ? <Th>{ __( 'Available', 'erp' ) }</Th> : null }
@@ -281,14 +282,14 @@ function LeaveForwardInner(): JSX.Element {
 			<Dialog open={ confirm } onOpenChange={ ( next ) => ( busy ? undefined : setConfirm( next ) ) }>
 				<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle className="m-0 mb-4 text-xl font-bold leading-tight tracking-tight text-foreground">
+						<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">
 							{ __( 'Apply forward leaves?', 'erp' ) }
 						</DialogTitle>
 						<DialogDescription>
 							{ __( 'This carries forward / encashes the listed leaves for the previous financial year and cannot be undone.', 'erp' ) }
 						</DialogDescription>
 					</DialogHeader>
-					<DialogFooter className="gap-3 sm:gap-3">
+					<DialogFooter className="gap-5 sm:gap-5">
 						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ () => setConfirm( false ) }>
 							{ __( 'Cancel', 'erp' ) }
 						</Button>
@@ -313,7 +314,7 @@ export function LeaveForwardPage(): JSX.Element {
 }
 
 function Th( { children, className = 'whitespace-nowrap px-2' }: { children: ReactNode; className?: string } ): JSX.Element {
-	return <th scope="col" className={ className }>{ children }</th>;
+	return <th scope="col" className={ `${ className } text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]` }>{ children }</th>;
 }
 
 /** Trigger a client-side CSV download. */

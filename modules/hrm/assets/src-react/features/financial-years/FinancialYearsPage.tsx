@@ -79,7 +79,7 @@ function FinancialYearsInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-5xl">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<div>
 					<h1 className="text-2xl font-bold leading-8 text-foreground">{ __( 'Financial Years', 'erp' ) }</h1>
 					<p className="mt-1 text-sm text-muted-foreground">
@@ -92,7 +92,7 @@ function FinancialYearsInner(): JSX.Element {
 				</Button>
 			</header>
 
-			<div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+			<div className="rounded-[10px] bg-card p-6 shadow-sm">
 				{ error ? (
 					<p className="text-sm text-destructive">{ error }</p>
 				) : loading ? (
@@ -102,8 +102,8 @@ function FinancialYearsInner(): JSX.Element {
 						<div className="space-y-3">
 							{ draft.map( ( row, index ) => (
 								<div key={ index } className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1.1fr_1fr_1fr_1.3fr_auto]">
-									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Name', 'erp' ) }</span> : null }
+									<label className="flex flex-col gap-2.5">
+										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'Name', 'erp' ) }</span> : null }
 										<Input
 											value={ row.fy_name }
 											onChange={ ( e ) => patch( index, 'fy_name', e.target.value ) }
@@ -111,8 +111,8 @@ function FinancialYearsInner(): JSX.Element {
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
-									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Start date', 'erp' ) }</span> : null }
+									<label className="flex flex-col gap-2.5">
+										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'Start date', 'erp' ) }</span> : null }
 										<DateField
 											value={ row.start_date }
 											onChange={ ( v ) => patch( index, 'start_date', v ) }
@@ -120,8 +120,8 @@ function FinancialYearsInner(): JSX.Element {
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
-									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'End date', 'erp' ) }</span> : null }
+									<label className="flex flex-col gap-2.5">
+										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'End date', 'erp' ) }</span> : null }
 										<DateField
 											value={ row.end_date }
 											onChange={ ( v ) => patch( index, 'end_date', v ) }
@@ -129,8 +129,8 @@ function FinancialYearsInner(): JSX.Element {
 											className="h-10 bg-background px-4 text-sm"
 										/>
 									</label>
-									<label className="flex flex-col gap-1.5">
-										{ index === 0 ? <span className="text-sm font-medium text-muted-foreground">{ __( 'Description', 'erp' ) }</span> : null }
+									<label className="flex flex-col gap-2.5">
+										{ index === 0 ? <span className="text-sm font-medium text-foreground">{ __( 'Description', 'erp' ) }</span> : null }
 										<Input
 											value={ row.description }
 											onChange={ ( e ) => patch( index, 'description', e.target.value ) }
@@ -141,7 +141,7 @@ function FinancialYearsInner(): JSX.Element {
 									<Button
 										variant="ghost"
 										size="icon"
-										className="h-10 w-10 text-destructive hover:text-destructive"
+										className="text-destructive hover:bg-destructive/10 hover:text-destructive"
 										aria-label={ __( 'Remove row', 'erp' ) }
 										disabled={ busy }
 										onClick={ () => removeRow( index ) }
@@ -152,7 +152,7 @@ function FinancialYearsInner(): JSX.Element {
 							) ) }
 						</div>
 
-						<Button variant="outline" className="mt-4 gap-1.5" disabled={ busy } onClick={ addRow }>
+						<Button variant="outline" className="mt-4 h-10 gap-1.5" disabled={ busy } onClick={ addRow }>
 							<Plus size={ 16 } aria-hidden="true" />
 							{ __( 'Add New', 'erp' ) }
 						</Button>

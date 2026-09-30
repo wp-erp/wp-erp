@@ -65,7 +65,7 @@ function ResourceCard( { icon: Icon, title, desc, href, cta }: Resource ): JSX.E
 				href={ href }
 				target="_blank"
 				rel="noopener noreferrer"
-				className="mt-4 inline-flex h-9 w-fit items-center gap-1.5 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+				className="mt-4 inline-flex h-10 w-fit items-center gap-1.5 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
 			>
 				{ cta }
 			</a>
@@ -78,7 +78,7 @@ export function HelpPage(): JSX.Element {
 		<ErrorBoundary>
 			<div className="mx-auto w-full max-w-full space-y-6">
 				<header>
-					<h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground">
+					<h1 className="text-2xl font-bold leading-8 text-foreground">
 						{ __( 'Help & Resources', 'erp' ) }
 					</h1>
 					<p className="mt-1 text-sm text-muted-foreground">

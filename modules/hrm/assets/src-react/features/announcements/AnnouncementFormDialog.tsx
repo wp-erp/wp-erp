@@ -20,6 +20,7 @@ import {
 	DialogTitle,
 	RichTextEditor,
 	SmartMultiSelect,
+	Textarea,
 } from '@wedevs/plugin-ui';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
@@ -277,12 +278,6 @@ export function AnnouncementFormDialog( {
 						</div>
 					) : null }
 
-					{ error ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ error }</AlertDescription>
-						</Alert>
-					) : null }
-
 					{ /* Scheduling. WordPress parks a future-dated post under `future` and
 					     publishes it on cron, which fires the same assignment hook the
 					     e-mail and push run off — so this needs no queue of its own.
@@ -339,12 +334,12 @@ export function AnnouncementFormDialog( {
 									<label htmlFor="announcement_sms_content" className="text-sm font-medium text-foreground">
 										{ __( 'SMS body', 'erp' ) }
 									</label>
-									<textarea
+									<Textarea
 										id="announcement_sms_content"
 										rows={ 3 }
 										value={ form.smsContent }
 										onChange={ ( e ) => setForm( ( p ) => ( { ...p, smsContent: e.target.value } ) ) }
-										className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+										className="rounded-md border border-border bg-background px-3 py-2 text-sm"
 									/>
 									<p className="text-xs text-muted-foreground">
 										{ __( 'Sent as plain text — the announcement body is not used.', 'erp' ) }
@@ -352,6 +347,12 @@ export function AnnouncementFormDialog( {
 								</div>
 							) : null }
 						</div>
+					) : null }
+
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">

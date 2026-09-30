@@ -72,7 +72,7 @@ export function LeaveEntitlementsFilters( {
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-				<div role="tablist" aria-label={ __( 'Leave Entitlements', 'erp' ) } className="flex items-stretch">
+				<div role="tablist" aria-label={ __( 'Leave Entitlements', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 					<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 						<span>{ __( 'All', 'erp' ) }</span>
 						<span className="font-normal text-[#a5a5aa]">({ total })</span>
@@ -91,7 +91,7 @@ export function LeaveEntitlementsFilters( {
 							value={ search }
 							onChange={ ( e ) => onSearch( e.target.value ) }
 							placeholder={ __( 'Search employees…', 'erp' ) }
-							className="h-9 w-56 rounded-md border-border pl-9 text-sm"
+							className="h-9 w-60 rounded-md border-border pl-9 text-sm"
 							aria-label={ __( 'Search entitlements by employee', 'erp' ) }
 						/>
 					</div>
@@ -116,7 +116,7 @@ export function LeaveEntitlementsFilters( {
 			</div>
 
 			{ filterButtonActive ? (
-				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
+				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
 						{ __( 'Year', 'erp' ) }
 						<SmartSelect
@@ -161,7 +161,7 @@ export function LeaveEntitlementsFilters( {
 							onClick={ clearFilters }
 							className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
 						>
-							<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+							<X size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 							{ __( 'Clear', 'erp' ) }
 						</Button>
 					) : null }

@@ -101,7 +101,7 @@ export function EmployeesBulkBar(): JSX.Element | null {
 									: ''
 							}` }
 						>
-							{ Icon ? <Icon size={ 14 } aria-hidden="true" /> : null }
+							{ Icon ? <Icon size={ 16 } aria-hidden="true" /> : null }
 							{ action.label }
 						</Button>
 					);

@@ -41,11 +41,11 @@ export function EmployeesToolbar( { view, onViewChange }: EmployeesToolbarProps 
 	const [ exportOpen, setExportOpen ] = useState( false );
 
 	return (
-		<header className="mb-6 flex items-center justify-between gap-4">
+		<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 			<h1 className="text-2xl font-bold leading-8 text-foreground">
 				{ __( 'Employees', 'erp' ) }
 			</h1>
-			<div className="flex items-center gap-3">
+			<div className="flex flex-wrap items-center gap-3">
 				{ can( 'erp_create_employee' ) ? (
 					<>
 						{ /* Split button: Export is the primary action; the chevron

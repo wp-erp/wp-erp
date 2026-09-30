@@ -6,6 +6,7 @@
  * Data from `GET /reports/years-of-service`.
  */
 
+import { Button } from '@wedevs/plugin-ui';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -95,9 +96,9 @@ export function YearsOfServicePage(): JSX.Element {
 					) ) }
 					{ totalPeople > visible ? (
 						<div className="flex justify-center p-3">
-							<button type="button" onClick={ () => setVisible( ( v ) => v + PAGE ) } className="inline-flex h-9 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+							<Button type="button" variant="outline" className="h-10 px-4" onClick={ () => setVisible( ( v ) => v + PAGE ) }>
 								{ __( 'Load more', 'erp' ) } ({ totalPeople - visible })
-							</button>
+							</Button>
 						</div>
 					) : null }
 				</div>

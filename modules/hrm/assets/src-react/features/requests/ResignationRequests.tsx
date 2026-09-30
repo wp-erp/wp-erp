@@ -19,9 +19,10 @@ import {
     DropdownMenuItem,
     SmartSelect,
     Skeleton,
+    Textarea,
     toast,
 } from "@wedevs/plugin-ui";
-import { Plus, Trash2 } from "lucide-react";
+import { LogOut, Plus, Trash2 } from "lucide-react";
 
 import { ApproveRejectSplit } from "./ApproveRejectSplit";
 import { RequestsActionSlot } from "./RequestsActionSlot";
@@ -30,6 +31,7 @@ import type { JSX } from "react";
 
 import { RequestsTabContext } from "./requests-tab-context";
 
+import { EmptyState } from "@/shared/components/EmptyState";
 import { DateField } from "@/shared/DateField";
 import { formatCalendarDate } from "@/shared/utils/date";
 import { __ } from "@/shared/i18n";
@@ -106,17 +108,17 @@ export function ResignationRequests(): JSX.Element {
             {inTabs ? (
                 <RequestsActionSlot>
                     <Button className="h-10 gap-1.5" onClick={() => setCreating(true)}>
-                        <Plus size={15} aria-hidden="true" />
+                        <Plus size={16} aria-hidden="true" />
                         {__("New Request", "erp")}
                     </Button>
                 </RequestsActionSlot>
             ) : (
-                <header className="mb-6 flex items-center justify-between gap-4">
+                <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
                     <h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
                         {__("Resignation Requests", "erp")}
                     </h1>
                     <Button className="h-10 gap-1.5" onClick={() => setCreating(true)}>
-                        <Plus size={15} aria-hidden="true" />
+                        <Plus size={16} aria-hidden="true" />
                         {__("New Request", "erp")}
                     </Button>
                 </header>
@@ -128,9 +130,21 @@ export function ResignationRequests(): JSX.Element {
                         <Skeleton className="h-6 w-full" />
                     </div>
                 ) : rows.length === 0 ? (
-                    <p className="px-4 py-12 text-center text-sm text-muted-foreground">
-                        {__("No resignation requests.", "erp")}
-                    </p>
+                    <EmptyState
+                        size="page"
+                        icon={LogOut}
+                        title={__("No resignation requests.", "erp")}
+                        action={
+                            <Button
+                                variant="default"
+                                className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium shadow-sm"
+                                onClick={() => setCreating(true)}
+                            >
+                                <Plus size={16} aria-hidden="true" />
+                                {__("New Request", "erp")}
+                            </Button>
+                        }
+                    />
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-160 text-left text-sm">
@@ -216,7 +230,7 @@ export function ResignationRequests(): JSX.Element {
                                                             act(r.id, "delete")
                                                         }
                                                     >
-                                                        <Trash2 size={14} aria-hidden="true" />
+                                                        <Trash2 size={16} aria-hidden="true" />
                                                         {__("Delete", "erp")}
                                                     </Button>
                                                 )}
@@ -302,6 +316,7 @@ function NewResignationDialog({
                         )}
                     </DialogDescription>
                 </DialogHeader>
+                <div className="h-px w-full bg-border" />
 
                 <div className="flex flex-col gap-2.5">
                     <label className="text-sm font-medium text-foreground">
@@ -350,7 +365,7 @@ function NewResignationDialog({
                     >
                         {__("Reason Details", "erp")}
                     </label>
-                    <textarea
+                    <Textarea
                         id="resign_details"
                         rows={4}
                         value={details}
@@ -359,15 +374,15 @@ function NewResignationDialog({
                             "It will be the body of email. Leave it blank to send default texts.",
                             "erp",
                         )}
-                        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+                        className="rounded-md border border-border bg-background px-3 py-2 text-sm"
                     />
                 </div>
 
-                <DialogFooter className="gap-3">
-                    <Button variant="outline" disabled={busy} onClick={onClose}>
+                <DialogFooter className="gap-5 sm:gap-5">
+                    <Button variant="outline" className="h-10 px-6" disabled={busy} onClick={onClose}>
                         {__("Cancel", "erp")}
                     </Button>
-                    <Button disabled={busy} onClick={submit}>
+                    <Button className="h-10 px-6" disabled={busy} onClick={submit}>
                         {busy ? __("Submitting…", "erp") : __("Submit", "erp")}
                     </Button>
                 </DialogFooter>

@@ -7,12 +7,13 @@
  * `GET /reports/headcount?year=&department=`.
  */
 
-import { ChartContainer, ChartTooltip, ChartTooltipContent, SmartSelect } from '@wedevs/plugin-ui';
+import { Button, ChartContainer, ChartTooltip, ChartTooltipContent, SmartSelect } from '@wedevs/plugin-ui';
 import { Filter, Users } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { __, sprintf } from '@/shared/i18n';
 import { formatDisplayDate, siteToday, todaySiteYmd } from '@/shared/utils/date';
 
@@ -169,21 +170,19 @@ export function HeadcountPage(): JSX.Element {
 				</div>
 
 				{ ( data?.employees ?? [] ).length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ __( 'No employees match these filters.', 'erp' ) }
-					</p>
+					<EmptyState size="page" icon={ Users } title={ __( 'No employees match these filters.', 'erp' ) } />
 				) : (
 					<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 						<div className="overflow-x-auto">
 						<table className="w-full min-w-160 text-left">
 						<thead className="border-b border-border bg-card">
-							<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-								<th scope="col" className="px-4">{ __( 'Name', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Hire Date', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Job Title', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Department', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Location', 'erp' ) }</th>
-								<th scope="col" className="px-2">{ __( 'Status', 'erp' ) }</th>
+							<tr className="h-10">
+								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Name', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Hire Date', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Job Title', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Department', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Location', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -202,9 +201,9 @@ export function HeadcountPage(): JSX.Element {
 						</div>
 						{ ( data?.employees?.length ?? 0 ) > visible ? (
 							<div className="flex justify-center border-t border-border p-3">
-								<button type="button" onClick={ () => setVisible( ( v ) => v + PAGE ) } className="inline-flex h-9 items-center rounded-md border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted">
+								<Button type="button" variant="outline" className="h-10 px-4" onClick={ () => setVisible( ( v ) => v + PAGE ) }>
 									{ __( 'Load more', 'erp' ) } ({ ( data?.employees?.length ?? 0 ) - visible })
-								</button>
+								</Button>
 							</div>
 						) : null }
 					</div>

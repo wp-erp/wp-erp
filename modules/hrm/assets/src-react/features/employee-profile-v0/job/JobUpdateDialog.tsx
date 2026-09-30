@@ -247,12 +247,6 @@ export function JobUpdateDialog( {
 				<div className="h-px w-full bg-border" />
 
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
-					{ error ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ error }</AlertDescription>
-						</Alert>
-					) : null }
-
 					<TextField
 						id="job_date"
 						label={ __( 'Date', 'erp' ) }
@@ -286,6 +280,12 @@ export function JobUpdateDialog( {
 							onAddDept={ () => { setQuickDeptErr( null ); setQuickDeptOpen( true ); } }
 							onAddDesig={ () => { setQuickDesigErr( null ); setQuickDesigOpen( true ); } }
 						/>
+					) : null }
+
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">

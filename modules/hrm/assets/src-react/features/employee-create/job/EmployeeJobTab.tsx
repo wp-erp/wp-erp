@@ -10,10 +10,11 @@
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Briefcase, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -63,14 +64,14 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 			</header>
 			<div className="mx-6 mb-4 h-px bg-border" />
 			{ rowCount === 0 ? (
-				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
+				<EmptyState size="compact" icon={ Briefcase } title={ empty } />
 			) : (
 				<div className="overflow-x-auto">
 					<table className="w-full text-left">
 						<thead className="border-b border-border bg-card">
-							<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-								{ columns.map( ( col ) => (
-									<th key={ col } scope="col" className="px-4">{ col }</th>
+							<tr className="h-10">
+								{ columns.map( ( col, i ) => (
+									<th key={ col } scope="col" className={ [ 'whitespace-nowrap text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]', i === 0 ? 'px-4' : 'px-2' ].join( ' ' ) }>{ col }</th>
 								) ) }
 								{ canDelete ? (
 									<th scope="col" className="w-16 px-4"><span className="sr-only">{ __( 'Actions', 'erp' ) }</span></th>
@@ -89,8 +90,8 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 function DeleteCell( { onDelete }: { readonly onDelete: () => void } ): JSX.Element {
 	return (
 		<td className="px-4 align-middle text-right">
-			<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-				<Trash2 size={ 14 } aria-hidden="true" />
+			<Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
+				<Trash2 size={ 16 } aria-hidden="true" />
 			</Button>
 		</td>
 	);
@@ -157,7 +158,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 	const actionButton = ( target: JobAction, label: string ): ReactNode =>
 		canManage ? (
 			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => openAction( target ) }>
-				<Pencil size={ 14 } aria-hidden="true" />
+				<Pencil size={ 16 } aria-hidden="true" />
 				{ label }
 			</Button>
 		) : null;
@@ -205,7 +206,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 			>
 				{ data.employment.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
-						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.type ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>
 						{ canManage ? <DeleteCell onDelete={ () => setPendingDelete( row.id ) } /> : null }
@@ -223,7 +224,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 			>
 				{ data.compensation.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
-						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_rate ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_type ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reason ) }</td>
@@ -243,7 +244,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 			>
 				{ data.job.map( ( row ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
-						<td className="px-2 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
+						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.department ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.designation ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.location ) }</td>

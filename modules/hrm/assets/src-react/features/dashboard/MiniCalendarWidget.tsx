@@ -6,7 +6,7 @@
  * that the hover tooltip expands. "View" opens the full calendar.
  */
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@wedevs/plugin-ui';
+import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@wedevs/plugin-ui';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useSelect } from '@wordpress/data';
 import { useMemo, useState } from 'react';
@@ -159,28 +159,29 @@ export function MiniCalendarWidget(): JSX.Element {
 					</h2>
 					{ /* Take a Leave — self-service leave request; opens the form
 					   locked to the current user. Sits beside the title (left). */ }
-					<button
+					<Button
 						type="button"
 						onClick={ () => setTakeLeave( 'new' ) }
-						className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+						className="h-10 gap-1.5 px-4"
 					>
-						<Plus size={ 15 } aria-hidden="true" />
+						<Plus size={ 16 } aria-hidden="true" />
 						{ __( 'Take a Leave', 'erp' ) }
-					</button>
+					</Button>
 				</div>
 				<div className="flex items-center gap-2">
-					<button
+					<Button
 						type="button"
+						variant="outline"
 						onClick={ () =>
 							setCursor( () => {
 								const n = siteToday();
 								return new Date( n.getFullYear(), n.getMonth(), 1 );
 							} )
 						}
-						className="inline-flex h-8 items-center rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+						className="h-10 px-4"
 					>
 						{ __( 'Today', 'erp' ) }
-					</button>
+					</Button>
 					<div className="inline-flex items-center rounded-md border border-border">
 						<button
 							type="button"

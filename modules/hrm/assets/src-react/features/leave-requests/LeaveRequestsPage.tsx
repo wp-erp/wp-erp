@@ -15,7 +15,7 @@
 
 import { addAction, removeAction } from '@wordpress/hooks';
 import { Button, Input, toast } from '@wedevs/plugin-ui';
-import { Check, Filter, Plus, Search, Trash2, X } from 'lucide-react';
+import { CalendarDays, Check, Filter, Plus, Search, Trash2, X } from 'lucide-react';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
@@ -26,6 +26,7 @@ import { TYPE_OPTIONS } from '@/features/employee-create/options';
 import { loadLookup } from '@/features/employees/filters/lookups';
 import type { LookupOption } from '@/features/employees/filters/lookups';
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import { useBoot } from '@/shared/hooks/useBoot';
@@ -416,7 +417,7 @@ function LeaveRequestsInner(): JSX.Element {
 					</RequestsActionSlot>
 				) : null
 			) : (
-				<header className="mb-6 flex items-center justify-between gap-4">
+				<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 					<h1 className="text-2xl font-bold leading-8 text-foreground">
 						{ __( 'Leave Requests', 'erp' ) }
 					</h1>
@@ -438,7 +439,7 @@ function LeaveRequestsInner(): JSX.Element {
 					<div
 						role="tablist"
 						aria-label={ __( 'Leave request status', 'erp' ) }
-						className="flex items-stretch"
+						className="flex max-w-full items-stretch overflow-x-auto"
 					>
 						{ STATUS_TABS.filter(
 							( tab ) => ! tab.module || activeModules.includes( tab.module )
@@ -571,7 +572,7 @@ function LeaveRequestsInner(): JSX.Element {
 								onClick={ () => void runBulk( 'approve' ) }
 								className="h-8 gap-1.5"
 							>
-								<Check size={ 14 } aria-hidden="true" />{ ' ' }
+								<Check size={ 16 } aria-hidden="true" />{ ' ' }
 								{ __( 'Approve', 'erp' ) }
 							</Button>
 							<Button
@@ -581,7 +582,7 @@ function LeaveRequestsInner(): JSX.Element {
 								onClick={ () => void runBulk( 'reject' ) }
 								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 							>
-								<X size={ 14 } aria-hidden="true" />{ ' ' }
+								<X size={ 16 } aria-hidden="true" />{ ' ' }
 								{ __( 'Reject', 'erp' ) }
 							</Button>
 							<Button
@@ -591,7 +592,7 @@ function LeaveRequestsInner(): JSX.Element {
 								onClick={ () => setBulkDeleting( true ) }
 								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 							>
-								<Trash2 size={ 14 } aria-hidden="true" />{ ' ' }
+								<Trash2 size={ 16 } aria-hidden="true" />{ ' ' }
 								{ __( 'Delete', 'erp' ) }
 							</Button>
 						</div>
@@ -610,12 +611,7 @@ function LeaveRequestsInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ __(
-							'No leave requests match these filters.',
-							'erp'
-						) }
-					</p>
+					<EmptyState size="page" icon={ CalendarDays } title={ __( 'No leave requests match these filters.', 'erp' ) } />
 				) : (
 					<LeaveRequestsTable
 						rows={ rows }

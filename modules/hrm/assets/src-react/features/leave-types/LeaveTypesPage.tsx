@@ -15,12 +15,13 @@ import {
 	Input,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Plus, Search, Trash2 } from 'lucide-react';
+import { CalendarDays, Plus, Search, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -170,7 +171,7 @@ function LeaveTypesInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Leave Types', 'erp' ) }
 				</h1>
@@ -188,7 +189,7 @@ function LeaveTypesInner(): JSX.Element {
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Leave Types', 'erp' ) } className="flex items-stretch">
+					<div role="tablist" aria-label={ __( 'Leave Types', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ __( 'All', 'erp' ) }</span>
 							<span className="font-normal text-[#a5a5aa]">({ rows.length })</span>
@@ -234,7 +235,7 @@ function LeaveTypesInner(): JSX.Element {
 								className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive"
 								onClick={ () => setBulkOpen( true ) }
 							>
-								<Trash2 size={ 14 } aria-hidden="true" />
+								<Trash2 size={ 16 } aria-hidden="true" />
 								{ __( 'Delete', 'erp' ) }
 							</Button>
 						</div>
@@ -254,11 +255,23 @@ function LeaveTypesInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : filtered.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ search
+					<EmptyState
+						size="page"
+						icon={ CalendarDays }
+						title={ search
 							? __( 'No leave types match your search.', 'erp' )
 							: __( 'No leave types yet.', 'erp' ) }
-					</p>
+						action={ ! search && canManage ? (
+							<Button
+								onClick={ openCreate }
+								variant="default"
+								className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium shadow-sm"
+							>
+								<Plus size={ 16 } aria-hidden="true" />
+								{ __( 'Add Leave Type', 'erp' ) }
+							</Button>
+						) : null }
+					/>
 				) : (
 					<LeaveTypesTable
 						rows={ pageRows }

@@ -12,12 +12,13 @@ import {
 	Button,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Filter, Plus } from 'lucide-react';
+import { CalendarDays, Filter, Plus } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -208,7 +209,7 @@ function LeavePoliciesInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Leave Policies', 'erp' ) }
 				</h1>
@@ -226,7 +227,7 @@ function LeavePoliciesInner(): JSX.Element {
 
 			<div className="rounded-lg border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-					<div role="tablist" aria-label={ __( 'Leave Policies', 'erp' ) } className="flex items-stretch">
+					<div role="tablist" aria-label={ __( 'Leave Policies', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ __( 'All', 'erp' ) }</span>
 							<span className="font-normal text-[#a5a5aa]">({ total })</span>
@@ -269,9 +270,7 @@ function LeavePoliciesInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ __( 'No leave policies match these filters.', 'erp' ) }
-					</p>
+					<EmptyState size="page" icon={ CalendarDays } title={ __( 'No leave policies match these filters.', 'erp' ) } />
 				) : (
 					<LeavePoliciesTable
 						rows={ rows }

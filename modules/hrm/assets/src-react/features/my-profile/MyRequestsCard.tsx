@@ -55,10 +55,10 @@ export function MyRequestActions(): JSX.Element | null {
 	return (
 		<>
 			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setOpen( 'remote_work' ) }>
-				<Laptop size={ 14 } aria-hidden="true" />{ __( 'Remote Work', 'erp' ) }
+				<Laptop size={ 16 } aria-hidden="true" />{ __( 'Remote Work', 'erp' ) }
 			</Button>
 			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4 border-destructive text-destructive hover:border-destructive hover:text-destructive" onClick={ () => setOpen( 'resignation' ) }>
-				<LogOut size={ 14 } aria-hidden="true" />{ __( 'Resign', 'erp' ) }
+				<LogOut size={ 16 } aria-hidden="true" />{ __( 'Resign', 'erp' ) }
 			</Button>
 
 			{ 'resignation' === open ? <ResignDialog onClose={ () => setOpen( null ) } /> : null }
@@ -133,6 +133,7 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Apply for Resignation', 'erp' ) }</DialogTitle>
 					<DialogDescription>{ __( 'Submit a resignation request to HR.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
+				<div className="h-px w-full bg-border" />
 				<MyHistory base="/hrm/resignations" primary={ ( r ) => r.date || '—' } />
 				<div className="flex flex-col gap-2.5">
 					<label className="text-sm font-medium text-foreground">{ __( 'Reason', 'erp' ) }</label>
@@ -142,9 +143,9 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 					<label className="text-sm font-medium text-foreground">{ __( 'Resignation Date', 'erp' ) }</label>
 					<DateField value={ date } onChange={ setDate } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 				</div>
-				<DialogFooter className="gap-3">
-					<Button variant="outline" disabled={ busy } onClick={ onClose }>{ __( 'Cancel', 'erp' ) }</Button>
-					<Button disabled={ busy } onClick={ submit }>{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit', 'erp' ) }</Button>
+				<DialogFooter className="gap-5 sm:gap-5">
+					<Button variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>{ __( 'Cancel', 'erp' ) }</Button>
+					<Button className="h-10 px-6" disabled={ busy } onClick={ submit }>{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit', 'erp' ) }</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
@@ -175,6 +176,7 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Apply for Remote Work', 'erp' ) }</DialogTitle>
 					<DialogDescription>{ __( 'Submit a remote work request to HR.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
+				<div className="h-px w-full bg-border" />
 				<MyHistory base="/hrm/remote-work" primary={ ( r ) => `${ r.startDate ?? '' } → ${ r.endDate ?? '' }` } />
 				<div className="flex flex-col gap-2.5">
 					<label className="text-sm font-medium text-foreground">{ __( 'Reason', 'erp' ) }</label>
@@ -196,9 +198,9 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 						<DateField value={ to } onChange={ setTo } min={ from || undefined } className="h-10 rounded-md border border-border bg-background px-3 text-sm" />
 					</div>
 				</div>
-				<DialogFooter className="gap-3">
-					<Button variant="outline" disabled={ busy } onClick={ onClose }>{ __( 'Cancel', 'erp' ) }</Button>
-					<Button disabled={ busy } onClick={ submit }>{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit', 'erp' ) }</Button>
+				<DialogFooter className="gap-5 sm:gap-5">
+					<Button variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>{ __( 'Cancel', 'erp' ) }</Button>
+					<Button className="h-10 px-6" disabled={ busy } onClick={ submit }>{ busy ? __( 'Submitting…', 'erp' ) : __( 'Submit', 'erp' ) }</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

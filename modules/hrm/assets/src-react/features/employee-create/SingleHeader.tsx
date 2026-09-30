@@ -54,7 +54,7 @@ export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, o
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<h1 className="m-0 text-2xl font-bold tracking-tight text-foreground">
+						<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						{ canEdit ? (
@@ -63,11 +63,11 @@ export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, o
 								variant="ghost"
 								size="icon"
 								onClick={ onEdit }
-								className="size-7 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+								className="size-7 rounded-full"
 								aria-label={ __( 'Edit employee', 'erp' ) }
 								title={ __( 'Edit employee', 'erp' ) }
 							>
-								<Pencil size={ 15 } aria-hidden="true" />
+								<Pencil size={ 16 } aria-hidden="true" />
 							</Button>
 						) : null }
 					</div>
@@ -83,13 +83,13 @@ export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, o
 					<div className="mt-3 flex flex-wrap gap-2">
 						{ canEdit ? (
 							<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => onSetTab( 'leave' ) }>
-								<CalendarPlus size={ 15 } aria-hidden="true" />
+								<CalendarPlus size={ 16 } aria-hidden="true" />
 								{ __( 'Leave', 'erp' ) }
 							</Button>
 						) : null }
 						{ canViewNotes ? (
 							<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => onSetTab( 'notes' ) }>
-								<StickyNote size={ 15 } aria-hidden="true" />
+								<StickyNote size={ 16 } aria-hidden="true" />
 								{ __( 'Notes', 'erp' ) }
 							</Button>
 						) : null }
@@ -98,7 +98,7 @@ export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, o
 
 				{ canEdit ? (
 					<Button variant="default" size="sm" className="h-9 gap-1.5 px-4" onClick={ onEdit }>
-						<Pencil size={ 14 } aria-hidden="true" />
+						<Pencil size={ 16 } aria-hidden="true" />
 						{ __( 'Edit', 'erp' ) }
 					</Button>
 				) : null }

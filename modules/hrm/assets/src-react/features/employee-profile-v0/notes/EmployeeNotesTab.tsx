@@ -9,11 +9,12 @@
  */
 
 import { Avatar, AvatarFallback, AvatarImage, Button, Spinner, Textarea, toast } from '@wedevs/plugin-ui';
-import { Trash2 } from 'lucide-react';
+import { FileText, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
 import { OrgDeleteDialog } from '@/features/org/OrgDeleteDialog';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, dateI18n } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -123,9 +124,12 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 					{ __( 'Loading notes…', 'erp' ) }
 				</div>
 			) : notes.length === 0 ? (
-				<p className="rounded-lg border border-border bg-card p-10 text-center text-sm text-muted-foreground">
-					{ __( 'No notes yet.', 'erp' ) }
-				</p>
+				<EmptyState
+					size="compact"
+					icon={ FileText }
+					title={ __( 'No notes yet.', 'erp' ) }
+					className="rounded-lg border border-border bg-card"
+				/>
 			) : (
 				<ul className="space-y-3">
 					{ notes.map( ( note ) => (
@@ -153,12 +157,12 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 										{ canDelete ? (
 											<Button
 												variant="ghost"
-												size="icon-sm"
-												className="text-destructive hover:text-destructive focus:text-destructive"
+												size="icon"
+												className="text-destructive hover:bg-destructive/10 hover:text-destructive"
 												aria-label={ __( 'Delete note', 'erp' ) }
 												onClick={ () => setDeleting( note ) }
 											>
-												<Trash2 size={ 14 } aria-hidden="true" />
+												<Trash2 size={ 16 } aria-hidden="true" />
 											</Button>
 										) : null }
 									</div>

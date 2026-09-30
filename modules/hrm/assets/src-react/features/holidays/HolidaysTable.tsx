@@ -66,7 +66,7 @@ export function HolidaysTable( {
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
 			<thead className="border-b border-border bg-card">
-				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+				<tr className="h-10">
 					{ canManage ? (
 						<th scope="col" className="w-10 px-4">
 							<Checkbox
@@ -76,10 +76,10 @@ export function HolidaysTable( {
 							/>
 						</th>
 					) : null }
-					<th scope="col" className="px-4"><SortButton column="title" label={ __( 'Title', 'erp' ) } /></th>
-					<th scope="col" className="px-2"><SortButton column="start" label={ __( 'Date', 'erp' ) } /></th>
-					<th scope="col" className="px-2">{ __( 'Duration', 'erp' ) }</th>
-					<th scope="col" className="px-2">{ __( 'Description', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]"><SortButton column="title" label={ __( 'Title', 'erp' ) } /></th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]"><SortButton column="start" label={ __( 'Date', 'erp' ) } /></th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Duration', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Description', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

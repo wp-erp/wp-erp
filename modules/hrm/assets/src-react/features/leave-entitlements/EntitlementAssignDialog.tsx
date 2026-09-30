@@ -147,7 +147,7 @@ export function EntitlementAssignDialog( {
 							] }
 							onBeforeNavigate={ onClose }
 						/>
-						<DialogFooter>
+						<DialogFooter className="gap-5 sm:gap-5">
 							<Button type="button" variant="outline" className="h-10 px-6" onClick={ onClose }>
 								{ __( 'Close', 'erp' ) }
 							</Button>

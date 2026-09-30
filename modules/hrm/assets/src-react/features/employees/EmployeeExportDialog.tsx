@@ -148,7 +148,7 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 						onClick={ handleExport }
 					>
 						{ exporting ? __( 'Exporting…', 'erp' ) : __( 'Continue', 'erp' ) }
-						<ArrowRight size={ 15 } aria-hidden="true" />
+						<ArrowRight size={ 16 } aria-hidden="true" />
 					</Button>
 				</DialogFooter>
 			</DialogContent>

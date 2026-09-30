@@ -27,6 +27,9 @@ interface EmployeeFormAlertsProps {
 	readonly converting:      boolean;
 	readonly onConvert:       () => void;
 	readonly errors:          Record< string, string >;
+	/** Labels of the pro custom fields, keyed by field key, so the summary can
+	 *  name them. Without this a custom field's error shows its raw meta key. */
+	readonly extraLabels?:    Record< string, string >;
 }
 
 export function EmployeeFormAlerts( {
@@ -37,6 +40,7 @@ export function EmployeeFormAlerts( {
 	converting,
 	onConvert,
 	errors,
+	extraLabels = {},
 }: EmployeeFormAlertsProps ): JSX.Element {
 	return (
 		<>
@@ -125,7 +129,7 @@ export function EmployeeFormAlerts( {
 							{ Object.entries( errors ).map( ( [ key, msg ] ) => (
 								<li key={ key }>
 									<span className="font-medium">
-										{ FIELD_LABELS[ key ] ?? key }
+										{ FIELD_LABELS[ key ] ?? extraLabels[ key ] ?? key }
 									</span>
 									{ ': ' }
 									{ msg }

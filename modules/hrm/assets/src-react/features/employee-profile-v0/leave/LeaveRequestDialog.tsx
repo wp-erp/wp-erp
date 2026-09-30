@@ -218,12 +218,6 @@ export function LeaveRequestDialog( {
 				<div className="h-px w-full bg-border" />
 
 				<form onSubmit={ ( e ) => void handleSubmit( e ) } className="flex min-w-0 flex-col gap-4" noValidate>
-					{ error ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ error }</AlertDescription>
-						</Alert>
-					) : null }
-
 					{ /* Financial year is taken from the current FY automatically (legacy
 					     parity — the employee never picked it). */ }
 					{ entitlementError ? <EntitlementEmptyHint onClose={ onClose } /> : null }
@@ -265,7 +259,7 @@ export function LeaveRequestDialog( {
 
 					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } disabled={ ! entitled } value={ reason } onChange={ setReason } />
 
-					<div className="flex flex-col gap-1.5">
+					<div className="flex flex-col gap-2.5">
 						<label htmlFor="leave_document" className="text-sm font-medium text-foreground">{ __( 'Document', 'erp' ) }</label>
 						<input
 							id="leave_document"
@@ -276,6 +270,12 @@ export function LeaveRequestDialog( {
 							className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border file:border-border file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70 disabled:opacity-50"
 						/>
 					</div>
+
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
+					) : null }
 
 					<DialogFooter className="items-center gap-5 sm:gap-5">
 						{ year && ! entitled ? (

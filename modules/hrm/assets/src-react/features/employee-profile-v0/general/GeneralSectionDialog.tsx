@@ -179,12 +179,6 @@ export function GeneralSectionDialog( {
 				<div className="h-px w-full bg-border" />
 
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
-					{ error ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ error }</AlertDescription>
-						</Alert>
-					) : null }
-
 					{ section === 'experiences' ? (
 						<>
 							<TextField id="exp_company" label={ __( 'Company Name', 'erp' ) } required value={ form.company_name ?? '' } onChange={ set( 'company_name' ) } />
@@ -218,6 +212,12 @@ export function GeneralSectionDialog( {
 							<TextField id="dep_relation" label={ __( 'Relation', 'erp' ) } required value={ form.relation ?? '' } onChange={ set( 'relation' ) } />
 							<TextField id="dep_dob" label={ __( 'Date of Birth', 'erp' ) } type="date" value={ form.dob ?? '' } onChange={ set( 'dob' ) } />
 						</>
+					) : null }
+
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">

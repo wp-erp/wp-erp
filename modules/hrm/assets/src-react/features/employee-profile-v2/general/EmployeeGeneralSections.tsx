@@ -6,10 +6,11 @@
  */
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { FileText, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -60,7 +61,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 				</Button>
 			</header>
 			{ rowCount === 0 ? (
-				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
+				<EmptyState size="compact" icon={ FileText } title={ empty } />
 			) : (
 				<div className="mt-4 overflow-x-auto">
 					<table className="w-full text-left">

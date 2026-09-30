@@ -14,12 +14,13 @@ import {
 	Button,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Plus, Trash2 } from 'lucide-react';
+import { CalendarDays, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -210,7 +211,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Leave Entitlements', 'erp' ) }
 				</h1>
@@ -250,7 +251,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 							{ sprintf( __( '%d selected', 'erp' ), selected.size ) }
 						</span>
 						<Button size="sm" variant="outline" disabled={ busy } onClick={ () => setBulkDeleting( true ) } className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive">
-							<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+							<Trash2 size={ 16 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
 						</Button>
 						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
 							{ __( 'Clear', 'erp' ) }
@@ -263,11 +264,23 @@ function LeaveEntitlementsInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ search || policyId || year || employeeType
+					<EmptyState
+						size="page"
+						icon={ CalendarDays }
+						title={ search || policyId || year || employeeType
 							? __( 'No entitlements match these filters.', 'erp' )
 							: __( 'No entitlements assigned yet.', 'erp' ) }
-					</p>
+						action={ ! ( search || policyId || employeeType ) && canManage ? (
+							<Button
+								onClick={ () => { setFormError( null ); setAssignParam( 'open' ); } }
+								variant="default"
+								className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium shadow-sm"
+							>
+								<Plus size={ 16 } aria-hidden="true" />
+								{ __( 'Assign Policy', 'erp' ) }
+							</Button>
+						) : null }
+					/>
 				) : (
 					<LeaveEntitlementsTable
 						rows={ rows }

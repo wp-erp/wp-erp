@@ -10,10 +10,11 @@
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
 import { useDispatch } from '@wordpress/data';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Briefcase, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -63,7 +64,7 @@ function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction
 				{ headerAction }
 			</header>
 			{ rowCount === 0 ? (
-				<p className="p-6 text-sm text-muted-foreground">{ empty }</p>
+				<EmptyState size="compact" icon={ Briefcase } title={ empty } />
 			) : (
 				<div className="mt-4 overflow-x-auto">
 					<table className="w-full text-left">

@@ -10,12 +10,13 @@ import {
 	Button,
 	toast,
 } from '@wedevs/plugin-ui';
-import { Plus, Trash2 } from 'lucide-react';
+import { Briefcase, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { useListUrlSync } from '@/shared/hooks/useListUrlSync';
@@ -209,7 +210,7 @@ function DesignationsInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Designations', 'erp' ) }
 				</h1>
@@ -242,7 +243,7 @@ function DesignationsInner(): JSX.Element {
 						<span className="text-sm font-medium text-foreground">{ sprintf( __( '%d selected', 'erp' ), selected.size ) }</span>
 						<div className="flex items-center gap-2">
 							<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ handleBulkDelete }>
-								<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
+								<Trash2 size={ 16 } aria-hidden="true" /> { __( 'Delete', 'erp' ) }
 							</Button>
 						</div>
 						<button type="button" className="text-sm text-muted-foreground hover:text-foreground" onClick={ () => setSelected( new Set() ) }>
@@ -256,11 +257,23 @@ function DesignationsInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : filtered.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ search
+					<EmptyState
+						size="page"
+						icon={ Briefcase }
+						title={ search
 							? __( 'No designations match your search.', 'erp' )
 							: __( 'No designations yet.', 'erp' ) }
-					</p>
+						action={ ! search && canManage ? (
+							<Button
+								onClick={ openCreate }
+								variant="default"
+								className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium shadow-sm"
+							>
+								<Plus size={ 16 } aria-hidden="true" />
+								{ __( 'Add Designation', 'erp' ) }
+							</Button>
+						) : null }
+					/>
 				) : (
 					<DesignationsTable
 						rows={ pageRows }

@@ -73,10 +73,10 @@ export function EmployeeImportUpload( {
 				<Button
 					type="button"
 					variant="outline"
-					className="mt-1 h-9 gap-1.5 text-primary"
+					className="mt-1 h-10 gap-1.5 text-primary"
 					onClick={ () => fileRef.current?.click() }
 				>
-					<Upload size={ 15 } aria-hidden="true" />
+					<Upload size={ 16 } aria-hidden="true" />
 					{ __( 'Choose File', 'erp' ) }
 				</Button>
 				<input
@@ -109,7 +109,7 @@ export function EmployeeImportUpload( {
 					{ __( 'Cancel', 'erp' ) }
 				</Button>
 				<Button type="button" className="h-10 gap-1.5 px-6" disabled={ ! canImport } onClick={ onImport }>
-					<Upload size={ 15 } aria-hidden="true" />
+					<Upload size={ 16 } aria-hidden="true" />
 					{ submitting ? __( 'Importing…', 'erp' ) : __( 'Import Employee', 'erp' ) }
 				</Button>
 			</DialogFooter>

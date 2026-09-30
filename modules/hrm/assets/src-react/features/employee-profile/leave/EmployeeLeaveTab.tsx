@@ -8,10 +8,11 @@
  */
 
 import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Spinner, toast } from '@wedevs/plugin-ui';
-import { Plus } from 'lucide-react';
+import { CalendarDays, Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 
@@ -96,7 +97,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 					) : null }
 				</header>
 				{ data.summary.length === 0 ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave policies assigned.', 'erp' ) }</p>
+					<EmptyState size="compact" icon={ CalendarDays } title={ __( 'No leave policies assigned.', 'erp' ) } />
 				) : (
 					<div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
 						{ data.summary.map( ( row, i ) => {
@@ -201,7 +202,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 					) : null }
 				</header>
 				{ data.requests.length === 0 ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
+					<EmptyState size="compact" icon={ CalendarDays } title={ __( 'No leave requests found.', 'erp' ) } />
 				) : (
 					<div className="mt-4 overflow-x-auto">
 						<table className="w-full text-left">

@@ -8,10 +8,11 @@
  */
 
 import { Badge, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Spinner, toast } from '@wedevs/plugin-ui';
-import { Plus } from 'lucide-react';
+import { CalendarDays, Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 import { formatCalendarDate } from '@/shared/utils/date';
@@ -91,14 +92,14 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 					<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ __( 'Leave Balance', 'erp' ) }</h2>
 					{ canCreate ? (
 						<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setShowRequest( true ) }>
-							<Plus size={ 14 } aria-hidden="true" />
+							<Plus size={ 16 } aria-hidden="true" />
 							{ __( 'Request Leave', 'erp' ) }
 						</Button>
 					) : null }
 				</header>
 				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.summary.length === 0 ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave policies assigned.', 'erp' ) }</p>
+					<EmptyState size="compact" icon={ CalendarDays } title={ __( 'No leave policies assigned.', 'erp' ) } />
 				) : (
 					<div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
 						{ data.summary.map( ( row, i ) => {
@@ -211,17 +212,17 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 				</header>
 				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.requests.length === 0 ? (
-					<p className="p-6 text-sm text-muted-foreground">{ __( 'No leave requests found.', 'erp' ) }</p>
+					<EmptyState size="compact" icon={ CalendarDays } title={ __( 'No leave requests found.', 'erp' ) } />
 				) : (
 					<div className="overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-card">
-								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-									<th scope="col" className="px-4">{ __( 'Date', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Policy', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Reason', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Request', 'erp' ) }</th>
-									<th scope="col" className="px-2">{ __( 'Status', 'erp' ) }</th>
+								<tr className="h-10">
+									<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Date', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Policy', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Reason', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Request', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
 								</tr>
 							</thead>
 							<tbody>

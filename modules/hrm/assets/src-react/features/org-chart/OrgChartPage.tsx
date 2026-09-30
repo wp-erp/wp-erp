@@ -17,12 +17,13 @@
  */
 
 import { Button } from '@wedevs/plugin-ui';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Network, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
@@ -138,9 +139,7 @@ function OrgChartInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : roots.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ __( 'No reporting structure for this team.', 'erp' ) }
-					</p>
+					<EmptyState size="page" icon={ Network } title={ __( 'No reporting structure for this team.', 'erp' ) } />
 				) : (
 					<div
 						className="origin-top transition-transform"

@@ -61,14 +61,14 @@ export function UserMenu(): JSX.Element {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile' ) }>
-					<UserCircle2 size={ 16 } aria-hidden="true" />
+					<UserCircle2 size={ 14 } aria-hidden="true" />
 					{ __( 'My profile', 'erp' ) }
 				</DropdownMenuItem>
 				<DropdownMenuItem className="gap-2" onClick={ toggle }>
 					{ layout === 'sidebar' ? (
-						<PanelTop size={ 16 } aria-hidden="true" />
+						<PanelTop size={ 14 } aria-hidden="true" />
 					) : (
-						<PanelLeft size={ 16 } aria-hidden="true" />
+						<PanelLeft size={ 14 } aria-hidden="true" />
 					) }
 					{ layout === 'sidebar'
 						? __( 'Top navigation', 'erp' )
@@ -76,12 +76,13 @@ export function UserMenu(): JSX.Element {
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
-					className="gap-2 text-destructive focus:text-destructive"
+					variant="destructive"
+					className="gap-2"
 					onClick={ () => {
 						window.location.assign( '/wp-login.php?action=logout' );
 					} }
 				>
-					<LogOut size={ 16 } aria-hidden="true" />
+					<LogOut size={ 14 } aria-hidden="true" />
 					{ __( 'Log out', 'erp' ) }
 				</DropdownMenuItem>
 			</DropdownMenuContent>

@@ -8,11 +8,12 @@
  */
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
 import { OrgDeleteDialog } from '@/features/org/OrgDeleteDialog';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -54,7 +55,7 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 				{ headerAction }
 			</div>
 			{ rowCount === 0 ? (
-				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
+				<EmptyState size="compact" icon={ TrendingUp } title={ empty } />
 			) : (
 				<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">

@@ -118,7 +118,7 @@ export function BirthdayItem( {
 					disabled={ wished || person.wished }
 					onClick={ () => onWish( person.user_id ) }
 				>
-					<Gift size={ 14 } aria-hidden="true" />
+					<Gift size={ 16 } aria-hidden="true" />
 					{ wished || person.wished ? __( 'Sent', 'erp' ) : __( 'Wish', 'erp' ) }
 				</Button>
 			) : null }

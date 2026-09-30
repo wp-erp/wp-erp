@@ -12,12 +12,13 @@
  */
 
 import { Button, toast } from '@wedevs/plugin-ui';
-import { Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { Megaphone, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
@@ -323,7 +324,7 @@ function AnnouncementsInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ __( 'Announcements', 'erp' ) }
 				</h1>
@@ -362,15 +363,15 @@ function AnnouncementsInner(): JSX.Element {
 							{ status === 'trash' ? (
 								<>
 									<Button size="sm" variant="outline" className="h-8 gap-1.5" disabled={ busy } onClick={ () => void handleBulkRestore() }>
-										<RotateCcw size={ 14 } aria-hidden="true" /> { __( 'Restore', 'erp' ) }
+										<RotateCcw size={ 16 } aria-hidden="true" /> { __( 'Restore', 'erp' ) }
 									</Button>
 									<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkDelete() }>
-										<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Delete permanently', 'erp' ) }
+										<Trash2 size={ 16 } aria-hidden="true" /> { __( 'Delete permanently', 'erp' ) }
 									</Button>
 								</>
 							) : (
 								<Button size="sm" variant="outline" className="h-8 gap-1.5 border-destructive text-destructive hover:border-destructive hover:text-destructive" disabled={ busy } onClick={ () => void handleBulkTrash() }>
-									<Trash2 size={ 14 } aria-hidden="true" /> { __( 'Trash', 'erp' ) }
+									<Trash2 size={ 16 } aria-hidden="true" /> { __( 'Trash', 'erp' ) }
 								</Button>
 							) }
 						</div>
@@ -385,9 +386,21 @@ function AnnouncementsInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<p className="p-10 text-center text-sm text-muted-foreground">
-						{ search ? __( 'No announcements match your search.', 'erp' ) : __( 'No announcements here yet.', 'erp' ) }
-					</p>
+					<EmptyState
+						size="page"
+						icon={ Megaphone }
+						title={ search ? __( 'No announcements match your search.', 'erp' ) : __( 'No announcements here yet.', 'erp' ) }
+						action={ ! search && canManage && status !== 'trash' ? (
+							<Button
+								onClick={ () => void openCreate() }
+								variant="default"
+								className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium shadow-sm"
+							>
+								<Plus size={ 16 } aria-hidden="true" />
+								{ __( 'New Announcement', 'erp' ) }
+							</Button>
+						) : null }
+					/>
 				) : (
 					<AnnouncementsTable
 						rows={ rows }

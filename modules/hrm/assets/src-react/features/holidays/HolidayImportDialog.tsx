@@ -188,47 +188,47 @@ export function HolidayImportDialog( {
 					<div className="max-h-80 overflow-auto rounded-lg border border-border">
 						<table className="w-full text-left text-sm">
 							<thead className="sticky top-0 border-b border-border bg-card">
-								<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-									<th scope="col" className="w-10 px-3" />
-									<th scope="col" className="px-3">{ __( 'Title', 'erp' ) }</th>
-									<th scope="col" className="px-3">{ __( 'Start', 'erp' ) }</th>
-									<th scope="col" className="px-3">{ __( 'End', 'erp' ) }</th>
+								<tr className="h-10">
+									<th scope="col" className="w-10 px-4" />
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Title', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Start', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'End', 'erp' ) }</th>
 								</tr>
 							</thead>
 							<tbody>
 								{ rows.map( ( row, i ) => (
-									<tr key={ `${ row.title }-${ row.start }-${ i }` } className="h-11 border-b border-border last:border-b-0">
-										<td className="px-3 align-middle">
+									<tr key={ `${ row.title }-${ row.start }-${ i }` } className="h-11 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+										<td className="px-4 align-middle">
 											<Checkbox checked={ checked.has( i ) } onCheckedChange={ () => toggle( i ) } />
 										</td>
 										{ /* Legacy rendered these as inputs so a bad title or date
 										     could be corrected before importing (leave.js:1150, made
 										     editable on double-click). Same capability, without the
 										     hidden gesture — the fields are simply editable. */ }
-										<td className="px-3 align-middle">
+										<td className="px-2 align-middle">
 											<Input
 												value={ row.title }
 												onChange={ ( e ) => patchRow( i, { title: e.target.value } ) }
 												aria-label={ sprintf( __( 'Title for row %d', 'erp' ), i + 1 ) }
-												className="h-9 text-sm font-medium"
+												className="h-10 bg-background text-sm font-medium"
 											/>
 										</td>
-										<td className="px-3 align-middle">
+										<td className="px-2 align-middle">
 											<Input
 												type="date"
 												value={ row.start.slice( 0, 10 ) }
 												onChange={ ( e ) => patchRow( i, { start: e.target.value } ) }
 												aria-label={ sprintf( __( 'Start date for row %d', 'erp' ), i + 1 ) }
-												className="h-9 text-sm"
+												className="h-10 bg-background text-sm"
 											/>
 										</td>
-										<td className="px-3 align-middle">
+										<td className="px-4 align-middle">
 											<Input
 												type="date"
 												value={ row.end.slice( 0, 10 ) }
 												onChange={ ( e ) => patchRow( i, { end: e.target.value } ) }
 												aria-label={ sprintf( __( 'End date for row %d', 'erp' ), i + 1 ) }
-												className="h-9 text-sm"
+												className="h-10 bg-background text-sm"
 											/>
 										</td>
 									</tr>

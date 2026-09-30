@@ -59,15 +59,16 @@ export function AnnouncementViewDialog( {
 }: AnnouncementViewDialogProps ): JSX.Element {
 	return (
 		<Dialog open={ open } onOpenChange={ ( next: boolean ) => { if ( ! next ) { onClose(); } } }>
-			<DialogContent className="sm:max-w-2xl">
+			<DialogContent className="gap-4 rounded-[10px] p-6 sm:max-w-2xl">
 				<DialogHeader>
-					<DialogTitle>{ item?.title || __( '(no title)', 'erp' ) }</DialogTitle>
+					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ item?.title || __( '(no title)', 'erp' ) }</DialogTitle>
 					<DialogDescription>
 						{ item
 							? [ item.type_label, item.author, fmt( item.date ) ].filter( Boolean ).join( ' · ' )
 							: __( 'Loading…', 'erp' ) }
 					</DialogDescription>
 				</DialogHeader>
+				<div className="h-px w-full bg-border" />
 
 				{ loading || ! item ? (
 					<p className="py-6 text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
@@ -93,11 +94,11 @@ export function AnnouncementViewDialog( {
 					</div>
 				) }
 
-				<DialogFooter>
+				<DialogFooter className="gap-5 sm:gap-5">
 					{ canManage && item && item.status !== 'trash' ? (
-						<Button variant="outline" onClick={ onEdit }>{ __( 'Edit', 'erp' ) }</Button>
+						<Button variant="outline" className="h-10 px-6" onClick={ onEdit }>{ __( 'Edit', 'erp' ) }</Button>
 					) : null }
-					<Button onClick={ onClose }>{ __( 'Close', 'erp' ) }</Button>
+					<Button className="h-10 px-6" onClick={ onClose }>{ __( 'Close', 'erp' ) }</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

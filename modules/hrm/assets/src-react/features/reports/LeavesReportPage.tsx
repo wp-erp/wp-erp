@@ -215,7 +215,7 @@ export function LeavesReportPage(): JSX.Element {
 							onClick={ clearFilters }
 							className="ml-auto h-9 gap-1.5 border-border bg-card text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
 						>
-							<X size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+							<X size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 							{ __( 'Clear', 'erp' ) }
 						</Button>
 					) : null }
@@ -236,10 +236,10 @@ export function LeavesReportPage(): JSX.Element {
 					<div className="overflow-x-auto">
 						<table className="w-full text-left">
 					<thead className="border-b border-border bg-card">
-						<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-card px-4">{ __( 'Name', 'erp' ) }</th>
+						<tr className="h-10">
+							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-card px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Name', 'erp' ) }</th>
 							{ columns.map( ( col ) => (
-								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-2 text-right">{ col.name }</th>
+								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ col.name }</th>
 							) ) }
 						</tr>
 					</thead>

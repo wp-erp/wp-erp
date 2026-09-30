@@ -174,12 +174,6 @@ export function PerformanceFormDialog( {
 				<div className="h-px w-full bg-border" />
 
 				<form onSubmit={ handleSubmit } className="flex min-w-0 flex-col gap-4">
-					{ error ? (
-						<Alert variant="destructive">
-							<AlertDescription>{ error }</AlertDescription>
-						</Alert>
-					) : null }
-
 					<TextField id="perf_date" label={ __( 'Date', 'erp' ) } type="date" required value={ form.performance_date } onChange={ set( 'performance_date' ) } />
 
 					{ type === 'reviews' ? (
@@ -208,6 +202,12 @@ export function PerformanceFormDialog( {
 							<SmartSelectField id="perf_supervisor" label={ __( 'Supervisor', 'erp' ) } required options={ supervisor.options } value={ form.supervisor } onChange={ set( 'supervisor' ) } onSearch={ supervisor.onSearch } loading={ supervisor.loading } placeholder={ __( '- Select -', 'erp' ) } searchPlaceholder={ __( 'Search employees…', 'erp' ) } />
 							<TextareaField id="perf_sup_assess" label={ __( 'Supervisor Assessment', 'erp' ) } value={ form.supervisor_assessment } onChange={ set( 'supervisor_assessment' ) } />
 						</>
+					) : null }
+
+					{ error ? (
+						<Alert variant="destructive">
+							<AlertDescription>{ error }</AlertDescription>
+						</Alert>
 					) : null }
 
 					<DialogFooter className="gap-5 sm:gap-5">

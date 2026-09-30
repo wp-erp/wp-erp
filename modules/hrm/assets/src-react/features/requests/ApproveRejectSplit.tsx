@@ -39,7 +39,7 @@ export function ApproveRejectSplit( { onApprove, onReject, disabled, extraItems 
 				onClick={ onApprove }
 				className="h-full gap-1.5 rounded-l-md rounded-r-none border-0 px-3 text-sm font-medium leading-5 text-success shadow-none hover:bg-success/10 hover:text-success"
 			>
-				<Check size={ 15 } strokeWidth={ 2 } aria-hidden="true" />
+				<Check size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 				{ __( 'Approve', 'erp' ) }
 			</Button>
 			<span className="h-4 w-px shrink-0 bg-border" aria-hidden="true" />
@@ -53,7 +53,7 @@ export function ApproveRejectSplit( { onApprove, onReject, disabled, extraItems 
 							className="h-full w-auto rounded-l-none rounded-r-md border-0 px-2 text-foreground shadow-none"
 							aria-label={ __( 'More moderation actions', 'erp' ) }
 						>
-							<ChevronDown size={ 15 } strokeWidth={ 2 } aria-hidden="true" />
+							<ChevronDown size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
 						</Button>
 					}
 				/>

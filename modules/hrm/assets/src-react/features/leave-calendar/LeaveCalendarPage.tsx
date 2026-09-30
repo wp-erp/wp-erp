@@ -158,7 +158,7 @@ function LeaveCalendarInner(): JSX.Element {
 
 	return (
 		<section className="mx-auto w-full max-w-full">
-			<header className="mb-6 flex items-center justify-between gap-4">
+			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
 				<h1 className="text-2xl font-bold leading-8 text-foreground">
 					{ canManage ? __( 'Leave Calendar', 'erp' ) : __( 'My Leave Calendar', 'erp' ) }
 				</h1>

@@ -5,10 +5,12 @@
  * + divider — identical to `EmployeeSinglePage`'s `DetailCard`.
  */
 
+import { FileText } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { __ } from '@/shared/i18n';
 
@@ -27,7 +29,7 @@ export function ReportShell( { title, toolbar, children }: ReportShellProps ): J
 			<ErrorBoundary>
 				<div className="mx-auto w-full max-w-full space-y-6">
 					<header>
-						<h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground">
+						<h1 className="text-2xl font-bold leading-8 text-foreground">
 							{ __( 'Reports', 'erp' ) }
 						</h1>
 					</header>
@@ -35,8 +37,8 @@ export function ReportShell( { title, toolbar, children }: ReportShellProps ): J
 					<ReportsTabs />
 
 					<section className="rounded-[10px] bg-card p-6 shadow-sm">
-						<h2 className="text-lg font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
-						<div className="mb-5 mt-4 h-px w-full bg-border" />
+						<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+						<div className="mb-4 mt-4 h-px w-full bg-border" />
 						{ toolbar ? <div className="mb-5">{ toolbar }</div> : null }
 						{ children }
 					</section>
@@ -64,9 +66,11 @@ export function ReportState( { loading, error, empty, emptyText, children }: Rep
 	}
 	if ( empty ) {
 		return (
-			<p className="py-10 text-center text-sm text-muted-foreground">
-				{ emptyText ?? __( 'No records found.', 'erp' ) }
-			</p>
+			<EmptyState
+				size="page"
+				icon={ FileText }
+				title={ emptyText ?? __( 'No records found.', 'erp' ) }
+			/>
 		);
 	}
 	return <>{ children }</>;

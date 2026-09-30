@@ -40,21 +40,21 @@ export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImpo
 			</div>
 
 			{ result.failed.length > 0 ? (
-				<div className="max-h-56 overflow-auto rounded-md border border-border">
+				<div className="max-h-56 overflow-auto rounded-lg border border-border">
 					<table className="w-full min-w-88 text-left text-sm">
 						<thead className="border-b border-border bg-card">
-							<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
-								<th scope="col" className="px-3">{ __( 'Row', 'erp' ) }</th>
-								<th scope="col" className="px-3">{ __( 'Email', 'erp' ) }</th>
-								<th scope="col" className="px-3">{ __( 'Error', 'erp' ) }</th>
+							<tr className="h-10">
+								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Row', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Email', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Error', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>
 							{ result.failed.map( ( f ) => (
-								<tr key={ `${ f.row }-${ f.email }` } className="h-11 border-b border-border last:border-b-0">
-									<td className="px-3 align-middle font-medium text-foreground">{ f.row }</td>
-									<td className="px-3 align-middle text-muted-foreground">{ f.email }</td>
-									<td className="px-3 align-middle text-destructive">{ f.message }</td>
+								<tr key={ `${ f.row }-${ f.email }` } className="h-11 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+									<td className="px-4 align-middle text-sm font-medium text-foreground">{ f.row }</td>
+									<td className="px-2 align-middle text-sm text-muted-foreground">{ f.email }</td>
+									<td className="px-4 align-middle text-sm text-destructive">{ f.message }</td>
 								</tr>
 							) ) }
 						</tbody>

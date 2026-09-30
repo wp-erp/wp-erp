@@ -6,10 +6,11 @@
  */
 
 import { Button, Spinner, toast } from '@wedevs/plugin-ui';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { FileText, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -60,13 +61,13 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 			<div className="flex items-center justify-between gap-4">
 				<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onAdd }>
-					<Plus size={ 14 } aria-hidden="true" />
+					<Plus size={ 16 } aria-hidden="true" />
 					{ __( 'Add', 'erp' ) }
 				</Button>
 			</div>
 			<div className="mb-4 mt-4 h-px w-full bg-border" />
 			{ rowCount === 0 ? (
-				<p className="py-6 text-sm text-muted-foreground">{ empty }</p>
+				<EmptyState size="compact" icon={ FileText } title={ empty } />
 			) : (
 				<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
@@ -94,11 +95,11 @@ function RowActions( { onEdit, onDelete }: { readonly onEdit: () => void; readon
 	return (
 		<td className="px-4 align-middle">
 			<div className="flex items-center justify-end gap-1">
-				<Button variant="ghost" size="icon" className="size-8" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
-					<Pencil size={ 14 } aria-hidden="true" />
+				<Button variant="ghost" size="icon" onClick={ onEdit } aria-label={ __( 'Edit', 'erp' ) }>
+					<Pencil size={ 16 } aria-hidden="true" />
 				</Button>
-				<Button variant="ghost" size="icon" className="size-8 text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
-					<Trash2 size={ 14 } aria-hidden="true" />
+				<Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={ onDelete } aria-label={ __( 'Delete', 'erp' ) }>
+					<Trash2 size={ 16 } aria-hidden="true" />
 				</Button>
 			</div>
 		</td>

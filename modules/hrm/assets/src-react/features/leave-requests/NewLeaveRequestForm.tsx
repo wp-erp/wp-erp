@@ -123,12 +123,6 @@ export function NewLeaveRequestForm( {
 
 	return (
 		<form onSubmit={ onSubmit } className="flex min-w-0 flex-col gap-4" noValidate>
-			{ error ? (
-				<Alert variant="destructive">
-					<AlertDescription>{ error }</AlertDescription>
-				</Alert>
-			) : null }
-
 			{ hideEmployeePicker ? null : (
 				<SmartSelectField
 					id="leave_employee"
@@ -265,6 +259,12 @@ export function NewLeaveRequestForm( {
 					<span className="text-xs text-muted-foreground">{ sprintf( __( '%d file(s) selected', 'erp' ), files.length ) }</span>
 				) : null }
 			</div>
+
+			{ error ? (
+				<Alert variant="destructive">
+					<AlertDescription>{ error }</AlertDescription>
+				</Alert>
+			) : null }
 
 			<DialogFooter className="items-center gap-5 sm:gap-5">
 				{ employeeId && ! entitled ? (

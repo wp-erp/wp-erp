@@ -39,17 +39,17 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 		<div className="overflow-x-auto">
 			<table className="w-full min-w-160 text-left">
 			<thead className="border-b border-border bg-card">
-				<tr className="h-10 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+				<tr className="h-10">
 					{ canManage ? (
 						<th scope="col" className="w-10 px-4">
 							<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
 						</th>
 					) : null }
-					<th scope="col" className="px-4">{ __( 'Title', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Type', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Recipients', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Author', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2">{ __( 'Date', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Title', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Type', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Recipients', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Author', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Date', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

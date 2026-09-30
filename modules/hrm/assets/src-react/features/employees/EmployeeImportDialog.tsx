@@ -167,6 +167,7 @@ export function EmployeeImportDialog( { open, onClose }: EmployeeImportDialogPro
 						{ __( 'Add employees to your WP ERP by uploading a CSV file.', 'erp' ) }
 					</p>
 				</DialogHeader>
+				<div className="h-px w-full bg-border" />
 
 				{ result ? (
 					<EmployeeImportResult result={ result } onReset={ reset } onClose={ close } />

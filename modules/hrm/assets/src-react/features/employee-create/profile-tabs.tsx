@@ -71,7 +71,7 @@ function DocumentsTabPreview(): JSX.Element {
 					href="https://wperp.com/downloads/document-manager/"
 					target="_blank"
 					rel="noreferrer"
-					className="inline-flex h-9 items-center rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+					className="inline-flex h-10 items-center rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
 				>
 					{ __( 'Learn more', 'erp' ) }
 				</a>

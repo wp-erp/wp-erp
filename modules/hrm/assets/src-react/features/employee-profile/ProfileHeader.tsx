@@ -46,7 +46,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 			) }
 			<div className="flex min-w-0 flex-1 flex-col gap-2">
 				<div className="flex flex-wrap items-center gap-3">
-					<h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground">
+					<h1 className="text-2xl font-bold leading-8 text-foreground">
 						{ fullName || __( 'Employee', 'erp' ) }
 					</h1>
 					{ status ? (

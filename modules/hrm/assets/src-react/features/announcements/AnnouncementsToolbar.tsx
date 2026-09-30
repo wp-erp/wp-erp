@@ -46,7 +46,7 @@ export function AnnouncementsToolbar( {
 	return (
 		<>
 			<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
-				<div role="tablist" aria-label={ __( 'Announcement status', 'erp' ) } className="flex items-stretch">
+				<div role="tablist" aria-label={ __( 'Announcement status', 'erp' ) } className="flex max-w-full items-stretch overflow-x-auto">
 					{ STATUS_TABS.map( ( tab ) => {
 						const selected = status === tab.value;
 						return (
@@ -107,7 +107,7 @@ export function AnnouncementsToolbar( {
 			</div>
 
 			{ filterButtonActive ? (
-				<div className="flex flex-wrap items-center gap-4 border-b border-border bg-muted/20 px-4 py-3">
+				<div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/20 px-4 py-3">
 					<label className="flex items-center gap-2 text-sm text-muted-foreground">
 						{ __( 'Date range', 'erp' ) }
 						<DateRangeField
