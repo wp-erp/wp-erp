@@ -3,7 +3,8 @@
  * edit icon), designation, email, status and the Leave / Notes quick actions
  * stacked down one column, the page actions on the right, and a facts strip
  * under a divider (employee ID, department, date of hire, type). Avatar is
- * editable in place (for self / managers) via `AvatarUpload`.
+ * editable in place (for self / managers) via `AvatarUpload`. On the
+ * employee's birthday a cake pill and a confetti burst join the name.
  */
 
 import { Avatar, AvatarFallback, AvatarImage, Button, toast } from '@wedevs/plugin-ui';
@@ -18,6 +19,7 @@ import { __ } from '@/shared/i18n';
 import { formatCalendarDate } from '@/shared/utils/date';
 
 import { AvatarUpload } from './AvatarUpload';
+import { BirthdayBadge } from './BirthdayConfetti';
 import { STATUS_OPTIONS, TYPE_OPTIONS } from './options';
 import { initials, labelOf, str, type LucideIcon, type Record_ } from './profile-format';
 
@@ -106,7 +108,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 				) }
 
 				<div className="flex min-w-0 flex-1 flex-col gap-2">
-					<div className="flex items-center gap-2">
+					<div className="flex flex-wrap items-center gap-2">
 						<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
@@ -123,6 +125,12 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 								<Pencil size={ 16 } aria-hidden="true" />
 							</Button>
 						) : null }
+						<BirthdayBadge
+							userId={ userId }
+							firstName={ str( record, 'first_name' ) }
+							dateOfBirth={ str( record, 'date_of_birth' ) }
+							status={ status }
+						/>
 					</div>
 					{ designation ? (
 						<p className="m-0 mb-4 text-sm font-semibold text-foreground">

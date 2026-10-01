@@ -747,3 +747,38 @@ body:has(#erp-hr-app) {
 	width: 40px !important;
 	height: 40px !important;
 }
+
+/* ─── Birthday confetti burst (features/employee-profile/BirthdayConfetti.tsx) ───
+ * Same burst as FlyHR's onboarding: each piece leaves the centre of the
+ * birthday pill, arcs out and up to its own point (--erp-confetti-dx / -dy),
+ * then falls (--erp-confetti-fall) while spinning and fading. The pieces are
+ * portalled to <body>, outside #erp-hr-app, so these rules are unscoped. */
+.erp-confetti-piece {
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+	animation-name: erp-confetti-burst;
+	animation-timing-function: cubic-bezier( 0.15, 0.65, 0.35, 1 );
+	animation-iteration-count: 1;
+	animation-fill-mode: both;
+}
+@keyframes erp-confetti-burst {
+	0% {
+		opacity: 1;
+		transform: translate( -50%, -50% ) scale( 0.4 ) rotate( 0deg );
+	}
+	35% {
+		opacity: 1;
+		transform: translate( calc( -50% + var( --erp-confetti-dx ) ), calc( -50% + var( --erp-confetti-dy ) ) ) scale( 1 ) rotate( calc( var( --erp-confetti-spin ) * 0.4 ) );
+	}
+	100% {
+		opacity: 0;
+		transform: translate( calc( -50% + var( --erp-confetti-dx ) * 1.25 ), calc( -50% + var( --erp-confetti-dy ) + var( --erp-confetti-fall ) ) ) scale( 0.9 ) rotate( var( --erp-confetti-spin ) );
+	}
+}
+@media ( prefers-reduced-motion: reduce ) {
+	.erp-confetti-piece {
+		display: none;
+	}
+}
