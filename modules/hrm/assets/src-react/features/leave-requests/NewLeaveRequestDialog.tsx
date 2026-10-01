@@ -288,7 +288,12 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 	async function handleSubmit( e: FormEvent ): Promise< void > {
 		e.preventDefault();
 		if ( ! userId || ! policy || ! from || ! to ) {
-			setError( __( 'Please select an employee, policy and date range.', 'erp' ) );
+			// The self-service form has no employee field, so do not ask for one.
+			setError(
+				lockEmployeeId
+					? __( 'Please select a policy and date range.', 'erp' )
+					: __( 'Please select an employee, policy and date range.', 'erp' )
+			);
 			return;
 		}
 		// Mirrors the server (`rest_leave_reason_required`) — the field is marked

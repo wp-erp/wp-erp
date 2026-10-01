@@ -104,7 +104,9 @@ function DashboardInner(): JSX.Element {
 	const canManageLeave = useCan( 'erp_leave_manage' );
 	const canViewAnnouncements = useCan( 'erp_view_announcement' );
 	const canListEmployees = useCan( 'erp_list_employee' );
-	const canViewList = useCan( 'erp_view_list' );
+	// Card links follow the route capabilities, so nobody lands on a no-access page.
+	const canManageDepartments = useCan( 'erp_manage_department' );
+	const canManageDesignations = useCan( 'erp_manage_designation' );
 
 	const currentUserId = user?.id ?? 0;
 	const name = user?.displayName ? user.displayName.split( ' ' )[ 0 ] : '';
@@ -363,14 +365,14 @@ function DashboardInner(): JSX.Element {
 							label={ __( 'Departments', 'erp' ) }
 							value={ summary?.total_departments ?? 0 }
 							tint="bg-sky-500/10 text-sky-600 dark:text-sky-400"
-							to={ canViewList ? '/departments' : undefined }
+							to={ canManageDepartments ? '/departments' : undefined }
 						/>
 						<StatCard
 							icon={ Briefcase }
 							label={ __( 'Designations', 'erp' ) }
 							value={ summary?.total_designations ?? 0 }
 							tint="bg-violet-500/10 text-violet-600 dark:text-violet-400"
-							to="/designations"
+							to={ canManageDesignations ? '/designations' : undefined }
 						/>
 						{ isManager ? (
 							<StatCard

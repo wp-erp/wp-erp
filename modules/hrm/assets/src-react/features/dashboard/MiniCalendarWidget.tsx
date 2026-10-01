@@ -6,7 +6,7 @@
  * that the hover tooltip expands. "View" opens the full calendar.
  */
 
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@wedevs/plugin-ui';
+import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, toast } from '@wedevs/plugin-ui';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useSelect } from '@wordpress/data';
 import { useMemo, useState } from 'react';
@@ -104,7 +104,7 @@ export function MiniCalendarWidget(): JSX.Element {
 	const gridStart = useMemo( () => addDays( cursor, -mondayOffset( cursor.getDay() ) ), [ cursor ] );
 	const daysInMonth = useMemo( () => new Date( cursor.getFullYear(), cursor.getMonth() + 1, 0 ).getDate(), [ cursor ] );
 	const weekCount = useMemo( () => Math.ceil( ( mondayOffset( cursor.getDay() ) + daysInMonth ) / 7 ), [ cursor, daysInMonth ] );
-	const { events, loading, error } = useLeaveCalendar( ymd( gridStart ), ymd( addDays( gridStart, weekCount * 7 - 1 ) ), { scope } );
+	const { events, loading, error, reload } = useLeaveCalendar( ymd( gridStart ), ymd( addDays( gridStart, weekCount * 7 - 1 ) ), { scope } );
 
 	const byDay = useMemo( () => {
 		const map = new Map< string, DayBucket >();
@@ -352,7 +352,11 @@ export function MiniCalendarWidget(): JSX.Element {
 		<NewLeaveRequestDialog
 			open={ takeLeave !== null }
 			onClose={ () => setTakeLeave( null ) }
-			onSubmitted={ () => setTakeLeave( null ) }
+			onSubmitted={ () => {
+				setTakeLeave( null );
+				toast.success( __( 'Leave request submitted.', 'erp' ) );
+				void reload();
+			} }
 			lockEmployeeId={ currentUserId }
 		/>
 		</>

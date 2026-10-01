@@ -227,7 +227,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 										<td className="px-2 align-middle text-sm text-foreground">
 											{ row.duration || sprintf(
 												/* translators: %s: number of days */
-												__( '%s days', 'erp' ),
+												Number( row.days ) === 1 ? __( '%s day', 'erp' ) : __( '%s days', 'erp' ),
 												num( row.days )
 											) }
 										</td>
