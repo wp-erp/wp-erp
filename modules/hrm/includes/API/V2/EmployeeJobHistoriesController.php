@@ -141,6 +141,63 @@ class EmployeeJobHistoriesController extends RestController {
 	}
 
 	/**
+	 * Per-module value rules, checked before the model writes. The model holds
+	 * the same rules (legacy parity) but words them as codes ("Invalid
+	 * Designation Type"); this names the field the way the React dialog does
+	 * (profile-rules.ts).
+	 *
+	 * @param string $module Module slug.
+	 * @param array  $params Request params.
+	 *
+	 * @return \WP_Error|null WP_Error (400) to reject, null when valid.
+	 */
+	private function validate_values( string $module, array $params ) {
+		$text = static function ( $key ) use ( $params ): string {
+			$value = $params[ $key ] ?? '';
+			return \is_scalar( $value ) ? trim( (string) $value ) : '';
+		};
+		$fail = static function ( string $message ) {
+			return new \WP_Error( 'rest_invalid_param', $message, [ 'status' => 400 ] );
+		};
+
+		if ( 'employee' === $module && '' === $text( 'category' ) ) {
+			return $fail( __( 'Employee status is required.', 'erp' ) );
+		}
+
+		if ( 'employment' === $module && '' === $text( 'type' ) ) {
+			return $fail( __( 'Employee type is required.', 'erp' ) );
+		}
+
+		if ( 'compensation' === $module ) {
+			$rate = $text( 'pay_rate' );
+
+			if ( '' === $rate ) {
+				return $fail( __( 'Pay rate is required.', 'erp' ) );
+			}
+			if ( ! erp_is_valid_currency_amount( $rate ) || (float) $rate <= 0 ) {
+				return $fail( __( 'Pay rate must be a number greater than 0, with up to 4 decimal places.', 'erp' ) );
+			}
+			if ( '' === $text( 'pay_type' ) ) {
+				return $fail( __( 'Pay type is required.', 'erp' ) );
+			}
+		}
+
+		if ( 'job' === $module ) {
+			if ( empty( $params['department'] ) ) {
+				return $fail( __( 'Department is required.', 'erp' ) );
+			}
+			if ( empty( $params['designation'] ) ) {
+				return $fail( __( 'Job title is required.', 'erp' ) );
+			}
+			if ( empty( $params['reporting_to'] ) ) {
+				return $fail( __( 'Reporting to is required.', 'erp' ) );
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * DELETE /erp/v2/employees/{user_id}/job-histories/{history_id}
 	 *
 	 * Mirrors `AjaxHandler::employee_remove_history()` — delegates to the
@@ -231,6 +288,11 @@ class EmployeeJobHistoriesController extends RestController {
 			return $invalid;
 		}
 
+		$invalid = $this->validate_values( $module, $params );
+		if ( is_wp_error( $invalid ) ) {
+			return $invalid;
+		}
+
 		// Snapshot before the write so the `erp_hr_employee_update` action can carry
 		// the old data — the model methods below fire only their `*_create` hooks, so
 		// the legacy AjaxHandler fired this update action separately after each write.
@@ -306,6 +368,11 @@ class EmployeeJobHistoriesController extends RestController {
 		}
 
 		$invalid = $this->validate_date( $params );
+		if ( is_wp_error( $invalid ) ) {
+			return $invalid;
+		}
+
+		$invalid = $this->validate_values( $module, $params );
 		if ( is_wp_error( $invalid ) ) {
 			return $invalid;
 		}

@@ -52,6 +52,17 @@ interface UseLeaveRequestsArgs {
 	readonly perPage:       number;
 }
 
+/**
+ * Approve / reject response. `message` is set when the server recorded the
+ * response but left the request open (Advanced Leave multi-level approval:
+ * a department lead's response waits for the HR decision).
+ */
+export interface LeaveModerateResult {
+	readonly id:       number;
+	readonly status:   number;
+	readonly message?: string;
+}
+
 export interface UseLeaveRequestsResult {
 	readonly rows:           readonly LeaveRequest[];
 	readonly total:          number;
@@ -59,8 +70,8 @@ export interface UseLeaveRequestsResult {
 	readonly loading:        boolean;
 	readonly error:          string | null;
 	readonly reload:         () => Promise< void >;
-	readonly approve:        ( id: number, reason: string ) => Promise< void >;
-	readonly reject:         ( id: number, reason: string ) => Promise< void >;
+	readonly approve:        ( id: number, reason: string ) => Promise< LeaveModerateResult >;
+	readonly reject:         ( id: number, reason: string ) => Promise< LeaveModerateResult >;
 	readonly remove:         ( id: number ) => Promise< void >;
 	readonly bulk:           ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ) => Promise< void >;
 	readonly loadLeaveTypes: () => Promise< readonly LeaveTypeOption[] >;
@@ -140,17 +151,19 @@ export function useLeaveRequests( {
 	}, [ reload ] );
 
 	const approve = useCallback(
-		async ( id: number, reason: string ): Promise< void > => {
-			await request( restPath( 'v2', `/leave-requests/${ id }/approve` ), { method: 'PUT', data: { reason } } );
+		async ( id: number, reason: string ): Promise< LeaveModerateResult > => {
+			const res = await request< LeaveModerateResult >( restPath( 'v2', `/leave-requests/${ id }/approve` ), { method: 'PUT', data: { reason } } );
 			await reload();
+			return res;
 		},
 		[ reload ]
 	);
 
 	const reject = useCallback(
-		async ( id: number, reason: string ): Promise< void > => {
-			await request( restPath( 'v2', `/leave-requests/${ id }/reject` ), { method: 'PUT', data: { reason } } );
+		async ( id: number, reason: string ): Promise< LeaveModerateResult > => {
+			const res = await request< LeaveModerateResult >( restPath( 'v2', `/leave-requests/${ id }/reject` ), { method: 'PUT', data: { reason } } );
 			await reload();
+			return res;
 		},
 		[ reload ]
 	);

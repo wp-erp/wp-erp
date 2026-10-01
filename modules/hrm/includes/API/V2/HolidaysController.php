@@ -251,7 +251,14 @@ class HolidaysController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function create_item( $request ) {
-		$id = erp_hr_leave_insert_holiday( $this->prepare_item_for_database( $request ) );
+		$data = $this->prepare_item_for_database( $request );
+
+		$invalid = $this->validate_dates( $data );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
+		$id = erp_hr_leave_insert_holiday( $data );
 
 		if ( is_wp_error( $id ) ) {
 			return $this->to_rest_error( $id );
@@ -283,7 +290,13 @@ class HolidaysController extends RestController {
 			return new \WP_Error( 'rest_holiday_invalid_id', __( 'Invalid holiday id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
-		$data       = $this->prepare_item_for_database( $request );
+		$data = $this->prepare_item_for_database( $request );
+
+		$invalid = $this->validate_dates( $data );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$data['id'] = $holiday_id;
 
 		$id = erp_hr_leave_insert_holiday( $data );
@@ -623,6 +636,34 @@ class HolidaysController extends RestController {
 		}
 
 		return [ '', '' ];
+	}
+
+	/**
+	 * A 400 `WP_Error` when the start date is not a real date or the end date
+	 * falls before it, else null. The model only checks the dates are non-empty,
+	 * so a bad date would otherwise be stored as 1970 or as a backwards range.
+	 *
+	 * @param array $data Prepared holiday args (`start` Y-m-d, `end` Y-m-d 23:59:59).
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function validate_dates( array $data ): ?\WP_Error {
+		$start = (string) ( $data['start'] ?? '' );
+
+		if ( '' === $start ) {
+			return null; // The model reports the missing start date.
+		}
+
+		$start_day = \DateTime::createFromFormat( '!Y-m-d', substr( $start, 0, 10 ) );
+		if ( ! $start_day || $start_day->format( 'Y-m-d' ) !== substr( $start, 0, 10 ) ) {
+			return new \WP_Error( 'rest_holiday_invalid_start', __( 'Start date is not a valid date.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		if ( substr( (string) ( $data['end'] ?? '' ), 0, 10 ) < $start_day->format( 'Y-m-d' ) ) {
+			return new \WP_Error( 'rest_holiday_end_before_start', __( 'End date must be on or after the start date.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
 	}
 
 	/**

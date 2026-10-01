@@ -41,14 +41,14 @@ export interface ErpToastOptions {
 
 /**
  * A supporting line per type, so a toast is never a bare five-word title.
- * A caller's own `description` always wins. Called lazily — at module-eval
+ * A caller's own `description` always wins. Errors and warnings get none: their
+ * title is the specific problem ("You must select a category"), and a generic
+ * "Something went wrong" under a validation message reads like a crash. Called lazily: at module-eval
  * time the locale data may not have landed yet, which would freeze the
  * English string into a translated site.
  */
 const FALLBACK_DESCRIPTION: Record< string, () => string > = {
 	success: () => __( 'Your changes were saved.', 'erp' ),
-	error:   () => __( 'Something went wrong. Please try again.', 'erp' ),
-	warning: () => __( 'Please review the highlighted issue.', 'erp' ),
 	info:    () => __( 'Here is something you should know.', 'erp' ),
 	loading: () => __( 'Please wait a moment…', 'erp' ),
 };

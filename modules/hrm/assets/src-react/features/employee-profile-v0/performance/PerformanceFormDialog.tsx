@@ -26,6 +26,7 @@ import { __ } from '@/shared/i18n';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
+import { validatePerformance } from '../profile-rules';
 import { RATING_OPTIONS } from '../options';
 import { siteToday, toLocalYmd } from '@/shared/utils/date';
 
@@ -145,20 +146,9 @@ export function PerformanceFormDialog( {
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
 
-		if ( ! form.performance_date ) {
-			toast.error( __( 'Please fill all required fields.', 'erp' ) );
-			return;
-		}
-		if ( type === 'reviews' && ! form.reporting_to ) {
-			toast.error( __( 'Please fill all required fields.', 'erp' ) );
-			return;
-		}
-		if ( type === 'comments' && ! form.reviewer ) {
-			toast.error( __( 'Please fill all required fields.', 'erp' ) );
-			return;
-		}
-		if ( type === 'goals' && ( ! form.completion_date || ! form.supervisor ) ) {
-			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+		const problem = type ? validatePerformance( type, form ) : null;
+		if ( problem ) {
+			toast.error( problem );
 			return;
 		}
 

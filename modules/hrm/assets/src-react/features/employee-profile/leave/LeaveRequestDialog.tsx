@@ -181,6 +181,18 @@ export function LeaveRequestDialog( {
 
 	async function handleSubmit( e: FormEvent ): Promise< void > {
 		e.preventDefault();
+		if ( ! policy || ! from || ! to ) {
+			setError( __( 'Please select a policy and date range.', 'erp' ) );
+			return;
+		}
+		if ( to < from ) {
+			setDateError( __( 'The end date must be on or after the start date.', 'erp' ) );
+			return;
+		}
+		if ( ! reason.trim() ) {
+			setError( __( 'Leave reason field can not be blank.', 'erp' ) );
+			return;
+		}
 		setBusy( true );
 		setError( null );
 		try {
@@ -262,7 +274,7 @@ export function LeaveRequestDialog( {
 						</div>
 					) : null }
 
-					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } disabled={ ! entitled } value={ reason } onChange={ setReason } />
+					<TextareaField id="leave_reason" label={ __( 'Reason', 'erp' ) } required disabled={ ! entitled } value={ reason } onChange={ setReason } />
 
 					<DialogFooter className="items-center gap-5 sm:gap-5">
 						{ year && ! entitled ? (

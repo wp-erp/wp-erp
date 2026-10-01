@@ -13,6 +13,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	toast,
 } from '@wedevs/plugin-ui';
 import { useEffect, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
@@ -20,6 +21,7 @@ import type { FormEvent, JSX } from 'react';
 import { __ } from '@/shared/i18n';
 
 import { SelectField, TextField, TextareaField } from '../fields';
+import { validateGeneralSection } from '../profile-rules';
 import type { GeneralSection } from './useEmployeeGeneral';
 
 interface GeneralSectionDialogProps {
@@ -94,6 +96,12 @@ export function GeneralSectionDialog( {
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
 		if ( ! section ) {
+			return;
+		}
+
+		const problem = validateGeneralSection( section, form );
+		if ( problem ) {
+			toast.error( problem );
 			return;
 		}
 

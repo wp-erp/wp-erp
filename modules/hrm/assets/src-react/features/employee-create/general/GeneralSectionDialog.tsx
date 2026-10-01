@@ -21,6 +21,7 @@ import type { FormEvent, JSX } from 'react';
 import { __ } from '@/shared/i18n';
 
 import { SelectField, TextField, TextareaField } from '../fields';
+import { validateGeneralSection } from '../profile-rules';
 import type { GeneralSection } from './useEmployeeGeneral';
 
 interface GeneralSectionDialogProps {
@@ -98,18 +99,9 @@ export function GeneralSectionDialog( {
 			return;
 		}
 
-		if ( section === 'experiences' ) {
-			if ( ! ( form.company_name ?? '' ).trim() || ! ( form.job_title ?? '' ).trim() ) {
-				toast.error( __( 'Please fill all required fields.', 'erp' ) );
-				return;
-			}
-		} else if ( section === 'educations' ) {
-			if ( ! ( form.school ?? '' ).trim() || ! ( form.degree ?? '' ).trim() || ! ( form.field ?? '' ).trim() || ! ( form.finished ?? '' ).trim() ) {
-				toast.error( __( 'Please fill all required fields.', 'erp' ) );
-				return;
-			}
-		} else if ( ! ( form.name ?? '' ).trim() || ! ( form.relation ?? '' ).trim() ) {
-			toast.error( __( 'Please fill all required fields.', 'erp' ) );
+		const problem = validateGeneralSection( section, form );
+		if ( problem ) {
+			toast.error( problem );
 			return;
 		}
 

@@ -1796,6 +1796,27 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         return new WP_Error( 'invalid-entitlement', __( 'Error: You can not modify past leave year requests.', 'erp' ) );
     }
 
+    /**
+     * Short-circuit the status change.
+     *
+     * Return a WP_Error to refuse it, or an array describing the outcome when an
+     * extension handled the request itself (e.g. Advanced Leave multi-level
+     * approval recording a department lead's response over REST). Null lets the
+     * normal flow continue.
+     *
+     * @since 1.18.0
+     *
+     * @param null|array|WP_Error $pre        Short-circuit value.
+     * @param int                 $request_id Leave request ID.
+     * @param int                 $status     New status.
+     * @param string              $comments   Moderator comment.
+     */
+    $pre = apply_filters( 'erp_hr_leave_request_pre_update_status', null, $request_id, $status, $comments );
+
+    if ( null !== $pre ) {
+        return $pre;
+    }
+
     do_action( 'erp_hr_leave_request_before_process', $request_id, $status, $comments );
 
     // approval status table data

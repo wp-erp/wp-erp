@@ -75,6 +75,13 @@ function isValidDate( value: string ): boolean {
 	return ! Number.isNaN( ts );
 }
 
+/** Today as `yyyy-mm-dd` in the browser's calendar. */
+function todayYmd(): string {
+	const now = new Date();
+	const pad = ( n: number ): string => String( n ).padStart( 2, '0' );
+	return `${ now.getFullYear() }-${ pad( now.getMonth() + 1 ) }-${ pad( now.getDate() ) }`;
+}
+
 /**
  * Fields that must be non-empty to submit.
  *
@@ -217,6 +224,22 @@ export function validateEmployeeForm(
 		if ( v && ! isValidDate( v ) ) {
 			next[ key ] = __( 'Enter a valid date.', 'erp' );
 		}
+	}
+
+	// Date order, mirrored by EmployeesController::validate_employee_rules().
+	// ISO `yyyy-mm-dd` strings compare correctly as plain strings.
+	const hire = ( form.hiring_date ?? '' ).trim();
+	const dob  = ( form.date_of_birth ?? '' ).trim();
+	const end  = ( form.end_date ?? '' ).trim();
+	if ( dob && isValidDate( dob ) && ! next.date_of_birth ) {
+		if ( dob > todayYmd() ) {
+			next.date_of_birth = __( 'Date of birth cannot be in the future.', 'erp' );
+		} else if ( hire && isValidDate( hire ) && dob >= hire ) {
+			next.date_of_birth = __( 'Date of birth must be earlier than the date of hire.', 'erp' );
+		}
+	}
+	if ( end && isValidDate( end ) && hire && isValidDate( hire ) && end < hire && ! next.end_date ) {
+		next.end_date = __( 'Employee end date cannot be earlier than the date of hire.', 'erp' );
 	}
 
 	// Phone numbers.

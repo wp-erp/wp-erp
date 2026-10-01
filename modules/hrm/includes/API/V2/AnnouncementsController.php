@@ -307,6 +307,11 @@ class AnnouncementsController extends RestController {
 			return new \WP_Error( 'rest_announcement_no_title', __( 'Title is required.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		$invalid = $this->validate_write( $request, true );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$status = $this->cast_enum( (string) ( $request['status'] ?? 'publish' ), [ 'publish', 'draft' ] ) ?? 'publish';
 
 		$postarr = [
@@ -354,6 +359,11 @@ class AnnouncementsController extends RestController {
 
 		if ( ! $post || self::POST_TYPE !== $post->post_type ) {
 			return new \WP_Error( 'rest_announcement_invalid_id', __( 'Invalid announcement id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		$invalid = $this->validate_write( $request, null !== $request['assign_type'] );
+		if ( $invalid ) {
+			return $invalid;
 		}
 
 		$data = [ 'ID' => $id ];
@@ -546,6 +556,45 @@ class AnnouncementsController extends RestController {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Value rules the form enforces, re-checked here so a direct request cannot
+	 * skip them. A 400 `WP_Error` naming the field, else null.
+	 *
+	 * - A targeted audience needs at least one recipient: the legacy assign step
+	 *   silently saves an announcement nobody receives when the set is empty.
+	 * - A publish date must parse: an unreadable one was dropped silently, which
+	 *   published the announcement now instead of when the author asked.
+	 *
+	 * @param WP_REST_Request $request          Request.
+	 * @param bool            $check_recipients Whether the request sets the audience.
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function validate_write( $request, bool $check_recipients ): ?\WP_Error {
+		if ( $check_recipients ) {
+			$type     = $this->cast_enum( (string) ( $request['assign_type'] ?? '' ), self::ASSIGN_TYPES ) ?? 'all_employee';
+			$required = [
+				'by_department'     => [ 'departments', __( 'Select at least one department.', 'erp' ) ],
+				'by_designation'    => [ 'designations', __( 'Select at least one designation.', 'erp' ) ],
+				'selected_employee' => [ 'employees', __( 'Select at least one employee.', 'erp' ) ],
+			];
+
+			if ( isset( $required[ $type ] ) ) {
+				$ids = array_filter( array_map( 'absint', (array) ( $request[ $required[ $type ][0] ] ?? [] ) ) );
+				if ( empty( $ids ) ) {
+					return new \WP_Error( 'rest_announcement_no_recipients', $required[ $type ][1], [ 'status' => 400 ] );
+				}
+			}
+		}
+
+		$publish_date = trim( (string) ( $request['publish_date'] ?? '' ) );
+		if ( '' !== $publish_date && ! strtotime( $publish_date ) ) {
+			return new \WP_Error( 'rest_announcement_invalid_date', __( 'Publish date is not a valid date.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
 	}
 
 	/**

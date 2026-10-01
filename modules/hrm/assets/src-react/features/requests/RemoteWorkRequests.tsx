@@ -276,6 +276,18 @@ function NewRemoteWorkDialog({
             toast.error(__("Select an employee.", "erp"));
             return;
         }
+        if (!reason) {
+            toast.error(__("Select a reason.", "erp"));
+            return;
+        }
+        if (!from) {
+            toast.error(__("Select a start date.", "erp"));
+            return;
+        }
+        if (!to) {
+            toast.error(__("Select an end date.", "erp"));
+            return;
+        }
         if (to < from) {
             toast.error(
                 __("The end date must be on or after the start date.", "erp"),

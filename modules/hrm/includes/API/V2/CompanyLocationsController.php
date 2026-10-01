@@ -103,6 +103,14 @@ class CompanyLocationsController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function create_item( $request ) {
+		$country = sanitize_text_field( (string) $request['country'] );
+
+		// The form offers a country list; a code outside it would be stored
+		// as-is and print as a blank country on every address.
+		if ( '' !== $country && ! \array_key_exists( $country, (array) \WeDevs\ERP\Countries::instance()->get_countries() ) ) {
+			return new \WP_Error( 'rest_company_location_invalid_country', __( 'Country is not valid.', 'erp' ), [ 'status' => 400 ] );
+		}
+
 		$company     = new Company();
 		$location_id = $company->create_location(
 			[

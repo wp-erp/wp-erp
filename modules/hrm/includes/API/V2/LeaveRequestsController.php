@@ -259,6 +259,21 @@ class LeaveRequestsController extends RestController {
 			return new \WP_Error( 'rest_leave_request_bad_request', __( 'Invalid leave request.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		// Only HR may moderate their own request; a department lead cannot.
+		if ( ! current_user_can( 'erp_leave_manage' ) ) {
+			$leave_request = \WeDevs\ERP\HRM\Models\LeaveRequest::find( $request_id );
+
+			if ( $leave_request && (int) $leave_request->user_id === get_current_user_id() ) {
+				return new \WP_Error(
+					'rest_leave_request_own',
+					1 === $status
+						? __( 'You cannot approve your own leave request.', 'erp' )
+						: __( 'You cannot reject your own leave request.', 'erp' ),
+					[ 'status' => 403 ]
+				);
+			}
+		}
+
 		$update = erp_hr_leave_request_update_status( $request_id, $status, sanitize_text_field( $reason ) );
 
 		if ( is_wp_error( $update ) ) {
@@ -266,6 +281,18 @@ class LeaveRequestsController extends RestController {
 				$update->get_error_code() ?: 'rest_leave_request_error',
 				$update->get_error_message(),
 				[ 'status' => $this->error_status( $update->get_error_code() ) ]
+			);
+		}
+
+		// An extension handled the request itself (Advanced Leave multi-level
+		// approval records a lead's response and leaves the request open).
+		if ( is_array( $update ) ) {
+			return rest_ensure_response(
+				[
+					'id'      => $request_id,
+					'status'  => isset( $update['status'] ) ? (int) $update['status'] : $status,
+					'message' => isset( $update['message'] ) ? (string) $update['message'] : '',
+				]
 			);
 		}
 

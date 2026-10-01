@@ -280,6 +280,14 @@ function NewResignationDialog({
             toast.error(__("Select an employee.", "erp"));
             return;
         }
+        if (!reason) {
+            toast.error(__("Select a reason.", "erp"));
+            return;
+        }
+        if (!date) {
+            toast.error(__("Select a resignation date.", "erp"));
+            return;
+        }
         setBusy(true);
         request(restPath("v2", BASE), {
             method: "POST",

@@ -198,6 +198,11 @@ class EmployeeProfileController extends RestController {
 			return $employee;
 		}
 
+		$invalid = $this->validate_fields( $this->section( $request ), $request );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		switch ( $this->section( $request ) ) {
 			case 'educations':
 				$result = $employee->add_education( $this->education_fields( $request ) );
@@ -265,6 +270,128 @@ class EmployeeProfileController extends RestController {
 		}
 
 		return rest_ensure_response( [ 'deleted' => true, 'id' => $id ] );
+	}
+
+	/**
+	 * Value rules for the three sections, checked before the model writes. The
+	 * React dialogs run the same rules with the same wording (profile-rules.ts);
+	 * this side is the one that counts.
+	 *
+	 * @param string          $section 'experiences' | 'educations' | 'dependents'.
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return \WP_Error|null WP_Error (400) to reject, null when valid.
+	 */
+	private function validate_fields( string $section, WP_REST_Request $request ) {
+		$text = static function ( $key ) use ( $request ): string {
+			$value = $request[ $key ] ?? '';
+			return \is_scalar( $value ) ? trim( sanitize_text_field( (string) $value ) ) : '';
+		};
+		$fail = static function ( string $message ) {
+			return new \WP_Error( 'rest_invalid_param', $message, [ 'status' => 400 ] );
+		};
+		$is_day = static function ( string $value ): bool {
+			return (bool) preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) && erp_is_valid_date( $value );
+		};
+
+		if ( 'experiences' === $section ) {
+			$from = $text( 'from' );
+			$to   = $text( 'to' );
+
+			if ( '' === $text( 'company_name' ) ) {
+				return $fail( __( 'Company name is required.', 'erp' ) );
+			}
+			if ( '' === $text( 'job_title' ) ) {
+				return $fail( __( 'Job title is required.', 'erp' ) );
+			}
+			if ( '' === $from ) {
+				return $fail( __( 'From date is required.', 'erp' ) );
+			}
+			if ( ! $is_day( $from ) ) {
+				return $fail( __( 'Enter a valid From date.', 'erp' ) );
+			}
+			if ( '' === $to ) {
+				return $fail( __( 'To date is required.', 'erp' ) );
+			}
+			if ( ! $is_day( $to ) ) {
+				return $fail( __( 'Enter a valid To date.', 'erp' ) );
+			}
+			if ( $to < $from ) {
+				return $fail( __( 'The To date cannot be earlier than the From date.', 'erp' ) );
+			}
+
+			return null;
+		}
+
+		if ( 'educations' === $section ) {
+			$type   = $text( 'result_type' );
+			$result = $text( 'gpa' );
+			$scale  = $text( 'scale' );
+			$year   = $text( 'finished' );
+			$expiry = $text( 'expiration_date' );
+			$number = '/^[0-9]+(\.[0-9]+)?$/';
+
+			if ( '' === $text( 'school' ) ) {
+				return $fail( __( 'School name is required.', 'erp' ) );
+			}
+			if ( '' === $text( 'degree' ) ) {
+				return $fail( __( 'Degree is required.', 'erp' ) );
+			}
+			if ( '' === $text( 'field' ) ) {
+				return $fail( __( 'Field of study is required.', 'erp' ) );
+			}
+			if ( ! \in_array( $type, [ 'grade', 'percentage' ], true ) ) {
+				return $fail( __( 'Select a valid result type.', 'erp' ) );
+			}
+			if ( '' === $result ) {
+				return $fail( __( 'Result is required.', 'erp' ) );
+			}
+			if ( ! preg_match( $number, $result ) ) {
+				return $fail( __( 'Result must be a number of 0 or more.', 'erp' ) );
+			}
+			if ( 'percentage' === $type && (float) $result > 100 ) {
+				return $fail( __( 'Percentage cannot be more than 100.', 'erp' ) );
+			}
+			if ( 'grade' === $type ) {
+				if ( '' === $scale ) {
+					return $fail( __( 'Scale is required.', 'erp' ) );
+				}
+				if ( ! preg_match( $number, $scale ) || (float) $scale <= 0 ) {
+					return $fail( __( 'Scale must be a number greater than 0.', 'erp' ) );
+				}
+				if ( (float) $result > (float) $scale ) {
+					return $fail( __( 'Grade cannot be higher than the scale.', 'erp' ) );
+				}
+			}
+			if ( '' === $year ) {
+				return $fail( __( 'Completion year is required.', 'erp' ) );
+			}
+			if ( ! preg_match( '/^\d{4}$/', $year ) || (int) $year < 1970 || (int) $year > 2099 ) {
+				return $fail( __( 'Completion year must be between 1970 and 2099.', 'erp' ) );
+			}
+			if ( '' !== $expiry && ! $is_day( $expiry ) ) {
+				return $fail( __( 'Enter a valid expiration date.', 'erp' ) );
+			}
+
+			return null;
+		}
+
+		$dob = $text( 'dob' );
+
+		if ( '' === $text( 'name' ) ) {
+			return $fail( __( 'Name is required.', 'erp' ) );
+		}
+		if ( '' === $text( 'relation' ) ) {
+			return $fail( __( 'Relation is required.', 'erp' ) );
+		}
+		if ( '' !== $dob && ! $is_day( $dob ) ) {
+			return $fail( __( 'Enter a valid date of birth.', 'erp' ) );
+		}
+		if ( '' !== $dob && $dob > current_time( 'Y-m-d' ) ) {
+			return $fail( __( 'Date of birth cannot be in the future.', 'erp' ) );
+		}
+
+		return null;
 	}
 
 	/**

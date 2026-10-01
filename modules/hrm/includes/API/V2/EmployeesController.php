@@ -663,6 +663,11 @@ class EmployeesController extends RestController {
 
 		$item_data = $this->prepare_item_for_database( $request );
 
+		$invalid = $this->validate_employee_rules( $item_data );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		if ( ! empty( $item_data['personal']['photo_id'] ) ) {
 			$photo_error = $this->photo_error( (int) $item_data['personal']['photo_id'], 0 );
 			if ( $photo_error ) {
@@ -674,7 +679,7 @@ class EmployeesController extends RestController {
 		$created  = $employee->create_employee( $item_data );
 
 		if ( is_wp_error( $created ) ) {
-			return $created;
+			return $this->as_bad_request( $created );
 		}
 
 		$new_employee = new Employee( $created->user_id );
@@ -945,10 +950,15 @@ class EmployeesController extends RestController {
 			);
 		}
 
+		$invalid = $this->validate_employee_rules( $data, $employee );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$updated = $employee->update_employee( $data );
 
 		if ( is_wp_error( $updated ) ) {
-			return $updated;
+			return $this->as_bad_request( $updated );
 		}
 
 		/** @see create_item() — same hook, fires for React-driven edits. */
@@ -1084,6 +1094,19 @@ class EmployeesController extends RestController {
 			'termination_reason'  => sanitize_text_field( (string) ( $request['termination_reason'] ?? '' ) ),
 			'eligible_for_rehire' => sanitize_text_field( (string) ( $request['eligible_for_rehire'] ?? '' ) ),
 		];
+
+		// The termination date has to be a real day, on or after the date of hire.
+		if ( ! empty( $request['terminate_date'] ) ) {
+			if ( ! erp_is_valid_date( $fields['terminate_date'] ) ) {
+				return new \WP_Error( 'rest_invalid_terminate_date', __( 'Enter a valid termination date.', 'erp' ), [ 'status' => 400 ] );
+			}
+
+			$hired = $this->calendar_day( (string) $employee->get_hiring_date() );
+
+			if ( '' !== $hired && $this->calendar_day( $fields['terminate_date'] ) < $hired ) {
+				return new \WP_Error( 'rest_invalid_terminate_date', __( 'Termination date cannot be earlier than the date of hire.', 'erp' ), [ 'status' => 400 ] );
+			}
+		}
 
 		// Delegate to the frozen v1 helper: it runs `Employee::terminate()` and
 		// fires `erp_hr_employee_update` with the correct ( $user_id, $old_data )
@@ -1230,6 +1253,202 @@ class EmployeesController extends RestController {
 		$error = apply_filters( 'erp_hr_v2_employee_validate', null, $request, $mode );
 
 		return is_wp_error( $error ) ? $error : null;
+	}
+
+	/**
+	 * Value rules for a create or edit, checked before anything is written.
+	 *
+	 * The legacy form saved both create and edit through
+	 * `Employee::create_employee()`, so every field rule held on edit too. The v2
+	 * edit path goes through `update_employee()`, which checks nothing, so the
+	 * same rules run here for both modes. Also enforces the date order the
+	 * React form checks (birth before hire, end date not before hire), reading
+	 * the stored value for any date the request leaves out.
+	 *
+	 * @param array         $data     Output of prepare_item_for_database().
+	 * @param Employee|null $employee The employee being edited, null on create.
+	 *
+	 * @return \WP_Error|null WP_Error (400) to reject, null when valid.
+	 */
+	private function validate_employee_rules( array $data, $employee = null ) {
+		$personal = (array) ( $data['personal'] ?? [] );
+		$work     = (array) ( $data['work'] ?? [] );
+		$user_id  = $employee ? (int) $employee->get_user_id() : 0;
+
+		$fail = static function ( string $code, string $message ) {
+			return new \WP_Error( $code, $message, [ 'status' => 400 ] );
+		};
+
+		$name_fields = [
+			'first_name'  => __( 'Enter a valid first name. Use letters only, no digits or symbols.', 'erp' ),
+			'middle_name' => __( 'Enter a valid middle name. Use letters only, no digits or symbols.', 'erp' ),
+			'last_name'   => __( 'Enter a valid last name. Use letters only, no digits or symbols.', 'erp' ),
+			'father_name' => __( "Enter a valid father's name. Use letters only, no digits or symbols.", 'erp' ),
+			'mother_name' => __( "Enter a valid mother's name. Use letters only, no digits or symbols.", 'erp' ),
+			'spouse_name' => __( "Enter a valid spouse's name. Use letters only, no digits or symbols.", 'erp' ),
+		];
+
+		if ( \array_key_exists( 'first_name', $personal ) && '' === trim( (string) $personal['first_name'] ) ) {
+			return $fail( 'rest_empty_first_name', __( 'First name is required.', 'erp' ) );
+		}
+		if ( \array_key_exists( 'last_name', $personal ) && '' === trim( (string) $personal['last_name'] ) ) {
+			return $fail( 'rest_empty_last_name', __( 'Last name is required.', 'erp' ) );
+		}
+		foreach ( $name_fields as $key => $message ) {
+			if ( ! empty( $personal[ $key ] ) && ! erp_is_valid_name( $personal[ $key ] ) ) {
+				return $fail( 'rest_invalid_' . $key, $message );
+			}
+		}
+
+		if ( ! empty( $personal['employee_id'] ) ) {
+			if ( ! erp_is_valid_employee_id( $personal['employee_id'] ) ) {
+				return $fail( 'rest_invalid_employee_id', __( 'Employee ID can contain only letters, numbers and hyphens.', 'erp' ) );
+			}
+			$taken = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $personal['employee_id'] )
+				->where( 'user_id', '!=', $user_id )
+				->exists();
+			if ( $taken ) {
+				return $fail( 'rest_employee_id_exists', __( 'Another employee already uses this employee ID.', 'erp' ) );
+			}
+		}
+
+		if ( \array_key_exists( 'user_email', $data ) ) {
+			if ( ! is_email( (string) $data['user_email'] ) ) {
+				return $fail( 'rest_invalid_email', __( 'Enter a valid email address.', 'erp' ) );
+			}
+			// Create keeps the model's own check (it offers the convert-a-WP-user
+			// flow); on edit any other account holding the address blocks it.
+			if ( $employee && 0 !== strcasecmp( (string) $data['user_email'], (string) $employee->user_email )
+				&& erp_is_employee_exist( (string) $data['user_email'], $user_id ) ) {
+				return $fail( 'rest_email_exists', __( 'Another user already uses this email address.', 'erp' ) );
+			}
+		}
+
+		if ( ! empty( $personal['other_email'] ) && ! is_email( $personal['other_email'] ) ) {
+			return $fail( 'rest_invalid_other_email', __( 'Enter a valid other email address.', 'erp' ) );
+		}
+
+		$phones = [
+			'work_phone' => __( 'Enter a valid work phone number.', 'erp' ),
+			'mobile'     => __( 'Enter a valid mobile number.', 'erp' ),
+			'phone'      => __( 'Enter a valid phone number.', 'erp' ),
+		];
+		foreach ( $phones as $key => $message ) {
+			if ( ! empty( $personal[ $key ] ) && ! erp_is_valid_contact_no( $personal[ $key ] ) ) {
+				return $fail( 'rest_invalid_' . $key, $message );
+			}
+		}
+
+		$enums = [
+			'type'          => [ $work, erp_hr_get_employee_types(), __( 'Select a valid employee type.', 'erp' ) ],
+			'status'        => [ $work, erp_hr_get_employee_statuses(), __( 'Select a valid employee status.', 'erp' ) ],
+			'hiring_source' => [ $work, erp_hr_get_employee_sources(), __( 'Select a valid source of hire.', 'erp' ) ],
+			'pay_type'      => [ $work, erp_hr_get_pay_type(), __( 'Select a valid pay type.', 'erp' ) ],
+			'gender'        => [ $personal, erp_hr_get_genders(), __( 'Select a valid gender.', 'erp' ) ],
+			'marital_status' => [ $personal, erp_hr_get_marital_statuses(), __( 'Select a valid marital status.', 'erp' ) ],
+		];
+		foreach ( $enums as $key => [ $bucket, $allowed, $message ] ) {
+			$value = (string) ( $bucket[ $key ] ?? '' );
+			if ( '' !== $value && '-1' !== $value && ! \array_key_exists( $value, (array) $allowed ) ) {
+				return $fail( 'rest_invalid_' . $key, $message );
+			}
+		}
+
+		if ( ! empty( $work['department'] ) && ! \array_key_exists( $work['department'], (array) erp_hr_get_departments_fresh() ) ) {
+			return $fail( 'rest_invalid_department', __( 'Select a valid department.', 'erp' ) );
+		}
+		if ( ! empty( $work['designation'] ) && ! \array_key_exists( $work['designation'], (array) erp_hr_get_designations_fresh() ) ) {
+			return $fail( 'rest_invalid_designation', __( 'Select a valid job title.', 'erp' ) );
+		}
+		if ( ! empty( $work['location'] ) && ! \array_key_exists( $work['location'], (array) erp_company_get_location_dropdown_raw() ) ) {
+			return $fail( 'rest_invalid_location', __( 'Select a valid location.', 'erp' ) );
+		}
+
+		if ( ! empty( $work['pay_rate'] ) && ! erp_is_valid_currency_amount( $work['pay_rate'] ) ) {
+			return $fail( 'rest_invalid_pay_rate', __( 'Enter a valid pay rate.', 'erp' ) );
+		}
+		if ( ! empty( $personal['user_url'] ) && ! erp_is_valid_url( $personal['user_url'] ) ) {
+			return $fail( 'rest_invalid_user_url', __( 'Enter a valid website URL.', 'erp' ) );
+		}
+		if ( ! empty( $personal['city'] ) && erp_contains_disallowed_chars( $personal['city'] ) ) {
+			return $fail( 'rest_invalid_city', __( 'Remove the special characters from the city name.', 'erp' ) );
+		}
+		if ( ! empty( $personal['postal_code'] ) && ! erp_is_valid_zip_code( $personal['postal_code'] ) ) {
+			return $fail( 'rest_invalid_postal_code', __( 'Enter a valid post code or zip code.', 'erp' ) );
+		}
+
+		$dates = [
+			'hiring_date'   => __( 'Enter a valid date of hire.', 'erp' ),
+			'end_date'      => __( 'Enter a valid employee end date.', 'erp' ),
+			'date_of_birth' => __( 'Enter a valid date of birth.', 'erp' ),
+		];
+		$stored = $employee ? $this->get_edit_data( $employee ) : [];
+		$ymd    = [];
+		foreach ( $dates as $key => $message ) {
+			$value = \array_key_exists( $key, $work ) ? trim( (string) $work[ $key ] ) : (string) ( $stored[ $key ] ?? '' );
+			if ( '' !== $value && ! erp_is_valid_date( $value ) ) {
+				return $fail( 'rest_invalid_' . $key, $message );
+			}
+			$ymd[ $key ] = $this->calendar_day( $value );
+		}
+
+		if ( '' !== $ymd['date_of_birth'] ) {
+			if ( $ymd['date_of_birth'] > current_time( 'Y-m-d' ) ) {
+				return $fail( 'rest_invalid_date_of_birth', __( 'Date of birth cannot be in the future.', 'erp' ) );
+			}
+			if ( '' !== $ymd['hiring_date'] && $ymd['date_of_birth'] >= $ymd['hiring_date'] ) {
+				return $fail( 'rest_invalid_date_of_birth', __( 'Date of birth must be earlier than the date of hire.', 'erp' ) );
+			}
+		}
+		if ( '' !== $ymd['end_date'] && '' !== $ymd['hiring_date'] && $ymd['end_date'] < $ymd['hiring_date'] ) {
+			return $fail( 'rest_invalid_end_date', __( 'Employee end date cannot be earlier than the date of hire.', 'erp' ) );
+		}
+
+		return null;
+	}
+
+	/**
+	 * A date value as its `Y-m-d` calendar day ('' when empty). A leading
+	 * `Y-m-d` is kept as-is so a timezone offset cannot shift the day.
+	 *
+	 * @param string $value Date or datetime string.
+	 *
+	 * @return string
+	 */
+	private function calendar_day( string $value ): string {
+		$value = trim( $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		if ( preg_match( '/^\d{4}-\d{2}-\d{2}/', $value ) ) {
+			return substr( $value, 0, 10 );
+		}
+
+		return wp_date( 'Y-m-d', (int) strtotime( $value ) );
+	}
+
+	/**
+	 * Re-issue a model WP_Error as a 400, so a rejected value is reported as a
+	 * client error instead of the REST default 500.
+	 *
+	 * @param \WP_Error $error Error from the Employee model.
+	 *
+	 * @return \WP_Error
+	 */
+	private function as_bad_request( \WP_Error $error ): \WP_Error {
+		$data = $error->get_error_data();
+
+		if ( \is_array( $data ) && isset( $data['status'] ) ) {
+			return $error;
+		}
+
+		return new \WP_Error(
+			$error->get_error_code() ?: 'rest_employee_invalid',
+			$error->get_error_message() ?: __( 'The employee could not be saved.', 'erp' ),
+			[ 'status' => 400 ]
+		);
 	}
 
 	private function get_edit_data( Employee $employee ): array {

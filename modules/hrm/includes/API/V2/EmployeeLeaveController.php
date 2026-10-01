@@ -239,7 +239,7 @@ class EmployeeLeaveController extends RestController {
 		$reason       = wp_strip_all_tags( sanitize_text_field( (string) ( $request['leave_reason'] ?? '' ) ) );
 
 		if ( '' === trim( $reason ) ) {
-			return new \WP_Error( 'rest_leave_reason_required', __( 'Leave reason field can not be blank', 'erp' ), [ 'status' => 400 ] );
+			return new \WP_Error( 'rest_leave_reason_required', __( 'Leave reason field can not be blank.', 'erp' ), [ 'status' => 400 ] );
 		}
 
 		$invalid = $this->entitlement_error( $leave_policy, $user_id );
@@ -250,6 +250,12 @@ class EmployeeLeaveController extends RestController {
 		// Same date envelope the AJAX handler built (whole-day window).
 		$start_date = sanitize_text_field( (string) ( $request['leave_from'] ?? '' ) );
 		$end_date   = sanitize_text_field( (string) ( $request['leave_to'] ?? '' ) );
+
+		$invalid = $this->date_range_error( $start_date, $end_date );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$start_date = $start_date ? $start_date . ' 00:00:00' : date_i18n( 'Y-m-d 00:00:00' );
 		$end_date   = $end_date ? $end_date . ' 23:59:59' : date_i18n( 'Y-m-d 23:59:59' );
 
@@ -319,6 +325,40 @@ class EmployeeLeaveController extends RestController {
 	}
 
 	/**
+	 * A 400 `WP_Error` when a supplied leave date is not a real `Y-m-d` date or
+	 * the range runs backwards, else null. Empty dates are allowed (callers fall
+	 * back to today, as the AJAX handler did). The legacy model compares the raw
+	 * strings, so an unreadable date would slip past its range checks.
+	 *
+	 * @param string $from From date (Y-m-d).
+	 * @param string $to   To date (Y-m-d).
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function date_range_error( string $from, string $to ) {
+		$labels = [
+			'from' => [ $from, __( 'From date is not a valid date.', 'erp' ) ],
+			'to'   => [ $to, __( 'To date is not a valid date.', 'erp' ) ],
+		];
+
+		foreach ( $labels as $field => $pair ) {
+			if ( '' === $pair[0] ) {
+				continue;
+			}
+			$parsed = \DateTime::createFromFormat( '!Y-m-d', $pair[0] );
+			if ( ! $parsed || $parsed->format( 'Y-m-d' ) !== $pair[0] ) {
+				return new \WP_Error( 'rest_invalid_' . $field . '_date', $pair[1], [ 'status' => 400 ] );
+			}
+		}
+
+		if ( '' !== $from && '' !== $to && $from > $to ) {
+			return new \WP_Error( 'rest_invalid_range', __( 'The end date must be on or after the start date.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		return null;
+	}
+
+	/**
 	 * POST /erp/v2/employees/{user_id}/leave/validate-dates
 	 *
 	 * Pre-validates a leave date range before submission — mirrors
@@ -350,8 +390,9 @@ class EmployeeLeaveController extends RestController {
 		$start_date = $start_date !== '' ? $start_date : date_i18n( 'Y-m-d' );
 		$end_date   = $end_date !== '' ? $end_date : date_i18n( 'Y-m-d' );
 
-		if ( $start_date > $end_date ) {
-			return new \WP_Error( 'rest_invalid_range', __( 'Invalid date range', 'erp' ), [ 'status' => 400 ] );
+		$invalid = $this->date_range_error( $start_date, $end_date );
+		if ( $invalid ) {
+			return $invalid;
 		}
 
 		$invalid = $this->entitlement_error( $policy_id, $user_id );

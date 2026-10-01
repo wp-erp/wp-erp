@@ -23,6 +23,7 @@ import type { ApiError } from '@/shared/utils/apiFetch';
 
 import type { FinancialYear } from './types';
 import { useFinancialYears } from './useFinancialYears';
+import { findYearsError } from './validate-years';
 
 function emptyRow(): FinancialYear {
 	return { id: null, fy_name: '', start_date: '', end_date: '', description: '' };
@@ -55,19 +56,10 @@ function FinancialYearsInner(): JSX.Element {
 
 	async function handleSave(): Promise< void > {
 		// Mirror the server validation client-side for instant feedback.
-		for ( const [ i, r ] of draft.entries() ) {
-			if ( ! r.fy_name.trim() ) {
-				toast.error( __( 'Please give a financial year name on row #', 'erp' ) + ( i + 1 ) );
-				return;
-			}
-			if ( ! r.start_date || ! r.end_date ) {
-				toast.error( __( 'Start and end date are required on row #', 'erp' ) + ( i + 1 ) );
-				return;
-			}
-			if ( r.end_date <= r.start_date ) {
-				toast.error( __( 'End date must be greater than start date on row #', 'erp' ) + ( i + 1 ) );
-				return;
-			}
+		const invalid = findYearsError( draft );
+		if ( invalid ) {
+			toast.error( invalid );
+			return;
 		}
 
 		setBusy( true );

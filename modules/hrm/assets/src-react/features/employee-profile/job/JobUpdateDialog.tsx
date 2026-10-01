@@ -18,6 +18,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	toast,
 } from '@wedevs/plugin-ui';
 import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
@@ -34,6 +35,7 @@ import {
 	TERMINATION_TYPE_OPTIONS,
 } from '../../employees/terminate-options';
 import { SelectField, SmartSelectField, TextField, TextareaField } from '../fields';
+import { validateJobUpdate } from '../profile-rules';
 import type { Option } from '../options';
 import { PAY_CHANGE_REASON_OPTIONS, PAY_TYPE_OPTIONS, STATUS_OPTIONS, TYPE_OPTIONS } from '../options';
 import { siteToday, toLocalYmd } from '@/shared/utils/date';
@@ -188,6 +190,13 @@ export function JobUpdateDialog( {
 
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
+
+		const problem = action ? validateJobUpdate( action, form, form.category === 'terminated' ) : null;
+		if ( problem ) {
+			toast.error( problem );
+			return;
+		}
+
 		onSubmit( payload );
 	}
 

@@ -152,6 +152,12 @@ class EmployeePerformanceController extends RestController {
 		// body `employee_id` would file the record under another employee and an
 		// `id` would overwrite an existing one.
 		$params = array_intersect_key( $request->get_params(), $this->get_create_params() );
+
+		$invalid = $this->validate_fields( $params );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$result = $employee->add_performance( $params );
 
 		if ( is_wp_error( $result ) ) {
@@ -166,6 +172,82 @@ class EmployeePerformanceController extends RestController {
 		$response->set_status( 201 );
 
 		return $response;
+	}
+
+	/**
+	 * Value rules checked before the model writes. The React dialog runs the
+	 * same rules with the same wording (profile-rules.ts). The model still checks
+	 * that the picked reporting-to / reviewer / supervisor is an employee.
+	 *
+	 * @param array $params Declared create params.
+	 *
+	 * @return \WP_Error|null WP_Error (400) to reject, null when valid.
+	 */
+	private function validate_fields( array $params ) {
+		$fail = static function ( string $message ) {
+			return new \WP_Error( 'rest_invalid_param', $message, [ 'status' => 400 ] );
+		};
+		$day = static function ( $value ): string {
+			return \is_scalar( $value ) ? trim( (string) $value ) : '';
+		};
+		$is_day = static function ( string $value ): bool {
+			return (bool) preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) && erp_is_valid_date( $value );
+		};
+
+		$type = (string) ( $params['type'] ?? '' );
+		$date = $day( $params['performance_date'] ?? '' );
+
+		if ( '' === $date ) {
+			return $fail( __( 'Date is required.', 'erp' ) );
+		}
+		if ( ! $is_day( $date ) ) {
+			return $fail( __( 'Enter a valid date.', 'erp' ) );
+		}
+
+		if ( 'reviews' === $type ) {
+			if ( empty( $params['reporting_to'] ) ) {
+				return $fail( __( 'Reporting to is required.', 'erp' ) );
+			}
+
+			$ratings = [
+				'job_knowledge' => __( 'Select a valid job knowledge rating.', 'erp' ),
+				'work_quality'  => __( 'Select a valid work quality rating.', 'erp' ),
+				'attendance'    => __( 'Select a valid attendance rating.', 'erp' ),
+				'communication' => __( 'Select a valid communication rating.', 'erp' ),
+				'dependablity'  => __( 'Select a valid dependability rating.', 'erp' ),
+			];
+			$allowed = (array) erp_performance_rating();
+
+			foreach ( $ratings as $key => $message ) {
+				$value = $day( $params[ $key ] ?? '' );
+				if ( '' !== $value && ! \array_key_exists( $value, $allowed ) ) {
+					return $fail( $message );
+				}
+			}
+		}
+
+		if ( 'comments' === $type && empty( $params['reviewer'] ) ) {
+			return $fail( __( 'Reviewer is required.', 'erp' ) );
+		}
+
+		if ( 'goals' === $type ) {
+			$completion = $day( $params['completion_date'] ?? '' );
+
+			if ( '' === $completion ) {
+				return $fail( __( 'Completion date is required.', 'erp' ) );
+			}
+			if ( ! $is_day( $completion ) ) {
+				return $fail( __( 'Enter a valid completion date.', 'erp' ) );
+			}
+			if ( $completion < $date ) {
+				return $fail( __( 'Completion date cannot be earlier than the set date.', 'erp' ) );
+			}
+			if ( empty( $params['supervisor'] ) ) {
+				return $fail( __( 'Supervisor is required.', 'erp' ) );
+			}
+		}
+
+		return null;
 	}
 
 	/**

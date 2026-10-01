@@ -33,6 +33,7 @@ import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { TextField } from '../employee-create/fields';
 import type { FinancialYear } from './types';
+import { findYearsError } from './validate-years';
 
 interface FinancialYearQuickAddDialogProps {
 	readonly open:      boolean;
@@ -112,12 +113,20 @@ export function FinancialYearQuickAddDialog( {
 		setBusy( true );
 		setError( null );
 		void request< FinancialYear[] >( restPath( 'v2', '/financial-years' ) )
-			.then( ( existing ) =>
-				request< FinancialYear[] >( restPath( 'v2', '/financial-years' ), {
+			.then( ( existing ) => {
+				const years   = [ ...( Array.isArray( existing ) ? existing : [] ), row ];
+				const invalid = findYearsError( years );
+				if ( invalid ) {
+					// A clash with a saved year (same name or overlapping dates):
+					// the server says the same, this just skips the round trip.
+					const clash: ApiError = { code: 'rest_financial_year_error', message: invalid, status: 400 };
+					return Promise.reject( clash );
+				}
+				return request< FinancialYear[] >( restPath( 'v2', '/financial-years' ), {
 					method: 'POST',
-					data:   { years: [ ...( Array.isArray( existing ) ? existing : [] ), row ] },
-				} )
-			)
+					data:   { years },
+				} );
+			} )
 			.then( ( saved ) => {
 				const created = ( Array.isArray( saved ) ? saved : [] ).find(
 					( y ) => y.fy_name === row.fy_name

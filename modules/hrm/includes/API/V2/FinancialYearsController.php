@@ -118,6 +118,11 @@ class FinancialYearsController extends RestController {
 			];
 		}
 
+		$invalid = $this->validate_years( $clean );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
 		$result = erp_settings_save_leave_years( $clean );
 
 		if ( is_wp_error( $result ) ) {
@@ -125,5 +130,65 @@ class FinancialYearsController extends RestController {
 		}
 
 		return $this->get_items( $request );
+	}
+
+	/**
+	 * Rules the legacy save helper does not check, as a 400 `WP_Error`, else null.
+	 *
+	 * - A date must be a real `Y-m-d` date: the helper hands it straight to
+	 *   `new DateTimeImmutable()`, which throws (HTTP 500) on garbage.
+	 * - Two years must not overlap: every leave date is matched to ONE financial
+	 *   year, so an overlap makes a request's year (and its balance) ambiguous.
+	 *
+	 * Empty names/dates, end-before-start and duplicate names are left to the
+	 * helper so its legacy messages keep firing.
+	 *
+	 * @param array $years Sanitized rows.
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function validate_years( array $years ): ?\WP_Error {
+		$valid = [];
+
+		foreach ( $years as $index => $year ) {
+			if ( '' === $year['start_date'] || '' === $year['end_date'] ) {
+				continue;
+			}
+
+			foreach ( [ $year['start_date'], $year['end_date'] ] as $date ) {
+				$parsed = \DateTime::createFromFormat( '!Y-m-d', $date );
+				if ( ! $parsed || $parsed->format( 'Y-m-d' ) !== $date ) {
+					return new \WP_Error(
+						'rest_financial_year_invalid_date',
+						/* translators: %d: row number */
+						\sprintf( __( 'Start and end date on row %d must be valid dates.', 'erp' ), (int) $index + 1 ),
+						[ 'status' => 400 ]
+					);
+				}
+			}
+
+			if ( $year['end_date'] > $year['start_date'] ) {
+				$valid[] = $year;
+			}
+		}
+
+		$count = \count( $valid );
+		for ( $i = 0; $i < $count; $i++ ) {
+			for ( $j = $i + 1; $j < $count; $j++ ) {
+				$a = $valid[ $i ];
+				$b = $valid[ $j ];
+
+				if ( $a['start_date'] <= $b['end_date'] && $b['start_date'] <= $a['end_date'] ) {
+					return new \WP_Error(
+						'rest_financial_year_overlap',
+						/* translators: 1: a financial year name, 2: another financial year name */
+						\sprintf( __( 'Financial years %1$s and %2$s overlap. Each date can belong to one financial year only.', 'erp' ), $a['fy_name'], $b['fy_name'] ),
+						[ 'status' => 400 ]
+					);
+				}
+			}
+		}
+
+		return null;
 	}
 }

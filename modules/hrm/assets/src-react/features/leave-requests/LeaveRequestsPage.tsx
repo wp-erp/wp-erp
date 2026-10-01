@@ -300,11 +300,11 @@ function LeaveRequestsInner(): JSX.Element {
 		setModerateError( null );
 		try {
 			if ( moderate.action === 'approve' ) {
-				await approve( moderate.request.id, reason );
-				toast.success( __( 'Leave request approved.', 'erp' ) );
+				const res = await approve( moderate.request.id, reason );
+				toast.success( res?.message || __( 'Leave request approved.', 'erp' ) );
 			} else {
-				await reject( moderate.request.id, reason );
-				toast.success( __( 'Leave request rejected.', 'erp' ) );
+				const res = await reject( moderate.request.id, reason );
+				toast.success( res?.message || __( 'Leave request rejected.', 'erp' ) );
 			}
 			setModerate( null );
 		} catch ( raw ) {

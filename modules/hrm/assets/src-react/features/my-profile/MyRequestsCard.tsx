@@ -115,6 +115,8 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 	const [ busy, setBusy ]     = useState( false );
 
 	function submit(): void {
+		if ( ! reason ) { toast.error( __( 'Select a reason.', 'erp' ) ); return; }
+		if ( ! date ) { toast.error( __( 'Select a resignation date.', 'erp' ) ); return; }
 		setBusy( true );
 		request( restPath( 'v2', '/hrm/resignations' ), { method: 'POST', data: { reason, date } } )
 			.then( () => { toast.success( __( 'Your resignation request has been submitted.', 'erp' ) ); onClose(); } )
@@ -157,6 +159,9 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 	const [ busy, setBusy ]     = useState( false );
 
 	function submit(): void {
+		if ( ! reason ) { toast.error( __( 'Select a reason.', 'erp' ) ); return; }
+		if ( ! from ) { toast.error( __( 'Select a start date.', 'erp' ) ); return; }
+		if ( ! to ) { toast.error( __( 'Select an end date.', 'erp' ) ); return; }
 		if ( to < from ) { toast.error( __( 'The end date must be on or after the start date.', 'erp' ) ); return; }
 		setBusy( true );
 		request( restPath( 'v2', '/hrm/remote-work' ), { method: 'POST', data: { reason, other_reason: other, start_date: from, end_date: to } } )
