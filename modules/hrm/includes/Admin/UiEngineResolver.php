@@ -198,7 +198,10 @@ final class UiEngineResolver {
 			return;
 		}
 
-		$prefs = (array) get_user_meta( $user_id, self::USERMETA_KEY, true );
+		// A missing meta comes back as '', and `(array) ''` is `[ 0 => '' ]`,
+		// which would be saved along with the preference.
+		$prefs = get_user_meta( $user_id, self::USERMETA_KEY, true );
+		$prefs = is_array( $prefs ) ? $prefs : [];
 		$key   = $this->legacy_key_for_page( $page );
 
 		// Both directions are stored explicitly. An opt-in must survive on sites
