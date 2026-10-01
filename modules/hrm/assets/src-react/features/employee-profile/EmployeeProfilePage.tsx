@@ -258,6 +258,8 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 				canTerminate={ canTerminateCap && currentUserId !== userId && str( record, 'status' ) !== 'terminated' }
 				onReactivate={ handleReactivate }
 				canReactivate={ canEditCap && currentUserId !== userId && str( record, 'status' ) === 'terminated' }
+				onOpenTab={ setTab }
+				canViewNotes={ canViewNotes }
 			/>
 
 			<TerminateDialog

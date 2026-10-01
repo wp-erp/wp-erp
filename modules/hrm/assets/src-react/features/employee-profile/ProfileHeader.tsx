@@ -1,11 +1,12 @@
 /**
  * Header card for the employee profile: compact avatar-left, name +
- * status badge, an Edit action, and a summary info row of key facts. Avatar is
- * editable in place (for self / managers) via `AvatarUpload`.
+ * status badge, quick actions that jump to the Leave / Notes tabs, an Edit
+ * action, and a summary info row of key facts. Avatar is editable in place
+ * (for self / managers) via `AvatarUpload`.
  */
 
 import { Avatar, AvatarFallback, AvatarImage, Button, toast } from '@wedevs/plugin-ui';
-import { Activity, Building2, IdCard, Pencil, Phone, Printer, Smartphone, Tag, UserCheck, UserX } from 'lucide-react';
+import { Activity, Building2, CalendarPlus, IdCard, Pencil, Phone, Printer, Smartphone, StickyNote, Tag, UserCheck, UserX } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -37,9 +38,13 @@ interface ProfileHeaderProps {
 	readonly onReactivate?:  () => void;
 	/** Whether the current user may reactivate this (terminated) employee. */
 	readonly canReactivate?: boolean;
+	/** Open a profile tab. Enables the Leave / Notes quick actions. */
+	readonly onOpenTab?:     ( tab: string ) => void;
+	/** Whether the Notes tab is available to the current user. */
+	readonly canViewNotes?:  boolean;
 }
 
-export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange, extraActions, onPrint, onTerminate, canTerminate, onReactivate, canReactivate }: ProfileHeaderProps ): JSX.Element {
+export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange, extraActions, onPrint, onTerminate, canTerminate, onReactivate, canReactivate, onOpenTab, canViewNotes = false }: ProfileHeaderProps ): JSX.Element {
 	const fullName  = str( record, 'full_name' );
 	const avatarUrl = str( record, 'avatar_url' );
 	const status    = str( record, 'status' );
@@ -91,6 +96,24 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 						{ role ? <p className="m-0 mb-4 truncate text-sm font-semibold text-foreground">{ role }</p> : null }
 						{ email ? <p className="m-0 mb-4 truncate text-sm text-muted-foreground">{ email }</p> : null }
 					</div>
+
+					{ /* Quick actions: jump straight to the Leave / Notes tabs. */ }
+					{ onOpenTab && ( canEdit || canViewNotes ) ? (
+						<div className="flex flex-wrap gap-2">
+							{ canEdit ? (
+								<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => onOpenTab( 'leave' ) }>
+									<CalendarPlus size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+									{ __( 'Leave', 'erp' ) }
+								</Button>
+							) : null }
+							{ canViewNotes ? (
+								<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => onOpenTab( 'notes' ) }>
+									<StickyNote size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+									{ __( 'Notes', 'erp' ) }
+								</Button>
+							) : null }
+						</div>
+					) : null }
 				</div>
 
 				{ canEdit || extraActions || onPrint || ( onTerminate && canTerminate ) || ( onReactivate && canReactivate ) ? (
