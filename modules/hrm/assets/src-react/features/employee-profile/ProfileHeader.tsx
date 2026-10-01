@@ -7,7 +7,7 @@
  */
 
 import { Avatar, AvatarFallback, AvatarImage, Button, toast } from '@wedevs/plugin-ui';
-import { CalendarPlus, Pencil, Printer, StickyNote, UserCheck, UserX } from 'lucide-react';
+import { Briefcase, Building2, Calendar, CalendarPlus, IdCard, Pencil, Phone, Printer, Smartphone, StickyNote, UserCheck, UserX } from 'lucide-react';
 import type { JSX, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ import { formatCalendarDate } from '@/shared/utils/date';
 
 import { AvatarUpload } from './AvatarUpload';
 import { STATUS_OPTIONS, TYPE_OPTIONS } from './options';
-import { initials, labelOf, str, type Record_ } from './profile-format';
+import { initials, labelOf, str, type LucideIcon, type Record_ } from './profile-format';
 
 interface ProfileHeaderProps {
 	readonly record:         Record_;
@@ -62,6 +62,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 	// filtered by it, the employee ID copies, mobile / phone dial.
 	const facts: ReadonlyArray< FactProps > = [
 		{
+			icon:    IdCard,
 			label:   __( 'Employee ID:', 'erp' ),
 			value:   employeeId,
 			title:   employeeId ? __( 'Copy employee ID', 'erp' ) : undefined,
@@ -73,14 +74,15 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 				: undefined,
 		},
 		{
+			icon:  Building2,
 			label: __( 'Department:', 'erp' ),
 			value: str( record, 'department_name' ),
 			to:    departmentId ? `/employees?department_id=${ departmentId }` : undefined,
 		},
-		{ label: __( 'Date of Hire:', 'erp' ), value: formatCalendarDate( str( record, 'hiring_date' ), '' ) },
-		{ label: __( 'Type:', 'erp' ), value: labelOf( TYPE_OPTIONS, str( record, 'type' ) ) },
-		...( mobile ? [ { label: __( 'Mobile:', 'erp' ), value: mobile, href: `tel:${ mobile }` } ] : [] ),
-		...( phone ? [ { label: __( 'Phone:', 'erp' ), value: phone, href: `tel:${ phone }` } ] : [] ),
+		{ icon: Calendar, label: __( 'Date of Hire:', 'erp' ), value: formatCalendarDate( str( record, 'hiring_date' ), '' ) },
+		{ icon: Briefcase, label: __( 'Type:', 'erp' ), value: labelOf( TYPE_OPTIONS, str( record, 'type' ) ) },
+		...( mobile ? [ { icon: Smartphone, label: __( 'Mobile:', 'erp' ), value: mobile, href: `tel:${ mobile }` } ] : [] ),
+		...( phone ? [ { icon: Phone, label: __( 'Phone:', 'erp' ), value: phone, href: `tel:${ phone }` } ] : [] ),
 	];
 
 	return (
@@ -199,6 +201,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 }
 
 interface FactProps {
+	readonly icon:     LucideIcon;
 	readonly label:    string;
 	readonly value:    string;
 	/** Internal route (react-router): the value renders as a Link. */
@@ -214,7 +217,7 @@ interface FactProps {
  * One label / value fact in the header strip. A value with a target (to /
  * href / onClick) gets the primary hover colour; an empty value shows a dash.
  */
-function Fact( { label, value, to, href, onClick, title }: FactProps ): JSX.Element {
+function Fact( { icon: Icon, label, value, to, href, onClick, title }: FactProps ): JSX.Element {
 	const valueClass = 'font-medium text-foreground';
 	const linkClass  = `${ valueClass } hover:text-primary hover:underline`;
 	let shown: ReactNode = value || '—';
@@ -231,6 +234,7 @@ function Fact( { label, value, to, href, onClick, title }: FactProps ): JSX.Elem
 
 	return (
 		<span className="inline-flex items-center gap-2">
+			<Icon size={ 16 } strokeWidth={ 2 } aria-hidden="true" className="shrink-0 text-muted-foreground" />
 			<span className="text-muted-foreground">{ label }</span>
 			{ shown }
 		</span>
