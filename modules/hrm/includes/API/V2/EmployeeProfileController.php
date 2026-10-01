@@ -198,7 +198,7 @@ class EmployeeProfileController extends RestController {
 			return $employee;
 		}
 
-		$invalid = $this->validate_fields( $this->section( $request ), $request );
+		$invalid = $this->validate_fields( $this->section( $request ), $request, $this->stored_row( $employee, $this->section( $request ), $request ) );
 		if ( $invalid ) {
 			return $invalid;
 		}
@@ -277,12 +277,18 @@ class EmployeeProfileController extends RestController {
 	 * React dialogs run the same rules with the same wording (profile-rules.ts);
 	 * this side is the one that counts.
 	 *
+	 * Required fields are checked on every save, as the model always did. On an
+	 * edit the other rules run only when a field they read is changed, so a row
+	 * saved before the rules existed stays editable (e.g. an old To date before
+	 * its From date, left as it was).
+	 *
 	 * @param string          $section 'experiences' | 'educations' | 'dependents'.
 	 * @param WP_REST_Request $request Request.
+	 * @param array|null      $stored  The row being edited, null on create.
 	 *
 	 * @return \WP_Error|null WP_Error (400) to reject, null when valid.
 	 */
-	private function validate_fields( string $section, WP_REST_Request $request ) {
+	private function validate_fields( string $section, WP_REST_Request $request, $stored = null ) {
 		$text = static function ( $key ) use ( $request ): string {
 			$value = $request[ $key ] ?? '';
 			return \is_scalar( $value ) ? trim( sanitize_text_field( (string) $value ) ) : '';
@@ -292,6 +298,9 @@ class EmployeeProfileController extends RestController {
 		};
 		$is_day = static function ( string $value ): bool {
 			return (bool) preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) && erp_is_valid_date( $value );
+		};
+		$check = function ( array $fields ) use ( $stored, $request ): bool {
+			return null === $stored || $this->changed( $stored, $request->get_params(), $fields );
 		};
 
 		if ( 'experiences' === $section ) {
@@ -307,16 +316,16 @@ class EmployeeProfileController extends RestController {
 			if ( '' === $from ) {
 				return $fail( __( 'From date is required.', 'erp' ) );
 			}
-			if ( ! $is_day( $from ) ) {
+			if ( $check( [ 'from' ] ) && ! $is_day( $from ) ) {
 				return $fail( __( 'Enter a valid From date.', 'erp' ) );
 			}
 			if ( '' === $to ) {
 				return $fail( __( 'To date is required.', 'erp' ) );
 			}
-			if ( ! $is_day( $to ) ) {
+			if ( $check( [ 'to' ] ) && ! $is_day( $to ) ) {
 				return $fail( __( 'Enter a valid To date.', 'erp' ) );
 			}
-			if ( $to < $from ) {
+			if ( $check( [ 'from', 'to' ] ) && $to < $from ) {
 				return $fail( __( 'The To date cannot be earlier than the From date.', 'erp' ) );
 			}
 
@@ -330,6 +339,7 @@ class EmployeeProfileController extends RestController {
 			$year   = $text( 'finished' );
 			$expiry = $text( 'expiration_date' );
 			$number = '/^[0-9]+(\.[0-9]+)?$/';
+			$grade  = $check( [ 'result_type', 'gpa', 'scale' ] );
 
 			if ( '' === $text( 'school' ) ) {
 				return $fail( __( 'School name is required.', 'erp' ) );
@@ -340,36 +350,38 @@ class EmployeeProfileController extends RestController {
 			if ( '' === $text( 'field' ) ) {
 				return $fail( __( 'Field of study is required.', 'erp' ) );
 			}
-			if ( ! \in_array( $type, [ 'grade', 'percentage' ], true ) ) {
+			if ( ( '' === $type || $check( [ 'result_type' ] ) ) && ! \in_array( $type, [ 'grade', 'percentage' ], true ) ) {
 				return $fail( __( 'Select a valid result type.', 'erp' ) );
 			}
 			if ( '' === $result ) {
 				return $fail( __( 'Result is required.', 'erp' ) );
 			}
-			if ( ! preg_match( $number, $result ) ) {
-				return $fail( __( 'Result must be a number of 0 or more.', 'erp' ) );
-			}
-			if ( 'percentage' === $type && (float) $result > 100 ) {
-				return $fail( __( 'Percentage cannot be more than 100.', 'erp' ) );
-			}
-			if ( 'grade' === $type ) {
-				if ( '' === $scale ) {
-					return $fail( __( 'Scale is required.', 'erp' ) );
+			if ( $grade ) {
+				if ( ! preg_match( $number, $result ) ) {
+					return $fail( __( 'Result must be a number of 0 or more.', 'erp' ) );
 				}
-				if ( ! preg_match( $number, $scale ) || (float) $scale <= 0 ) {
-					return $fail( __( 'Scale must be a number greater than 0.', 'erp' ) );
+				if ( 'percentage' === $type && (float) $result > 100 ) {
+					return $fail( __( 'Percentage cannot be more than 100.', 'erp' ) );
 				}
-				if ( (float) $result > (float) $scale ) {
-					return $fail( __( 'Grade cannot be higher than the scale.', 'erp' ) );
+				if ( 'grade' === $type ) {
+					if ( '' === $scale ) {
+						return $fail( __( 'Scale is required.', 'erp' ) );
+					}
+					if ( ! preg_match( $number, $scale ) || (float) $scale <= 0 ) {
+						return $fail( __( 'Scale must be a number greater than 0.', 'erp' ) );
+					}
+					if ( (float) $result > (float) $scale ) {
+						return $fail( __( 'Grade cannot be higher than the scale.', 'erp' ) );
+					}
 				}
 			}
 			if ( '' === $year ) {
 				return $fail( __( 'Completion year is required.', 'erp' ) );
 			}
-			if ( ! preg_match( '/^\d{4}$/', $year ) || (int) $year < 1970 || (int) $year > 2099 ) {
+			if ( $check( [ 'finished' ] ) && ( ! preg_match( '/^\d{4}$/', $year ) || (int) $year < 1970 || (int) $year > 2099 ) ) {
 				return $fail( __( 'Completion year must be between 1970 and 2099.', 'erp' ) );
 			}
-			if ( '' !== $expiry && ! $is_day( $expiry ) ) {
+			if ( $check( [ 'expiration_date' ] ) && '' !== $expiry && ! $is_day( $expiry ) ) {
 				return $fail( __( 'Enter a valid expiration date.', 'erp' ) );
 			}
 
@@ -384,11 +396,50 @@ class EmployeeProfileController extends RestController {
 		if ( '' === $text( 'relation' ) ) {
 			return $fail( __( 'Relation is required.', 'erp' ) );
 		}
-		if ( '' !== $dob && ! $is_day( $dob ) ) {
-			return $fail( __( 'Enter a valid date of birth.', 'erp' ) );
+		if ( $check( [ 'dob' ] ) ) {
+			if ( '' !== $dob && ! $is_day( $dob ) ) {
+				return $fail( __( 'Enter a valid date of birth.', 'erp' ) );
+			}
+			if ( '' !== $dob && $dob > current_time( 'Y-m-d' ) ) {
+				return $fail( __( 'Date of birth cannot be in the future.', 'erp' ) );
+			}
 		}
-		if ( '' !== $dob && $dob > current_time( 'Y-m-d' ) ) {
-			return $fail( __( 'Date of birth cannot be in the future.', 'erp' ) );
+
+		return null;
+	}
+
+	/**
+	 * The employee's stored row an edit targets, as the edit dialog reads it
+	 * (education `gpa` / `scale` decoded), or null on create or when the id is
+	 * not one of this employee's rows.
+	 *
+	 * @param Employee        $employee Employee.
+	 * @param string          $section  'experiences' | 'educations' | 'dependents'.
+	 * @param WP_REST_Request $request  Request.
+	 *
+	 * @return array|null
+	 */
+	private function stored_row( Employee $employee, string $section, WP_REST_Request $request ) {
+		switch ( $section ) {
+			case 'educations':
+				$id   = (int) $this->education_fields( $request )['id'];
+				$rows = $id ? $employee->get_educations( 100, 0 ) : [];
+				break;
+			case 'dependents':
+				$id   = (int) $this->dependent_fields( $request )['id'];
+				$rows = $id ? $employee->get_dependents( 100, 0 ) : [];
+				break;
+			default:
+				$id   = (int) $this->experience_fields( $request )['id'];
+				$rows = $id ? $employee->get_experiences( 100, 0 ) : [];
+		}
+
+		foreach ( $rows as $row ) {
+			$item = is_array( $row ) ? $row : $row->toArray();
+
+			if ( (int) ( $item['id'] ?? 0 ) === $id ) {
+				return 'educations' === $section ? $this->decode_education_result( $item ) : $item;
+			}
 		}
 
 		return null;

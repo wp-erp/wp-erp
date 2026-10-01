@@ -1096,7 +1096,13 @@ class EmployeesController extends RestController {
 		];
 
 		// The termination date has to be a real day, on or after the date of hire.
-		if ( ! empty( $request['terminate_date'] ) ) {
+		// Re-saving the termination already on record with the same date is not
+		// re-checked, so an old termination stays editable.
+		$stored_termination = (array) get_user_meta( $user_id, '_erp_hr_termination', true );
+		$same_date          = ! empty( $stored_termination['terminate_date'] )
+			&& $this->calendar_day( (string) $stored_termination['terminate_date'] ) === $this->calendar_day( $fields['terminate_date'] );
+
+		if ( ! empty( $request['terminate_date'] ) && ! $same_date ) {
 			if ( ! erp_is_valid_date( $fields['terminate_date'] ) ) {
 				return new \WP_Error( 'rest_invalid_terminate_date', __( 'Enter a valid termination date.', 'erp' ), [ 'status' => 400 ] );
 			}
@@ -1382,25 +1388,32 @@ class EmployeesController extends RestController {
 			'end_date'      => __( 'Enter a valid employee end date.', 'erp' ),
 			'date_of_birth' => __( 'Enter a valid date of birth.', 'erp' ),
 		];
-		$stored = $employee ? $this->get_edit_data( $employee ) : [];
-		$ymd    = [];
+		$stored  = $employee ? $this->get_edit_data( $employee ) : [];
+		$ymd     = [];
+		$changed = [];
 		foreach ( $dates as $key => $message ) {
-			$value = \array_key_exists( $key, $work ) ? trim( (string) $work[ $key ] ) : (string) ( $stored[ $key ] ?? '' );
-			if ( '' !== $value && ! erp_is_valid_date( $value ) ) {
+			$sent  = \array_key_exists( $key, $work );
+			$value = $sent ? trim( (string) $work[ $key ] ) : (string) ( $stored[ $key ] ?? '' );
+			// A sent date was always checked (legacy create_employee() did); a
+			// stored one the request leaves out is not re-checked.
+			if ( $sent && '' !== $value && ! erp_is_valid_date( $value ) ) {
 				return $fail( 'rest_invalid_' . $key, $message );
 			}
 			$ymd[ $key ] = $this->calendar_day( $value );
+			// The date-order rules below are new: on an edit they run only when a
+			// date they read is changed, so an old record left as it was saves.
+			$changed[ $key ] = ! $employee || ( $sent && $ymd[ $key ] !== $this->calendar_day( (string) ( $stored[ $key ] ?? '' ) ) );
 		}
 
-		if ( '' !== $ymd['date_of_birth'] ) {
-			if ( $ymd['date_of_birth'] > current_time( 'Y-m-d' ) ) {
+		if ( '' !== $ymd['date_of_birth'] && ( $changed['date_of_birth'] || $changed['hiring_date'] ) ) {
+			if ( $changed['date_of_birth'] && $ymd['date_of_birth'] > current_time( 'Y-m-d' ) ) {
 				return $fail( 'rest_invalid_date_of_birth', __( 'Date of birth cannot be in the future.', 'erp' ) );
 			}
 			if ( '' !== $ymd['hiring_date'] && $ymd['date_of_birth'] >= $ymd['hiring_date'] ) {
 				return $fail( 'rest_invalid_date_of_birth', __( 'Date of birth must be earlier than the date of hire.', 'erp' ) );
 			}
 		}
-		if ( '' !== $ymd['end_date'] && '' !== $ymd['hiring_date'] && $ymd['end_date'] < $ymd['hiring_date'] ) {
+		if ( '' !== $ymd['end_date'] && '' !== $ymd['hiring_date'] && ( $changed['end_date'] || $changed['hiring_date'] ) && $ymd['end_date'] < $ymd['hiring_date'] ) {
 			return $fail( 'rest_invalid_end_date', __( 'Employee end date cannot be earlier than the date of hire.', 'erp' ) );
 		}
 

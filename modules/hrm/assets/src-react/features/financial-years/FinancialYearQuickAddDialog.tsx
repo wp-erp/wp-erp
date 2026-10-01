@@ -114,8 +114,9 @@ export function FinancialYearQuickAddDialog( {
 		setError( null );
 		void request< FinancialYear[] >( restPath( 'v2', '/financial-years' ) )
 			.then( ( existing ) => {
-				const years   = [ ...( Array.isArray( existing ) ? existing : [] ), row ];
-				const invalid = findYearsError( years );
+				const saved   = Array.isArray( existing ) ? existing : [];
+				const years   = [ ...saved, row ];
+				const invalid = findYearsError( years, saved );
 				if ( invalid ) {
 					// A clash with a saved year (same name or overlapping dates):
 					// the server says the same, this just skips the round trip.

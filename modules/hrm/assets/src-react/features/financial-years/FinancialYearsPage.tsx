@@ -56,7 +56,7 @@ function FinancialYearsInner(): JSX.Element {
 
 	async function handleSave(): Promise< void > {
 		// Mirror the server validation client-side for instant feedback.
-		const invalid = findYearsError( draft );
+		const invalid = findYearsError( draft, rows );
 		if ( invalid ) {
 			toast.error( invalid );
 			return;

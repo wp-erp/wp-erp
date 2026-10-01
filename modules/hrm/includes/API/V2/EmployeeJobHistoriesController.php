@@ -146,12 +146,17 @@ class EmployeeJobHistoriesController extends RestController {
 	 * Designation Type"); this names the field the way the React dialog does
 	 * (profile-rules.ts).
 	 *
-	 * @param string $module Module slug.
-	 * @param array  $params Request params.
+	 * On an edit the pay rate's greater-than-0 rule (the model only rejects an
+	 * empty rate) runs only when the rate is changed, so a history saved with
+	 * a 0.00 rate stays editable.
+	 *
+	 * @param string     $module Module slug.
+	 * @param array      $params Request params.
+	 * @param array|null $stored The history row being edited, null on create.
 	 *
 	 * @return \WP_Error|null WP_Error (400) to reject, null when valid.
 	 */
-	private function validate_values( string $module, array $params ) {
+	private function validate_values( string $module, array $params, $stored = null ) {
 		$text = static function ( $key ) use ( $params ): string {
 			$value = $params[ $key ] ?? '';
 			return \is_scalar( $value ) ? trim( (string) $value ) : '';
@@ -174,7 +179,8 @@ class EmployeeJobHistoriesController extends RestController {
 			if ( '' === $rate ) {
 				return $fail( __( 'Pay rate is required.', 'erp' ) );
 			}
-			if ( ! erp_is_valid_currency_amount( $rate ) || (float) $rate <= 0 ) {
+			$check_rate = null === $stored || $this->changed( [ 'pay_rate' => $stored['type'] ?? '' ], $params, [ 'pay_rate' ] );
+			if ( ! erp_is_valid_currency_amount( $rate ) || ( $check_rate && (float) $rate <= 0 ) ) {
 				return $fail( __( 'Pay rate must be a number greater than 0, with up to 4 decimal places.', 'erp' ) );
 			}
 			if ( '' === $text( 'pay_type' ) ) {
@@ -372,7 +378,7 @@ class EmployeeJobHistoriesController extends RestController {
 			return $invalid;
 		}
 
-		$invalid = $this->validate_values( $module, $params );
+		$invalid = $this->validate_values( $module, $params, $history->toArray() );
 		if ( is_wp_error( $invalid ) ) {
 			return $invalid;
 		}

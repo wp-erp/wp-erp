@@ -361,7 +361,35 @@ class AnnouncementsController extends RestController {
 			return new \WP_Error( 'rest_announcement_invalid_id', __( 'Invalid announcement id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
-		$invalid = $this->validate_write( $request, null !== $request['assign_type'] );
+		// The recipients rule runs only when the audience is changed, so an
+		// announcement saved before the rule with an empty audience stays editable.
+		$ids    = static function ( $value ): array {
+			return array_values( array_filter( array_map( 'absint', (array) $value ) ) );
+		};
+		$stored = [
+			'assign_type'  => (string) get_post_meta( $id, '_announcement_type', true ),
+			'employees'    => $ids( get_post_meta( $id, '_announcement_selected_user', true ) ),
+			'departments'  => $ids( get_post_meta( $id, '_announcement_department', true ) ),
+			'designations' => $ids( get_post_meta( $id, '_announcement_designation', true ) ),
+		];
+		$sent   = [ 'assign_type' => (string) $request['assign_type'] ];
+		foreach ( [ 'employees', 'departments', 'designations' ] as $list ) {
+			if ( null !== $request[ $list ] ) {
+				$sent[ $list ] = $ids( $request[ $list ] );
+			}
+		}
+
+		$lists  = [
+			'by_department'     => 'departments',
+			'by_designation'    => 'designations',
+			'selected_employee' => 'employees',
+		];
+		$reads  = [ 'assign_type', $lists[ $sent['assign_type'] ] ?? 'employees' ];
+
+		$invalid = $this->validate_write(
+			$request,
+			null !== $request['assign_type'] && $this->changed( $stored, $sent, $reads )
+		);
 		if ( $invalid ) {
 			return $invalid;
 		}

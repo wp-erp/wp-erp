@@ -372,7 +372,7 @@ export function EmployeeForm( {
 	}
 
 	function validate(): boolean {
-		const next = validateEmployeeForm( form, mode, { userCheck, isManager, extraFields } );
+		const next = validateEmployeeForm( form, mode, { userCheck, isManager, extraFields, opened: isEdit ? initialValues : null } );
 		setErrors( next );
 		return Object.keys( next ).length === 0;
 	}

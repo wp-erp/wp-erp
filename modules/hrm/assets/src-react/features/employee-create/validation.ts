@@ -153,6 +153,8 @@ interface ValidateContext {
 	readonly isManager?: boolean;
 	/** Pro custom fields, so the ones marked required are actually enforced. */
 	readonly extraFields?: readonly ExtraField[];
+	/** The values an edit opened with: the date-order rules skip dates left as they were. */
+	readonly opened?: Readonly< Record< string, string > > | null;
 }
 
 /**
@@ -228,17 +230,21 @@ export function validateEmployeeForm(
 
 	// Date order, mirrored by EmployeesController::validate_employee_rules().
 	// ISO `yyyy-mm-dd` strings compare correctly as plain strings.
-	const hire = ( form.hiring_date ?? '' ).trim();
-	const dob  = ( form.date_of_birth ?? '' ).trim();
-	const end  = ( form.end_date ?? '' ).trim();
-	if ( dob && isValidDate( dob ) && ! next.date_of_birth ) {
-		if ( dob > todayYmd() ) {
+	// On edit they run only when a date they read was changed, so a record
+	// saved before these rules stays editable.
+	const hire    = ( form.hiring_date ?? '' ).trim();
+	const dob     = ( form.date_of_birth ?? '' ).trim();
+	const end     = ( form.end_date ?? '' ).trim();
+	const changed = ( key: string ): boolean =>
+		! ctx.opened || ( form[ key ] ?? '' ).trim() !== ( ctx.opened[ key ] ?? '' ).trim();
+	if ( dob && isValidDate( dob ) && ! next.date_of_birth && ( changed( 'date_of_birth' ) || changed( 'hiring_date' ) ) ) {
+		if ( changed( 'date_of_birth' ) && dob > todayYmd() ) {
 			next.date_of_birth = __( 'Date of birth cannot be in the future.', 'erp' );
 		} else if ( hire && isValidDate( hire ) && dob >= hire ) {
 			next.date_of_birth = __( 'Date of birth must be earlier than the date of hire.', 'erp' );
 		}
 	}
-	if ( end && isValidDate( end ) && hire && isValidDate( hire ) && end < hire && ! next.end_date ) {
+	if ( end && isValidDate( end ) && hire && isValidDate( hire ) && end < hire && ! next.end_date && ( changed( 'end_date' ) || changed( 'hiring_date' ) ) ) {
 		next.end_date = __( 'Employee end date cannot be earlier than the date of hire.', 'erp' );
 	}
 

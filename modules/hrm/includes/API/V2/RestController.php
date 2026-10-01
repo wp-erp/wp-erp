@@ -248,6 +248,57 @@ abstract class RestController extends WP_REST_Controller {
 	}
 
 	// ---------------------------------------------------------------------
+	// Update helpers.
+	// ---------------------------------------------------------------------
+
+	/**
+	 * Whether an update changes any of `$fields` compared with the stored record.
+	 *
+	 * The value rules added for the React forms run on update only when one of
+	 * the fields a rule reads is changed, so a record saved before a rule existed
+	 * stays editable as long as those fields are left as they were. A field the
+	 * request does not send keeps its stored value, so it is not a change.
+	 * Values compare as trimmed strings, numbers by value and lists as sets.
+	 *
+	 * @param array $stored   Stored record (field => value).
+	 * @param array $incoming Incoming values (field => value).
+	 * @param array $fields   Fields the rule reads.
+	 *
+	 * @return bool
+	 */
+	protected function changed( array $stored, array $incoming, array $fields ): bool {
+		$normalize = static function ( $value ) {
+			if ( \is_array( $value ) || \is_object( $value ) ) {
+				$list = array_map(
+					static function ( $item ) {
+						return \is_scalar( $item ) ? trim( (string) $item ) : wp_json_encode( $item );
+					},
+					array_values( (array) $value )
+				);
+				sort( $list );
+
+				return wp_json_encode( $list );
+			}
+
+			$value = null === $value ? '' : trim( (string) $value );
+
+			return is_numeric( $value ) ? (string) (float) $value : $value;
+		};
+
+		foreach ( $fields as $field ) {
+			if ( ! \array_key_exists( $field, $incoming ) ) {
+				continue;
+			}
+
+			if ( $normalize( $incoming[ $field ] ) !== $normalize( $stored[ $field ] ?? '' ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// ---------------------------------------------------------------------
 	// Permission helpers.
 	// ---------------------------------------------------------------------
 

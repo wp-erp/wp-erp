@@ -143,15 +143,34 @@ class FinancialYearsController extends RestController {
 	 * Empty names/dates, end-before-start and duplicate names are left to the
 	 * helper so its legacy messages keep firing.
 	 *
+	 * Only new rows and rows whose dates are changed are checked: two saved
+	 * years that overlap and that nobody touched do not block the save, but a
+	 * new or edited year must not overlap any other.
+	 *
 	 * @param array $years Sanitized rows.
 	 *
 	 * @return \WP_Error|null
 	 */
 	private function validate_years( array $years ): ?\WP_Error {
-		$valid = [];
+		$valid  = [];
+		$stored = [];
+
+		foreach ( (array) erp_get_hr_financial_years() as $row ) {
+			$stored[ (int) ( $row['id'] ?? 0 ) ] = (array) $row;
+		}
 
 		foreach ( $years as $index => $year ) {
 			if ( '' === $year['start_date'] || '' === $year['end_date'] ) {
+				continue;
+			}
+
+			$year['touched'] = empty( $year['id'] ) || ! isset( $stored[ $year['id'] ] )
+				|| $this->changed( $stored[ $year['id'] ], $year, [ 'start_date', 'end_date' ] );
+
+			if ( ! $year['touched'] ) {
+				if ( $year['end_date'] > $year['start_date'] ) {
+					$valid[] = $year;
+				}
 				continue;
 			}
 
@@ -177,6 +196,10 @@ class FinancialYearsController extends RestController {
 			for ( $j = $i + 1; $j < $count; $j++ ) {
 				$a = $valid[ $i ];
 				$b = $valid[ $j ];
+
+				if ( ! $a['touched'] && ! $b['touched'] ) {
+					continue;
+				}
 
 				if ( $a['start_date'] <= $b['end_date'] && $b['start_date'] <= $a['end_date'] ) {
 					return new \WP_Error(

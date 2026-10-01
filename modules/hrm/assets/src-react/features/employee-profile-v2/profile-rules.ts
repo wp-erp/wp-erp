@@ -7,6 +7,11 @@
  *
  * Kept identical in every profile copy (employee-profile, -v0, -v2, -v3 and
  * employee-create). Change them together.
+ *
+ * On an edit the dialog passes the values it opened with: a value rule then
+ * runs only when one of the fields it reads was changed, so a record saved
+ * before the rule existed stays editable (required fields are always
+ * checked). The controllers skip the same rules the same way.
  */
 
 import { __ } from '@/shared/i18n';
@@ -46,6 +51,25 @@ function todayYmd(): string {
 	return `${ now.getFullYear() }-${ pad( now.getMonth() + 1 ) }-${ pad( now.getDate() ) }`;
 }
 
+/**
+ * Whether any of `keys` differs from the values the edit dialog opened with.
+ * Always true on create (no opened values), so every rule runs.
+ *
+ * @param opened The values the dialog opened with, or null on create.
+ * @param form   The current values.
+ * @param keys   The fields a rule reads.
+ */
+export function changedFrom(
+	opened: Readonly< Record< string, string > > | null | undefined,
+	form: Readonly< Record< string, string > >,
+	keys: readonly string[]
+): boolean {
+	if ( ! opened ) {
+		return true;
+	}
+	return keys.some( ( key ) => ( form[ key ] ?? '' ).trim() !== ( opened[ key ] ?? '' ).trim() );
+}
+
 export type GeneralRuleSection = 'experiences' | 'educations' | 'dependents';
 
 /**
@@ -54,11 +78,15 @@ export type GeneralRuleSection = 'experiences' | 'educations' | 'dependents';
  *
  * @param section Which General section the dialog is editing.
  * @param form    The dialog's flat string values.
+ * @param opened  The values an edit opened with, null when adding.
  */
 export function validateGeneralSection(
 	section: GeneralRuleSection,
-	form: Readonly< Record< string, string > >
+	form: Readonly< Record< string, string > >,
+	opened: Readonly< Record< string, string > > | null = null
 ): string | null {
+	const check = ( ...keys: string[] ): boolean => changedFrom( opened, form, keys );
+
 	if ( section === 'experiences' ) {
 		const from = ( form.from ?? '' ).trim();
 		const to   = ( form.to ?? '' ).trim();
@@ -71,16 +99,16 @@ export function validateGeneralSection(
 		if ( ! from ) {
 			return __( 'From date is required.', 'erp' );
 		}
-		if ( ! isDate( from ) ) {
+		if ( check( 'from' ) && ! isDate( from ) ) {
 			return __( 'Enter a valid From date.', 'erp' );
 		}
 		if ( ! to ) {
 			return __( 'To date is required.', 'erp' );
 		}
-		if ( ! isDate( to ) ) {
+		if ( check( 'to' ) && ! isDate( to ) ) {
 			return __( 'Enter a valid To date.', 'erp' );
 		}
-		if ( to < from ) {
+		if ( check( 'from', 'to' ) && to < from ) {
 			return __( 'The To date cannot be earlier than the From date.', 'erp' );
 		}
 		return null;
@@ -101,19 +129,20 @@ export function validateGeneralSection(
 		if ( blank( form.field ) ) {
 			return __( 'Field of study is required.', 'erp' );
 		}
-		if ( type !== 'grade' && type !== 'percentage' ) {
+		if ( ( ! type || check( 'result_type' ) ) && type !== 'grade' && type !== 'percentage' ) {
 			return __( 'Select a valid result type.', 'erp' );
 		}
 		if ( ! result ) {
 			return __( 'Result is required.', 'erp' );
 		}
-		if ( ! NUMBER_RE.test( result ) ) {
+		const grade = check( 'result_type', 'gpa', 'scale' );
+		if ( grade && ! NUMBER_RE.test( result ) ) {
 			return __( 'Result must be a number of 0 or more.', 'erp' );
 		}
-		if ( type === 'percentage' && Number( result ) > 100 ) {
+		if ( grade && type === 'percentage' && Number( result ) > 100 ) {
 			return __( 'Percentage cannot be more than 100.', 'erp' );
 		}
-		if ( type === 'grade' ) {
+		if ( grade && type === 'grade' ) {
 			if ( ! scale ) {
 				return __( 'Scale is required.', 'erp' );
 			}
@@ -127,10 +156,10 @@ export function validateGeneralSection(
 		if ( ! year ) {
 			return __( 'Completion year is required.', 'erp' );
 		}
-		if ( ! /^\d{4}$/.test( year ) || Number( year ) < 1970 || Number( year ) > 2099 ) {
+		if ( check( 'finished' ) && ( ! /^\d{4}$/.test( year ) || Number( year ) < 1970 || Number( year ) > 2099 ) ) {
 			return __( 'Completion year must be between 1970 and 2099.', 'erp' );
 		}
-		if ( expiry && ! isDate( expiry ) ) {
+		if ( check( 'expiration_date' ) && expiry && ! isDate( expiry ) ) {
 			return __( 'Enter a valid expiration date.', 'erp' );
 		}
 		return null;
@@ -143,10 +172,10 @@ export function validateGeneralSection(
 		return __( 'Relation is required.', 'erp' );
 	}
 	const dob = ( form.dob ?? '' ).trim();
-	if ( dob && ! isDate( dob ) ) {
+	if ( check( 'dob' ) && dob && ! isDate( dob ) ) {
 		return __( 'Enter a valid date of birth.', 'erp' );
 	}
-	if ( dob && dob > todayYmd() ) {
+	if ( check( 'dob' ) && dob && dob > todayYmd() ) {
 		return __( 'Date of birth cannot be in the future.', 'erp' );
 	}
 	return null;
@@ -175,17 +204,22 @@ export interface JobRuleInput {
  * @param action    Which Job-tab update the dialog is making.
  * @param form      The dialog's values.
  * @param terminate Whether this status update is a termination.
+ * @param opened    The values an edit opened with, null when adding.
  */
 export function validateJobUpdate(
 	action: 'status' | 'type' | 'compensation' | 'job',
 	form: JobRuleInput,
-	terminate: boolean
+	terminate: boolean,
+	opened: Readonly< Partial< JobRuleInput > > | null = null
 ): string | null {
-	const date = ( form.date ?? '' ).trim();
+	const values = form as unknown as Readonly< Record< string, string > >;
+	const start  = opened as unknown as Readonly< Record< string, string > > | null;
+	const check  = ( ...keys: string[] ): boolean => changedFrom( start, values, keys );
+	const date   = ( form.date ?? '' ).trim();
 	if ( ! date ) {
 		return __( 'Date is required.', 'erp' );
 	}
-	if ( ! isDate( date ) ) {
+	if ( check( 'date' ) && ! isDate( date ) ) {
 		return __( 'Enter a valid date.', 'erp' );
 	}
 
@@ -216,7 +250,7 @@ export function validateJobUpdate(
 		if ( ! rate ) {
 			return __( 'Pay rate is required.', 'erp' );
 		}
-		if ( ! AMOUNT_RE.test( rate ) || Number( rate ) <= 0 ) {
+		if ( ! AMOUNT_RE.test( rate ) || ( check( 'pay_rate' ) && Number( rate ) <= 0 ) ) {
 			return __( 'Pay rate must be a number greater than 0, with up to 4 decimal places.', 'erp' );
 		}
 		return blank( form.pay_type ) ? __( 'Pay type is required.', 'erp' ) : null;

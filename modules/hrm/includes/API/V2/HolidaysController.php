@@ -292,7 +292,19 @@ class HolidaysController extends RestController {
 
 		$data = $this->prepare_item_for_database( $request );
 
-		$invalid = $this->validate_dates( $data );
+		// The date rules run only when a date is changed, so a holiday saved
+		// before them stays editable while its dates are left as they were.
+		$stored = (array) reset( $existing );
+		$day    = static function ( $value ): string {
+			return substr( (string) $value, 0, 10 );
+		};
+		$dates_changed = $this->changed(
+			[ 'start' => $day( $stored['start'] ?? '' ), 'end' => $day( $stored['end'] ?? '' ) ],
+			[ 'start' => $day( $data['start'] ?? '' ), 'end' => $day( $data['end'] ?? '' ) ],
+			[ 'start', 'end' ]
+		);
+
+		$invalid = $dates_changed ? $this->validate_dates( $data ) : null;
 		if ( $invalid ) {
 			return $invalid;
 		}

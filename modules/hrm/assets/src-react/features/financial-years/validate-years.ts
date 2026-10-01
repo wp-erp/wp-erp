@@ -10,6 +10,7 @@
 import { __, sprintf } from '@/shared/i18n';
 
 interface YearRow {
+	readonly id?:        number | null;
 	readonly fy_name:    string;
 	readonly start_date: string;
 	readonly end_date:   string;
@@ -18,9 +19,13 @@ interface YearRow {
 /**
  * The first rule the set breaks, as a message, or null when it is valid.
  *
- * @param rows Every financial year that will be saved (the whole set).
+ * The overlap rule checks only new rows and rows whose dates were changed:
+ * two saved years that overlap and that nobody touched do not block the save.
+ *
+ * @param rows  Every financial year that will be saved (the whole set).
+ * @param saved The years as they are saved now (to tell untouched rows apart).
  */
-export function findYearsError( rows: readonly YearRow[] ): string | null {
+export function findYearsError( rows: readonly YearRow[], saved: readonly YearRow[] = [] ): string | null {
 	const names: string[] = [];
 
 	for ( const [ i, r ] of rows.entries() ) {
@@ -40,11 +45,16 @@ export function findYearsError( rows: readonly YearRow[] ): string | null {
 		names.push( name );
 	}
 
+	const touched = ( r: YearRow ): boolean => {
+		const was = r.id ? saved.find( ( s ) => s.id === r.id ) : undefined;
+		return ! was || was.start_date !== r.start_date || was.end_date !== r.end_date;
+	};
+
 	for ( let i = 0; i < rows.length; i++ ) {
 		for ( let j = i + 1; j < rows.length; j++ ) {
 			const a = rows[ i ];
 			const b = rows[ j ];
-			if ( a && b && a.start_date <= b.end_date && b.start_date <= a.end_date ) {
+			if ( a && b && ( touched( a ) || touched( b ) ) && a.start_date <= b.end_date && b.start_date <= a.end_date ) {
 				return sprintf(
 					/* translators: 1: a financial year name, 2: another financial year name. */
 					__( 'Financial years %1$s and %2$s overlap. Each date can belong to one financial year only.', 'erp' ),

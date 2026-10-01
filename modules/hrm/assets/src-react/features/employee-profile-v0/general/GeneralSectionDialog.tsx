@@ -67,13 +67,15 @@ export function GeneralSectionDialog( {
 	onSubmit,
 }: GeneralSectionDialogProps ): JSX.Element {
 	const [ form, setForm ] = useState< Record< string, string > >( {} );
+	// The values an edit opened with: the value rules skip fields left as they were.
+	const [ opened, setOpened ] = useState< Record< string, string > | null >( null );
 
 	// Reset the form whenever the dialog opens for a section / row.
 	useEffect( () => {
 		if ( ! section ) {
 			return;
 		}
-		setForm( {
+		const values = {
 			id:              str( initial, 'id' ),
 			company_name:    str( initial, 'company_name' ),
 			job_title:       str( initial, 'job_title' ),
@@ -93,7 +95,9 @@ export function GeneralSectionDialog( {
 			name:            str( initial, 'name' ),
 			relation:        str( initial, 'relation' ),
 			dob:             str( initial, 'dob' ),
-		} );
+		};
+		setForm( values );
+		setOpened( initial ? values : null );
 	}, [ section, initial ] );
 
 	const set = ( key: string ) => ( value: string ): void =>
@@ -105,7 +109,7 @@ export function GeneralSectionDialog( {
 			return;
 		}
 
-		const problem = validateGeneralSection( section, form );
+		const problem = validateGeneralSection( section, form, opened );
 		if ( problem ) {
 			toast.error( problem );
 			return;

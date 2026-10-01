@@ -78,6 +78,8 @@ export function JobUpdateDialog( {
 	initial,
 }: JobUpdateDialogProps ): JSX.Element {
 	const [ form, setForm ] = useState< FormState >( emptyForm );
+	// The values an edit opened with: the value rules skip fields left as they were.
+	const [ opened, setOpened ] = useState< FormState | null >( null );
 	const isEditing = editId != null;
 
 	const [ departments, setDepartments ]   = useState< Option[] >( [] );
@@ -88,7 +90,9 @@ export function JobUpdateDialog( {
 	// Reset the form each time a dialog opens — seeded with `initial` in edit mode.
 	useEffect( () => {
 		if ( action ) {
-			setForm( { ...emptyForm(), ...( initial ?? {} ) } );
+			const values = { ...emptyForm(), ...( initial ?? {} ) };
+			setForm( values );
+			setOpened( editId != null ? values : null );
 		}
 		// Re-run only on open (action) / target-row (editId) change; `initial` is a
 		// fresh object each render, so keying on it would reset the form mid-edit.
@@ -210,7 +214,7 @@ export function JobUpdateDialog( {
 	function handleSubmit( e: FormEvent ): void {
 		e.preventDefault();
 
-		const problem = action ? validateJobUpdate( action, form, ! isEditing && form.category === 'terminated' ) : null;
+		const problem = action ? validateJobUpdate( action, form, ! isEditing && form.category === 'terminated', opened ) : null;
 		if ( problem ) {
 			toast.error( problem );
 			return;
