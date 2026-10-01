@@ -61,7 +61,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit }: ProfileHeade
 			</div>
 
 			<div className="flex min-w-0 flex-1 flex-col gap-4">
-				<section className="flex flex-wrap items-center gap-3 rounded-3xl bg-card p-6 shadow-sm ring-1 ring-border/60">
+				<section className="flex flex-wrap items-center gap-3 rounded-[10px] bg-card p-6 shadow-sm ring-1 ring-border/60">
 					<div className="min-w-0 flex-1">
 						<h1 className="m-0 mb-4 truncate text-2xl font-bold tracking-tight text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }

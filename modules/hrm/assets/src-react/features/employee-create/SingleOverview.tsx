@@ -34,7 +34,7 @@ export function SingleOverview( { userId, record, canEdit, activeLabel }: Single
 		<div className="space-y-6">
 			<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
 
-			<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
+			<section className="rounded-[10px] bg-card p-6 shadow-sm ring-1 ring-border/60">
 			<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">
 				{ activeLabel }
 			</h2>

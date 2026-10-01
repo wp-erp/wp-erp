@@ -99,7 +99,7 @@ export function ToastCard( {
 	};
 
 	return (
-		<div className="relative w-[356px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+		<div className="relative w-[356px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[10px] border border-border bg-card shadow-lg">
 			{ showFill ? (
 				<div
 					className="absolute inset-0 origin-left"

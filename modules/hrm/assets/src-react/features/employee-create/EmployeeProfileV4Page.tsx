@@ -102,10 +102,10 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 	if ( ! record ) {
 		return (
 			<div className="mx-auto w-full max-w-full space-y-6">
-				<Skeleton className="h-52 w-full rounded-2xl" />
+				<Skeleton className="h-52 w-full rounded-[10px]" />
 				<div className="flex flex-col gap-6 lg:flex-row">
-					<Skeleton className="h-96 w-full rounded-2xl lg:w-64" />
-					<Skeleton className="h-96 flex-1 rounded-2xl" />
+					<Skeleton className="h-96 w-full rounded-[10px] lg:w-64" />
+					<Skeleton className="h-96 flex-1 rounded-[10px]" />
 				</div>
 			</div>
 		);
@@ -139,7 +139,7 @@ export function EmployeeProfileV4Inner( { userId }: { userId: number } ): JSX.El
 			{ /* BODY — left nav card + right content card. */ }
 			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">
 				<aside className="shrink-0 lg:sticky lg:top-[88px] lg:w-64">
-					<div className="rounded-2xl bg-card p-3 shadow-sm ring-1 ring-border/60">
+					<div className="rounded-[10px] bg-card p-3 shadow-sm ring-1 ring-border/60">
 						<NavMenu items={ navItems } current={ tab } onSelect={ setTab } />
 					</div>
 				</aside>

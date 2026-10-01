@@ -51,7 +51,7 @@ function EmployeesPageInner(): JSX.Element {
 		<section className="mx-auto w-full max-w-full">
 			<EmployeesToolbar view={ view } onViewChange={ setView } />
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<EmployeesFilters />
 
 				<EmployeesBulkBar />

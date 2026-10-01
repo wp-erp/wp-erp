@@ -115,7 +115,7 @@ export function RemoteWorkRequests(): JSX.Element {
                     </Button>
                 </header>
             )}
-            <div className="rounded-lg border border-border bg-card shadow-sm">
+            <div className="rounded-[10px] border border-border bg-card shadow-sm">
                 {loading ? (
                     <div className="space-y-2 p-4">
                         <Skeleton className="h-6 w-full" />
@@ -126,6 +126,7 @@ export function RemoteWorkRequests(): JSX.Element {
                         size="page"
                         icon={Laptop}
                         title={__("No remote work requests.", "erp")}
+                        description={__("Days people ask to work away from the office show up here for you to approve. Add a request to start.", "erp")}
                         action={
                             <Button
                                 variant="default"

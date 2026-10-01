@@ -37,7 +37,7 @@ export function SingleHeader( { record, userId, canEdit, canViewNotes, onEdit, o
 	const email       = str( record, 'email' );
 
 	return (
-		<section className="rounded-2xl bg-card p-6 shadow-sm ring-1 ring-border/60">
+		<section className="rounded-[10px] bg-card p-6 shadow-sm ring-1 ring-border/60">
 			<div className="flex flex-wrap items-start gap-5">
 				{ canEdit ? (
 					<AvatarUpload

@@ -190,7 +190,7 @@ export function SearchTrigger(): JSX.Element {
 			<Dialog open={ open } onOpenChange={ ( next ) => ( next ? setOpen( true ) : close() ) }>
 				<DialogContent
 					showCloseButton={ false }
-					className="gap-0 overflow-hidden rounded-xl p-0 sm:max-w-xl"
+					className="gap-0 overflow-hidden rounded-[10px] p-0 sm:max-w-xl"
 				>
 					<DialogTitle className="sr-only">{ __( 'Search', 'erp' ) }</DialogTitle>
 

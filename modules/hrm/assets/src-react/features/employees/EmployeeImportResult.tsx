@@ -20,7 +20,7 @@ interface EmployeeImportResultProps {
 export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImportResultProps ): JSX.Element {
 	return (
 		<div className="space-y-4">
-			<div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card px-6 py-10 text-center">
+			<div className="flex flex-col items-center justify-center gap-3 rounded-[10px] border border-border bg-card px-6 py-10 text-center">
 				<span className="text-4xl" aria-hidden="true">🎉</span>
 				<div className="space-y-1">
 					<h3 className="m-0 mb-4 text-lg font-semibold text-foreground">

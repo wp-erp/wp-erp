@@ -41,9 +41,9 @@ interface NewLeaveRequestFormProps {
 	/** Hide the Financial Year picker (self-service — auto-uses the current FY). */
 	readonly hideFinancialYear?: boolean;
 	/**
-	 * Self-service only: the year picker is hidden and no current financial year
-	 * resolved, so there is nothing to pick a policy from. Replaces the dead
-	 * policy select with a notice.
+	 * There is no financial year to pick a policy from: self-service found no
+	 * current year (the picker is hidden), or none exists at all. Replaces the
+	 * dead policy select with a notice.
 	 */
 	readonly yearMissing?: boolean;
 	readonly employee:         ReturnType< typeof useEmployeeSearch >;
@@ -174,7 +174,9 @@ export function NewLeaveRequestForm( {
 			{ yearMissing ? (
 				canManageYears ? (
 					<DependencyHint
-						message={ __( 'Leave cannot be requested yet because no financial year covers today.', 'erp' ) }
+						message={ hideFinancialYear
+							? __( 'Leave cannot be requested yet because no financial year covers today.', 'erp' )
+							: __( 'Leave cannot be requested yet because no financial year exists. Use Add New next to Financial Year, or open the Financial Years page.', 'erp' ) }
 						steps={ [ { label: __( 'Add a financial year', 'erp' ), path: '/leave/financial-years' } ] }
 						onBeforeNavigate={ onClose }
 					/>

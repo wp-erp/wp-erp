@@ -53,7 +53,7 @@ export interface ProfileTab {
  */
 function DocumentsTabPreview(): JSX.Element {
 	return (
-		<section className="rounded-2xl bg-card p-10 text-center shadow-sm ring-1 ring-border/60">
+		<section className="rounded-[10px] bg-card p-10 text-center shadow-sm ring-1 ring-border/60">
 			<div className="mx-auto flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
 				<FileText size={ 26 } strokeWidth={ 1.75 } aria-hidden="true" />
 			</div>

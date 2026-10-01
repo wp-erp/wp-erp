@@ -436,7 +436,7 @@ function LeaveRequestsInner(): JSX.Element {
 				</header>
 			) }
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				{ /* Toolbar — status tabs (left) + search + filter funnel (right). */ }
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
 					<StatusTabs
@@ -564,11 +564,21 @@ function LeaveRequestsInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					activeFilterCount === 0 && ! search && counts.all === 0 ? (
+					// Only a filter or search the user set counts as "filtered"; an
+					// empty status tab (Pending is the default) is not a filter.
+					activeFilterCount > 0 || search ? (
+						<EmptyState
+							size="page"
+							icon={ CalendarDays }
+							title={ __( 'No leave requests match these filters.', 'erp' ) }
+							description={ __( 'Change or clear the search and filters to see more requests.', 'erp' ) }
+						/>
+					) : 0 === status || 0 === counts.all ? (
 						<EmptyState
 							size="page"
 							icon={ CalendarDays }
 							title={ __( 'No leave requests yet.', 'erp' ) }
+							description={ __( 'Time off your people ask for shows up here for you to approve. Add a request for an employee, or let them apply from their dashboard.', 'erp' ) }
 							action={ canManage ? (
 								<Button className="h-10 gap-1.5 px-4" onClick={ () => setFormParam( 'new' ) }>
 									<Plus size={ 16 } aria-hidden="true" />
@@ -577,7 +587,12 @@ function LeaveRequestsInner(): JSX.Element {
 							) : undefined }
 						/>
 					) : (
-						<EmptyState size="page" icon={ CalendarDays } title={ __( 'No leave requests match these filters.', 'erp' ) } />
+						<EmptyState
+							size="page"
+							icon={ CalendarDays }
+							title={ __( 'No leave requests with this status.', 'erp' ) }
+							description={ __( 'Requests move between these tabs as they are approved or rejected. Open the All tab to see every request.', 'erp' ) }
+						/>
 					)
 				) : (
 					<LeaveRequestsTable

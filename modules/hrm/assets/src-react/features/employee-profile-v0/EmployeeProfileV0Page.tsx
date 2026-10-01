@@ -216,10 +216,10 @@ export function EmployeeProfileV0Inner( { userId, headerActions }: { userId: num
 	if ( ! record ) {
 		return (
 			<div className="mx-auto w-full max-w-full space-y-6">
-				<Skeleton className="h-44 w-full rounded-xl" />
+				<Skeleton className="h-44 w-full rounded-[10px]" />
 				<div className="flex gap-6">
-					<Skeleton className="h-72 w-60 shrink-0 rounded-xl" />
-					<Skeleton className="h-72 flex-1 rounded-xl" />
+					<Skeleton className="h-72 w-60 shrink-0 rounded-[10px]" />
+					<Skeleton className="h-72 flex-1 rounded-[10px]" />
 				</div>
 			</div>
 		);

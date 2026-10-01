@@ -93,7 +93,7 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 					</p>
 				</DialogHeader>
 
-				<div className="space-y-5 rounded-xl border border-border bg-card px-6 pb-6 pt-5">
+				<div className="space-y-5 rounded-[10px] border border-border bg-card px-6 pb-6 pt-5">
 					<div className="space-y-1.5">
 						<p className="m-0 mb-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">
 							{ __( 'Export as', 'erp' ) }

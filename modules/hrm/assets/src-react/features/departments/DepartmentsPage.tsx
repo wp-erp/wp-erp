@@ -265,7 +265,7 @@ function DepartmentsInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<DepartmentsToolbar
 					count={ rows.length }
 					search={ search }
@@ -303,6 +303,9 @@ function DepartmentsInner(): JSX.Element {
 						title={ search
 							? __( 'No departments match your search.', 'erp' )
 							: __( 'No departments yet.', 'erp' ) }
+						description={ search
+							? undefined
+							: __( 'Group your people by team and set who leads each one. Add your first department to start.', 'erp' ) }
 						action={ ! search && canManage ? (
 							<Button
 								onClick={ openCreate }

@@ -72,7 +72,7 @@ export function EmployeesGrid(): JSX.Element {
 						<li
 							key={ row.id }
 							data-selected={ isChecked ? 'true' : 'false' }
-							className="group relative flex flex-col gap-4 overflow-hidden rounded-lg border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/40 data-[selected=true]:border-primary/40 data-[selected=true]:bg-primary/5"
+							className="group relative flex flex-col gap-4 overflow-hidden rounded-[10px] border border-border bg-card p-4 shadow-sm transition-colors hover:bg-muted/40 data-[selected=true]:border-primary/40 data-[selected=true]:bg-primary/5"
 						>
 							{ /* Top row: selection + status (left), row actions (right). */ }
 							<div className="flex items-center justify-between gap-2">

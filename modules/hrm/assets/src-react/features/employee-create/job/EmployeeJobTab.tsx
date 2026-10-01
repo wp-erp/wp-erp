@@ -50,22 +50,23 @@ interface HistoryCardProps {
 	readonly title:        string;
 	readonly columns:      readonly string[];
 	readonly empty:        string;
+	readonly emptyHint?:   string;
 	readonly rowCount:     number;
 	readonly canDelete?:   boolean;
 	readonly headerAction?: ReactNode;
 	readonly children:     ReactNode;
 }
 
-function HistoryCard( { title, columns, empty, rowCount, canDelete, headerAction, children }: HistoryCardProps ): JSX.Element {
+function HistoryCard( { title, columns, empty, emptyHint, rowCount, canDelete, headerAction, children }: HistoryCardProps ): JSX.Element {
 	return (
-		<section className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+		<section className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 px-6 py-4">
 				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				{ headerAction }
 			</header>
 			<div className="mx-6 mb-4 h-px bg-border" />
 			{ rowCount === 0 ? (
-				<EmptyState size="compact" icon={ Briefcase } title={ empty } />
+				<EmptyState size="compact" icon={ Briefcase } title={ empty } description={ emptyHint } />
 			) : (
 				<div className="overflow-x-auto">
 					<table className="w-full text-left">
@@ -169,12 +170,12 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 		) : null;
 
 	if ( error ) {
-		return <p className="rounded-lg border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
+		return <p className="rounded-[10px] border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
 	}
 
 	if ( loading || ! data ) {
 		return (
-			<div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-10 text-sm text-muted-foreground">
+			<div className="flex items-center justify-center gap-2 rounded-[10px] border border-border bg-card p-10 text-sm text-muted-foreground">
 				<Spinner className="size-4" />
 				{ __( 'Loading job history…', 'erp' ) }
 			</div>
@@ -187,6 +188,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				title={ __( 'Employment Status', 'erp' ) }
 				columns={ [ __( 'Date', 'erp' ), __( 'Status', 'erp' ), __( 'Comment', 'erp' ) ] }
 				empty={ __( 'No status changes recorded.', 'erp' ) }
+				emptyHint={ __( 'Changes to this person\'s employment status, like probation to permanent, are kept here with their dates.', 'erp' ) }
 				rowCount={ data.status.length }
 				canDelete={ canManage }
 				headerAction={ actionButton( 'status', __( 'Update Status', 'erp' ) ) }
@@ -205,6 +207,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				title={ __( 'Employment Type', 'erp' ) }
 				columns={ [ __( 'Date', 'erp' ), __( 'Type', 'erp' ), __( 'Comment', 'erp' ) ] }
 				empty={ __( 'No employment-type changes recorded.', 'erp' ) }
+				emptyHint={ __( 'Moves between full-time, part-time and other employment types are kept here with their dates.', 'erp' ) }
 				rowCount={ data.employment.length }
 				canDelete={ canManage }
 				headerAction={ actionButton( 'type', __( 'Update Type', 'erp' ) ) }
@@ -223,6 +226,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				title={ __( 'Compensation', 'erp' ) }
 				columns={ [ __( 'Date', 'erp' ), __( 'Pay Rate', 'erp' ), __( 'Pay Type', 'erp' ), __( 'Reason', 'erp' ), __( 'Comment', 'erp' ) ] }
 				empty={ __( 'No compensation changes recorded.', 'erp' ) }
+				emptyHint={ __( 'Pay rate changes for this person are kept here with their dates and reasons.', 'erp' ) }
 				rowCount={ data.compensation.length }
 				canDelete={ canManage }
 				headerAction={ actionButton( 'compensation', __( 'Update Compensation', 'erp' ) ) }
@@ -243,6 +247,7 @@ export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.E
 				title={ __( 'Job Information', 'erp' ) }
 				columns={ [ __( 'Date', 'erp' ), __( 'Department', 'erp' ), __( 'Designation', 'erp' ), __( 'Location', 'erp' ), __( 'Reporting To', 'erp' ) ] }
 				empty={ __( 'No job-information changes recorded.', 'erp' ) }
+				emptyHint={ __( 'Changes to this person\'s department, designation, manager and location are kept here with their dates.', 'erp' ) }
 				rowCount={ data.job.length }
 				canDelete={ canManage }
 				headerAction={ actionButton( 'job', __( 'Update Job Information', 'erp' ) ) }

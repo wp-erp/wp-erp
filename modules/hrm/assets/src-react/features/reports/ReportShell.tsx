@@ -53,11 +53,13 @@ interface ReportStateProps {
 	readonly error:   string | null;
 	readonly empty:   boolean;
 	readonly emptyText?: string;
+	/** One line of help under the empty title. */
+	readonly emptyDescription?: string | undefined;
 	readonly children: ReactNode;
 }
 
 /** Uniform loading / error / empty fallback used inside a report card. */
-export function ReportState( { loading, error, empty, emptyText, children }: ReportStateProps ): JSX.Element {
+export function ReportState( { loading, error, empty, emptyText, emptyDescription, children }: ReportStateProps ): JSX.Element {
 	if ( error ) {
 		return <p className="py-6 text-sm text-destructive">{ error }</p>;
 	}
@@ -70,6 +72,7 @@ export function ReportState( { loading, error, empty, emptyText, children }: Rep
 				size="page"
 				icon={ FileText }
 				title={ emptyText ?? __( 'No records found.', 'erp' ) }
+				description={ emptyDescription }
 			/>
 		);
 	}

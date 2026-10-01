@@ -208,7 +208,7 @@ function HolidaysInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<HolidaysToolbar
 					total={ total }
 					search={ search }
@@ -259,6 +259,9 @@ function HolidaysInner(): JSX.Element {
 						title={ search
 							? __( 'No holidays match your search.', 'erp' )
 							: __( 'No holidays for this year yet.', 'erp' ) }
+						description={ search
+							? undefined
+							: __( 'Holidays are days off for everyone, and they are not counted in leave. Add them one by one or import a list.', 'erp' ) }
 						action={ ! search && canManage ? (
 							<Button
 								onClick={ openCreate }

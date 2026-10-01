@@ -24,7 +24,7 @@ interface EmptyStateProps {
 	readonly icon?: LucideIcon;
 	readonly title: string;
 	/** Muted help text under the title. */
-	readonly description?: string;
+	readonly description?: string | undefined;
 	/** Call to action (a Button) rendered under the text. */
 	readonly action?: ReactNode;
 	readonly size?: 'page' | 'compact';

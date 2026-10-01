@@ -60,7 +60,7 @@ export function EmployeeImportUpload( {
 				onDragLeave={ () => setDragging( false ) }
 				onDrop={ onDrop }
 				className={ cn(
-					'flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed px-6 py-12 text-center transition-colors',
+					'flex flex-col items-center justify-center gap-3 rounded-[10px] border border-dashed px-6 py-12 text-center transition-colors',
 					dragging ? 'border-primary bg-primary/5' : 'border-border bg-muted/30'
 				) }
 			>

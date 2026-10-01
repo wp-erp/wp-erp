@@ -227,7 +227,7 @@ function DesignationsInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<DesignationsToolbar
 					total={ rows.length }
 					search={ search }
@@ -264,6 +264,9 @@ function DesignationsInner(): JSX.Element {
 						title={ search
 							? __( 'No designations match your search.', 'erp' )
 							: __( 'No designations yet.', 'erp' ) }
+						description={ search
+							? undefined
+							: __( 'Designations are job titles, like Manager or Developer, that you give to employees. Add your first one to start.', 'erp' ) }
 						action={ ! search && canManage ? (
 							<Button
 								onClick={ openCreate }

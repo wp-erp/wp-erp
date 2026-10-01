@@ -80,14 +80,14 @@ export function WeatherWidget( { embedded = false }: WeatherWidgetProps ): JSX.E
 
 	const shell = embedded
 		? 'flex items-center gap-3'
-		: 'flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-2.5 shadow-sm';
+		: 'flex items-center gap-3 rounded-[10px] border border-border bg-card px-4 py-2.5 shadow-sm';
 
 	// First load (no data yet) shows a skeleton; a manual refresh keeps the
 	// existing chip and just spins the refresh icon.
 	if ( status === 'loading' && ! data ) {
 		return (
 			<div
-				className={ `h-[3.75rem] w-52 animate-pulse rounded-xl ${ embedded ? 'bg-muted/40' : 'border border-border bg-muted/40' }` }
+				className={ `h-[3.75rem] w-52 animate-pulse rounded-[10px] ${ embedded ? 'bg-muted/40' : 'border border-border bg-muted/40' }` }
 				aria-hidden="true"
 			/>
 		);

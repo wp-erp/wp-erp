@@ -45,14 +45,15 @@ interface SectionCardProps {
 	readonly title:       string;
 	readonly columns:     readonly string[];
 	readonly empty:       string;
+	readonly emptyHint?:  string;
 	readonly rowCount:    number;
 	readonly onAdd:       () => void;
 	readonly children:    ReactNode;
 }
 
-function SectionCard( { title, columns, empty, rowCount, onAdd, children }: SectionCardProps ): JSX.Element {
+function SectionCard( { title, columns, empty, emptyHint, rowCount, onAdd, children }: SectionCardProps ): JSX.Element {
 	return (
-		<section className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+		<section className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
 			<header className="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
 				<h2 className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
 				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onAdd }>
@@ -61,7 +62,7 @@ function SectionCard( { title, columns, empty, rowCount, onAdd, children }: Sect
 				</Button>
 			</header>
 			{ rowCount === 0 ? (
-				<EmptyState size="compact" icon={ FileText } title={ empty } />
+				<EmptyState size="compact" icon={ FileText } title={ empty } description={ emptyHint } />
 			) : (
 				<div className="mt-4 overflow-x-auto">
 					<table className="w-full text-left">
@@ -168,6 +169,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				title={ __( 'Work Experience', 'erp' ) }
 				columns={ [ __( 'Company', 'erp' ), __( 'Job Title', 'erp' ), __( 'From', 'erp' ), __( 'To', 'erp' ) ] }
 				empty={ __( 'No work experience added.', 'erp' ) }
+				emptyHint={ __( 'Past jobs this person held before joining. Use Add to record one.', 'erp' ) }
 				rowCount={ experiences.length }
 				onAdd={ () => openAdd( 'experiences' ) }
 			>
@@ -186,6 +188,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				title={ __( 'Education', 'erp' ) }
 				columns={ [ __( 'School', 'erp' ), __( 'Degree', 'erp' ), __( 'Field', 'erp' ), __( 'Result', 'erp' ), __( 'Year', 'erp' ) ] }
 				empty={ __( 'No education added.', 'erp' ) }
+				emptyHint={ __( 'Schools, degrees and courses this person finished. Use Add to record one.', 'erp' ) }
 				rowCount={ educations.length }
 				onAdd={ () => openAdd( 'educations' ) }
 			>
@@ -205,6 +208,7 @@ export function EmployeeGeneralSections( { userId }: { readonly userId: number }
 				title={ __( 'Dependents', 'erp' ) }
 				columns={ [ __( 'Name', 'erp' ), __( 'Relation', 'erp' ), __( 'Date of Birth', 'erp' ) ] }
 				empty={ __( 'No dependents added.', 'erp' ) }
+				emptyHint={ __( 'Family members who depend on this person, such as a spouse or child. Use Add to record one.', 'erp' ) }
 				rowCount={ dependents.length }
 				onAdd={ () => openAdd( 'dependents' ) }
 			>

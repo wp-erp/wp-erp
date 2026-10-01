@@ -362,7 +362,9 @@ export function NewLeaveRequestDialog( { open, onClose, onSubmitted, lockEmploye
 					error={ error }
 					hideEmployeePicker={ Boolean( lockEmployeeId ) }
 					hideFinancialYear={ Boolean( lockEmployeeId ) }
-					yearMissing={ Boolean( lockEmployeeId ) && yearsLoaded && ! year }
+					// Self-service: no current year resolved. On behalf of someone:
+					// no financial year exists at all, so no policy can be picked.
+					yearMissing={ yearsLoaded && ( lockEmployeeId ? ! year : 0 === yearOptions.length ) }
 					employee={ employee }
 					employeeId={ employeeId }
 					setEmployeeId={ setEmployeeId }

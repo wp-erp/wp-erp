@@ -8,13 +8,14 @@
  */
 
 import { Button, Input, toast } from '@wedevs/plugin-ui';
-import { Plus, Save, Trash2 } from 'lucide-react';
+import { CalendarRange, Plus, Save, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { TableSkeleton } from '@/shared/components/TableSkeleton';
 import type { JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { DateField } from '@/shared/DateField';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PlainLabel } from '@/shared/components/FieldLabels';
 import { __ } from '@/shared/i18n';
@@ -33,9 +34,11 @@ function FinancialYearsInner(): JSX.Element {
 	const [ draft, setDraft ] = useState< FinancialYear[] >( [] );
 	const [ busy, setBusy ]   = useState( false );
 
-	// Seed the editable draft from the server rows whenever they (re)load.
+	// Seed the editable draft from the server rows whenever they (re)load. With
+	// no year saved yet the draft starts empty, so the empty state explains
+	// what a financial year is before the first row is added.
 	useEffect( () => {
-		setDraft( rows.length > 0 ? rows.map( ( r ) => ( { ...r } ) ) : [ emptyRow() ] );
+		setDraft( rows.map( ( r ) => ( { ...r } ) ) );
 	}, [ rows ] );
 
 	function patch( index: number, key: keyof FinancialYear, value: string ): void {
@@ -87,7 +90,7 @@ function FinancialYearsInner(): JSX.Element {
 						{ __( 'Define the financial years that leave entitlements are granted against.', 'erp' ) }
 					</p>
 				</div>
-				<Button className="h-10 gap-1.5 px-4" disabled={ busy || loading } onClick={ () => void handleSave() }>
+				<Button className="h-10 gap-1.5 px-4" disabled={ busy || loading || draft.length === 0 } onClick={ () => void handleSave() }>
 					<Save size={ 16 } aria-hidden="true" />
 					{ busy ? __( 'Saving…', 'erp' ) : __( 'Save Changes', 'erp' ) }
 				</Button>
@@ -100,6 +103,14 @@ function FinancialYearsInner(): JSX.Element {
 					<TableSkeleton rows={ 6 } />
 				) : (
 					<>
+						{ draft.length === 0 ? (
+							<EmptyState
+								size="compact"
+								icon={ CalendarRange }
+								title={ __( 'No financial years yet.', 'erp' ) }
+								description={ __( 'A financial year sets the dates leave is counted in, like January to December. Use Add New to add one, then Save Changes.', 'erp' ) }
+							/>
+						) : null }
 						<div className="space-y-3">
 							{ draft.map( ( row, index ) => (
 								<div key={ index } className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1.1fr_1fr_1fr_1.3fr_auto]">

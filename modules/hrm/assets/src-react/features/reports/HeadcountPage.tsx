@@ -160,7 +160,7 @@ export function HeadcountPage(): JSX.Element {
 				{ ( data?.employees ?? [] ).length === 0 ? (
 					<EmptyState size="page" icon={ Users } title={ __( 'No employees match these filters.', 'erp' ) } />
 				) : (
-					<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+					<div className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
 						<div className="overflow-x-auto">
 						<table className="w-full min-w-160 text-left">
 						<thead className="border-b border-border bg-card">

@@ -230,7 +230,7 @@ function LeaveEntitlementsInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<LeaveEntitlementsFilters
 					total={ total }
 					search={ search }
@@ -270,9 +270,14 @@ function LeaveEntitlementsInner(): JSX.Element {
 					<EmptyState
 						size="page"
 						icon={ CalendarDays }
-						title={ search || policyId || year || employeeType
+						// The year is pre-set to the current financial year, so it
+						// does not count as a filter the user chose.
+						title={ search || policyId || employeeType
 							? __( 'No entitlements match these filters.', 'erp' )
 							: __( 'No entitlements assigned yet.', 'erp' ) }
+						description={ search || policyId || employeeType
+							? undefined
+							: __( 'An entitlement gives employees the leave days of a policy for a financial year. Assign a policy to start.', 'erp' ) }
 						action={ ! ( search || policyId || employeeType ) && canManage ? (
 							<Button
 								onClick={ () => { setFormError( null ); setAssignParam( 'open' ); } }

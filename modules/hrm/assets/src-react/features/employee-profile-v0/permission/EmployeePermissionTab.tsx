@@ -39,12 +39,12 @@ export function EmployeePermissionTab( { userId }: { readonly userId: number } )
 	}
 
 	if ( error ) {
-		return <p className="rounded-lg border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
+		return <p className="rounded-[10px] border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
 	}
 
 	if ( loading ) {
 		return (
-			<div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-10 text-sm text-muted-foreground">
+			<div className="flex items-center justify-center gap-2 rounded-[10px] border border-border bg-card p-10 text-sm text-muted-foreground">
 				<Spinner className="size-4" />
 				{ __( 'Loading permissions…', 'erp' ) }
 			</div>

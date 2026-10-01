@@ -218,9 +218,16 @@ export function LeavesReportPage(): JSX.Element {
 				loading={ loading }
 				error={ error }
 				empty={ rows.length === 0 }
-				emptyText={ __( 'No record found.', 'erp' ) }
+				// The year is pre-set to the current financial year, so only the
+				// other filters count as ones the user chose.
+				emptyText={ designation || department || employmentType || start || end
+					? __( 'No records match these filters.', 'erp' )
+					: __( 'No record found.', 'erp' ) }
+				emptyDescription={ designation || department || employmentType || start || end
+					? undefined
+					: __( 'This report shows each employee\'s leave balance by leave type. It fills in once employees have a leave policy assigned.', 'erp' ) }
 			>
-				<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+				<div className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
 						<table className="w-full text-left">
 					<thead className="border-b border-border bg-card">

@@ -104,7 +104,7 @@ function ProSlides( { base }: { base: string } ): JSX.Element {
 	}, [] );
 
 	return (
-		<div className="flex h-full flex-col items-center justify-center gap-6 rounded-xl bg-[#eaf3ff] p-6">
+		<div className="flex h-full flex-col items-center justify-center gap-6 rounded-[10px] bg-[#eaf3ff] p-6">
 			<div className="relative flex aspect-square w-full max-w-90 items-center justify-center">
 				{ SLIDES.map( ( slide, i ) => (
 					<img

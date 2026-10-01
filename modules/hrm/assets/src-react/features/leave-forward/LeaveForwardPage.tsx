@@ -186,7 +186,7 @@ function LeaveForwardInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
 					<div role="tablist" aria-label={ __( 'Forward Leaves', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
@@ -226,7 +226,12 @@ function LeaveForwardInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : rows.length === 0 ? (
-					<EmptyState size="page" icon={ CalendarDays } title={ __( 'No forward leaves to process.', 'erp' ) } />
+					<EmptyState
+						size="page"
+						icon={ CalendarDays }
+						title={ __( 'No forward leaves to process.', 'erp' ) }
+						description={ __( 'Unused leave you carry over to the next financial year shows up here at year end.', 'erp' ) }
+					/>
 				) : (
 					<div className="overflow-x-auto">
 						<table className="w-full min-w-3xl text-left">

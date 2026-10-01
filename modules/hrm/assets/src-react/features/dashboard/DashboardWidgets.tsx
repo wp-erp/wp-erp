@@ -178,7 +178,7 @@ export function ProWidget( {
 			{ featured.map( ( s, i ) => (
 				<div
 					key={ `f-${ i }` }
-					className="mx-2 mb-3 flex items-baseline gap-3 rounded-lg border border-border bg-card px-4 py-3.5"
+					className="mx-2 mb-3 flex items-baseline gap-3 rounded-[10px] border border-border bg-card px-4 py-3.5"
 				>
 					<span className="text-2xl font-bold leading-7 text-primary">
 						{ s.value }
@@ -196,7 +196,7 @@ export function ProWidget( {
 					{ stats.map( ( s, i ) => (
 						<div
 							key={ i }
-							className="rounded-lg border border-border bg-card px-4 py-3.5 text-center"
+							className="rounded-[10px] border border-border bg-card px-4 py-3.5 text-center"
 						>
 							<p className="text-2xl font-bold leading-7 text-primary">
 								{ s.value }
@@ -208,7 +208,7 @@ export function ProWidget( {
 					) ) }
 				</div>
 			) : stats.length ? (
-				<div className="mx-2 mb-2 flex items-stretch rounded-lg border border-border bg-card">
+				<div className="mx-2 mb-2 flex items-stretch rounded-[10px] border border-border bg-card">
 					{ stats.map( ( s, i ) => (
 						<Fragment key={ i }>
 							{ i > 0 ? (

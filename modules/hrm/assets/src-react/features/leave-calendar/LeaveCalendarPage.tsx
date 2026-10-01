@@ -13,9 +13,11 @@
  * (pure date helpers + the per-day bucket type).
  */
 
+import { CalendarDays } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
+import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
@@ -156,6 +158,13 @@ function LeaveCalendarInner(): JSX.Element {
 
 	const dayBucket = byDay.get( ymd( cursor ) );
 
+	// Nothing but weekends / holidays in the shown range: the grid alone gives a
+	// first-time user no clue, so an empty state under it says what goes here.
+	const hasLeave = events.some( ( ev ) => ev.type !== 'weekend' && ev.type !== 'holiday' );
+	const emptyHint = canManage
+		? __( 'Leave your people take shows up on these dates. Use the arrows to see another period.', 'erp' )
+		: __( 'Your leave shows up on these dates once you request it. Use the arrows to see another period.', 'erp' );
+
 	return (
 		<section className="mx-auto w-full max-w-full">
 			<header className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -164,7 +173,7 @@ function LeaveCalendarInner(): JSX.Element {
 				</h1>
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<CalendarToolbar
 					label={ label }
 					view={ view }
@@ -206,21 +215,35 @@ function LeaveCalendarInner(): JSX.Element {
 								</div>
 							) ) }
 							{ ( dayBucket?.holidays?.length ?? 0 ) === 0 && ( dayBucket?.leaves?.length ?? 0 ) === 0 && ! loading ? (
-								<p className="py-8 text-center text-sm text-muted-foreground">
-									{ __( 'No leave or holidays on this day.', 'erp' ) }
-								</p>
+								<EmptyState
+									size="compact"
+									icon={ CalendarDays }
+									title={ __( 'No leave or holidays on this day.', 'erp' ) }
+									description={ emptyHint }
+								/>
 							) : null }
 						</div>
 					</div>
 				) : (
-					<CalendarGrid
-						weeks={ weeks }
-						byDay={ byDay }
-						thisMonth={ thisMonth }
-						todayKey={ todayKey }
-						loading={ loading }
-						dimOutOfMonth={ view === 'month' }
-					/>
+					<>
+						<CalendarGrid
+							weeks={ weeks }
+							byDay={ byDay }
+							thisMonth={ thisMonth }
+							todayKey={ todayKey }
+							loading={ loading }
+							dimOutOfMonth={ view === 'month' }
+						/>
+						{ ! loading && ! hasLeave ? (
+							<EmptyState
+								size="compact"
+								icon={ CalendarDays }
+								title={ __( 'No leave in this period.', 'erp' ) }
+								description={ emptyHint }
+								className="border-t border-border"
+							/>
+						) : null }
+					</>
 				) }
 			</div>
 		</section>

@@ -188,7 +188,7 @@ function LeaveTypesInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
 					<div role="tablist" aria-label={ __( 'Leave Types', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
@@ -258,6 +258,9 @@ function LeaveTypesInner(): JSX.Element {
 						title={ search
 							? __( 'No leave types match your search.', 'erp' )
 							: __( 'No leave types yet.', 'erp' ) }
+						description={ search
+							? undefined
+							: __( 'Leave types are the kinds of leave people can take, like Annual or Sick. Add one, then give it days in a leave policy.', 'erp' ) }
 						action={ ! search && canManage ? (
 							<Button
 								onClick={ openCreate }

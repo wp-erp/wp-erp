@@ -128,7 +128,7 @@ function OrgChartInner(): JSX.Element {
 			) : null }
 
 			<div
-				className="overflow-auto rounded-lg border border-border bg-card p-6 shadow-sm"
+				className="overflow-auto rounded-[10px] border border-border bg-card p-6 shadow-sm"
 				style={ {
 					backgroundImage: 'radial-gradient(color-mix(in srgb, var(--border) 70%, transparent) 1px, transparent 1px)',
 					backgroundSize:  '22px 22px',
@@ -139,7 +139,16 @@ function OrgChartInner(): JSX.Element {
 				) : loading ? (
 					<TableSkeleton rows={ 6 } />
 				) : roots.length === 0 ? (
-					<EmptyState size="page" icon={ Network } title={ __( 'No reporting structure for this team.', 'erp' ) } />
+					<EmptyState
+						size="page"
+						icon={ Network }
+						title={ deptId
+							? __( 'No reporting structure for this team.', 'erp' )
+							: __( 'No org chart yet.', 'erp' ) }
+						description={ deptId
+							? __( 'Give this department a lead and add employees to it to draw its chart.', 'erp' )
+							: __( 'The chart is drawn from your departments, their leads and who reports to whom. Add departments and employees to see it.', 'erp' ) }
+					/>
 				) : (
 					<div
 						className="origin-top transition-transform"

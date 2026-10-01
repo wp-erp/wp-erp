@@ -97,7 +97,7 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 				</header>
 				<div className="space-y-5 p-5">
 			{ canManage ? (
-				<form onSubmit={ ( e ) => void handleAdd( e ) } className="rounded-lg border border-border bg-card p-4 shadow-sm">
+				<form onSubmit={ ( e ) => void handleAdd( e ) } className="rounded-[10px] border border-border bg-card p-4 shadow-sm">
 					<Textarea
 						value={ draft }
 						onChange={ ( e ) => setDraft( e.target.value ) }
@@ -115,9 +115,9 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 			) : null }
 
 			{ error ? (
-				<p className="rounded-lg border border-border bg-card p-6 text-sm text-destructive">{ error }</p>
+				<p className="rounded-[10px] border border-border bg-card p-6 text-sm text-destructive">{ error }</p>
 			) : loading ? (
-				<div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-10 text-sm text-muted-foreground">
+				<div className="flex items-center justify-center gap-2 rounded-[10px] border border-border bg-card p-10 text-sm text-muted-foreground">
 					<Spinner className="size-4" />
 					{ __( 'Loading notes…', 'erp' ) }
 				</div>
@@ -126,14 +126,17 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 					size="compact"
 					icon={ FileText }
 					title={ __( 'No notes yet.', 'erp' ) }
-					className="rounded-lg border border-border bg-card"
+					description={ canManage
+						? __( 'Keep feedback, reminders and other remarks about this employee here. Write a note above to add the first one.', 'erp' )
+						: __( 'Feedback, reminders and other remarks about this employee show up here.', 'erp' ) }
+					className="rounded-[10px] border border-border bg-card"
 				/>
 			) : (
 				<ul className="space-y-3">
 					{ notes.map( ( note ) => (
 						<li
 							key={ note.id }
-							className="flex gap-3 rounded-lg border border-border bg-card p-4 shadow-sm"
+							className="flex gap-3 rounded-[10px] border border-border bg-card p-4 shadow-sm"
 						>
 							<Avatar className="size-9 shrink-0">
 								{ note.author_avatar_url ? (

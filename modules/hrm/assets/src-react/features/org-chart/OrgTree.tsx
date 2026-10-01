@@ -12,7 +12,7 @@ import { realChildren, type DeptName, type ServerNode } from './org-chart-format
 /** Dashed, department-labelled cluster of leaf reports. */
 function DeptGroup( { label, members }: { readonly label: string; readonly members: readonly ServerNode[] } ): JSX.Element {
 	return (
-		<div className="relative rounded-xl border-2 border-dashed border-primary/40 px-5 pb-5 pt-7">
+		<div className="relative rounded-[10px] border-2 border-dashed border-primary/40 px-5 pb-5 pt-7">
 			<span className="absolute -top-3 left-5 rounded bg-card px-2 text-sm font-semibold text-foreground">{ label }</span>
 			<ul className="flex flex-wrap justify-center gap-3">
 				{ members.map( ( m ) => (

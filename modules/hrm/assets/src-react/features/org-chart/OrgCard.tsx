@@ -15,7 +15,7 @@ import type { ServerNode } from './org-chart-format';
 /** Single employee card: avatar · name · designation, with a mail action. */
 export function OrgCard( { node }: { node: ServerNode } ): JSX.Element {
 	return (
-		<div className="group relative inline-flex w-60 items-center gap-3 rounded-xl border border-border bg-card py-2.5 pl-3 pr-8 text-left shadow-sm transition-shadow hover:shadow-md">
+		<div className="group relative inline-flex w-60 items-center gap-3 rounded-[10px] border border-border bg-card py-2.5 pl-3 pr-8 text-left shadow-sm transition-shadow hover:shadow-md">
 			<Avatar className="size-10 shrink-0">
 				{ node.avatar ? <AvatarImage src={ node.avatar } alt="" /> : null }
 				<AvatarFallback>{ makeInitials( node.name ) }</AvatarFallback>

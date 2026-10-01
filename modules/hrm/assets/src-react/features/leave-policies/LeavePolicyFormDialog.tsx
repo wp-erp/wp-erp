@@ -277,6 +277,10 @@ export function LeavePolicyFormDialog( {
 		} );
 	}
 
+	// A new policy needs a leave type and a financial year; keep submit off
+	// until both exist (the inline Add new dialogs clear this without leaving).
+	const missingPrerequisite = ! editing && Boolean( options ) && ( leaveTypeOpts.length === 0 || fYearOpts.length === 0 );
+
 	return (
 		<Dialog open={ open } onOpenChange={ dismissGuard( onClose, busy ) }>
 			<DialogContent className="max-h-[90vh] gap-4 overflow-y-auto rounded-[10px] p-6 sm:max-w-2xl">
@@ -290,9 +294,9 @@ export function LeavePolicyFormDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				{ ! editing && leaveTypeOpts.length === 0 ? (
+				{ ! editing && options && leaveTypeOpts.length === 0 ? (
 					<DependencyHint
-						message={ __( 'No leave type exists yet. Create one before adding a leave policy.', 'erp' ) }
+						message={ __( 'No leave type exists yet. A policy gives days of one leave type, so add one first: use Add new next to Leave type, or open the Leave Types page.', 'erp' ) }
 						steps={ [ { label: __( 'Create a leave type', 'erp' ), path: '/leave/types' } ] }
 						onBeforeNavigate={ onClose }
 					/>
@@ -301,7 +305,7 @@ export function LeavePolicyFormDialog( {
 				{ ! editing && options && fYearOpts.length === 0 ? (
 					canManageYears ? (
 						<DependencyHint
-							message={ __( 'No financial year exists yet. Add one before creating a leave policy.', 'erp' ) }
+							message={ __( 'No financial year exists yet. A policy counts days within one, so add it first: use Add new next to Financial year, or open the Financial Years page.', 'erp' ) }
 							steps={ [ { label: __( 'Add a financial year', 'erp' ), path: '/leave/financial-years' } ] }
 							onBeforeNavigate={ onClose }
 						/>
@@ -366,7 +370,7 @@ export function LeavePolicyFormDialog( {
 						<Button type="button" variant="outline" className="h-10 px-6" disabled={ busy } onClick={ onClose }>
 							{ __( 'Cancel', 'erp' ) }
 						</Button>
-						<Button type="submit" className="h-10 px-6" disabled={ busy }>
+						<Button type="submit" className="h-10 px-6" disabled={ busy || missingPrerequisite }>
 							{ busy
 								? __( 'Saving…', 'erp' )
 								: editing

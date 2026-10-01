@@ -118,7 +118,7 @@ export function ResignationRequests(): JSX.Element {
                     </Button>
                 </header>
             )}
-            <div className="rounded-lg border border-border bg-card shadow-sm">
+            <div className="rounded-[10px] border border-border bg-card shadow-sm">
                 {loading ? (
                     <div className="space-y-2 p-4">
                         <Skeleton className="h-6 w-full" />
@@ -129,6 +129,7 @@ export function ResignationRequests(): JSX.Element {
                         size="page"
                         icon={LogOut}
                         title={__("No resignation requests.", "erp")}
+                        description={__("When an employee plans to leave, their resignation and last working day are tracked here. Add a request to start.", "erp")}
                         action={
                             <Button
                                 variant="default"

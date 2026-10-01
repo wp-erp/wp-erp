@@ -42,13 +42,14 @@ interface SectionProps {
 	readonly title:        string;
 	readonly columns:      readonly string[];
 	readonly empty:        string;
+	readonly emptyHint?:   string;
 	readonly rowCount:     number;
 	readonly hasActions:   boolean;
 	readonly headerAction?: ReactNode;
 	readonly children:     ReactNode;
 }
 
-function Section( { title, columns, empty, rowCount, hasActions, headerAction, children }: SectionProps ): JSX.Element {
+function Section( { title, columns, empty, emptyHint, rowCount, hasActions, headerAction, children }: SectionProps ): JSX.Element {
 	return (
 		<section className="rounded-[10px] bg-card p-6 shadow-sm">
 			<div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-4">
@@ -56,9 +57,9 @@ function Section( { title, columns, empty, rowCount, hasActions, headerAction, c
 				{ headerAction }
 			</div>
 			{ rowCount === 0 ? (
-				<EmptyState size="compact" icon={ TrendingUp } title={ empty } />
+				<EmptyState size="compact" icon={ TrendingUp } title={ empty } description={ emptyHint } />
 			) : (
-				<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+				<div className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
 					<div className="overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-card">
@@ -141,12 +142,12 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 		) : null;
 
 	if ( error ) {
-		return <p className="rounded-lg border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
+		return <p className="rounded-[10px] border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
 	}
 
 	if ( loading || ! data ) {
 		return (
-			<div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-10 text-sm text-muted-foreground">
+			<div className="flex items-center justify-center gap-2 rounded-[10px] border border-border bg-card p-10 text-sm text-muted-foreground">
 				<Spinner className="size-4" />
 				{ __( 'Loading performance…', 'erp' ) }
 			</div>
@@ -167,6 +168,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 					__( 'Dependability', 'erp' ),
 				] }
 				empty={ __( 'No performance reviews found.', 'erp' ) }
+				emptyHint={ __( 'Reviews rate this person\'s work on a set date, with the reviewer and their scores.', 'erp' ) }
 				rowCount={ data.reviews.length }
 				hasActions={ canDelete }
 				headerAction={ addButton( 'reviews', __( 'Add Review', 'erp' ) ) }
@@ -189,6 +191,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 				title={ __( 'Performance Comments', 'erp' ) }
 				columns={ [ __( 'Date', 'erp' ), __( 'Reviewer', 'erp' ), __( 'Comment', 'erp' ) ] }
 				empty={ __( 'No performance comments found.', 'erp' ) }
+				emptyHint={ __( 'Comments are short written feedback from a reviewer on this person\'s work.', 'erp' ) }
 				rowCount={ data.comments.length }
 				hasActions={ canDelete }
 				headerAction={ addButton( 'comments', __( 'Add Comment', 'erp' ) ) }
@@ -214,6 +217,7 @@ export function EmployeePerformanceTab( { userId }: { readonly userId: number } 
 					__( 'Supervisor Assessment', 'erp' ),
 				] }
 				empty={ __( 'No performance goals found.', 'erp' ) }
+				emptyHint={ __( 'Goals set what this person should achieve and by when, so progress can be checked later.', 'erp' ) }
 				rowCount={ data.goals.length }
 				hasActions={ canDelete }
 				headerAction={ addButton( 'goals', __( 'Add Goal', 'erp' ) ) }

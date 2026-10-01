@@ -341,7 +341,7 @@ function AnnouncementsInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<AnnouncementsToolbar
 					status={ status }
 					onStatus={ setStatus }
@@ -390,8 +390,19 @@ function AnnouncementsInner(): JSX.Element {
 					<EmptyState
 						size="page"
 						icon={ Megaphone }
-						title={ search ? __( 'No announcements match your search.', 'erp' ) : __( 'No announcements here yet.', 'erp' ) }
-						action={ ! search && canManage && status !== 'trash' ? (
+						title={ search
+							? __( 'No announcements match your search.', 'erp' )
+							: startDate || endDate
+								? __( 'No announcements match these filters.', 'erp' )
+								: __( 'No announcements here yet.', 'erp' ) }
+						description={ search || startDate || endDate
+							? undefined
+							: 'trash' === status
+								? __( 'Announcements you move to the trash wait here until you restore or delete them for good.', 'erp' )
+								: 'draft' === status
+									? __( 'Announcements you save as a draft wait here until you publish them.', 'erp' )
+									: __( 'Share news and updates with your people. Post your first announcement to start.', 'erp' ) }
+						action={ ! search && ! startDate && ! endDate && canManage && status !== 'trash' ? (
 							<Button
 								onClick={ () => void openCreate() }
 								variant="default"

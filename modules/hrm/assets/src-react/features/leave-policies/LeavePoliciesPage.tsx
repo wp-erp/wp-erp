@@ -231,7 +231,7 @@ function LeavePoliciesInner(): JSX.Element {
 				) : null }
 			</header>
 
-			<div className="rounded-lg border border-border bg-card shadow-sm">
+			<div className="rounded-[10px] border border-border bg-card shadow-sm">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 pt-3 pb-2">
 					<div role="tablist" aria-label={ __( 'Leave Policies', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
@@ -268,7 +268,7 @@ function LeavePoliciesInner(): JSX.Element {
 						size="page"
 						icon={ CalendarDays }
 						title={ __( 'No leave policies yet.', 'erp' ) }
-						description={ __( 'A policy grants leave days for a financial year. Create a leave type first if you have none.', 'erp' ) }
+						description={ __( 'A policy gives people days of one leave type for a financial year. Add a leave type and a financial year first if you have none.', 'erp' ) }
 						action={ canManage ? (
 							<Button
 								onClick={ () => void openCreate() }

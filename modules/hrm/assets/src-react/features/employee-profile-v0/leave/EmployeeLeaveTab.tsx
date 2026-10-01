@@ -69,12 +69,12 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 	const [ showRequest, setShowRequest ] = useState( false );
 
 	if ( error ) {
-		return <p className="rounded-lg border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
+		return <p className="rounded-[10px] border border-border bg-card p-6 text-sm text-destructive">{ error }</p>;
 	}
 
 	if ( loading || ! data ) {
 		return (
-			<div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-card p-10 text-sm text-muted-foreground">
+			<div className="flex items-center justify-center gap-2 rounded-[10px] border border-border bg-card p-10 text-sm text-muted-foreground">
 				<Spinner className="size-4" />
 				{ __( 'Loading leave…', 'erp' ) }
 			</div>
@@ -99,7 +99,12 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 				</header>
 				<div className="mx-6 mb-4 h-px bg-border" />
 				{ data.summary.length === 0 ? (
-					<EmptyState size="compact" icon={ CalendarDays } title={ __( 'No leave policies assigned.', 'erp' ) } />
+					<EmptyState
+						size="compact"
+						icon={ CalendarDays }
+						title={ __( 'No leave policies assigned.', 'erp' ) }
+						description={ __( 'Leave days show up here once a leave policy is assigned to this person on the Leave Entitlements page.', 'erp' ) }
+					/>
 				) : (
 					<div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
 						{ data.summary.map( ( row, i ) => {
@@ -212,9 +217,16 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 				</div>
 				<div className="mb-4 mt-4 h-px w-full bg-border" />
 				{ data.requests.length === 0 ? (
-					<EmptyState size="compact" icon={ CalendarDays } title={ __( 'No leave requests found.', 'erp' ) } />
+					<EmptyState
+						size="compact"
+						icon={ CalendarDays }
+						title={ __( 'No leave requests found.', 'erp' ) }
+						description={ ( filters.status && 'all' !== filters.status ) || filters.policy_id
+							? __( 'Change the status or policy filter to see more requests.', 'erp' )
+							: __( 'Leave this person asks for in the selected year shows up here, with its status.', 'erp' ) }
+					/>
 				) : (
-					<div className="erp-card-in overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+					<div className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
 						<div className="overflow-x-auto">
 						<table className="w-full text-left">
 							<thead className="border-b border-border bg-card">
