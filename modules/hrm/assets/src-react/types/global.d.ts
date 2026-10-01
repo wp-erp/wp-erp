@@ -93,10 +93,6 @@ export interface BootPayload {
 	readonly filters:       BootPayloadFilters;
 	/** Active pro HR sub-modules (each self-registers via `erp_hr_v2_boot_payload`). */
 	readonly modules?:      readonly string[];
-	/** Country options (value=code, label=name) for the employee-form address selects. */
-	readonly countries?:    readonly BootSelectOption[];
-	/** States keyed by country code, for the country-dependent state select. */
-	readonly states?:       Readonly<Record<string, readonly BootSelectOption[]>>;
 }
 
 export interface RouteHandle {

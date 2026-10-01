@@ -77,6 +77,7 @@ class Manager {
 			DepartmentsController::class,
 			DesignationsController::class,
 			CompanyLocationsController::class,
+			CountriesController::class,
 			HolidaysController::class,
 			LeaveTypesController::class,
 			LeavePoliciesController::class,

@@ -294,10 +294,6 @@ final class Enqueue {
 				// offer date formats only — so times follow WordPress's.
 				'timeFormat'  => (string) get_option( 'time_format', 'g:i a' ),
 			],
-			// Country / state lookups for the employee-form address selects
-			// (parity with the legacy new-employee.php Countries dropdowns).
-			'countries'     => self::build_countries(),
-			'states'        => self::build_states(),
 			// Active pro HR sub-modules — each self-registers via the
 			// `erp_hr_v2_boot_payload` filter. Drives module-gated nav items.
 			'modules'       => [],
@@ -323,72 +319,6 @@ final class Enqueue {
 		 * @param string $page_slug Current page slug.
 		 */
 		return (array) apply_filters( 'erp_hr_v2_boot_payload', $payload, $page_slug );
-	}
-
-	/**
-	 * Country list for the employee-form selects.
-	 *
-	 * Returns `[ { value: <code>, label: <name> }, … ]`, sourced from the same
-	 * `\WeDevs\ERP\Countries` data the legacy new-employee.php form used.
-	 *
-	 * @return array
-	 */
-	private static function build_countries(): array {
-		if ( ! class_exists( '\WeDevs\ERP\Countries' ) ) {
-			return [];
-		}
-
-		$countries = \WeDevs\ERP\Countries::instance()->get_countries();
-		$options   = [];
-
-		foreach ( (array) $countries as $code => $name ) {
-			$options[] = [
-				'value' => (string) $code,
-				// The source list is HTML-encoded (`&#197;land Islands`), which the
-				// legacy PHP `<select>` got for free — the browser decoded it. React
-				// escapes text, so the entity rendered literally. Decode once here so
-				// every consumer of the boot payload gets a real string.
-				'label' => html_entity_decode( (string) $name, ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
-			];
-		}
-
-		return $options;
-	}
-
-	/**
-	 * State lookup keyed by country code, for the country-dependent state
-	 * select. Only countries that actually define states are included.
-	 *
-	 * Returns `{ <countryCode>: [ { value: <stateCode>, label: <name> }, … ] }`.
-	 *
-	 * @return array
-	 */
-	private static function build_states(): array {
-		if ( ! class_exists( '\WeDevs\ERP\Countries' ) ) {
-			return [];
-		}
-
-		$all   = \WeDevs\ERP\Countries::instance()->get_states();
-		$byCode = [];
-
-		foreach ( (array) $all as $code => $states ) {
-			if ( empty( $states ) || ! is_array( $states ) ) {
-				continue;
-			}
-
-			$options = [];
-			foreach ( $states as $state_code => $state_name ) {
-				$options[] = [
-					'value' => (string) $state_code,
-					// Same HTML-entity decoding as the country labels above.
-					'label' => html_entity_decode( (string) $state_name, ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
-				];
-			}
-
-			$byCode[ (string) $code ] = $options;
-		}
-
-		return $byCode;
 	}
 
 	/**

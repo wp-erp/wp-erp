@@ -22,17 +22,16 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@wedevs/plugin-ui';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent, JSX } from 'react';
 
-import { useBoot } from '@/shared/hooks/useBoot';
+import { useCountries, useStates } from '@/shared/hooks/useCountries';
 import { __ } from '@/shared/i18n';
 import { dismissGuard } from '@/shared/utils/dialog';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { SelectField, SmartSelectField, TextField } from '../employee-create/fields';
-import type { Option } from '../employee-create/options';
 
 /** What the endpoint returns — the shape the Location selects already speak. */
 export interface CreatedLocation {
@@ -67,8 +66,6 @@ const EMPTY: FormState = {
 };
 
 export function LocationFormDialog( { open, onClose, onCreated }: LocationFormDialogProps ): JSX.Element {
-	const boot = useBoot();
-
 	const [ form, setForm ]     = useState< FormState >( EMPTY );
 	const [ errors, setErrors ] = useState< Record< string, string > >( {} );
 	const [ busy, setBusy ]     = useState( false );
@@ -84,14 +81,8 @@ export function LocationFormDialog( { open, onClose, onCreated }: LocationFormDi
 		setBusy( false );
 	}, [ open ] );
 
-	const countryOptions = useMemo< Option[] >(
-		() => ( boot.countries ?? [] ).map( ( c ) => ( { value: c.value, label: c.label } ) ),
-		[ boot.countries ]
-	);
-	const stateOptions = useMemo< Option[] >(
-		() => ( ( boot.states ?? {} )[ form.country ] ?? [] ).map( ( s ) => ( { value: s.value, label: s.label } ) ),
-		[ boot.states, form.country ]
-	);
+	const countryOptions = useCountries();
+	const stateOptions   = useStates( form.country );
 
 	const set = ( key: keyof FormState ) => ( value: string ) => {
 		setForm( ( p ) => ( { ...p, [ key ]: value } ) );

@@ -19,7 +19,7 @@ import { Button, toast } from '@wedevs/plugin-ui';
 import { X } from 'lucide-react';
 import { useDispatch } from '@wordpress/data';
 import { applyFilters } from '@wordpress/hooks';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +32,7 @@ import type { EmployeeCreateInput } from '@/stores/employees';
 
 import { useEmployeeSearch } from '@/features/employees/hooks/useEmployeeSearch';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useCountries, useStates } from '@/shared/hooks/useCountries';
 import { useCan } from '@/shared/hooks/useCan';
 
 import { DepartmentFormDialog } from '../departments/DepartmentFormDialog';
@@ -135,26 +136,12 @@ export function EmployeeForm( {
 	);
 	const [ lookupsLoaded, setLookupsLoaded ] = useState( false );
 
-	// Country / state options for the address selects — sourced from the boot
-	// payload (parity with the legacy new-employee.php Countries dropdowns).
-	const boot = useBoot();
-	const countryOptions = useMemo< Option[] >(
-		() =>
-			( boot.countries ?? [] ).map( ( c ) => ( {
-				value: c.value,
-				label: c.label,
-			} ) ),
-		[ boot.countries ]
-	);
-	// State options depend on the selected country; empty when the country has
-	// no states defined (the field then stays an empty/disabled select).
-	const stateOptions = useMemo< Option[] >(
-		() =>
-			( ( boot.states ?? {} )[ form.country ?? '' ] ?? [] ).map(
-				( s ) => ( { value: s.value, label: s.label } )
-			),
-		[ boot.states, form.country ]
-	);
+	// Country / state options for the address selects, fetched from erp/v2 when
+	// the form opens. States follow the selected country and stay empty when it
+	// defines none.
+	const boot           = useBoot();
+	const countryOptions = useCountries();
+	const stateOptions   = useStates( form.country ?? '' );
 
 	// Inline "+ Add new" for the two required org dependencies — open the same
 	// dialogs the Departments / Designations screens use, then merge the new
