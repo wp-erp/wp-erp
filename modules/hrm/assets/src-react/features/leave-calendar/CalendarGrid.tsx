@@ -47,7 +47,7 @@ export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
 			</Avatar>
 			<span className="min-w-0 truncate">{ label }</span>
 			{ isPending ? (
-				<span className="ml-auto shrink-0 rounded-full bg-amber-100 px-1.5 py-px text-[9px] font-semibold uppercase leading-tight text-amber-700 dark:bg-amber-500/25 dark:text-amber-300">
+				<span className="ml-auto shrink-0 rounded-full bg-warning-light px-1.5 py-px text-[9px] font-semibold uppercase leading-tight text-warning-on-light">
 					{ __( 'Pending', 'erp' ) }
 				</span>
 			) : null }

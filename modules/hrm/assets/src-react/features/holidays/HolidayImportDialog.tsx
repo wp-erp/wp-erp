@@ -29,7 +29,7 @@ import { useState } from 'react';
 import type { JSX } from 'react';
 
 import { PlainLabel } from '@/shared/components/FieldLabels';
-import { PlainButton } from '@/shared/components/PlainButton';
+import { LinkButton } from '@/shared/components/LinkButton';
 import { __, _n, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
@@ -241,13 +241,13 @@ export function HolidayImportDialog( {
 				) }
 
 				{ ! parsed ? (
-					<PlainButton
-						className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-primary hover:underline"
+					<LinkButton
+						className="inline-flex items-center gap-1.5 self-start text-sm"
 						onClick={ downloadSampleCsv }
 					>
 						<Download size={ 14 } aria-hidden="true" />
 						{ __( 'Download a sample CSV', 'erp' ) }
-					</PlainButton>
+					</LinkButton>
 				) : null }
 
 				{ notice && rows.length > 0 ? (
