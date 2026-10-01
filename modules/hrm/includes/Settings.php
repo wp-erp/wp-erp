@@ -28,6 +28,23 @@ class Settings extends Template {
     }
 
     /**
+     * Effective value of the "HR Admin Interface" setting when it was never saved.
+     *
+     * A site that never saved it has no option row, and the settings screen
+     * shows a select with no value as "Please select". Report the effective
+     * value instead, so the field reads "Let each user choose".
+     *
+     * @since 1.18.0
+     *
+     * @param mixed $default Default passed to get_option().
+     *
+     * @return string
+     */
+    public static function default_ui_engine( $default ) {
+        return ( false === $default || '' === $default ) ? 'auto' : $default;
+    }
+
+    /**
      * Get registered tabs
      *
      * @return array
