@@ -1,5 +1,5 @@
 /**
- * Termination-details card for the Employee Profile v4 overview.
+ * Termination-details card for the employee profile overview.
  *
  * Rendered only for terminated employees (self / managers). Mirrors the legacy
  * `tab-general.php` "Termination" postbox: Termination Date, Type, Reason and

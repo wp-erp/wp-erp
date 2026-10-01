@@ -46,7 +46,7 @@ import type { LookupOption } from '../employees/filters/lookups';
 import { EmployeeBasicSection } from './EmployeeBasicSection';
 import { EmployeeFormAlerts } from './EmployeeFormAlerts';
 import { PhotoUpload } from './PhotoUpload';
-import { AvatarUpload } from '../employee-profile-v0/AvatarUpload';
+import { AvatarUpload } from '../employee-profile/AvatarUpload';
 import { EmployeeNotificationSection } from './EmployeeNotificationSection';
 import { EmployeePersonalSection } from './EmployeePersonalSection';
 import { EmployeeWorkSection } from './EmployeeWorkSection';

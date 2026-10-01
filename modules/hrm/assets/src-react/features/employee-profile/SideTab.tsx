@@ -1,5 +1,5 @@
 /**
- * Left-sidebar nav button for the Employee Profile v4 layout. The active row is
+ * Left-sidebar nav button for the employee profile. The active row is
  * a solid primary (blue) pill. `TabDef` is the shared shape the page builds its
  * nav list from.
  */

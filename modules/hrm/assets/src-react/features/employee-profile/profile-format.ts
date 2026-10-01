@@ -1,5 +1,5 @@
 /**
- * Pure presentation helpers shared across the Employee Profile v4 chrome
+ * Pure presentation helpers shared across the employee profile chrome
  * (header card, overview cards, sidebar). No component state — plain functions
  * and the two record/icon types the pieces pass around.
  */

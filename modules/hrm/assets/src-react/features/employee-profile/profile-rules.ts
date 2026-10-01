@@ -5,9 +5,6 @@
  * enforce the same rules with the same wording, so the server never trusts
  * this check; it only saves a round trip.
  *
- * Kept identical in every profile copy (employee-profile, -v0, -v2, -v3 and
- * employee-create). Change them together.
- *
  * On an edit the dialog passes the values it opened with: a value rule then
  * runs only when one of the fields it reads was changed, so a record saved
  * before the rule existed stays editable (required fields are always

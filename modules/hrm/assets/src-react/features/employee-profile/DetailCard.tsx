@@ -1,5 +1,5 @@
 /**
- * Overview card primitives for the Employee Profile v4 layout: a titled card
+ * Overview card primitives for the employee profile: a titled card
  * (`DetailCard`) holding a responsive grid of label/value rows (`Item`).
  * Presentational only.
  */

@@ -1,21 +1,13 @@
 /**
- * Modern employee profile view (`#/employees/{id}/profile`).
+ * Employee profile view (`#/employees/{id}`).
  *
- * Alternative, redesigned layout for the single-employee detail screen:
- *   - a large, prominent avatar header (no gradient — flat card, clean rings)
- *   - a left vertical sidebar for tab navigation instead of top segmented pills
- *
- * Pulls the same record from `GET /erp/v2/employees/{id}` and reuses every tab
- * body component from the Employee Create feature (Job, Leave, Notes,
- * Performance, Permission, General sections, Overview stats) so behaviour stays
- * 1:1 with the original `EmployeeSinglePage`. Only the chrome differs.
- *
- * The original `EmployeeSinglePage` is left untouched; this is a parallel page
- * wired at its own route.
+ * Header card with the avatar, a left sidebar for tab navigation and the tab
+ * body. Pulls the record from `GET /erp/v2/employees/{id}`.
  *
  * Chrome pieces live alongside: `ProfileHeader` (header card), `SideTab`
  * (sidebar nav), `OverviewTab` (overview body), `DetailCard`/`Item` (cards),
- * `profile-format` (pure helpers).
+ * `profile-format` (pure helpers). My Profile renders the same body through
+ * `EmployeeProfileInner`.
  */
 
 import { Skeleton, toast } from '@wedevs/plugin-ui';
@@ -62,7 +54,7 @@ interface SingleDispatch {
 	invalidate:           () => void;
 }
 
-export function EmployeeProfileV0Inner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
+export function EmployeeProfileInner( { userId, headerActions }: { userId: number; headerActions?: ReactNode } ): JSX.Element {
 	const navigate     = useNavigate();
 	const canEditCap   = useCan( 'erp_edit_employee' );
 	const canViewNotesCap = useCan( 'erp_manage_review' );
@@ -306,14 +298,14 @@ export function EmployeeProfileV0Inner( { userId, headerActions }: { userId: num
 	);
 }
 
-export function EmployeeProfileV0Page(): JSX.Element {
+export function EmployeeProfilePage(): JSX.Element {
 	const { id } = useParams< { id: string } >();
 	const userId = Number( id );
 
 	return (
 		<ErrorBoundary>
 			{ Number.isFinite( userId ) && userId > 0 ? (
-				<EmployeeProfileV0Inner userId={ userId } />
+				<EmployeeProfileInner userId={ userId } />
 			) : (
 				<div className="mx-auto my-12 max-w-md text-center text-sm text-muted-foreground">
 					{ __( 'Invalid employee.', 'erp' ) }

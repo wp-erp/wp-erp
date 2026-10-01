@@ -1,5 +1,5 @@
 /**
- * Header card for the Employee Profile v4 layout: compact avatar-left, name +
+ * Header card for the employee profile: compact avatar-left, name +
  * status badge, an Edit action, and a summary info row of key facts. Avatar is
  * editable in place (for self / managers) via `AvatarUpload`.
  */

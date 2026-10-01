@@ -1,5 +1,5 @@
 /**
- * Overview tab body for the Employee Profile v4 layout: stats strip, pro extra
+ * Overview tab body for the employee profile: stats strip, pro extra
  * fields, and the Employment / Contact / Personal / Address / Biography detail
  * cards. Sensitive cards (pay, personal, address, biography) render only for
  * self / managers (`canEdit`), matching legacy tab-general.php / tab-job.php.

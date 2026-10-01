@@ -33,8 +33,8 @@ const EmployeeEditPage = lazy( () =>
 
 // The employee profile page (`/employees/:id`): header card + left nav, shown
 // in the row menu as "View profile".
-const EmployeeProfileV0Page = lazy( () =>
-	import( '@/features/employee-profile-v0' ).then( ( m ) => ( { default: m.EmployeeProfileV0Page } ) )
+const EmployeeProfilePage = lazy( () =>
+	import( '@/features/employee-profile' ).then( ( m ) => ( { default: m.EmployeeProfilePage } ) )
 );
 
 const DepartmentsPage = lazy( () =>
@@ -191,7 +191,7 @@ const baseRoutes: AppRoute[] = [
 		id:           'employee-single',
 		path:         '/employees/:id',
 		// The employee profile page, shown in the row menu as "View profile".
-		element:      EmployeeProfileV0Page,
+		element:      EmployeeProfilePage,
 		// Legacy parity: viewing a profile needs only the People-list cap (the menu
 		// gate); `erp_view_employee` is a meta cap that would block non-managers.
 		capabilities: [ 'erp_list_employee' ],
