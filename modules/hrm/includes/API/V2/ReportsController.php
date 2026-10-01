@@ -701,7 +701,9 @@ class ReportsController extends RestController {
 		if ( $per_page < 1 ) {
 			$per_page = 20;
 		}
-		$offset = ( $page - 1 ) * $per_page;
+		// Each row runs several queries, so cap the page like the other v2 lists.
+		$per_page = min( 100, $per_page );
+		$offset   = ( $page - 1 ) * $per_page;
 
 		$selected_designation = $request['filter_designation'] !== null ? (int) $request['filter_designation'] : 0;
 		$selected_department  = $request['filter_department'] !== null ? (int) $request['filter_department'] : 0;

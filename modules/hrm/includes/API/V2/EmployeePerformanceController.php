@@ -117,13 +117,15 @@ class EmployeePerformanceController extends RestController {
 
 	/**
 	 * Whether the current user is the department lead of the given employee.
+	 * A lead never counts as their own lead, so they cannot write or delete
+	 * reviews about themselves.
 	 *
 	 * @param int $user_id Target employee user id.
 	 *
 	 * @return bool
 	 */
 	protected function is_department_lead( int $user_id ): bool {
-		if ( ! $user_id || ! function_exists( 'erp_hr_get_department_lead_by_user' ) ) {
+		if ( ! $user_id || get_current_user_id() === $user_id || ! function_exists( 'erp_hr_get_department_lead_by_user' ) ) {
 			return false;
 		}
 

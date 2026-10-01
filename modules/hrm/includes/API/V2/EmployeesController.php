@@ -847,6 +847,15 @@ class EmployeesController extends RestController {
 
 		$data = $this->get_edit_data( $employee );
 
+		// Same rule as the list: who was terminated, resigned or trashed is for
+		// HR only, so a peer asking for such a record by id gets a 404.
+		$is_trashed = $has_hr_record && ! empty( $employee->get_erp_user()->deleted_at );
+		if ( get_current_user_id() !== $user_id
+			&& ! current_user_can( 'erp_view_employee' )
+			&& ( $is_trashed || 'active' !== ( $data['status'] ?? '' ) ) ) {
+			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
 		// Resolved display names for the read-only detail view (the edit form
 		// ignores these — it only reads the *_id / scalar keys).
 		$reporting               = $this->embed_reporting_to( $this->cast_int_or_null( $employee->get_reporting_to() ) );
@@ -858,8 +867,8 @@ class EmployeesController extends RestController {
 		// Field-level privacy (mirrors legacy tab-general.php:26 / tab-job.php:126,
 		// and the v4 client guards): pay + personal + address + bio are visible
 		// only to the employee themselves or an HR manager (erp_edit_employee).
-		// Defense-in-depth — the route 403 already blocks peers, this stays correct
-		// if that gate is ever loosened (e.g. a peer-directory mode).
+		// Peers do reach this route (it is gated on `erp_list_employee`, like the
+		// legacy peer view), so this stripping is what keeps those fields private.
 		$can_see_private = get_current_user_id() === $user_id
 			|| current_user_can( 'erp_edit_employee', $user_id );
 		if ( ! $can_see_private ) {
@@ -873,6 +882,8 @@ class EmployeesController extends RestController {
 				// work e-mail only, so the phone numbers and secondary addresses
 				// must not travel to a peer either.
 				'work_phone', 'phone', 'mobile', 'other_email', 'user_url',
+				// How someone was hired and when they leave are HR records too.
+				'hiring_source', 'end_date',
 			];
 			foreach ( $private_fields as $field ) {
 				if ( array_key_exists( $field, $data ) ) {

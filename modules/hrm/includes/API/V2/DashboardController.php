@@ -99,8 +99,22 @@ class DashboardController extends RestController {
 	public function birthday_wish( WP_REST_Request $request ) {
 		$employee_user_id = (int) $request['employee_user_id'];
 
-		if ( ! $employee_user_id ) {
+		// Only an active employee with an HR record can be wished; any other
+		// user id (an administrator, a customer) gets no mail.
+		$employee = $employee_user_id ? new \WeDevs\ERP\HRM\Employee( $employee_user_id ) : null;
+		if ( ! $employee
+			|| ! $employee->get_erp_user()
+			|| 'active' !== $employee->get_status() ) {
 			return new \WP_Error( 'rest_invalid_employee', __( 'Invalid employee.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		// One wish per recipient per wisher per year, recorded on the wisher, so
+		// a repeated request does not send the mail again.
+		$key  = $this->birthday_wish_meta_key();
+		$sent = array_map( 'intval', (array) get_user_meta( get_current_user_id(), $key, true ) );
+
+		if ( in_array( $employee_user_id, $sent, true ) ) {
+			return rest_ensure_response( [ 'sent' => true, 'employee_user_id' => $employee_user_id ] );
 		}
 
 		$emailer = wperp()->emailer->get_email( 'BirthdayWish' );
@@ -109,15 +123,8 @@ class DashboardController extends RestController {
 			$emailer->trigger( $employee_user_id );
 		}
 
-		// Persist the "sent" state so the Wish button stays disabled after a
-		// refresh (this calendar year). Stored on the wisher, per recipient.
-		$key  = $this->birthday_wish_meta_key();
-		$sent = array_map( 'intval', (array) get_user_meta( get_current_user_id(), $key, true ) );
-
-		if ( ! in_array( $employee_user_id, $sent, true ) ) {
-			$sent[] = $employee_user_id;
-			update_user_meta( get_current_user_id(), $key, $sent );
-		}
+		$sent[] = $employee_user_id;
+		update_user_meta( get_current_user_id(), $key, $sent );
 
 		return rest_ensure_response( [ 'sent' => true, 'employee_user_id' => $employee_user_id ] );
 	}

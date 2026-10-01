@@ -216,6 +216,14 @@ class EmployeeNotesController extends RestController {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
+		// A line manager holds `erp_manage_review` on their reports, but may only
+		// remove the notes they wrote themselves; HR may remove any note.
+		$note = \WeDevs\ERP\HRM\Models\Employee_Note::where( 'user_id', $user_id )->find( $note_id );
+
+		if ( $note && (int) $note->comment_by !== get_current_user_id() && ! current_user_can( erp_hr_get_manager_role() ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You can only delete notes you wrote.', 'erp' ), [ 'status' => 403 ] );
+		}
+
 		$result = $employee->delete_note( $note_id );
 
 		if ( is_wp_error( $result ) ) {

@@ -584,14 +584,31 @@ class HolidaysController extends RestController {
 		$failed   = [];
 
 		foreach ( array_values( $rows ) as $index => $row ) {
-			$id = erp_hr_leave_insert_holiday(
-				[
-					'title'       => isset( $row['title'] ) ? sanitize_text_field( $row['title'] ) : '',
-					'start'       => isset( $row['start'] ) ? sanitize_text_field( $row['start'] ) : '',
-					'end'         => isset( $row['end'] ) ? sanitize_text_field( $row['end'] ) : '',
-					'description' => isset( $row['description'] ) ? sanitize_text_field( $row['description'] ) : '',
-				]
-			);
+			if ( ! \is_array( $row ) ) {
+				$failed[] = (int) $index + 1;
+				continue;
+			}
+
+			$data = [
+				'title'       => isset( $row['title'] ) ? sanitize_text_field( $row['title'] ) : '',
+				'start'       => isset( $row['start'] ) ? sanitize_text_field( $row['start'] ) : '',
+				'end'         => isset( $row['end'] ) ? sanitize_text_field( $row['end'] ) : '',
+				'description' => isset( $row['description'] ) ? sanitize_text_field( $row['description'] ) : '',
+			];
+
+			// A one-day row may leave the end blank; it ends on its start day.
+			if ( '' === $data['end'] ) {
+				$data['end'] = $data['start'];
+			}
+
+			// Same date checks as create and update: a real start date, and an
+			// end on or after it.
+			if ( '' === $data['start'] || null !== $this->validate_dates( $data ) ) {
+				$failed[] = (int) $index + 1;
+				continue;
+			}
+
+			$id = erp_hr_leave_insert_holiday( $data );
 
 			if ( is_wp_error( $id ) ) {
 				$failed[] = (int) $index + 1;
