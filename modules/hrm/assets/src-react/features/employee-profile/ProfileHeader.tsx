@@ -1,8 +1,9 @@
 /**
- * Header card for the employee profile: avatar, then the name (with an inline
- * edit icon), designation, email, status and the Leave / Notes quick actions
- * stacked down one column, the page actions on the right, and a facts strip
- * under a divider (employee ID, department, date of hire, type). Avatar is
+ * Header card for the employee profile: avatar, then the name, designation,
+ * email, status and the Leave / Notes quick actions stacked down one column
+ * (the avatar sits on top on phones), the page actions on the right, and a
+ * facts strip under a divider (employee ID, department, date of hire, type,
+ * phones). Avatar is
  * editable in place (for self / managers) via `AvatarUpload`. On the
  * employee's birthday a cake pill and a confetti burst join the name.
  */
@@ -89,7 +90,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 
 	return (
 		<section className="rounded-[10px] border border-border bg-card p-6 shadow-sm">
-			<div className="flex flex-wrap items-start gap-5">
+			<div className="flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-start">
 				{ canEdit ? (
 					<AvatarUpload
 						userId={ userId }
@@ -107,24 +108,11 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 					</Avatar>
 				) }
 
-				<div className="flex min-w-0 flex-1 flex-col gap-2">
+				<div className="flex min-w-0 flex-1 flex-col gap-1.5">
 					<div className="flex flex-wrap items-center gap-2">
 						<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
-						{ canEdit ? (
-							<Button
-								type="button"
-								variant="ghost"
-								size="icon"
-								onClick={ onEdit }
-								className="size-7 rounded-full"
-								aria-label={ __( 'Edit employee', 'erp' ) }
-								title={ __( 'Edit employee', 'erp' ) }
-							>
-								<Pencil size={ 16 } aria-hidden="true" />
-							</Button>
-						) : null }
 						<BirthdayBadge
 							userId={ userId }
 							firstName={ str( record, 'first_name' ) }
@@ -133,7 +121,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 						/>
 					</div>
 					{ designation ? (
-						<p className="m-0 mb-4 text-sm font-semibold text-foreground">
+						<p className="m-0 text-sm font-semibold text-foreground">
 							{ designationId ? (
 								<Link to={ `/employees?designation_id=${ designationId }` } className="text-foreground hover:text-primary hover:underline">
 									{ designation }
@@ -141,7 +129,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 							) : designation }
 						</p>
 					) : null }
-					{ email ? <p className="m-0 mb-4 truncate text-sm text-muted-foreground">{ email }</p> : null }
+					{ email ? <p className="m-0 truncate text-sm text-muted-foreground">{ email }</p> : null }
 					{ status ? (
 						<div className="mt-1">
 							<Link to={ `/employees?status=${ status }` } className="inline-flex rounded-md hover:opacity-80" title={ __( 'Show employees with this status', 'erp' ) }>

@@ -8,6 +8,7 @@ import { Button } from '@wedevs/plugin-ui';
 import {
 	Banknote,
 	Briefcase,
+	Cake,
 	CalendarCheck,
 	Gift,
 	Package,
@@ -19,6 +20,8 @@ import { Link } from 'react-router-dom';
 
 import { StatusPill, type StatusTone } from '@/shared/components/StatusPill';
 import { __ } from '@/shared/i18n';
+
+import { BIRTHDAY_PILL_CLASS } from '../employee-profile/BirthdayConfetti';
 
 import { EmptyRow, PersonAvatar, WidgetCard } from './DashboardCards';
 import { fmtDate, fmtDayMonth } from './format';
@@ -106,11 +109,16 @@ export function BirthdayItem( {
 					</p>
 				) : null }
 			</div>
-			<span className="shrink-0 text-xs text-muted-foreground">
-				{ today
-					? __( 'Today 🎉', 'erp' )
-					: fmtDayMonth( person.date_of_birth ) }
-			</span>
+			{ today ? (
+				<span className={ `${ BIRTHDAY_PILL_CLASS } shrink-0` }>
+					<Cake size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
+					{ __( 'Today', 'erp' ) }
+				</span>
+			) : (
+				<span className="shrink-0 text-xs text-muted-foreground">
+					{ fmtDayMonth( person.date_of_birth ) }
+				</span>
+			) }
 			{ canWish ? (
 				<Button
 					variant="ghost"

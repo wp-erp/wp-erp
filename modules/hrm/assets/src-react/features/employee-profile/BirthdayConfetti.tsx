@@ -18,6 +18,9 @@ import { createPortal } from 'react-dom';
 import { __, sprintf } from '@/shared/i18n';
 import { siteToday } from '@/shared/utils/date';
 
+/** The pink cake pill, shared with the dashboard's "Birthdays" card. */
+export const BIRTHDAY_PILL_CLASS = 'inline-flex items-center gap-1.5 rounded-full border-0 bg-pink-50 px-3 py-1 text-xs font-semibold text-pink-700 dark:bg-pink-500/15 dark:text-pink-300';
+
 const COLORS = [ '#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6' ];
 
 /**
@@ -171,7 +174,7 @@ export function BirthdayBadge( { userId, firstName, dateOfBirth, status }: Birth
 						setBurst( ( n ) => n + 1 );
 					}
 				} }
-				className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border-0 bg-pink-50 px-3 py-1 text-xs font-semibold text-pink-700 hover:bg-pink-100 dark:bg-pink-500/15 dark:text-pink-300"
+				className={ `${ BIRTHDAY_PILL_CLASS } cursor-pointer hover:bg-pink-100` }
 				title={ __( 'Celebrate again', 'erp' ) }
 			>
 				<Cake size={ 14 } strokeWidth={ 2 } aria-hidden="true" />
