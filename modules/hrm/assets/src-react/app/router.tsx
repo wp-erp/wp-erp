@@ -31,40 +31,10 @@ const EmployeeEditPage = lazy( () =>
 	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeEditPage } ) )
 );
 
-// [NEW-PROFILE] Modern profile page. Self-contained — to remove it, delete the
-// `features/employee-profile/` folder and every block tagged `[NEW-PROFILE]`
-// (this lazy import, the route entry below, and the "New design" button in
-// EmployeeSinglePage.tsx). Nothing else depends on it.
-const EmployeeProfilePage = lazy( () =>
-	import( '@/features/employee-profile' ).then( ( m ) => ( { default: m.EmployeeProfilePage } ) )
-);
-
-// [NEW-PROFILE-V2] Profile-card + dark-pill-tabs layout. Self-contained — to
-// remove it, delete the `features/employee-profile-v2/` folder and every block
-// tagged `[NEW-PROFILE-V2]` (this lazy import, the route entry below, and the
-// "New design v2" button in EmployeeSinglePage.tsx). Nothing else depends on it.
-const EmployeeProfileV2Page = lazy( () =>
-	import( '@/features/employee-profile-v2' ).then( ( m ) => ( { default: m.EmployeeProfileV2Page } ) )
-);
-
-// [NEW-PROFILE-V3] Big-square-portrait + dashboard-card layout. Self-contained —
-// to remove it, delete the `features/employee-profile-v3/` folder and every
-// block tagged `[NEW-PROFILE-V3]` (this lazy import, the route entry below, and
-// the "New design v3" button in EmployeeSinglePage.tsx). Nothing depends on it.
-const EmployeeProfileV3Page = lazy( () =>
-	import( '@/features/employee-profile-v3' ).then( ( m ) => ( { default: m.EmployeeProfileV3Page } ) )
-);
-
-// v0 — the sidebar design (header card + left nav) is the main employee profile
-// page (`/employees/:id`), shown in the menu as "View profile".
+// The employee profile page (`/employees/:id`): header card + left nav, shown
+// in the row menu as "View profile".
 const EmployeeProfileV0Page = lazy( () =>
 	import( '@/features/employee-profile-v0' ).then( ( m ) => ( { default: m.EmployeeProfileV0Page } ) )
-);
-
-// v4 — the candidate-card design (kept in `employee-create`), shown in the menu
-// as "View profile v4" at `/employees/:id/profile-v4`.
-const EmployeeProfileV4Page = lazy( () =>
-	import( '@/features/employee-create' ).then( ( m ) => ( { default: m.EmployeeProfileV4Page } ) )
 );
 
 const DepartmentsPage = lazy( () =>
@@ -220,69 +190,13 @@ const baseRoutes: AppRoute[] = [
 	{
 		id:           'employee-single',
 		path:         '/employees/:id',
-		// The main employee page = `EmployeeProfileV0Page` (the sidebar/modern design,
-		// shown in the menu as "View profile"). This is the canonical main view.
+		// The employee profile page, shown in the row menu as "View profile".
 		element:      EmployeeProfileV0Page,
 		// Legacy parity: viewing a profile needs only the People-list cap (the menu
 		// gate); `erp_view_employee` is a meta cap that would block non-managers.
 		capabilities: [ 'erp_list_employee' ],
 		handle: {
 			id:        'employee-single',
-			title:     __( 'Employee', 'erp' ),
-			group:     'people',
-			showInNav: false,
-		},
-	},
-	{
-		// [NEW-PROFILE] Route for the modern profile page (see note at the lazy import).
-		id:           'employee-profile',
-		path:         '/employees/:id/profile',
-		// Same gate as the classic single page — view access is the People-list cap.
-		capabilities: [ 'erp_list_employee' ],
-		element:      EmployeeProfilePage,
-		handle: {
-			id:        'employee-profile',
-			title:     __( 'Employee', 'erp' ),
-			group:     'people',
-			showInNav: false,
-		},
-	},
-	{
-		// [NEW-PROFILE-V2] Route for the profile-card layout (see note at the lazy import).
-		id:           'employee-profile-v2',
-		path:         '/employees/:id/profile-v2',
-		capabilities: [ 'erp_list_employee' ],
-		element:      EmployeeProfileV2Page,
-		handle: {
-			id:        'employee-profile-v2',
-			title:     __( 'Employee', 'erp' ),
-			group:     'people',
-			showInNav: false,
-		},
-	},
-	{
-		// [NEW-PROFILE-V3] Route for the big-square-portrait layout (see note at the lazy import).
-		id:           'employee-profile-v3',
-		path:         '/employees/:id/profile-v3',
-		capabilities: [ 'erp_list_employee' ],
-		element:      EmployeeProfileV3Page,
-		handle: {
-			id:        'employee-profile-v3',
-			title:     __( 'Employee', 'erp' ),
-			group:     'people',
-			showInNav: false,
-		},
-	},
-	{
-		// [NEW-PROFILE-V4] "View profile v4" — the candidate-card design
-		// (`EmployeeProfileV4Page` in employee-create). The canonical
-		// `/employees/:id` above renders the v0 sidebar design.
-		id:           'employee-profile-v4',
-		path:         '/employees/:id/profile-v4',
-		capabilities: [ 'erp_list_employee' ],
-		element:      EmployeeProfileV4Page,
-		handle: {
-			id:        'employee-profile-v4',
 			title:     __( 'Employee', 'erp' ),
 			group:     'people',
 			showInNav: false,

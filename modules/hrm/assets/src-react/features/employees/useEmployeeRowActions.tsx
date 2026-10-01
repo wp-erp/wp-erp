@@ -89,49 +89,6 @@ export function useEmployeeRowActions(
 				// single.php having no manager-only entry gate.
 				capability: 'erp_list_employee',
 			},
-			// Temporary design-preview entries — view each profile layout variant.
-			// Remove these (and the unused profile routes/folders) once a final
-			// design is chosen.
-			{
-				id:       'view-v1',
-				label:    __( 'View profile v1', 'erp' ),
-				priority: 11,
-				icon:     'Eye',
-				onSelect: ( emp: EmployeeListItem ) => {
-					navigate( `/employees/${ emp.user_id }/profile`, { viewTransition: true } );
-				},
-				capability: 'erp_view_employee',
-			},
-			{
-				id:       'view-v2',
-				label:    __( 'View profile v2', 'erp' ),
-				priority: 12,
-				icon:     'Eye',
-				onSelect: ( emp: EmployeeListItem ) => {
-					navigate( `/employees/${ emp.user_id }/profile-v2`, { viewTransition: true } );
-				},
-				capability: 'erp_view_employee',
-			},
-			{
-				id:       'view-v3',
-				label:    __( 'View profile v3', 'erp' ),
-				priority: 13,
-				icon:     'Eye',
-				onSelect: ( emp: EmployeeListItem ) => {
-					navigate( `/employees/${ emp.user_id }/profile-v3`, { viewTransition: true } );
-				},
-				capability: 'erp_view_employee',
-			},
-			{
-				id:       'view-v4',
-				label:    __( 'View profile v4', 'erp' ),
-				priority: 14,
-				icon:     'Eye',
-				onSelect: ( emp: EmployeeListItem ) => {
-					navigate( `/employees/${ emp.user_id }/profile-v4`, { viewTransition: true } );
-				},
-				capability: 'erp_view_employee',
-			},
 			{
 				id:       'edit',
 				label:    __( 'Edit', 'erp' ),

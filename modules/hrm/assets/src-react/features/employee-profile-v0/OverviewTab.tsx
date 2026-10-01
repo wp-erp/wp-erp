@@ -47,7 +47,7 @@ import {
 	SOURCE_OPTIONS,
 	STATUS_OPTIONS,
 	TYPE_OPTIONS,
-} from '../employee-profile/options';
+} from './options';
 import { DetailCard, Item } from './DetailCard';
 import { EmployeeGeneralSections } from './general/EmployeeGeneralSections';
 import { OverviewStats } from './general/OverviewStats';

@@ -14,7 +14,7 @@ import { StatusPill } from '@/shared/components/StatusPill';
 import { employeeStatusTone } from '@/shared/components/status-tones';
 import { __ } from '@/shared/i18n';
 
-import { AvatarUpload } from '../employee-profile-v3/AvatarUpload';
+import { AvatarUpload } from '../employee-profile-v0/AvatarUpload';
 import { STATUS_OPTIONS, TYPE_OPTIONS } from '../employee-profile-v0/options';
 import { initials, labelOf, str, type Record_ } from './single-format';
 

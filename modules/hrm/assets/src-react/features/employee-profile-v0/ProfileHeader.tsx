@@ -15,8 +15,8 @@ import { employeeStatusTone } from '@/shared/components/status-tones';
 import { __ } from '@/shared/i18n';
 import type { LucideIcon } from './profile-format';
 
-import { AvatarUpload } from '../employee-profile/AvatarUpload';
-import { STATUS_OPTIONS } from '../employee-profile/options';
+import { AvatarUpload } from './AvatarUpload';
+import { STATUS_OPTIONS } from './options';
 import { initials, labelOf, str, type Record_ } from './profile-format';
 
 interface ProfileHeaderProps {

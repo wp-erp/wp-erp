@@ -34,9 +34,21 @@ interface AvatarUploadProps {
 	readonly fullName:  string;
 	readonly initials:  string;
 	readonly onChange:  ( avatarUrl: string ) => void;
+	/** Tailwind size utility for the avatar box. Defaults to the 90px header size. */
+	readonly sizeClass?:     string;
+	/** Tailwind text utility for the fallback initials. Defaults to `text-xl`. */
+	readonly fallbackClass?: string;
 }
 
-export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange }: AvatarUploadProps ): JSX.Element {
+export function AvatarUpload( {
+	userId,
+	avatarUrl,
+	fullName,
+	initials,
+	onChange,
+	sizeClass = 'size-[90px]',
+	fallbackClass = 'text-xl',
+}: AvatarUploadProps ): JSX.Element {
 	const inputRef = useRef< HTMLInputElement >( null );
 	const [ busy, setBusy ] = useState( false );
 	const [ confirmOpen, setConfirmOpen ] = useState( false );
@@ -85,10 +97,10 @@ export function AvatarUpload( { userId, avatarUrl, fullName, initials, onChange 
 	}
 
 	return (
-		<div className="group relative size-[90px] shrink-0">
-			<Avatar className="size-[90px]">
+		<div className={ `group relative shrink-0 ${ sizeClass }` }>
+			<Avatar className={ sizeClass }>
 				{ avatarUrl ? <AvatarImage src={ avatarUrl } alt={ fullName } /> : null }
-				<AvatarFallback className="text-xl">{ initials }</AvatarFallback>
+				<AvatarFallback className={ fallbackClass }>{ initials }</AvatarFallback>
 			</Avatar>
 
 			<input
