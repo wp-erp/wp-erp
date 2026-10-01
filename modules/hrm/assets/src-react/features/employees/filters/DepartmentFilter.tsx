@@ -1,5 +1,5 @@
 /**
- * Department lookup filter — sources options from /erp/v1/hrm/departments.
+ * Department lookup filter: sources options from /erp/v2/departments.
  * Will swap to `erp-hr/departments` store when that ships.
  */
 

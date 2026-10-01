@@ -1,6 +1,6 @@
 /**
- * Location lookup filter — sources options from
- * /erp/v1/hrm/company/company-locations.
+ * Location lookup filter: sources options from
+ * /erp/v2/company-locations.
  */
 
 import type { JSX } from 'react';

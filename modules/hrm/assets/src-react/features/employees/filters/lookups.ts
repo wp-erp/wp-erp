@@ -1,8 +1,8 @@
 /**
  * Lightweight shared lookup cache for Department / Designation / Location
  * dropdowns in the filters row. Cached at module scope — same lookup is
- * reused across renders + tabs. Pull from v1 endpoints (existing) until the
- * v2 stores ship.
+ * reused across renders + tabs. Reads the erp/v2 lookups like the rest of
+ * the React admin.
  */
 
 import { request } from '@/shared/utils/apiFetch';
@@ -25,9 +25,9 @@ interface RawListItem {
 }
 
 const ENDPOINTS: Record< LookupKey, string > = {
-	departments:  '/erp/v1/hrm/departments?per_page=100',
-	designations: '/erp/v1/hrm/designations?per_page=100',
-	locations:    '/erp/v1/hrm/company/company-locations?per_page=100',
+	departments:  '/erp/v2/departments?per_page=100',
+	designations: '/erp/v2/designations?per_page=100',
+	locations:    '/erp/v2/company-locations?per_page=100',
 };
 
 const cache: Partial< Record< LookupKey, LookupOption[] > > = {};

@@ -1,5 +1,5 @@
 /**
- * Designation lookup filter — sources options from /erp/v1/hrm/designations.
+ * Designation lookup filter: sources options from /erp/v2/designations.
  */
 
 import type { JSX } from 'react';
