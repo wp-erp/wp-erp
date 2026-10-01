@@ -50,6 +50,9 @@ export function PhotoUpload( { avatarUrl, fullName, initials, onChange, compact 
 				path:   '/wp/v2/media',
 				method: 'POST',
 				body:   form,
+				// Opts this core media upload into the legacy 2 MB server cap
+				// (`erp_enforce_react_upload_size()`).
+				headers: { 'X-ERP-Upload': '1' },
 			} );
 			onChange( body.id, body.source_url ?? '' );
 			toast.success( __( 'Photo uploaded.', 'erp' ) );

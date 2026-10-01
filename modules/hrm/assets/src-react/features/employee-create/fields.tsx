@@ -81,6 +81,8 @@ interface TextFieldProps {
 	readonly placeholder?: string | undefined;
 	readonly maxLength?:  number | undefined;
 	readonly disabled?:   boolean | undefined;
+	readonly readOnly?:   boolean | undefined;
+	readonly hint?:       string | undefined;
 	readonly className?:  string | undefined;
 }
 
@@ -95,10 +97,12 @@ export function TextField( {
 	placeholder,
 	maxLength,
 	disabled,
+	readOnly,
+	hint,
 	className,
 }: TextFieldProps ): JSX.Element {
 	return (
-		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
+		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className } hint={ hint }>
 			{ type === 'date' ? (
 				<DateField
 					value={ value }
@@ -114,6 +118,7 @@ export function TextField( {
 					value={ value }
 					required={ required }
 					disabled={ disabled }
+					readOnly={ readOnly }
 					placeholder={ placeholder }
 					maxLength={ maxLength }
 					onChange={ ( e ) => onChange( e.target.value ) }

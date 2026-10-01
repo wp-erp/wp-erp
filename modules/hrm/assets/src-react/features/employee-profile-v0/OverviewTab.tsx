@@ -64,11 +64,15 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 
 	return (
 		<div className="space-y-6">
-			<OverviewStats
-				userId={ userId }
-				hiringDate={ str( record, 'hiring_date' ) }
-				dateOfBirth={ str( record, 'date_of_birth' ) }
-			/>
+			{ /* Self / managers only: a peer's record has these fields stripped and
+			     the leave summary endpoint answers 403, so the row would be four dashes. */ }
+			{ canEdit ? (
+				<OverviewStats
+					userId={ userId }
+					hiringDate={ str( record, 'hiring_date' ) }
+					dateOfBirth={ str( record, 'date_of_birth' ) }
+				/>
+			) : null }
 			<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
 
 			{ /* Termination details — self / managers only, when terminated (legacy tab-general.php:348). */ }

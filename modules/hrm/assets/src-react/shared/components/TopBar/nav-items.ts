@@ -75,6 +75,11 @@ export interface NavItem {
 	/** True when the item is a dropdown trigger (rendered with ChevronDown). */
 	readonly hasDropdown:  boolean;
 	readonly capabilities: readonly Capability[];
+	/**
+	 * Hides the item when the viewer holds ANY of these caps. Used for
+	 * self-service shortcuts that a manager already reaches through their own menu.
+	 */
+	readonly hiddenForCapabilities?: readonly Capability[];
 	/** Hash-path prefixes that count as "active" for the link's underline. */
 	readonly activeMatches: readonly string[];
 	/**
@@ -253,6 +258,20 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				pro:          true,
 			},
 		],
+	},
+	{
+		// Employee self-service: their own profile on the Leave tab. Managers
+		// (`erp_leave_manage`) already have the Leave menu above, so it hides for them.
+		id:                    'my-leave',
+		label:                 __( 'My Leave', 'erp' ),
+		path:                  '/my-profile?tab=leave',
+		icon:                  'log-out',
+		hasDropdown:           false,
+		capabilities:          [ 'employee' ],
+		hiddenForCapabilities: [ 'erp_leave_manage' ],
+		// The route is shared with My Profile, so a pathname match would also
+		// light this up on the other profile tabs.
+		activeMatches:         [],
 	},
 	{
 		id:            'attendance',

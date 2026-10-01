@@ -263,6 +263,12 @@ class EmployeesController extends RestController {
 			return new \WP_Error( 'rest_no_photo', __( 'No photo provided.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		// Legacy 2 MB cap, enforced here rather than relying on the client to
+		// send the `X-ERP-Upload` header that `erp_enforce_react_upload_size()` keys on.
+		if ( (int) ( $files['photo']['size'] ?? 0 ) > 2 * 1024 * 1024 ) {
+			return new \WP_Error( 'rest_upload_too_large', __( 'File size cannot be greater than 2MB.', 'erp' ), [ 'status' => 400 ] );
+		}
+
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -272,6 +278,12 @@ class EmployeesController extends RestController {
 
 		if ( is_wp_error( $attachment_id ) ) {
 			return new \WP_Error( 'rest_avatar_upload_failed', $attachment_id->get_error_message(), [ 'status' => 400 ] );
+		}
+
+		if ( ! wp_attachment_is_image( (int) $attachment_id ) ) {
+			wp_delete_attachment( (int) $attachment_id, true );
+
+			return new \WP_Error( 'rest_invalid_photo', __( 'The profile photo must be an image attachment.', 'erp' ), [ 'status' => 400 ] );
 		}
 
 		// Mark the upload as this employee's photo: delete_avatar() only removes
@@ -382,6 +394,14 @@ class EmployeesController extends RestController {
 			return false;
 		}
 
+		// An employee may not change their own login email here: it would let
+		// whoever holds the session take over password resets with no
+		// confirmation. WordPress grants `edit_user` on oneself, so this must
+		// come before that check. HR managers keep the ability.
+		if ( get_current_user_id() === $user_id && ! current_user_can( 'erp_edit_employee' ) ) {
+			return false;
+		}
+
 		if ( current_user_can( 'edit_user', $user_id ) ) {
 			return true;
 		}
@@ -390,9 +410,48 @@ class EmployeesController extends RestController {
 			return false;
 		}
 
+		// Compare capabilities directly rather than through
+		// `erp_can_current_user_assign_role()`: that helper also counts the
+		// deprecated `level_N` caps (subscriber carries `level_0`), which an HR
+		// manager role never holds, so any second role blocked the correction.
+		if ( current_user_can( 'promote_users' ) ) {
+			return true;
+		}
+
+		$user_caps = array_filter( (array) wp_get_current_user()->allcaps );
+
+		/** This filter is documented in includes/functions.php */
+		$meta_caps = apply_filters( 'erp_role_comparison_ignored_caps', [
+			'edit_post',
+			'read_post',
+			'delete_post',
+			'edit_page',
+			'read_page',
+			'delete_page',
+			'edit_comment',
+			'edit_user',
+			'delete_user',
+			'remove_user',
+			'add_user_to_blog',
+		] );
+
 		foreach ( (array) $target->roles as $role ) {
-			if ( ! erp_can_current_user_assign_role( $role ) ) {
+			$role_object = get_role( $role );
+
+			if ( ! $role_object ) {
 				return false;
+			}
+
+			foreach ( (array) $role_object->capabilities as $cap => $granted ) {
+				if ( ! $granted
+					|| in_array( $cap, $meta_caps, true )
+					|| preg_match( '/^level_\d+$/', (string) $cap ) ) {
+					continue;
+				}
+
+				if ( empty( $user_caps[ $cap ] ) ) {
+					return false;
+				}
 			}
 		}
 
@@ -678,6 +737,27 @@ class EmployeesController extends RestController {
 			);
 		}
 
+		/**
+		 * Filters the maximum number of employee rows one import request may carry.
+		 *
+		 * @since 1.18.0
+		 *
+		 * @param int $max_rows Maximum rows per request. Default 500.
+		 */
+		$max_rows = (int) apply_filters( 'erp_hr_employee_import_max_rows', 500 );
+
+		if ( $max_rows > 0 && count( $rows ) > $max_rows ) {
+			return new \WP_Error(
+				'rest_import_too_many_rows',
+				sprintf(
+					/* translators: %d: maximum number of rows */
+					__( 'Too many rows. Import at most %d employees at a time.', 'erp' ),
+					$max_rows
+				),
+				[ 'status' => 400 ]
+			);
+		}
+
 		$created = 0;
 		$failed  = [];
 
@@ -747,6 +827,16 @@ class EmployeesController extends RestController {
 		$employee = new Employee( $user_id );
 
 		if ( ! $employee->is_employee() ) {
+			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		// `is_employee()` answers yes for every administrator, even one with no
+		// HR record. Only a manager may read such an account here; anyone else
+		// would otherwise get the admin's login email.
+		$has_hr_record = (bool) ( $employee->get_erp_user() && $employee->get_erp_user()->exists );
+		if ( ! $has_hr_record
+			&& get_current_user_id() !== $user_id
+			&& ! current_user_can( 'erp_view_employee' ) ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
@@ -848,7 +938,9 @@ class EmployeesController extends RestController {
 			&& ! $this->can_change_login_email( $user_id ) ) {
 			return new \WP_Error(
 				'rest_cannot_change_email',
-				__( 'You are not allowed to change the email address of this user.', 'erp' ),
+				get_current_user_id() === $user_id
+					? __( 'You cannot change your own login email. Ask HR to change it.', 'erp' )
+					: __( 'You are not allowed to change the email address of this user.', 'erp' ),
 				[ 'status' => 403 ]
 			);
 		}
@@ -1038,6 +1130,18 @@ class EmployeesController extends RestController {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
+		// Record the status change in the employment history, the same way
+		// `Employee::terminate()` does, so the Job tab shows the reactivation.
+		$employee->update_employment_status(
+			[
+				'module'   => 'employee',
+				'category' => 'active',
+				'comments' => __( 'Reactivated', 'erp' ),
+			]
+		);
+
+		// The history call skips the status column when a future-dated history
+		// row exists, so set it explicitly as before.
 		\WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->update( [ 'status' => 'active' ] );
 		delete_user_meta( $user_id, '_erp_hr_termination' );
 

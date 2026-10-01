@@ -7,7 +7,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@wedevs/plugin-ui';
 import { ArrowRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -113,6 +113,27 @@ export function WidgetCard( {
 	className,
 	children,
 }: WidgetCardProps ): JSX.Element {
+	// A long list scrolls inside the card. macOS hides scrollbars, so fade the
+	// bottom edge while more rows are below; otherwise the cut-off row looks broken.
+	const listRef = useRef< HTMLDivElement >( null );
+	const [ moreBelow, setMoreBelow ] = useState( false );
+
+	useEffect( () => {
+		const el = listRef.current;
+		if ( ! el ) {
+			return undefined;
+		}
+		const update = (): void => setMoreBelow( el.scrollTop + el.clientHeight < el.scrollHeight - 4 );
+		update();
+		el.addEventListener( 'scroll', update, { passive: true } );
+		const observer = new ResizeObserver( update );
+		observer.observe( el );
+		return () => {
+			el.removeEventListener( 'scroll', update );
+			observer.disconnect();
+		};
+	}, [ children ] );
+
 	return (
 		<section className={ `erp-card-in flex flex-col rounded-[10px] border border-border bg-card shadow-sm transition-shadow duration-200 hover:shadow-md ${ className ?? '' }` }>
 			<header className="flex items-center justify-between gap-3 px-6 pt-6 pb-4">
@@ -136,7 +157,10 @@ export function WidgetCard( {
 				) : null }
 			</header>
 			{ /* Scroll long lists inside the card instead of stretching the page. */ }
-			<div className="max-h-80 flex-1 overflow-y-auto p-3 pt-0">
+			<div
+				ref={ listRef }
+				className={ `max-h-80 flex-1 overflow-y-auto p-3 pt-0 ${ moreBelow ? '[mask-image:linear-gradient(to_bottom,black_calc(100%-40px),transparent)]' : '' }` }
+			>
 				{ children }
 			</div>
 		</section>

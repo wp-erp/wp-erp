@@ -27,6 +27,8 @@ interface EmployeeBasicSectionProps {
 	readonly errors:       Record< string, string >;
 	readonly set:          ( key: string ) => ( value: string ) => void;
 	readonly isEdit:       boolean;
+	/** The viewer is editing their own record. */
+	readonly isSelf?:      boolean;
 	readonly departments:  Option[];
 	readonly designations: Option[];
 	readonly submitting:   boolean;
@@ -41,6 +43,7 @@ export function EmployeeBasicSection( {
 	errors,
 	set,
 	isEdit,
+	isSelf = false,
 	departments,
 	designations,
 	submitting,
@@ -111,6 +114,16 @@ export function EmployeeBasicSection( {
 				value={ form.email ?? '' }
 				onChange={ set( 'email' ) }
 				error={ errors.email }
+				// The login email is an account credential: only HR may change it
+				// (the v2 update endpoint returns 403 for anyone else).
+				readOnly={ lockManager }
+				hint={
+					lockManager
+						? ( isSelf
+							? __( 'Ask HR to change your login email.', 'erp' )
+							: __( 'Only HR can change the login email.', 'erp' ) )
+						: undefined
+				}
 			/>
 			<SelectField
 				id="type"

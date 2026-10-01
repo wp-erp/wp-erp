@@ -200,6 +200,8 @@ export function EmployeeForm( {
 		const result = applyFilters( HOOKS.EMPLOYEE_EXTRA_FIELDS, [], {
 			mode,
 			employeeId,
+			// HR manager viewer (bare `erp_edit_employee`); see EmployeeExtraFieldsView.
+			canManage: isManager,
 		} ) as ExtraField[] | Promise< ExtraField[] >;
 		void Promise.resolve( result ).then( ( fields ) => {
 			if (
@@ -225,7 +227,7 @@ export function EmployeeForm( {
 		return () => {
 			cancelled = true;
 		};
-	}, [ mode, employeeId ] );
+	}, [ mode, employeeId, isManager ] );
 
 	// Department + Designation are required to create an employee. If the org has
 	// none yet, point the user to set them up first instead of leaving the
@@ -480,6 +482,7 @@ export function EmployeeForm( {
 						errors={ errors }
 						set={ set }
 						isEdit={ isEdit }
+						isSelf={ isEdit && employeeId === boot.currentUserId }
 						departments={ departments }
 						designations={ designations }
 						submitting={ submitting }

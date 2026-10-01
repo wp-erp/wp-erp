@@ -79,6 +79,12 @@ export const captionDropdownProps = (
 		captionLayout: 'dropdown',
 		startMonth:    min ?? new Date( year - YEARS_BACK, 0, 1 ),
 		endMonth:      max ?? new Date( year + YEARS_AHEAD, 11, 31 ),
+		// In dropdown mode the caption label wraps each month/year name and its
+		// chevron. plugin-ui styles it as plain text, and the preflight makes the
+		// chevron SVG a block, so it dropped to a second line. Keep them on one row.
+		classNames: {
+			caption_label: 'inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold',
+		},
 	};
 };
 

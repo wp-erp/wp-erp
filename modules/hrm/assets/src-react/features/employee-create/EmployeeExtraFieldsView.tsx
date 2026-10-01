@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
 import { HOOKS } from '@/shared/filters';
+import { useCan } from '@/shared/hooks/useCan';
 
 import type { ExtraField } from './ExtraFields';
 
@@ -41,10 +42,14 @@ interface EmployeeExtraFieldsViewProps {
 
 export function EmployeeExtraFieldsView( { employeeId, sections }: EmployeeExtraFieldsViewProps ): JSX.Element | null {
 	const [ fields, setFields ] = useState< ExtraField[] >( [] );
+	// `canManage` tells filter consumers whether the viewer is an HR manager
+	// (bare `erp_edit_employee`), so manager-only sources (e.g. pro's attendance
+	// shift field) can skip their request instead of logging a 403.
+	const canManage = useCan( 'erp_edit_employee' );
 
 	useEffect( () => {
 		let cancelled = false;
-		const result = applyFilters( HOOKS.EMPLOYEE_EXTRA_FIELDS, [], { mode: 'edit', employeeId } ) as
+		const result = applyFilters( HOOKS.EMPLOYEE_EXTRA_FIELDS, [], { mode: 'edit', employeeId, canManage } ) as
 			| ExtraField[]
 			| Promise< ExtraField[] >;
 		void Promise.resolve( result ).then( ( list ) => {
@@ -55,7 +60,7 @@ export function EmployeeExtraFieldsView( { employeeId, sections }: EmployeeExtra
 		return () => {
 			cancelled = true;
 		};
-	}, [ employeeId ] );
+	}, [ employeeId, canManage ] );
 
 	const visible = sections
 		? fields.filter( ( f ) => sections.includes( f.sectionKey ?? '' ) )

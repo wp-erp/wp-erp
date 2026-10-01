@@ -65,6 +65,12 @@ final class WelcomeNotice {
 
 		update_user_meta( $user_id, self::USERMETA_KEY, 1 );
 
+		// Background request from the notice's X button: no redirect, no page.
+		if ( ! empty( $_GET['erp_silent'] ) ) {
+			status_header( 204 );
+			exit;
+		}
+
 		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : 'erp-hr';
 		wp_safe_redirect( add_query_arg( 'page', $page, admin_url( 'admin.php' ) ) );
 		exit;
@@ -111,7 +117,7 @@ final class WelcomeNotice {
 			self::NONCE_NAME
 		);
 		?>
-		<div class="notice notice-info is-dismissible">
+		<div id="erp-hr-welcome-notice" class="notice notice-info is-dismissible">
 			<p>
 				<strong><?php esc_html_e( 'Welcome to the new HR experience.', 'erp' ); ?></strong>
 				<?php esc_html_e( 'This is the redesigned HR admin. You can switch back to the previous version anytime.', 'erp' ); ?>
@@ -122,5 +128,29 @@ final class WelcomeNotice {
 			</p>
 		</div>
 		<?php
+		// The core X only hides the notice. Record the dismissal too, the same as
+		// the "Got it" link, so it does not come back on the next page load.
+		$script = sprintf(
+			'document.addEventListener("click",function(e){var b=e.target&&e.target.closest?e.target.closest("#erp-hr-welcome-notice .notice-dismiss"):null;if(b&&window.fetch){window.fetch(%s,{credentials:"same-origin"});}});',
+			wp_json_encode(
+				esc_url_raw(
+					add_query_arg(
+						[
+							'page'       => $page,
+							'erp_action' => self::DISMISS_ACTION,
+							'erp_silent' => 1,
+							'_wpnonce'   => wp_create_nonce( self::NONCE_NAME ),
+						],
+						admin_url( 'admin.php' )
+					)
+				)
+			)
+		);
+
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $script );
+		} else {
+			echo '<script>' . $script . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from wp_json_encode( esc_url_raw() ).
+		}
 	}
 }

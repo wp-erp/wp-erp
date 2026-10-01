@@ -24,6 +24,10 @@ export const HOOKS = {
 	REQUEST_TABS:       'erp_hr.request_tabs',
 
 	// Employee create/edit form — pro injects extra (custom) field definitions.
+	// Applied with `(fields, ctx)` where ctx = { mode, employeeId, canManage }.
+	// `canManage` is true when the viewer holds the bare `erp_edit_employee`
+	// (HR manager) cap; manager-only sources should skip their request when it
+	// is false (an employee viewing their own or a peer's profile).
 	EMPLOYEE_EXTRA_FIELDS:   'erp_hr.employee.extra_fields',
 
 	// Leave policy create/edit form — pro injects extra field definitions

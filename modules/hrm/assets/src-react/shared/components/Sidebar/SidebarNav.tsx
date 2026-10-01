@@ -150,7 +150,9 @@ function SidebarLeaf( { item, Icon, collapsed = false }: LeafProps ): JSX.Elemen
 			end={ item.path === '/' }
 			viewTransition
 			title={ collapsed ? item.label : undefined }
-			className={ ( { isActive } ) => rowClass( isActive, collapsed ) }
+			// An item with no `activeMatches` shares its route with another page
+			// (My Leave → My Profile), so it never shows as the active row.
+			className={ ( { isActive } ) => rowClass( isActive && item.activeMatches.length > 0, collapsed ) }
 		>
 			<Icon size={ 18 } strokeWidth={ 1.75 } aria-hidden="true" />
 			{ ! collapsed && <span className="flex-1 truncate">{ item.label }</span> }

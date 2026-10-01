@@ -138,6 +138,9 @@ export function useNavMenu(): NavMenu {
 			if ( item.capabilities.length > 0 && ! hasCap( item.capabilities ) ) {
 				return false;
 			}
+			if ( item.hiddenForCapabilities?.some( ( cap ) => hasCap( cap ) ) ) {
+				return false;
+			}
 			// Pro-module item whose module is inactive: show only as a "Pro" upsell
 			// badge when the Pro plugin is absent (legacy parity).
 			if ( item.module && ! activeModules.includes( item.module ) ) {
