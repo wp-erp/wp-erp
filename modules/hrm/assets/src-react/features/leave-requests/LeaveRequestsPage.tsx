@@ -73,6 +73,9 @@ const SEARCH_DEBOUNCE_MS = 350;
 
 function LeaveRequestsInner(): JSX.Element {
 	const canManage = useCan( 'erp_leave_manage' );
+	// A department lead approves and rejects their team's requests; the list
+	// route already scopes them to the departments they lead.
+	const canModerate = useCan( 'erp_leave_moderate' );
 	// Which pro sub-modules are on — decides whether the Forwarded tab exists.
 	const activeModules = useBoot().modules ?? [];
 
@@ -598,6 +601,7 @@ function LeaveRequestsInner(): JSX.Element {
 					<LeaveRequestsTable
 						rows={ rows }
 						canManage={ canManage }
+						canModerate={ canModerate }
 						selected={ selected }
 						allOnPageSelected={ allOnPageSelected }
 						statusFilter={ status }
@@ -686,7 +690,7 @@ function LeaveRequestsInner(): JSX.Element {
 
 export function LeaveRequestsPage(): JSX.Element {
 	return (
-		<CapabilityGate caps={ [ 'erp_leave_manage' ] }>
+		<CapabilityGate caps={ [ 'erp_leave_moderate' ] }>
 			<ErrorBoundary>
 				<LeaveRequestsInner />
 			</ErrorBoundary>

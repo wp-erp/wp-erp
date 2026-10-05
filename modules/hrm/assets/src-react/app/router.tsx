@@ -267,7 +267,8 @@ const baseRoutes: AppRoute[] = [
 		id:           'leave-requests',
 		path:         '/leave/requests',
 		element:      LeaveRequestsPage,
-		capabilities: [ 'erp_leave_manage' ],
+		// Leave managers, and department leads for their own teams.
+		capabilities: [ 'erp_leave_moderate' ],
 		handle: {
 			id:        'leave-requests',
 			title:     __( 'Leave Requests', 'erp' ),

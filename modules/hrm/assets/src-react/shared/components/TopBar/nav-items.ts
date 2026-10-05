@@ -181,15 +181,16 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		hasDropdown:   true,
 		// Free leave caps are `erp_leave_manage` (manager) + `erp_leave_create_request`.
 		// There is NO `erp_leave_list_request` cap, so the old gate never passed and
-		// the Leave menu never rendered. Gate on the real manage cap.
-		capabilities:  [ 'erp_leave_manage' ],
+		// the Leave menu never rendered. Gate on the real manage cap, or on being
+		// a department lead, who sees only Requests below (as in legacy).
+		capabilities:  [ 'erp_leave_moderate' ],
 		activeMatches: [ '/leave' ],
 		children: [
 			{
 				id:           'leave-requests',
 				label:        __( 'Requests', 'erp' ),
 				to:           '/leave/requests',
-				capabilities: [ 'erp_hr_manager' ],
+				capabilities: [ 'erp_leave_moderate' ],
 				description:  __( 'Approve, reject and manage leave requests', 'erp' ),
 			},
 			{

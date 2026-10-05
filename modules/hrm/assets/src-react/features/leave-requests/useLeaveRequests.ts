@@ -185,8 +185,10 @@ export function useLeaveRequests( {
 	);
 
 	const loadLeaveTypes = useCallback( async (): Promise< readonly LeaveTypeOption[] > => {
-		const res = await request< IdName[] >( restPath( 'v2', '/leave-types', { per_page: 100 } ) );
-		return Array.isArray( res ) ? res.map( ( t ) => ( { value: t.id, label: t.name } ) ) : [];
+		// From the policy form options, which a department lead may read:
+		// `/leave-types` is manager-only and answered a lead with a 403.
+		const res = await request< { leave_types?: IdName[] } >( restPath( 'v2', '/leave-policies/form-options' ) );
+		return Array.isArray( res?.leave_types ) ? res.leave_types.map( ( t ) => ( { value: t.id, label: t.name } ) ) : [];
 	}, [] );
 
 	return { rows, total, counts, loading, error, reload, approve, reject, remove, bulk, loadLeaveTypes };

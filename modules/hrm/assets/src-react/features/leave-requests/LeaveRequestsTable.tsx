@@ -92,6 +92,8 @@ function AvailableCell( {
 interface LeaveRequestsTableProps {
 	readonly rows: readonly LeaveRequest[];
 	readonly canManage: boolean;
+	/** Approve / reject (leave managers and department leads); delete and bulk stay with `canManage`. */
+	readonly canModerate?: boolean;
 	readonly selected: ReadonlySet< number >;
 	readonly allOnPageSelected: boolean;
 	/** Active status tab — decides the "Approved By" vs "Rejected By" header. */
@@ -111,6 +113,7 @@ interface LeaveRequestsTableProps {
 export function LeaveRequestsTable( {
 	rows,
 	canManage,
+	canModerate = canManage,
 	selected,
 	allOnPageSelected,
 	statusFilter,
@@ -360,7 +363,7 @@ export function LeaveRequestsTable( {
 								) }
 							</td>
 							<td className="px-4 align-middle">
-								{ canManage ? (
+								{ canModerate ? (
 									<div className="flex items-center justify-end gap-1">
 										{ /* 2 = Pending, 4 = Forwarded (Advanced Leave multilevel).
 										     Both are open requests still awaiting a decision, and the
@@ -384,7 +387,7 @@ export function LeaveRequestsTable( {
 													onSelect: () => action.onSelect( req ),
 													variant:  action.variant === 'destructive' ? 'destructive' : 'default',
 												} ) ),
-												{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( req ), variant: 'destructive' },
+												{ id: 'delete', label: __( 'Delete', 'erp' ), icon: Trash2, onSelect: () => onDelete( req ), variant: 'destructive', hidden: ! canManage },
 											] }
 										/>
 									</div>

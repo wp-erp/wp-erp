@@ -219,6 +219,13 @@ final class Enqueue {
 			$capabilities[ $cap ] = current_user_can( $cap );
 		}
 
+		// Derived, not a WordPress cap: may moderate leave, as a leave manager or
+		// as the lead of a department. Legacy gives a lead Leave → Requests
+		// (AdminMenu, `erp_list_employee` for a lead) scoped to their team; the
+		// v2 leave-request routes already scope a lead the same way.
+		$capabilities['erp_leave_moderate'] = current_user_can( 'erp_leave_manage' )
+			|| ( function_exists( 'erp_hr_is_current_user_dept_lead' ) && erp_hr_is_current_user_dept_lead() );
+
 		$theme_mode = self::resolve_theme_mode( $user_id );
 		$color_scheme = self::resolve_color_scheme( $theme_mode );
 		$nav_layout = self::resolve_nav_layout( $user_id );
