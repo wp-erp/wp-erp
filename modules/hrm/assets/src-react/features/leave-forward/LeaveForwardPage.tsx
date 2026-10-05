@@ -42,6 +42,7 @@ import { __, sprintf } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
+import { csvCell } from '@/shared/utils/csv';
 
 import { OrgPagination } from '../org/OrgPagination';
 
@@ -147,7 +148,7 @@ function LeaveForwardInner(): JSX.Element {
 		const header = [ 'Employee', 'Leave', 'Encash days', 'Forward days', 'Amount', 'Total' ];
 		const lines  = rows.map( ( r ) =>
 			[ r.employee_name, r.policy_name, r.encash_days, r.forward_days, r.amount, r.total ]
-				.map( ( c ) => `"${ String( c ).replace( /"/g, '""' ) }"` )
+				.map( ( c ) => csvCell( c, true ) )
 				.join( ',' )
 		);
 		downloadCsv( [ header.join( ',' ), ...lines ].join( '\n' ), 'encash-requests.csv' );

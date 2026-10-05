@@ -10,6 +10,7 @@
 
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
+import { csvCell } from '@/shared/utils/csv';
 
 /** Columns accepted on import — keys match the create payload exactly. */
 export const IMPORT_COLUMNS: readonly string[] = [
@@ -341,14 +342,6 @@ export async function buildEmployeesCsv( status: string, fieldKeys?: readonly st
 	}
 
 	return lines.join( '\n' ) + '\n';
-}
-
-/** Quote a CSV cell when it contains a comma, quote, or newline. */
-function csvCell( value: string ): string {
-	if ( /[",\n\r]/.test( value ) ) {
-		return `"${ value.replace( /"/g, '""' ) }"`;
-	}
-	return value;
 }
 
 /** Trigger a browser download of `content` as `filename`. */

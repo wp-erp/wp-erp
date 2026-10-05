@@ -3,9 +3,11 @@
  * client-side download. No React/state.
  */
 
-/** Quote a CSV cell. */
+import { csvCell as cell } from '@/shared/utils/csv';
+
+/** Quote a CSV cell (formula-safe, see `shared/utils/csv`). */
 export function csvCell( value: unknown ): string {
-	return `"${ String( value ).replace( /"/g, '""' ) }"`;
+	return cell( value, true );
 }
 
 /** Trigger a client-side CSV download. */
