@@ -1756,6 +1756,13 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
         }
     }
 
+    // A lead is a member of the department they lead, so the check above lets
+    // them decide their own request. The v2 route refuses that; doing it here
+    // covers every other caller (bulk actions, add-ons) as well.
+    if ( current_user_can( 'erp_leave_manage' ) === false && (int) $request->user_id === get_current_user_id() ) {
+        return new WP_Error( 'no-permission', esc_html__( 'You cannot approve or reject your own leave request.', 'erp' ) );
+    }
+
     $status = absint( $status );
 
     $old_leave_status = isset( $request->latest_approval_status->approval_status_id ) ? absint( $request->latest_approval_status->approval_status_id ) : 2; // by default status is pending

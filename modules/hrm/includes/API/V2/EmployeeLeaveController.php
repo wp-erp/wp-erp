@@ -221,6 +221,39 @@ class EmployeeLeaveController extends RestController {
 	}
 
 	/**
+	 * Refuse a range that leaves the entitlement's financial year.
+	 *
+	 * @param LeaveEntitlement|null $entitlement Entitlement the request draws on.
+	 * @param string                $start_date  Y-m-d.
+	 * @param string                $end_date    Y-m-d.
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function financial_year_error( $entitlement, string $start_date, string $end_date ) {
+		if ( ! $entitlement || ! $entitlement->financial_year ) {
+			return new \WP_Error( 'rest_invalid_financial_year', __( 'No leave year found for this leave policy.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
+		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
+
+		if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end ) ) {
+			return new \WP_Error(
+				'rest_invalid_duration',
+				sprintf(
+					/* translators: %1$s start, %2$s end of financial year */
+					__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ),
+					erp_format_date( $f_year_start ),
+					erp_format_date( $f_year_end )
+				),
+				[ 'status' => 400 ]
+			);
+		}
+
+		return null;
+	}
+
+	/**
 	 * POST /erp/v2/employees/{user_id}/leave/requests
 	 *
 	 * @param WP_REST_Request $request Request.
@@ -252,6 +285,18 @@ class EmployeeLeaveController extends RestController {
 		$end_date   = sanitize_text_field( (string) ( $request['leave_to'] ?? '' ) );
 
 		$invalid = $this->date_range_error( $start_date, $end_date );
+		if ( $invalid ) {
+			return $invalid;
+		}
+
+		// Before the insert: it counts the work days of the whole range, one
+		// array entry per day, before it checks the year, so a range of
+		// centuries ran the worker out of memory.
+		$invalid = $this->financial_year_error(
+			LeaveEntitlement::find( $leave_policy ),
+			$start_date ? $start_date : date_i18n( 'Y-m-d' ),
+			$end_date ? $end_date : date_i18n( 'Y-m-d' )
+		);
 		if ( $invalid ) {
 			return $invalid;
 		}
@@ -402,20 +447,9 @@ class EmployeeLeaveController extends RestController {
 
 		$entitlement = LeaveEntitlement::find( $policy_id );
 
-		$f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
-		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
-
-		if ( ( $start_date < $f_year_start || $start_date > $f_year_end ) || ( $end_date < $f_year_start || $end_date > $f_year_end ) ) {
-			return new \WP_Error(
-				'rest_invalid_duration',
-				sprintf(
-					/* translators: %1$s start, %2$s end of financial year */
-					__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ),
-					erp_format_date( $f_year_start ),
-					erp_format_date( $f_year_end )
-				),
-				[ 'status' => 400 ]
-			);
+		$invalid = $this->financial_year_error( $entitlement, $start_date, $end_date );
+		if ( $invalid ) {
+			return $invalid;
 		}
 
 		if ( erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id, $entitlement->f_year ) ) {
