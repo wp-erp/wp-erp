@@ -878,6 +878,9 @@ class EmployeesController extends RestController {
 				unset( $data['work'][ $manager_only ] );
 			}
 			unset( $data['personal']['employee_id'] );
+			// Work phone belongs to the legacy form's Work section, which only HR
+			// sees, but it travels in `personal`, so the loop above missed it.
+			unset( $data['personal']['work_phone'] );
 		}
 
 		if ( ! empty( $data['personal']['photo_id'] ) && (int) $data['personal']['photo_id'] !== (int) $employee->get_photo_id() ) {
