@@ -326,6 +326,9 @@ Off day/Weekend (Saturday & Sunday)
 We strive to respond to all queries within 12 hours. Our response time may be just 1 hour if you reach us during our working hours!
 It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured of the best service.
 
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the WP ERP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb52d-9e2d-4917-82cf-95032b4443ce). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Changelog ==
 = v1.17.10 → Sep 22, 2026
 --------------------------
