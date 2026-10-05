@@ -260,7 +260,7 @@ class HRM {
 
                 } else if ( 'requests' === $sub_section ) {
 
-                    ?><script>window.erpLocale = JSON.parse('<?php echo wp_kses_post( wp_slash( wp_json_encode( apply_filters( 'erp_localized_data', [] ) ) ) ); ?>');</script><?php
+                    ?><script>window.erpLocale = <?php echo wp_json_encode( apply_filters( 'erp_localized_data', [] ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;</script><?php
 
                     wp_enqueue_style( 'erp-sweetalert' );
                     wp_enqueue_script( 'erp-sweetalert' );
