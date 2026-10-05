@@ -227,6 +227,11 @@ class EmployeePermissionController extends RestController {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
+		// An administrator's roles are not an HR manager's to change.
+		if ( user_can( $user, 'manage_options' ) && ! current_user_can( 'manage_options' ) ) {
+			return new \WP_Error( 'rest_cannot_edit_permission', __( 'You are not allowed to change this user\'s permissions.', 'erp' ), [ 'status' => 403 ] );
+		}
+
 		$roles = (array) $request['roles'];
 
 		// Normalize the incoming map to plain booleans the legacy setters expect.

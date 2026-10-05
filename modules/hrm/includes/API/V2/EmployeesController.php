@@ -376,24 +376,15 @@ class EmployeesController extends RestController {
 	 * Whether the current user may change the login email of the target account.
 	 *
 	 * The login email is an account credential: whoever controls it can reset the
-	 * password. So an HR manager may correct it only for an account that holds no
-	 * role the manager could not grant themselves, and never for an administrator.
+	 * password. An employee may not change their own here; otherwise the caller
+	 * must have the say over the account that `erp_hr_can_manage_wp_account()`
+	 * describes.
 	 *
 	 * @param int $user_id Target user ID.
 	 *
 	 * @return bool
 	 */
 	private function can_change_login_email( int $user_id ): bool {
-		$target = get_userdata( $user_id );
-
-		if ( ! $target ) {
-			return false;
-		}
-
-		if ( in_array( 'administrator', (array) $target->roles, true ) && ! current_user_can( 'administrator' ) ) {
-			return false;
-		}
-
 		// An employee may not change their own login email here: it would let
 		// whoever holds the session take over password resets with no
 		// confirmation. WordPress grants `edit_user` on oneself, so this must
@@ -402,60 +393,7 @@ class EmployeesController extends RestController {
 			return false;
 		}
 
-		if ( current_user_can( 'edit_user', $user_id ) ) {
-			return true;
-		}
-
-		if ( ! current_user_can( 'erp_edit_employee' ) ) {
-			return false;
-		}
-
-		// Compare capabilities directly rather than through
-		// `erp_can_current_user_assign_role()`: that helper also counts the
-		// deprecated `level_N` caps (subscriber carries `level_0`), which an HR
-		// manager role never holds, so any second role blocked the correction.
-		if ( current_user_can( 'promote_users' ) ) {
-			return true;
-		}
-
-		$user_caps = array_filter( (array) wp_get_current_user()->allcaps );
-
-		/** This filter is documented in includes/functions.php */
-		$meta_caps = apply_filters( 'erp_role_comparison_ignored_caps', [
-			'edit_post',
-			'read_post',
-			'delete_post',
-			'edit_page',
-			'read_page',
-			'delete_page',
-			'edit_comment',
-			'edit_user',
-			'delete_user',
-			'remove_user',
-			'add_user_to_blog',
-		] );
-
-		foreach ( (array) $target->roles as $role ) {
-			$role_object = get_role( $role );
-
-			if ( ! $role_object ) {
-				return false;
-			}
-
-			foreach ( (array) $role_object->capabilities as $cap => $granted ) {
-				if ( ! $granted
-					|| in_array( $cap, $meta_caps, true )
-					|| preg_match( '/^level_\d+$/', (string) $cap ) ) {
-					continue;
-				}
-
-				if ( empty( $user_caps[ $cap ] ) ) {
-					return false;
-				}
-			}
-		}
-
-		return true;
+		return erp_hr_can_manage_wp_account( $user_id );
 	}
 
 	/**

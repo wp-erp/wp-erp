@@ -394,6 +394,13 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             \WeDevs\ERP\HRM\Models\Announcement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
+
+            // Read before the HR roles are stripped below. No role at all
+            // counts: trashing an employee already took theirs away.
+            $only_employee = $wp_user
+                && ! array_diff( (array) $wp_user->roles, [ erp_hr_get_employee_role() ] )
+                && ! user_can( $wp_user, 'edit_posts' );
+
             if ( $wp_user ) {
                 $wp_user->remove_role( erp_hr_get_manager_role() );
                 $wp_user->remove_role( erp_hr_get_employee_role() );
@@ -402,8 +409,19 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             //finally remove from WordPress user
             $remove_wp_user = get_option( 'erp_hrm_remove_wp_user', 'no' );
 
-            if ( 'yes' === $remove_wp_user ) {
-                $current_user = get_current_user_id();
+            // The login goes only when the caller could delete it in WordPress,
+            // or it was nothing but an employee's. An HR manager has no
+            // `delete_users`, and this was their way to delete any account
+            // with the employee role, an administrator's included.
+            $current_user = get_current_user_id();
+            $may_delete   = (int) $employee_wp_user_id !== $current_user
+                && ( current_user_can( 'delete_user', $employee_wp_user_id ) || $only_employee );
+
+            if ( 'yes' === $remove_wp_user && $may_delete ) {
+                if ( ! function_exists( 'wp_delete_user' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/user.php';
+                }
+
                 wp_delete_user( $employee_wp_user_id, $current_user );
             }
         } else {
@@ -1094,7 +1112,117 @@ function erp_hr_get_single_link( $user_id ) {
 function erp_is_employee_exist( $email, $user_id ) {
     global $wpdb;
     $user_email = sanitize_email( $email );
-    return $wpdb->get_col( $wpdb->prepare( "select ID from {$wpdb->prefix}users where user_email=%s AND ID !=%s", $user_email, $user_id ) );
+    // `$wpdb->users`, not `{prefix}users`: on a multisite subsite the latter
+    // names a table that does not exist, so every email passed as unused.
+    return $wpdb->get_col( $wpdb->prepare( "select ID from {$wpdb->users} where user_email=%s AND ID !=%s", $user_email, $user_id ) );
+}
+
+/**
+ * Whether the current user may take charge of a WordPress account as HR.
+ *
+ * Changing an employee's login email hands over the account (it is the reset
+ * address), and converting a user gives them the employee role and an HR
+ * record. Both need the same say over the account:
+ *
+ * - never a super admin, an administrator, or a user of another site in the
+ *   network, unless the caller is one too;
+ * - always when WordPress lets the caller edit that user anyway;
+ * - otherwise an HR manager only, and only when every capability the account
+ *   holds, from its roles or granted to it directly, is one the caller holds.
+ *
+ * @since 1.18.0
+ *
+ * @param int $user_id Target user ID.
+ *
+ * @return bool
+ */
+function erp_hr_can_manage_wp_account( $user_id ) {
+    $user_id = (int) $user_id;
+    $target  = get_userdata( $user_id );
+
+    if ( ! $target ) {
+        return false;
+    }
+
+    if ( is_multisite() && ! is_user_member_of_blog( $user_id ) && ! is_super_admin() ) {
+        return false;
+    }
+
+    if ( is_super_admin( $user_id ) && ! is_super_admin() ) {
+        return false;
+    }
+
+    if ( ( in_array( 'administrator', (array) $target->roles, true ) || user_can( $target, 'manage_options' ) )
+        && ! current_user_can( 'manage_options' ) ) {
+        return false;
+    }
+
+    if ( current_user_can( 'edit_user', $user_id ) ) {
+        return true;
+    }
+
+    if ( ! current_user_can( 'erp_edit_employee' ) ) {
+        return false;
+    }
+
+    // Compare capabilities directly rather than through
+    // `erp_can_current_user_assign_role()`: that helper also counts the
+    // deprecated `level_N` caps (subscriber carries `level_0`), which an HR
+    // manager role never holds, so any second role blocked the correction.
+    if ( current_user_can( 'promote_users' ) ) {
+        return true;
+    }
+
+    $user_caps = array_filter( (array) wp_get_current_user()->allcaps );
+
+    /** This filter is documented in includes/functions.php */
+    $meta_caps = apply_filters( 'erp_role_comparison_ignored_caps', [
+        'edit_post',
+        'read_post',
+        'delete_post',
+        'edit_page',
+        'read_page',
+        'delete_page',
+        'edit_comment',
+        'edit_user',
+        'delete_user',
+        'remove_user',
+        'add_user_to_blog',
+    ] );
+
+    // The caps of every role, plus any granted to the user directly (those
+    // sit in `caps` beside the role names).
+    $target_caps = [];
+
+    foreach ( (array) $target->roles as $role ) {
+        $role_object = get_role( $role );
+
+        if ( ! $role_object ) {
+            return false;
+        }
+
+        $target_caps += (array) $role_object->capabilities;
+    }
+
+    foreach ( (array) $target->caps as $cap => $granted ) {
+        if ( ! wp_roles()->is_role( $cap ) ) {
+            $target_caps[ $cap ] = $granted;
+        }
+    }
+
+    foreach ( $target_caps as $cap => $granted ) {
+        if ( ! $granted
+            || in_array( $cap, $meta_caps, true )
+            || preg_match( '/^level_\d+$/', (string) $cap ) ) {
+            continue;
+        }
+
+        if ( empty( $user_caps[ $cap ] ) ) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );

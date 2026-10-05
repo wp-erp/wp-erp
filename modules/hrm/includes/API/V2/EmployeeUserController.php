@@ -160,6 +160,13 @@ class EmployeeUserController extends RestController {
 			return new \WP_Error( 'rest_employee_exists', __( 'Employee already exist.', 'erp' ), [ 'status' => 409 ] );
 		}
 
+		// Converting gives the account the employee role and puts its email
+		// under HR, so it needs the same say over the account as changing that
+		// email does: never an admin, a super admin or another site's user.
+		if ( ! erp_hr_can_manage_wp_account( $user->ID ) ) {
+			return new \WP_Error( 'rest_cannot_convert_user', __( 'You are not allowed to make this account an employee.', 'erp' ), [ 'status' => 403 ] );
+		}
+
 		$user->add_role( 'employee' );
 
 		EmployeeModel::create(
