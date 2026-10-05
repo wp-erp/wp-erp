@@ -238,8 +238,9 @@ export function MiniCalendarWidget(): JSX.Element {
 									const bucket   = byDay.get( key );
 									const inMonth  = day.getMonth() === thisMonth;
 									const isToday  = key === todayKey;
-									const dow      = day.getDay();
-									const weekend  = dow === 0 || dow === 6;
+									// The company's weekly days off, as the calendar feed marks
+									// them from the work days setting, not Saturday and Sunday.
+									const weekend  = bucket?.weekend ?? false;
 									const leaves   = bucket?.leaves ?? [];
 									const holidays = bucket?.holidays ?? [];
 									const hasEvents = leaves.length > 0 || holidays.length > 0;
