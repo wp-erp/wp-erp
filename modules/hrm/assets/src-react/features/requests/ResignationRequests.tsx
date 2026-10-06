@@ -29,6 +29,7 @@ import type { JSX } from "react";
 import { RequestsTabContext } from "./requests-tab-context";
 
 import { EmptyState } from "@/shared/components/EmptyState";
+import { TablePager } from "@/shared/components/TablePager";
 import { RowActionsMenu } from "@/shared/components/RowActionsMenu";
 import { StatusPill } from "@/shared/components/StatusPill";
 import { requestStatusTone } from "@/shared/components/status-tones";
@@ -62,13 +63,21 @@ export function ResignationRequests(): JSX.Element {
     const inTabs = useContext(RequestsTabContext);
     const [rows, setRows] = useState<ResignRow[]>([]);
     const [loading, setLoading] = useState(true);
+    // The list is paged on the server (20 by default); without a pager only
+    // the newest page was ever reachable.
+    const [page, setPage] = useState(1);
+    const [perPage, setPerPage] = useState(20);
+    const [total, setTotal] = useState(0);
     const [busy, setBusy] = useState(false);
     const [creating, setCreating] = useState(false);
 
     function load(): void {
         setLoading(true);
-        request<{ items: ResignRow[] }>(restPath("v2", BASE))
-            .then((r) => setRows([...r.items]))
+        request<{ items: ResignRow[]; total?: number }>(restPath("v2", BASE, { page, per_page: perPage }))
+            .then((r) => {
+                setRows([...r.items]);
+                setTotal(r.total ?? r.items.length);
+            })
             .catch((e) =>
                 toast.error(
                     (e as ApiError)?.message ||
@@ -77,7 +86,7 @@ export function ResignationRequests(): JSX.Element {
             )
             .finally(() => setLoading(false));
     }
-    useEffect(load, []);
+    useEffect(load, [page, perPage]);
 
     function act(id: number, kind: "approve" | "reject" | "delete"): void {
         setBusy(true);
@@ -235,6 +244,18 @@ export function ResignationRequests(): JSX.Element {
                         </table>
                     </div>
                 )}
+                {!loading && total > 0 ? (
+                    <TablePager
+                        page={page}
+                        perPage={perPage}
+                        total={total}
+                        onPage={setPage}
+                        onPerPage={(next) => {
+                            setPage(1);
+                            setPerPage(next);
+                        }}
+                    />
+                ) : null}
             </div>
 
             {creating ? (
