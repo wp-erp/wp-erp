@@ -28,7 +28,8 @@ import type { LeaveFilters } from './useEmployeeLeave';
 
 // v1 leave-request status codes: 1 approved, 2 pending, 3 rejected.
 function formatDate( iso: string | null ): string {
-	const date = parseServerDate( iso );
+	// The site-time calendar day, so another timezone cannot move it a day.
+	const date = parseServerDate( iso ? iso.slice( 0, 10 ) : iso );
 	if ( ! date ) {
 		return '—';
 	}

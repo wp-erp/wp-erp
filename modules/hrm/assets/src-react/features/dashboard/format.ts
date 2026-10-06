@@ -32,7 +32,9 @@ export function greeting(): string {
 
 /** Short "Mon D" date label; "—" when empty, raw slice when unparseable. */
 export function fmtDate( value: string | null ): string {
-	const d = parseServerDate( value );
+	// Only the day is shown: take the site-time calendar day the server sent,
+	// so a viewer in another timezone never sees the day before or after.
+	const d = parseServerDate( value ? value.slice( 0, 10 ) : value );
 	if ( ! d ) {
 		return value ? value.slice( 0, 10 ) : '—';
 	}
@@ -44,7 +46,7 @@ export function fmtDate( value: string | null ): string {
 
 /** Long "Month D" date label (used for birthdays). */
 export function fmtDayMonth( value: string | null ): string {
-	const d = parseServerDate( value );
+	const d = parseServerDate( value ? value.slice( 0, 10 ) : value );
 	if ( ! d ) {
 		return value ? value.slice( 5, 10 ) : '—';
 	}
