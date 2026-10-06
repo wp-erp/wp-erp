@@ -451,12 +451,18 @@ class Employee {
                 return new WP_Error( 'cannot-create-employee', __( 'Cannot create an employee. Please check all the fields and try again.', 'erp' ) );
             }
         } elseif ( ! in_array( erp_hr_get_employee_role(), (array) $wp_user->roles ) ) {
+            // set_role() replaces every role: never turn an administrator into
+            // a plain employee on an HR manager's say.
+            if ( is_user_logged_in() && erp_hr_is_account_above_current_user( $wp_user->ID ) ) {
+                return new WP_Error( 'cannot-manage-account', __( 'You are not allowed to make this user an employee.', 'erp' ) );
+            }
+
             // set user role as employee
             $wp_user->set_role( erp_hr_get_employee_role() );
         }
 
-        // update user display name
-        if ( $wp_user ) {
+        // update user display name, unless the account ranks above the caller
+        if ( $wp_user && ! ( is_user_logged_in() && erp_hr_is_account_above_current_user( $wp_user->ID ) ) ) {
             $full_name =  $first_name . ' ' . $middle_name . ' ' . $last_name ;
             wp_update_user( array( 'ID' => $user_id, 'display_name' =>  $full_name ) );
         }
@@ -571,6 +577,13 @@ class Employee {
         $posted = array_map( 'strip_tags_deep', $data );
         $posted = erp_array_flatten( $posted );
         $posted = array_except( $posted, $restricted );
+
+        // An administrator's WordPress account (login email, website, name) is
+        // not HR's to rewrite: the email is the password reset address. Their
+        // HR record still updates.
+        if ( is_user_logged_in() && erp_hr_is_account_above_current_user( $this->user_id ) ) {
+            unset( $posted['user_email'], $posted['user_url'], $posted['first_name'], $posted['last_name'] );
+        }
 
         //update user email
         if ( isset( $posted['user_email'] )

@@ -1495,7 +1495,22 @@ class EmployeesController extends REST_Controller {
             return new WP_Error( 'rest_performance_invalid_permission_type', __( 'Invalid role format', 'erp' ), [ 'status' => 400 ] );
         }
 
-        $roles = $employee->update_role( $request['roles'] )->get_roles();
+        // An administrator's roles are not an HR manager's to change.
+        if ( ! get_userdata( $employee_id ) || erp_hr_is_account_above_current_user( $employee_id ) ) {
+            return new WP_Error( 'rest_cannot_edit_permission', __( 'You are not allowed to change this user\'s permissions.', 'erp' ), array( 'status' => 403 ) );
+        }
+
+        // Only grant or take away a role the caller holds: an HR manager may not
+        // make themselves or anyone else a CRM or Accounting manager.
+        $roles = array();
+
+        foreach ( $request['roles'] as $role => $enabled ) {
+            if ( current_user_can( 'manage_options' ) || current_user_can( $role ) ) {
+                $roles[ $role ] = $enabled;
+            }
+        }
+
+        $roles = $employee->update_role( $roles )->get_roles();
         $request->set_param( 'context', 'edit' );
         $response = rest_ensure_response( $roles );
         $response->set_status( 201 );

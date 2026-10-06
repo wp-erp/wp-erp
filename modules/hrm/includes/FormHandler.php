@@ -1111,6 +1111,11 @@ class FormHandler {
 
 		$user = get_user_by( 'id', $employee_id );
 
+		// An administrator's roles are not an HR manager's to change.
+		if ( ! $user || erp_hr_is_account_above_current_user( $user->ID ) ) {
+			wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		if ( $enable_manager && ! user_can( $user, $hr_manager_role ) ) {
 			$user->add_role( $hr_manager_role );
 		} elseif ( ! $enable_manager && user_can( $user, $hr_manager_role ) ) {

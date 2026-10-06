@@ -1225,6 +1225,38 @@ function erp_hr_can_manage_wp_account( $user_id ) {
     return true;
 }
 
+/**
+ * Whether a WordPress account ranks above the current user.
+ *
+ * True for a super admin or an administrator (anyone who can manage_options)
+ * when the current user is not one. Such an account's roles, login email,
+ * website and name are not HR's to change; its HR record still is.
+ *
+ * Narrower than `erp_hr_can_manage_wp_account()`, which also refuses any
+ * account holding a capability the caller lacks (a CRM agent, say): HR keeps
+ * editing those employees' names as before.
+ *
+ * @since 1.18.0
+ *
+ * @param int $user_id Target user ID.
+ *
+ * @return bool
+ */
+function erp_hr_is_account_above_current_user( $user_id ) {
+    $target = get_userdata( (int) $user_id );
+
+    if ( ! $target ) {
+        return false;
+    }
+
+    if ( is_super_admin( $target->ID ) && ! is_super_admin() ) {
+        return true;
+    }
+
+    return ( in_array( 'administrator', (array) $target->roles, true ) || user_can( $target, 'manage_options' ) )
+        && ! current_user_can( 'manage_options' );
+}
+
 add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
 
 /**
