@@ -206,6 +206,11 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
                 //date extract between last leave date and current leave start dates
                 $previous_between_dates = erp_extract_dates( $last_req_end_date, $start_day_previous );
 
+                // A gap too long to list holds working days, so no sandwich.
+                if ( is_wp_error( $previous_between_dates ) ) {
+                    $previous_between_dates = array();
+                }
+
                 //check holiday or non-working day exist between last_req and current start_date
                 $previous_holiday_exist = erp_hr_leave_get_holiday_between_date_range( $last_req_end_date, $start_day_previous );
 
@@ -245,6 +250,11 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
                 $end_date_next_day   = erp_current_datetime()->modify( $end_date )->modify( '+1 days' )->format( 'Y-m-d' );
                 //date extract between last leave date and current leave start dates
                 $previous_between_dates = erp_extract_dates( $end_date_next_day, $last_req_start_date );
+
+                // A gap too long to list holds working days, so no sandwich.
+                if ( is_wp_error( $previous_between_dates ) ) {
+                    $previous_between_dates = array();
+                }
 
                 //check holiday or non-working day exist between last_req and current start_date
                 $previous_holiday_exist = erp_hr_leave_get_holiday_between_date_range( $end_date_next_day, $last_req_start_date );

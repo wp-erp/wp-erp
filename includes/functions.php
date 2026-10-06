@@ -715,6 +715,24 @@ function erp_extract_dates( $start_date, $end_date ) {
 		return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'erp' ) );
 	}
 
+	/**
+	 * Longest range, in days, that erp_extract_dates() lists day by day.
+	 *
+	 * A leave or remote work request carries its own dates, so without a
+	 * limit one request for a range thousands of years long tied up the
+	 * server walking it. 0 turns the limit off.
+	 *
+	 * @since 1.18.0
+	 *
+	 * @param int $max_days Default 731 (two years).
+	 */
+	$max_days = (int) apply_filters( 'erp_extract_dates_max_days', 731 );
+
+	if ( $max_days > 0 && $diff->days + 1 > $max_days ) {
+		/* translators: %d: number of days */
+		return new WP_Error( 'date-range-too-long', sprintf( __( 'The date range is too long. Please choose at most %d days.', 'erp' ), $max_days ) );
+	}
+
 	$interval = DateInterval::createFromDateString( '1 day' );
 	$period   = new DatePeriod( $start_date, $interval, $end_date );
 

@@ -51,8 +51,17 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
     $holiday_extrat    = [];
     $given_date_extrat = erp_extract_dates( $start_date, $end_date );
 
+    if ( is_wp_error( $given_date_extrat ) ) {
+        return array();
+    }
+
     foreach ( $results as $result ) {
-        $date_extrat    = erp_extract_dates( $result['start'], $result['end'] );
+        $date_extrat = erp_extract_dates( $result['start'], $result['end'] );
+
+        if ( is_wp_error( $date_extrat ) ) {
+            continue;
+        }
+
         $holiday_extrat = array_merge( $holiday_extrat, $date_extrat );
     }
 
@@ -121,8 +130,13 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
 
     $user_enti_count    = $balance['day_out'];
     $policy_days        = $balance['total'];
-    $working_day        = erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id ); //erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
-    $apply_days         = $working_day['total'] + $user_enti_count;
+    $working_day = erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id ); //erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
+
+    if ( is_wp_error( $working_day ) ) {
+        return false;
+    }
+
+    $apply_days = $working_day['total'] + $user_enti_count;
 
     if ( $apply_days > $policy_days ) {
         return false;
@@ -1201,12 +1215,6 @@ function erp_hr_leave_insert_request( $args = [] ) {
         return new WP_Error( 'no-policy', esc_attr__( 'No leave policy provided.', 'erp' ) );
     }
 
-    $period = erp_hr_get_work_days_between_dates( $args['start_date'], $args['end_date'], $args['user_id'] );
-
-    if ( is_wp_error( $period ) ) {
-        return $period;
-    }
-
     // get balance
     $entitlement = LeaveEntitlement::find( $args['leave_policy'] );
 
@@ -1219,6 +1227,21 @@ function erp_hr_leave_insert_request( $args = [] ) {
         return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range.', 'erp' ) );
     }
 
+    // check start_date and end_date are in the same f_year, before walking the
+    // range day by day: a range far outside the year is refused straight away
+    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' );
+    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' );
+
+    if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end ) ) {
+        return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
+    }
+
+    $period = erp_hr_get_work_days_between_dates( $args['start_date'], $args['end_date'], $args['user_id'] );
+
+    if ( is_wp_error( $period ) ) {
+        return $period;
+    }
+
     // check for unpaid leave
     if ( get_option( 'enable_extra_leave', 'no' ) !== 'yes' ) {
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $args['start_date'], $args['end_date'], $args['leave_policy'], $args['user_id'] );
@@ -1226,14 +1249,6 @@ function erp_hr_leave_insert_request( $args = [] ) {
         if ( ! $is_policy_valid ) {
             return new WP_Error( 'invalid-dates', esc_attr__( 'Sorry! You do not have any leave left under this leave policy.', 'erp' ) );
         }
-    }
-
-    // check start_date and end_date are in the same f_year
-    $f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' );
-    $f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' );
-
-    if ( ( $args['start_date'] < $f_year_start || $args['start_date'] > $f_year_end ) || ( $args['end_date'] < $f_year_start || $args['end_date'] > $f_year_end ) ) {
-        return new WP_Error( 'invalid-dates', sprintf( esc_attr__( 'Invalid leave duration. Please apply between %1$s and %2$s.', 'erp' ), erp_format_date( $f_year_start ), erp_format_date( $f_year_end ) ) );
     }
 
     // handle overlapped leaves
