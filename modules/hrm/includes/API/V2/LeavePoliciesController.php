@@ -173,7 +173,7 @@ class LeavePoliciesController extends RestController {
 		}
 
 		$response = rest_ensure_response( $items );
-		return $this->paginate( $response, $request, $total );
+		return $this->paginate( $response, $request, $total, $per_page );
 	}
 
 	/**

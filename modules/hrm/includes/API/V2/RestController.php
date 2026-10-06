@@ -239,11 +239,15 @@ abstract class RestController extends WP_REST_Controller {
 	 * @param WP_REST_Response $response    The response.
 	 * @param WP_REST_Request  $request     The request.
 	 * @param int              $total_items Total item count (across all pages).
+	 * @param int              $per_page    Page size the handler actually used, when it
+	 *                                      clamped the request's (0 reads the request).
 	 *
 	 * @return WP_REST_Response
 	 */
-	protected function paginate( WP_REST_Response $response, WP_REST_Request $request, int $total_items ): WP_REST_Response {
-		$per_page = (int) ( $request['per_page'] ?? 20 );
+	protected function paginate( WP_REST_Response $response, WP_REST_Request $request, int $total_items, int $per_page = 0 ): WP_REST_Response {
+		if ( $per_page < 1 ) {
+			$per_page = (int) ( $request['per_page'] ?? 20 );
+		}
 		if ( $per_page < 1 ) {
 			$per_page = 20;
 		}

@@ -165,7 +165,7 @@ class DepartmentsController extends RestController {
 		$this->primed = [];
 
 		$response = rest_ensure_response( $items );
-		return $this->paginate( $response, $request, $total );
+		return $this->paginate( $response, $request, $total, $per_page );
 	}
 
 	/**

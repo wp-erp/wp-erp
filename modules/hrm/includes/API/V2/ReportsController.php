@@ -772,7 +772,7 @@ class ReportsController extends RestController {
 			'current_f_year' => $current_f_year,
 		] );
 
-		return $this->paginate( $response, $request, (int) $total_count );
+		return $this->paginate( $response, $request, (int) $total_count, $per_page );
 	}
 
 	/**
