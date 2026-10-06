@@ -35,24 +35,25 @@ export interface UseEmployeeNotes {
 	readonly reload:     () => void;
 }
 
-// Page size; the list grows by this on each "Load more" so notes past the first
-// page (legacy fetched ≤100 and lost the rest) stay reachable.
+// Page size. "Load more" fetches the next page and appends it, so notes past
+// the first page (legacy fetched ≤100 and lost the rest) stay reachable.
+// Growing per_page instead hit the server's cap of 100 and blanked the tab.
 const PAGE_SIZE = 20;
 
 export function useEmployeeNotes( userId: number ): UseEmployeeNotes {
 	const [ notes, setNotes ]     = useState< readonly EmployeeNote[] >( [] );
 	const [ total, setTotal ]     = useState( 0 );
-	const [ limit, setLimit ]     = useState( PAGE_SIZE );
+	const [ page, setPage ]       = useState( 1 );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ]     = useState< string | null >( null );
 	const [ nonce, setNonce ]     = useState( 0 );
 
-	const reload   = useCallback( () => { setLimit( PAGE_SIZE ); setNonce( ( n ) => n + 1 ); }, [] );
-	const loadMore = useCallback( () => setLimit( ( l ) => l + PAGE_SIZE ), [] );
+	const reload   = useCallback( () => { setPage( 1 ); setNonce( ( n ) => n + 1 ); }, [] );
+	const loadMore = useCallback( () => setPage( ( p ) => p + 1 ), [] );
 
 	// Reset the window when switching employees.
 	useEffect( () => {
-		setLimit( PAGE_SIZE );
+		setPage( 1 );
 	}, [ userId ] );
 
 	useEffect( () => {
@@ -60,13 +61,19 @@ export function useEmployeeNotes( userId: number ): UseEmployeeNotes {
 		setLoading( true );
 		setError( null );
 
-		const path = restPath( 'v2', `/employees/${ userId }/notes`, { per_page: limit } );
+		const path = restPath( 'v2', `/employees/${ userId }/notes`, { per_page: PAGE_SIZE, page } );
 		void requestWithHeaders< EmployeeNote[] >( path )
 			.then( ( { body, headers } ) => {
 				if ( cancelled ) {
 					return;
 				}
-				setNotes( body );
+				setNotes( ( prev ) => {
+					if ( page === 1 ) {
+						return body;
+					}
+					const seen = new Set( prev.map( ( n ) => n.id ) );
+					return [ ...prev, ...body.filter( ( n ) => ! seen.has( n.id ) ) ];
+				} );
 				const totalHeader = headers.get( 'X-WP-Total' );
 				setTotal( totalHeader ? parseInt( totalHeader, 10 ) : body.length );
 			} )
@@ -85,7 +92,7 @@ export function useEmployeeNotes( userId: number ): UseEmployeeNotes {
 		return () => {
 			cancelled = true;
 		};
-	}, [ userId, nonce, limit ] );
+	}, [ userId, nonce, page ] );
 
 	const addNote = useCallback(
 		async ( comment: string ): Promise< void > => {
