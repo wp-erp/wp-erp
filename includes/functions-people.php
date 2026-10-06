@@ -450,7 +450,7 @@ function erp_get_people_by( $field, $value ) {
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $value ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         $results = array_map( function ( $item ) {
-            $item->types = explode( ',', $item->types );
+            $item->types = ! empty( $item->types ) ? explode( ',', $item->types ) : [];
             return $item;
         }, $results );
 
