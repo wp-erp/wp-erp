@@ -3245,8 +3245,123 @@ function erp_hr_save_leave_attachment( $request_id, $request, $leaves ) {
 
         if ( ! empty( $uploaded['success'] ) ) {
             add_user_meta( $request['user_id'], 'leave_document_' . $request_id, $uploaded['attach_id'] );
+            wp_cache_delete( 'leave_document_ids', 'erp-hr-leave' );
         }
     }
+}
+
+/**
+ * Ids of every leave request document.
+ *
+ * Leave documents are unattached `inherit` attachments, which WordPress lists
+ * to anyone; their ids live only in the user meta `leave_document_{request_id}`.
+ *
+ * @since 1.18.0
+ *
+ * @return int[]
+ */
+function erp_hr_leave_document_ids() {
+    $ids = wp_cache_get( 'leave_document_ids', 'erp-hr-leave' );
+
+    if ( false !== $ids ) {
+        return $ids;
+    }
+
+    global $wpdb;
+
+    $ids = $wpdb->get_col(
+        $wpdb->prepare(
+            "SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key LIKE %s",
+            $wpdb->esc_like( 'leave_document_' ) . '%'
+        )
+    );
+
+    $ids = array_values( array_unique( array_filter( array_map( 'absint', $ids ) ) ) );
+
+    wp_cache_set( 'leave_document_ids', $ids, 'erp-hr-leave', MINUTE_IN_SECONDS );
+
+    return $ids;
+}
+
+/**
+ * Whether leave documents should be hidden from the current user's media listings.
+ *
+ * HR and admins see them. ERP Pro hides them itself along with its other
+ * private HR files, so this stands down when Pro's filter is loaded.
+ *
+ * @since 1.18.0
+ *
+ * @return bool
+ */
+function erp_hr_should_hide_leave_documents() {
+    if ( function_exists( 'erp_pro_private_file_ids' ) ) {
+        return false;
+    }
+
+    return ! current_user_can( 'manage_options' ) && ! current_user_can( erp_hr_get_manager_role() );
+}
+
+/**
+ * Keep leave documents out of a REST or media-modal attachment query.
+ *
+ * @since 1.18.0
+ *
+ * @param array $args Query args.
+ *
+ * @return array
+ */
+function erp_hr_hide_leave_documents( $args ) {
+    if ( ! erp_hr_should_hide_leave_documents() ) {
+        return $args;
+    }
+
+    $ids = erp_hr_leave_document_ids();
+
+    if ( $ids ) {
+        $args['post__not_in'] = array_merge( (array) ( isset( $args['post__not_in'] ) ? $args['post__not_in'] : array() ), $ids );
+    }
+
+    return $args;
+}
+
+/**
+ * Keep leave documents out of the wp-admin Media Library list.
+ *
+ * @since 1.18.0
+ *
+ * @param WP_Query $query Query.
+ *
+ * @return void
+ */
+function erp_hr_hide_leave_documents_in_admin( $query ) {
+    if ( ! is_admin() || ! $query->is_main_query() || 'attachment' !== $query->get( 'post_type' ) ) {
+        return;
+    }
+
+    $query->query_vars = erp_hr_hide_leave_documents( $query->query_vars );
+}
+
+/**
+ * A single leave document through `/wp/v2/media/{id}` is a 404 for anyone who is not HR.
+ *
+ * @since 1.18.0
+ *
+ * @param mixed           $response Response so far.
+ * @param array           $handler  Route handler.
+ * @param WP_REST_Request $request  Request.
+ *
+ * @return mixed
+ */
+function erp_hr_hide_leave_document_rest_item( $response, $handler, $request ) {
+    if ( is_wp_error( $response ) || ! preg_match( '#^/wp/v2/media/(\d+)#', (string) $request->get_route(), $match ) ) {
+        return $response;
+    }
+
+    if ( erp_hr_should_hide_leave_documents() && in_array( (int) $match[1], erp_hr_leave_document_ids(), true ) ) {
+        return new WP_Error( 'rest_post_invalid_id', __( 'Invalid post ID.', 'erp' ), array( 'status' => 404 ) );
+    }
+
+    return $response;
 }
 
 /**
