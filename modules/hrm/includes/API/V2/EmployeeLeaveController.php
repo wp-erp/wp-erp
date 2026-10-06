@@ -234,6 +234,14 @@ class EmployeeLeaveController extends RestController {
 			return new \WP_Error( 'rest_invalid_financial_year', __( 'No leave year found for this leave policy.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		// The legacy approve refuses requests in a leave year that ended before
+		// the current one ("You can not modify past leave year requests"), so a
+		// request filed there sat pending for good. Refuse it here too.
+		$current_f_year = erp_hr_get_financial_year_from_date();
+		if ( $current_f_year && (int) $entitlement->financial_year->start_date < (int) $current_f_year->start_date ) {
+			return new \WP_Error( 'rest_past_leave_year', __( 'Error: You can not modify past leave year requests.', 'erp' ), [ 'status' => 400 ] );
+		}
+
 		$f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
 		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
 
