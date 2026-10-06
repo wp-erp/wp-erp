@@ -1215,6 +1215,15 @@ function erp_hr_leave_insert_request( $args = [] ) {
         return new WP_Error( 'no-policy', esc_attr__( 'No leave policy provided.', 'erp' ) );
     }
 
+    // Terminating an employee only changes their status (they keep the
+    // employee role and with it their self-service), so check it here: leave
+    // is for active employees.
+    $employee = new \WeDevs\ERP\HRM\Employee( intval( $args['user_id'] ) );
+
+    if ( ! $employee->is_employee() || 'active' !== $employee->get_status() ) {
+        return new WP_Error( 'inactive-employee', esc_attr__( 'Leave can only be requested for an active employee.', 'erp' ) );
+    }
+
     // get balance
     $entitlement = LeaveEntitlement::find( $args['leave_policy'] );
 
