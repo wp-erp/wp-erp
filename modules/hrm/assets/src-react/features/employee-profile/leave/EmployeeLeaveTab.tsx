@@ -56,7 +56,7 @@ const SELECT_CLASS =
 // Accent palette for the leave-balance cards (cycled by index).
 const BALANCE_COLORS = [ '#3b82f6', '#ef4444', '#22c55e', '#ec4899', '#a78bfa', '#f59e0b' ];
 
-export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX.Element {
+export function EmployeeLeaveTab( { userId, targetCaps = {} }: { readonly userId: number; readonly targetCaps?: Readonly< Record< string, boolean > > } ): JSX.Element {
 	const [ filters, setFilters ] = useState< LeaveFilters >( {} );
 	const { data, loading, error, refetch } = useEmployeeLeave( userId, filters );
 	const meta = data?.meta;
@@ -66,7 +66,7 @@ export function EmployeeLeaveTab( { userId }: { readonly userId: number } ): JSX
 	);
 	// Managers can file for anyone (primitive cap); an employee can file for
 	// their OWN profile (self meta-cap) even without the primitive cap.
-	const canCreate = useCan( 'erp_leave_create_request' ) || userId === currentUserId;
+	const canCreate = useCan( 'erp_leave_create_request' ) || Boolean( targetCaps.erp_leave_create_request ) || userId === currentUserId;
 	const [ showRequest, setShowRequest ] = useState( false );
 
 	if ( error ) {

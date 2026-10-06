@@ -523,8 +523,10 @@ class EmployeeJobHistoriesController extends RestController {
 			$out[] = [
 				'id'      => (int) ( $row['id'] ?? 0 ),
 				'date'    => $this->cast_date_iso( $row['date'] ?? null ),
-				'status'  => $code !== '' && isset( $statuses[ $code ] ) ? (string) $statuses[ $code ] : '',
-				'comment' => $this->cast_string_or_null( $row['comments'] ?? '' ) ?? '',
+				'status'      => $code !== '' && isset( $statuses[ $code ] ) ? (string) $statuses[ $code ] : '',
+				// Raw code for edit prefill; the label above is display-only.
+				'status_code' => $code,
+				'comment'     => $this->cast_string_or_null( $row['comments'] ?? '' ) ?? '',
 			];
 		}
 		return $out;
@@ -545,8 +547,9 @@ class EmployeeJobHistoriesController extends RestController {
 			$out[] = [
 				'id'      => (int) ( $row['id'] ?? 0 ),
 				'date'    => $this->cast_date_iso( $row['date'] ?? null ),
-				'type'    => $code !== '' && isset( $types[ $code ] ) ? (string) $types[ $code ] : '',
-				'comment' => $this->cast_string_or_null( $row['comments'] ?? '' ) ?? '',
+				'type'      => $code !== '' && isset( $types[ $code ] ) ? (string) $types[ $code ] : '',
+				'type_code' => $code,
+				'comment'   => $this->cast_string_or_null( $row['comments'] ?? '' ) ?? '',
 			];
 		}
 		return $out;
@@ -570,9 +573,11 @@ class EmployeeJobHistoriesController extends RestController {
 				'id'       => (int) ( $row['id'] ?? 0 ),
 				'date'     => $this->cast_date_iso( $row['date'] ?? null ),
 				'pay_rate' => $this->cast_string_or_null( $row['pay_rate'] ?? '' ) ?? '',
-				'pay_type' => $pay_type !== '' && isset( $pay_types[ $pay_type ] ) ? (string) $pay_types[ $pay_type ] : $pay_type,
-				'reason'   => $reason !== '' && isset( $reasons[ $reason ] ) ? (string) $reasons[ $reason ] : $reason,
-				'comment'  => $this->cast_string_or_null( $row['comment'] ?? '' ) ?? '',
+				'pay_type'      => $pay_type !== '' && isset( $pay_types[ $pay_type ] ) ? (string) $pay_types[ $pay_type ] : $pay_type,
+				'reason'        => $reason !== '' && isset( $reasons[ $reason ] ) ? (string) $reasons[ $reason ] : $reason,
+				'pay_type_code' => $pay_type,
+				'reason_code'   => $reason,
+				'comment'       => $this->cast_string_or_null( $row['comment'] ?? '' ) ?? '',
 			];
 		}
 		return $out;

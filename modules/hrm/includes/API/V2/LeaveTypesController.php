@@ -156,8 +156,10 @@ class LeaveTypesController extends RestController {
 			$items[] = $row;
 		}
 
+		// Every row is returned in one page, so the headers say one page too
+		// (they were computed from `per_page`, which this route does not apply).
 		$response = rest_ensure_response( $items );
-		return $this->paginate( $response, $request, \count( $items ) );
+		return $this->paginate( $response, $request, \count( $items ), max( 1, \count( $items ) ) );
 	}
 
 	/**

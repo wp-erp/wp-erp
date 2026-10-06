@@ -94,7 +94,7 @@ class FinancialYearsController extends RestController {
 	 * POST /erp/v2/financial-years
 	 *
 	 * Full-set save via ID-stable upsert — deleting a year = omitting its row
-	 * from the payload (skipped when the year is still FK-referenced).
+	 * from the payload (refused with a 409 when the year is still FK-referenced).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
@@ -123,6 +123,11 @@ class FinancialYearsController extends RestController {
 			return $invalid;
 		}
 
+		$in_use = $this->in_use_removals( $clean );
+		if ( $in_use ) {
+			return $in_use;
+		}
+
 		$result = erp_settings_save_leave_years( $clean );
 
 		if ( is_wp_error( $result ) ) {
@@ -130,6 +135,39 @@ class FinancialYearsController extends RestController {
 		}
 
 		return $this->get_items( $request );
+	}
+
+	/**
+	 * A 409 naming the stored years the payload drops that leave records still
+	 * use, else null. The legacy helper keeps such years (it never orphans an
+	 * `f_year` link) but reports success, so the row silently came back.
+	 *
+	 * @param array $years Sanitized rows.
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function in_use_removals( array $years ): ?\WP_Error {
+		$kept  = array_filter( array_map( 'intval', wp_list_pluck( $years, 'id' ) ) );
+		$names = [];
+
+		foreach ( (array) erp_get_hr_financial_years() as $row ) {
+			$id = (int) ( $row['id'] ?? 0 );
+
+			if ( $id && ! \in_array( $id, $kept, true ) && erp_hr_financial_year_in_use( $id ) ) {
+				$names[] = (string) ( $row['fy_name'] ?? $id );
+			}
+		}
+
+		if ( empty( $names ) ) {
+			return null;
+		}
+
+		return new \WP_Error(
+			'rest_financial_year_in_use',
+			/* translators: %s: comma separated financial year names */
+			\sprintf( __( 'These financial years are used by leave policies, entitlements or requests and cannot be deleted: %s', 'erp' ), implode( ', ', $names ) ),
+			[ 'status' => 409 ]
+		);
 	}
 
 	/**

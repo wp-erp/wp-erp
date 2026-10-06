@@ -8,6 +8,9 @@
  * `RequestsActionSlotContext` — the DOM node at the right of the tab row where
  * the active child portals its "New Request" button (kept inline with the tabs
  * instead of on a separate row below).
+ *
+ * `RequestsCountsContext` - asks the Requests page to refetch its tab badges
+ * after a child changes a request (approve, reject, delete, create).
  */
 
 import { createContext } from 'react';
@@ -15,3 +18,5 @@ import { createContext } from 'react';
 export const RequestsTabContext = createContext( false );
 
 export const RequestsActionSlotContext = createContext< HTMLElement | null >( null );
+
+export const RequestsCountsContext = createContext< () => void >( () => undefined );

@@ -24,7 +24,7 @@ import { Check, Laptop, Plus, Trash2, X } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 
 import { RequestsActionSlot } from "./RequestsActionSlot";
-import { RequestsTabContext } from "./requests-tab-context";
+import { RequestsCountsContext, RequestsTabContext } from "./requests-tab-context";
 import type { JSX } from "react";
 
 import { EmptyState } from "@/shared/components/EmptyState";
@@ -58,6 +58,7 @@ const BASE = "/hrm/remote-work";
 
 export function RemoteWorkRequests(): JSX.Element {
     const inTabs = useContext(RequestsTabContext);
+    const refreshCounts = useContext(RequestsCountsContext);
     const [rows, setRows] = useState<RemoteRow[]>([]);
     const [loading, setLoading] = useState(true);
     // The list is paged on the server (20 by default); without a pager only
@@ -97,6 +98,7 @@ export function RemoteWorkRequests(): JSX.Element {
         p.then(() => {
             toast.success(__("Done.", "erp"));
             load();
+            refreshCounts();
         })
             .catch((e: ApiError) =>
                 toast.error(e.message || __("Action failed.", "erp")),
@@ -263,6 +265,7 @@ export function RemoteWorkRequests(): JSX.Element {
                     onSaved={() => {
                         setCreating(false);
                         load();
+                        refreshCounts();
                     }}
                 />
             ) : null}

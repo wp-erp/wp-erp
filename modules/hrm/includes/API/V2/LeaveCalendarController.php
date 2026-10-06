@@ -294,8 +294,10 @@ class LeaveCalendarController extends RestController {
 				'id'         => (int) ( $h->id ?? 0 ),
 				'type'       => $is_weekend ? 'weekend' : 'holiday',
 				'title'      => (string) ( $h->title ?? '' ),
-				'start'      => $this->cast_date_iso( $h->start ?? null ),
-				'end'        => $this->cast_date_iso( $h->end ?? null ),
+				// Bare calendar days like `/holidays`: the rows end at `23:59:59`,
+				// which as an instant can tip onto the next day in another zone.
+				'start'      => $this->cast_calendar_day( $h->start ?? null ),
+				'end'        => $this->cast_calendar_day( $h->end ?? null ),
 				'holiday'    => true,
 				'background' => (bool) $is_weekend,
 				'color'      => $is_weekend ? '#c5bfbf' : '#FF5354',

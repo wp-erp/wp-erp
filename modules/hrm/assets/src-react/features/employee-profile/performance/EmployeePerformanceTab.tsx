@@ -79,10 +79,12 @@ function Section( { title, columns, empty, emptyHint, rowCount, hasActions, head
 	);
 }
 
-export function EmployeePerformanceTab( { userId }: { readonly userId: number } ): JSX.Element {
+export function EmployeePerformanceTab( { userId, targetCaps = {} }: { readonly userId: number; readonly targetCaps?: Readonly< Record< string, boolean > > } ): JSX.Element {
 	const { data, loading, error, createPerformance, deletePerformance } = useEmployeePerformance( userId );
-	const canCreate = useCan( 'erp_create_review' );
-	const canDelete = useCan( 'erp_delete_review' );
+	// A reporting manager holds the review caps only against their reports, so
+	// the per-target caps decide alongside the global map (as the server does).
+	const canCreate = useCan( 'erp_create_review' ) || Boolean( targetCaps.erp_create_review );
+	const canDelete = useCan( 'erp_delete_review' ) || Boolean( targetCaps.erp_delete_review );
 
 	const [ formType, setFormType ] = useState< PerformanceType | null >( null );
 	const [ busy, setBusy ]         = useState( false );

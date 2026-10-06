@@ -181,7 +181,9 @@ function LeaveUnpaidInner(): JSX.Element {
 						) : null }
 						<Button
 							className="inline-flex h-10 items-center gap-2 rounded-md px-5 text-sm font-medium leading-5 shadow-sm"
-							disabled={ busy }
+							// Amounts are worked out per financial year; the server refuses none.
+							disabled={ busy || ! fYear }
+							title={ fYear ? undefined : __( 'Pick a financial year first.', 'erp' ) }
 							onClick={ () => void handleCalculate() }
 						>
 							<Calculator size={ 16 } strokeWidth={ 2 } aria-hidden="true" />

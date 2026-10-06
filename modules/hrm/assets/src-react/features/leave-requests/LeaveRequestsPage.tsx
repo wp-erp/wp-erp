@@ -16,11 +16,11 @@
 import { addAction, removeAction } from '@wordpress/hooks';
 import { Button, Input, toast } from '@wedevs/plugin-ui';
 import { CalendarDays, Check, Plus, Search, Trash2, X } from 'lucide-react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { JSX } from 'react';
 
 import { RequestsActionSlot } from '../requests/RequestsActionSlot';
-import { RequestsTabContext } from '../requests/requests-tab-context';
+import { RequestsCountsContext, RequestsTabContext } from '../requests/requests-tab-context';
 
 import { TYPE_OPTIONS } from '@/features/employee-create/options';
 import { loadLookup } from '@/features/employees/filters/lookups';
@@ -360,6 +360,21 @@ function LeaveRequestsInner(): JSX.Element {
 			removeAction( ACTIONS.LEAVE_REQUESTS_REFRESH_REQUESTED, 'erp-hr/leave-requests' );
 		};
 	}, [ reload ] );
+
+	// Inside People > Requests, refetch the tab badges whenever these counts move
+	// (approve, reject, delete, a new request, a pro Forward), not just once.
+	const refreshRequestCounts = useContext( RequestsCountsContext );
+	const countsKey = [ counts.all, counts.pending, counts.approved, counts.rejected, counts.forwarded ].join( '|' );
+	const lastCountsKey = useRef< string | null >( null );
+	useEffect( () => {
+		if ( loading ) {
+			return;
+		}
+		if ( null !== lastCountsKey.current && lastCountsKey.current !== countsKey ) {
+			refreshRequestCounts();
+		}
+		lastCountsKey.current = countsKey;
+	}, [ countsKey, loading, refreshRequestCounts ] );
 
 	const allOnPageSelected =
 		rows.length > 0 && rows.every( ( r ) => selected.has( r.id ) );

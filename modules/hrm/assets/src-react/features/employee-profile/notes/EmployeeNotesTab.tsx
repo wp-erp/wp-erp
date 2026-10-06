@@ -5,10 +5,12 @@
  * author avatar + timestamp, and delete a note behind a confirm dialog. All
  * writes go through `useEmployeeNotes`, which hits the v2 endpoint that
  * delegates to the unchanged v1 `Employee` model. Capability gating mirrors the
- * server: `erp_manage_review` to add, `erp_edit_employee` to delete.
+ * server: `erp_manage_review` on this employee to add or delete, and a non-HR
+ * author may delete only the notes they wrote.
  */
 
 import { Avatar, AvatarFallback, AvatarImage, Button, Spinner, Textarea, toast } from '@wedevs/plugin-ui';
+import { useSelect } from '@wordpress/data';
 import { FileText, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent, JSX } from 'react';
@@ -19,6 +21,8 @@ import { RowActionsMenu } from '@/shared/components/RowActionsMenu';
 import { useCan } from '@/shared/hooks/useCan';
 import { __, dateI18n } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
+import { storeName as meStoreName } from '@/stores/me';
+import type { MeUser } from '@/stores/me/types';
 
 import { useEmployeeNotes } from './useEmployeeNotes';
 import type { EmployeeNote } from './useEmployeeNotes';
@@ -46,10 +50,16 @@ function formatDate( iso: string ): string {
 	return dateI18n( 'M j, Y · g:i a', iso );
 }
 
-export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX.Element {
+export function EmployeeNotesTab( { userId, targetCaps = {} }: { readonly userId: number; readonly targetCaps?: Readonly< Record< string, boolean > > } ): JSX.Element {
 	const { notes, loading, error, hasMore, loadMore, addNote, removeNote } = useEmployeeNotes( userId );
-	const canManage = useCan( 'erp_manage_review' );
-	const canDelete = useCan( 'erp_edit_employee' );
+	// A reporting manager holds `erp_manage_review` only against their reports.
+	const canManage = useCan( 'erp_manage_review' ) || Boolean( targetCaps.erp_manage_review );
+	const isHr      = useCan( 'erp_hr_manager' );
+	const currentUserId = useSelect(
+		( select ) => ( select( meStoreName ) as { getUser: () => MeUser | null } ).getUser()?.id ?? 0,
+		[]
+	);
+	const canDelete = ( note: EmployeeNote ): boolean => canManage && ( isHr || note.comment_by === currentUserId );
 
 	const [ draft, setDraft ]           = useState( '' );
 	const [ submitting, setSubmitting ] = useState( false );
@@ -160,7 +170,7 @@ export function EmployeeNotesTab( { userId }: { readonly userId: number } ): JSX
 										) : null }
 										<RowActionsMenu
 											actions={ [
-												{ id: 'delete', label: __( 'Delete note', 'erp' ), icon: Trash2, onSelect: () => setDeleting( note ), variant: 'destructive', hidden: ! canDelete },
+												{ id: 'delete', label: __( 'Delete note', 'erp' ), icon: Trash2, onSelect: () => setDeleting( note ), variant: 'destructive', hidden: ! canDelete( note ) },
 											] }
 										/>
 									</div>

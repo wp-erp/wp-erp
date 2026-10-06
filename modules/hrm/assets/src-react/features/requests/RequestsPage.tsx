@@ -14,7 +14,7 @@
 import { applyFilters } from '@wordpress/hooks';
 import { CalendarDays, LogOut, Laptop } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ComponentType, JSX } from 'react';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
@@ -28,7 +28,7 @@ import { useModalParam } from '@/shared/useModalParam';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
 import { LeaveRequestsPage } from '../leave-requests';
-import { RequestsActionSlotContext, RequestsTabContext } from './requests-tab-context';
+import { RequestsActionSlotContext, RequestsCountsContext, RequestsTabContext } from './requests-tab-context';
 import { ResignationRequests } from './ResignationRequests';
 import { RemoteWorkRequests } from './RemoteWorkRequests';
 
@@ -76,8 +76,11 @@ function RequestsInner(): JSX.Element {
 	const [ actionSlotEl, setActionSlotEl ] = useState< HTMLDivElement | null >( null );
 
 	// Per-type totals for the tab badges (Leave / Asset / Reimbursement / …),
-	// keyed by tab id. Restores the legacy unified-Requests counts.
+	// keyed by tab id. Restores the legacy unified-Requests counts. Refetched
+	// whenever a tab reports a change, so the badges never go stale.
 	const [ counts, setCounts ] = useState< Record< string, number > >( {} );
+	const [ countsTick, setCountsTick ] = useState( 0 );
+	const refreshCounts = useCallback( () => setCountsTick( ( n ) => n + 1 ), [] );
 	useEffect( () => {
 		const ctrl = new AbortController();
 		request< { totals?: Record< string, number > } >(
@@ -87,7 +90,7 @@ function RequestsInner(): JSX.Element {
 			.then( ( res ) => setCounts( res.totals ?? {} ) )
 			.catch( () => undefined );
 		return () => ctrl.abort();
-	}, [] );
+	}, [ countsTick ] );
 
 	return (
 		<section className="mx-auto w-full max-w-full">
@@ -128,7 +131,9 @@ function RequestsInner(): JSX.Element {
 			<ErrorBoundary>
 				<RequestsTabContext.Provider value={ true }>
 					<RequestsActionSlotContext.Provider value={ actionSlotEl }>
-						<ActiveEl inTabs />
+						<RequestsCountsContext.Provider value={ refreshCounts }>
+							<ActiveEl inTabs />
+						</RequestsCountsContext.Provider>
 					</RequestsActionSlotContext.Provider>
 				</RequestsTabContext.Provider>
 			</ErrorBoundary>

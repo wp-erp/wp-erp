@@ -406,10 +406,8 @@ class LeaveRequestsController extends RestController {
 	 * list rows. The list (`erp_hr_get_leave_requests()`) buckets by CALENDAR
 	 * year (`year` → `request.start_date >= Jan 1 AND end_date <= Dec 31`), so
 	 * when a `year` is supplied the counts are computed with the same
-	 * calendar-year scope. With no `year` we fall back to the legacy
-	 * financial-year view counts (`erp_hr_leave_get_requests_count()`, current FY
-	 * by default) — matching the list's "All Years" default, which is FY-agnostic
-	 * but uses the same model layer.
+	 * calendar-year scope. An `f_year` narrows both the same way, and with
+	 * neither ("All years") both cover every year.
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
@@ -425,61 +423,28 @@ class LeaveRequestsController extends RestController {
 			$user_ids = array_map( 'absint', (array) erp_hr_get_dept_lead_subordinate_employees( get_current_user_id() ) );
 		}
 
-		// Calendar-year scope: count rows exactly as the list filters them.
-		if ( $year ) {
-			$counts = $this->scoped_counts( $user_ids, $year, 0 );
-
-			return rest_ensure_response(
-				[
-					'all'       => $counts['all'],
-					'approved'  => $counts['1'],
-					'pending'   => $counts['2'],
-					'rejected'  => $counts['3'],
-					'forwarded' => $counts['4'],
-					'year'      => $year,
-				]
-			);
-		}
-
-		// No year filter ("All Years") → legacy financial-year view counts.
+		// Count with the same `year` / `f_year` filters the list applies. With
+		// neither ("All years") the list has no year filter, so neither do these.
 		$f_year = (int) ( $request['f_year'] ?? 0 );
+		$counts = $this->scoped_counts( $user_ids, $year, $f_year );
 
-		if ( ! $f_year && function_exists( 'erp_hr_get_financial_year_from_date' ) ) {
-			$fy     = erp_hr_get_financial_year_from_date();
-			$f_year = $fy ? (int) $fy->id : 0;
+		$payload = [
+			'all'       => $counts['all'],
+			'approved'  => $counts['1'],
+			'pending'   => $counts['2'],
+			'rejected'  => $counts['3'],
+			'forwarded' => $counts['4'],
+		];
+
+		if ( $year ) {
+			$payload['year'] = $year;
 		}
 
-		if ( null !== $user_ids ) {
-			$counts = $this->scoped_counts( $user_ids, 0, $f_year );
-
-			return rest_ensure_response(
-				[
-					'all'       => $counts['all'],
-					'approved'  => $counts['1'],
-					'pending'   => $counts['2'],
-					'rejected'  => $counts['3'],
-					'forwarded' => $counts['4'],
-					'f_year'    => $f_year,
-				]
-			);
+		if ( $f_year ) {
+			$payload['f_year'] = $f_year;
 		}
 
-		$counts = (array) erp_hr_leave_get_requests_count( $f_year );
-
-		$pick = static function ( $key ) use ( $counts ): int {
-			return isset( $counts[ $key ]['count'] ) ? (int) $counts[ $key ]['count'] : 0;
-		};
-
-		return rest_ensure_response(
-			[
-				'all'       => $pick( 'all' ),
-				'approved'  => $pick( '1' ),
-				'pending'   => $pick( '2' ),
-				'rejected'  => $pick( '3' ),
-				'forwarded' => $pick( '4' ),
-				'f_year'    => $f_year,
-			]
-		);
+		return rest_ensure_response( $payload );
 	}
 
 	/**
@@ -490,7 +455,7 @@ class LeaveRequestsController extends RestController {
 	 * @param int[]|null $user_ids Restrict to these employees (a lead's
 	 *                             departments); null for no restriction.
 	 * @param int        $year     Calendar year (e.g. 2025), 0 for none.
-	 * @param int        $f_year   Financial year id, used when no calendar year.
+	 * @param int        $f_year   Financial year id, 0 for none.
 	 *
 	 * @return array{all:int,1:int,2:int,3:int,4:int}
 	 */
@@ -503,7 +468,9 @@ class LeaveRequestsController extends RestController {
 			$from   = ( new \DateTime( $year . '-01-01 00:00:00', wp_timezone() ) )->getTimestamp();
 			$to     = ( new \DateTime( $year . '-12-31 23:59:59', wp_timezone() ) )->getTimestamp();
 			$where .= $wpdb->prepare( ' AND request.start_date >= %d AND request.end_date <= %d', $from, $to );
-		} else {
+		}
+
+		if ( $f_year ) {
 			$where .= $wpdb->prepare( ' AND entl.f_year = %d', $f_year );
 		}
 

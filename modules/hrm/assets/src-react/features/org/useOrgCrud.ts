@@ -1,8 +1,8 @@
 /**
  * Shared list + CRUD hook for the small HR taxonomy entities (departments and
- * designations). Both are low-cardinality, so the list is fetched in one page
- * (`per_page=100`) and searched client-side — no server pagination needed,
- * matching the existing lookup-dropdown pattern.
+ * designations). The whole list is fetched (every page of 100, following
+ * `X-WP-TotalPages`) and searched, sorted and built into a tree client-side,
+ * so rows past the first 100 still reach the table, tree and parent picker.
  *
  * Reads + writes the matching `erp/v2` resource. Mutations delegate (server
  * side) to the unchanged v1 model layer, so every legacy hook keeps firing.
@@ -46,12 +46,26 @@ export function useOrgCrud< T extends OrgEntity >(
 		setLoading( true );
 		setError( null );
 		try {
-			const { body, headers } = await requestWithHeaders< T[] >(
-				restPath( 'v2', `/${ resource }`, { per_page: 100, orderby: 'title', order: 'asc' } )
-			);
-			const list = Array.isArray( body ) ? body : [];
+			const list: T[] = [];
+			let page       = 1;
+			let totalPages = 1;
+			let count      = 0;
+			do {
+				const { body, headers } = await requestWithHeaders< T[] >(
+					restPath( 'v2', `/${ resource }`, { per_page: 100, page, orderby: 'title', order: 'asc' } )
+				);
+				const chunk = Array.isArray( body ) ? body : [];
+				list.push( ...chunk );
+				totalPages = toInt( headers.get( 'X-WP-TotalPages' ), 1 );
+				count      = toInt( headers.get( 'X-WP-Total' ), list.length );
+				// Stop on an empty page so a wrong header can never loop forever.
+				if ( chunk.length === 0 ) {
+					break;
+				}
+				page++;
+			} while ( page <= totalPages );
 			setRows( list );
-			setTotal( toInt( headers.get( 'X-WP-Total' ), list.length ) );
+			setTotal( count );
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? 'Could not load the list.' );
 		} finally {

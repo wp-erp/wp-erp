@@ -205,6 +205,9 @@ class MeController extends RestController {
 			'erp_view_jobinfo',
 			'erp_create_review',
 			'erp_manage_review',
+			'erp_delete_review',
+			'erp_manage_jobinfo',
+			'erp_leave_create_request',
 			'erp_can_terminate',
 			'erp_delete_employee',
 		];

@@ -26,7 +26,7 @@ import { RequestsActionSlot } from "./RequestsActionSlot";
 import { useContext, useEffect, useState } from "react";
 import type { JSX } from "react";
 
-import { RequestsTabContext } from "./requests-tab-context";
+import { RequestsCountsContext, RequestsTabContext } from "./requests-tab-context";
 
 import { EmptyState } from "@/shared/components/EmptyState";
 import { TablePager } from "@/shared/components/TablePager";
@@ -61,6 +61,7 @@ const BASE = "/hrm/resignations";
 
 export function ResignationRequests(): JSX.Element {
     const inTabs = useContext(RequestsTabContext);
+    const refreshCounts = useContext(RequestsCountsContext);
     const [rows, setRows] = useState<ResignRow[]>([]);
     const [loading, setLoading] = useState(true);
     // The list is paged on the server (20 by default); without a pager only
@@ -100,6 +101,7 @@ export function ResignationRequests(): JSX.Element {
         p.then(() => {
             toast.success(__("Done.", "erp"));
             load();
+            refreshCounts();
         })
             .catch((e: ApiError) =>
                 toast.error(e.message || __("Action failed.", "erp")),
@@ -264,6 +266,7 @@ export function ResignationRequests(): JSX.Element {
                     onSaved={() => {
                         setCreating(false);
                         load();
+                        refreshCounts();
                     }}
                 />
             ) : null}

@@ -204,12 +204,18 @@ class DashboardController extends RestController {
 		$birthdays_upcoming = $this->birthday_people( $coming_birthdays, $is_manager );
 
 		// --- Upcoming holidays (today → +30 days) -----------------------
-		$holidays = [];
-		$holiday_rows = erp_hr_get_holidays( [
-			'number' => '-1',
-			'from'   => current_time( 'Y-m-d' ),
-			'to'     => gmdate( 'Y-m-d', strtotime( '+30 days', current_time( 'timestamp' ) ) ),
-		] );
+		// Any holiday that overlaps the window, soonest first: one already under
+		// way still counts, and one ending on day 30 (stored `23:59:59`) is kept.
+		// `erp_hr_get_holidays()` filters `start >= from AND end <= to` unordered.
+		$holidays     = [];
+		$holiday_rows = \WeDevs\ERP\HRM\Models\LeaveHoliday::select( [ 'id', 'title', 'start', 'end', 'description' ] )
+			->where( 'end', '>=', current_time( 'Y-m-d' ) . ' 00:00:00' )
+			->where( 'start', '<=', gmdate( 'Y-m-d', strtotime( '+30 days', current_time( 'timestamp' ) ) ) . ' 23:59:59' )
+			->orderBy( 'start', 'ASC' )
+			->orderBy( 'id', 'ASC' )
+			->get()
+			->toArray();
+		$holiday_rows = erp_array_to_object( $holiday_rows );
 		foreach ( (array) $holiday_rows as $holiday ) {
 			$holidays[] = [
 				'id'          => (int) ( $holiday->id ?? 0 ),

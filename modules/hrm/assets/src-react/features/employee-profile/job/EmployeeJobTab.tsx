@@ -124,9 +124,10 @@ function RowActionCell( { isActive, onEdit, onDelete }: RowActionCellProps ): JS
 	);
 }
 
-export function EmployeeJobTab( { userId }: { readonly userId: number } ): JSX.Element {
+export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: number; readonly targetCaps?: Readonly< Record< string, boolean > > } ): JSX.Element {
 	const { data, loading, error, createHistory, updateHistory, deleteHistory, refetch } = useEmployeeJobHistories( userId );
-	const canManage = useCan( 'erp_manage_jobinfo' );
+	// Per-target caps come from `/me/employee-capabilities/{id}` (the server's own check).
+	const canManage = useCan( 'erp_manage_jobinfo' ) || Boolean( targetCaps.erp_manage_jobinfo );
 	const { terminateEmployee, invalidate } = useDispatch( employeesStoreName ) as unknown as JobDispatch;
 
 	const [ action, setAction ]   = useState< JobAction | null >( null );

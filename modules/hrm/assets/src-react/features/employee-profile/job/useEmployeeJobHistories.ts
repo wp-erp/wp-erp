@@ -17,6 +17,8 @@ export interface StatusHistory {
 	readonly id:      number;
 	readonly date:    string | null;
 	readonly status:  string;
+	/** Raw status code for edit prefill (`status` is the display label). */
+	readonly status_code?: string;
 	readonly comment: string;
 }
 
@@ -24,6 +26,7 @@ export interface EmploymentHistory {
 	readonly id:      number;
 	readonly date:    string | null;
 	readonly type:    string;
+	readonly type_code?: string;
 	readonly comment: string;
 }
 
@@ -33,6 +36,8 @@ export interface CompensationHistory {
 	readonly pay_rate: string;
 	readonly pay_type: string;
 	readonly reason:   string;
+	readonly pay_type_code?: string;
+	readonly reason_code?:   string;
 	readonly comment:  string;
 }
 

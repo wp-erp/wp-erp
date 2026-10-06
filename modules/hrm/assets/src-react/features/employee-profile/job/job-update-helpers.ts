@@ -125,14 +125,22 @@ export function resolveLabelToValue( options: readonly Option[], current: string
 }
 
 // ── Edit-mode prefill builders ──────────────────────────────────────────────
-// Each takes a resolved history row (labels, not codes) and returns the form
-// fields to seed. Static enums are reverse-mapped here; the job-info org
-// lookups carry their labels through and are resolved in the dialog once loaded.
+// Each takes a history row and returns the form fields to seed. Rows carry the
+// raw codes and ids next to the display labels, so prefill uses those; matching
+// a label back to a code is only a fallback for an older response.
+
+/** A raw code the select offers, else the code matched by its label. */
+function codeOrLabel( options: readonly Option[], code: string | undefined, label: string ): string {
+	if ( code && options.some( ( o ) => o.value === code ) ) {
+		return code;
+	}
+	return optionValue( options, label );
+}
 
 export function statusInitial( row: StatusHistory ): Partial< FormState > {
 	return {
 		date:     toDateInput( row.date ),
-		category: optionValue( STATUS_OPTIONS, row.status ),
+		category: codeOrLabel( STATUS_OPTIONS, row.status_code, row.status ),
 		comments: row.comment,
 	};
 }
@@ -140,7 +148,7 @@ export function statusInitial( row: StatusHistory ): Partial< FormState > {
 export function typeInitial( row: EmploymentHistory ): Partial< FormState > {
 	return {
 		date:     toDateInput( row.date ),
-		type:     optionValue( TYPE_OPTIONS, row.type ),
+		type:     codeOrLabel( TYPE_OPTIONS, row.type_code, row.type ),
 		comments: row.comment,
 	};
 }
@@ -149,22 +157,20 @@ export function compensationInitial( row: CompensationHistory ): Partial< FormSt
 	return {
 		date:     toDateInput( row.date ),
 		pay_rate: row.pay_rate,
-		pay_type: optionValue( PAY_TYPE_OPTIONS, row.pay_type ),
-		reason:   optionValue( PAY_CHANGE_REASON_OPTIONS, row.reason ),
+		pay_type: codeOrLabel( PAY_TYPE_OPTIONS, row.pay_type_code, row.pay_type ),
+		reason:   codeOrLabel( PAY_CHANGE_REASON_OPTIONS, row.reason_code, row.reason ),
 		comment:  row.comment,
 	};
 }
 
 export function jobInitial( row: JobInfoHistory ): Partial< FormState > {
-	// department / designation / location carry their labels; the dialog resolves
-	// them to ids once the org lookups load. reporting_to now prefills from the
-	// raw id the read model exposes (`reporting_to_id`) so the manager picker is
-	// preselected instead of forcing reselection.
+	// Prefill from the raw ids the read model exposes; the dialog keeps a value
+	// that is already a valid option and only label-matches the fallback.
 	return {
 		date:         toDateInput( row.date ),
-		department:   row.department,
-		designation:  row.designation,
-		location:     row.location,
+		department:   row.department_id ? String( row.department_id ) : row.department,
+		designation:  row.designation_id ? String( row.designation_id ) : row.designation,
+		location:     row.location_id ? String( row.location_id ) : row.location,
 		reporting_to: row.reporting_to_id ? String( row.reporting_to_id ) : '',
 	};
 }

@@ -288,10 +288,10 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 						<OverviewTab userId={ userId } record={ record } canEdit={ canEdit } />
 					) : null }
 
-					{ canEdit && tab === 'job' ? <EmployeeJobTab userId={ userId } /> : null }
-					{ canEdit && tab === 'leave' ? <EmployeeLeaveTab userId={ userId } /> : null }
-					{ canViewNotes && tab === 'notes' ? <EmployeeNotesTab userId={ userId } /> : null }
-					{ canViewPerf && tab === 'performance' ? <EmployeePerformanceTab userId={ userId } /> : null }
+					{ canEdit && tab === 'job' ? <EmployeeJobTab userId={ userId } targetCaps={ targetCaps } /> : null }
+					{ canEdit && tab === 'leave' ? <EmployeeLeaveTab userId={ userId } targetCaps={ targetCaps } /> : null }
+					{ canViewNotes && tab === 'notes' ? <EmployeeNotesTab userId={ userId } targetCaps={ targetCaps } /> : null }
+					{ canViewPerf && tab === 'performance' ? <EmployeePerformanceTab userId={ userId } targetCaps={ targetCaps } /> : null }
 					{ canViewPermission && tab === 'permission' ? <EmployeePermissionTab userId={ userId } /> : null }
 					{ extraTabs.find( ( t ) => t.id === tab )?.render( { userId, canEdit } ) }
 				</div>

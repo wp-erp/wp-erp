@@ -357,6 +357,18 @@ class EmployeeLeaveController extends RestController {
 			);
 		}
 
+		// The helper returns false when no row was written: a failed insert
+		// (500) or a range with no leave day in it (400). Never a 201.
+		if ( ! $request_id ) {
+			global $wpdb;
+
+			if ( '' !== (string) $wpdb->last_error ) {
+				return new \WP_Error( 'rest_leave_request_failed', __( 'The leave request could not be saved.', 'erp' ), [ 'status' => 500 ] );
+			}
+
+			return new \WP_Error( 'rest_leave_request_no_days', __( 'The selected dates have no working day to take as leave.', 'erp' ), [ 'status' => 400 ] );
+		}
+
 		// Fire the same notification email the legacy flow sent.
 		$emailer = wperp()->emailer->get_email( 'NewLeaveRequest' );
 		if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {

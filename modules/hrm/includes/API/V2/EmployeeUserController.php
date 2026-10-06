@@ -178,6 +178,9 @@ class EmployeeUserController extends RestController {
 			]
 		);
 
+		// A new employee row: drop the cached list and status counts.
+		erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => (int) $user->ID ] );
+
 		$employee = new Employee( (int) $user->ID );
 
 		$response = rest_ensure_response(
