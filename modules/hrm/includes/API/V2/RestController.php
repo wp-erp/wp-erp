@@ -160,7 +160,14 @@ abstract class RestController extends WP_REST_Controller {
 			return substr( $value, 0, 10 );
 		}
 
-		return gmdate( 'c', $timestamp );
+		// Stored datetimes are site time (current_time( 'mysql' )). Stamping them
+		// with gmdate() labelled them UTC, so on a UTC+6 site a note written at
+		// 11:16 showed as 5:16 pm. Read them in the site timezone instead.
+		try {
+			return ( new \DateTimeImmutable( $value, wp_timezone() ) )->format( 'c' );
+		} catch ( \Exception $e ) {
+			return null;
+		}
 	}
 
 	/**
