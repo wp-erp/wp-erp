@@ -2226,6 +2226,33 @@ function erp_is_module_active( $module_key ) {
 	return isset( $modules[ $module_key ] );
 }
 
+if ( ! function_exists( 'erp_csv_safe_cell' ) ) {
+	/**
+	 * Neutralise a CSV cell that a spreadsheet would run as a formula.
+	 *
+	 * A cell starting with =, +, -, @, a tab or a carriage return runs as a
+	 * formula when the file is opened in Excel or Sheets, so a name or comment
+	 * someone typed could run commands on the reader's machine. Such a cell is
+	 * prefixed with a quote so it shows as text. Plain numbers (-5, +880...)
+	 * and a lone placeholder like "-" are left alone.
+	 *
+	 * @since 1.18.0
+	 *
+	 * @param mixed $value Cell value.
+	 *
+	 * @return string
+	 */
+	function erp_csv_safe_cell( $value ) {
+		$value = (string) $value;
+
+		if ( strlen( $value ) > 1 && ! is_numeric( $value ) && in_array( $value[0], array( '=', '+', '-', '@', "\t", "\r" ), true ) ) {
+			$value = "'" . $value;
+		}
+
+		return $value;
+	}
+}
+
 /**
  * Make csv file from array and force download
  *
@@ -2251,7 +2278,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 		function ( $column ) {
 			$column = ucwords( str_replace( '_', ' ', $column ) );
 
-			return $column;
+			return erp_csv_safe_cell( $column );
 		},
 		$columns
 	);
@@ -2263,10 +2290,10 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 			$csv_row = array_map(
 				function ( $item_val ) {
 					if ( is_array( $item_val ) ) {
-						return implode( ', ', $item_val );
+						return erp_csv_safe_cell( implode( ', ', $item_val ) );
 					}
 
-					return $item_val;
+					return erp_csv_safe_cell( $item_val );
 				},
 				$item
 			);
