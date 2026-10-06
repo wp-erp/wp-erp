@@ -85,7 +85,8 @@ interface HistRow { readonly id: number; readonly status: string; readonly date?
 function MyHistory( { base, primary }: { readonly base: string; readonly primary: ( r: HistRow ) => string } ): JSX.Element | null {
 	const [ rows, setRows ] = useState< HistRow[] >( [] );
 	useEffect( () => {
-		request< { items: HistRow[] } >( restPath( 'v2', base ) )
+		// `mine`: an HR manager's own card showed every employee's requests.
+		request< { items: HistRow[] } >( restPath( 'v2', base, { mine: 1 } ) )
 			.then( ( r ) => setRows( [ ...r.items ] ) )
 			.catch( () => undefined );
 	}, [ base ] );
