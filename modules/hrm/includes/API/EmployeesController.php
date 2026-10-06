@@ -472,6 +472,12 @@ class EmployeesController extends REST_Controller {
             's'           => ( $request['s'] ) ? $request['s'] : '',
         ];
 
+        // Colleagues see the active directory only; terminated, resigned and
+        // trashed staff are for HR (as in the v2 list).
+        if ( ! current_user_can( 'erp_view_employee' ) ) {
+            $args['status'] = 'active';
+        }
+
         $items = erp_hr_get_employees( $args );
 
         $args['count'] = true;
