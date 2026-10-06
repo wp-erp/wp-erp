@@ -46,6 +46,13 @@ import { csvCell } from '@/shared/utils/csv';
 
 import { OrgPagination } from '../org/OrgPagination';
 
+
+// The pending preview sends raw floats (1666.6666666666667); the applied list is
+// stored to two decimals. Show both the same way.
+function money( value: number ): string {
+	return Number( value ).toFixed( 2 );
+}
+
 interface FinancialYear {
 	readonly id:      number;
 	readonly fy_name: string;
@@ -147,7 +154,7 @@ function LeaveForwardInner(): JSX.Element {
 		const rows   = data?.rows ?? [];
 		const header = [ 'Employee', 'Leave', 'Encash days', 'Forward days', 'Amount', 'Total' ];
 		const lines  = rows.map( ( r ) =>
-			[ r.employee_name, r.policy_name, r.encash_days, r.forward_days, r.amount, r.total ]
+			[ r.employee_name, r.policy_name, r.encash_days, r.forward_days, money( r.amount ), money( r.total ) ]
 				.map( ( c ) => csvCell( c, true ) )
 				.join( ',' )
 		);
@@ -259,8 +266,8 @@ function LeaveForwardInner(): JSX.Element {
 										{ pending ? <td className="px-2 align-middle text-sm text-muted-foreground">{ r.max_carry_days ?? 0 }</td> : null }
 										<td className="px-2 align-middle text-sm text-foreground">{ r.encash_days }</td>
 										<td className="px-2 align-middle text-sm text-foreground">{ r.forward_days }</td>
-										<td className="px-2 align-middle text-sm text-muted-foreground">{ r.amount }</td>
-										<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.total }</td>
+										<td className="px-2 align-middle text-sm text-muted-foreground">{ money( r.amount ) }</td>
+										<td className="px-2 align-middle text-sm font-medium text-foreground">{ money( r.total ) }</td>
 									</tr>
 								) ) }
 							</tbody>
