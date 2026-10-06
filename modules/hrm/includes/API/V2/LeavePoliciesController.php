@@ -248,10 +248,24 @@ class LeavePoliciesController extends RestController {
 		$data       = $this->prepare_item_for_database( $request );
 		$data['id'] = $id;
 
+		// Advanced Leave's insert filters read their fields off $_POST and write
+		// 0 for any that are missing, so an update without `extra` (or with only
+		// some keys) reset half-day, accrual and carry-forward settings. Keep the
+		// stored values for whatever the request does not send.
+		$sent_extra = (array) ( $request->get_param( 'extra' ) ?? [] );
+		$request->set_param( 'extra', array_merge( $this->stored_extra( $policy ), $sent_extra ) );
+
 		$result = $this->insert_policy( $data, $request );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->to_rest_error( $result, 409 );
+		}
+
+		// The half-day filter only ever sets the flag on, so unticking it was
+		// ignored and half-day could never be turned off again. Clear it here when
+		// the form sends it off (the legacy filter is left as it is).
+		if ( \array_key_exists( 'enable-halfday', $sent_extra ) && 'on' !== $sent_extra['enable-halfday'] && isset( $policy->halfday_enable ) ) {
+			LeavePolicy::where( 'id', $id )->update( [ 'halfday_enable' => 0 ] );
 		}
 
 		return rest_ensure_response( $this->prepare_item_for_response( LeavePolicy::find( $id ), $request ) );
@@ -444,6 +458,39 @@ class LeavePoliciesController extends RestController {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * The policy's stored Advanced Leave settings, keyed by the legacy form field
+	 * names the `erp_hr_leave_insert_policy_extra` filters read. Columns that do
+	 * not exist (Advanced Leave never installed) are left out.
+	 *
+	 * @param LeavePolicy $policy Stored policy.
+	 *
+	 * @return array
+	 */
+	private function stored_extra( $policy ): array {
+		$map = [
+			'enable-halfday'       => 'halfday_enable',
+			'accrued-amount'       => 'accrued_amount',
+			'accrued-max-days'     => 'accrued_max_days',
+			'carryover-days'       => 'carryover_days',
+			'carryover-uses-limit' => 'carryover_uses_limit',
+			'encashment-days'      => 'encashment_days',
+			'encashment-based-on'  => 'encashment_based_on',
+			'forward-default'      => 'forward_default',
+		];
+
+		$out = [];
+		foreach ( $map as $field => $column ) {
+			if ( ! isset( $policy->{$column} ) ) {
+				continue;
+			}
+			$value         = $policy->{$column};
+			$out[ $field ] = 'halfday_enable' === $column ? ( ! empty( $value ) ? 'on' : '' ) : (string) $value;
+		}
+
+		return $out;
 	}
 
 	/**
