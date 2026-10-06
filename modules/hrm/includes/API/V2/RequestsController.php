@@ -105,6 +105,13 @@ class RequestsController extends RestController {
 		// deep link (`?tab=reimburse`) has to change.
 		$pending = $this->mirror_reimbursement_key( $pending );
 
+		// Same for resignation: pro keys its pending count `resigned` (the legacy
+		// Vue screen's id) and its total `resignation` (the React tab id), so the
+		// tab read no pending count. The total above is summed before this.
+		if ( isset( $pending['resigned'] ) && ! isset( $pending['resignation'] ) ) {
+			$pending['resignation'] = $pending['resigned'];
+		}
+
 		// Per-type TOTALS (all statuses) for the tab badges. Free seeds Leave; pro
 		// modules add their own via `erp_hr_request_total_count`.
 		$totals = [ 'leave' => $leave['total'] ];
