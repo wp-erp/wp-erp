@@ -90,7 +90,7 @@ function Stat( { icon: Icon, label, value, sub, tint }: StatProps ): JSX.Element
 			</span>
 			<div className="min-w-0">
 				<p className="truncate text-2xl font-bold leading-7 text-foreground">{ value }</p>
-				<p className="truncate text-xs text-muted-foreground">{ sub ? `${ label } · ${ sub }` : label }</p>
+				<p className="line-clamp-2 text-xs text-muted-foreground">{ sub ? `${ label } · ${ sub }` : label }</p>
 			</div>
 		</div>
 	);

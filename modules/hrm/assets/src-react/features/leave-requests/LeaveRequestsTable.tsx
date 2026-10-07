@@ -293,7 +293,7 @@ export function LeaveRequestsTable( {
 									{ req.status_label }
 								</StatusPill>
 							</td>
-							<td className="max-w-48 px-2 align-middle text-sm text-muted-foreground">
+							<td className="min-w-40 max-w-48 px-2 align-middle text-sm text-muted-foreground">
 								{ req.reason ? (
 									<span
 										className="block truncate"

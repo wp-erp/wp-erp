@@ -203,7 +203,9 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 				{ deptData.length === 0 ? (
 					<EmptyChart text={ __( 'No department data.', 'erp' ) } />
 				) : (
-					<ChartContainer config={ DEPT_CONFIG } className="h-[260px] w-full">
+					// One row per department: a fixed 260px fit about five, and the
+					// axis then dropped every other name, leaving bars unlabelled.
+					<ChartContainer config={ DEPT_CONFIG } className="w-full" style={ { height: Math.max( 260, deptData.length * 30 + 40 ) } }>
 						<BarChart data={ deptData } layout="vertical" margin={ { left: 8, right: 24 } }>
 							<CartesianGrid horizontal={ false } strokeDasharray="3 3" className="stroke-border" />
 							<XAxis type="number" tickLine={ false } axisLine={ false } allowDecimals={ false } className="text-xs" />
@@ -213,6 +215,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 								tickLine={ false }
 								axisLine={ false }
 								width={ 120 }
+								interval={ 0 }
 								className="text-xs"
 							/>
 							<ChartTooltip content={ <ChartTooltipContent hideLabel /> } />
