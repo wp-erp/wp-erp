@@ -1321,6 +1321,17 @@ class EmployeesController extends RestController {
 		if ( ! empty( $work['location'] ) && ! \array_key_exists( $work['location'], (array) erp_company_get_location_dropdown_raw() ) ) {
 			return $fail( 'rest_invalid_location', __( 'Select a valid location.', 'erp' ) );
 		}
+		// The manager has to be another employee. Any user id was stored,
+		// including one with no employee record and the employee themselves.
+		$manager_id = (int) ( $work['reporting_to'] ?? 0 );
+
+		if ( $manager_id > 0 ) {
+			$manager = new \WeDevs\ERP\HRM\Employee( $manager_id );
+
+			if ( $manager_id === $user_id || ! $manager->is_employee() ) {
+				return $fail( 'rest_invalid_reporting_to', __( 'Reports To must be another employee.', 'erp' ) );
+			}
+		}
 
 		if ( ! empty( $work['pay_rate'] ) && ! erp_is_valid_currency_amount( $work['pay_rate'] ) ) {
 			return $fail( 'rest_invalid_pay_rate', __( 'Enter a valid pay rate.', 'erp' ) );
