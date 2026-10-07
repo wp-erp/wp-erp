@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { initials } from './format';
 import type { LucideIcon } from './format';
 import { siteNow } from '@/shared/utils/date';
+import { AnimatedNumber } from '@/shared/motion/AnimatedNumber';
 
 /** Live wall-clock that re-renders every second, on the site's clock. */
 export function LiveTime(): JSX.Element {
@@ -79,7 +80,7 @@ export function StatCard( {
 					{ label }
 				</p>
 				<p className="mt-auto pt-4 text-3xl font-bold leading-8 text-primary">
-					{ value }
+					<AnimatedNumber value={ value } />
 				</p>
 			</div>
 		</div>

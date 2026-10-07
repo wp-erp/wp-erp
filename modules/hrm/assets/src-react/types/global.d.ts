@@ -82,6 +82,8 @@ export interface BootPayload {
 	readonly themeMode:     ThemeMode;
 	readonly navLayout:     NavLayout;
 	readonly switchUrl:     string;
+	/** One time, right after a switch from the classic screens: show the welcome screen. */
+	readonly showWelcome?:  boolean;
 	readonly pageSlug:      string;
 	/** Plugin version, shown in the shell footer (legacy parity). */
 	readonly pluginVersion?: string;

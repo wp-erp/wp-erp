@@ -629,6 +629,254 @@ body:has(#erp-hr-app) {
 	.erp-card-in:nth-child( n + 8 ) { animation-delay: 300ms; }
 }
 
+/* ─── Motion system (shared with FlyHR) ──────────────────────────────────────
+ * One easing family everywhere, so every screen moves the same way:
+ *   enter  cubic-bezier( 0.16, 1, 0.3, 1 )  decelerating: quick to arrive, slow to settle
+ *   leave  cubic-bezier( 0.4, 0, 1, 1 )     accelerating, and shorter than the entrance
+ * Timeline on a page: sections cascade (.erp-page-transition, 30–240ms), cards
+ * stagger (.erp-card-in, 0–300ms), each card's number counts once that card has
+ * landed (AnimatedNumber), charts draw last. Durations: overlays 160–180ms,
+ * menus 140ms, cards and pages 380ms, text reveals 700ms. */
+
+/* Text and panel reveals: FlyHR's `flyhr-reveal`, same values (shared/motion/Reveal.tsx). */
+.erp-reveal {
+	--erp-reveal-y: 0.75rem;
+	--erp-reveal-blur: 6px;
+	--erp-reveal-scale: 1;
+	animation: erp-reveal 700ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+.erp-reveal-panel {
+	--erp-reveal-y: 2rem;
+	--erp-reveal-blur: 4px;
+	--erp-reveal-scale: 0.97;
+}
+@keyframes erp-reveal {
+	from {
+		opacity: 0;
+		transform: translate3d( 0, var( --erp-reveal-y ), 0 ) scale( var( --erp-reveal-scale ) );
+		filter: blur( var( --erp-reveal-blur ) );
+	}
+	to {
+		opacity: 1;
+		transform: none;
+		filter: none;
+	}
+}
+
+/* Welcome screen (app/WelcomeScreen.tsx): fades in, the glows drift, it fades
+ * and lifts away on close. */
+.erp-welcome {
+	animation: erp-fade-in 240ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+.erp-welcome-leave {
+	animation: erp-welcome-leave 280ms cubic-bezier( 0.4, 0, 1, 1 ) both;
+}
+/* Three brand-colour glows, each looping its own slow path at its own pace,
+ * so the background keeps moving without ever repeating in step. Transform
+ * and opacity only, so it stays on the compositor. */
+.erp-welcome-glow {
+	will-change: transform, opacity;
+	animation: erp-welcome-drift-a 16s ease-in-out infinite;
+}
+.erp-welcome-glow-late {
+	animation-name: erp-welcome-drift-b;
+	animation-duration: 19s;
+}
+.erp-welcome-glow-third {
+	animation-name: erp-welcome-drift-c;
+	animation-duration: 23s;
+}
+@keyframes erp-fade-in {
+	from { opacity: 0; }
+}
+@keyframes erp-welcome-leave {
+	to {
+		opacity: 0;
+		transform: translateY( -8px ) scale( 1.01 );
+	}
+}
+@keyframes erp-welcome-drift-a {
+	0%, 100% { transform: translate3d( 0, 0, 0 ) scale( 1 ); opacity: 0.9; }
+	25%      { transform: translate3d( 9rem, 5rem, 0 ) scale( 1.15 ); opacity: 1; }
+	50%      { transform: translate3d( 16rem, -1rem, 0 ) scale( 0.95 ); opacity: 0.75; }
+	75%      { transform: translate3d( 5rem, -5rem, 0 ) scale( 1.1 ); opacity: 1; }
+}
+@keyframes erp-welcome-drift-b {
+	0%, 100% { transform: translate3d( 0, 0, 0 ) scale( 1.05 ); opacity: 0.85; }
+	30%      { transform: translate3d( -12rem, -6rem, 0 ) scale( 0.95 ); opacity: 1; }
+	60%      { transform: translate3d( -4rem, -12rem, 0 ) scale( 1.2 ); opacity: 0.7; }
+	80%      { transform: translate3d( 4rem, -4rem, 0 ) scale( 1 ); opacity: 0.95; }
+}
+@keyframes erp-welcome-drift-c {
+	0%, 100% { transform: translate3d( -50%, -50%, 0 ) scale( 0.9 ); opacity: 0.5; }
+	35%      { transform: translate3d( calc( -50% + 10rem ), calc( -50% - 4rem ), 0 ) scale( 1.15 ); opacity: 0.85; }
+	70%      { transform: translate3d( calc( -50% - 10rem ), calc( -50% + 5rem ), 0 ) scale( 1 ); opacity: 0.6; }
+}
+
+/* Function-first motion: each of these says something.
+ * - A number that changes after the page has painted (Refresh, new data)
+ *   counts from the old value and its card gives one soft ring: "this changed".
+ *   Never on first paint (shared/motion/AnimatedNumber adds the class).
+ * - Table rows fade in top to bottom when they arrive (first load after the
+ *   skeleton, a new page, a filter): "new data is here", in reading order.
+ *   Short and capped at ten rows, so a long list is not a wait.
+ * - Buttons give a small press: "your click registered". */
+@media ( prefers-reduced-motion: no-preference ) {
+	/* On a layer above the card, not the card: swapping the card's own
+	 * animation would replay its entrance when the ring ends. */
+	.erp-card-updated {
+		position: relative;
+	}
+	.erp-card-updated::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+		animation: erp-card-updated 900ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+	}
+	@keyframes erp-card-updated {
+		0%   { box-shadow: 0 0 0 0 color-mix( in oklab, var( --color-primary ) 45%, transparent ); }
+		100% { box-shadow: 0 0 0 10px color-mix( in oklab, var( --color-primary ) 0%, transparent ); }
+	}
+
+	.erp-page-transition tbody > tr {
+		animation: erp-row-in 240ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+	}
+	.erp-page-transition tbody > tr:nth-child( 2 )  { animation-delay: 20ms; }
+	.erp-page-transition tbody > tr:nth-child( 3 )  { animation-delay: 40ms; }
+	.erp-page-transition tbody > tr:nth-child( 4 )  { animation-delay: 60ms; }
+	.erp-page-transition tbody > tr:nth-child( 5 )  { animation-delay: 80ms; }
+	.erp-page-transition tbody > tr:nth-child( 6 )  { animation-delay: 100ms; }
+	.erp-page-transition tbody > tr:nth-child( 7 )  { animation-delay: 120ms; }
+	.erp-page-transition tbody > tr:nth-child( 8 )  { animation-delay: 140ms; }
+	.erp-page-transition tbody > tr:nth-child( 9 )  { animation-delay: 160ms; }
+	.erp-page-transition tbody > tr:nth-child( n + 10 ) { animation-delay: 180ms; }
+	@keyframes erp-row-in {
+		/* Opacity only: moving rows would push the last one past the table's
+		 * scroll box for a moment and flash a scrollbar on a short list. */
+		from { opacity: 0; }
+	}
+
+	[data-slot='button'] {
+		transition-property: color, background-color, border-color, box-shadow, opacity, scale;
+		transition-duration: 150ms;
+		transition-timing-function: cubic-bezier( 0.16, 1, 0.3, 1 );
+	}
+	[data-slot='button']:active:not( :disabled ) {
+		scale: 0.97;
+	}
+}
+
+/* Text arrives the way the welcome screen's does (shared/motion/Reveal,
+ * `.erp-reveal`): headings rise a little out of a soft blur and
+ * settle, the line under them follows a beat later. One rule per role, keyed
+ * on what every screen already renders, so each page, card and dialog reads
+ * its title first and its explanation second without a component opting in.
+ * Overlays use a shorter version so the reveal never outlasts the pop-in.
+ * Anything already revealing itself (the welcome) is left alone. */
+@media ( prefers-reduced-motion: no-preference ) {
+	.erp-page-transition :is( h1, h2, h3, [data-slot='card-title'] ):not( .erp-reveal, :has( .erp-reveal ) ),
+	.erp-page-transition :is( h1, h2, h3 ):not( :has( .erp-reveal ) ) + p:not( .erp-reveal ),
+	.erp-page-transition [data-slot='card-description'] {
+		--erp-reveal-y: 0.5rem;
+		--erp-reveal-blur: 6px;
+		--erp-reveal-scale: 1;
+		animation: erp-reveal 700ms cubic-bezier( 0.16, 1, 0.3, 1 ) 60ms both;
+	}
+	.erp-page-transition :is( h1, h2, h3 ):not( :has( .erp-reveal ) ) + p:not( .erp-reveal ),
+	.erp-page-transition [data-slot='card-description'] {
+		animation-delay: 160ms;
+	}
+
+	:is( [data-slot='dialog-title'], [data-slot='alert-dialog-title'], [data-slot='sheet-title'] ),
+	:is( [data-slot='dialog-description'], [data-slot='alert-dialog-description'], [data-slot='sheet-description'] ) {
+		--erp-reveal-y: 0.35rem;
+		--erp-reveal-blur: 4px;
+		--erp-reveal-scale: 1;
+		animation: erp-reveal 420ms cubic-bezier( 0.16, 1, 0.3, 1 ) 60ms both;
+	}
+	:is( [data-slot='dialog-description'], [data-slot='alert-dialog-description'], [data-slot='sheet-description'] ) {
+		animation-delay: 120ms;
+	}
+}
+
+/* While the welcome covers the app, the page underneath holds its entrance
+ * on the first frame; it plays when the welcome has gone. */
+.erp-motion-hold .erp-page-transition > * > *,
+.erp-motion-hold .erp-page-transition tbody > tr,
+.erp-motion-hold .erp-card-in,
+.erp-motion-hold .erp-page-transition :is( h1, h2, h3, p, [data-slot='card-title'], [data-slot='card-description'] ) {
+	animation-play-state: paused !important;
+}
+
+/* Overlays (plugin-ui dialogs, sheets, menus, selects, popovers, tooltips).
+ * plugin-ui marks them with `data-open:animate-in …` classes whose rules this
+ * build does not ship, so they used to snap open. These key on plugin-ui's own
+ * data-slot and data-open / data-closed attributes. `scale` and `translate`
+ * are separate CSS properties, so they compose with the transform each
+ * component already uses for its position. Base UI waits for the closing
+ * animation before it unmounts. */
+:is( [data-slot='dialog-overlay'], [data-slot='alert-dialog-overlay'], [data-slot='sheet-overlay'] )[data-open] {
+	animation: erp-fade-in 160ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+:is( [data-slot='dialog-overlay'], [data-slot='alert-dialog-overlay'], [data-slot='sheet-overlay'] )[data-closed] {
+	animation: erp-fade-out 120ms cubic-bezier( 0.4, 0, 1, 1 ) both;
+}
+:is( [data-slot='dialog-content'], [data-slot='alert-dialog-content'] )[data-open] {
+	animation: erp-pop-in 180ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+:is( [data-slot='dialog-content'], [data-slot='alert-dialog-content'] )[data-closed] {
+	animation: erp-pop-out 120ms cubic-bezier( 0.4, 0, 1, 1 ) both;
+}
+:is( [data-slot='popover-content'], [data-slot='select-content'], [data-slot='dropdown-menu-content'], [data-slot='combobox-content'], [data-slot='tooltip-content'] )[data-open] {
+	transform-origin: var( --transform-origin, center top );
+	animation: erp-menu-in 140ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+:is( [data-slot='popover-content'], [data-slot='select-content'], [data-slot='dropdown-menu-content'], [data-slot='combobox-content'], [data-slot='tooltip-content'] )[data-side='top'][data-open] {
+	--erp-menu-y: 4px;
+}
+:is( [data-slot='popover-content'], [data-slot='select-content'], [data-slot='dropdown-menu-content'], [data-slot='combobox-content'], [data-slot='tooltip-content'] )[data-closed] {
+	animation: erp-fade-out 100ms cubic-bezier( 0.4, 0, 1, 1 ) both;
+}
+[data-slot='sheet-content'][data-open] {
+	animation: erp-sheet-in 240ms cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+[data-slot='sheet-content'][data-closed] {
+	animation: erp-sheet-out 160ms cubic-bezier( 0.4, 0, 1, 1 ) both;
+}
+[data-slot='sheet-content'][data-side='left'] {
+	--erp-sheet-x: -2.5rem;
+}
+@keyframes erp-fade-out {
+	to { opacity: 0; }
+}
+@keyframes erp-pop-in {
+	from { opacity: 0; scale: 0.96; }
+}
+@keyframes erp-pop-out {
+	to { opacity: 0; scale: 0.97; }
+}
+@keyframes erp-menu-in {
+	from { opacity: 0; scale: 0.98; translate: 0 var( --erp-menu-y, -4px ); }
+}
+@keyframes erp-sheet-in {
+	from { opacity: 0; translate: var( --erp-sheet-x, 2.5rem ) 0; }
+}
+@keyframes erp-sheet-out {
+	to { opacity: 0; translate: var( --erp-sheet-x, 2.5rem ) 0; }
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	.erp-reveal,
+	.erp-welcome,
+	.erp-welcome-leave,
+	.erp-welcome-glow,
+	[data-slot] {
+		animation: none !important;
+	}
+}
+
 /* ─── react-day-picker month-transition keyframes (plugin-ui DatePicker) ───
  * plugin-ui enables react-day-picker's month-change slide in JS, but the
  * @keyframes + animation rules ship only in plugin-ui's own index.css — which

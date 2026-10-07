@@ -30,6 +30,22 @@ import {
 import { __ } from '@/shared/i18n';
 
 import type { DashboardCharts } from './types';
+import { prefersReducedMotion, useMotionReady } from '@/shared/motion/MotionContext';
+
+/**
+ * Chart drawing, timed into the page's entrance: series start once the cards
+ * above have landed (~320ms) and draw on the same decelerating feel. While
+ * the welcome screen holds the page, `ready` is false; flipping it re-keys the
+ * series, so they draw when the page actually shows.
+ */
+function useChartMotion(): { readonly isAnimationActive: boolean; readonly animationBegin: number; readonly animationDuration: number; readonly animationEasing: 'ease-out' } {
+	return {
+		isAnimationActive: ! prefersReducedMotion(),
+		animationBegin:    320,
+		animationDuration: 900,
+		animationEasing:   'ease-out',
+	};
+}
 
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 
@@ -95,6 +111,8 @@ export function HeadcountTrendCard( {
 	readonly data:      DashboardCharts[ 'headcount_trend' ];
 	readonly className?: string;
 } ): JSX.Element {
+	const motion = useChartMotion();
+	const drawKey = useMotionReady() ? 'shown' : 'held';
 	return (
 		<ChartCard icon={ TrendingUp } title={ __( 'Headcount Trend', 'erp' ) } className={ className }>
 			<ChartContainer config={ HEADCOUNT_CONFIG } className="h-[240px] w-full">
@@ -117,6 +135,7 @@ export function HeadcountTrendCard( {
 					<YAxis tickLine={ false } axisLine={ false } width={ 28 } allowDecimals={ false } className="text-xs" />
 					<ChartTooltip content={ <ChartTooltipContent labelFormatter={ ( v ) => monthTick( String( v ) ) } /> } />
 					<Area
+						key={ drawKey } { ...motion }
 						type="monotone"
 						dataKey="count"
 						stroke="var(--color-count)"
@@ -135,6 +154,8 @@ interface ChartsSectionProps {
 }
 
 export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.Element {
+	const motion = useChartMotion();
+	const drawKey = useMotionReady() ? 'shown' : 'held';
 	const genderData = [
 		{ key: 'male', label: __( 'Male', 'erp' ), value: charts.gender.male, fill: 'var(--color-male)' },
 		{ key: 'female', label: __( 'Female', 'erp' ), value: charts.gender.female, fill: 'var(--color-female)' },
@@ -164,7 +185,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 					<ChartContainer config={ GENDER_CONFIG } className="mx-auto aspect-square h-[240px]">
 						<PieChart>
 							<ChartTooltip content={ <ChartTooltipContent nameKey="key" hideLabel /> } />
-							<Pie data={ genderData } dataKey="value" nameKey="key" innerRadius={ 55 } strokeWidth={ 4 }>
+							<Pie key={ drawKey } { ...motion } data={ genderData } dataKey="value" nameKey="key" innerRadius={ 55 } strokeWidth={ 4 }>
 								{ genderData.map( ( d ) => <Cell key={ d.key } fill={ d.fill } /> ) }
 							</Pie>
 							<ChartLegend content={ <ChartLegendContent nameKey="key" /> } className="mt-2 flex-wrap" />
@@ -195,7 +216,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 								className="text-xs"
 							/>
 							<ChartTooltip content={ <ChartTooltipContent hideLabel /> } />
-							<Bar dataKey="count" fill="var(--color-count)" radius={ [ 0, 4, 4, 0 ] } barSize={ 18 }>
+							<Bar key={ drawKey } { ...motion } dataKey="count" fill="var(--color-count)" radius={ [ 0, 4, 4, 0 ] } barSize={ 18 }>
 								<LabelList dataKey="count" position="right" className="fill-foreground text-xs" />
 							</Bar>
 						</BarChart>
@@ -212,7 +233,7 @@ export function ChartsSection( { charts, isManager }: ChartsSectionProps ): JSX.
 						<ChartContainer config={ LEAVE_CONFIG } className="mx-auto aspect-square h-[240px]">
 							<PieChart>
 								<ChartTooltip content={ <ChartTooltipContent nameKey="key" hideLabel /> } />
-								<Pie data={ leaveData } dataKey="value" nameKey="key" innerRadius={ 55 } strokeWidth={ 4 }>
+								<Pie key={ drawKey } { ...motion } data={ leaveData } dataKey="value" nameKey="key" innerRadius={ 55 } strokeWidth={ 4 }>
 									{ leaveData.map( ( d ) => <Cell key={ d.key } fill={ d.fill } /> ) }
 								</Pie>
 								<ChartLegend content={ <ChartLegendContent nameKey="key" /> } className="mt-2 flex-wrap" />

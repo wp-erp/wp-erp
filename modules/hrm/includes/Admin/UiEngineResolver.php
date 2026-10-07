@@ -26,6 +26,14 @@ final class UiEngineResolver {
 	public const NONCE_NAME     = 'erp_switch_ui';
 	public const USERMETA_KEY   = 'erp_hr_ui_pref';
 	public const SITE_OPTION    = 'erp_hr_ui_engine';
+
+	/**
+	 * Welcome screen bookkeeping (user meta). `PENDING` is set by the switch to
+	 * the new design; the boot payload turns it into `showWelcome` once and
+	 * records `SEEN`, after which no later switch sets `PENDING` again.
+	 */
+	public const WELCOME_PENDING = 'erp_hr_ui_welcome_pending';
+	public const WELCOME_SEEN    = 'erp_hr_ui_welcomed';
 	public const DEFAULT_OPTION = 'erp_hr_ui_default_engine';
 
 	public const ENGINE_REACT  = 'react';
@@ -219,6 +227,11 @@ final class UiEngineResolver {
 
 		update_user_meta( $user_id, self::USERMETA_KEY, $prefs );
 
+		// First switch to the new design ever: greet the user on arrival.
+		if ( self::ENGINE_REACT === $target && ! get_user_meta( $user_id, self::WELCOME_SEEN, true ) ) {
+			update_user_meta( $user_id, self::WELCOME_PENDING, 1 );
+		}
+
 		// Land on a URL that differs from the bare `admin.php?page=erp-hr` the
 		// browser may have cached for the *other* engine — otherwise it can serve
 		// the stale (previous-engine) document and the switch only appears after a
@@ -281,6 +294,33 @@ final class UiEngineResolver {
 		wp_safe_redirect( $redirect );
 		exit;
 		// phpcs:enable
+	}
+
+	/**
+	 * Whether to show the welcome screen on this page load, consuming the
+	 * one-time flag: true at most once per user, ever.
+	 *
+	 * @return bool
+	 */
+	public function take_welcome(): bool {
+		$user_id = get_current_user_id();
+		if ( ! $user_id || ! get_user_meta( $user_id, self::WELCOME_PENDING, true ) ) {
+			return false;
+		}
+
+		delete_user_meta( $user_id, self::WELCOME_PENDING );
+
+		if ( get_user_meta( $user_id, self::WELCOME_SEEN, true ) ) {
+			return false;
+		}
+
+		update_user_meta( $user_id, self::WELCOME_SEEN, time() );
+
+		// The welcome screen says what the "new HR experience" notice says, so
+		// the notice would repeat it on the same page: count it as read.
+		update_user_meta( $user_id, WelcomeNotice::USERMETA_KEY, 1 );
+
+		return true;
 	}
 
 	/**

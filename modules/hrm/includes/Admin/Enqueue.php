@@ -278,6 +278,8 @@ final class Enqueue {
 				? ''
 				: UiEngineResolver::instance()->switch_url( $page_slug, 'legacy' ),
 			'pageSlug'      => $page_slug,
+			// Once per user, the first time they switch to the new design.
+			'showWelcome'   => UiEngineResolver::instance()->take_welcome(),
 			'assets'        => [
 				'logoUrl'      => WPERP_HRM_ASSETS . '/images/logo.svg',
 				// Base URL for the shared pro-popup illustration set, reused by the

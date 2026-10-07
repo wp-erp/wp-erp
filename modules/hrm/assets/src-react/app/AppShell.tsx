@@ -5,6 +5,7 @@
  * so a TopBar crash doesn't kill the route content (and vice versa).
  */
 
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { JSX } from 'react';
 
@@ -13,11 +14,15 @@ import { ProUpsellProvider } from '@/shared/components/pro/ProUpsell';
 import { TopBar } from '@/shared/components/TopBar';
 import { RightCluster } from '@/shared/components/TopBar/RightCluster';
 import { Sidebar } from '@/shared/components/Sidebar';
+import { useBoot } from '@/shared/hooks/useBoot';
 import { useNavLayout } from '@/shared/hooks/useNavLayout';
+import { MotionProvider } from '@/shared/motion/MotionContext';
+import { useHapticTap } from '@/shared/motion/useHapticTap';
 import { EmployeeActionsProvider } from '@/features/employees/actions/EmployeeActionsContext';
 
 import { AppFooter } from './AppFooter';
 import { PageTransition } from './PageTransition';
+import { WelcomeScreen } from './WelcomeScreen';
 
 /**
  * Routes that own their own full-bleed background (no shell padding, no gray
@@ -40,6 +45,14 @@ export function AppShell(): JSX.Element {
 	const { pathname } = useLocation();
 	const chromeless   = isChromeless( pathname );
 	const { layout }   = useNavLayout();
+	const boot         = useBoot();
+	useHapticTap();
+
+	// Once, right after a switch from the classic screens: the welcome covers
+	// the app and the page beneath holds its entrance until it has gone.
+	const [ welcome, setWelcome ] = useState( () => Boolean( boot.showWelcome ) );
+	const hold = welcome ? ' erp-motion-hold' : '';
+	const welcomeScreen = welcome ? <WelcomeScreen onDone={ () => setWelcome( false ) } /> : null;
 
 	const mainClass = chromeless
 		? 'flex-1'
@@ -71,8 +84,9 @@ export function AppShell(): JSX.Element {
 	// of sliding up under the sticky header and going sharp.
 	if ( layout === 'sidebar' ) {
 		return (
+			<MotionProvider value={ ! welcome }>
 			<ProUpsellProvider>
-				<div className="erp-hr-shell flex h-[calc(100vh-32px)] bg-background text-foreground">
+				<div className={ `erp-hr-shell flex h-[calc(100vh-32px)] bg-background text-foreground${ hold }` }>
 					<Sidebar />
 					<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 						<header
@@ -97,18 +111,23 @@ export function AppShell(): JSX.Element {
 						</div>
 					</div>
 				</div>
+				{ welcomeScreen }
 			</ProUpsellProvider>
+			</MotionProvider>
 		);
 	}
 
 	// Default: horizontal top-bar layout.
 	return (
+		<MotionProvider value={ ! welcome }>
 		<ProUpsellProvider>
-			<div className="erp-hr-shell flex min-h-[calc(100vh-32px)] flex-col bg-background text-foreground">
+			<div className={ `erp-hr-shell flex min-h-[calc(100vh-32px)] flex-col bg-background text-foreground${ hold }` }>
 				<TopBar />
 				{ content }
 				<AppFooter />
 			</div>
+			{ welcomeScreen }
 		</ProUpsellProvider>
+		</MotionProvider>
 	);
 }
