@@ -69,7 +69,7 @@ export function StatCard( {
 	to,
 }: StatCardProps ): JSX.Element {
 	const body = (
-		<div className="erp-card-in group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/30">
+		<div className="erp-card-in group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/30 group-focus-visible:-translate-y-0.5 group-focus-visible:ring-2 group-focus-visible:ring-ring">
 			<span
 				className={ `inline-flex size-8 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-105 ${ tint }` }
 			>
@@ -89,7 +89,7 @@ export function StatCard( {
 		<Link
 			to={ to }
 			viewTransition
-			className="group block h-full rounded-[10px] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+			className="group block h-full rounded-[10px] focus:outline-none"
 		>
 			{ body }
 		</Link>
