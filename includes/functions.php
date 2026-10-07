@@ -2301,7 +2301,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 		$columns
 	);
 
-	fputcsv( $output, $columns );
+	fputcsv( $output, $columns, ',', '"', '\\' );
 
 	if ( $field_data ) {
 		foreach ( $items as $item ) {
@@ -2316,7 +2316,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 				$item
 			);
 
-			fputcsv( $output, $csv_row );
+			fputcsv( $output, $csv_row, ',', '"', '\\' );
 		}
 	}
 
@@ -2324,7 +2324,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 
         $sample_data = get_sample_employee_data($items[0]);
         foreach ( $sample_data as $item ) {
-            fputcsv( $output, $item );
+            fputcsv( $output, $item, ',', '"', '\\' );
         }
     }
 	exit();
