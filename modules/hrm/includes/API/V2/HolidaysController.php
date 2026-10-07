@@ -253,7 +253,7 @@ class HolidaysController extends RestController {
 	public function create_item( $request ) {
 		$data = $this->prepare_item_for_database( $request );
 
-		$invalid = $this->validate_dates( $data );
+		$invalid = $this->validate_dates( $data, $this->raw_end( $request ) );
 		if ( $invalid ) {
 			return $invalid;
 		}
@@ -304,7 +304,7 @@ class HolidaysController extends RestController {
 			[ 'start', 'end' ]
 		);
 
-		$invalid = $dates_changed ? $this->validate_dates( $data ) : null;
+		$invalid = $dates_changed ? $this->validate_dates( $data, $this->raw_end( $request ) ) : null;
 		if ( $invalid ) {
 			return $invalid;
 		}
@@ -353,7 +353,7 @@ class HolidaysController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function batch_delete_items( $request ) {
-		$ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $request['ids'] ) ) ) );
+		$ids = $this->positive_ids( $request['ids'] ?? [] );
 
 		if ( empty( $ids ) ) {
 			return new \WP_Error( 'rest_holiday_no_ids', __( 'No holidays selected.', 'erp' ), [ 'status' => 400 ] );
@@ -668,15 +668,38 @@ class HolidaysController extends RestController {
 	}
 
 	/**
-	 * A 400 `WP_Error` when the start date is not a real date or the end date
-	 * falls before it, else null. The model only checks the dates are non-empty,
-	 * so a bad date would otherwise be stored as 1970 or as a backwards range.
+	 * The end date as posted, for a range; null when the holiday is a single day
+	 * or the range sends no end (both collapse to the start day).
 	 *
-	 * @param array $data Prepared holiday args (`start` Y-m-d, `end` Y-m-d 23:59:59).
+	 * `prepare_item_for_database()` runs the end through `strtotime()`, which
+	 * rolls an impossible day such as 2026-02-30 over to March, so the check
+	 * for a real end date needs the posted value.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return string|null
+	 */
+	private function raw_end( $request ): ?string {
+		if ( ! $this->cast_bool( $request['range'] ?? false ) || ! isset( $request['end'] ) || '' === $request['end'] ) {
+			return null;
+		}
+
+		return sanitize_text_field( (string) $request['end'] );
+	}
+
+	/**
+	 * A 400 `WP_Error` when the start or end date is not a real date, the end
+	 * date falls before the start, or the holiday spans more than a year, else
+	 * null. The model only checks the dates are non-empty, so a bad date would
+	 * otherwise be stored as 1970 or as a backwards range, and a range of years
+	 * marked every day a holiday on the calendar and in every leave count.
+	 *
+	 * @param array       $data    Prepared holiday args (`start` Y-m-d, `end` Y-m-d 23:59:59).
+	 * @param string|null $end_raw The end date as posted, when the range sends one.
 	 *
 	 * @return \WP_Error|null
 	 */
-	private function validate_dates( array $data ): ?\WP_Error {
+	private function validate_dates( array $data, ?string $end_raw = null ): ?\WP_Error {
 		$start = (string) ( $data['start'] ?? '' );
 
 		if ( '' === $start ) {
@@ -688,8 +711,19 @@ class HolidaysController extends RestController {
 			return new \WP_Error( 'rest_holiday_invalid_start', __( 'Start date is not a valid date.', 'erp' ), [ 'status' => 400 ] );
 		}
 
-		if ( substr( (string) ( $data['end'] ?? '' ), 0, 10 ) < $start_day->format( 'Y-m-d' ) ) {
+		$end = substr( null !== $end_raw ? $end_raw : (string) ( $data['end'] ?? '' ), 0, 10 );
+
+		if ( $end < $start_day->format( 'Y-m-d' ) ) {
 			return new \WP_Error( 'rest_holiday_end_before_start', __( 'End date must be on or after the start date.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		$end_day = \DateTime::createFromFormat( '!Y-m-d', $end );
+		if ( ! $end_day || $end_day->format( 'Y-m-d' ) !== $end ) {
+			return new \WP_Error( 'rest_holiday_invalid_end', __( 'End date is not a valid date.', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		if ( (int) $start_day->diff( $end_day )->days > 365 ) {
+			return new \WP_Error( 'rest_holiday_too_long', __( 'A holiday can cover at most a year.', 'erp' ), [ 'status' => 400 ] );
 		}
 
 		return null;

@@ -363,7 +363,7 @@ class LeaveRequestsController extends RestController {
 	 */
 	public function bulk_action( $request ) {
 		$action = sanitize_text_field( (string) ( $request['action'] ?? '' ) );
-		$ids    = array_values( array_filter( array_map( 'absint', (array) ( $request['ids'] ?? [] ) ) ) );
+		$ids    = $this->positive_ids( $request['ids'] ?? [] );
 
 		if ( empty( $ids ) || ! \in_array( $action, [ 'approve', 'reject', 'delete' ], true ) ) {
 			return new \WP_Error( 'rest_leave_request_bad_request', __( 'Provide a valid action and at least one request.', 'erp' ), [ 'status' => 400 ] );

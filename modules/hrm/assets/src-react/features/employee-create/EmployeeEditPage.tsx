@@ -11,7 +11,7 @@ import { Skeleton } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { Forbidden } from '@/shared/components/Forbidden';
@@ -101,9 +101,12 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 		};
 	}, [ userId, fetchEmployeeForEdit ] );
 
+	// Back only to a WP ERP screen: `history.length` also counts pages before the app.
+	const location = useLocation();
+
 	// Cancel means "undo the detour" — go back where the user came from.
 	function close(): void {
-		if ( window.history.length > 1 ) {
+		if ( 'default' !== location.key ) {
 			navigate( -1 );
 		} else {
 			navigate( '/employees' );

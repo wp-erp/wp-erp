@@ -116,7 +116,7 @@ class EmployeeJobHistoriesController extends RestController {
 	 *
 	 * @param array $params Request params (by reference).
 	 *
-	 * @return \WP_Error|null WP_Error on an unparseable date, null otherwise.
+	 * @return \WP_Error|null WP_Error on an unparseable or future date, null otherwise.
 	 */
 	private function validate_date( array &$params ) {
 		if ( ! array_key_exists( 'date', $params ) ) {
@@ -133,6 +133,12 @@ class EmployeeJobHistoriesController extends RestController {
 
 		if ( false === strtotime( $date ) ) {
 			return new \WP_Error( 'rest_invalid_date', __( 'Invalid date format', 'erp' ), [ 'status' => 400 ] );
+		}
+
+		// A change is recorded once it has happened. Nothing applies a row when
+		// its date comes, so a future one changed the employee at once.
+		if ( gmdate( 'Y-m-d', strtotime( $date ) ) > current_time( 'Y-m-d' ) ) {
+			return new \WP_Error( 'rest_job_history_future_date', __( 'The date cannot be in the future.', 'erp' ), [ 'status' => 400 ] );
 		}
 
 		$params['date'] = $date;

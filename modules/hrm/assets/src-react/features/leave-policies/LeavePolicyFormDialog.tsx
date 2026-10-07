@@ -242,6 +242,8 @@ export function LeavePolicyFormDialog( {
 		}
 		if ( ! editing && ( form.days === '' || Number( form.days ) < 0 ) ) {
 			next.days = __( 'Days is required.', 'erp' );
+		} else if ( ! editing && Number( form.days ) < 1 ) {
+			next.days = __( 'A policy needs at least one day.', 'erp' );
 		}
 
 		// No sum-vs-total rule for segregation, deliberately. Each month is the

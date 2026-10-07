@@ -163,7 +163,7 @@ class LeaveEntitlementsController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function bulk_delete( $request ) {
-		$ids = array_values( array_filter( array_map( 'absint', (array) ( $request['ids'] ?? [] ) ) ) );
+		$ids = $this->positive_ids( $request['ids'] ?? [] );
 
 		if ( empty( $ids ) ) {
 			return new \WP_Error( 'rest_entitlement_bad_request', __( 'Provide at least one entitlement.', 'erp' ), [ 'status' => 400 ] );

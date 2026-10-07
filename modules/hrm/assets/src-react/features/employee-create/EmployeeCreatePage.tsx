@@ -12,7 +12,7 @@
 import { useDispatch } from '@wordpress/data';
 import { useState } from 'react';
 import type { JSX } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
@@ -34,8 +34,14 @@ function EmployeeCreateInner(): JSX.Element {
 	const [ submitError, setSubmitError ] = useState< string | null >( null );
 	const [ submitting, setSubmitting ] = useState( false );
 
+	// `history.length` counts pages before WP ERP too, so going back from a form
+	// opened by bookmark or reload left the app (or stayed put). The router's own
+	// key says whether this screen was reached inside the app; only then is
+	// "back" a WP ERP page.
+	const location = useLocation();
+
 	function close(): void {
-		if ( window.history.length > 1 ) {
+		if ( 'default' !== location.key ) {
 			navigate( -1 );
 		} else {
 			navigate( '/employees' );

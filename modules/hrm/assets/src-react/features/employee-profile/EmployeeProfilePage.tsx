@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import type { JSX, ReactNode } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { TextButton } from '@/shared/components/TextButton';
@@ -189,8 +189,16 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 		};
 	}, [ userId, fetchEmployeeForEdit ] );
 
+	// Reload the header's copy after a change made in a tab.
+	const reloadRecord = useCallback( (): void => {
+		void fetchEmployeeForEdit( userId ).then( ( data ) => setRecord( data ) ).catch( () => undefined );
+	}, [ userId, fetchEmployeeForEdit ] );
+
+	// Back only to a WP ERP screen: `history.length` also counts pages before the app.
+	const location = useLocation();
+
 	function back(): void {
-		if ( window.history.length > 1 ) {
+		if ( 'default' !== location.key ) {
 			navigate( -1 );
 		} else {
 			navigate( '/employees' );
@@ -288,7 +296,7 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 						<OverviewTab userId={ userId } record={ record } canEdit={ canEdit } />
 					) : null }
 
-					{ canEdit && tab === 'job' ? <EmployeeJobTab userId={ userId } targetCaps={ targetCaps } /> : null }
+					{ canEdit && tab === 'job' ? <EmployeeJobTab userId={ userId } targetCaps={ targetCaps } onChanged={ reloadRecord } /> : null }
 					{ canEdit && tab === 'leave' ? <EmployeeLeaveTab userId={ userId } targetCaps={ targetCaps } /> : null }
 					{ canViewNotes && tab === 'notes' ? <EmployeeNotesTab userId={ userId } targetCaps={ targetCaps } /> : null }
 					{ canViewPerf && tab === 'performance' ? <EmployeePerformanceTab userId={ userId } targetCaps={ targetCaps } /> : null }

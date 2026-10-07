@@ -281,7 +281,7 @@ class LeaveTypesController extends RestController {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function bulk_delete( $request ) {
-		$ids = array_filter( array_map( 'absint', (array) ( $request['ids'] ?? [] ) ) );
+		$ids = $this->positive_ids( $request['ids'] ?? [] );
 
 		if ( empty( $ids ) ) {
 			return new \WP_Error( 'rest_leave_type_no_ids', __( 'No valid leave type found!', 'erp' ), [ 'status' => 400 ] );

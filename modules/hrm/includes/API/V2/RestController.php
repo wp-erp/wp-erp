@@ -309,6 +309,32 @@ abstract class RestController extends WP_REST_Controller {
 		return false;
 	}
 
+	/**
+	 * The positive ids in a bulk request.
+	 *
+	 * `absint()` turns -1 into 1, so a bulk delete of `[-1]` deleted row 1.
+	 * Anything that is not a positive whole number is dropped instead.
+	 *
+	 * @param mixed $raw The posted `ids`.
+	 *
+	 * @return int[]
+	 */
+	protected function positive_ids( $raw ): array {
+		$ids = [];
+
+		foreach ( (array) $raw as $value ) {
+			if ( \is_int( $value ) || ( \is_string( $value ) && ctype_digit( $value ) ) ) {
+				$id = (int) $value;
+
+				if ( $id > 0 ) {
+					$ids[] = $id;
+				}
+			}
+		}
+
+		return array_values( array_unique( $ids ) );
+	}
+
 	// ---------------------------------------------------------------------
 	// Permission helpers.
 	// ---------------------------------------------------------------------

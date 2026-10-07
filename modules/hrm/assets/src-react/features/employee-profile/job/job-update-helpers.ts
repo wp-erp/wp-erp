@@ -174,3 +174,26 @@ export function jobInitial( row: JobInfoHistory ): Partial< FormState > {
 		reporting_to: row.reporting_to_id ? String( row.reporting_to_id ) : '',
 	};
 }
+
+/**
+ * Seed for a new job-information change: what the employee holds now, from the
+ * latest row, dated today.
+ *
+ * The dialog used to open empty, so changing only the manager meant picking the
+ * department, job title and location again.
+ */
+export function currentJobSeed( rows: readonly JobInfoHistory[] ): Partial< FormState > | undefined {
+	const latest = [ ...rows ].sort(
+		( a, b ) => String( b.date ?? '' ).localeCompare( String( a.date ?? '' ) ) || b.id - a.id
+	)[ 0 ];
+
+	if ( ! latest ) {
+		return undefined;
+	}
+
+	// Dated today by the dialog's own default, not the old row's date.
+	const current = jobInitial( latest );
+	delete current.date;
+
+	return current;
+}

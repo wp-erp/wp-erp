@@ -377,7 +377,7 @@ class LeavePoliciesController extends RestController {
 	/**
 	 * Required-field validation mirroring `FormHandler::leave_policy_create()`.
 	 *
-	 * On create: leave type, days (>= 0), color and financial year are required.
+	 * On create: leave type, days (>= 1), color and financial year are required.
 	 * On update: only color is enforced (the legacy handler skips name/days/year
 	 * when editing). The model still re-validates and dedupes.
 	 *
@@ -399,6 +399,11 @@ class LeavePoliciesController extends RestController {
 			}
 			if ( empty( $request['f_year'] ) ) {
 				return new \WP_Error( 'rest_leave_policy_no_year', __( 'Year field should not be left empty', 'erp' ), [ 'status' => 400 ] );
+			}
+			// Days are fixed once the policy exists, so a 0-day policy could never
+			// be corrected: it entitled no one to anything, for good.
+			if ( absint( $request['days'] ?? 0 ) < 1 ) {
+				return new \WP_Error( 'rest_leave_policy_no_days', __( 'A policy needs at least one day.', 'erp' ), [ 'status' => 400 ] );
 			}
 		}
 

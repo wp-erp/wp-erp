@@ -283,6 +283,12 @@ class EmployeeLeaveController extends RestController {
 			return new \WP_Error( 'rest_leave_reason_required', __( 'Leave reason field can not be blank.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		// The `reason` column is `text` (65,535 bytes). A longer value made the
+		// insert fail and the request answer 500.
+		if ( \strlen( $reason ) > 65535 ) {
+			return new \WP_Error( 'rest_leave_reason_too_long', __( 'Leave reason is too long.', 'erp' ), [ 'status' => 400 ] );
+		}
+
 		$invalid = $this->entitlement_error( $leave_policy, $user_id );
 		if ( $invalid ) {
 			return $invalid;
@@ -551,7 +557,7 @@ class EmployeeLeaveController extends RestController {
 
 		return rest_ensure_response(
 			[
-				'summary'  => $this->map_summary( $employee->get_leave_summary() ),
+				'summary'  => $this->map_summary( $employee->get_leave_summary(), $this->refunded_days( $user_id, $current_id ) ),
 				'requests' => $this->map_requests( (array) $employee->get_leave_requests( $request_args ) ),
 				'meta'     => $this->build_meta( $employee, $current_id ),
 			]
@@ -610,11 +616,12 @@ class EmployeeLeaveController extends RestController {
 	 * `get_leave_summary()` returns an object keyed by leave id; cast to an array
 	 * and flatten into a list.
 	 *
-	 * @param mixed $summary Balance object/array keyed by leave id.
+	 * @param mixed $summary  Balance object/array keyed by leave id.
+	 * @param array $refunded Days handed back by a rejected approval, keyed by leave id.
 	 *
 	 * @return array
 	 */
-	private function map_summary( $summary ): array {
+	private function map_summary( $summary, array $refunded = [] ): array {
 		$out = [];
 
 		foreach ( (array) $summary as $row ) {
@@ -623,12 +630,53 @@ class EmployeeLeaveController extends RestController {
 			$out[] = [
 				'policy'      => $this->cast_string_or_null( $row['policy'] ?? '' ) ?? '',
 				'entitlement' => $this->cast_float_or_null( $row['entitlement'] ?? null ) ?? 0,
-				'total'       => $this->cast_float_or_null( $row['total'] ?? null ) ?? 0,
+				// The allowance, not the ledger's day_in: a rejected approval hands its
+				// days back as day_in, and counting them read "20 of 23 days left"
+				// on a 20-day policy.
+				'total'       => ( $this->cast_float_or_null( $row['total'] ?? null ) ?? 0 ) - ( $refunded[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ),
 				'available'   => $this->cast_float_or_null( $row['available'] ?? null ) ?? 0,
 				'spent'       => $this->cast_float_or_null( $row['spent'] ?? null ) ?? 0,
 				'from_date'   => $this->cast_entitlement_date( $row['from_date'] ?? null ),
 				'to_date'     => $this->cast_entitlement_date( $row['to_date'] ?? null ),
 			];
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Days handed back to an employee by approved requests that were later
+	 * rejected, per leave id, for one financial year.
+	 *
+	 * The ledger books each refund as a `day_in` row with `trn_type =
+	 * 'leave_approval_status'`, so `erp_hr_leave_get_balance()` counts it in
+	 * `total`. `available` is right either way (the approval's `day_out`
+	 * cancels it); only the allowance shown needs it taken out.
+	 *
+	 * @param int $user_id Employee user id.
+	 * @param int $f_year  Financial year id.
+	 *
+	 * @return array<int, float> Refunded days keyed by leave id.
+	 */
+	private function refunded_days( int $user_id, int $f_year ): array {
+		global $wpdb;
+
+		if ( ! $f_year ) {
+			return [];
+		}
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT leave_id, SUM(day_in) AS refunded FROM {$wpdb->prefix}erp_hr_leave_entitlements WHERE user_id = %d AND f_year = %d AND trn_type = %s GROUP BY leave_id",
+				$user_id,
+				$f_year,
+				'leave_approval_status'
+			)
+		);
+
+		$out = [];
+		foreach ( (array) $rows as $row ) {
+			$out[ (int) $row->leave_id ] = (float) $row->refunded;
 		}
 
 		return $out;

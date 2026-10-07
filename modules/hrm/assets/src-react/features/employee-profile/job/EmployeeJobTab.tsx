@@ -29,6 +29,7 @@ import { JobUpdateDialog } from './JobUpdateDialog';
 import type { JobAction } from './JobUpdateDialog';
 import {
 	compensationInitial,
+	currentJobSeed,
 	jobInitial,
 	statusInitial,
 	typeInitial,
@@ -124,7 +125,7 @@ function RowActionCell( { isActive, onEdit, onDelete }: RowActionCellProps ): JS
 	);
 }
 
-export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: number; readonly targetCaps?: Readonly< Record< string, boolean > > } ): JSX.Element {
+export function EmployeeJobTab( { userId, targetCaps = {}, onChanged }: { readonly userId: number; readonly targetCaps?: Readonly< Record< string, boolean > >; readonly onChanged?: () => void } ): JSX.Element {
 	const { data, loading, error, createHistory, updateHistory, deleteHistory, refetch } = useEmployeeJobHistories( userId );
 	// Per-target caps come from `/me/employee-capabilities/{id}` (the server's own check).
 	const canManage = useCan( 'erp_manage_jobinfo' ) || Boolean( targetCaps.erp_manage_jobinfo );
@@ -136,6 +137,8 @@ export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: 
 	const [ pendingDelete, setPendingDelete ] = useState< number | null >( null );
 	// Set while editing the active row in place (PUT); null in create mode (POST).
 	const [ editState, setEditState ] = useState< { editId: number; initial: Partial< FormState > } | null >( null );
+	// A new job-information change opens on the employee's current values.
+	const [ seed, setSeed ] = useState< Partial< FormState > | undefined >( undefined );
 
 	async function handleDelete(): Promise< void > {
 		if ( pendingDelete === null ) {
@@ -144,6 +147,7 @@ export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: 
 		setBusy( true );
 		try {
 			await deleteHistory( pendingDelete );
+			onChanged?.();
 			toast.success( __( 'History entry deleted.', 'erp' ) );
 			setPendingDelete( null );
 		} catch ( raw ) {
@@ -161,6 +165,7 @@ export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: 
 	function openAction( next: JobAction ): void {
 		setError( null );
 		setEditState( null );
+		setSeed( 'job' === next ? currentJobSeed( data?.job ?? [] ) : undefined );
 		setAction( next );
 	}
 
@@ -198,6 +203,10 @@ export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: 
 				invalidate();
 				toast.success( __( 'History updated.', 'erp' ) );
 			}
+			// The page header shows status, type and department from its own
+			// copy of the employee; without this it kept the old values until a
+			// reload.
+			onChanged?.();
 			closeDialog();
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Could not save the history.', 'erp' ) );
@@ -338,7 +347,7 @@ export function EmployeeJobTab( { userId, targetCaps = {} }: { readonly userId: 
 				busy={ busy }
 				error={ formError }
 				editId={ editState?.editId }
-				initial={ editState?.initial }
+				initial={ editState?.initial ?? seed }
 				onClose={ closeDialog }
 				onSubmit={ ( payload ) => void handleSubmit( payload ) }
 			/>
