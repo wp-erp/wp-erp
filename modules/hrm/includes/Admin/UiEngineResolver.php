@@ -118,7 +118,15 @@ final class UiEngineResolver {
 
 		$prefs = (array) get_user_meta( $user_id, self::USERMETA_KEY, true );
 		$key   = $this->legacy_key_for_page( $page_slug );
-		$pref  = (string) ( $prefs[ $key ] ?? '' );
+
+		// A pro page with its own switch (Workflow, Custom Fields) saves the
+		// choice under its own slug. That choice wins; without one the page
+		// follows the HR-wide `dashboard` choice, as legacy_key_for_page() says.
+		if ( ! $this->is_hr_page( $page_slug ) && isset( $prefs[ $page_slug ] ) ) {
+			$key = $page_slug;
+		}
+
+		$pref = (string) ( $prefs[ $key ] ?? '' );
 
 		if ( 'legacy' === $pref ) {
 			return self::ENGINE_LEGACY;
