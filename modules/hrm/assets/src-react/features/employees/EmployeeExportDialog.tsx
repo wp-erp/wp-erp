@@ -88,7 +88,7 @@ export function EmployeeExportDialog( { open, onClose }: EmployeeExportDialogPro
 					<DialogTitle className="m-0 mb-4 text-left text-2xl font-bold leading-tight tracking-tight text-foreground">
 						{ __( 'Export Employee', 'erp' ) }
 					</DialogTitle>
-					<p className="mx-auto max-w-md text-sm text-muted-foreground">
+					<p className="m-0 max-w-md text-sm text-muted-foreground">
 						{ __( 'Export employee data from your WP ERP by downloading a CSV file.', 'erp' ) }
 					</p>
 				</DialogHeader>

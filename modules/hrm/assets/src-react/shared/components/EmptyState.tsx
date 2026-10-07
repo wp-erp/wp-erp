@@ -48,7 +48,7 @@ export function EmptyState( {
 	return (
 		<div
 			className={ `flex flex-col items-center text-center ${
-				isPage ? 'px-6 py-16' : 'px-4 py-10'
+				isPage ? 'px-6 py-12' : 'px-4 py-10'
 			} ${ className }` }
 		>
 			<div
