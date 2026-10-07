@@ -342,6 +342,15 @@ body:has(#erp-hr-app) {
 	}
 }
 
+/* plugin-ui's "simple" rich-text toolbar (email templates, workflow and
+ * candidate email bodies) draws an "AI Assist" button with no handler, so it
+ * did nothing when pressed. Hidden, with the divider after it, until the
+ * editor gives it a job. */
+:is( #erp-hr-app, .pui-root ) button[title='AI Assist'],
+:is( #erp-hr-app, .pui-root ) button[title='AI Assist'] + .w-px {
+	display: none;
+}
+
 /* ─── Hairline chrome borders ───
  * The shell's structural dividers (sidebar edge, top strips) use a softer
  * border than the default token so they read as a faint hairline, matching the
