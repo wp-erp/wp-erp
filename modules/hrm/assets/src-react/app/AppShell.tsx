@@ -17,6 +17,7 @@ import { Sidebar } from '@/shared/components/Sidebar';
 import { useBoot } from '@/shared/hooks/useBoot';
 import { useNavLayout } from '@/shared/hooks/useNavLayout';
 import { MotionProvider } from '@/shared/motion/MotionContext';
+import { useScrollLockGuard } from '@/shared/hooks/useScrollLockGuard';
 import { useHapticTap } from '@/shared/motion/useHapticTap';
 import { EmployeeActionsProvider } from '@/features/employees/actions/EmployeeActionsContext';
 
@@ -47,6 +48,7 @@ export function AppShell(): JSX.Element {
 	const { layout }   = useNavLayout();
 	const boot         = useBoot();
 	useHapticTap();
+	useScrollLockGuard();
 
 	// Once, right after a switch from the classic screens: the welcome covers
 	// the app and the page beneath holds its entrance until it has gone.
