@@ -309,26 +309,37 @@ body:has(#erp-hr-app) {
 	background-color: #131519 !important;
 }
 
-/* ─── Thin, smooth-blue scrollbars (Figma parity) ───
- * The browser-default chunky gray bar in the sidebar (and tables) reads heavy.
- * Slim it down and tint the thumb a soft blue that brightens on hover. */
-#erp-hr-app * {
+/* ─── Thin scrollbars that show on hover ───
+ * Every scroll area in the app (lists, tables, dialogs, menus, the sidebar)
+ * keeps a thin bar whose thumb only appears while the pointer is over that
+ * area, so a still page shows content, not chrome, and the bar is there the
+ * moment someone reaches to scroll. Portalled overlays sit in `.pui-root`,
+ * outside #erp-hr-app, so they are listed too. A strip that hides its bar on
+ * purpose (`.scrollbar-none`, `!important`) still does.
+ *
+ * Built on the standard properties: Chrome does not repaint a
+ * ::-webkit-scrollbar-thumb when only its element's :hover changes, so the
+ * webkit pseudos are kept for browsers without `scrollbar-color` only. */
+:is( #erp-hr-app, .pui-root ) * {
 	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+}
+:is( #erp-hr-app, .pui-root ) *:hover {
 	scrollbar-color: rgba( 59, 130, 246, 0.45 ) transparent;
 }
-#erp-hr-app *::-webkit-scrollbar {
-	width: 7px;
-	height: 7px;
-}
-#erp-hr-app *::-webkit-scrollbar-track {
-	background: transparent;
-}
-#erp-hr-app *::-webkit-scrollbar-thumb {
-	background-color: rgba( 59, 130, 246, 0.45 );
-	border-radius: 9999px;
-}
-#erp-hr-app *::-webkit-scrollbar-thumb:hover {
-	background-color: rgba( 59, 130, 246, 0.7 );
+@supports not ( scrollbar-color: auto ) {
+	:is( #erp-hr-app, .pui-root ) *::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+	:is( #erp-hr-app, .pui-root ) *::-webkit-scrollbar-track,
+	:is( #erp-hr-app, .pui-root ) *::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+	:is( #erp-hr-app, .pui-root ) *::-webkit-scrollbar-thumb {
+		background-color: rgba( 59, 130, 246, 0.45 );
+		border-radius: 9999px;
+	}
 }
 
 /* ─── Hairline chrome borders ───
