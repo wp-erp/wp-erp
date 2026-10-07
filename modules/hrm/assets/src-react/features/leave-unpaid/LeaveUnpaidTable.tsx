@@ -65,7 +65,7 @@ export function LeaveUnpaidTable( { rows, canManage, onAmountChange }: LeaveUnpa
 									className="h-10 w-28 rounded-md border border-border bg-background px-4 text-sm focus:border-primary focus:outline-none"
 								/>
 							</td>
-							<td className="px-2 align-middle text-sm font-medium text-foreground">{ r.total }</td>
+							<td className="px-2 align-middle text-sm font-medium text-foreground">{ Number( r.total ).toFixed( 2 ) }</td>
 						</tr>
 					) ) }
 				</tbody>
