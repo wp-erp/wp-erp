@@ -890,7 +890,7 @@ function erp_months_dropdown( $title = false ) {
 	}
 
 	for ( $m = 1; $m <= 12; $m++ ) {
-		$months[ $m ] = sprintf( __( '%s', 'erp' ), gmdate( 'F', mktime( 0, 0, 0, $m, 1 ) ) );
+		$months[ $m ] = date_i18n( 'F', mktime( 0, 0, 0, $m, 1 ) );
 	}
 
 	return $months;
