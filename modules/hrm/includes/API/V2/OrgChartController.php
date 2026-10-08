@@ -306,8 +306,10 @@ class OrgChartController extends RestController {
 			];
 		}
 
+		// Offer "No Team" only when it has someone to show: the chart lists
+		// active, untrashed employees.
 		$empty_dept = $wpdb->get_row(
-			"SELECT id FROM {$wpdb->prefix}erp_hr_employees WHERE department = 0"
+			"SELECT id FROM {$wpdb->prefix}erp_hr_employees WHERE department = 0 AND status = 'active' AND deleted_at IS NULL"
 		);
 
 		if ( $empty_dept ) {

@@ -330,9 +330,10 @@ class ReportsController extends RestController {
 		// Oldest month first (the view builds newest-first then plots by timestamp).
 		$chart = array_reverse( $chart );
 
-		$total_emp_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
+		// A trashed employee keeps `status = 'active'`; only `deleted_at` marks them.
+		$total_emp_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL" );
 
-		$user_all      = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
+		$user_all      = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL" );
 		$user_filtered = [];
 
 		foreach ( $user_all as $user ) {
@@ -426,7 +427,7 @@ class ReportsController extends RestController {
 	public function get_salary_history(): WP_REST_Response {
 		global $wpdb;
 
-		$all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' ORDER BY hiring_date DESC" );
+		$all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL ORDER BY hiring_date DESC" );
 		$rows        = [];
 
 		// Every compensation entry in one query, newest first, instead of one
@@ -436,7 +437,7 @@ class ReportsController extends RestController {
 			"SELECT user_id, type, category, date
 			 FROM {$wpdb->prefix}erp_hr_employee_history
 			 WHERE module = 'compensation'
-			   AND user_id IN ( SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' )
+			   AND user_id IN ( SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL )
 			 ORDER BY date DESC, id DESC"
 		);
 		foreach ( (array) $history_rows as $history ) {
@@ -488,7 +489,7 @@ class ReportsController extends RestController {
 	public function get_years_of_service(): WP_REST_Response {
 		global $wpdb;
 
-		$all_user_id = array_map( 'intval', (array) $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" ) );
+		$all_user_id = array_map( 'intval', (array) $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL" ) );
 		$people      = erp_hr_get_employee_display_data( $all_user_id, 60 );
 		$hire_data   = [];
 

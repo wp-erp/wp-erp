@@ -356,7 +356,7 @@ class DashboardController extends RestController {
 		$rows = $wpdb->get_results(
 			"SELECT department, COUNT(*) AS total
 			 FROM {$wpdb->prefix}erp_hr_employees
-			 WHERE status = 'active' AND department > 0
+			 WHERE status = 'active' AND deleted_at IS NULL AND department > 0
 			 GROUP BY department",
 			ARRAY_A
 		);
