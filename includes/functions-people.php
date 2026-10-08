@@ -467,6 +467,41 @@ function erp_get_people_by( $field, $value ) {
 }
 
 /**
+ * Check whether a meta key must never be written to a WP user from people data
+ *
+ * @since 1.17.11
+ *
+ * @param string $key Meta key
+ *
+ * @return bool
+ */
+function erp_is_protected_user_meta_key( $key ) {
+    global $wpdb;
+
+    if ( ! is_string( $key ) || '' === $key ) {
+        return true;
+    }
+
+    if ( is_protected_meta( $key, 'user' ) ) {
+        return true;
+    }
+
+    // Covers {prefix}capabilities, {prefix}user_level and their per-site multisite variants.
+    if ( preg_match( '/(capabilities|user_level)$/i', $key ) ) {
+        return true;
+    }
+
+    // Site-scoped core user meta (e.g. wp_user-settings, wp_2_capabilities).
+    if ( 0 === stripos( $key, $wpdb->base_prefix ) || 0 === stripos( $key, 'wp_' ) ) {
+        return true;
+    }
+
+    $protected = [ 'session_tokens', 'primary_blog', 'source_domain', 'use_ssl', 'show_admin_bar_front', 'locale' ];
+
+    return in_array( strtolower( $key ), $protected, true );
+}
+
+/**
  * Insert a new people
  *
  * @since 1.0.0
@@ -521,6 +556,13 @@ function erp_insert_people( $args = [], $return_object = false ) {
     $people_type    = $args['type'];
 
     unset( $args['type'], $args['created'] );
+
+    // Extra args end up in user meta, so drop anything that could alter privileges or sessions.
+    foreach ( array_keys( $args ) as $key ) {
+        if ( erp_is_protected_user_meta_key( $key ) ) {
+            unset( $args[ $key ] );
+        }
+    }
 
     //sensitization
     $args['email'] = strtolower( trim( $args['email'] ) );

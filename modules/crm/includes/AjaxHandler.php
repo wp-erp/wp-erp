@@ -334,6 +334,9 @@ class AjaxHandler {
 			$this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
 		}
 
+		// The linked WP user must never come from the request, otherwise any WP account could be targeted.
+		unset( $data['user_id'] );
+
 		if ( $data['id'] ) {
 			$customer_data = new Contact( $data['id'] );
 		}
