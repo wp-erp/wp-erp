@@ -43,7 +43,7 @@ class ValidateData {
 
                 foreach ( $pdata_val as $pdval ) {
                     foreach ( $pdval['errors'] as $err ) {
-                        $errors[] = __( sprintf( "%s", $err ), 'erp' );
+                        $errors[] = __( $err, 'erp' );
                     }
                 }
             }
