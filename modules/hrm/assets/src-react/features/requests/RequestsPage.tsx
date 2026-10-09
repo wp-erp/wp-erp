@@ -23,6 +23,7 @@ import { ProBadge, useProUpsell } from '@/shared/components/pro/ProUpsell';
 import { SegmentedTab } from '@/shared/components/SegmentedTab';
 import { HOOKS } from '@/shared/filters';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { refreshRequestsPendingCount } from '@/shared/hooks/useRequestsPendingCount';
 import { __ } from '@/shared/i18n';
 import { useModalParam } from '@/shared/useModalParam';
 import { request, restPath } from '@/shared/utils/apiFetch';
@@ -80,7 +81,12 @@ function RequestsInner(): JSX.Element {
 	// whenever a tab reports a change, so the badges never go stale.
 	const [ counts, setCounts ] = useState< Record< string, number > >( {} );
 	const [ countsTick, setCountsTick ] = useState( 0 );
-	const refreshCounts = useCallback( () => setCountsTick( ( n ) => n + 1 ), [] );
+	const refreshCounts = useCallback( () => {
+		setCountsTick( ( n ) => n + 1 );
+		// The top-bar badge caches its total for the page's life; a moderated
+		// request changes it.
+		void refreshRequestsPendingCount();
+	}, [] );
 	useEffect( () => {
 		const ctrl = new AbortController();
 		request< { totals?: Record< string, number > } >(

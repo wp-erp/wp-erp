@@ -132,7 +132,7 @@ class EmployeesController extends RestController {
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'update_item' ],
 					'permission_callback' => [ $this, 'permission_edit_employee' ],
-					'args'                => $this->get_create_params(),
+					'args'                => $this->get_update_params(),
 				],
 				[
 					'methods'             => WP_REST_Server::DELETABLE,
@@ -1752,6 +1752,24 @@ class EmployeesController extends RestController {
 				'default'     => false,
 			],
 		];
+	}
+
+	/**
+	 * Argument schema for `PUT|PATCH /employees/{id}`: the create schema with
+	 * nothing required, so a partial update need not resend the name and email.
+	 * A field that is sent is still validated and sanitized, and
+	 * validate_employee_rules() still refuses a name sent empty.
+	 *
+	 * @return array
+	 */
+	public function get_update_params(): array {
+		$params = $this->get_create_params();
+
+		foreach ( $params as $key => $param ) {
+			unset( $params[ $key ]['required'] );
+		}
+
+		return $params;
 	}
 
 	/**

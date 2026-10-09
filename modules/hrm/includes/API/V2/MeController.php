@@ -157,7 +157,7 @@ class MeController extends RestController {
 			'email'         => $this->cast_string_or_null( $user->user_email ) ?? '',
 			'avatar_url'    => get_avatar_url( $user_id, [ 'size' => 80 ] ) ?: '',
 			'is_pro'        => $this->cast_bool( class_exists( 'WP_ERP_Pro' ) ),
-			'is_hr_manager' => current_user_can( erp_hr_get_manager_role() ) || in_array( erp_hr_get_manager_role(), (array) $user->roles, true ),
+			'is_hr_manager' => current_user_can( erp_hr_get_manager_role() ),
 			'roles'         => array_values( array_map( 'strval', (array) $user->roles ) ),
 			'capabilities'  => $capabilities,
 			'preferences'   => [

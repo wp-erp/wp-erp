@@ -43,7 +43,7 @@ function EmployeesPageInner(): JSX.Element {
 		query.search ||
 			query.department_id ||
 			query.designation_id ||
-			query.location_id ||
+			( query.location_id !== undefined && query.location_id !== null ) ||
 			( query.status && query.status !== 'active' )
 	);
 

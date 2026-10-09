@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
@@ -39,7 +40,7 @@ export function useReport< T >( path: string ): UseReportResult< T > {
 			const body = await request< T >( restPath( 'v2', path ) );
 			setData( body );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load the report.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load the report.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -72,7 +73,7 @@ export function useHeadcount( year: string, department: number ): UseReportResul
 			const body = await request< HeadcountResponse >( restPath( 'v2', '/reports/headcount', query ) );
 			setData( body );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load the headcount report.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load the headcount report.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -133,7 +134,7 @@ export function useLeaveReport( filters: LeaveReportFilters ): UseLeaveReportRes
 			setData( body );
 			setTotal( toInt( headers.get( 'X-WP-Total' ), body?.rows?.length ?? 0 ) );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load the leave report.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load the leave report.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}

@@ -24,7 +24,9 @@ const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
  * table whose columns come from both layers disagrees with itself.
  */
 function erpDateFormat(): string {
-	return window.__ERP_HR_BOOT__?.settings?.dateFormat || 'M j, Y';
+	// `typeof` guard: the unit tests run these helpers in Node, with no window.
+	const boot = typeof window === 'undefined' ? undefined : window.__ERP_HR_BOOT__;
+	return boot?.settings?.dateFormat || 'M j, Y';
 }
 
 /**
@@ -55,6 +57,13 @@ export function parseServerDate( value: string | null | undefined ): Date | null
  * @param fallback
  */
 export function formatDisplayDate( value: string | null | undefined, fallback = '—' ): string {
+	// A bare calendar date has no timezone. Parsing it to local midnight and
+	// letting dateI18n convert that instant into the site zone shows the day
+	// before whenever the browser sits ahead of the site, so hand it to the
+	// calendar formatter instead. Only genuine instants take the path below.
+	if ( value && DATE_ONLY.test( value.trim() ) ) {
+		return formatCalendarDate( value, fallback );
+	}
 	const date = parseServerDate( value );
 	if ( ! date ) {
 		return fallback;

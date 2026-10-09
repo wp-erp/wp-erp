@@ -12,7 +12,7 @@
 import { setSettings } from '@wordpress/date';
 import { afterAll, describe, expect, it } from 'vitest';
 
-import { formatCalendarDate, parseServerDate, siteToday } from './date';
+import { formatCalendarDate, formatDisplayDate, parseServerDate, siteToday } from './date';
 
 /** Local-field `YYYY-MM-DD`, the inverse of `parseServerDate`. */
 function localYmd( date: Date ): string {
@@ -77,6 +77,24 @@ describe( 'formatCalendarDate', () => {
 		expect( formatCalendarDate( '' ) ).toBe( '—' );
 		expect( formatCalendarDate( null ) ).toBe( '—' );
 		expect( formatCalendarDate( undefined, 'n/a' ) ).toBe( 'n/a' );
+	} );
+} );
+
+describe( 'formatDisplayDate', () => {
+	it( 'renders a bare calendar date on its own day whatever the site timezone', () => {
+		// It used to parse to local midnight and let dateI18n move that instant
+		// into the site zone, a day early whenever the browser was ahead.
+		for ( const [ name, offset ] of SITE_ZONES ) {
+			setSiteTimezone( name, offset );
+			expect( formatDisplayDate( '2026-01-01' ), `site ${ name }` ).toBe( 'Jan 1, 2026' );
+			expect( formatDisplayDate( '2026-12-31' ), `site ${ name }` ).toBe( 'Dec 31, 2026' );
+		}
+	} );
+
+	it( 'keeps the fallback for empty input', () => {
+		setSiteTimezone( 'UTC', 0 );
+		expect( formatDisplayDate( '' ) ).toBe( '—' );
+		expect( formatDisplayDate( null, 'n/a' ) ).toBe( 'n/a' );
 	} );
 } );
 

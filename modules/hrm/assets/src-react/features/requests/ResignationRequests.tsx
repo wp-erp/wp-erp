@@ -28,6 +28,7 @@ import type { JSX } from "react";
 
 import { RequestsCountsContext, RequestsTabContext } from "./requests-tab-context";
 
+import { OrgDeleteDialog } from "@/features/org/OrgDeleteDialog";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { TablePager } from "@/shared/components/TablePager";
 import { RowActionsMenu } from "@/shared/components/RowActionsMenu";
@@ -35,7 +36,7 @@ import { StatusPill } from "@/shared/components/StatusPill";
 import { requestStatusTone } from "@/shared/components/status-tones";
 import { DateField } from "@/shared/DateField";
 import { formatCalendarDate } from "@/shared/utils/date";
-import { __ } from "@/shared/i18n";
+import { __, sprintf } from "@/shared/i18n";
 import { request, restPath } from "@/shared/utils/apiFetch";
 import type { ApiError } from "@/shared/utils/apiFetch";
 import { useEmployeeSearch } from "@/features/employees/hooks/useEmployeeSearch";
@@ -71,6 +72,7 @@ export function ResignationRequests(): JSX.Element {
     const [total, setTotal] = useState(0);
     const [busy, setBusy] = useState(false);
     const [creating, setCreating] = useState(false);
+    const [deleting, setDeleting] = useState<ResignRow | null>(null);
 
     function load(): void {
         setLoading(true);
@@ -106,7 +108,10 @@ export function ResignationRequests(): JSX.Element {
             .catch((e: ApiError) =>
                 toast.error(e.message || __("Action failed.", "erp")),
             )
-            .finally(() => setBusy(false));
+            .finally(() => {
+                setBusy(false);
+                setDeleting(null);
+            });
     }
 
     return (
@@ -232,7 +237,7 @@ export function ResignationRequests(): JSX.Element {
                                                             id: "delete",
                                                             label: __("Delete", "erp"),
                                                             icon: Trash2,
-                                                            onSelect: () => act(r.id, "delete"),
+                                                            onSelect: () => setDeleting(r),
                                                             variant: "destructive",
                                                             disabled: busy,
                                                         },
@@ -259,6 +264,27 @@ export function ResignationRequests(): JSX.Element {
                     />
                 ) : null}
             </div>
+
+            <OrgDeleteDialog
+                open={null !== deleting}
+                title={__("Delete this resignation request?", "erp")}
+                description={
+                    deleting
+                        ? sprintf(
+                              /* translators: %s: employee name */
+                              __("%s's resignation request will be permanently deleted. This cannot be undone.", "erp"),
+                              deleting.employee.name || __("This employee", "erp"),
+                          )
+                        : ""
+                }
+                busy={busy}
+                onConfirm={() => {
+                    if (deleting) {
+                        act(deleting.id, "delete");
+                    }
+                }}
+                onCancel={() => setDeleting(null)}
+            />
 
             {creating ? (
                 <NewResignationDialog

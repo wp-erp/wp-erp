@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
@@ -61,7 +62,7 @@ export function useDashboard(): UseDashboardResult {
 			const body = await request< DashboardData >( restPath( 'v2', '/dashboard' ) );
 			setData( body );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load the dashboard.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load the dashboard.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}

@@ -1013,11 +1013,16 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
     $args_s = isset( $args['s'] ) ? $args['s'] : '';
 
     // Title OR description, grouped so the search stays inside the date window.
+    // The term is bound, but `%` and `_` in it would still act as wildcards.
     if ( $args_s && ! empty( $args['s'] ) ) {
+        global $wpdb;
+
+        $like = '%' . $wpdb->esc_like( $args_s ) . '%';
+
         $holiday = $holiday->where(
-            function ( $query ) use ( $args_s ) {
-                $query->where( 'title', 'LIKE', "%$args_s%" )
-                    ->orWhere( 'description', 'LIKE', "%$args_s%" );
+            function ( $query ) use ( $like ) {
+                $query->where( 'title', 'LIKE', $like )
+                    ->orWhere( 'description', 'LIKE', $like );
             }
         );
     }
@@ -1217,10 +1222,11 @@ function erp_hr_leave_insert_request( $args = [] ) {
 
     // Terminating an employee only changes their status (they keep the
     // employee role and with it their self-service), so check it here: leave
-    // is for active employees.
+    // is for active employees. A trashed record keeps status `active`, so the
+    // offboarded check (which also reads `deleted_at`) covers that case.
     $employee = new \WeDevs\ERP\HRM\Employee( intval( $args['user_id'] ) );
 
-    if ( ! $employee->is_employee() || 'active' !== $employee->get_status() ) {
+    if ( ! $employee->is_employee() || 'active' !== $employee->get_status() || erp_hr_is_offboarded_user( $args['user_id'] ) ) {
         return new WP_Error( 'inactive-employee', esc_attr__( 'Leave can only be requested for an active employee.', 'erp' ) );
     }
 

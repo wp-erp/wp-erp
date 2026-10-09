@@ -7,6 +7,7 @@
  * `invalidate()`s the store so the list + counts refetch.
  */
 
+import { __ } from '@/shared/i18n';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt, toObject, toStr } from '@/shared/utils/coerce';
 
@@ -171,7 +172,7 @@ export const fetchEmployees =
 			const error = raw as { code?: string; message?: string };
 			dispatch.setError( {
 				code:    toStr( error.code, 'erp_hr_employees_failed' ),
-				message: toStr( error.message, 'Could not load employees' ),
+				message: toStr( error.message, __( 'Could not load employees', 'erp' ) ),
 			} );
 		} finally {
 			dispatch.setLoading( false );

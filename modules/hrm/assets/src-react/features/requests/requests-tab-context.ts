@@ -10,13 +10,19 @@
  * instead of on a separate row below).
  *
  * `RequestsCountsContext` - asks the Requests page to refetch its tab badges
- * after a child changes a request (approve, reject, delete, create).
+ * after a child changes a request (approve, reject, delete, create). Both the
+ * provider and the default also refresh the top-bar pending badge, so a list
+ * mounted outside the Requests page keeps that badge current too.
  */
 
 import { createContext } from 'react';
+
+import { refreshRequestsPendingCount } from '@/shared/hooks/useRequestsPendingCount';
 
 export const RequestsTabContext = createContext( false );
 
 export const RequestsActionSlotContext = createContext< HTMLElement | null >( null );
 
-export const RequestsCountsContext = createContext< () => void >( () => undefined );
+export const RequestsCountsContext = createContext< () => void >( () => {
+	void refreshRequestsPendingCount();
+} );

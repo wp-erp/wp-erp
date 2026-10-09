@@ -96,11 +96,18 @@ class DesignationsController extends RestController {
 
 	/**
 	 * Listing requires the shared HR view capability (managers + employees).
+	 * An offboarded employee keeps `erp_view_list` (other screens still list
+	 * their own records through it) but no longer reads the org lists, which
+	 * carry staff names and avatars. Site administrators are never locked out.
 	 *
 	 * @return bool
 	 */
 	public function permission_view(): bool {
-		return $this->permission_cap( 'erp_view_list' );
+		if ( ! $this->permission_cap( 'erp_view_list' ) ) {
+			return false;
+		}
+
+		return current_user_can( 'manage_options' ) || ! erp_hr_is_offboarded_user( get_current_user_id() );
 	}
 
 	/**

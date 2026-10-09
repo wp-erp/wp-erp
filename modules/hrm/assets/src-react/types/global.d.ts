@@ -82,6 +82,8 @@ export interface BootPayload {
 	readonly themeMode:     ThemeMode;
 	readonly navLayout:     NavLayout;
 	readonly switchUrl:     string;
+	/** Nonced logout URL that returns to the HR admin after sign-in. */
+	readonly logoutUrl?:    string;
 	/** One time, right after a switch from the classic screens: show the welcome screen. */
 	readonly showWelcome?:  boolean;
 	readonly pageSlug:      string;

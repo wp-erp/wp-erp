@@ -10,7 +10,7 @@ import type { ComponentType, JSX, SVGProps } from 'react';
 import { __ } from '@/shared/i18n';
 
 import { useEmployeeLeave } from '../leave/useEmployeeLeave';
-import { siteToday } from '@/shared/utils/date';
+import { parseServerDate, siteToday } from '@/shared/utils/date';
 
 type LucideIcon = ComponentType< SVGProps< SVGSVGElement > & { size?: number; strokeWidth?: number } >;
 
@@ -26,8 +26,9 @@ function parseDate( value: string ): Date | null {
 	if ( ! v || v === '—' || v.startsWith( '0000' ) ) {
 		return null;
 	}
-	const d = new Date( v );
-	return Number.isNaN( d.getTime() ) ? null : d;
+	// A bare YYYY-MM-DD parsed by `new Date()` is UTC midnight, which is the
+	// day before west of UTC; read it as the local calendar day instead.
+	return parseServerDate( v );
 }
 
 /** Whole years + months elapsed from `from` to now, formatted e.g. "3y 2m". */

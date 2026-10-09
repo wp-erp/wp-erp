@@ -11,6 +11,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
@@ -41,7 +42,8 @@ export interface UseEntitlementsResult {
 	readonly reload:        () => Promise< void >;
 	readonly assign:        ( payload: EntitlementAssignInput ) => Promise< EntitlementAssignResult >;
 	readonly remove:        ( id: number, userId: number ) => Promise< void >;
-	readonly bulkRemove:    ( ids: readonly number[] ) => Promise< void >;
+	/** Resolves with how many of the ids the server could not delete. */
+	readonly bulkRemove:    ( ids: readonly number[] ) => Promise< number >;
 	readonly loadPolicies:  () => Promise< readonly IdOption[] >;
 	readonly loadEmployees: ( policyId: number ) => Promise< readonly IdOption[] >;
 	readonly loadFinancialYears: () => Promise< readonly FinancialYearOption[] >;
@@ -79,7 +81,7 @@ export function useEntitlements( {
 			setRows( list );
 			setTotal( toInt( headers.get( 'X-WP-Total' ), list.length ) );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load entitlements.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load entitlements.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -110,9 +112,10 @@ export function useEntitlements( {
 	);
 
 	const bulkRemove = useCallback(
-		async ( ids: readonly number[] ): Promise< void > => {
-			await request( restPath( 'v2', '/leave-entitlements/bulk-delete' ), { method: 'POST', data: { ids } } );
+		async ( ids: readonly number[] ): Promise< number > => {
+			const res = await request< { failed?: unknown[] } >( restPath( 'v2', '/leave-entitlements/bulk-delete' ), { method: 'POST', data: { ids } } );
 			await reload();
+			return Array.isArray( res?.failed ) ? res.failed.length : 0;
 		},
 		[ reload ]
 	);

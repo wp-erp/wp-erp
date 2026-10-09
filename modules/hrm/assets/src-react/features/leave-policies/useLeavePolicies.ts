@@ -13,6 +13,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
@@ -120,7 +121,7 @@ export function useLeavePolicies( {
 			setRows( list );
 			setTotal( toInt( headers.get( 'X-WP-Total' ), list.length ) );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load leave policies.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load leave policies.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}

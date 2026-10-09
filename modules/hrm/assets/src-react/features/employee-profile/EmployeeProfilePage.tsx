@@ -60,6 +60,8 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 	const canViewNotesCap = useCan( 'erp_manage_review' );
 	const canViewPerfCap  = useCan( 'erp_create_review' );
 	const canTerminateCap = useCan( 'erp_can_terminate' );
+	// A leaver keeps their own profile but not the directory, so no link back to it.
+	const canListPeople   = useCan( 'erp_list_employee' );
 
 	// Per-target caps (meta-mapped against THIS employee). The global `useCan`
 	// map resolves review/edit caps to manager-only; a department lead is granted
@@ -241,13 +243,15 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
-			<TextButton
-				onClick={ back }
-				className="inline-flex items-center gap-1.5 font-medium transition-colors"
-			>
-				<ArrowLeft size={ 16 } aria-hidden="true" />
-				{ __( 'Back to People', 'erp' ) }
-			</TextButton>
+			{ canListPeople && (
+				<TextButton
+					onClick={ back }
+					className="inline-flex items-center gap-1.5 font-medium transition-colors"
+				>
+					<ArrowLeft size={ 16 } aria-hidden="true" />
+					{ __( 'Back to People', 'erp' ) }
+				</TextButton>
+			) }
 
 			<ProfileHeader
 				record={ record }

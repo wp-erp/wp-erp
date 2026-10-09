@@ -13,6 +13,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import type { JSX } from 'react';
 
 import { StatusTabs } from '@/shared/components/StatusTabs';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName, toCountsQuery } from '@/stores/employees';
 import type {
@@ -44,6 +45,13 @@ const TABS: ReadonlyArray< { readonly value: StatusTab; readonly label: string }
 	{ value: 'trash',      label: __( 'Trash', 'erp' ) },
 ];
 
+/**
+ * Tabs a non-HR viewer may use. The server only lists active employees to
+ * someone without `erp_view_employee`, so the other buckets would be empty
+ * tabs (or counts of people they cannot open).
+ */
+const LIMITED_TABS: ReadonlySet< StatusTab > = new Set< StatusTab >( [ 'all', 'active' ] );
+
 export function StatusFilter(): JSX.Element {
 	const filters = useSelect(
 		( select ) => ( select( employeesStoreName ) as unknown as EmployeesStoreSelectors ).getFilters(),
@@ -59,11 +67,14 @@ export function StatusFilter(): JSX.Element {
 		employeesStoreName
 	) as unknown as EmployeesStoreDispatch;
 
+	const isHr    = useCan( 'erp_view_employee' );
+	const visible = isHr ? TABS : TABS.filter( ( tab ) => LIMITED_TABS.has( tab.value ) );
+
 	const current: StatusTab = filters.status ?? 'all';
 
 	return (
 		<StatusTabs
-			tabs={ TABS.map( ( tab ) => ( {
+			tabs={ visible.map( ( tab ) => ( {
 				value: tab.value,
 				label: tab.label,
 				count: countFor( counts, tab.value ),

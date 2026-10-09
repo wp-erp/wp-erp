@@ -158,8 +158,20 @@ function LeaveTypesInner(): JSX.Element {
 	async function handleBulkDelete(): Promise< void > {
 		setBusy( true );
 		try {
-			await bulkRemove( [ ...selected ] );
-			toast.success( __( 'Selected leave types deleted.', 'erp' ) );
+			const ids     = [ ...selected ];
+			const skipped = await bulkRemove( ids );
+			if ( skipped > 0 ) {
+				toast.error(
+					sprintf(
+						/* translators: 1: leave types not deleted, 2: leave types selected */
+						__( '%1$d of %2$d leave type(s) could not be deleted because a policy uses them.', 'erp' ),
+						skipped,
+						ids.length
+					)
+				);
+			} else {
+				toast.success( __( 'Selected leave types deleted.', 'erp' ) );
+			}
 			setSelected( new Set() );
 			setBulkOpen( false );
 		} catch ( raw ) {

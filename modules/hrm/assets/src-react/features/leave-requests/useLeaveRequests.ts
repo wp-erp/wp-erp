@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
@@ -73,7 +74,8 @@ export interface UseLeaveRequestsResult {
 	readonly approve:        ( id: number, reason: string ) => Promise< LeaveModerateResult >;
 	readonly reject:         ( id: number, reason: string ) => Promise< LeaveModerateResult >;
 	readonly remove:         ( id: number ) => Promise< void >;
-	readonly bulk:           ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ) => Promise< void >;
+	/** Resolves with how many of the ids the server could not process. */
+	readonly bulk:           ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ) => Promise< number >;
 	readonly loadLeaveTypes: () => Promise< readonly LeaveTypeOption[] >;
 }
 
@@ -140,7 +142,7 @@ export function useLeaveRequests( {
 				setCounts( EMPTY_COUNTS );
 			}
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load leave requests.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load leave requests.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -177,9 +179,12 @@ export function useLeaveRequests( {
 	);
 
 	const bulk = useCallback(
-		async ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ): Promise< void > => {
-			await request( restPath( 'v2', '/leave-requests/bulk' ), { method: 'POST', data: { action, ids } } );
+		async ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ): Promise< number > => {
+			// Best effort on the server: `{ done, failed }`, still a 200 when
+			// some ids were refused.
+			const res = await request< { failed?: unknown[] } >( restPath( 'v2', '/leave-requests/bulk' ), { method: 'POST', data: { action, ids } } );
 			await reload();
+			return Array.isArray( res?.failed ) ? res.failed.length : 0;
 		},
 		[ reload ]
 	);

@@ -208,22 +208,26 @@ final class Enqueue {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $page_slug HR admin page slug.
+	 * @param string $page_slug    HR admin page slug.
+	 * @param bool   $take_welcome Whether to consume the once-per-user welcome flag.
+	 *                             A host that does not show the welcome passes false
+	 *                             so the admin app can still show it later.
 	 *
 	 * @return array
 	 */
-	public static function boot_payload( string $page_slug ): array {
-		return self::build_boot_payload( $page_slug );
+	public static function boot_payload( string $page_slug, bool $take_welcome = true ): array {
+		return self::build_boot_payload( $page_slug, $take_welcome );
 	}
 
 	/**
 	 * Build the `__ERP_HR_BOOT__` payload localized to `window`.
 	 *
-	 * @param string $page_slug Current admin page slug.
+	 * @param string $page_slug    Current admin page slug.
+	 * @param bool   $take_welcome Whether to consume the once-per-user welcome flag.
 	 *
 	 * @return array
 	 */
-	private static function build_boot_payload( string $page_slug ): array {
+	private static function build_boot_payload( string $page_slug, bool $take_welcome = true ): array {
 		$user_id = (int) get_current_user_id();
 		$user    = wp_get_current_user();
 
@@ -271,8 +275,10 @@ final class Enqueue {
 			 * @param bool $is_pro Whether pro is present and licensed.
 			 */
 			'isPro'         => (bool) apply_filters( 'erp_hr_is_pro_active', class_exists( 'WP_ERP_Pro' ) ),
+			// The role as a capability only: an offboarded HR manager loses the role's
+			// caps, so a raw `$user->roles` check would still report them as a manager.
 			'isHrManager'   => function_exists( 'erp_hr_get_manager_role' )
-				? in_array( erp_hr_get_manager_role(), (array) $user->roles, true )
+				? current_user_can( erp_hr_get_manager_role() )
 				: false,
 			'api'           => [
 				'nsV1' => 'erp/v1',
@@ -293,7 +299,9 @@ final class Enqueue {
 				: UiEngineResolver::instance()->switch_url( $page_slug, 'legacy' ),
 			'pageSlug'      => $page_slug,
 			// Once per user, the first time they switch to the new design.
-			'showWelcome'   => UiEngineResolver::instance()->take_welcome(),
+			'showWelcome'   => $take_welcome ? UiEngineResolver::instance()->take_welcome() : false,
+			// wp_logout_url() returns an HTML-escaped (`&amp;`) URL; decode it for JSON.
+			'logoutUrl'     => esc_url_raw( wp_specialchars_decode( wp_logout_url( admin_url( 'admin.php?page=erp-hr' ) ) ) ),
 			'assets'        => [
 				'logoUrl'      => WPERP_HRM_ASSETS . '/images/logo.svg',
 				// Base URL for the shared pro-popup illustration set, reused by the

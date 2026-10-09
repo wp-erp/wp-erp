@@ -209,11 +209,17 @@ function erp_hr_get_caps_for_role( $role = '' ) {
  * React client probes (boot payload + `/erp/v2/me/capabilities`), so UI gated on those
  * caps silently disappears (e.g. an employee's own profile tabs).
  *
- * This grants every mapped cap onto the live role. Idempotent.
+ * This grants mapped caps onto the live role, but never overrides a site owner's choice:
+ * a cap already present on the role (granted, or explicitly set to false) is left alone,
+ * and when `$previous` (the map from the last sync) is given, only caps that are new
+ * compared with it are granted, so a cap the owner removed is not re-granted on the next
+ * map change. With no previous map (first run after upgrade) every missing cap is granted.
+ *
+ * @param array|null $previous Role => cap map from the last sync, or null on the first run.
  *
  * @return void
  */
-function erp_hr_sync_role_caps() {
+function erp_hr_sync_role_caps( $previous = null ) {
     if ( ! function_exists( 'erp_hr_get_roles' ) ) {
         return;
     }
@@ -224,9 +230,13 @@ function erp_hr_sync_role_caps() {
             continue;
         }
         foreach ( (array) erp_hr_get_caps_for_role( $role_key ) as $cap => $grant ) {
-            if ( $grant && empty( $role->capabilities[ $cap ] ) ) {
-                $role->add_cap( $cap );
+            if ( ! $grant || array_key_exists( $cap, (array) $role->capabilities ) ) {
+                continue;
             }
+            if ( is_array( $previous ) && ! empty( $previous[ $role_key ][ $cap ] ) ) {
+                continue;
+            }
+            $role->add_cap( $cap );
         }
     }
 }
@@ -236,8 +246,9 @@ function erp_hr_sync_role_caps() {
  *
  * The signature covers every ERP HR role's full (filtered) cap map, so the moment a
  * pro module adds a cap via the `erp_hr_get_caps_for_role` filter the signature
- * changes and the new caps land on the live roles automatically — the canonical way
- * for any new module to register its capabilities.
+ * changes and the new caps land on the live roles automatically: the canonical way
+ * for any new module to register its capabilities. The full map is stored alongside
+ * the signature so the next sync grants only caps that are new since this one.
  *
  * @return void
  */
@@ -253,7 +264,9 @@ function erp_hr_maybe_sync_role_caps() {
     $signature = md5( serialize( $map ) );
 
     if ( get_option( 'erp_hr_role_caps_signature' ) !== $signature ) {
-        erp_hr_sync_role_caps();
+        $previous = get_option( 'erp_hr_role_caps_map', null );
+        erp_hr_sync_role_caps( is_array( $previous ) ? $previous : null );
+        update_option( 'erp_hr_role_caps_map', $map, false );
         update_option( 'erp_hr_role_caps_signature', $signature );
     }
 }

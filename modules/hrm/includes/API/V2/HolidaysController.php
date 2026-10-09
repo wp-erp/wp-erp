@@ -391,8 +391,9 @@ class HolidaysController extends RestController {
 			return new \WP_Error( 'rest_no_file', __( 'File upload error!', 'erp' ), [ 'status' => 400 ] );
 		}
 
-		$first_day_of_year = strtotime( gmdate( 'Y-01-01 00:00:00' ) );
-		$last_day_of_year  = strtotime( gmdate( 'Y-12-31 23:59:59' ) );
+		// The site's current year, not UTC's: they differ around New Year.
+		$first_day_of_year = strtotime( wp_date( 'Y' ) . '-01-01 00:00:00' );
+		$last_day_of_year  = strtotime( wp_date( 'Y' ) . '-12-31 23:59:59' );
 
 		$holiday_model = new LeaveHoliday();
 
@@ -630,6 +631,7 @@ class HolidaysController extends RestController {
 	 * Resolve the `from` / `to` date window from `from`/`to`/`year` request args.
 	 *
 	 * Explicit `from`/`to` win; otherwise a `year` expands to Jan 1 .. Dec 31.
+	 * A `year` outside 1970-9999 is invalid (null).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
@@ -656,15 +658,20 @@ class HolidaysController extends RestController {
 			];
 		}
 
-		$year = (int) ( $request['year'] ?? 0 );
-		if ( $year >= 1970 && $year <= 9999 ) {
-			return [
-				sprintf( '%04d-01-01 00:00:00', $year ),
-				sprintf( '%04d-12-31 23:59:59', $year ),
-			];
+		if ( ! isset( $request['year'] ) || '' === $request['year'] ) {
+			return [ '', '' ];
 		}
 
-		return [ '', '' ];
+		// A year outside the range is a bad request, not "every year".
+		$year = (int) $request['year'];
+		if ( $year < 1970 || $year > 9999 ) {
+			return null;
+		}
+
+		return [
+			sprintf( '%04d-01-01 00:00:00', $year ),
+			sprintf( '%04d-12-31 23:59:59', $year ),
+		];
 	}
 
 	/**

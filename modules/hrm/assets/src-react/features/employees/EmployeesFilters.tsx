@@ -55,7 +55,8 @@ export function EmployeesFilters(): JSX.Element {
 	const activeFilterCount =
 		( filters.department_id  ? 1 : 0 ) +
 		( filters.designation_id ? 1 : 0 ) +
-		( filters.location_id    ? 1 : 0 ) +
+		// 0 is the Main Location, a real filter.
+		( filters.location_id !== undefined && filters.location_id !== null ? 1 : 0 ) +
 		( filters.employee_type  ? 1 : 0 );
 	const hasActiveSecondaryFilters = activeFilterCount > 0;
 

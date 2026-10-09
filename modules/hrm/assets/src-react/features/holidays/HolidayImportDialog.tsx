@@ -23,6 +23,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	Input,
+	toast,
 } from '@wedevs/plugin-ui';
 import { Download, Upload } from 'lucide-react';
 import { useState } from 'react';
@@ -141,7 +142,27 @@ export function HolidayImportDialog( {
 		setImporting( true );
 		setError( null );
 		try {
-			await onImport( selected );
+			const result   = await onImport( selected );
+			const imported = Number( result?.imported ) || 0;
+			const failed   = Array.isArray( result?.failed ) ? result.failed.length : 0;
+			if ( failed > 0 ) {
+				toast.error(
+					sprintf(
+						/* translators: 1: holidays imported, 2: rows that failed */
+						__( '%1$d imported, %2$d failed.', 'erp' ),
+						imported,
+						failed
+					)
+				);
+			} else {
+				toast.success(
+					sprintf(
+						/* translators: %d: holidays imported */
+						_n( '%d holiday imported.', '%d holidays imported.', imported, 'erp' ),
+						imported
+					)
+				);
+			}
 			handleClose();
 		} catch ( raw ) {
 			setError( ( raw as ApiError )?.message ?? __( 'Import failed.', 'erp' ) );

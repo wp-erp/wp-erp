@@ -12,6 +12,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
@@ -26,7 +27,8 @@ export interface UseLeaveTypesResult {
 	readonly reload:     () => Promise< void >;
 	readonly save:       ( id: number | null, payload: LeaveTypeInput ) => Promise< void >;
 	readonly remove:     ( id: number ) => Promise< void >;
-	readonly bulkRemove: ( ids: readonly number[] ) => Promise< void >;
+	/** Resolves with how many leave types were skipped (still tied to a policy). */
+	readonly bulkRemove: ( ids: readonly number[] ) => Promise< number >;
 }
 
 export function useLeaveTypes(): UseLeaveTypesResult {
@@ -46,7 +48,7 @@ export function useLeaveTypes(): UseLeaveTypesResult {
 			setRows( list );
 			setTotal( toInt( headers.get( 'X-WP-Total' ), list.length ) );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load leave types.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load leave types.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -77,9 +79,10 @@ export function useLeaveTypes(): UseLeaveTypesResult {
 	);
 
 	const bulkRemove = useCallback(
-		async ( ids: readonly number[] ): Promise< void > => {
-			await request( restPath( 'v2', '/leave-types/bulk-delete' ), { method: 'POST', data: { ids } } );
+		async ( ids: readonly number[] ): Promise< number > => {
+			const res = await request< { skipped?: unknown[] } >( restPath( 'v2', '/leave-types/bulk-delete' ), { method: 'POST', data: { ids } } );
 			await reload();
+			return Array.isArray( res?.skipped ) ? res.skipped.length : 0;
 		},
 		[ reload ]
 	);

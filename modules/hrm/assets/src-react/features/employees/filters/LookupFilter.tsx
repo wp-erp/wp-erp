@@ -82,7 +82,9 @@ export function LookupFilter( {
 		return null;
 	}
 
-	const value = filters[ field ] ? String( filters[ field ] ) : '';
+	// `location_id` 0 is the Main Location, so only a missing value means "any".
+	const current = filters[ field ];
+	const value   = current !== undefined && current !== null ? String( current ) : '';
 
 	return (
 		<div className="flex items-center gap-2">

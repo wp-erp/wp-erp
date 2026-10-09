@@ -30,7 +30,8 @@ export function toCountsQuery( query: EmployeeListQuery ): EmployeeCountsQuery {
 	if ( query.search )         { out.search         = query.search; }
 	if ( query.department_id )  { out.department_id  = query.department_id; }
 	if ( query.designation_id ) { out.designation_id = query.designation_id; }
-	if ( query.location_id )    { out.location_id    = query.location_id; }
+	// 0 is a real location ("Main Location"), so test for presence, not truthiness.
+	if ( query.location_id !== undefined && query.location_id !== null ) { out.location_id = query.location_id; }
 	return out as EmployeeCountsQuery;
 }
 

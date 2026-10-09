@@ -13,6 +13,7 @@
  */
 
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 
 import type { BootPayload } from '@/types/global';
@@ -74,8 +75,15 @@ export function bootApiFetch(): void {
 
 	apiFetch.use( apiFetch.createRootURLMiddleware( root ) );
 
-	if ( nonce ) {
-		apiFetch.use( apiFetch.createNonceMiddleware( nonce ) );
+	// WordPress core registers its own nonce middleware (and the refresh
+	// endpoint) on `wp.apiFetch`. Adding a second one would pin the boot nonce:
+	// after api-fetch refreshes an expired nonce on the core middleware, ours
+	// would overwrite the header with the stale value again. Only register when
+	// core did not, and expose it so api-fetch's refresh can update it.
+	if ( nonce && ! apiFetch.nonceMiddleware ) {
+		const nonceMiddleware = apiFetch.createNonceMiddleware( nonce );
+		apiFetch.use( nonceMiddleware );
+		apiFetch.nonceMiddleware = nonceMiddleware;
 	}
 
 	// Error-normalization middleware. Always last to run on the response path.
@@ -83,7 +91,9 @@ export function bootApiFetch(): void {
 		try {
 			return await next( options );
 		} catch ( raw: unknown ) {
-			throw normalizeError( raw );
+			// A `rest_cookie_invalid_nonce` code here lets api-fetch's own
+			// handler refresh the nonce and retry, `parse: false` calls included.
+			throw await normalizeError( raw );
 		}
 	} );
 
@@ -133,12 +143,31 @@ export function bootApiFetch(): void {
 	} );
 }
 
-function normalizeError( raw: unknown ): ApiError {
+async function normalizeError( raw: unknown ): Promise< ApiError > {
+	// With `parse: false` api-fetch rejects with the raw Response, so the
+	// WP_Error body (code, translated message, status) is still unread.
+	if ( typeof Response !== 'undefined' && raw instanceof Response ) {
+		let body: Partial< ApiError > & { data?: { status?: number } } = {};
+		try {
+			const parsed: unknown = await raw.json();
+			if ( parsed && typeof parsed === 'object' ) {
+				body = parsed as typeof body;
+			}
+		} catch {
+			// Not JSON (a proxy error page, an empty body): keep the HTTP status.
+		}
+		return {
+			code:    body.code ?? 'erp_hr_unknown_error',
+			message: body.message ?? __( 'Unknown error', 'erp' ),
+			status:  body.data?.status ?? raw.status ?? 0,
+			data:    body.data,
+		};
+	}
 	if ( raw && typeof raw === 'object' ) {
 		const err = raw as Partial< ApiError > & { data?: { status?: number } };
 		return {
 			code:    err.code ?? 'erp_hr_unknown_error',
-			message: err.message ?? 'Unknown error',
+			message: err.message ?? __( 'Unknown error', 'erp' ),
 			status:  err.data?.status ?? err.status ?? 0,
 			data:    err.data,
 		};
@@ -215,7 +244,20 @@ export async function requestWithHeaders< T = unknown >(
 	opts: Omit< ApiFetchOptions, 'parse' > = {}
 ): Promise< { body: T; headers: Headers } > {
 	const response = await request< Response >( path, { ...opts, parse: false } );
-	const body     = ( await response.json() ) as T;
+
+	let body: T;
+	try {
+		body = ( await response.json() ) as T;
+	} catch {
+		// A 2xx with an unreadable body (PHP notice before the JSON, empty
+		// reply): reject with the same shape every other failure has.
+		const error: ApiError = {
+			code:    'invalid_json',
+			message: __( 'The response is not a valid JSON response.', 'erp' ),
+			status:  response.status,
+		};
+		throw error;
+	}
 	return { body, headers: response.headers };
 }
 

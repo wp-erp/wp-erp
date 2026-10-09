@@ -33,7 +33,7 @@ const ENDPOINTS: Record< LookupKey, string > = {
 const cache: Partial< Record< LookupKey, LookupOption[] > > = {};
 const inflight: Partial< Record< LookupKey, Promise< LookupOption[] > > > = {};
 
-function normalize( raw: unknown ): LookupOption[] {
+function normalize( key: LookupKey, raw: unknown ): LookupOption[] {
 	const list: unknown[] = Array.isArray( raw )
 		? raw
 		: Array.isArray( ( raw as { data?: unknown } )?.data )
@@ -46,7 +46,9 @@ function normalize( raw: unknown ): LookupOption[] {
 			const title = toStr( obj.title ?? obj.name ?? '', '' );
 			return { id, title };
 		} )
-		.filter( ( opt ) => opt.id > 0 && opt.title !== '' );
+		// Location 0 is the company's own "Main Location", a real choice; for
+		// departments and designations 0 means none.
+		.filter( ( opt ) => ( opt.id > 0 || ( 'locations' === key && 0 === opt.id ) ) && opt.title !== '' );
 }
 
 export async function loadLookup( key: LookupKey ): Promise< LookupOption[] > {
@@ -60,11 +62,12 @@ export async function loadLookup( key: LookupKey ): Promise< LookupOption[] > {
 	const promise = ( async () => {
 		try {
 			const raw  = await request< unknown >( ENDPOINTS[ key ] );
-			const list = normalize( raw );
+			const list = normalize( key, raw );
 			cache[ key ] = list;
 			return list;
 		} catch {
-			cache[ key ] = [];
+			// Not cached: a transient failure must not leave every select on the
+			// page empty until a reload. The next mount retries.
 			return [];
 		} finally {
 			delete inflight[ key ];

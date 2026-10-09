@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
 import { toInt } from '@/shared/utils/coerce';
@@ -67,7 +68,7 @@ export function useOrgCrud< T extends OrgEntity >(
 			setRows( list );
 			setTotal( count );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load the list.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load the list.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}

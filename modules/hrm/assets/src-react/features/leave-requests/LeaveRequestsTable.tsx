@@ -183,15 +183,11 @@ export function LeaveRequestsTable( {
 							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Requested On', 'erp' ) ) }
 							first={ false }
 						/>
-						<SortHeader
-							label={ __( 'Available', 'erp' ) }
-							sortKey="available"
-							orderBy={ orderby }
-							order={ order }
-							onSort={ onSort }
-							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Available', 'erp' ) ) }
-							first={ false }
-						/>
+						{ /* Not sortable: the balance is computed per row, and the server's
+						   "available" order is by entitlement id, not by the number shown. */ }
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+							{ __( 'Available', 'erp' ) }
+						</th>
 						<SortHeader
 							label={ __( 'Status', 'erp' ) }
 							sortKey="last_status"

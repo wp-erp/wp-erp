@@ -201,8 +201,19 @@ function LeaveEntitlementsInner(): JSX.Element {
 		}
 		setBusy( true );
 		try {
-			await bulkRemove( ids );
-			toast.success( __( 'Selected entitlements deleted.', 'erp' ) );
+			const failed = await bulkRemove( ids );
+			if ( failed > 0 ) {
+				toast.error(
+					sprintf(
+						/* translators: 1: entitlements not deleted, 2: entitlements selected */
+						__( '%1$d of %2$d entitlement(s) could not be deleted.', 'erp' ),
+						failed,
+						ids.length
+					)
+				);
+			} else {
+				toast.success( __( 'Selected entitlements deleted.', 'erp' ) );
+			}
 			setSelected( new Set() );
 			setBulkDeleting( false );
 		} catch ( raw ) {

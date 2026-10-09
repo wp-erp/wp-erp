@@ -33,7 +33,7 @@ import { useBoot } from '@/shared/hooks/useBoot';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
-import { todaySiteYmd } from '@/shared/utils/date';
+import { formatCalendarDate, todaySiteYmd } from '@/shared/utils/date';
 
 interface ReasonOption { readonly value: string; readonly label: string }
 type Kind = 'resignation' | 'remote_work' | null;
@@ -81,6 +81,20 @@ function useReasons( base: string ): ReasonOption[] {
 
 interface HistRow { readonly id: number; readonly status: string; readonly date?: string; readonly startDate?: string; readonly endDate?: string }
 
+/** Translated label for a request status; an unknown value shows as sent. */
+function statusLabel( status: string ): string {
+	switch ( status ) {
+		case 'pending':
+			return __( 'Pending', 'erp' );
+		case 'approved':
+			return __( 'Approved', 'erp' );
+		case 'rejected':
+			return __( 'Rejected', 'erp' );
+		default:
+			return status || '—';
+	}
+}
+
 /** The employee's own past/pending requests + their status (self-scoped GET). */
 function MyHistory( { base, primary }: { readonly base: string; readonly primary: ( r: HistRow ) => string } ): JSX.Element | null {
 	const [ rows, setRows ] = useState< HistRow[] >( [] );
@@ -101,7 +115,7 @@ function MyHistory( { base, primary }: { readonly base: string; readonly primary
 				{ rows.map( ( r ) => (
 					<li key={ r.id } className="flex items-center justify-between gap-2 px-3 py-2 text-sm">
 						<span className="text-foreground">{ primary( r ) }</span>
-						<StatusPill tone={ requestStatusTone( r.status ) } className="capitalize">{ r.status }</StatusPill>
+						<StatusPill tone={ requestStatusTone( r.status ) } className="capitalize">{ statusLabel( r.status ) }</StatusPill>
 					</li>
 				) ) }
 			</ul>
@@ -133,7 +147,7 @@ function ResignDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 					<DialogDescription>{ __( 'Submit a resignation request to HR.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
-				<MyHistory base="/hrm/resignations" primary={ ( r ) => r.date || '—' } />
+				<MyHistory base="/hrm/resignations" primary={ ( r ) => formatCalendarDate( r.date ) } />
 				<div className="flex flex-col gap-2.5">
 					<FormLabel>{ __( 'Reason', 'erp' ) }</FormLabel>
 					<SmartSelect options={ reasons } value={ reason } onValueChange={ ( v ) => setReason( v ?? '' ) } placeholder={ __( 'Select reason', 'erp' ) } searchPlaceholder={ __( 'Search…', 'erp' ) } emptyMessage={ __( 'No reasons.', 'erp' ) } className="h-10 w-full" />
@@ -179,7 +193,7 @@ function RemoteDialog( { onClose }: { readonly onClose: () => void } ): JSX.Elem
 					<DialogDescription>{ __( 'Submit a remote work request to HR.', 'erp' ) }</DialogDescription>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
-				<MyHistory base="/hrm/remote-work" primary={ ( r ) => `${ r.startDate ?? '' } → ${ r.endDate ?? '' }` } />
+				<MyHistory base="/hrm/remote-work" primary={ ( r ) => `${ formatCalendarDate( r.startDate ) } → ${ formatCalendarDate( r.endDate ) }` } />
 				<div className="flex flex-col gap-2.5">
 					<FormLabel>{ __( 'Reason', 'erp' ) }</FormLabel>
 					<SmartSelect options={ reasons } value={ reason } onValueChange={ ( v ) => setReason( v ?? '' ) } placeholder={ __( 'Select reason', 'erp' ) } searchPlaceholder={ __( 'Search…', 'erp' ) } emptyMessage={ __( 'No reasons.', 'erp' ) } className="h-10 w-full" />

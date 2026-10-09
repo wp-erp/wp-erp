@@ -12,6 +12,22 @@ import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
+/**
+ * Flatten the pro `extra` values onto FormData as `extra[key]`, recursing into
+ * nested objects and arrays (`extra[a][b]`) so PHP rebuilds the same shape.
+ * `String( v )` on a nested value sent "[object Object]".
+ */
+function appendExtra( fd: FormData, extra: Record< string, unknown >, prefix = 'extra' ): void {
+	Object.entries( extra ).forEach( ( [ key, value ] ) => {
+		const field = `${ prefix }[${ key }]`;
+		if ( value !== null && typeof value === 'object' ) {
+			appendExtra( fd, value as Record< string, unknown >, field );
+		} else if ( value !== undefined && value !== null ) {
+			fd.append( field, String( value ) );
+		}
+	} );
+}
+
 export interface LeaveSummary {
 	readonly policy:      string;
 	readonly entitlement: number;
@@ -141,7 +157,7 @@ export async function submitLeaveRequest(
 		fd.append( 'leave_to', payload.leave_to );
 		fd.append( 'leave_reason', payload.leave_reason );
 		if ( payload.extra ) {
-			Object.entries( payload.extra ).forEach( ( [ k, v ] ) => fd.append( `extra[${ k }]`, String( v ?? '' ) ) );
+			appendExtra( fd, payload.extra );
 		}
 		files.forEach( ( file ) => fd.append( 'leave_document[]', file ) );
 		await request( path, { method: 'POST', body: fd } );

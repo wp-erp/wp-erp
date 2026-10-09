@@ -84,7 +84,12 @@ class SearchController extends RestController {
 			$payload['employees'] = $this->search_employees( $query, $limit );
 		}
 
-		if ( current_user_can( 'erp_view_list' ) ) {
+		// An offboarded employee keeps `erp_view_list` but not the org lists
+		// (see DepartmentsController::permission_view()).
+		$can_view_org = current_user_can( 'erp_view_list' )
+			&& ( current_user_can( 'manage_options' ) || ! erp_hr_is_offboarded_user( get_current_user_id() ) );
+
+		if ( $can_view_org ) {
 			$payload['departments']  = $this->filter_by_title( (array) erp_hr_get_departments( [ 'number' => -1 ] ), $query, $limit );
 			$payload['designations'] = $this->filter_by_title( (array) erp_hr_get_designations( [ 'number' => -1 ] ), $query, $limit );
 		}

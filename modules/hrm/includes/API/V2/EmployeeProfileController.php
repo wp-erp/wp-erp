@@ -215,7 +215,26 @@ class EmployeeProfileController extends RestController {
 			return $employee;
 		}
 
-		$invalid = $this->validate_fields( $this->section( $request ), $request, $this->stored_row( $employee, $this->section( $request ), $request ) );
+		// An `id` means update, and the model's updateOrCreate() would create a
+		// new row for an id that is not this employee's: refuse it instead.
+		$section = $this->section( $request );
+
+		switch ( $section ) {
+			case 'educations':
+				$row_id = (int) $this->education_fields( $request )['id'];
+				break;
+			case 'dependents':
+				$row_id = (int) $this->dependent_fields( $request )['id'];
+				break;
+			default:
+				$row_id = (int) $this->experience_fields( $request )['id'];
+		}
+
+		if ( $row_id && ! $employee->get_erp_user()->{$section}()->find( $row_id ) ) {
+			return new \WP_Error( 'rest_invalid_id', __( 'Invalid record id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		$invalid = $this->validate_fields( $section, $request, $this->stored_row( $employee, $section, $request ) );
 		if ( $invalid ) {
 			return $invalid;
 		}

@@ -510,6 +510,13 @@ class EmployeeLeaveController extends RestController {
 			return new \WP_Error( 'rest_leave_overlap', __( 'Existing Leave Record found within selected range!', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		// The same pending / forwarded check the submit runs, so the dialog
+		// does not say the dates are fine and the submit then refuse them.
+		$overlap = $this->overlapping_request( $user_id, $start_date, $end_date );
+		if ( $overlap ) {
+			return $overlap;
+		}
+
 		if ( get_option( 'enable_extra_leave', 'no' ) !== 'yes' ) {
 			if ( ! erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $user_id ) ) {
 				return new \WP_Error( 'rest_insufficient_balance', __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ), [ 'status' => 400 ] );

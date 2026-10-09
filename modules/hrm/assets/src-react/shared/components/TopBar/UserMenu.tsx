@@ -79,7 +79,11 @@ export function UserMenu(): JSX.Element {
 					variant="destructive"
 					className="gap-2"
 					onClick={ () => {
-						window.location.assign( '/wp-login.php?action=logout' );
+						// The boot payload carries `wp_logout_url()`, nonce included; the
+						// bare path only stays as a fallback for an older payload.
+						window.location.assign(
+							window.__ERP_HR_BOOT__?.logoutUrl || '/wp-login.php?action=logout'
+						);
 					} }
 				>
 					<LogOut size={ 14 } aria-hidden="true" />

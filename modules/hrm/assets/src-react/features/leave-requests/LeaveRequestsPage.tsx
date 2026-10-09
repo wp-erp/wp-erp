@@ -406,14 +406,31 @@ function LeaveRequestsInner(): JSX.Element {
 		}
 		setBusy( true );
 		try {
-			await bulk( action, ids );
-			toast.success(
-				action === 'approve'
-					? __( 'Selected requests approved.', 'erp' )
-					: action === 'reject'
-					? __( 'Selected requests rejected.', 'erp' )
-					: __( 'Selected requests deleted.', 'erp' )
-			);
+			const failed = await bulk( action, ids );
+			if ( failed > 0 ) {
+				toast.error(
+					sprintf(
+						action === 'approve'
+							/* translators: 1: requests not approved, 2: requests selected */
+							? __( '%1$d of %2$d request(s) could not be approved.', 'erp' )
+							: action === 'reject'
+							/* translators: 1: requests not rejected, 2: requests selected */
+							? __( '%1$d of %2$d request(s) could not be rejected.', 'erp' )
+							/* translators: 1: requests not deleted, 2: requests selected */
+							: __( '%1$d of %2$d request(s) could not be deleted.', 'erp' ),
+						failed,
+						ids.length
+					)
+				);
+			} else {
+				toast.success(
+					action === 'approve'
+						? __( 'Selected requests approved.', 'erp' )
+						: action === 'reject'
+						? __( 'Selected requests rejected.', 'erp' )
+						: __( 'Selected requests deleted.', 'erp' )
+				);
+			}
 			setSelected( new Set() );
 			setBulkDeleting( false );
 		} catch ( raw ) {

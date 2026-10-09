@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
@@ -56,7 +57,7 @@ export function useLeaveCalendar( start: string, end: string, opts: LeaveCalenda
 			const res = await request< CalendarEvent[] >( restPath( 'v2', '/leave-calendar', params ) );
 			setEvents( Array.isArray( res ) ? res : [] );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load the calendar.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load the calendar.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}

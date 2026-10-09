@@ -9,6 +9,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
@@ -34,7 +35,7 @@ export function useFinancialYears(): UseFinancialYearsResult {
 			const res = await request< FinancialYear[] >( restPath( 'v2', '/financial-years' ) );
 			setRows( Array.isArray( res ) ? res : [] );
 		} catch ( raw ) {
-			setError( ( raw as ApiError )?.message ?? 'Could not load financial years.' );
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load financial years.', 'erp' ) );
 		} finally {
 			setLoading( false );
 		}

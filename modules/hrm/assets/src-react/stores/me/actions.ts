@@ -6,6 +6,7 @@
  */
 
 import type { Capability } from '@/types/global';
+import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import { toBool, toEnumOrNull, toInt, toStr } from '@/shared/utils/coerce';
 
@@ -92,7 +93,7 @@ export function* fetchMe(): Generator< unknown, void, unknown > {
 		const error = raw as { code?: string; message?: string };
 		yield setError( {
 			code:    toStr( error.code, 'erp_hr_me_failed' ),
-			message: toStr( error.message, 'Could not load current user' ),
+			message: toStr( error.message, __( 'Could not load current user', 'erp' ) ),
 		} );
 		// Permissive fallback per critical-parts.md §24 — leave user gated by
 		// server-side caps; mark store ready so the UI can render skeleton →
@@ -133,7 +134,7 @@ export function* updatePreferences(
 		}
 		yield setError( {
 			code:    toStr( error.code, 'erp_hr_me_pref_failed' ),
-			message: toStr( error.message, 'Could not save preferences' ),
+			message: toStr( error.message, __( 'Could not save preferences', 'erp' ) ),
 		} );
 	}
 }
