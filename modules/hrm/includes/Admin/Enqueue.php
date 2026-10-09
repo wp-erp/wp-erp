@@ -203,6 +203,20 @@ final class Enqueue {
 	}
 
 	/**
+	 * The `__ERP_HR_BOOT__` payload for an HR page, for a host that mounts the
+	 * HR app outside this class (WP ERP Pro's HR Frontend portal).
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $page_slug HR admin page slug.
+	 *
+	 * @return array
+	 */
+	public static function boot_payload( string $page_slug ): array {
+		return self::build_boot_payload( $page_slug );
+	}
+
+	/**
 	 * Build the `__ERP_HR_BOOT__` payload localized to `window`.
 	 *
 	 * @param string $page_slug Current admin page slug.
