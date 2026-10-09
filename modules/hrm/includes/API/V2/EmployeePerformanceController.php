@@ -287,7 +287,8 @@ class EmployeePerformanceController extends RestController {
 	 * @return array
 	 */
 	public function get_create_params(): array {
-		$str = [ 'type' => 'string' ];
+		$str  = [ 'type' => 'string' ];
+		$text = [ 'type' => 'string', 'sanitize_callback' => 'sanitize_textarea_field' ];
 		return [
 			'type'                  => [ 'type' => 'string', 'required' => true, 'enum' => [ 'reviews', 'comments', 'goals' ] ],
 			'performance_date'      => $str,
@@ -300,12 +301,12 @@ class EmployeePerformanceController extends RestController {
 			'dependablity'          => $str,
 			// comments
 			'reviewer'              => [ 'type' => 'integer' ],
-			'comments'              => $str,
+			'comments'              => $text,
 			// goals
-			'goal_description'      => $str,
-			'employee_assessment'   => $str,
+			'goal_description'      => $text,
+			'employee_assessment'   => $text,
 			'supervisor'            => [ 'type' => 'integer' ],
-			'supervisor_assessment' => $str,
+			'supervisor_assessment' => $text,
 			'completion_date'       => $str,
 		];
 	}

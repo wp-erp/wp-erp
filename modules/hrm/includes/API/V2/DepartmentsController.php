@@ -334,6 +334,10 @@ class DepartmentsController extends RestController {
 			if ( ! \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', (int) $data['lead'] )->exists() ) {
 				return new \WP_Error( 'rest_department_invalid_lead', __( 'The department lead must be an employee.', 'erp' ), [ 'status' => 400 ] );
 			}
+
+			if ( erp_hr_is_offboarded_user( (int) $data['lead'] ) ) {
+				return new \WP_Error( 'rest_department_inactive_lead', __( 'The department lead must be an active employee.', 'erp' ), [ 'status' => 400 ] );
+			}
 		}
 
 		return null;

@@ -258,6 +258,11 @@ class EmployeesController extends RestController {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
+		// An HR manager does not terminate, delete or re-photo an administrator.
+		if ( erp_hr_is_account_above_current_user( $user_id ) ) {
+			return new \WP_Error( 'rest_employee_account_above', __( 'You cannot change this account.', 'erp' ), [ 'status' => 403 ] );
+		}
+
 		$files = $request->get_file_params();
 		if ( empty( $files['photo'] ) ) {
 			return new \WP_Error( 'rest_no_photo', __( 'No photo provided.', 'erp' ), [ 'status' => 400 ] );
@@ -318,6 +323,11 @@ class EmployeesController extends RestController {
 
 		if ( ! $employee->is_employee() ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		// An HR manager does not terminate, delete or re-photo an administrator.
+		if ( erp_hr_is_account_above_current_user( $user_id ) ) {
+			return new \WP_Error( 'rest_employee_account_above', __( 'You cannot change this account.', 'erp' ), [ 'status' => 403 ] );
 		}
 
 		$photo_id = (int) get_user_meta( $user_id, 'photo_id', true );
@@ -942,6 +952,11 @@ class EmployeesController extends RestController {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
+		// An HR manager does not terminate, delete or re-photo an administrator.
+		if ( erp_hr_is_account_above_current_user( $user_id ) ) {
+			return new \WP_Error( 'rest_employee_account_above', __( 'You cannot change this account.', 'erp' ), [ 'status' => 403 ] );
+		}
+
 		$user = get_user_by( 'id', $user_id );
 		if ( ! $user ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'No employee found', 'erp' ), [ 'status' => 404 ] );
@@ -1035,6 +1050,11 @@ class EmployeesController extends RestController {
 
 		if ( ! $employee->is_employee() ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		// An HR manager does not terminate, delete or re-photo an administrator.
+		if ( erp_hr_is_account_above_current_user( $user_id ) ) {
+			return new \WP_Error( 'rest_employee_account_above', __( 'You cannot change this account.', 'erp' ), [ 'status' => 403 ] );
 		}
 
 		$fields = [

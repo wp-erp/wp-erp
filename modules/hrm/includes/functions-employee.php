@@ -1259,6 +1259,143 @@ function erp_hr_is_account_above_current_user( $user_id ) {
 
 add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
 
+wp_cache_add_non_persistent_groups( [ 'erp_hr_offboarded' ] );
+
+/**
+ * Whether a user's HR record is no longer active: terminated, resigned,
+ * deceased, inactive or trashed.
+ *
+ * Such a user keeps reading what is theirs, but holds no HR authority: no
+ * HR-manager rights, no department-lead moderation, no line-manager reviews.
+ * A user with no HR record at all is not offboarded.
+ *
+ * Read once per request per user; the status hooks below forget the answer
+ * when it changes mid-request.
+ *
+ * @since 2.0.0
+ *
+ * @param int $user_id WordPress user id.
+ *
+ * @return bool
+ */
+function erp_hr_is_offboarded_user( $user_id ) {
+    global $wpdb;
+
+    $user_id = absint( $user_id );
+
+    if ( ! $user_id ) {
+        return false;
+    }
+
+    $found = false;
+    $row   = wp_cache_get( $user_id, 'erp_hr_offboarded', false, $found );
+
+    if ( ! $found ) {
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT status, deleted_at FROM {$wpdb->prefix}erp_hr_employees WHERE user_id = %d",
+                $user_id
+            )
+        );
+
+        wp_cache_set( $user_id, $row ? $row : 0, 'erp_hr_offboarded' );
+    }
+
+    return ! empty( $row ) && ( 'active' !== $row->status || ! empty( $row->deleted_at ) );
+}
+
+/**
+ * Forget a user's cached offboarded state after their HR record changed.
+ *
+ * @since 2.0.0
+ *
+ * @param int $user_id WordPress user id.
+ *
+ * @return void
+ */
+function erp_hr_forget_offboarded_state( $user_id ) {
+    wp_cache_delete( absint( $user_id ), 'erp_hr_offboarded' );
+}
+
+add_action( 'erp_hr_employee_update', 'erp_hr_forget_offboarded_state' );
+add_action( 'erp_hr_employee_after_update_status', 'erp_hr_forget_offboarded_state' );
+add_action( 'erp_hr_employee_employment_status_create', 'erp_hr_forget_offboarded_state' );
+add_action( 'erp_hr_after_delete_employee', 'erp_hr_forget_offboarded_state' );
+
+/**
+ * Take HR-manager authority from an offboarded user.
+ *
+ * Terminating or trashing an employee who is also an HR manager left the
+ * `erp_hr_manager` role in place, and every manager check maps to that role,
+ * so the person kept full HR access with their old session. Site
+ * administrators are left alone, so an owner can never lock themselves out.
+ *
+ * @since 2.0.0
+ *
+ * @param array    $capabilities All capabilities of the user.
+ * @param array    $caps         Capabilities being checked.
+ * @param array    $args         Arguments.
+ * @param \WP_User $user         The user.
+ *
+ * @return array
+ */
+function erp_hr_revoke_offboarded_manager_access( $capabilities, $caps, $args, $user ) {
+    $manager_role = erp_hr_get_manager_role();
+
+    if ( empty( $capabilities[ $manager_role ] ) || ! empty( $capabilities['manage_options'] ) ) {
+        return $capabilities;
+    }
+
+    if ( ! erp_hr_is_offboarded_user( $user->ID ) ) {
+        return $capabilities;
+    }
+
+    // Only what the manager role adds: the basics every employee has (read,
+    // their own profile, the list) stay, so they can still see what is theirs.
+    $manager_caps = array_diff(
+        array_keys( erp_hr_get_caps_for_role( $manager_role ) ),
+        array_keys( erp_hr_get_caps_for_role( erp_hr_get_employee_role() ) ),
+        [ 'read' ]
+    );
+
+    foreach ( $caps as $cap ) {
+        if ( $cap === $manager_role || in_array( $cap, $manager_caps, true ) ) {
+            $capabilities[ $cap ] = false;
+        }
+    }
+
+    return $capabilities;
+}
+
+add_filter( 'user_has_cap', 'erp_hr_revoke_offboarded_manager_access', 11, 4 );
+
+/**
+ * Drop a deleted employee from the department lead and line manager slots.
+ *
+ * Only on permanent delete: a trashed or terminated person already holds no
+ * authority (see erp_hr_is_offboarded_user()), and keeping the pointers lets a
+ * restore bring the team back as it was.
+ *
+ * @since 2.0.0
+ *
+ * @param int  $user_id WordPress user id.
+ * @param bool $force   Whether the record was deleted permanently.
+ *
+ * @return void
+ */
+function erp_hr_release_deleted_employee_relations( $user_id, $force = false ) {
+    global $wpdb;
+
+    if ( ! $force ) {
+        return;
+    }
+
+    $wpdb->update( "{$wpdb->prefix}erp_hr_depts", [ 'lead' => 0 ], [ 'lead' => absint( $user_id ) ] );
+    $wpdb->update( "{$wpdb->prefix}erp_hr_employees", [ 'reporting_to' => 0 ], [ 'reporting_to' => absint( $user_id ) ] );
+}
+
+add_action( 'erp_hr_after_delete_employee', 'erp_hr_release_deleted_employee_relations', 10, 2 );
+
 /**
  * Disable terminated users from accessing ERP
  *
@@ -1285,9 +1422,8 @@ function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $us
         return $capabilities;
     }
 
-    $employee = new WeDevs\ERP\HRM\Employee( $user );
-
-    if ( 'active' !== $employee->get_status() ) {
+    // Trashed counts too: a trashed record keeps status `active`.
+    if ( erp_hr_is_offboarded_user( $user->ID ) ) {
         $capabilities['erp_list_employee']        = false; // hr menu capabilities
         $capabilities['upload_files']             = false;
         $capabilities['erp_ac_manager']           = false; // accounting menu capabilities

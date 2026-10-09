@@ -196,8 +196,10 @@ class LeaveRequestsController extends RestController {
 			's'             => sanitize_text_field( (string) ( $request['search'] ?? '' ) ),
 			// Date-range filter (F7): the model only applies the range when BOTH
 			// bounds are present, so pass them through as-is (empty string = off).
-			'start_date'    => sanitize_text_field( (string) ( $request['start_date'] ?? '' ) ),
-			'end_date'      => sanitize_text_field( (string) ( $request['end_date'] ?? '' ) ),
+			// Only a real Y-m-d is passed on: the query builds a DateTime from it,
+			// and anything else ended in a fatal error.
+			'start_date'    => $this->ymd_or_empty( $request['start_date'] ?? '' ),
+			'end_date'      => $this->ymd_or_empty( $request['end_date'] ?? '' ),
 			'orderby'       => $orderby,
 			'order'         => strtoupper( (string) ( $request['order'] ?? 'DESC' ) ) === 'ASC' ? 'ASC' : 'DESC',
 		];
@@ -854,5 +856,21 @@ class LeaveRequestsController extends RestController {
 		$params['end_date']       = [ 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ];
 
 		return $params;
+	}
+
+	/**
+	 * A real `Y-m-d` date, or '' (no filter) for anything else.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param mixed $value Submitted value.
+	 *
+	 * @return string
+	 */
+	private function ymd_or_empty( $value ): string {
+		$value = sanitize_text_field( (string) $value );
+		$date  = \DateTime::createFromFormat( '!Y-m-d', $value );
+
+		return $date && $date->format( 'Y-m-d' ) === $value ? $value : '';
 	}
 }

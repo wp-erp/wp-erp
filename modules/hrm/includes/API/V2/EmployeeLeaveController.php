@@ -242,6 +242,13 @@ class EmployeeLeaveController extends RestController {
 			return new \WP_Error( 'rest_past_leave_year', __( 'Error: You can not modify past leave year requests.', 'erp' ), [ 'status' => 400 ] );
 		}
 
+		// With no leave year covering today the check above cannot run, but
+		// approving still fails ("No current leave year found"), so a request
+		// in a year that has already ended would wait for good.
+		if ( ! $current_f_year && (int) $entitlement->financial_year->end_date < erp_current_datetime()->setTime( 0, 0 )->getTimestamp() ) {
+			return new \WP_Error( 'rest_past_leave_year', __( 'Error: You can not modify past leave year requests.', 'erp' ), [ 'status' => 400 ] );
+		}
+
 		$f_year_start = erp_current_datetime()->setTimestamp( $entitlement->financial_year->start_date )->format( 'Y-m-d' );
 		$f_year_end   = erp_current_datetime()->setTimestamp( $entitlement->financial_year->end_date )->format( 'Y-m-d' );
 
@@ -259,6 +266,48 @@ class EmployeeLeaveController extends RestController {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Refuse a request whose days overlap one already pending, forwarded or
+	 * approved for the same employee.
+	 *
+	 * The insert's own overlap check reads only the per-day rows written on
+	 * approval, so the same dates could be filed again and again while the
+	 * first request waited, and each copy mailed every HR manager and the lead.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int    $user_id    Employee user id.
+	 * @param string $start_date Site-local `Y-m-d 00:00:00`.
+	 * @param string $end_date   Site-local `Y-m-d 23:59:59`.
+	 *
+	 * @return \WP_Error|null
+	 */
+	private function overlapping_request( int $user_id, string $start_date, string $end_date ) {
+		global $wpdb;
+
+		$tz    = wp_timezone();
+		$start = ( new \DateTimeImmutable( $start_date, $tz ) )->getTimestamp();
+		$end   = ( new \DateTimeImmutable( $end_date, $tz ) )->getTimestamp();
+
+		$found = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests
+				WHERE user_id = %d AND last_status IN (1, 2, 4)
+				AND start_date <= %d AND end_date >= %d
+				LIMIT 1",
+				$user_id,
+				$end,
+				$start
+			)
+		);
+
+		if ( ! $found ) {
+			return null;
+		}
+
+		return new \WP_Error( 'rest_leave_overlap', __( 'There is already a leave request on these dates.', 'erp' ), [ 'status' => 409 ] );
 	}
 
 	/**
@@ -317,6 +366,11 @@ class EmployeeLeaveController extends RestController {
 
 		$start_date = $start_date ? $start_date . ' 00:00:00' : date_i18n( 'Y-m-d 00:00:00' );
 		$end_date   = $end_date ? $end_date . ' 23:59:59' : date_i18n( 'Y-m-d 23:59:59' );
+
+		$overlap = $this->overlapping_request( $user_id, $start_date, $end_date );
+		if ( $overlap ) {
+			return $overlap;
+		}
 
 		// Bridge any pro-injected `extra` request fields (Advanced Leave half-day:
 		// `halfday` + `leave-period`) onto `$_POST` so the legacy

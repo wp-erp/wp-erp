@@ -706,8 +706,10 @@ class HolidaysController extends RestController {
 			return null; // The model reports the missing start date.
 		}
 
-		$start_day = \DateTime::createFromFormat( '!Y-m-d', substr( $start, 0, 10 ) );
-		if ( ! $start_day || $start_day->format( 'Y-m-d' ) !== substr( $start, 0, 10 ) ) {
+		// The whole value: `2026-12-16 junk` passed a 10-character check, was
+		// written, and then failed in the add-on hook with a 500.
+		$start_day = \DateTime::createFromFormat( '!Y-m-d', $start );
+		if ( ! $start_day || $start_day->format( 'Y-m-d' ) !== $start ) {
 			return new \WP_Error( 'rest_holiday_invalid_start', __( 'Start date is not a valid date.', 'erp' ), [ 'status' => 400 ] );
 		}
 

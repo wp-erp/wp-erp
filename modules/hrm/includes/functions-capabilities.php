@@ -319,7 +319,9 @@ function erp_hr_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] )
             $employee_id = isset( $args[0] ) ? $args[0] : false;
 
             if ( $user_id == $employee_id ) {
-                $caps = [ $cap ];
+                // An offboarded person keeps reading their own record, but no
+                // longer edits it.
+                $caps = 'erp_edit_employee' === $cap && erp_hr_is_offboarded_user( $user_id ) ? [ 'do_not_allow' ] : [ $cap ];
             } else {
                 $hr_manager_role = erp_hr_get_manager_role();
                 // HR manager can read any employee
@@ -370,7 +372,9 @@ function erp_hr_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] )
             $employee_id = isset( $args[0] ) ? $args[0] : false;
             $employee    = new \WeDevs\ERP\HRM\Employee( $employee_id );
 
-            if ( $employee->get_reporting_to() && $employee->get_reporting_to() == $user_id ) {
+            // A line manager reviews their reports only while they are an
+            // active employee themselves.
+            if ( $employee->get_reporting_to() && $employee->get_reporting_to() == $user_id && ! erp_hr_is_offboarded_user( $user_id ) ) {
                 $caps = [ 'employee' ];
             } else {
                 $caps = [ $cap ];

@@ -116,7 +116,7 @@ class OrgChartController extends RestController {
 			);
 
 			foreach ( $depts as $dept ) {
-				$data['children'][] = $this->sort_employees( (int) $dept->lead, (int) $dept->id );
+				$data['children'][] = $this->sort_employees( $this->active_lead( (int) $dept->lead ), (int) $dept->id );
 			}
 
 			$data['children'][] = $this->sort_employees( 0 );
@@ -135,7 +135,7 @@ class OrgChartController extends RestController {
 			)
 		);
 
-		return $this->sort_employees( (int) $dept_lead, $dept_id );
+		return $this->sort_employees( $this->active_lead( (int) $dept_lead ), $dept_id );
 	}
 
 	/**
@@ -188,8 +188,9 @@ class OrgChartController extends RestController {
 			];
 		}
 
-		// Department leads are nodes too, and need not be active employees.
-		$leads = $wpdb->get_col( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts" );
+		// Department leads are nodes too, and need not be employees at all (an
+		// administrator can lead), but a terminated or trashed lead is not one.
+		$leads = array_filter( array_map( [ $this, 'active_lead' ], array_map( 'intval', (array) $wpdb->get_col( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts" ) ) ) );
 
 		$this->people = erp_hr_get_employee_display_data( array_merge( array_keys( $this->employees ), (array) $leads ), 80 );
 	}
@@ -317,5 +318,20 @@ class OrgChartController extends RestController {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * A department's lead as an org chart node: none when the lead has been
+	 * terminated or trashed, so the team shows as leaderless rather than under
+	 * someone who has left.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $lead Lead user id.
+	 *
+	 * @return int
+	 */
+	protected function active_lead( int $lead ): int {
+		return $lead && ! erp_hr_is_offboarded_user( $lead ) ? $lead : 0;
 	}
 }

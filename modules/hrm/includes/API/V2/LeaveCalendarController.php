@@ -158,6 +158,9 @@ class LeaveCalendarController extends RestController {
 			'number'     => '-1',
 			'start_date' => $start->getTimestamp(),
 			'end_date'   => $end->getTimestamp(),
+			// Leave that started before the window and runs into it belongs on
+			// the calendar too; without this only leave wholly inside showed.
+			'overlap'    => 1,
 		];
 
 		if ( $is_manager && 'all' === $scope ) {

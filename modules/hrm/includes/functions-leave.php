@@ -1934,8 +1934,17 @@ function erp_hr_leave_request_update_status( $request_id, $status, $comments = '
                 // 5. Delete data from unpaid leave table
                 $deleted = LeavesUnpaid::where( 'leave_request_id', '=', $request->id )->delete();
 
-                // 6. Delete data from entitlement table for trn_type = unpaid leave
-                $deleted = LeaveEntitlement::where( 'trn_id', '=', $old_approval_status_id )
+                // 6. Delete data from entitlement table for trn_type = unpaid leave.
+                // Keyed on every approval record of this request, not only the
+                // latest: a department lead's response recorded after HR approved
+                // would otherwise be the latest, and the unpaid days written
+                // against HR's approval would stay on the employee's balance.
+                $approval_ids = LeaveApprovalStatus::where( 'leave_request_id', '=', $request->id )
+                    ->where( 'id', '<>', $approval_status->id )
+                    ->pluck( 'id' )->toArray();
+                $approval_ids[] = $old_approval_status_id;
+
+                $deleted = LeaveEntitlement::whereIn( 'trn_id', array_unique( array_map( 'intval', $approval_ids ) ) )
                     ->where( 'trn_type', '=', 'unpaid_leave' )->delete();
             }
             break;
@@ -3224,7 +3233,9 @@ function erp_hr_is_current_user_dept_lead() {
     $leads        = erp_hr_get_department_leads_id();
     $logged_in_us = get_current_user_id();
 
-    return (bool) in_array( $logged_in_us, $leads );
+    // A terminated or trashed lead keeps the department slot until someone
+    // replaces them, but no longer moderates its leave.
+    return (bool) in_array( $logged_in_us, $leads ) && ! erp_hr_is_offboarded_user( $logged_in_us );
 }
 
 /**
