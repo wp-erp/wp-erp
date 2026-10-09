@@ -56,6 +56,26 @@ class EmployeesController extends RestController {
 	];
 
 	/**
+	 * Statuses a colleague without `erp_view_employee` may list and open: the
+	 * legacy HR Frontend directory's Active, Terminated, Deceased and Resigned
+	 * tabs. Inactive and trashed records stay HR only.
+	 */
+	private const PEER_STATUSES = [ 'active', 'terminated', 'resigned', 'deceased' ];
+
+	/**
+	 * The single-employee keys a colleague receives (not self, no
+	 * `erp_edit_employee` on the target). Legacy tab-general.php showed such a
+	 * viewer the header (name, job title, department, photo) and the Basic Info
+	 * box (first name, last name, employee ID, email); the legacy directory
+	 * added employment type, joined date and status. Everything else is blanked.
+	 */
+	private const PEER_FIELDS = [
+		'user_id', 'full_name', 'avatar_url', 'employee_id', 'first_name', 'middle_name',
+		'last_name', 'email', 'type', 'status', 'hiring_date', 'department', 'designation',
+		'department_name', 'designation_name',
+	];
+
+	/**
 	 * @return void
 	 */
 	public function register_routes() {
@@ -437,8 +457,9 @@ class EmployeesController extends RestController {
 		foreach ( $statuses as $status ) {
 			$args               = $base_args;
 			$args['status']     = $status;
-			// Same rule as the list: a non-HR viewer only learns about active staff.
-			$count              = ( $is_hr || 'active' === $status ) ? (int) erp_hr_get_employees( $args ) : 0;
+			// Same rule as the list: a non-HR viewer only learns about the
+			// statuses the colleague directory shows.
+			$count              = ( $is_hr || in_array( $status, self::PEER_STATUSES, true ) ) ? (int) erp_hr_get_employees( $args ) : 0;
 			$counts[ $status ]  = $count;
 			$total             += $count;
 		}
@@ -795,12 +816,13 @@ class EmployeesController extends RestController {
 
 		$data = $this->get_edit_data( $employee );
 
-		// Same rule as the list: who was terminated, resigned or trashed is for
-		// HR only, so a peer asking for such a record by id gets a 404.
+		// Same rule as the list: a colleague may open the statuses the directory
+		// shows them (active, terminated, resigned, deceased). Inactive and
+		// trashed records are HR only, so a peer asking for one by id gets a 404.
 		$is_trashed = $has_hr_record && ! empty( $employee->get_erp_user()->deleted_at );
 		if ( get_current_user_id() !== $user_id
 			&& ! current_user_can( 'erp_view_employee' )
-			&& ( $is_trashed || 'active' !== ( $data['status'] ?? '' ) ) ) {
+			&& ( $is_trashed || ! in_array( (string) ( $data['status'] ?? '' ), self::PEER_STATUSES, true ) ) ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
 		}
 
@@ -812,36 +834,47 @@ class EmployeesController extends RestController {
 		$data['location_name']     = (string) $employee->get_location( 'view' );
 		$data['reporting_to_name'] = $reporting['full_name'] ?? '';
 
-		// Field-level privacy (mirrors legacy tab-general.php:26 / tab-job.php:126,
-		// and the v4 client guards): pay + personal + address + bio are visible
-		// only to the employee themselves or an HR manager (erp_edit_employee).
-		// Peers do reach this route (it is gated on `erp_list_employee`, like the
-		// legacy peer view), so this stripping is what keeps those fields private.
+		// `get_data()` leaves the hire date out for a colleague, yet the
+		// directory row already shows it (`hire_date`); read it the same way.
+		if ( '' === $data['hiring_date'] ) {
+			$data['hiring_date'] = $this->cast_date_iso( $employee->get_hiring_date() ) ?? '';
+		}
+
+		// Field-level privacy (mirrors legacy tab-general.php:26 / tab-job.php:126):
+		// beyond the basic info, the record is visible only to the employee
+		// themselves or someone who may edit them (erp_edit_employee: HR, or a
+		// lead for their reports). Peers do reach this route (it is gated on
+		// `erp_list_employee`, like the legacy peer view), so the allowlist below
+		// is what keeps the rest private.
 		$can_see_private = get_current_user_id() === $user_id
 			|| current_user_can( 'erp_edit_employee', $user_id );
-		if ( ! $can_see_private ) {
-			$private_fields = [
-				'pay_rate', 'pay_type',
-				'date_of_birth', 'gender', 'marital_status', 'blood_group', 'nationality',
-				'driving_license', 'hobbies', 'father_name', 'mother_name', 'spouse_name',
-				'street_1', 'street_2', 'city', 'state', 'country', 'postal_code',
-				'description',
-				// Contact details: the legacy peer view exposes name / employee id /
-				// work e-mail only, so the phone numbers and secondary addresses
-				// must not travel to a peer either.
-				'work_phone', 'phone', 'mobile', 'other_email', 'user_url',
-				// How someone was hired and when they leave are HR records too.
-				'hiring_source', 'end_date',
-			];
-			foreach ( $private_fields as $field ) {
-				if ( array_key_exists( $field, $data ) ) {
-					$data[ $field ] = '';
-				}
-			}
 
-			// Termination reason / rehire eligibility is HR-only, and its shape is
-			// an array|null rather than a string.
-			$data['termination'] = null;
+		/**
+		 * Filter the v2 single-employee record (`GET /erp/v2/employees/{id}`).
+		 *
+		 * Pro modules append read-only fields, e.g. Attendance adds `shift` (the
+		 * employee's current shift name). A field for the employee or HR only
+		 * should be added only when `$can_see_private` is true; for any other
+		 * viewer every key outside the colleague allowlist is blanked after this
+		 * filter runs anyway.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param array $data            Record payload.
+		 * @param int   $user_id         Employee user id.
+		 * @param bool  $can_see_private Whether the viewer is the employee or may edit them.
+		 */
+		$data = (array) apply_filters( 'erp_hr_v2_employee_item', $data, $user_id, $can_see_private );
+
+		if ( ! $can_see_private ) {
+			foreach ( $data as $field => $value ) {
+				if ( in_array( $field, self::PEER_FIELDS, true ) ) {
+					continue;
+				}
+
+				// Keep each key's type so the client reads an empty value, not a gap.
+				$data[ $field ] = is_string( $value ) ? '' : null;
+			}
 		}
 
 		return rest_ensure_response( $data );
@@ -1795,10 +1828,16 @@ class EmployeesController extends RestController {
 		$status = (string) ( $request['status'] ?? 'active' );
 		$status = $this->cast_enum( $status, $this->allowed_statuses() ) ?? 'active';
 
-		// The directory an employee sees is the people working here now. Who was
-		// terminated, resigned or trashed is for HR only.
+		// A colleague without `erp_view_employee` sees the legacy HR Frontend
+		// directory: active, terminated, resigned and deceased people, and "all"
+		// meaning those four. Inactive and trashed records are HR only. Each row
+		// still carries only the peer fields (`prepare_item_for_response()`).
 		if ( ! current_user_can( 'erp_view_employee' ) ) {
-			$status = 'active';
+			if ( 'all' === $status ) {
+				$status = self::PEER_STATUSES;
+			} elseif ( ! in_array( $status, self::PEER_STATUSES, true ) ) {
+				$status = 'active';
+			}
 		}
 
 		$args = [

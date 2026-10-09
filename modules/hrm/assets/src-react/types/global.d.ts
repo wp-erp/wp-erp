@@ -72,6 +72,8 @@ export interface BootPayload {
 	readonly displayName:   string;
 	readonly email:         string;
 	readonly avatarUrl:     string;
+	/** "Administrator", "HR Manager", or the employee's job title (user menu). */
+	readonly roleLabel?:    string;
 	readonly isPro:         boolean;
 	readonly isHrManager:   boolean;
 	readonly api:           BootPayloadApi;

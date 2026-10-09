@@ -46,11 +46,12 @@ const TABS: ReadonlyArray< { readonly value: StatusTab; readonly label: string }
 ];
 
 /**
- * Tabs a non-HR viewer may use. The server only lists active employees to
- * someone without `erp_view_employee`, so the other buckets would be empty
- * tabs (or counts of people they cannot open).
+ * Tabs a non-HR viewer may use: the legacy HR Frontend directory's Active,
+ * Terminated, Deceased and Resigned, plus All (those four). The server lists
+ * exactly these to someone without `erp_view_employee`; Inactive and Trash
+ * stay HR only.
  */
-const LIMITED_TABS: ReadonlySet< StatusTab > = new Set< StatusTab >( [ 'all', 'active' ] );
+const LIMITED_TABS: ReadonlySet< StatusTab > = new Set< StatusTab >( [ 'all', 'active', 'terminated', 'deceased', 'resigned' ] );
 
 export function StatusFilter(): JSX.Element {
 	const filters = useSelect(

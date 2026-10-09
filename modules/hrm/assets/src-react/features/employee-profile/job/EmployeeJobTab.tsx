@@ -300,7 +300,7 @@ export function EmployeeJobTab( { userId, targetCaps = {}, onChanged }: { readon
 				{ data.compensation.map( ( row, index ) => (
 					<tr key={ row.id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
 						<td className="px-4 align-middle text-sm text-foreground">{ formatDate( row.date ) }</td>
-						<td className="px-2 align-middle text-sm text-foreground"><PayRateReveal value={ row.pay_rate } /></td>
+						<td className="px-2 align-middle text-sm text-foreground"><PayRateReveal value={ row.pay_rate } hiddenByDefault /></td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.pay_type ) }</td>
 						<td className="px-2 align-middle text-sm text-foreground">{ cell( row.reason ) }</td>
 						<td className="px-2 align-middle text-sm text-muted-foreground">{ cell( row.comment ) }</td>

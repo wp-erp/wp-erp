@@ -19,11 +19,16 @@ interface PayRateRevealProps {
 	readonly value: string;
 	/** Extra classes for the value span. */
 	readonly className?: string;
+	/**
+	 * Always blur with a show/hide toggle, whatever the global setting: the Job
+	 * tab's compensation rows, each with its own toggle (legacy HR Frontend).
+	 */
+	readonly hiddenByDefault?: boolean;
 }
 
-export function PayRateReveal( { value, className }: PayRateRevealProps ): JSX.Element {
+export function PayRateReveal( { value, className, hiddenByDefault = false }: PayRateRevealProps ): JSX.Element {
 	const boot   = useBoot();
-	const hide   = Boolean( boot.settings?.hidePayRate );
+	const hide   = hiddenByDefault || Boolean( boot.settings?.hidePayRate );
 	const [ revealed, setRevealed ] = useState( false );
 
 	const display = value.trim() === '' ? '—' : value;

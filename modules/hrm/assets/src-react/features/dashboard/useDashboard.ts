@@ -8,6 +8,7 @@ import { __ } from '@/shared/i18n';
 import type { ApiError } from '@/shared/utils/apiFetch';
 import { request, restPath } from '@/shared/utils/apiFetch';
 
+import { markMyAnnouncementRead } from '../announcements/useMyAnnouncements';
 import type { DashboardData } from './types';
 
 export interface UseDashboardResult {
@@ -37,9 +38,9 @@ export async function fetchAnnouncement( id: number ): Promise< AnnouncementCont
 	};
 }
 
-/** Mark an announcement read for the current user. */
+/** Mark an announcement read for the current user (and tell the top-bar bell). */
 export async function markAnnouncementRead( id: number ): Promise< void > {
-	await request( restPath( 'v2', `/announcements/${ id }/mark-read` ), { method: 'POST' } );
+	await markMyAnnouncementRead( id );
 }
 
 /** Send a birthday wish e-mail to a coworker (mirrors the legacy birthday_wish). */

@@ -91,7 +91,7 @@ interface NavItemLinkProps {
 
 function NavItemLink( { item, currentPath }: NavItemLinkProps ): JSX.Element {
 	const active = isPathActive( item, currentPath );
-	const Icon   = ICON_MAP[ item.icon ];
+	const Icon   = ICON_MAP[ item.icon ] ?? ICON_MAP[ 'layout-grid' ];
 
 	return (
 		<NavLink

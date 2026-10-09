@@ -120,7 +120,10 @@ function erp_hr_get_employees( $args = [] ) {
         }
         /******** Check gender & marital status end ***********/
 
-        if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+        if ( isset( $args['status'] ) && is_array( $args['status'] ) ) {
+            // A list of statuses (since 2.0.0): any of them, trashed rows excluded.
+            $employees = $employees->whereIn( 'status', array_values( array_map( 'sanitize_key', $args['status'] ) ) );
+        } elseif ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
             if ( $args['status'] == 'trash' ) {
                 $employees = $employees->onlyTrashed();
             } else {

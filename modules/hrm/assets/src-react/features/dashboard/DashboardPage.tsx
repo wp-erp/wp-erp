@@ -581,6 +581,12 @@ function DashboardInner(): JSX.Element {
 											label: __( 'All', 'erp' ),
 											to: '/announcements',
 									  }
+									: canListEmployees
+									? {
+											// An employee's own list of what was sent to them.
+											label: __( 'View all', 'erp' ),
+											to: '/announcements',
+									  }
 									: undefined
 							}
 							className={ recruitmentWidget ? PAIR_BASIS : CARD_BASE }

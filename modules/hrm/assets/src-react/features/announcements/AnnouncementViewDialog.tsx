@@ -34,6 +34,8 @@ interface AnnouncementViewDialogProps {
 	readonly loading:   boolean;
 	readonly item:      AnnouncementDetail | null;
 	readonly canManage: boolean;
+	/** Status and recipient preview; off for a recipient reading their own copy. */
+	readonly showAudience?: boolean;
 	readonly onEdit:    () => void;
 	readonly onClose:   () => void;
 }
@@ -64,6 +66,7 @@ export function AnnouncementViewDialog( {
 	loading,
 	item,
 	canManage,
+	showAudience = true,
 	onEdit,
 	onClose,
 }: AnnouncementViewDialogProps ): JSX.Element {
@@ -74,7 +77,7 @@ export function AnnouncementViewDialog( {
 					<DialogTitle className="m-0 mb-4 text-2xl font-bold leading-tight tracking-tight text-foreground">{ item?.title || __( '(no title)', 'erp' ) }</DialogTitle>
 					<DialogDescription>
 						{ item
-							? [ item.type_label, item.author, fmt( item.date ) ].filter( Boolean ).join( ' · ' )
+							? [ showAudience ? item.type_label : '', item.author, fmt( item.date ) ].filter( Boolean ).join( ' · ' )
 							: __( 'Loading…', 'erp' ) }
 					</DialogDescription>
 				</DialogHeader>
@@ -84,13 +87,15 @@ export function AnnouncementViewDialog( {
 					<p className="py-6 text-sm text-muted-foreground">{ __( 'Loading…', 'erp' ) }</p>
 				) : (
 					<div className="flex flex-col gap-4">
-						<div className="flex flex-wrap items-center gap-2">
-							<StatusPill tone={ statusTone( item.status ) }>{ statusLabel( item.status ) }</StatusPill>
-							<EmployeeAvatarStack
-								people={ item.recipients_preview }
-								total={ item.recipient_count }
-							/>
-						</div>
+						{ showAudience ? (
+							<div className="flex flex-wrap items-center gap-2">
+								<StatusPill tone={ statusTone( item.status ) }>{ statusLabel( item.status ) }</StatusPill>
+								<EmployeeAvatarStack
+									people={ item.recipients_preview }
+									total={ item.recipient_count }
+								/>
+							</div>
+						) : null }
 
 						{ item.html_content ? (
 							<div

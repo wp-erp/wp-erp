@@ -1,5 +1,6 @@
 /**
- * `/announcements` route — company announcement management.
+ * `/announcements` route — company announcement management. An employee
+ * without the view cap gets their own read-only list (`MyAnnouncementsPage`).
  *
  * Employees-table conventions: status tabs (Published / Draft / Trash) with
  * counts + inline search, the shared `OrgPagination` footer, per-row actions.
@@ -32,6 +33,7 @@ import { AnnouncementFormDialog } from './AnnouncementFormDialog';
 import { AnnouncementViewDialog } from './AnnouncementViewDialog';
 import { AnnouncementsTable } from './AnnouncementsTable';
 import { AnnouncementsToolbar } from './AnnouncementsToolbar';
+import { MyAnnouncementsPage } from './MyAnnouncementsPage';
 import { SEARCH_DEBOUNCE_MS } from './announcements-format';
 import type { Announcement, AnnouncementDetail, AnnouncementFormOptions, AnnouncementInput } from './types';
 import { useAnnouncements } from './useAnnouncements';
@@ -484,7 +486,23 @@ function AnnouncementsInner(): JSX.Element {
 	);
 }
 
+/**
+ * Managers (`erp_view_announcement`) get the management list; an employee
+ * (`erp_list_employee`) gets the read-only list of what was sent to them.
+ */
 export function AnnouncementsPage(): JSX.Element {
+	const canView = useCan( 'erp_view_announcement' );
+
+	if ( ! canView ) {
+		return (
+			<CapabilityGate caps={ [ 'erp_list_employee' ] }>
+				<ErrorBoundary>
+					<MyAnnouncementsPage />
+				</ErrorBoundary>
+			</CapabilityGate>
+		);
+	}
+
 	return (
 		<CapabilityGate caps={ [ 'erp_view_announcement' ] }>
 			<ErrorBoundary>

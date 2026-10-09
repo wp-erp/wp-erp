@@ -4,3 +4,4 @@ export { HeadcountPage } from './HeadcountPage';
 export { SalaryHistoryPage } from './SalaryHistoryPage';
 export { YearsOfServicePage } from './YearsOfServicePage';
 export { LeavesReportPage } from './LeavesReportPage';
+export { ReportsIndexPage } from './ReportsIndexPage';

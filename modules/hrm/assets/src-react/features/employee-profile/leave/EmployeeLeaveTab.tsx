@@ -2,7 +2,7 @@
  * Leave tab for the single-employee profile (read-only).
  *
  * Top: per-policy balance for the current financial year (entitlement / spent /
- * available). Bottom: the leave request history with resolved status labels.
+ * scheduled / available). Bottom: the leave request history with resolved status labels.
  * Requesting/approving leave is a follow-up; this surfaces what the v1 model
  * already tracks.
  */
@@ -149,7 +149,9 @@ export function EmployeeLeaveTab( { userId, targetCaps = {} }: { readonly userId
 									</div>
 									<div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
 										<span>{ sprintf( __( 'Entitled %s', 'erp' ), num( row.entitlement ) ) }</span>
-										<span>{ sprintf( __( 'Spent %s', 'erp' ), num( row.spent ) ) }</span>
+										<span>{ sprintf( __( 'Taken %s', 'erp' ), num( row.taken ?? row.spent ) ) }</span>
+										{ /* Taken: approved days up to today. Scheduled: approved days still ahead (legacy balance table). */ }
+										<span>{ sprintf( __( 'Scheduled %s', 'erp' ), num( row.scheduled ?? 0 ) ) }</span>
 									</div>
 									{ /* Entitlement period — the window this balance belongs to, the
 									     same validity the entitlements list shows. */ }

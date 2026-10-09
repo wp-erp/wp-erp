@@ -9,6 +9,7 @@
  */
 
 import { useSelect } from '@wordpress/data';
+import { applyFilters } from '@wordpress/hooks';
 import {
 	BadgeCheck,
 	Banknote,
@@ -38,6 +39,7 @@ import type { ComponentType, SVGProps } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useProUpsell } from '@/shared/components/pro/ProUpsell';
+import { HOOKS } from '@/shared/filters';
 import { useBoot } from '@/shared/hooks/useBoot';
 import { storeName as meStoreName } from '@/stores/me';
 import type { Capability } from '@/types/global';
@@ -133,7 +135,12 @@ export function useNavMenu(): NavMenu {
 	const isPro = boot.isPro;
 	const { openUpsell } = useProUpsell();
 
-	const entries: NavMenuEntry[] = TOPBAR_NAV_ITEMS
+	// `erp_hr.nav.groups` lets an add-on append (or reorder) top-level entries;
+	// they go through the same gates as the built-in ones below.
+	const filtered = applyFilters( HOOKS.NAV_GROUPS, TOPBAR_NAV_ITEMS ) as unknown;
+	const items: readonly NavItem[] = Array.isArray( filtered ) ? ( filtered as readonly NavItem[] ) : TOPBAR_NAV_ITEMS;
+
+	const entries: NavMenuEntry[] = items
 		.filter( ( item ) => {
 			if ( item.capabilities.length > 0 && ! hasCap( item.capabilities ) ) {
 				return false;
@@ -150,7 +157,7 @@ export function useNavMenu(): NavMenu {
 		} )
 		.map( ( item ) => ( {
 			item,
-			Icon:      ICON_MAP[ item.icon ],
+			Icon:      ICON_MAP[ item.icon ] ?? LayoutGrid,
 			proLocked: Boolean(
 				item.pro && ! isPro && ( ! item.module || ! activeModules.includes( item.module ) )
 			),
@@ -162,6 +169,7 @@ export function useNavMenu(): NavMenu {
 			.filter(
 				( sub ) =>
 					( sub.capabilities.length === 0 || hasCap( sub.capabilities ) ) &&
+					! sub.hiddenForCapabilities?.some( ( cap ) => hasCap( cap ) ) &&
 					( ! sub.module || activeModules.includes( sub.module ) || Boolean( sub.pro && ! isPro ) )
 			)
 			.map( ( sub ) => ( {

@@ -108,6 +108,10 @@ const HelpPage = lazy( () =>
 	import( '@/features/help' ).then( ( m ) => ( { default: m.HelpPage } ) )
 );
 
+const ReportsIndexPage = lazy( () =>
+	import( '@/features/reports' ).then( ( m ) => ( { default: m.ReportsIndexPage } ) )
+);
+
 const AgeProfilePage = lazy( () =>
 	import( '@/features/reports' ).then( ( m ) => ( { default: m.AgeProfilePage } ) )
 );
@@ -255,7 +259,9 @@ const baseRoutes: AppRoute[] = [
 		id:           'announcements',
 		path:         '/announcements',
 		element:      AnnouncementsPage,
-		capabilities: [ 'erp_view_announcement' ],
+		// The page gates itself: the management list for `erp_view_announcement`,
+		// the employee's own read-only list for `erp_list_employee`.
+		capabilities: [],
 		handle: {
 			id:        'announcements',
 			title:     __( 'Announcements', 'erp' ),
@@ -383,6 +389,20 @@ const baseRoutes: AppRoute[] = [
 			id:        'leave-forward',
 			title:     __( 'Forward Leaves', 'erp' ),
 			group:     'leave',
+			showInNav: false,
+		},
+	},
+	{
+		// Section landing page: a card per report this user can open (legacy
+		// HR Frontend Reports page). Bookmarks and hand-typed `#/reports` land here.
+		id:           'reports',
+		path:         '/reports',
+		element:      ReportsIndexPage,
+		capabilities: [ 'erp_hr_manager' ],
+		handle: {
+			id:        'reports',
+			title:     __( 'Reports', 'erp' ),
+			group:     'reports',
 			showInNav: false,
 		},
 	},
@@ -552,11 +572,6 @@ export function buildHashRouter(): ReturnType< typeof createHashRouter > {
 				// and without this alias the catch-all below answered it with
 				// "Page not found".
 				{ path: 'dashboard', element: <Navigate to="/" replace /> },
-				// Same story for `#/reports`: the reports are sub-routes and the
-				// legacy UI had a section landing page, so the bare path is what a
-				// user reaches for. Send it to the first report, which renders the
-				// full report tab strip.
-				{ path: 'reports', element: <Navigate to="/reports/age-profile" replace /> },
 				// And for `#/holidays`: holidays live under the Leave section, but the
 				// nav label reads "Holidays" on its own, so the bare path is the one
 				// people type. Alias it rather than answer "Page not found".

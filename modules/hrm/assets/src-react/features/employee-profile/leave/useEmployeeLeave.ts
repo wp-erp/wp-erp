@@ -31,6 +31,10 @@ export interface LeaveSummary {
 	readonly total:       number;
 	readonly available:   number;
 	readonly spent:       number;
+	/** Approved days not taken yet (part of `spent`); absent on an older server. */
+	readonly scheduled?:  number;
+	/** Approved days already taken (`spent` minus `scheduled`); absent on an older server. */
+	readonly taken?:      number;
 	readonly from_date:   string | null;
 	readonly to_date:     string | null;
 }

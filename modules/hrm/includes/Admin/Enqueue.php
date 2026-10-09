@@ -220,6 +220,33 @@ final class Enqueue {
 	}
 
 	/**
+	 * The viewer's role as the legacy HR Frontend top bar named it:
+	 * "Administrator", "HR Manager", or the employee's job title.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $user_id Current user id.
+	 *
+	 * @return string
+	 */
+	private static function role_label( int $user_id ): string {
+		if ( current_user_can( 'manage_options' ) ) {
+			return __( 'Administrator', 'erp' );
+		}
+
+		if ( function_exists( 'erp_hr_get_manager_role' ) && current_user_can( erp_hr_get_manager_role() ) ) {
+			return __( 'HR Manager', 'erp' );
+		}
+
+		$designation = '';
+		if ( $user_id ) {
+			$designation = (string) ( new \WeDevs\ERP\HRM\Employee( $user_id ) )->get_designation( 'view' );
+		}
+
+		return '' !== $designation ? $designation : __( 'Employee', 'erp' );
+	}
+
+	/**
 	 * Build the `__ERP_HR_BOOT__` payload localized to `window`.
 	 *
 	 * @param string $page_slug    Current admin page slug.
@@ -257,6 +284,8 @@ final class Enqueue {
 			'displayName'   => (string) ( $user->display_name ?? '' ),
 			'email'         => (string) ( $user->user_email ?? '' ),
 			'avatarUrl'     => get_avatar_url( $user_id, [ 'size' => 80 ] ) ?: '',
+			// The line under the name in the user menu (legacy HR Frontend top bar).
+			'roleLabel'     => self::role_label( $user_id ),
 			/**
 			 * Whether the pro feature set is actually **usable**, which drives every
 			 * "Pro" badge and upsell in the React admin.

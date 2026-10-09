@@ -1,7 +1,8 @@
 /**
  * Right-cluster aggregator.
  *
- * Default order: SearchTrigger → ThemeToggle → UserMenu.
+ * Default order: SearchTrigger → ThemeToggle → AnnouncementBell (employees)
+ * → UserMenu.
  * The "View legacy version" link lives in the shell footer
  * (see `app/AppFooter.tsx`) instead of the top bar.
  * Pro injects items via `wp.hooks.applyFilters('erp_hr.topbar.right_items', items)`.
@@ -13,7 +14,9 @@ import type { JSX, ReactNode } from 'react';
 
 import { HOOKS } from '@/shared/filters';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useCan } from '@/shared/hooks/useCan';
 
+import { AnnouncementBell } from './AnnouncementBell';
 import { SearchTrigger } from './SearchTrigger';
 import { ThemeToggle } from './ThemeToggle';
 import { UpgradeButton } from './UpgradeButton';
@@ -43,6 +46,10 @@ const DEFAULTS: readonly TopBarRightItem[] = [
 
 export function RightCluster(): JSX.Element {
 	const isPro = useBoot().isPro;
+	// The bell is for employees; a manager has the Announcements page instead.
+	const isEmployee = useCan( 'erp_list_employee' );
+	const isManager  = useCan( 'erp_view_announcement' );
+	const showBell   = isEmployee && ! isManager;
 
 	const items = useMemo( () => {
 		// When Pro is absent, the free shell shows its own "Upgrade" upsell button
@@ -54,15 +61,19 @@ export function RightCluster(): JSX.Element {
 					...DEFAULTS,
 				];
 
+		const withBell: readonly TopBarRightItem[] = showBell
+			? [ ...base, { id: 'erp-hr/announcements', weight: 20, render: () => <AnnouncementBell /> } ]
+			: base;
+
 		const merged = applyFilters(
 			HOOKS.TOPBAR_RIGHT_ITEMS,
-			base
+			withBell
 		) as readonly TopBarRightItem[];
 
 		return [ ...merged ].sort(
 			( a, b ) => ( a.weight ?? 50 ) - ( b.weight ?? 50 )
 		);
-	}, [ isPro ] );
+	}, [ isPro, showBell ] );
 
 	return (
 		<div

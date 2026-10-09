@@ -18,6 +18,19 @@ export interface Announcement {
 	readonly type_label:         string;
 }
 
+/** A row of the caller's own inbox (`GET /me/announcements`). */
+export interface MyAnnouncement {
+	readonly id:           number;
+	readonly title:        string;
+	readonly excerpt:      string;
+	/** Server-side `wp_kses_post( wpautop() )` body. */
+	readonly html_content: string;
+	readonly author:       string;
+	readonly date:         string | null;
+	/** Per-user read state. */
+	readonly read:         boolean;
+}
+
 /** Single announcement (`GET /announcements/{id}`) — adds body + recipients. */
 export interface AnnouncementDetail extends Announcement {
 	/** Raw post content — the editor binds to this. */

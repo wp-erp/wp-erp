@@ -55,8 +55,16 @@ export function UserMenu(): JSX.Element {
 			/>
 			<DropdownMenuContent align="end" className="min-w-56">
 				<DropdownMenuGroup>
-					<DropdownMenuLabel className="text-muted-foreground">
-						{ boot.email || boot.displayName }
+					{ /* Name and role, as the legacy HR Frontend top bar showed them:
+					     Administrator, HR Manager, or the employee's job title. */ }
+					<DropdownMenuLabel className="flex flex-col gap-0.5">
+						<span className="truncate text-sm font-semibold text-foreground">{ boot.displayName }</span>
+						{ boot.roleLabel ? (
+							<span className="truncate text-xs font-normal text-muted-foreground">{ boot.roleLabel }</span>
+						) : null }
+						{ boot.email ? (
+							<span className="truncate text-xs font-normal text-muted-foreground">{ boot.email }</span>
+						) : null }
 					</DropdownMenuLabel>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />

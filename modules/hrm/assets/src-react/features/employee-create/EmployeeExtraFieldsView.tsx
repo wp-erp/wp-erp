@@ -62,9 +62,16 @@ export function EmployeeExtraFieldsView( { employeeId, sections }: EmployeeExtra
 		};
 	}, [ employeeId, canManage ] );
 
-	const visible = sections
+	const inSections = sections
 		? fields.filter( ( f ) => sections.includes( f.sectionKey ?? '' ) )
 		: fields;
+
+	// A section with no value to show is a card of empty placeholders, so only
+	// sections with at least one filled field render.
+	const filledSections = new Set(
+		inSections.filter( ( f ) => displayValue( f ) !== '' ).map( ( f ) => f.section )
+	);
+	const visible = inSections.filter( ( f ) => filledSections.has( f.section ) );
 
 	if ( visible.length === 0 ) {
 		return null;

@@ -65,6 +65,8 @@ export interface NavSubItem {
 	 * instead of navigating (legacy `pro_popup` parity).
 	 */
 	readonly pro?: boolean;
+	/** Hides the child when the viewer holds ANY of these caps. */
+	readonly hiddenForCapabilities?: readonly Capability[];
 }
 
 export interface NavItem {
@@ -170,6 +172,16 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 				to:           '/announcements',
 				capabilities: [ 'erp_manage_announcement' ],
 				description:  __( 'Post company-wide notices', 'erp' ),
+			},
+			{
+				// An employee's own inbox: the same route answers them with the
+				// read-only list of what was sent to them.
+				id:                    'people-my-announcements',
+				label:                 __( 'Announcements', 'erp' ),
+				to:                    '/announcements',
+				capabilities:          [ 'erp_list_employee' ],
+				hiddenForCapabilities: [ 'erp_view_announcement' ],
+				description:           __( 'Notices sent to you', 'erp' ),
 			},
 		],
 	},

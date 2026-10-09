@@ -103,6 +103,34 @@ class AnnouncementsController extends RestController {
 			]
 		);
 
+		// The caller's own inbox: what was addressed to them, nobody else's.
+		register_rest_route(
+			$this->namespace,
+			'/me/' . $this->rest_base,
+			[
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_my_items' ],
+					'permission_callback' => [ $this, 'permission_my_announcements' ],
+					'args'                => [
+						'page'     => [
+							'type'              => 'integer',
+							'default'           => 1,
+							'minimum'           => 1,
+							'sanitize_callback' => 'absint',
+						],
+						'per_page' => [
+							'type'              => 'integer',
+							'default'           => 20,
+							'minimum'           => 1,
+							'maximum'           => 100,
+							'sanitize_callback' => 'absint',
+						],
+					],
+				],
+			]
+		);
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)/mark-read',
@@ -197,6 +225,90 @@ class AnnouncementsController extends RestController {
 	}
 
 	/**
+	 * The caller's own announcements: an HR employee (`erp_list_employee`) who
+	 * has not left. The list only ever carries rows addressed to the caller.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function permission_my_announcements(): bool {
+		$user_id = get_current_user_id();
+
+		return $user_id > 0
+			&& current_user_can( 'erp_list_employee' )
+			&& ! erp_hr_is_offboarded_user( $user_id );
+	}
+
+	/**
+	 * GET /erp/v2/me/announcements
+	 *
+	 * The published announcements addressed to the current user, newest first,
+	 * with their per-user read state. Same row shape as the dashboard's "Latest
+	 * Announcements" widget plus the author and the body (`wp_kses_post`).
+	 * `X-WP-Total` counts every row, `X-ERP-Unread` the unread ones.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_my_items( $request ): WP_REST_Response {
+		global $wpdb;
+
+		$user_id  = get_current_user_id();
+		$page     = max( 1, (int) ( $request['page'] ?? 1 ) );
+		$per_page = max( 1, min( 100, (int) ( $request['per_page'] ?? 20 ) ) );
+		$table    = $wpdb->prefix . 'erp_hr_announcement';
+
+		$counts = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COUNT(*) AS total, SUM( CASE WHEN a.status = 'read' THEN 0 ELSE 1 END ) AS unread
+				FROM {$table} AS a
+				INNER JOIN {$wpdb->posts} AS p ON p.ID = a.post_id
+				WHERE a.user_id = %d AND p.post_type = %s AND p.post_status = 'publish'",
+				$user_id,
+				self::POST_TYPE
+			)
+		);
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT p.ID, p.post_title, p.post_content, p.post_date, p.post_author, a.status
+				FROM {$table} AS a
+				INNER JOIN {$wpdb->posts} AS p ON p.ID = a.post_id
+				WHERE a.user_id = %d AND p.post_type = %s AND p.post_status = 'publish'
+				ORDER BY p.post_date DESC, p.ID DESC
+				LIMIT %d OFFSET %d",
+				$user_id,
+				self::POST_TYPE,
+				$per_page,
+				( $page - 1 ) * $per_page
+			)
+		);
+
+		$items = [];
+		foreach ( (array) $rows as $row ) {
+			$items[] = [
+				'id'           => (int) $row->ID,
+				'title'        => $this->cast_string_or_null( $row->post_title ) ?? __( '(no title)', 'erp' ),
+				'excerpt'      => $this->build_excerpt( (string) $row->post_content ),
+				'html_content' => (string) wp_kses_post( wpautop( (string) $row->post_content ) ),
+				'author'       => (string) get_the_author_meta( 'display_name', (int) $row->post_author ),
+				'date'         => $this->cast_date_iso( $row->post_date ),
+				'read'         => 'read' === (string) $row->status,
+			];
+		}
+
+		$response = rest_ensure_response( $items );
+		$response = $this->paginate( $response, $request, (int) ( $counts->total ?? 0 ), $per_page );
+		$response->header( 'X-ERP-Unread', (string) (int) ( $counts->unread ?? 0 ) );
+
+		return $response;
+	}
+
+	/**
 	 * Create / update / delete require the announcement manage cap — same gate as
 	 * the legacy `save_announcement_meta()` + bulk handlers.
 	 *
@@ -282,8 +394,10 @@ class AnnouncementsController extends RestController {
 		// The audience and the SMS body are for the edit form. A recipient opening
 		// their own copy gets the announcement, not who else received it.
 		if ( ! $this->permission_cap( 'erp_view_announcement' ) ) {
-			$row['sms_content'] = '';
-			$row['recipients']  = [
+			$row['sms_content']        = '';
+			$row['recipients_preview'] = [];
+			$row['recipient_count']    = 0;
+			$row['recipients']         = [
 				'employees'    => [],
 				'departments'  => [],
 				'designations' => [],

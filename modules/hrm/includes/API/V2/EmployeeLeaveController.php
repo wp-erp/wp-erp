@@ -626,7 +626,7 @@ class EmployeeLeaveController extends RestController {
 
 		return rest_ensure_response(
 			[
-				'summary'  => $this->map_summary( $employee->get_leave_summary(), $this->refunded_days( $user_id, $current_id ) ),
+				'summary'  => $this->map_summary( $employee->get_leave_summary(), $this->refunded_days( $user_id, $current_id ), $this->scheduled_days( $user_id, $current_id ) ),
 				'requests' => $this->map_requests( (array) $employee->get_leave_requests( $request_args ) ),
 				'meta'     => $this->build_meta( $employee, $current_id ),
 			]
@@ -685,12 +685,13 @@ class EmployeeLeaveController extends RestController {
 	 * `get_leave_summary()` returns an object keyed by leave id; cast to an array
 	 * and flatten into a list.
 	 *
-	 * @param mixed $summary  Balance object/array keyed by leave id.
-	 * @param array $refunded Days handed back by a rejected approval, keyed by leave id.
+	 * @param mixed $summary   Balance object/array keyed by leave id.
+	 * @param array $refunded  Days handed back by a rejected approval, keyed by leave id.
+	 * @param array $scheduled Approved days still ahead, keyed by leave id.
 	 *
 	 * @return array
 	 */
-	private function map_summary( $summary, array $refunded = [] ): array {
+	private function map_summary( $summary, array $refunded = [], array $scheduled = [] ): array {
 		$out = [];
 
 		foreach ( (array) $summary as $row ) {
@@ -704,7 +705,13 @@ class EmployeeLeaveController extends RestController {
 				// on a 20-day policy.
 				'total'       => ( $this->cast_float_or_null( $row['total'] ?? null ) ?? 0 ) - ( $refunded[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ),
 				'available'   => $this->cast_float_or_null( $row['available'] ?? null ) ?? 0,
+				// Every approved day of the year, past and future (what the
+				// ledger books against the allowance).
 				'spent'       => $this->cast_float_or_null( $row['spent'] ?? null ) ?? 0,
+				// Of those, the days still ahead of today, and the days already
+				// taken: taken + scheduled = spent, and entitled - spent = left.
+				'scheduled'   => (float) ( $scheduled[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ),
+				'taken'       => max( 0, ( $this->cast_float_or_null( $row['spent'] ?? null ) ?? 0 ) - (float) ( $scheduled[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ) ),
 				'from_date'   => $this->cast_entitlement_date( $row['from_date'] ?? null ),
 				'to_date'     => $this->cast_entitlement_date( $row['to_date'] ?? null ),
 			];
@@ -746,6 +753,52 @@ class EmployeeLeaveController extends RestController {
 		$out = [];
 		foreach ( (array) $rows as $row ) {
 			$out[ (int) $row->leave_id ] = (float) $row->refunded;
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Approved leave days still ahead of today, per leave id, for one financial
+	 * year: the "Scheduled" column of the legacy balance table.
+	 *
+	 * Counts the working days of approved requests (`last_status = 1`) dated
+	 * after today, from the per-day request details. A half-day request has one
+	 * detail row and counts as its own `days` value.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $user_id Employee user id.
+	 * @param int $f_year  Financial year id.
+	 *
+	 * @return array<int, float> Scheduled days keyed by leave id.
+	 */
+	private function scheduled_days( int $user_id, int $f_year ): array {
+		global $wpdb;
+
+		if ( ! $f_year ) {
+			return [];
+		}
+
+		// Leave days are stored as site-local midnights.
+		$tomorrow = erp_current_datetime()->modify( '+1 day' )->setTime( 0, 0, 0 )->getTimestamp();
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT rq.leave_id, SUM( CASE WHEN rq.days < 1 THEN rq.days ELSE 1 END ) AS scheduled
+				FROM {$wpdb->prefix}erp_hr_leave_request_details AS d
+				INNER JOIN {$wpdb->prefix}erp_hr_leave_requests AS rq ON rq.id = d.leave_request_id
+				WHERE d.user_id = %d AND d.f_year = %d AND d.workingday_status = 1 AND d.leave_date >= %d AND rq.last_status = 1
+				GROUP BY rq.leave_id",
+				$user_id,
+				$f_year,
+				$tomorrow
+			)
+		);
+
+		$out = [];
+		foreach ( (array) $rows as $row ) {
+			$out[ (int) $row->leave_id ] = (float) $row->scheduled;
 		}
 
 		return $out;

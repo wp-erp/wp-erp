@@ -2,7 +2,8 @@
  * Overview tab body for the employee profile: stats strip, pro extra
  * fields, and the Employment / Contact / Personal / Address / Biography detail
  * cards. Sensitive cards (pay, personal, address, biography) render only for
- * self / managers (`canEdit`), matching legacy tab-general.php / tab-job.php.
+ * self / managers (`canEdit`), matching legacy tab-general.php / tab-job.php;
+ * a colleague gets the basic-info view (`ColleagueOverview`) instead.
  */
 
 import {
@@ -11,6 +12,7 @@ import {
 	Building2,
 	Calendar,
 	CalendarOff,
+	Clock,
 	Compass,
 	DollarSign,
 	Droplets,
@@ -59,8 +61,43 @@ interface OverviewTabProps {
 	readonly canEdit: boolean;
 }
 
+/**
+ * What a colleague sees (not self, no `erp_edit_employee` on the target): the
+ * legacy tab-general.php Basic Info box (first name, last name, employee ID,
+ * email) plus the directory's employment type, status, hire date, department
+ * and job title. No contact details, location, manager or custom fields; the
+ * server sends nothing else for this viewer anyway.
+ */
+function ColleagueOverview( { record }: { readonly record: Record_ } ): JSX.Element {
+	return (
+		<div className="space-y-6">
+			<DetailCard title={ __( 'Basic Info', 'erp' ) }>
+				<Item icon={ User } label={ __( 'First Name', 'erp' ) } value={ str( record, 'first_name' ) } />
+				<Item icon={ User } label={ __( 'Last Name', 'erp' ) } value={ str( record, 'last_name' ) } />
+				<Item icon={ IdCard } label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
+				<Item icon={ Mail } label={ __( 'Email', 'erp' ) } value={ str( record, 'email' ) } />
+			</DetailCard>
+
+			<DetailCard title={ __( 'Employment', 'erp' ) }>
+				<Item icon={ Briefcase } label={ __( 'Employee Type', 'erp' ) } value={ labelOf( TYPE_OPTIONS, str( record, 'type' ) ) } />
+				<Item icon={ Activity } label={ __( 'Employee Status', 'erp' ) } value={ labelOf( STATUS_OPTIONS, str( record, 'status' ) ) } />
+				<Item icon={ Calendar } label={ __( 'Date of Hire', 'erp' ) } value={ formatCalendarDate( str( record, 'hiring_date' ), '' ) } />
+				<Item icon={ Building2 } label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
+				<Item icon={ Tag } label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
+			</DetailCard>
+		</div>
+	);
+}
+
 export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JSX.Element {
 	const status = str( record, 'status' );
+	// Current attendance shift; the server adds it (Attendance module) only for
+	// the employee themselves and whoever may edit them.
+	const shift  = str( record, 'shift' );
+
+	if ( ! canEdit ) {
+		return <ColleagueOverview record={ record } />;
+	}
 
 	return (
 		<div className="space-y-6">
@@ -91,6 +128,7 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 				<Item icon={ MapPin } label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
 				<Item icon={ UserCog } label={ __( 'Reporting To', 'erp' ) } value={ str( record, 'reporting_to_name' ) } />
 				<Item icon={ Compass } label={ __( 'Source of Hire', 'erp' ) } value={ labelOf( SOURCE_OPTIONS, str( record, 'hiring_source' ) ) } />
+				{ shift !== '' ? <Item icon={ Clock } label={ __( 'Shift', 'erp' ) } value={ shift } /> : null }
 				{ /* Pay is sensitive — only self / managers (erp_edit_employee), matching legacy tab-job.php. */ }
 				{ canEdit ? (
 					<>
