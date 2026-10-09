@@ -549,7 +549,12 @@ class EmployeeLeaveController extends RestController {
 	 * @return bool
 	 */
 	public function permission_view( $request ): bool {
-		return $this->permission_cap( 'erp_edit_employee', (int) $request['user_id'] );
+		$user_id = (int) $request['user_id'];
+
+		// The employee also reads their own leave once they have left
+		// (read-only: `erp_view_employee` stays, the edit caps go).
+		return $this->permission_cap( 'erp_edit_employee', $user_id )
+			|| ( get_current_user_id() === $user_id && current_user_can( 'erp_view_employee', $user_id ) );
 	}
 
 	/**

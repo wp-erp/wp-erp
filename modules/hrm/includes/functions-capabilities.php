@@ -320,8 +320,9 @@ function erp_hr_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] )
 
             if ( $user_id == $employee_id ) {
                 // An offboarded person keeps reading their own record, but no
-                // longer edits it.
-                $caps = 'erp_edit_employee' === $cap && erp_hr_is_offboarded_user( $user_id ) ? [ 'do_not_allow' ] : [ $cap ];
+                // longer changes it: every self-service write is refused, only
+                // the `erp_view_*` caps stay.
+                $caps = 0 !== strpos( $cap, 'erp_view_' ) && erp_hr_is_offboarded_user( $user_id ) ? [ 'do_not_allow' ] : [ $cap ];
             } else {
                 $hr_manager_role = erp_hr_get_manager_role();
                 // HR manager can read any employee

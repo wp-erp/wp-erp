@@ -50,7 +50,7 @@ class EmployeeProfileController extends RestController {
 					[
 						'methods'             => WP_REST_Server::READABLE,
 						'callback'            => [ $this, 'get_items' ],
-						'permission_callback' => [ $this, 'permission_edit' ],
+						'permission_callback' => [ $this, 'permission_view' ],
 					],
 					[
 						'methods'             => WP_REST_Server::CREATABLE,
@@ -107,6 +107,23 @@ class EmployeeProfileController extends RestController {
 	 */
 	public function permission_edit( $request ): bool {
 		return $this->permission_cap( 'erp_edit_employee', (int) $request['user_id'] );
+	}
+
+	/**
+	 * Reading: whoever may edit, and the employee their own record, also once
+	 * they have left (read-only: `erp_view_employee` stays, the edit caps go).
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_REST_Request $request Request.
+	 *
+	 * @return bool
+	 */
+	public function permission_view( $request ): bool {
+		$user_id = (int) $request['user_id'];
+
+		return $this->permission_edit( $request )
+			|| ( get_current_user_id() === $user_id && current_user_can( 'erp_view_employee', $user_id ) );
 	}
 
 	/**
