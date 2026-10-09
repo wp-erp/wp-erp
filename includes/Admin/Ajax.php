@@ -791,7 +791,7 @@ class Ajax {
             $data = [
                 'link'           => $url,
                 'status'         => true,
-                'is_connected'   => (boolean) wperp()->google_auth->is_connected(),
+                'is_connected'   => (bool) wperp()->google_auth->is_connected(),
                 'disconnect_url' => wperp()->google_auth->get_disconnect_url()
             ];
 

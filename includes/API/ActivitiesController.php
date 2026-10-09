@@ -402,7 +402,7 @@ class ActivitiesController extends REST_Controller {
         $types = array_flip( $this->activity_types );
 
         // Convert to a standard type
-        $item->type = $types[ $item->type ];
+        $item->type = ( null !== $item->type && isset( $types[ $item->type ] ) ) ? $types[ $item->type ] : null;
 
         $common_fields = [
             'id'          => (int) $item->id,
