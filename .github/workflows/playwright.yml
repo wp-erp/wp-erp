@@ -101,15 +101,18 @@ jobs:
                   retention-days: 1
                   compression-level: 0
 
-    # ── Build the PRIVATE erp-pro plugin. ──────────────────────────────────────
-    # erp-pro also ships its built bundles in-repo (deals, hr-frontend, module assets),
-    # so again only `composer install` — no npm build. SKIPS on fork PRs (no secret
-    # access — expected). On the internal repo it MUST succeed: a bad ERP_PRO_TOKEN
-    # fails this job LOUDLY (no masking) and the whole workflow turns red.
+    # ── Check access to the PRIVATE erp-pro plugin. ───────────────────────────
+    # This repo is public, so erp-pro must never be uploaded as an artifact:
+    # artifacts of a public repo can be downloaded by anyone signed in to GitHub
+    # while they are kept. This job only proves the secret works; each test job
+    # checks erp-pro out itself (see the "Checkout erp-pro" steps below).
+    # SKIPS on fork PRs (no secret access — expected). On the internal repo it
+    # MUST succeed: a bad ERP_PRO_TOKEN fails this job LOUDLY (no masking) and
+    # the whole workflow turns red.
     build_pro:
-        name: build erp-pro
+        name: check erp-pro access
         runs-on: ubuntu-latest
-        timeout-minutes: 15
+        timeout-minutes: 10
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         # Prefer a repo-scoped deploy key (ERP_PRO_SSH_KEY) when present; otherwise fall
         # back to a PAT (ERP_PRO_TOKEN). Either grants read access to wp-erp/erp-pro.
@@ -124,6 +127,7 @@ jobs:
                   ref: develop
                   path: erp-pro
                   ssh-key: ${{ secrets.ERP_PRO_SSH_KEY }}
+                  persist-credentials: false
 
             - name: Checkout erp-pro (PAT)
               if: env.HAS_SSH_KEY != 'true'
@@ -133,21 +137,7 @@ jobs:
                   ref: develop
                   path: erp-pro
                   token: ${{ secrets.ERP_PRO_TOKEN }}
-
-            - name: Composer install (erp-pro)
-              working-directory: erp-pro
-              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
-
-            - name: Tar erp-pro
-              run: tar --exclude='erp-pro/.git' --exclude='erp-pro/node_modules' -czf /tmp/erp-pro.tar.gz erp-pro
-
-            - name: Upload erp-pro artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: erp-pro-build
-                  path: /tmp/erp-pro.tar.gz
-                  retention-days: 1
-                  compression-level: 0
+                  persist-credentials: false
 
     # ── Sharded E2E. ───────────────────────────────────────────────────────────
     # Runs once build_lite succeeds. build_pro is conditional: SUCCESS → pro run
@@ -157,6 +147,8 @@ jobs:
     e2e_tests:
         name: e2e tests
         runs-on: ubuntu-latest
+        env:
+            HAS_SSH_KEY: ${{ secrets.ERP_PRO_SSH_KEY != '' }}
         timeout-minutes: 30
         needs: [build_lite, build_pro]
         if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
@@ -177,18 +169,31 @@ jobs:
                   tar -xzf /tmp/wp-erp-build.tar.gz
                   rm /tmp/wp-erp-build.tar.gz
 
-            - name: Download erp-pro build artifact (pro runs only)
-              if: needs.build_pro.result == 'success'
-              uses: actions/download-artifact@v4
+            # erp-pro is checked out here, never passed as an artifact (public repo).
+            - name: Checkout erp-pro (deploy key, pro runs only)
+              if: needs.build_pro.result == 'success' && env.HAS_SSH_KEY == 'true'
+              uses: actions/checkout@v4
               with:
-                  name: erp-pro-build
-                  path: /tmp/
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  path: erp-pro
+                  ssh-key: ${{ secrets.ERP_PRO_SSH_KEY }}
+                  persist-credentials: false
 
-            - name: Extract erp-pro build (pro runs only)
+            - name: Checkout erp-pro (PAT, pro runs only)
+              if: needs.build_pro.result == 'success' && env.HAS_SSH_KEY != 'true'
+              uses: actions/checkout@v4
+              with:
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  path: erp-pro
+                  token: ${{ secrets.ERP_PRO_TOKEN }}
+                  persist-credentials: false
+
+            - name: Composer install (erp-pro, pro runs only)
               if: needs.build_pro.result == 'success'
-              run: |
-                  tar -xzf /tmp/erp-pro.tar.gz
-                  rm /tmp/erp-pro.tar.gz
+              working-directory: erp-pro
+              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
 
             - name: Use Node.js 20
               uses: actions/setup-node@v4
@@ -307,6 +312,8 @@ jobs:
     api_tests:
         name: api tests
         runs-on: ubuntu-latest
+        env:
+            HAS_SSH_KEY: ${{ secrets.ERP_PRO_SSH_KEY != '' }}
         timeout-minutes: 25
         needs: [build_lite, build_pro]
         if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
@@ -322,18 +329,31 @@ jobs:
                   tar -xzf /tmp/wp-erp-build.tar.gz
                   rm /tmp/wp-erp-build.tar.gz
 
-            - name: Download erp-pro build artifact (pro runs only)
-              if: needs.build_pro.result == 'success'
-              uses: actions/download-artifact@v4
+            # erp-pro is checked out here, never passed as an artifact (public repo).
+            - name: Checkout erp-pro (deploy key, pro runs only)
+              if: needs.build_pro.result == 'success' && env.HAS_SSH_KEY == 'true'
+              uses: actions/checkout@v4
               with:
-                  name: erp-pro-build
-                  path: /tmp/
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  path: erp-pro
+                  ssh-key: ${{ secrets.ERP_PRO_SSH_KEY }}
+                  persist-credentials: false
 
-            - name: Extract erp-pro build (pro runs only)
+            - name: Checkout erp-pro (PAT, pro runs only)
+              if: needs.build_pro.result == 'success' && env.HAS_SSH_KEY != 'true'
+              uses: actions/checkout@v4
+              with:
+                  repository: wp-erp/erp-pro
+                  ref: develop
+                  path: erp-pro
+                  token: ${{ secrets.ERP_PRO_TOKEN }}
+                  persist-credentials: false
+
+            - name: Composer install (erp-pro, pro runs only)
               if: needs.build_pro.result == 'success'
-              run: |
-                  tar -xzf /tmp/erp-pro.tar.gz
-                  rm /tmp/erp-pro.tar.gz
+              working-directory: erp-pro
+              run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
 
             - name: Use Node.js 20
               uses: actions/setup-node@v4
