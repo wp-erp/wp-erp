@@ -132,6 +132,8 @@ module.exports = function(grunt) {
                     '!modules/hrm/assets/dist-react/**/*.map',
                     '!modules/hrm/package.json',
                     '!modules/hrm/package-lock.json',
+                    '!modules/hrm/pnpm-lock.yaml',
+                    '!modules/hrm/pnpm-workspace.yaml',
                     '!modules/hrm/tsconfig.json',
                     '!modules/hrm/webpack.react.config.js',
                     '!modules/hrm/postcss.config.js',
