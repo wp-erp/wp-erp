@@ -948,7 +948,10 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
                 $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
             },
         ] )
-                                                      ->find( $feed_id )->toArray();
+                                                      ->find( $feed_id );
+
+        // A feed that does not exist was read anyway (a fatal error).
+        $data = $data ? $data->toArray() : [];
 
         if ( ! $data ) {
             return;
@@ -1205,6 +1208,12 @@ function erp_crm_get_contact_groups( $args = [] ) {
 
     $last_changed = erp_cache_get_last_changed( 'crm', 'contact_groups' );
     $args         = wp_parse_args( $args, $defaults );
+
+    // The REST route passes the request's values through, null when not sent,
+    // which threw in the query builder. A group column, ascending or descending.
+    $args['order']   = 'ASC' === strtoupper( (string) $args['order'] ) ? 'ASC' : 'DESC';
+    $args['orderby'] = in_array( $args['orderby'], [ 'id', 'name', 'description', 'created_at', 'updated_at' ], true ) ? $args['orderby'] : 'id';
+
     $cache_key    = 'erp-crm-contact-group-' . md5( serialize( $args ) ).":$last_changed";
     $items        = wp_cache_get( $cache_key, 'erp' );
 
@@ -1297,7 +1306,9 @@ function erp_crm_get_contact_group_by_id( $id ) {
     $contact_group = wp_cache_get( 'erp-crm-contact-group-detail-' . $id, 'erp' );
 
     if( false === $contact_group ) {
-        $contact_group = WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
+        // A group that does not exist was read anyway (a fatal error).
+        $contact_group = WeDevs\ERP\CRM\Models\ContactGroup::find( $id );
+        $contact_group = $contact_group ? $contact_group->toArray() : [];
 
         wp_cache_set( 'erp-crm-contact-group-detail-' . $id, $contact_group, 'erp' );
     }

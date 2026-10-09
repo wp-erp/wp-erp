@@ -220,9 +220,25 @@ function erp_html_form_input( $args = [] ) {
 
             echo '<span class="checkbox">';
 
+            // Each option carries its own id, so drop the shared one from the
+            // attribute list (it would emit a second, duplicate id attribute).
+            $option_attributes = array_filter(
+                $custom_attributes,
+                function ( $attribute ) {
+                    return 0 !== strpos( $attribute, 'id=' );
+                }
+            );
+
             if ( $field['options'] ) {
                 foreach ( $field['options'] as $key => $value ) {
-                    echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' id="' . esc_attr( $field_attributes['id'] ) . '-' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $custom_attributes ) ) . '"/>' . esc_html( $value ) . '&nbsp;';
+                    $option_id = $field_attributes['id'] . '-' . $key;
+
+                    // Wrapped in a label (like multicheckbox above) so the option
+                    // text is a styleable element and clicking it selects the radio.
+                    echo '<label for="' . esc_attr( $option_id ) . '">';
+                    echo '<input type="radio" ' . checked( $field['value'], $key, false ) . ' id="' . esc_attr( $option_id ) . '" value="' . esc_attr( $key ) . '" ' . wp_kses_post( implode( ' ', $option_attributes ) ) . ' />';
+                    echo '<span class="checkbox-value">' . esc_html( $value ) . '</span>';
+                    echo '</label>&nbsp;';
                 }
             }
 

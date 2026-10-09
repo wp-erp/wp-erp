@@ -78,6 +78,10 @@ function erp_hr_get_employees( $args = [] ) {
     $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
     $usermeta_table = apply_filters( 'erp_hrm_usermeta_table_name', $wpdb->prefix . 'usermeta' );
 
+    if ( $args['count'] && false !== $results_counts ) {
+        return $results_counts;
+    }
+
     if ( false === $results ) {
 
         $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
@@ -116,7 +120,10 @@ function erp_hr_get_employees( $args = [] ) {
         }
         /******** Check gender & marital status end ***********/
 
-        if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+        if ( isset( $args['status'] ) && is_array( $args['status'] ) ) {
+            // A list of statuses (since 2.0.0): any of them, trashed rows excluded.
+            $employees = $employees->whereIn( 'status', array_values( array_map( 'sanitize_key', $args['status'] ) ) );
+        } elseif ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
             if ( $args['status'] == 'trash' ) {
                 $employees = $employees->onlyTrashed();
             } else {
@@ -129,8 +136,14 @@ function erp_hr_get_employees( $args = [] ) {
         }
 
         if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-            $arg_s     = $args['s'];
-            $employees = $employees->where( 'display_name', 'LIKE', "%$arg_s%" );
+            // Escape LIKE wildcards so "%" or "_" in the term match literally.
+            $arg_s     = $wpdb->esc_like( $args['s'] );
+            // Match the name or the HR Employee ID (grouped so it ANDs with the
+            // status / department / designation filters above).
+            $employees = $employees->where( function ( $query ) use ( $arg_s, $employee_tbl ) {
+                $query->where( 'display_name', 'LIKE', "%$arg_s%" )
+                      ->orWhere( $employee_tbl . '.employee_id', 'LIKE', "%$arg_s%" );
+            } );
         }
 
         if ( 'employee_name' === $args['orderby'] ) {
@@ -152,6 +165,9 @@ function erp_hr_get_employees( $args = [] ) {
             $results_counts = $employees->count();
 
             wp_cache_set( $cache_key_counts, $results_counts, 'erp', HOUR_IN_SECONDS );
+
+            // A count call only needs the number: skip loading and hydrating every row.
+            return $results_counts;
         }
 
         $results = $employees
@@ -162,6 +178,11 @@ function erp_hr_get_employees( $args = [] ) {
         $results = erp_array_to_object( $results );
 
         do_action( 'erp_hr_get_employees_result', $results );
+
+        if ( true !== $args['no_object'] && ! empty( $results ) ) {
+            // Prime the user + usermeta caches in one go instead of two queries per Employee.
+            cache_users( array_map( 'intval', wp_list_pluck( $results, 'user_id' ) ) );
+        }
 
         foreach ( $results as $key => $row ) {
             if ( true === $args['no_object'] ) {
@@ -376,6 +397,13 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             \WeDevs\ERP\HRM\Models\Announcement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
+
+            // Read before the HR roles are stripped below. No role at all
+            // counts: trashing an employee already took theirs away.
+            $only_employee = $wp_user
+                && ! array_diff( (array) $wp_user->roles, [ erp_hr_get_employee_role() ] )
+                && ! user_can( $wp_user, 'edit_posts' );
+
             if ( $wp_user ) {
                 $wp_user->remove_role( erp_hr_get_manager_role() );
                 $wp_user->remove_role( erp_hr_get_employee_role() );
@@ -384,8 +412,19 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             //finally remove from WordPress user
             $remove_wp_user = get_option( 'erp_hrm_remove_wp_user', 'no' );
 
-            if ( 'yes' === $remove_wp_user ) {
-                $current_user = get_current_user_id();
+            // The login goes only when the caller could delete it in WordPress,
+            // or it was nothing but an employee's. An HR manager has no
+            // `delete_users`, and this was their way to delete any account
+            // with the employee role, an administrator's included.
+            $current_user = get_current_user_id();
+            $may_delete   = (int) $employee_wp_user_id !== $current_user
+                && ( current_user_can( 'delete_user', $employee_wp_user_id ) || $only_employee );
+
+            if ( 'yes' === $remove_wp_user && $may_delete ) {
+                if ( ! function_exists( 'wp_delete_user' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/user.php';
+                }
+
                 wp_delete_user( $employee_wp_user_id, $current_user );
             }
         } else {
@@ -822,6 +861,13 @@ function erp_hr_employee_tab_url( $tab, $employee_id ) {
 /**
  * Get Employee Announcement List
  *
+ * Published announcements only. The assignment row in `erp_hr_announcement` is
+ * written once and never revisited, so without this condition an announcement
+ * still in draft — or one trashed precisely to retract it — kept being served
+ * to the assigned employee, title and body alike. The manager-side listing has
+ * always passed `post_status => 'publish'`; only this employee-side query did
+ * not.
+ *
  * @since 0.1
  *
  * @param int $user_id
@@ -833,6 +879,7 @@ function erp_hr_employee_dashboard_announcement( $user_id ) {
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Announcement::join( $wpdb->posts, 'post_id', '=', $wpdb->posts . '.ID' )
         ->where( 'user_id', '=', $user_id )
+        ->where( $wpdb->posts . '.post_status', '=', 'publish' )
         ->orderby( $wpdb->posts . '.post_date', 'desc' )
         ->take( 8 )
         ->get()
@@ -1068,10 +1115,289 @@ function erp_hr_get_single_link( $user_id ) {
 function erp_is_employee_exist( $email, $user_id ) {
     global $wpdb;
     $user_email = sanitize_email( $email );
-    return $wpdb->get_col( $wpdb->prepare( "select ID from {$wpdb->prefix}users where user_email=%s AND ID !=%s", $user_email, $user_id ) );
+    // `$wpdb->users`, not `{prefix}users`: on a multisite subsite the latter
+    // names a table that does not exist, so every email passed as unused.
+    return $wpdb->get_col( $wpdb->prepare( "select ID from {$wpdb->users} where user_email=%s AND ID !=%s", $user_email, $user_id ) );
+}
+
+/**
+ * Whether the current user may take charge of a WordPress account as HR.
+ *
+ * Changing an employee's login email hands over the account (it is the reset
+ * address), and converting a user gives them the employee role and an HR
+ * record. Both need the same say over the account:
+ *
+ * - never a super admin, an administrator, or a user of another site in the
+ *   network, unless the caller is one too;
+ * - always when WordPress lets the caller edit that user anyway;
+ * - otherwise an HR manager only, and only when every capability the account
+ *   holds, from its roles or granted to it directly, is one the caller holds.
+ *
+ * @since 1.18.0
+ *
+ * @param int $user_id Target user ID.
+ *
+ * @return bool
+ */
+function erp_hr_can_manage_wp_account( $user_id ) {
+    $user_id = (int) $user_id;
+    $target  = get_userdata( $user_id );
+
+    if ( ! $target ) {
+        return false;
+    }
+
+    if ( is_multisite() && ! is_user_member_of_blog( $user_id ) && ! is_super_admin() ) {
+        return false;
+    }
+
+    if ( is_super_admin( $user_id ) && ! is_super_admin() ) {
+        return false;
+    }
+
+    if ( ( in_array( 'administrator', (array) $target->roles, true ) || user_can( $target, 'manage_options' ) )
+        && ! current_user_can( 'manage_options' ) ) {
+        return false;
+    }
+
+    if ( current_user_can( 'edit_user', $user_id ) ) {
+        return true;
+    }
+
+    if ( ! current_user_can( 'erp_edit_employee' ) ) {
+        return false;
+    }
+
+    // Compare capabilities directly rather than through
+    // `erp_can_current_user_assign_role()`: that helper also counts the
+    // deprecated `level_N` caps (subscriber carries `level_0`), which an HR
+    // manager role never holds, so any second role blocked the correction.
+    if ( current_user_can( 'promote_users' ) ) {
+        return true;
+    }
+
+    $user_caps = array_filter( (array) wp_get_current_user()->allcaps );
+
+    /** This filter is documented in includes/functions.php */
+    $meta_caps = apply_filters( 'erp_role_comparison_ignored_caps', [
+        'edit_post',
+        'read_post',
+        'delete_post',
+        'edit_page',
+        'read_page',
+        'delete_page',
+        'edit_comment',
+        'edit_user',
+        'delete_user',
+        'remove_user',
+        'add_user_to_blog',
+    ] );
+
+    // The caps of every role, plus any granted to the user directly (those
+    // sit in `caps` beside the role names).
+    $target_caps = [];
+
+    foreach ( (array) $target->roles as $role ) {
+        $role_object = get_role( $role );
+
+        if ( ! $role_object ) {
+            return false;
+        }
+
+        $target_caps += (array) $role_object->capabilities;
+    }
+
+    foreach ( (array) $target->caps as $cap => $granted ) {
+        if ( ! wp_roles()->is_role( $cap ) ) {
+            $target_caps[ $cap ] = $granted;
+        }
+    }
+
+    foreach ( $target_caps as $cap => $granted ) {
+        if ( ! $granted
+            || in_array( $cap, $meta_caps, true )
+            || preg_match( '/^level_\d+$/', (string) $cap ) ) {
+            continue;
+        }
+
+        if ( empty( $user_caps[ $cap ] ) ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Whether a WordPress account ranks above the current user.
+ *
+ * True for a super admin or an administrator (anyone who can manage_options)
+ * when the current user is not one. Such an account's roles, login email,
+ * website and name are not HR's to change; its HR record still is.
+ *
+ * Narrower than `erp_hr_can_manage_wp_account()`, which also refuses any
+ * account holding a capability the caller lacks (a CRM agent, say): HR keeps
+ * editing those employees' names as before.
+ *
+ * @since 1.18.0
+ *
+ * @param int $user_id Target user ID.
+ *
+ * @return bool
+ */
+function erp_hr_is_account_above_current_user( $user_id ) {
+    $target = get_userdata( (int) $user_id );
+
+    if ( ! $target ) {
+        return false;
+    }
+
+    if ( is_super_admin( $target->ID ) && ! is_super_admin() ) {
+        return true;
+    }
+
+    return ( in_array( 'administrator', (array) $target->roles, true ) || user_can( $target, 'manage_options' ) )
+        && ! current_user_can( 'manage_options' );
 }
 
 add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
+
+wp_cache_add_non_persistent_groups( [ 'erp_hr_offboarded' ] );
+
+/**
+ * Whether a user's HR record is no longer active: terminated, resigned,
+ * deceased, inactive or trashed.
+ *
+ * Such a user keeps reading what is theirs, but holds no HR authority: no
+ * HR-manager rights, no department-lead moderation, no line-manager reviews.
+ * A user with no HR record at all is not offboarded.
+ *
+ * Read once per request per user; the status hooks below forget the answer
+ * when it changes mid-request.
+ *
+ * @since 2.0.0
+ *
+ * @param int $user_id WordPress user id.
+ *
+ * @return bool
+ */
+function erp_hr_is_offboarded_user( $user_id ) {
+    global $wpdb;
+
+    $user_id = absint( $user_id );
+
+    if ( ! $user_id ) {
+        return false;
+    }
+
+    $found = false;
+    $row   = wp_cache_get( $user_id, 'erp_hr_offboarded', false, $found );
+
+    if ( ! $found ) {
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT status, deleted_at FROM {$wpdb->prefix}erp_hr_employees WHERE user_id = %d",
+                $user_id
+            )
+        );
+
+        wp_cache_set( $user_id, $row ? $row : 0, 'erp_hr_offboarded' );
+    }
+
+    return ! empty( $row ) && ( 'active' !== $row->status || ! empty( $row->deleted_at ) );
+}
+
+/**
+ * Forget a user's cached offboarded state after their HR record changed.
+ *
+ * @since 2.0.0
+ *
+ * @param int $user_id WordPress user id.
+ *
+ * @return void
+ */
+function erp_hr_forget_offboarded_state( $user_id ) {
+    wp_cache_delete( absint( $user_id ), 'erp_hr_offboarded' );
+}
+
+add_action( 'erp_hr_employee_update', 'erp_hr_forget_offboarded_state' );
+add_action( 'erp_hr_employee_after_update_status', 'erp_hr_forget_offboarded_state' );
+add_action( 'erp_hr_employee_employment_status_create', 'erp_hr_forget_offboarded_state' );
+add_action( 'erp_hr_after_delete_employee', 'erp_hr_forget_offboarded_state' );
+
+/**
+ * Take HR-manager authority from an offboarded user.
+ *
+ * Terminating or trashing an employee who is also an HR manager left the
+ * `erp_hr_manager` role in place, and every manager check maps to that role,
+ * so the person kept full HR access with their old session. Site
+ * administrators are left alone, so an owner can never lock themselves out.
+ *
+ * @since 2.0.0
+ *
+ * @param array    $capabilities All capabilities of the user.
+ * @param array    $caps         Capabilities being checked.
+ * @param array    $args         Arguments.
+ * @param \WP_User $user         The user.
+ *
+ * @return array
+ */
+function erp_hr_revoke_offboarded_manager_access( $capabilities, $caps, $args, $user ) {
+    $manager_role = erp_hr_get_manager_role();
+
+    if ( empty( $capabilities[ $manager_role ] ) || ! empty( $capabilities['manage_options'] ) ) {
+        return $capabilities;
+    }
+
+    if ( ! erp_hr_is_offboarded_user( $user->ID ) ) {
+        return $capabilities;
+    }
+
+    // Only what the manager role adds: the basics every employee has (read,
+    // their own profile, the list) stay, so they can still see what is theirs.
+    $manager_caps = array_diff(
+        array_keys( erp_hr_get_caps_for_role( $manager_role ) ),
+        array_keys( erp_hr_get_caps_for_role( erp_hr_get_employee_role() ) ),
+        [ 'read' ]
+    );
+
+    foreach ( $caps as $cap ) {
+        if ( $cap === $manager_role || in_array( $cap, $manager_caps, true ) ) {
+            $capabilities[ $cap ] = false;
+        }
+    }
+
+    return $capabilities;
+}
+
+add_filter( 'user_has_cap', 'erp_hr_revoke_offboarded_manager_access', 11, 4 );
+
+/**
+ * Drop a deleted employee from the department lead and line manager slots.
+ *
+ * Only on permanent delete: a trashed or terminated person already holds no
+ * authority (see erp_hr_is_offboarded_user()), and keeping the pointers lets a
+ * restore bring the team back as it was.
+ *
+ * @since 2.0.0
+ *
+ * @param int  $user_id WordPress user id.
+ * @param bool $force   Whether the record was deleted permanently.
+ *
+ * @return void
+ */
+function erp_hr_release_deleted_employee_relations( $user_id, $force = false ) {
+    global $wpdb;
+
+    if ( ! $force ) {
+        return;
+    }
+
+    $wpdb->update( "{$wpdb->prefix}erp_hr_depts", [ 'lead' => 0 ], [ 'lead' => absint( $user_id ) ] );
+    $wpdb->update( "{$wpdb->prefix}erp_hr_employees", [ 'reporting_to' => 0 ], [ 'reporting_to' => absint( $user_id ) ] );
+}
+
+add_action( 'erp_hr_after_delete_employee', 'erp_hr_release_deleted_employee_relations', 10, 2 );
 
 /**
  * Disable terminated users from accessing ERP
@@ -1099,9 +1425,8 @@ function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $us
         return $capabilities;
     }
 
-    $employee = new WeDevs\ERP\HRM\Employee( $user );
-
-    if ( 'active' !== $employee->get_status() ) {
+    // Trashed counts too: a trashed record keeps status `active`.
+    if ( erp_hr_is_offboarded_user( $user->ID ) ) {
         $capabilities['erp_list_employee']        = false; // hr menu capabilities
         $capabilities['upload_files']             = false;
         $capabilities['erp_ac_manager']           = false; // accounting menu capabilities

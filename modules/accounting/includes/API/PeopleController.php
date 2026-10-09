@@ -174,6 +174,10 @@ class PeopleController extends \WeDevs\ERP\API\REST_Controller {
 
         $people = erp_get_people( $id );
 
+        if ( ! $people || is_wp_error( $people ) ) {
+            return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
+        }
+
         $people->{'state'}   = erp_get_state_name( $people->country, $people->state );
         $people->{'country'} = erp_get_country_name( $people->country );
 
@@ -211,6 +215,12 @@ class PeopleController extends \WeDevs\ERP\API\REST_Controller {
     public function get_opening_balance( $request ) {
         $id                = (int) $request['id'];
         $args['people_id'] = $id;
+
+        // The function this route was written for was never added, so every
+        // call ended in a fatal error.
+        if ( ! function_exists( 'erp_acct_get_people_opening_balance' ) ) {
+            return new WP_Error( 'rest_not_implemented', __( 'This route is not available.', 'erp' ), [ 'status' => 501 ] );
+        }
 
         $transactions = erp_acct_get_people_opening_balance( $args );
 

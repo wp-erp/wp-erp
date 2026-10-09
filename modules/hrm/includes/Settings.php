@@ -28,6 +28,23 @@ class Settings extends Template {
     }
 
     /**
+     * Effective value of the "HR Admin Interface" setting when it was never saved.
+     *
+     * A site that never saved it has no option row, and the settings screen
+     * shows a select with no value as "Please select". Report the effective
+     * value instead, so the field reads "Let each user choose".
+     *
+     * @since 1.18.0
+     *
+     * @param mixed $default Default passed to get_option().
+     *
+     * @return string
+     */
+    public static function default_ui_engine( $default ) {
+        return ( false === $default || '' === $default ) ? 'auto' : $default;
+    }
+
+    /**
      * Get registered tabs
      *
      * @return array
@@ -151,6 +168,18 @@ class Settings extends Template {
             'type'  => 'checkbox',
             'id'    => 'erp_hrm_hide_pay_rate',
             'desc'  => __( 'By default hide pay rate on employee profile.', 'erp' ),
+        ];
+        $fields['miscellaneous'][] = [
+            'title'   => __( 'HR Admin Interface', 'erp' ),
+            'type'    => 'select',
+            'id'      => 'erp_hr_ui_engine',
+            'default' => 'auto',
+            'options' => [
+                'auto'  => __( 'Let each user choose', 'erp' ),
+                'react' => __( 'New interface for everyone', 'erp' ),
+                'vue'   => __( 'Classic interface for everyone', 'erp' ),
+            ],
+            'desc'    => __( 'Forcing an interface overrides every user\'s own choice. "Let each user choose" keeps the per-user switch, starting from the interface this site was installed with.', 'erp' ),
         ];
         $fields['miscellaneous'][] =[
             'type'  => 'sectionend',

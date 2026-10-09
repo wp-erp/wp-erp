@@ -3,6 +3,10 @@ on:
   push:
     tags:
       - "*"
+  # Manual run: builds Vue + React and uploads the zip as a run artifact. The
+  # WordPress.org deploy step below is skipped, so a dispatch (on a fork or on
+  # the org repo) can never publish a release.
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -26,18 +30,114 @@ jobs:
         run: |
           npm ci
           npm run build
+
+      # The HR React admin builds on Node 24 + pnpm (the legacy Vue build above
+      # runs on Node 12). Without this, dist-react is never produced and the
+      # WordPress.org zip ships with no React UI.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Setup Node.js 24 for React build
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Build HR React admin
+        env:
+          # pnpm/action-setup keeps its store under
+          # /home/runner/setup-pnpm/node_modules/.bin/store, and preparing the
+          # git-hosted @wedevs/plugin-ui builds it inside that store. wp-scripts'
+          # webpack config excludes every path containing node_modules from its
+          # TS loader, so the package fails to parse its own src/index.ts there.
+          # Reproduced locally: same commit builds clean in a normal path and
+          # fails identically under a node_modules path.
+          npm_config_store_dir: ${{ runner.temp }}/pnpm-store
+        run: npm run build:react
+
+      # Back to Node 12 for the POT step: makepot runs wpvuei18n, which belongs to
+      # the legacy Node 12 toolchain. (Its makepot:react half is wp-cli/PHP and is
+      # Node-agnostic, but it has to run after the React build so dist-react exists.)
+      - name: Restore Node.js 12.1.0 for tooling
+        uses: actions/setup-node@v4
+        with:
+          node-version: '12.1.0'
       - name: Generate POT
         run: npm run makepot
       - name: Composer install and build
         run: |
           composer install --no-dev --optimize-autoloader
+      # Release gate. Nothing gets zipped or deployed unless the React admin is
+      # actually built: every entry's .asset.php must have a real .js beside it.
+      # build-react.sh only checks that *some* non-empty .js exists, which would
+      # still pass if an entry silently dropped out.
+      - name: Verify the React admin is built
+        run: |
+          DIST=modules/hrm/assets/dist-react
+          test -d "$DIST" || { echo "ERROR: $DIST missing — the React build did not run"; exit 1; }
+
+          fail=0
+          for entry in employees hr-globals vendor; do
+            js="$DIST/$entry.js"
+            asset="$DIST/$entry.asset.php"
+            if [ ! -s "$js" ] || [ ! -s "$asset" ]; then
+              echo "ERROR: missing or empty $entry bundle ($js / $asset)"; fail=1; continue
+            fi
+            size=$(wc -c < "$js")
+            if [ "$size" -lt 1024 ]; then
+              echo "ERROR: $js is only ${size} bytes — a stub, not a build"; fail=1; continue
+            fi
+            echo "ok: $entry.js ${size} bytes"
+          done
+
+          echo "total dist-react js: $(ls "$DIST"/*.js 2>/dev/null | wc -l)"
+          [ "$fail" -eq 0 ] || { echo "React build not release-ready — refusing to package or deploy"; exit 1; }
+
       - name: Generate zip
         uses: 10up/action-wordpress-plugin-build-zip@stable
         with:
           retention-days: 5
         env:
           SLUG: erp # wp.org slug differs from repo name (wp-erp)
+      # Only a tag push on the org repo publishes. Fork runs and manual dispatches
+      # stop at the zip artifact above.
+      # Payload check. deploy.sh in 10up/action-wordpress-plugin-deploy@stable
+      # assembles what goes to .org with exactly this rsync when a .distignore is
+      # present (deploy.sh:120-124), so running it here proves the .org payload
+      # before the deploy step gets it — without SVN, credentials or a commit.
+      # (The action itself can't be dry-run: @stable has no dry-run input and
+      # checks SVN credentials before anything else.)
+      #
+      # This is the check that matters for React: dist-react is gitignored, and
+      # it only reaches .org because .distignore exists. Remove .distignore and
+      # deploy.sh falls back to `git archive HEAD`, which would ship a plugin
+      # with no React admin and no error.
+      # Runs on every event, dispatch and tag push alike, so a real release also
+      # has to prove its payload before anything reaches SVN.
+      - name: Verify the wp.org payload before deploy
+        run: |
+          TRUNK="${{ runner.temp }}/trunk"
+          mkdir -p "$TRUNK"
+          test -e .distignore || { echo "ERROR: no .distignore — deploy would fall back to git archive and drop dist-react"; exit 1; }
+          rsync -rc --exclude-from=.distignore "$GITHUB_WORKSPACE/" "$TRUNK/" --delete --delete-excluded
+
+          react=$(ls "$TRUNK"/modules/hrm/assets/dist-react/*.js 2>/dev/null | wc -l)
+          vue=$(ls "$TRUNK"/assets/js/*.js 2>/dev/null | wc -l)
+          echo "staged files : $(find "$TRUNK" -type f | wc -l)"
+          echo "staged size  : $(du -sh "$TRUNK" | cut -f1)"
+          echo "react bundles: $react"
+          echo "vue bundles  : $vue"
+
+          [ "$react" -gt 0 ] || { echo "ERROR: no React bundles staged for wp.org"; exit 1; }
+          [ "$vue"   -gt 0 ] || { echo "ERROR: no Vue bundles staged for wp.org"; exit 1; }
+
+          for p in node_modules src-react; do
+            n=$(find "$TRUNK" -path "*/$p/*" | wc -l)
+            echo "$p entries : $n"
+            [ "$n" -eq 0 ] || { echo "ERROR: $p leaked into the wp.org payload"; exit 1; }
+          done
+
       - name: WordPress Plugin Deploy
+        if: github.event_name == 'push' && github.repository == 'wp-erp/wp-erp'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
           dry-run: false

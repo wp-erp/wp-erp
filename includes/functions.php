@@ -715,6 +715,24 @@ function erp_extract_dates( $start_date, $end_date ) {
 		return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'erp' ) );
 	}
 
+	/**
+	 * Longest range, in days, that erp_extract_dates() lists day by day.
+	 *
+	 * A leave or remote work request carries its own dates, so without a
+	 * limit one request for a range thousands of years long tied up the
+	 * server walking it. 0 turns the limit off.
+	 *
+	 * @since 1.18.0
+	 *
+	 * @param int $max_days Default 731 (two years).
+	 */
+	$max_days = (int) apply_filters( 'erp_extract_dates_max_days', 731 );
+
+	if ( $max_days > 0 && $diff->days + 1 > $max_days ) {
+		/* translators: %d: number of days */
+		return new WP_Error( 'date-range-too-long', sprintf( __( 'The date range is too long. Please choose at most %d days.', 'erp' ), $max_days ) );
+	}
+
 	$interval = DateInterval::createFromDateString( '1 day' );
 	$period   = new DatePeriod( $start_date, $interval, $end_date );
 
@@ -2226,6 +2244,33 @@ function erp_is_module_active( $module_key ) {
 	return isset( $modules[ $module_key ] );
 }
 
+if ( ! function_exists( 'erp_csv_safe_cell' ) ) {
+	/**
+	 * Neutralise a CSV cell that a spreadsheet would run as a formula.
+	 *
+	 * A cell starting with =, +, -, @, a tab or a carriage return runs as a
+	 * formula when the file is opened in Excel or Sheets, so a name or comment
+	 * someone typed could run commands on the reader's machine. Such a cell is
+	 * prefixed with a quote so it shows as text. Plain numbers (-5, +880...)
+	 * and a lone placeholder like "-" are left alone.
+	 *
+	 * @since 1.18.0
+	 *
+	 * @param mixed $value Cell value.
+	 *
+	 * @return string
+	 */
+	function erp_csv_safe_cell( $value ) {
+		$value = (string) $value;
+
+		if ( strlen( $value ) > 1 && ! is_numeric( $value ) && in_array( $value[0], array( '=', '+', '-', '@', "\t", "\r" ), true ) ) {
+			$value = "'" . $value;
+		}
+
+		return $value;
+	}
+}
+
 /**
  * Make csv file from array and force download
  *
@@ -2251,27 +2296,27 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 		function ( $column ) {
 			$column = ucwords( str_replace( '_', ' ', $column ) );
 
-			return $column;
+			return erp_csv_safe_cell( $column );
 		},
 		$columns
 	);
 
-	fputcsv( $output, $columns );
+	fputcsv( $output, $columns, ',', '"', '\\' );
 
 	if ( $field_data ) {
 		foreach ( $items as $item ) {
 			$csv_row = array_map(
 				function ( $item_val ) {
 					if ( is_array( $item_val ) ) {
-						return implode( ', ', $item_val );
+						return erp_csv_safe_cell( implode( ', ', $item_val ) );
 					}
 
-					return $item_val;
+					return erp_csv_safe_cell( $item_val );
 				},
 				$item
 			);
 
-			fputcsv( $output, $csv_row );
+			fputcsv( $output, $csv_row, ',', '"', '\\' );
 		}
 	}
 
@@ -2279,7 +2324,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true, $type = '' )
 
         $sample_data = get_sample_employee_data($items[0]);
         foreach ( $sample_data as $item ) {
-            fputcsv( $output, $item );
+            fputcsv( $output, $item, ',', '"', '\\' );
         }
     }
 	exit();
@@ -4401,3 +4446,32 @@ function erp_load_headway_badge() {
     </script>
     <?php
 }
+
+/**
+ * Apply the legacy 2 MB upload cap to uploads the ERP React admin tags.
+ *
+ * The React admin uploads via the core `/wp/v2/media` endpoint and tags the
+ * request with an `X-ERP-Upload` header. Only those tagged requests are capped
+ * (so normal WP media is untouched), mirroring the old Vue/AjaxHandler 2 MB check.
+ *
+ * This is a consistency check for the React UI, not a security boundary: a
+ * request without the header (any user who can `upload_files` calling
+ * `/wp/v2/media` directly) gets the site's normal upload limits instead.
+ *
+ * @param array $file `$_FILES` entry being uploaded.
+ *
+ * @return array
+ */
+function erp_enforce_react_upload_size( $file ) {
+    if ( empty( $_SERVER['HTTP_X_ERP_UPLOAD'] ) ) {
+        return $file;
+    }
+
+    $limit = 2 * 1024 * 1024; // 2 MB — legacy value.
+    if ( isset( $file['size'] ) && (int) $file['size'] > $limit ) {
+        $file['error'] = __( 'File size cannot be greater than 2MB.', 'erp' );
+    }
+
+    return $file;
+}
+add_filter( 'wp_handle_upload_prefilter', 'erp_enforce_react_upload_size' );

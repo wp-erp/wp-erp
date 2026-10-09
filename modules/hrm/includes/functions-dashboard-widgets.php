@@ -112,7 +112,11 @@ function erp_hr_dashboard_widget_about_to_end() {
         $date2          = date_create( $end_date );
         $diff           = date_diff( $date1, $date2 );
 
-        if ( $diff->days > 0 && $diff->days < 21 ) {
+        // `days` is unsigned, so bounding it alone matched periods that ended
+        // up to 20 days *ago* as readily as ones ending in the next 20 days.
+        // `invert` is 1 when the end date is behind today — an "about to end"
+        // list must carry only what is still running.
+        if ( 0 === $diff->invert && $diff->days > 0 && $diff->days < 21 ) {
             $user->end_date = $end_date;
 
             if ( $user->type == 'contract' ) {

@@ -375,7 +375,6 @@ class ContactsController extends REST_Controller {
      * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        wp_send_json( $item );
         $data = [
             'id'            => (int) $item->id,
             'first_name'    => $item->first_name,

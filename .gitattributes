@@ -19,6 +19,14 @@
 *.yaml  text eol=lf
 *.html  text eol=lf
 
+# Generated build artifacts — kept tracked for the AppSero release, but collapsed
+# in `git diff` and marked generated in GitHub PR review so they stop polluting
+# code review. (React dist-react is gitignored in dev and force-added at release.)
+*.min.js                          -diff linguist-generated
+*.min.css                         -diff linguist-generated
+*-rtl.css                         -diff linguist-generated
+modules/hrm/assets/dist-react/**  -diff linguist-generated
+
 # Binary files: never touch.
 *.png   binary
 *.jpg   binary
