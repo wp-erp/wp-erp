@@ -182,7 +182,14 @@ export function validateEmployeeForm(
 	// Builder. It was rendered as an asterisk and never enforced, so the form
 	// submitted and the API accepted an employee with a required field empty —
 	// the legacy form blocks that save.
+	// The Work section is hidden from someone editing their own profile (the
+	// same condition as `requiredFields()`), so a required Work field there
+	// blocked every self-save with an error on a field they cannot see.
+	const workLocked = mode === 'edit' && ! ( ctx.isManager ?? true );
 	for ( const field of ctx.extraFields ?? [] ) {
+		if ( workLocked && 'work' === field.sectionKey ) {
+			continue;
+		}
 		if ( field.required && ! ( form[ field.key ] ?? '' ).trim() ) {
 			next[ field.key ] = __( 'This field is required.', 'erp' );
 		}
