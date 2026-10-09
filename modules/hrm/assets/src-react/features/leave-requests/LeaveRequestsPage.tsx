@@ -76,6 +76,8 @@ function LeaveRequestsInner(): JSX.Element {
 	// A department lead approves and rejects their team's requests; the list
 	// route already scopes them to the departments they lead.
 	const canModerate = useCan( 'erp_leave_moderate' );
+	// A lead may not moderate their own request (only `erp_leave_manage` may).
+	const currentUserId = useBoot().currentUserId;
 	// Which pro sub-modules are on — decides whether the Forwarded tab exists.
 	const activeModules = useBoot().modules ?? [];
 
@@ -634,6 +636,7 @@ function LeaveRequestsInner(): JSX.Element {
 						rows={ rows }
 						canManage={ canManage }
 						canModerate={ canModerate }
+						currentUserId={ currentUserId }
 						selected={ selected }
 						allOnPageSelected={ allOnPageSelected }
 						statusFilter={ status }

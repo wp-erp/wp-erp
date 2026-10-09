@@ -22,6 +22,7 @@ import type {
 import { COLUMN_IDS } from './constants';
 import { EmployeesRowActions } from './EmployeesRowActions';
 import { useColumnContext } from './useColumnContext';
+import { useEmployeeBulkActions } from './useEmployeeBulkActions';
 import { useEmployeeColumns } from './useEmployeeColumns';
 import { useEmployeesQuery } from './useEmployeesQuery';
 
@@ -74,6 +75,10 @@ export function EmployeesTable(): JSX.Element {
 	const visibleSelected = rowIds.filter( ( id ) => selectedSet.has( id ) );
 	const allSelected   = rowIds.length > 0 && visibleSelected.length === rowIds.length;
 	const someSelected  = visibleSelected.length > 0 && ! allSelected;
+	// Selection only feeds the bulk bar; a viewer with no bulk action (an
+	// employee) would tick rows that nothing can act on, so no checkboxes then.
+	const canSelect     = useEmployeeBulkActions( selectedIds ).length > 0;
+	const stickyName    = canSelect ? STICKY_LEFT_NAME : STICKY_LEFT_CHECK;
 
 	const toggleAll = ( next: boolean ): void => {
 		if ( next ) {
@@ -100,24 +105,26 @@ export function EmployeesTable(): JSX.Element {
 				<caption className="sr-only">{ __( 'Employee list', 'erp' ) }</caption>
 				<thead className="border-b border-border bg-card">
 					<tr className="h-10">
-						<th scope="col" className={ `w-10 px-4 ${ STICKY_HEAD } ${ STICKY_LEFT_CHECK }` }>
-							<span className="sr-only">{ __( 'Select all', 'erp' ) }</span>
-							<Checkbox
-								checked={ allSelected }
-								onCheckedChange={ ( next: boolean ) => toggleAll( next ) }
-								aria-label={
-									someSelected
-										? __( 'Some employees selected', 'erp' )
-										: __( 'Select all employees on this page', 'erp' )
-								}
-							/>
-						</th>
+						{ canSelect && (
+							<th scope="col" className={ `w-10 px-4 ${ STICKY_HEAD } ${ STICKY_LEFT_CHECK }` }>
+								<span className="sr-only">{ __( 'Select all', 'erp' ) }</span>
+								<Checkbox
+									checked={ allSelected }
+									onCheckedChange={ ( next: boolean ) => toggleAll( next ) }
+									aria-label={
+										someSelected
+											? __( 'Some employees selected', 'erp' )
+											: __( 'Select all employees on this page', 'erp' )
+									}
+								/>
+							</th>
+						) }
 						{ columns.map( ( col ) => (
 							<th
 								key={ col.id }
 								scope="col"
 								aria-sort={ ariaSortFor( col, currentOrderBy, currentOrder ) }
-								className={ `whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282] ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_HEAD } ${ STICKY_LEFT_NAME }` : '' }` }
+								className={ `whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282] ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_HEAD } ${ stickyName }` : '' }` }
 							>
 								{ col.sortable ? (
 									<SortButton
@@ -152,17 +159,19 @@ export function EmployeesTable(): JSX.Element {
 								data-selected={ isChecked ? 'true' : 'false' }
 								className="group h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40 data-[selected=true]:bg-primary/5"
 							>
-								<td className={ `w-10 px-4 align-middle ${ STICKY_BODY } ${ STICKY_LEFT_CHECK }` }>
-									<Checkbox
-										checked={ isChecked }
-										onCheckedChange={ ( next: boolean ) => toggleRow( row.id, next ) }
-										aria-label={ __( 'Select employee', 'erp' ) }
-									/>
-								</td>
+								{ canSelect && (
+									<td className={ `w-10 px-4 align-middle ${ STICKY_BODY } ${ STICKY_LEFT_CHECK }` }>
+										<Checkbox
+											checked={ isChecked }
+											onCheckedChange={ ( next: boolean ) => toggleRow( row.id, next ) }
+											aria-label={ __( 'Select employee', 'erp' ) }
+										/>
+									</td>
+								) }
 								{ columns.map( ( col ) => (
 									<td
 										key={ col.id }
-										className={ `px-2 align-middle text-sm text-foreground ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_BODY } ${ STICKY_LEFT_NAME }` : '' }` }
+										className={ `px-2 align-middle text-sm text-foreground ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_BODY } ${ stickyName }` : '' }` }
 									>
 										{ col.render( row, ctx ) }
 									</td>

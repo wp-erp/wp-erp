@@ -86,6 +86,9 @@ export function MiniCalendarWidget(): JSX.Element {
 	// Match the full /leave/calendar page: HR managers see EVERY employee's
 	// leave (team scope), regular employees only their own.
 	const canManageLeave = useCan( 'erp_leave_manage' );
+	// Filing for yourself needs an employee record (the `employee` role); the
+	// server refuses a leave request for anyone else, admins included.
+	const canTakeLeave = useCan( 'employee' );
 	const scope: 'me' | 'all' = canManageLeave ? 'all' : 'me';
 
 	// Self-service "Take a Leave" (mirrors the legacy dashboard button): shown to
@@ -160,14 +163,16 @@ export function MiniCalendarWidget(): JSX.Element {
 					</h2>
 					{ /* Take a Leave — self-service leave request; opens the form
 					   locked to the current user. Sits beside the title (left). */ }
-					<Button
-						type="button"
-						onClick={ () => setTakeLeave( 'new' ) }
-						className="h-10 gap-1.5 px-4"
-					>
-						<Plus size={ 16 } aria-hidden="true" />
-						{ __( 'Take a Leave', 'erp' ) }
-					</Button>
+					{ canTakeLeave ? (
+						<Button
+							type="button"
+							onClick={ () => setTakeLeave( 'new' ) }
+							className="h-10 gap-1.5 px-4"
+						>
+							<Plus size={ 16 } aria-hidden="true" />
+							{ __( 'Take a Leave', 'erp' ) }
+						</Button>
+					) : null }
 				</div>
 				<div className="flex items-center gap-2">
 					<Button

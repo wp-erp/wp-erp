@@ -16,6 +16,7 @@ import { applyFilters, didFilter } from '@wordpress/hooks';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useBoot } from '@/shared/hooks/useBoot';
 import { __ } from '@/shared/i18n';
 import {
 	storeName as employeesStoreName,
@@ -42,6 +43,7 @@ export function useEmployeeRowActions(
 	const { ctx, can } = useColumnContext();
 	const actions      = useEmployeeActions();
 	const navigate     = useNavigate();
+	const currentUserId = useBoot().currentUserId;
 	const filterVersion = didFilter( EMPLOYEES_HOOKS.ROW_ACTIONS );
 
 	const statusFilter = useSelect(
@@ -97,7 +99,9 @@ export function useEmployeeRowActions(
 				onSelect: ( emp: EmployeeListItem ) => {
 					navigate( `/employees/${ emp.user_id }/edit`, { viewTransition: true } );
 				},
-				capability: 'erp_edit_employee',
+				// The server's `erp_edit_employee` is per target: HR for anyone, an
+				// employee for their own record only.
+				isVisible: ( emp: EmployeeListItem ) => can( 'erp_edit_employee' ) || emp.user_id === currentUserId,
 			},
 			{
 				id:         'reactivate',
@@ -149,7 +153,7 @@ export function useEmployeeRowActions(
 				capability: 'erp_delete_employee',
 			},
 		];
-	}, [ actions, statusFilter, navigate ] );
+	}, [ actions, statusFilter, navigate, can, currentUserId ] );
 
 	return useMemo( () => {
 		if ( ! employee ) {

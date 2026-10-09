@@ -23,6 +23,7 @@ import type { EmployeeListItem, EmployeesState } from '@/stores/employees';
 
 import { StatusCell } from './columns/StatusCell';
 import { EmployeesRowActions } from './EmployeesRowActions';
+import { useEmployeeBulkActions } from './useEmployeeBulkActions';
 import { useEmployeesQuery } from './useEmployeesQuery';
 
 interface EmployeesStoreDispatch {
@@ -54,6 +55,8 @@ export function EmployeesGrid(): JSX.Element {
 	) as unknown as EmployeesStoreDispatch;
 
 	const selectedSet = new Set( selectedIds );
+	// Same rule as the table: no bulk action for this viewer, no checkbox.
+	const canSelect   = useEmployeeBulkActions( selectedIds ).length > 0;
 
 	const toggleRow = ( id: number, next: boolean ): void => {
 		if ( next ) {
@@ -77,11 +80,13 @@ export function EmployeesGrid(): JSX.Element {
 							{ /* Top row: selection + status (left), row actions (right). */ }
 							<div className="flex items-center justify-between gap-2">
 								<div className="flex items-center gap-2">
-									<Checkbox
-										checked={ isChecked }
-										onCheckedChange={ ( next: boolean ) => toggleRow( row.id, next ) }
-										aria-label={ sprintf( __( 'Select %s', 'erp' ), row.full_name || row.email ) }
-									/>
+									{ canSelect && (
+										<Checkbox
+											checked={ isChecked }
+											onCheckedChange={ ( next: boolean ) => toggleRow( row.id, next ) }
+											aria-label={ sprintf( __( 'Select %s', 'erp' ), row.full_name || row.email ) }
+										/>
+									) }
 									<StatusCell row={ row } />
 								</div>
 								<EmployeesRowActions employee={ row } />

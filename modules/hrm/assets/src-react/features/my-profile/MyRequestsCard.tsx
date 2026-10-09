@@ -30,6 +30,7 @@ import { StatusPill } from '@/shared/components/StatusPill';
 import { requestStatusTone } from '@/shared/components/status-tones';
 import { DateField } from '@/shared/DateField';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { useCan } from '@/shared/hooks/useCan';
 import { __ } from '@/shared/i18n';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
@@ -47,10 +48,13 @@ const today = (): string => todaySiteYmd();
 export function MyRequestActions(): JSX.Element | null {
 	const [ open, setOpen ] = useState< Kind >( null );
 	const { isPro } = useBoot();
+	// Both create routes file for the caller's own employee record, so a user
+	// without one (an administrator who is not an employee) is refused.
+	const isEmployee = useCan( 'employee' );
 
 	// Both flows are pro-only: without ERP Pro the create/reason routes do not
 	// exist, so offering the buttons only leads to a 404 toast.
-	if ( ! isPro ) {
+	if ( ! isPro || ! isEmployee ) {
 		return null;
 	}
 

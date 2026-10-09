@@ -66,7 +66,11 @@ export function EmployeeLeaveTab( { userId, targetCaps = {} }: { readonly userId
 	);
 	// Managers can file for anyone (primitive cap); an employee can file for
 	// their OWN profile (self meta-cap) even without the primitive cap.
-	const canCreate = useCan( 'erp_leave_create_request' ) || Boolean( targetCaps.erp_leave_create_request ) || userId === currentUserId;
+	// A user without an employee record (an administrator) has no leave to
+	// file on their own profile; the server refuses it.
+	const isEmployee = useCan( 'employee' );
+	const canCreate = ( useCan( 'erp_leave_create_request' ) || Boolean( targetCaps.erp_leave_create_request ) || userId === currentUserId )
+		&& ( userId !== currentUserId || isEmployee );
 	const [ showRequest, setShowRequest ] = useState( false );
 
 	if ( error ) {

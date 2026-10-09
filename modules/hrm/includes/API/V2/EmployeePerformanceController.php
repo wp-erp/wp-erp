@@ -312,14 +312,17 @@ class EmployeePerformanceController extends RestController {
 	}
 
 	/**
-	 * Reading reviews requires the create-review meta cap on the target.
+	 * Reading reviews requires the create-review meta cap on the target, or
+	 * being the target's department lead (who may already write them).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
 	 * @return bool
 	 */
 	public function permission_view( $request ): bool {
-		return $this->permission_cap( 'erp_create_review', (int) $request['user_id'] );
+		$user_id = (int) $request['user_id'];
+
+		return $this->permission_cap( 'erp_create_review', $user_id ) || $this->is_department_lead( $user_id );
 	}
 
 	/**

@@ -217,6 +217,16 @@ class MeController extends RestController {
 			$capabilities[ $cap ] = current_user_can( $cap, $employee_id );
 		}
 
+		// A department lead may write and delete reviews for their department
+		// (EmployeePerformanceController), never for themselves; the profile
+		// needs the same answer to show the Performance tab and its actions.
+		$current_id = get_current_user_id();
+		if ( $employee_id && $current_id !== $employee_id && function_exists( 'erp_hr_get_department_lead_by_user' )
+			&& $current_id === (int) erp_hr_get_department_lead_by_user( $employee_id ) ) {
+			$capabilities['erp_create_review'] = true;
+			$capabilities['erp_delete_review'] = true;
+		}
+
 		return rest_ensure_response(
 			[
 				'employee_id'  => $employee_id,

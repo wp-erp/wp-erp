@@ -94,6 +94,8 @@ interface LeaveRequestsTableProps {
 	readonly canManage: boolean;
 	/** Approve / reject (leave managers and department leads); delete and bulk stay with `canManage`. */
 	readonly canModerate?: boolean;
+	/** Signed-in user: without `canManage` the server refuses to moderate their own request. */
+	readonly currentUserId?: number;
 	readonly selected: ReadonlySet< number >;
 	readonly allOnPageSelected: boolean;
 	/** Active status tab — decides the "Approved By" vs "Rejected By" header. */
@@ -114,6 +116,7 @@ export function LeaveRequestsTable( {
 	rows,
 	canManage,
 	canModerate = canManage,
+	currentUserId = 0,
 	selected,
 	allOnPageSelected,
 	statusFilter,
@@ -359,7 +362,7 @@ export function LeaveRequestsTable( {
 								) }
 							</td>
 							<td className="px-4 align-middle">
-								{ canModerate ? (
+								{ canModerate && ( canManage || req.user_id !== currentUserId ) ? (
 									<div className="flex items-center justify-end gap-1">
 										{ /* 2 = Pending, 4 = Forwarded (Advanced Leave multilevel).
 										     Both are open requests still awaiting a decision, and the
