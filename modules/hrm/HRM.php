@@ -454,27 +454,20 @@ class HRM {
     /**
      * Load HRM rest controllers
      *
+     * The HR `erp/v1` routes moved to WP ERP Pro in 2.0.0: their clients are
+     * Pro features (the mobile app and the HR Frontend), and WP ERP's own
+     * screens use `erp/v2`. The filter stays for code that adds controllers
+     * through it.
+     *
      * @since 1.3.0
+     * @since 2.0.0 The HR v1 controllers are registered by WP ERP Pro.
      *
      * @param $controller
      *
      * @return array
      */
     public function load_hrm_rest_controllers( $controller ) {
-        $hrm_controller = [
-            '\WeDevs\ERP\HRM\API\EmployeesController',
-            '\WeDevs\ERP\HRM\API\DepartmentsController',
-            '\WeDevs\ERP\HRM\API\DesignationsController',
-            '\WeDevs\ERP\HRM\API\Birthdays_Controller',
-            '\WeDevs\ERP\HRM\API\HRMReportsController',
-            '\WeDevs\ERP\HRM\API\LeaveEntitlementsController',
-            '\WeDevs\ERP\HRM\API\LeaveHolidaysController',
-            '\WeDevs\ERP\HRM\API\LeavePoliciesController',
-            '\WeDevs\ERP\HRM\API\LeaveRequestsController',
-            '\WeDevs\ERP\HRM\API\AnnouncementsController',
-            '\WeDevs\ERP\HRM\API\CompanyController',
-        ];
-        $hrm_controller = apply_filters( 'erp_hrm_rest_api_controllers', $hrm_controller );
+        $hrm_controller = apply_filters( 'erp_hrm_rest_api_controllers', [] );
 
         return array_merge( $controller, $hrm_controller );
     }
