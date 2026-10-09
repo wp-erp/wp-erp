@@ -3146,6 +3146,11 @@ function erp_hr_remove_leave_policy_name( $id ) {
 
     $leave = Leave::find( $id );
 
+    // Already gone (deleted in another tab, or a stale id in a bulk delete).
+    if ( ! $leave ) {
+        return new WP_Error( 'invalid-leave-type', __( 'No leave type found with the given id.', 'erp' ) );
+    }
+
     erp_hrm_purge_cache( [ 'list' => 'leave_policy_name' ] );
 
     $leave->delete();
@@ -3831,6 +3836,39 @@ function erp_hr_leave_overlapping_request_id( $user_id, $start_date, $end_date, 
             absint( $exclude_id )
         )
     );
+}
+
+/**
+ * Take a per-employee lock around "check for an overlapping request, then
+ * insert". Without it two submissions sent at the same moment both pass the
+ * overlap check and both get filed. MySQL named locks are per connection and
+ * are released when the request ends, so a crash cannot leave one behind.
+ *
+ * @since 2.0.0
+ *
+ * @param int $user_id Employee user id.
+ *
+ * @return bool True when the lock was taken within 5 seconds.
+ */
+function erp_hr_leave_lock_requests( $user_id ) {
+    global $wpdb;
+
+    return '1' === (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 5)', $wpdb->prefix . 'erp_hr_leave_' . absint( $user_id ) ) );
+}
+
+/**
+ * Release the lock taken by erp_hr_leave_lock_requests().
+ *
+ * @since 2.0.0
+ *
+ * @param int $user_id Employee user id.
+ *
+ * @return void
+ */
+function erp_hr_leave_unlock_requests( $user_id ) {
+    global $wpdb;
+
+    $wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $wpdb->prefix . 'erp_hr_leave_' . absint( $user_id ) ) );
 }
 
 /**

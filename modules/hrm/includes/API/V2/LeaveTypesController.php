@@ -301,7 +301,7 @@ class LeaveTypesController extends RestController {
 		if ( 0 === $deleted ) {
 			return new \WP_Error(
 				'rest_leave_type_none_deleted',
-				__( 'No items were deleted as they are associated with policy', 'erp' ),
+				__( 'No items were deleted: they are linked to a leave policy or no longer exist.', 'erp' ),
 				[ 'status' => 409 ]
 			);
 		}

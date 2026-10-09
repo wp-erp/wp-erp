@@ -341,6 +341,35 @@ class EmployeeLeaveController extends RestController {
 		$start_date = $start_date ? $start_date . ' 00:00:00' : date_i18n( 'Y-m-d 00:00:00' );
 		$end_date   = $end_date ? $end_date . ' 23:59:59' : date_i18n( 'Y-m-d 23:59:59' );
 
+		// The overlap check and the insert run under one per-employee lock, so a
+		// double submit cannot file the same days twice.
+		if ( ! erp_hr_leave_lock_requests( $user_id ) ) {
+			return new \WP_Error( 'rest_leave_busy', __( 'Another leave request for this employee is being saved. Please try again.', 'erp' ), [ 'status' => 409 ] );
+		}
+
+		try {
+			return $this->insert_request( $request, $user_id, $leave_policy, $start_date, $end_date, $reason );
+		} finally {
+			erp_hr_leave_unlock_requests( $user_id );
+		}
+	}
+
+	/**
+	 * Overlap check + insert for create_request(), run while the employee's
+	 * leave lock is held.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_REST_Request $request      Request.
+	 * @param int             $user_id      Employee user id.
+	 * @param int             $leave_policy Entitlement id.
+	 * @param string          $start_date   Site-local `Y-m-d 00:00:00`.
+	 * @param string          $end_date     Site-local `Y-m-d 23:59:59`.
+	 * @param string          $reason       Sanitized reason.
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	private function insert_request( $request, int $user_id, int $leave_policy, string $start_date, string $end_date, string $reason ) {
 		$overlap = $this->overlapping_request( $user_id, $start_date, $end_date );
 		if ( $overlap ) {
 			return $overlap;
