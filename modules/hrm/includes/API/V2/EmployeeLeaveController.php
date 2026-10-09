@@ -237,15 +237,7 @@ class EmployeeLeaveController extends RestController {
 		// The legacy approve refuses requests in a leave year that ended before
 		// the current one ("You can not modify past leave year requests"), so a
 		// request filed there sat pending for good. Refuse it here too.
-		$current_f_year = erp_hr_get_financial_year_from_date();
-		if ( $current_f_year && (int) $entitlement->financial_year->start_date < (int) $current_f_year->start_date ) {
-			return new \WP_Error( 'rest_past_leave_year', __( 'Error: You can not modify past leave year requests.', 'erp' ), [ 'status' => 400 ] );
-		}
-
-		// With no leave year covering today the check above cannot run, but
-		// approving still fails ("No current leave year found"), so a request
-		// in a year that has already ended would wait for good.
-		if ( ! $current_f_year && (int) $entitlement->financial_year->end_date < erp_current_datetime()->setTime( 0, 0 )->getTimestamp() ) {
+		if ( erp_hr_leave_is_past_year( $entitlement ) ) {
 			return new \WP_Error( 'rest_past_leave_year', __( 'Error: You can not modify past leave year requests.', 'erp' ), [ 'status' => 400 ] );
 		}
 
@@ -285,25 +277,7 @@ class EmployeeLeaveController extends RestController {
 	 * @return \WP_Error|null
 	 */
 	private function overlapping_request( int $user_id, string $start_date, string $end_date ) {
-		global $wpdb;
-
-		$tz    = wp_timezone();
-		$start = ( new \DateTimeImmutable( $start_date, $tz ) )->getTimestamp();
-		$end   = ( new \DateTimeImmutable( $end_date, $tz ) )->getTimestamp();
-
-		$found = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests
-				WHERE user_id = %d AND last_status IN (1, 2, 4)
-				AND start_date <= %d AND end_date >= %d
-				LIMIT 1",
-				$user_id,
-				$end,
-				$start
-			)
-		);
-
-		if ( ! $found ) {
+		if ( ! erp_hr_leave_overlapping_request_id( $user_id, substr( $start_date, 0, 10 ), substr( $end_date, 0, 10 ) ) ) {
 			return null;
 		}
 

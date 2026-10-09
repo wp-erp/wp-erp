@@ -1231,6 +1231,12 @@ function erp_hr_leave_insert_request( $args = [] ) {
         return new WP_Error( 'no-entitlement', esc_attr__( 'No entitlement found with given id.', 'erp' ) );
     }
 
+    // Leave is taken from the employee's own entitlement: any entitlement id
+    // was accepted, so a colleague's balance could be spent.
+    if ( (int) $entitlement->user_id !== (int) $args['user_id'] ) {
+        return new WP_Error( 'invalid-entitlement', esc_attr__( 'This leave policy is not assigned to the employee.', 'erp' ) );
+    }
+
     // validate start and end date
     if ( $args['start_date'] > $args['end_date'] ) {
         return new WP_Error( 'invalid-dates', esc_attr__( 'Invalid date range.', 'erp' ) );
@@ -3782,3 +3788,68 @@ function erp_hr_leave_request_bulk_action( $req_ids, $action ) {
 
     return $processed;
 }
+
+/**
+ * The id of a pending, forwarded or approved request of the employee that
+ * overlaps the given days, or 0.
+ *
+ * The insert's own overlap check reads only the per-day rows written on
+ * approval, so the same dates could be filed again while the first request
+ * waited. Used by the v1 and v2 REST routes.
+ *
+ * @since 2.0.0
+ *
+ * @param int    $user_id    Employee user id.
+ * @param string $start_date Site-local `Y-m-d`.
+ * @param string $end_date   Site-local `Y-m-d`.
+ * @param int    $exclude_id Request to leave out, the one being edited.
+ *
+ * @return int
+ */
+function erp_hr_leave_overlapping_request_id( $user_id, $start_date, $end_date, $exclude_id = 0 ) {
+    global $wpdb;
+
+    $tz    = wp_timezone();
+    $start = ( new DateTimeImmutable( $start_date . ' 00:00:00', $tz ) )->getTimestamp();
+    $end   = ( new DateTimeImmutable( $end_date . ' 23:59:59', $tz ) )->getTimestamp();
+
+    return (int) $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM {$wpdb->prefix}erp_hr_leave_requests
+            WHERE user_id = %d AND last_status IN (1, 2, 4)
+            AND start_date <= %d AND end_date >= %d AND id <> %d
+            LIMIT 1",
+            absint( $user_id ),
+            $end,
+            $start,
+            absint( $exclude_id )
+        )
+    );
+}
+
+/**
+ * Whether an entitlement belongs to a leave year that can no longer take
+ * requests: one before the current year, or, with no current year set, one
+ * that has already ended. Approving such a request fails, so it would wait
+ * for good. Used by the v1 and v2 REST routes.
+ *
+ * @since 2.0.0
+ *
+ * @param object $entitlement Leave entitlement (with `financial_year`).
+ *
+ * @return bool
+ */
+function erp_hr_leave_is_past_year( $entitlement ) {
+    if ( empty( $entitlement->financial_year ) ) {
+        return false;
+    }
+
+    $current = erp_hr_get_financial_year_from_date();
+
+    if ( $current ) {
+        return (int) $entitlement->financial_year->start_date < (int) $current->start_date;
+    }
+
+    return (int) $entitlement->financial_year->end_date < erp_current_datetime()->setTime( 0, 0 )->getTimestamp();
+}
+
