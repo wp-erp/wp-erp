@@ -60,7 +60,6 @@ class Assets {
         $site_url          = site_url();
         $logout_url        = esc_url( wp_logout_url() );
         $acct_url          = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
-        $acct_tutorial_url = admin_url( 'admin.php' ) . '?page=erp-accounting&tutorial=true#/';
 
         foreach ( $scripts as $handle => $script ) {
             $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
@@ -114,7 +113,7 @@ class Assets {
             'erp_assets'          => WPERP_ASSETS,
             'erp_acct_menus'      => $menus,
             'erp_acct_url'        => $acct_url,
-            'erp_acct_tut_url'    => $acct_tutorial_url,
+            'erp_acct_tut_url'    => 'https://www.youtube.com/embed/M_HNHC9lBis?list=PLcxzJmmBmXv59j48tvCmAW-fYhQg6Blxe',
             'admin_url'           => admin_url( 'admin.php' ),
             'decimal_separator'   => $erp_acct_dec_separator,
             'thousand_separator'  => $erp_acct_ths_separator,
