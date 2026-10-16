@@ -4,6 +4,9 @@
 /.wordpress-org
 /zipfile
 /node_modules
+# Unanchored, so it also drops the React app's modules/hrm/node_modules —
+# which is ~276MB in the built zip when only /node_modules is listed.
+node_modules
 /tests
 /vendor/bin
 /vendor/google/apiclient/examples
@@ -18,6 +21,17 @@
 /modules/accounting/assets/src
 /modules/crm/assets/less
 /modules/hrm/assets/src
+# HR React: keep the built dist-react, drop the TS sources, sourcemaps + tooling.
+/modules/hrm/assets/src-react
+/modules/hrm/assets/dist-react/*.map
+/modules/hrm/webpack.react.config.js
+/modules/hrm/postcss.config.js
+/modules/hrm/tsconfig.json
+/modules/hrm/package.json
+/modules/hrm/package-lock.json
+/modules/hrm/pnpm-lock.yaml
+/modules/hrm/.npmrc
+/modules/hrm/.nvmrc
 
 # Dev/config files
 .distignore

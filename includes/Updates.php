@@ -63,6 +63,7 @@ class Updates {
         '1.11.0'  => 'updates/update-1.11.0.php',
         '1.12.6'  => 'updates/update-1.12.6.php',
         '1.12.7'  => 'updates/update-1.12.7.php',
+        '1.18.1'  => 'updates/update-1.18.1.php',
     ];
 
     /**
@@ -187,7 +188,10 @@ class Updates {
 
         foreach ( self::$updates as $version => $path ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
-                include $path;
+                // The map says `updates/`, the folder is `Updates/`. A relative
+                // include only resolved that on case-insensitive filesystems, so
+                // on Linux every updater was skipped and the version stamped anyway.
+                include __DIR__ . '/Updates/' . basename( $path );
                 update_option( 'wp_erp_version', $version );
             }
         }

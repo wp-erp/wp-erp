@@ -39,9 +39,7 @@ class EmployeesController extends \WeDevs\ERP\API\REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_employees' ],
                     'args'                => $this->get_collection_params(),
-                    'permission_callback' => function ( $request ) {
-                        return current_user_can( 'erp_view_list' );
-                    },
+                    'permission_callback' => [ $this, 'permission_manage' ],
                 ],
                 'schema' => [ $this, 'get_public_item_schema' ],
             ]
@@ -57,9 +55,7 @@ class EmployeesController extends \WeDevs\ERP\API\REST_Controller {
                     'args'                => [
                         'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                     ],
-                    'permission_callback' => function ( $request ) {
-                        return current_user_can( 'erp_list_employee' );
-                    },
+                    'permission_callback' => [ $this, 'permission_manage' ],
                 ],
                 'schema' => [ $this, 'get_public_item_schema' ],
             ]
@@ -73,12 +69,24 @@ class EmployeesController extends \WeDevs\ERP\API\REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_transactions' ],
                     'args'                => $this->get_collection_params(),
-                    'permission_callback' => function ( $request ) {
-                        return current_user_can( 'erp_view_list' );
-                    },
+                    'permission_callback' => [ $this, 'permission_manage' ],
                 ],
             ]
         );
+    }
+
+    /**
+     * Who may use these routes: accounting managers, as the Accounting >
+     * People > Employees screen they serve. They return each employee's
+     * full HR record and their transactions, which every employee could
+     * read through `erp_view_list` before.
+     *
+     * @since 2.0.0
+     *
+     * @return bool
+     */
+    public function permission_manage() {
+        return current_user_can( 'erp_ac_manager' );
     }
 
     /**

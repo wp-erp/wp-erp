@@ -1,6 +1,8 @@
 <?php
-$department_id  = isset( $_GET['department'] ) && absint( wp_unslash( $_GET['department'] ) ) != '-1' ? absint( wp_unslash( $_GET['department'] ) ) : 0;
-$designation_id = isset( $_GET['designation'] ) && absint( wp_unslash( $_GET['designation'] ) ) != '-1' ? absint( wp_unslash( $_GET['designation'] ) ) : 0;
+// The "- Select -" option posts -1. absint() turned that into id 1, so an unset
+// filter became a real one; anything that is not a positive id means no filter.
+$department_id  = isset( $_GET['department'] ) ? max( 0, (int) wp_unslash( $_GET['department'] ) ) : 0;
+$designation_id = isset( $_GET['designation'] ) ? max( 0, (int) wp_unslash( $_GET['designation'] ) ) : 0;
 
 $args = [
     'status'            => 1,

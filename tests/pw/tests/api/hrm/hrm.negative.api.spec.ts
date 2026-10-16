@@ -68,26 +68,26 @@ test.describe('HRM REST — validation rejections (admin)', () => {
         expect(status, `${label}: returns an error status (4xx, or 5xx per the documented bug)`).toBeGreaterThanOrEqual(400);
     };
 
-    test('HRM-NC-01 employee missing first name', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-01 employee missing first name', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload();
         delete payload.first_name;
         const [resp, body] = await api.post(endPoints.employees, { data: payload }, false);
         expectRejected(resp.status(), body, 'missing first name');
     });
 
-    test('HRM-NC-02 employee missing last name', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-02 employee missing last name', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload();
         delete payload.last_name;
         const [resp, body] = await api.post(endPoints.employees, { data: payload }, false);
         expectRejected(resp.status(), body, 'missing last name');
     });
 
-    test('HRM-NC-03 employee invalid email', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-03 employee invalid email', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(endPoints.employees, { data: employeePayload({ email: 'not-an-email' }) }, false);
         expectRejected(resp.status(), body, 'invalid email');
     });
 
-    test('HRM-NC-04 duplicate employee email', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-04 duplicate employee email', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload();
         const [firstResp, firstBody] = await api.post(endPoints.employees, { data: payload }, false);
         test.skip(!firstResp.ok() || !idOf(firstBody), 'baseline employee create unavailable');
@@ -98,44 +98,44 @@ test.describe('HRM REST — validation rejections (admin)', () => {
         expectRejected(resp.status(), body, 'duplicate email');
     });
 
-    test('HRM-NC-06 invalid employee type', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-06 invalid employee type', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(endPoints.employees, { data: employeePayload({ type: 'ceo' }) }, false);
         expectRejected(resp.status(), body, 'invalid type');
     });
 
-    test('HRM-NC-07 invalid status', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-07 invalid status', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(endPoints.employees, { data: employeePayload({ status: 'zombie' }) }, false);
         expectRejected(resp.status(), body, 'invalid status');
     });
 
-    test('HRM-NC-08 invalid department id', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-08 invalid department id', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(endPoints.employees, { data: employeePayload({ department: 99999999 }) }, false);
         expectRejected(resp.status(), body, 'invalid department');
     });
 
-    test('HRM-NC-09 invalid designation id', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-09 invalid designation id', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(endPoints.employees, { data: employeePayload({ designation: 99999999 }) }, false);
         expectRejected(resp.status(), body, 'invalid designation');
     });
 
-    test('HRM-NC-10 invalid hiring date format', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-10 invalid hiring date format', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(endPoints.employees, { data: employeePayload({ hiring_date: '31-31-2024' }) }, false);
         expectRejected(resp.status(), body, 'invalid hiring date');
     });
 
-    test('HRM-NC-11 department empty title is accepted (validation gap)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-11 department empty title is accepted (validation gap)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.post(endPoints.departments, { data: { title: '' } }, false);
         // FINDING (BUGS.md): an empty department title is accepted (no required-title guard).
         expect([200, 201], 'empty department title is (incorrectly) accepted').toContain(resp.status());
     });
 
-    test('HRM-NC-12 designation empty title is accepted (validation gap)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-12 designation empty title is accepted (validation gap)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.post(endPoints.designations, { data: { title: '' } }, false);
         // FINDING (BUGS.md): an empty designation title is accepted (no required-title guard).
         expect([200, 201], 'empty designation title is (incorrectly) accepted').toContain(resp.status());
     });
 
-    test('HRM-NC-13 deleting a department with employees is allowed (validation gap)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-13 deleting a department with employees is allowed (validation gap)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const dept = data.hrm.department();
         const [, deptId] = await api.create(endPoints.departments, { title: dept.title }, false);
         test.skip(!deptId, 'needs a department');
@@ -150,12 +150,12 @@ test.describe('HRM REST — validation rejections (admin)', () => {
         expect(delResp.status(), 'delete is allowed, not blocked').toBeLessThan(400);
     });
 
-    test('HRM-NC-15 get non-existent department → 404', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-15 get non-existent department → 404', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.get(endPoints.department(99999999), undefined, false);
         expect(resp.status(), 'unknown department id is a clean 404').toBe(404);
     });
 
-    test('HRM-NC-16 headcount invalid type param → 400', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-16 headcount invalid type param → 400', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.get(`${endPoints.hrReports}/head-counts?type=bogus`, undefined, false);
         // Controller returns rest_performance_invalid_type (400). Allow the 4xx band.
         expect(resp.status(), 'invalid report type must not 500').toBeLessThan(500);
@@ -176,12 +176,12 @@ test.describe('HRM REST — unauthorized (no cookie / no nonce)', () => {
         await anon.dispose();
     });
 
-    test('HRM-NC-18 unauthorized list employees → 401', { tag: ['@lite', '@hrm'] }, async () => {
+    test('HRM-NC-18 unauthorized list employees → 401', { tag: ['@pro', '@hrm'] }, async () => {
         const res = await anon.get(endPoints.employees, { failOnStatusCode: false });
         expect(res.status(), 'no-auth employee list rejected').toBe(401);
     });
 
-    test('HRM-NC-19 unauthorized create department → 401', { tag: ['@lite', '@hrm'] }, async () => {
+    test('HRM-NC-19 unauthorized create department → 401', { tag: ['@pro', '@hrm'] }, async () => {
         const res = await anon.post(endPoints.departments, {
             data: { title: data.hrm.department().title },
             headers: { 'Content-Type': 'application/json' },
@@ -190,12 +190,12 @@ test.describe('HRM REST — unauthorized (no cookie / no nonce)', () => {
         expect(res.status(), 'no-auth department create rejected').toBe(401);
     });
 
-    test('HRM-NC-20 unauthorized reports → 401', { tag: ['@lite', '@hrm'] }, async () => {
+    test('HRM-NC-20 unauthorized reports → 401', { tag: ['@pro', '@hrm'] }, async () => {
         const res = await anon.get(`${endPoints.hrReports}/head-counts`, { failOnStatusCode: false });
         expect(res.status(), 'no-auth reports rejected').toBe(401);
     });
 
-    test('HRM-NC-32 unauthorized announcements /my requires login → 401', { tag: ['@lite', '@hrm'] }, async () => {
+    test('HRM-NC-32 unauthorized announcements /my requires login → 401', { tag: ['@pro', '@hrm'] }, async () => {
         const res = await anon.get(`${endPoints.announcements}/my`, { failOnStatusCode: false });
         expect(res.status(), 'no-auth /my rejected').toBe(401);
     });
@@ -210,12 +210,12 @@ test.describe('HRM REST — plain employee permission boundary', () => {
         expect(status, `${label}: must be a client-side denial, not a 500`).toBeLessThan(500);
     };
 
-    test('HRM-NC-21 plain employee cannot create employee', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-21 plain employee cannot create employee', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         const [resp] = await empApi.post(endPoints.employees, { data: employeePayload() }, false);
         expectDenied(resp.status(), 'employee create');
     });
 
-    test('HRM-NC-22 plain employee cannot delete employee', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-22 plain employee cannot delete employee', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         // Seed a victim as admin so we have a real id to attempt to delete.
         const [, victimBody] = await api.post(endPoints.employees, { data: employeePayload() }, false);
         const victimId = idOf(victimBody);
@@ -224,33 +224,33 @@ test.describe('HRM REST — plain employee permission boundary', () => {
         expectDenied(resp.status(), 'employee delete');
     });
 
-    test('HRM-NC-23 plain employee cannot create department', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-23 plain employee cannot create department', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         const [resp] = await empApi.post(endPoints.departments, { data: { title: data.hrm.department().title } }, false);
         expectDenied(resp.status(), 'department create');
     });
 
-    test('HRM-NC-24 plain employee cannot read HR reports', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-24 plain employee cannot read HR reports', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         const [resp] = await empApi.get(`${endPoints.hrReports}/age-profiles`, undefined, false);
         expectDenied(resp.status(), 'reports read');
     });
 
-    test('HRM-NC-25 plain employee cannot create designation', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-25 plain employee cannot create designation', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         const [resp] = await empApi.post(endPoints.designations, { data: { title: data.hrm.designation().title } }, false);
         expectDenied(resp.status(), 'designation create');
     });
 
-    test('HRM-NC-26 plain employee cannot manage leave policy', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-26 plain employee cannot manage leave policy', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         const policy = data.hrm.leavePolicy();
         const [resp] = await empApi.post(endPoints.leavePolicies, { data: { name: policy.name, days: policy.days } }, false);
         expectDenied(resp.status(), 'leave policy create');
     });
 
-    test('HRM-NC-27 plain employee cannot list admin announcements', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-27 plain employee cannot list admin announcements', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         const [resp] = await empApi.get(endPoints.announcements, undefined, false);
         expectDenied(resp.status(), 'announcements admin list');
     });
 
-    test('HRM-NC-28 plain employee CAN view own profile', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-28 plain employee CAN view own profile', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         // Resolve the logged-in employee's own user id.
         const [meResp, me] = await empApi.get(endPoints.currentUser, undefined, false);
         test.skip(!meResp.ok(), 'could not resolve current user');
@@ -263,7 +263,7 @@ test.describe('HRM REST — plain employee permission boundary', () => {
         expect(resp.status(), 'self profile read must not 500').toBeLessThan(500);
     });
 
-    test('HRM-NC-29 plain employee CANNOT view another profile (leak check)', { tag: ['@lite', '@hrm', '@employee'] }, async () => {
+    test('HRM-NC-29 plain employee CANNOT view another profile (leak check)', { tag: ['@pro', '@hrm', '@employee'] }, async () => {
         // Seed a different employee as admin.
         const [, otherBody] = await api.post(endPoints.employees, { data: employeePayload() }, false);
         const otherId = idOf(otherBody);
@@ -286,7 +286,7 @@ test.describe('HRM REST — plain employee permission boundary', () => {
 test.describe('HRM REST — where bugs hide (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('HRM-BUG-01 GET non-existent employee response shape', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-01 GET non-existent employee response shape', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: non-existent employee returns blank record instead of 404.
         // KNOWN VALIDATION GAP: the model path may answer 200 with an EMPTY record
         // (user_id='') rather than a clean 404. The REST get_employee callback may
@@ -304,7 +304,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-02 employee accepted with no department', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-02 employee accepted with no department', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: employee accepted with no department/designation (HR analogue
         // of the invoice no-customer gap). department omitted entirely → still 201.
         const payload = employeePayload();
@@ -319,7 +319,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-03 duplicate department name accepted via REST', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-03 duplicate department name accepted via REST', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: duplicate department name accepted via REST (free
         // erp_hr_create_department only checks for an empty title — no dedupe).
         const dept = data.hrm.department();
@@ -336,7 +336,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-04 self/circular parent department accepted', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-04 self/circular parent department accepted', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: circular/self department parent accepted (no guard in free).
         const a = data.hrm.department();
         const [, aId] = await api.create(endPoints.departments, { title: a.title }, false);
@@ -352,14 +352,14 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-05 employee end_date before hiring_date accepted', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-05 employee end_date before hiring_date accepted', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: end_date before hiring_date accepted (no cross-field check).
         const payload = employeePayload({ hiring_date: '2024-06-01', end_date: '2024-01-01' });
         const [resp] = await api.post(endPoints.employees, { data: payload }, false);
         expect(resp.status(), 'reversed-date employee must not 500').toBeLessThan(500);
     });
 
-    test('HRM-BUG-06 negative pay rate (verify reject vs store)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-06 negative pay rate (verify reject vs store)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: negative pay rate (verify reject vs store).
         const payload = employeePayload({ pay_rate: -500 });
         const [resp, body] = await api.post(endPoints.employees, { data: payload }, false);
@@ -373,7 +373,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-07 fractional leave-day truncation in decimal(5,1)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-07 fractional leave-day truncation in decimal(5,1)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: sub-0.1 leave fractions truncated/rounded (day_in/days are
         // decimal(5,1)). Create a 0.25-day policy and read back the stored value.
         const policy = data.hrm.leavePolicy();
@@ -396,7 +396,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-08 re-running policy assignment does not double-entitle', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-08 re-running policy assignment does not double-entitle', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: duplicate entitlement on re-assignment. Read the
         // entitlements table for any leave_policies rows and confirm uniqueness on
         // (user_id, leave_id, f_year). This is a DB oracle; if no rows exist (no FY /
@@ -413,7 +413,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         expect(rows.length, 'no duplicate leave_policies entitlement per (user, leave, FY)').toBe(0);
     });
 
-    test('HRM-BUG-15 whitespace / HTML-injection in titles', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-15 whitespace / HTML-injection in titles', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: whitespace title accepted / verify title is escaped on output.
         // Whitespace path.
         const [wsResp, wsBody] = await api.post(endPoints.departments, { data: { title: '   ' } }, false);
@@ -436,7 +436,7 @@ test.describe('HRM REST — where bugs hide (admin)', () => {
         }
     });
 
-    test('HRM-BUG-17 REST bypasses UI 30-char first_name limit', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-BUG-17 REST bypasses UI 30-char first_name limit', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: REST bypasses UI 30-char first_name limit. UI maxlength is 30;
         // REST has no length guard, so a 60-char name is likely stored in full.
         const name60 = 'Z'.repeat(60);

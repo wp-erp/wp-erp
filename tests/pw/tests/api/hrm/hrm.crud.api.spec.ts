@@ -68,7 +68,7 @@ test.afterAll(async () => {
 test.describe('HRM REST — employees (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('HRM-HP-01 create full employee via REST', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-01 create full employee via REST', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload({
             pay_rate: 50000,
             pay_type: 'monthly',
@@ -89,7 +89,7 @@ test.describe('HRM REST — employees (admin)', () => {
         expect(read?.email ?? read?.user_email).toBe(payload.email);
     });
 
-    test('HRM-HP-02 create minimal employee (required only)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-02 create minimal employee (required only)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload({ hiring_date: '2024-06-01' });
         const [resp, body] = await api.post(endPoints.employees, { data: payload });
         expect(resp.status()).toBe(201);
@@ -102,7 +102,7 @@ test.describe('HRM REST — employees (admin)', () => {
         expect(String(read?.status ?? 'active')).toContain('active');
     });
 
-    test('HRM-HP-03 list employees defaults to active + X-WP-Total header', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-03 list employees defaults to active + X-WP-Total header', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(endPoints.employees);
         expect(resp.status()).toBe(200);
         expect(Array.isArray(body)).toBe(true);
@@ -112,7 +112,7 @@ test.describe('HRM REST — employees (admin)', () => {
         expect(total, 'X-WP-Total header present on the employees list').toBeDefined();
     });
 
-    test('HRM-HP-04 filter employees by department', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-04 filter employees by department', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         test.skip(!seedDeptId, 'needs a seeded department id');
         // Create an employee in the known department.
         const payload = employeePayload({ department: Number(seedDeptId) });
@@ -130,7 +130,7 @@ test.describe('HRM REST — employees (admin)', () => {
         }
     });
 
-    test('HRM-HP-05 get single employee by id', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-05 get single employee by id', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [, body] = await api.post(endPoints.employees, { data: employeePayload() });
         const userId = idOf(body);
         expect(userId).not.toBe('');
@@ -141,7 +141,7 @@ test.describe('HRM REST — employees (admin)', () => {
         expect(String(read?.user_id ?? read?.id ?? '')).toBe(userId);
     });
 
-    test('HRM-HP-06 update employee (edit name + pay)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-06 update employee (edit name + pay)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [, body] = await api.post(endPoints.employees, { data: employeePayload() });
         const userId = idOf(body);
         expect(userId).not.toBe('');
@@ -156,7 +156,7 @@ test.describe('HRM REST — employees (admin)', () => {
         expect(String(read?.first_name ?? '')).toBe('Renamed');
     });
 
-    test('HRM-HP-07 change employee status to inactive removes it from default list', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-07 change employee status to inactive removes it from default list', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [, body] = await api.post(endPoints.employees, { data: employeePayload() });
         const userId = idOf(body);
         expect(userId).not.toBe('');
@@ -180,7 +180,7 @@ test.describe('HRM REST — employees (admin)', () => {
         expect(inInactiveList, 'inactive employee appears under ?status=inactive').toBe(true);
     });
 
-    test('HRM-HP-08 soft-delete employee excludes it from default list', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-08 soft-delete employee excludes it from default list', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [, body] = await api.post(endPoints.employees, { data: employeePayload() });
         const userId = idOf(body);
         expect(userId).not.toBe('');
@@ -202,7 +202,7 @@ test.describe('HRM REST — employees (admin)', () => {
 test.describe('HRM REST — departments (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('HRM-HP-11 create department via REST', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-11 create department via REST', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const dept = data.hrm.department();
         const [created, id] = await api.create(endPoints.departments, { title: dept.title, description: dept.description });
         expect(id, 'create must return an id').not.toBe('');
@@ -213,7 +213,7 @@ test.describe('HRM REST — departments (admin)', () => {
         expect(read?.title).toBe(dept.title);
     });
 
-    test('HRM-HP-13 create child department with a parent', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-13 create child department with a parent', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         test.skip(!seedDeptId, 'needs a parent department');
         const child = data.hrm.department();
         const [resp, body] = await api.post(endPoints.departments, {
@@ -227,7 +227,7 @@ test.describe('HRM REST — departments (admin)', () => {
         expect(String(read?.parent ?? ''), 'parent hierarchy preserved').toBe(String(seedDeptId));
     });
 
-    test('HRM-HP-14 assign department lead', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-14 assign department lead', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // Seed an employee to be the lead.
         const [, empBody] = await api.post(endPoints.employees, { data: employeePayload() }, false);
         const leadId = idOf(empBody);
@@ -248,7 +248,7 @@ test.describe('HRM REST — departments (admin)', () => {
         expect(String(read?.lead ?? '0'), 'lead is not persisted from the create payload').toBe('0');
     });
 
-    test('HRM-HP-15 edit department title/description', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-15 edit department title/description', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const dept = data.hrm.department();
         const [, id] = await api.create(endPoints.departments, { title: dept.title, description: dept.description });
         expect(id).not.toBe('');
@@ -261,7 +261,7 @@ test.describe('HRM REST — departments (admin)', () => {
         expect(read?.title).toBe(newTitle);
     });
 
-    test('HRM-HP-16 get single department', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-16 get single department', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const dept = data.hrm.department();
         const [, id] = await api.create(endPoints.departments, { title: dept.title, description: dept.description });
         const [resp, read] = await api.get(endPoints.department(id));
@@ -270,7 +270,7 @@ test.describe('HRM REST — departments (admin)', () => {
         expect(String(read?.id)).toBe(id);
     });
 
-    test('HRM-HP-17 delete empty department then GET → 404', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-17 delete empty department then GET → 404', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const dept = data.hrm.department();
         const [, id] = await api.create(endPoints.departments, { title: dept.title, description: dept.description });
         expect(id).not.toBe('');
@@ -289,7 +289,7 @@ test.describe('HRM REST — departments (admin)', () => {
 test.describe('HRM REST — designations (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('HRM-HP-19 create designation via REST', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-19 create designation via REST', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const desig = data.hrm.designation();
         const [created, id] = await api.create(endPoints.designations, { title: desig.title, description: desig.description });
         expect(id).not.toBe('');
@@ -300,7 +300,7 @@ test.describe('HRM REST — designations (admin)', () => {
         expect(read?.title).toBe(desig.title);
     });
 
-    test('HRM-HP-21 edit designation', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-21 edit designation', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const desig = data.hrm.designation();
         const [, id] = await api.create(endPoints.designations, { title: desig.title, description: desig.description });
         const newTitle = `${desig.title}_upd`;
@@ -311,7 +311,7 @@ test.describe('HRM REST — designations (admin)', () => {
         expect(read?.title).toBe(newTitle);
     });
 
-    test('HRM-HP-22 delete empty designation then GET → 404', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-22 delete empty designation then GET → 404', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const desig = data.hrm.designation();
         const [, id] = await api.create(endPoints.designations, { title: desig.title, description: desig.description });
         const [delResp] = await api.delete(endPoints.designation(id), undefined, false);
@@ -330,7 +330,7 @@ test.describe('HRM REST — leave & holidays (admin)', () => {
 
     let createdHolidayId = '';
 
-    test('HRM-HP-23 create holiday (4xx-with-message tolerated)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-23 create holiday (4xx-with-message tolerated)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const holiday = data.hrm.holiday();
         const [resp, body] = await api.post(
             endPoints.holidays,
@@ -345,14 +345,14 @@ test.describe('HRM REST — leave & holidays (admin)', () => {
         }
     });
 
-    test('HRM-HP-24 list holidays returns an array shape', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-24 list holidays returns an array shape', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(endPoints.holidays, undefined, false);
         expect(resp.status()).toBe(200);
         const rows = Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : null;
         expect(rows, 'holidays response is an array or {data:[]}').not.toBeNull();
     });
 
-    test('HRM-HP-25/26 get + delete single holiday', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-25/26 get + delete single holiday', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // Re-create to be self-contained (test order is not guaranteed).
         const holiday = data.hrm.holiday();
         const [createResp, createBody] = await api.post(
@@ -374,21 +374,21 @@ test.describe('HRM REST — leave & holidays (admin)', () => {
         expect([200, 204]).toContain(delResp.status());
     });
 
-    test('HRM-HP-27 create leave policy (4xx-with-message tolerated)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-27 create leave policy (4xx-with-message tolerated)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const policy = data.hrm.leavePolicy();
         const [resp] = await api.post(endPoints.leavePolicies, { data: { name: `pw_${policy.name}`, days: policy.days } }, false);
         // Requires a leave-type + financial-year; a 4xx is acceptable, a 500 is a bug.
         expect(resp.status(), 'leave policy create must not 500').toBeLessThan(500);
     });
 
-    test('HRM-HP-28 list leave policies (array shape)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-28 list leave policies (array shape)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(endPoints.leavePolicies, undefined, false);
         expect(resp.status()).toBe(200);
         const rows = Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : null;
         expect(rows, 'leave policies array or {data:[]}').not.toBeNull();
     });
 
-    test('HRM-HP-29 list leave entitlements (array shape)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-29 list leave entitlements (array shape)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(endPoints.leaveEntitlements, undefined, false);
         // FINDING (BUGS.md): GET leave entitlements currently returns 500 on a base
         // install (no leave types / financial year). Tolerate it; validate shape when 200.
@@ -399,7 +399,7 @@ test.describe('HRM REST — leave & holidays (admin)', () => {
         }
     });
 
-    test('HRM-HP-30 list leave requests (array shape)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-30 list leave requests (array shape)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(endPoints.leaveRequests, undefined, false);
         expect(resp.status()).toBe(200);
         const rows = Array.isArray(body) ? body : Array.isArray(body?.data) ? body.data : null;
@@ -419,7 +419,7 @@ test.describe('HRM REST — leave & holidays (admin)', () => {
 test.describe('HRM REST — announcements (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('HRM-HP-33/34 create + list announcement', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-HP-33/34 create + list announcement', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const title = `pw_Announce_${Date.now()}`;
         const [resp, body] = await api.post(
             endPoints.announcements,
@@ -462,7 +462,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         await mgrApi.dispose();
     });
 
-    test('HRM-HP-37 headcount report (summary)', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-HP-37 headcount report (summary)', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [resp, body] = await mgrApi.get(`${endPoints.hrReports}/head-counts?type=summary`, undefined, false);
         expect(resp.status(), 'headcount summary answered').toBeLessThan(500);
         if (resp.status() === 200) {
@@ -472,7 +472,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         }
     });
 
-    test('HRM-HP-38 headcount-list reconciles with employee count (oracle)', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-HP-38 headcount-list reconciles with employee count (oracle)', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [listResp, listBody] = await mgrApi.get(`${endPoints.hrReports}/head-counts?type=list`, undefined, false);
         expect(listResp.status(), 'headcount list answered').toBeLessThan(500);
         if (listResp.status() !== 200) return;
@@ -485,7 +485,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         expect(rows.length, 'headcount-list total >= active employees').toBeGreaterThanOrEqual(activeCount);
     });
 
-    test('HRM-HP-39 age profile report', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-HP-39 age profile report', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [resp, body] = await mgrApi.get(`${endPoints.hrReports}/age-profiles`, undefined, false);
         expect(resp.status(), 'age-profiles answered').toBeLessThan(500);
         if (resp.status() === 200) {
@@ -493,7 +493,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         }
     });
 
-    test('HRM-HP-40 gender profile report', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-HP-40 gender profile report', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [resp, body] = await mgrApi.get(`${endPoints.hrReports}/gender-profiles`, undefined, false);
         expect(resp.status(), 'gender-profiles answered').toBeLessThan(500);
         if (resp.status() === 200) {
@@ -501,7 +501,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         }
     });
 
-    test('HRM-HP-41 salary history report', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-HP-41 salary history report', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [resp, body] = await mgrApi.get(`${endPoints.hrReports}/salary-histories`, undefined, false);
         expect(resp.status(), 'salary-histories answered').toBeLessThan(500);
         if (resp.status() === 200) {
@@ -509,7 +509,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         }
     });
 
-    test('HRM-HP-42 years-of-service report', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-HP-42 years-of-service report', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [resp, body] = await mgrApi.get(`${endPoints.hrReports}/year-of-services`, undefined, false);
         expect(resp.status(), 'year-of-services answered').toBeLessThan(500);
         if (resp.status() === 200) {
@@ -517,7 +517,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
         }
     });
 
-    test('HRM-NC-31 HR manager CAN access reports (positive baseline)', { tag: ['@lite', '@hrm', '@manager'] }, async () => {
+    test('HRM-NC-31 HR manager CAN access reports (positive baseline)', { tag: ['@pro', '@hrm', '@manager'] }, async () => {
         const [resp] = await mgrApi.get(`${endPoints.hrReports}/head-counts?type=summary`, undefined, false);
         // Positive baseline: the HR manager is NOT denied (would be 401/403). The
         // endpoint itself answers 200 (or 4xx for a bad param), never an auth refusal.
@@ -531,7 +531,7 @@ test.describe('HRM REST — reports (HR manager)', () => {
 test.describe('HRM REST — edge cases (admin)', () => {
     test.use({ storageState: data.auth.adminFile });
 
-    test('HRM-EC-01 unicode names round-trip or are cleanly rejected', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-01 unicode names round-trip or are cleanly rejected', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload({ first_name: 'José', last_name: 'Müller日本' });
         const [resp, body] = await api.post(endPoints.employees, { data: payload }, false);
         expect(resp.status(), 'unicode name must not 500').toBeLessThan(500);
@@ -542,7 +542,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-02 first name at maxlength (30) stored intact', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-02 first name at maxlength (30) stored intact', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const name30 = 'A'.repeat(30);
         const payload = employeePayload({ first_name: name30 });
         const [resp, body] = await api.post(endPoints.employees, { data: payload }, false);
@@ -554,7 +554,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-03 first name over maxlength (60) — document REST behavior', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-03 first name over maxlength (60) — document REST behavior', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: REST has no maxlength guard (UI limits first_name to 30);
         // an over-length name is likely stored in full — flag the inconsistency.
         const name60 = 'B'.repeat(60);
@@ -569,7 +569,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-04 department title with special chars stored intact', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-04 department title with special chars stored intact', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const title = `pw_R&D / <Ops> "Team" 100% ${Date.now()}`;
         const [resp, body] = await api.post(endPoints.departments, { data: { title } }, false);
         expect(resp.status(), 'special-char title must not 500').toBeLessThan(500);
@@ -582,7 +582,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-05 whitespace-only department title — document behavior', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-05 whitespace-only department title — document behavior', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: PHP empty() treats "   " (untrimmed spaces) as non-empty,
         // so a whitespace-only title is likely accepted as a blank-looking dept.
         const [resp, body] = await api.post(endPoints.departments, { data: { title: '   ' } }, false);
@@ -593,7 +593,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-06 very long description (5000 chars) accepted', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-06 very long description (5000 chars) accepted', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const dept = data.hrm.department();
         const longDesc = 'x'.repeat(5000);
         const [resp, body] = await api.post(endPoints.departments, { data: { title: dept.title, description: longDesc } }, false);
@@ -603,7 +603,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-07 pay rate = 0 accepted', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-07 pay rate = 0 accepted', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload({ pay_rate: 0 });
         const [resp] = await api.post(endPoints.employees, { data: payload }, false);
         expect(resp.status(), 'pay_rate=0 must not 500').toBeLessThan(500);
@@ -611,7 +611,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         expect([200, 201]).toContain(resp.status());
     });
 
-    test('HRM-EC-08 negative pay rate — document reject vs store', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-08 negative pay rate — document reject vs store', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: negative pay rate may be accepted (no negativity guard).
         const payload = employeePayload({ pay_rate: -100 });
         const [resp] = await api.post(endPoints.employees, { data: payload }, false);
@@ -620,21 +620,21 @@ test.describe('HRM REST — edge cases (admin)', () => {
         expect([200, 201], 'negative pay rate not accepted as a successful create').not.toContain(resp.status());
     });
 
-    test('HRM-EC-09 future hiring date accepted', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-09 future hiring date accepted', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const payload = employeePayload({ hiring_date: '2099-01-01' });
         const [resp] = await api.post(endPoints.employees, { data: payload }, false);
         // Valid date format → passes erp_is_valid_date; job_age becomes negative (noted).
         expect([200, 201]).toContain(resp.status());
     });
 
-    test('HRM-EC-10 end_date before hiring_date — document behavior', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-10 end_date before hiring_date — document behavior', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: no cross-field date check → reversed range likely accepted.
         const payload = employeePayload({ hiring_date: '2024-06-01', end_date: '2024-01-01' });
         const [resp] = await api.post(endPoints.employees, { data: payload }, false);
         expect(resp.status(), 'reversed dates must not 500').toBeLessThan(500);
     });
 
-    test('HRM-EC-11 holiday end before start — document behavior', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-11 holiday end before start — document behavior', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: reversed holiday range may be accepted with no validation.
         const [resp] = await api.post(
             endPoints.holidays,
@@ -644,7 +644,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         expect(resp.status(), 'reversed holiday range must not 500').toBeLessThan(500);
     });
 
-    test('HRM-EC-12 single-day holiday (start == end)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-12 single-day holiday (start == end)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.post(
             endPoints.holidays,
             { data: { title: `pw_Holiday_1d_${Date.now()}`, start: '2025-12-25', end: '2025-12-25' } },
@@ -653,20 +653,20 @@ test.describe('HRM REST — edge cases (admin)', () => {
         expect(resp.status(), 'single-day holiday must not 500').toBeLessThan(500);
     });
 
-    test('HRM-EC-13 leave policy with 0 days — document behavior', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-13 leave policy with 0 days — document behavior', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const policy = data.hrm.leavePolicy();
         const [resp] = await api.post(endPoints.leavePolicies, { data: { name: `pw_${policy.name}`, days: 0 } }, false);
         expect(resp.status(), '0-day policy must not 500').toBeLessThan(500);
     });
 
-    test('HRM-EC-14 leave policy fractional days (0.5) — document round-trip', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-14 leave policy fractional days (0.5) — document round-trip', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // days/day_in columns are decimal(5,1): 0.5 must round-trip exactly; 0.25 truncates.
         const policy = data.hrm.leavePolicy();
         const [resp] = await api.post(endPoints.leavePolicies, { data: { name: `pw_${policy.name}`, days: 0.5 } }, false);
         expect(resp.status(), 'fractional policy must not 500').toBeLessThan(500);
     });
 
-    test('HRM-EC-15 department self-reference (PUT parent=self) — document', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-15 department self-reference (PUT parent=self) — document', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: no circular/self-parent guard in free erp_hr_create_department.
         const dept = data.hrm.department();
         const [, id] = await api.create(endPoints.departments, { title: dept.title }, false);
@@ -677,7 +677,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         expect([200, 201], 'self-parent update is not a clean success (500 observed)').not.toContain(resp.status());
     });
 
-    test('HRM-EC-16 plus-addressed email accepted', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-16 plus-addressed email accepted', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const plusEmail = `qa+pw_${Date.now()}@example.com`;
         const payload = employeePayload({ email: plusEmail });
         const [resp, body] = await api.post(endPoints.employees, { data: payload }, false);
@@ -689,7 +689,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-17 duplicate designation title — document (no dedupe in free)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-17 duplicate designation title — document (no dedupe in free)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // BUG CANDIDATE: free erp_hr_create_designation only blocks empty title →
         // a duplicate title is likely accepted (two rows).
         const desig = data.hrm.designation();
@@ -702,7 +702,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-18 pagination beyond last page returns empty', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-18 pagination beyond last page returns empty', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(`${endPoints.employees}?page=9999&per_page=10`, undefined, false);
         expect(resp.status(), 'far-page request answered').toBeLessThan(500);
         if (resp.status() === 200) {
@@ -710,7 +710,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         }
     });
 
-    test('HRM-EC-19 per_page boundary (1 and 100)', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-19 per_page boundary (1 and 100)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp1, body1] = await api.get(`${endPoints.employees}?per_page=1`);
         expect(resp1.status()).toBe(200);
         expect(Array.isArray(body1) ? body1.length : 0, 'per_page=1 returns at most 1').toBeLessThanOrEqual(1);
@@ -720,7 +720,7 @@ test.describe('HRM REST — edge cases (admin)', () => {
         expect(Array.isArray(body100) ? body100.length : 0, 'per_page=100 returns at most 100').toBeLessThanOrEqual(100);
     });
 
-    test('HRM-EC-20 reassign employee to a different department', { tag: ['@lite', '@hrm', '@admin'] }, async () => {
+    test('HRM-EC-20 reassign employee to a different department', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         // Two departments.
         const d1 = data.hrm.department();
         const d2 = data.hrm.department();
