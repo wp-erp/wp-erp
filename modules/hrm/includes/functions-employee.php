@@ -78,6 +78,10 @@ function erp_hr_get_employees( $args = [] ) {
     $results_counts   = wp_cache_get( $cache_key_counts, 'erp' );
     $usermeta_table = apply_filters( 'erp_hrm_usermeta_table_name', $wpdb->prefix . 'usermeta' );
 
+    if ( $args['count'] && false !== $results_counts ) {
+        return $results_counts;
+    }
+
     if ( false === $results ) {
 
         $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
@@ -152,6 +156,9 @@ function erp_hr_get_employees( $args = [] ) {
             $results_counts = $employees->count();
 
             wp_cache_set( $cache_key_counts, $results_counts, 'erp', HOUR_IN_SECONDS );
+
+            // Only the total is needed; don't load every matching employee.
+            return $results_counts;
         }
 
         $results = $employees
