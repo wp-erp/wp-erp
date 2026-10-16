@@ -65,7 +65,8 @@ class ContactsController extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_crm_list_contact' );
+                    // `erp_crm_edit_contact` is mapped to an ownership check for CRM agents
+                    return current_user_can( 'erp_crm_list_contact' ) && current_user_can( 'erp_crm_edit_contact', $request['id'] );
                 },
             ],
             [
