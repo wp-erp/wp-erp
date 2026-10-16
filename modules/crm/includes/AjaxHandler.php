@@ -326,6 +326,9 @@ class AjaxHandler {
 		$data['first_name'] = ! empty( $data['first_name'] ) ? stripslashes( $data['first_name'] ) : '';
 		$data['last_name']  = ! empty( $data['last_name'] ) ? stripslashes( $data['last_name'] ) : '';
 
+		// The linked WP user comes from the saved contact (or its email), never from the request
+		unset( $data['user_id'] );
+
 		if ( ! $data['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
 			$this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
 		}

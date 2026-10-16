@@ -686,12 +686,17 @@ function erp_insert_people( $args = [], $return_object = false ) {
     }
 
     if ( isset( $user->ID ) && $user->ID ) {
+        $user_data = [ 'ID' => $user->ID ];
+
+        // Changing the account email allows a password reset, so only do it for someone who may edit that account.
+        // Requests without a logged in user (cron, CLI, imports) keep syncing.
+        if ( ! get_current_user_id() || current_user_can( 'edit_user', $user->ID ) ) {
+            $user_data['user_url']   = ! empty( $args['website'] ) ? $args['website'] : $user->user_url;
+            $user_data['user_email'] = ! empty( $args['email'] ) ? $args['email'] : $user->user_email;
+        }
+
         // Set data for updating record
-        $user_id = wp_update_user( [
-            'ID'         => $user->ID,
-            'user_url'   => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
-            'user_email' => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
-        ] );
+        $user_id = wp_update_user( $user_data );
 
         if ( is_wp_error( $user_id ) ) {
             return new WP_Error( 'update-user', $user_id->get_error_message() );
@@ -704,6 +709,11 @@ function erp_insert_people( $args = [], $return_object = false ) {
 
             if ( 'employee' !== $people_type ) {
                 foreach ( $args as $key => $value ) {
+                    // Contact fields come from the request, never let them write roles or login data
+                    if ( erp_people_is_protected_user_meta( $key ) ) {
+                        continue;
+                    }
+
                     if ( ! update_user_meta( $user_id, $key, $value ) ) {
                         $unchanged_data[ $key ] = $value;
                     }
@@ -805,6 +815,48 @@ function erp_insert_people( $args = [], $return_object = false ) {
     do_action( 'erp_people_created', $people->id, $people, $people_type );
 
     return $return_object ? $people : $people->id;
+}
+
+/**
+ * Checks whether a people field must not be copied into the linked WP user's meta.
+ *
+ * Covers roles and user level (`{$prefix}capabilities`, `{$prefix}user_level` for any site),
+ * protected keys (leading underscore, e.g. application passwords), login sessions and
+ * the role that gets restored with a removed employee.
+ *
+ * @since 1.17.11
+ *
+ * @param string $key
+ *
+ * @return bool
+ */
+function erp_people_is_protected_user_meta( $key ) {
+    global $wpdb;
+
+    $key = strtolower( trim( (string) $key ) );
+
+    if ( '' === $key || is_protected_meta( $key, 'user' ) ) {
+        return true;
+    }
+
+    if ( preg_match( '/(capabilities|user_level)$/', $key ) ) {
+        return true;
+    }
+
+    if ( '' !== $wpdb->base_prefix && 0 === strpos( $key, strtolower( $wpdb->base_prefix ) ) ) {
+        return true;
+    }
+
+    $protected = apply_filters( 'erp_people_protected_user_meta_keys', [
+        'session_tokens',
+        'primary_blog',
+        'source_domain',
+        'default_password_nag',
+        'use_ssl',
+        'erp_last_removed_role',
+    ] );
+
+    return in_array( $key, array_map( 'strtolower', (array) $protected ), true );
 }
 
 /**
