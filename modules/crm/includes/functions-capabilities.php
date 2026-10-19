@@ -259,14 +259,18 @@ function erp_crm_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] 
 
             if ( ! user_can( $user_id, $crm_manager_role ) && user_can( $user_id, $crm_agent_role ) ) {
                 $contact_user_id = \WeDevs\ERP\Framework\Models\People::select( 'user_id', 'contact_owner' )->where( 'id', $contact_id )->first();
+                $assign_id       = 0;
 
-                if ( isset( $contact_user_id->user_id ) && $contact_user_id->user_id ) {
-                    $assign_id = get_user_meta( $contact_user_id->user_id, 'contact_owner', true );
-                } else {
+                if ( $contact_user_id ) {
                     $assign_id = (int) $contact_user_id->contact_owner;
+
+                    // Legacy: owner of WP user linked contacts used to be kept in user meta
+                    if ( ! $assign_id && $contact_user_id->user_id ) {
+                        $assign_id = (int) get_user_meta( $contact_user_id->user_id, 'contact_owner', true );
+                    }
                 }
 
-                if ( $assign_id !== $user_id ) {
+                if ( ! $assign_id || $assign_id !== (int) $user_id ) {
                     $caps = [ 'do_not_allow' ];
                 } else {
                     if ( $data_hard ) {
