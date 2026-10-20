@@ -43,8 +43,9 @@ class ERP_i18n {
             $locale['']['plural_forms'] = $translations->headers['Plural-Forms'];
         }
 
-        foreach ( $translations->entries as $msgid => $entry ) {
-            $locale[ $msgid ] = $entry->translations;
+        foreach ( $translations->entries as $entry ) {
+            // WP 6.5+ returns a list, so key by the entry itself (context\004msgid) for Jed.
+            $locale[ $entry->key() ] = $entry->translations;
         }
 
         return $locale;
