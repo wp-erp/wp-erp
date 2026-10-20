@@ -1,0 +1,90 @@
+# Release & QA agent configuration for WP ERP.
+# Everything plugin-specific lives here, so the same agent can be dropped into
+# Dokan, WP Project Manager, etc. by copying the folder and editing this file.
+
+[plugin]
+name           = "WP ERP"
+slug           = "erp"                 # wp.org slug (differs from repo name!)
+main_file      = "wp-erp.php"
+readme         = "readme.txt"
+text_domain    = "erp"
+default_branch = "develop"
+tag_format     = "v{version}"
+# Plugins that extend this one through its hooks. Removing or renaming a hook
+# in a PR is flagged as a breaking change for these.
+dependents     = ["erp-pro (wp-erp/erp-pro)", "ERP add-ons"]
+
+# Every place the version string lives. Each pattern must have exactly one
+# capture group around the version. Release prep bumps all of them and fails
+# if they disagree before or after.
+[[plugin.version_locations]]
+file    = "wp-erp.php"
+pattern = '^\s*\*\s*Version:\s*([0-9][0-9A-Za-z.\-]*)'
+
+[[plugin.version_locations]]
+file    = "wp-erp.php"
+pattern = "define\\(\\s*'WPERP_VERSION',\\s*'([^']+)'\\s*\\)"
+
+[[plugin.version_locations]]
+file    = "readme.txt"
+pattern = '^Stable tag:\s*(\S+)'
+
+[[plugin.version_locations]]
+file    = "package.json"
+pattern = '^\s*"version":\s*"([^"]+)"'
+
+[changelog]
+file          = "readme.txt"
+anchor        = "== Changelog =="
+# {version} and {date} are filled in. Date format matches existing entries: "Sep 22, 2026".
+header        = "= v{version} → {date}\n--------------------------"
+date_format   = "%b %-d, %Y"
+categories    = ["New", "Improved", "Fixed"]
+link_prs      = true
+# wp.org truncates very long readmes; warn when the file grows past this.
+readme_warn_kb = 40
+
+[llm]
+model           = "claude-sonnet-5-5"   # used for review, changelog, analysis
+max_tokens      = 8000
+max_tool_rounds = 25                    # hard cap on agent loop iterations
+max_diff_chars  = 120000                # bigger PRs are reviewed file-by-file summary only
+
+[review]
+# "COMMENT" never blocks a merge. Switch to "REQUEST_CHANGES" for high
+# severity findings only after the team trusts the agent.
+event_on_high  = "COMMENT"
+skip_paths     = ["assets/js/*", "assets/css/*", "**/*.min.js", "i18n/**", "vendor/**", "tests/pw/**", "*.lock"]
+max_inline_comments = 15
+# phpcs sniffs that are noise for this codebase (prefix match on the sniff source).
+phpcs_ignore = [
+  "Universal.Arrays.DisallowShortArraySyntax",   # codebase uses short arrays
+  "WordPress.WP.Capabilities.Unknown",            # ERP registers its own caps
+  "Squiz.Commenting",
+  "Generic.Commenting.DocComment",
+]
+focus = [
+  "Missing capability checks (current_user_can) and nonce checks in AJAX, REST and admin-post handlers",
+  "Object-level authorization: users reading or editing records they don't own (employees, contacts, invoices)",
+  "SQL built from input without $wpdb->prepare(), including ORDER BY / LIMIT fragments",
+  "Output not escaped (esc_html, esc_attr, esc_url, wp_kses) and input not sanitized",
+  "unserialize()/maybe_unserialize() on user-controllable data (PHP object injection)",
+  "REST routes with a missing or permissive permission_callback",
+  "Removed or renamed actions, filters, public functions or class methods that erp-pro and add-ons may rely on",
+  "PHP 7.4 to 8.4 compatibility: null passed to string functions, dynamic properties, removed functions",
+  "Accounting correctness: rounding, double-posting of vouchers, tax calculation",
+]
+
+[compat]
+php       = ["7.4", "8.1", "8.3", "8.4"]
+# "min" = readme "Requires at least", "latest" = current stable, "beta" = next RC/beta if one exists.
+wordpress = ["min", "latest", "beta"]
+# REST namespace swept by the smoke test (GET routes dispatched as admin).
+rest_namespaces = ["erp/v1"]
+# Error types that fail a cell. Deprecations are reported but don't fail.
+fail_on = ["fatal", "error", "warning"]
+
+[upstream]
+watch_woocommerce = true   # ERP has a WooCommerce CRM integration
+issue_label       = "upstream-watch"
+compat_issue_label = "compat-report"

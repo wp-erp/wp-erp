@@ -41,3 +41,6 @@ phpcs-report.txt
 
 # Local dev scripts
 plugin-deploy.sh
+
+# release & QA agent output
+/agent-output

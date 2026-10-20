@@ -1,0 +1,150 @@
+name: AI compatibility test
+
+on:
+  schedule:
+    - cron: '23 3 * * 1'          # Mondays 03:23 UTC (09:23 BDT)
+  workflow_dispatch:
+  pull_request:
+    types: [labeled, synchronize]
+    branches: [develop]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: ai-compat-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  AGENT: .github/release-agent
+
+jobs:
+  # On PRs only run for release branches or when someone adds the `run-compat` label.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.g.outputs.run }}
+    steps:
+      - id: g
+        env:
+          EVENT: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          HAS_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'run-compat') }}
+        run: |
+          if [ "$EVENT" != "pull_request" ]; then echo "run=true" >> $GITHUB_OUTPUT; exit 0; fi
+          if [[ "$HEAD_REF" == release/* ]] || [ "$HAS_LABEL" = "true" ]; then
+            echo "run=true" >> $GITHUB_OUTPUT
+          else
+            echo "run=false" >> $GITHUB_OUTPUT
+          fi
+
+  matrix:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - id: m
+        working-directory: ${{ env.AGENT }}
+        run: python -m release_agent compat-matrix --repo-root "$GITHUB_WORKSPACE"
+
+  phpcompat:
+    name: PHPCompatibility scan
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.3', coverage: none, tools: composer }
+      - run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Scan against the plugin's declared minimum PHP and up
+        run: |
+          MIN_PHP=$(grep -m1 -E '^Requires PHP:' readme.txt | awk '{print $3}')
+          STD=$(ls -d vendor/wp-coding-standards/* vendor/phpcompatibility/* vendor/phpcsstandards/* 2>/dev/null | paste -sd, -)
+          vendor/bin/phpcs --standard=PHPCompatibilityWP --runtime-set installed_paths "$STD" \
+            --runtime-set testVersion "${MIN_PHP}-" --extensions=php --report=json -q \
+            --ignore='*/vendor/*,*/node_modules/*,*/tests/*,*/includes/Lib/*' . > phpcompat.json || true
+      - uses: actions/upload-artifact@v4
+        with: { name: phpcompat, path: phpcompat.json, retention-days: 7 }
+
+  cell:
+    name: WP ${{ matrix.wp }} / PHP ${{ matrix.php }}
+    needs: matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports: ['3306:3306']
+        options: --health-cmd="mysqladmin ping -proot" --health-interval=5s --health-timeout=3s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer, wp-cli
+          extensions: mysqli
+      - name: Composer install (runtime deps only)
+        run: composer install --no-dev --prefer-dist --no-progress --no-interaction || composer update --no-dev --no-progress
+      - name: Build JS/CSS assets (same toolchain as deploy)
+        uses: actions/setup-node@v4
+        with: { node-version-file: .nvmrc, cache: npm }
+      - run: npm ci && npm run build
+      - name: Run compatibility cell
+        env:
+          WP_VERSION: ${{ matrix.wp }}
+          PLUGIN_DIR: ${{ github.workspace }}
+          PLUGIN_SLUG: erp
+          OUT_DIR: ${{ runner.temp }}/compat
+          REST_NS: erp/v1
+          PAGE_PREFIX: erp
+        run: bash $AGENT/compat/run-cell.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compat-${{ matrix.php }}-${{ matrix.wp }}
+          path: ${{ runner.temp }}/compat
+          retention-days: 7
+
+  analyze:
+    name: Diagnose results
+    needs: [matrix, phpcompat, cell]
+    if: always() && needs.matrix.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: results, pattern: compat-* }
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with: { name: phpcompat, path: phpcompat }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: '${{ env.AGENT }}/requirements.txt' }
+      - run: pip install -r $AGENT/requirements.txt
+      - name: Analyze
+        working-directory: ${{ env.AGENT }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT_OUTPUT_DIR: ${{ github.workspace }}/agent-output
+        run: |
+          PR_ARG=""
+          if [ -n "${{ github.event.pull_request.number }}" ]; then PR_ARG="--pr ${{ github.event.pull_request.number }}"; fi
+          python -m release_agent compat-analyze --repo-root "$GITHUB_WORKSPACE" \
+            --results "$GITHUB_WORKSPACE/results" --phpcompat "$GITHUB_WORKSPACE/phpcompat/phpcompat.json" $PR_ARG
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: compat-report, path: agent-output, retention-days: 30 }

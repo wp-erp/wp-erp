@@ -1,0 +1,33 @@
+name: AI upstream watch
+
+# Weekly: new WordPress/WooCommerce versions, deprecated APIs still called,
+# and make.wordpress.org/core dev notes that touch this plugin. Results go to a
+# single issue labelled `upstream-watch` that is updated in place.
+on:
+  schedule:
+    - cron: '41 2 * * 1'          # Mondays 02:41 UTC (08:41 BDT)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: .github/release-agent/requirements.txt }
+      - run: pip install -r .github/release-agent/requirements.txt
+      - name: Watch upstream
+        working-directory: .github/release-agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT_OUTPUT_DIR: ${{ runner.temp }}/agent-output
+        run: python -m release_agent upstream --repo-root "$GITHUB_WORKSPACE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: upstream-watch, path: '${{ runner.temp }}/agent-output', retention-days: 30 }

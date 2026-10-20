@@ -1,0 +1,84 @@
+name: AI PR review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - '**.php'
+      - '**.js'
+      - '**.vue'
+      - 'readme.txt'
+      - 'composer.json'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Release & QA review
+    # Fork PRs get no secrets, so skip them. Drafts are reviewed once marked ready.
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout PR head (the code under review)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      # The agent itself runs from the base branch, so a PR can't change the
+      # reviewer's own code or prompts while it is being reviewed.
+      - name: Checkout agent from base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: .agent
+          sparse-checkout: .github/release-agent
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          tools: composer
+
+      - name: Cache composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install phpcs + WordPress standards
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: .agent/.github/release-agent/requirements.txt
+
+      - run: pip install -r .agent/.github/release-agent/requirements.txt
+
+      - name: Review
+        working-directory: .agent/.github/release-agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT_OUTPUT_DIR: ${{ github.workspace }}/agent-output
+        run: python -m release_agent review --pr ${{ github.event.pull_request.number }} --repo-root "$GITHUB_WORKSPACE"
+
+      - name: Upload review + transcript
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-${{ github.event.pull_request.number }}
+          path: agent-output
+          retention-days: 14
+          if-no-files-found: ignore

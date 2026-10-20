@@ -1,0 +1,64 @@
+name: AI release prep
+
+# Opens a release PR: changelog drafted from merged PRs, every version string
+# bumped, pre-flight checks in the PR body. It never tags. Merging the PR and
+# pushing the tag (which runs deploy-erp.yml) stays a human step.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (leave empty to let the agent pick from the changes)'
+        required: false
+      bump:
+        description: 'If no version given: how to bump'
+        type: choice
+        default: auto
+        options: [auto, patch, minor, major]
+      update_tested_up_to:
+        description: 'Set "Tested up to" to the latest WordPress (only after the compat workflow passed)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          fetch-tags: true
+          # A PR opened with GITHUB_TOKEN doesn't trigger other workflows (CI,
+          # compat). Add a RELEASE_AGENT_TOKEN secret (fine-grained PAT or
+          # GitHub App token) if you want them to run on the release PR.
+          token: ${{ secrets.RELEASE_AGENT_TOKEN || secrets.GITHUB_TOKEN }}
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '7.4', coverage: none }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: .github/release-agent/requirements.txt }
+      - run: pip install -r .github/release-agent/requirements.txt
+      - name: Prepare release
+        working-directory: .github/release-agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_AGENT_TOKEN || secrets.GITHUB_TOKEN }}
+          AGENT_OUTPUT_DIR: ${{ runner.temp }}/agent-output
+          IN_VERSION: ${{ inputs.version }}
+          IN_BUMP: ${{ inputs.bump }}
+          IN_TESTED: ${{ inputs.update_tested_up_to }}
+        run: |
+          ARGS=(--bump "$IN_BUMP")
+          if [ -n "$IN_VERSION" ]; then
+            [[ "$IN_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "version must look like 1.2.3"; exit 1; }
+            ARGS+=(--version "$IN_VERSION")
+          fi
+          [ "$IN_TESTED" = "true" ] && ARGS+=(--update-tested-up-to)
+          python -m release_agent release-prep --repo-root "$GITHUB_WORKSPACE" "${ARGS[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: release-prep, path: '${{ runner.temp }}/agent-output', retention-days: 30 }
