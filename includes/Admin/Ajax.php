@@ -600,8 +600,12 @@ class Ajax {
             $this->send_error( __( 'Audit log entry does not exist.', 'erp' ) );
         }
 
-        $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
-        $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
+        $old_value = maybe_unserialize( base64_decode( (string) $log->old_value ) );
+        $new_value = maybe_unserialize( base64_decode( (string) $log->new_value ) );
+
+        // "add"/"delete" entries store no diff, so there may be nothing to iterate
+        $old_value = is_array( $old_value ) ? $old_value : [];
+        $new_value = is_array( $new_value ) ? $new_value : [];
         ob_start(); ?>
         <div class="wrap">
             <table class="wp-list-table widefat fixed audit-log-change-table">
@@ -624,7 +628,7 @@ class Ajax {
                 <tbody>
                     <?php $i=1; ?>
                     <?php foreach ( $old_value as $key => $value ) {
-                         if(is_array($value) && is_array($new_value[$key]) ) {
+                         if(is_array($value) && isset($new_value[$key]) && is_array($new_value[$key]) ) {
                             foreach ($value as $sub_key => $sub_value) {
                                 if ( isset( $new_value[$key][$sub_key] ) ) {
                                     ?>
@@ -653,7 +657,7 @@ class Ajax {
                         <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
                             <td class="col-date"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $key ) ) ); ?></td>
                             <td><?php echo ( $value ) ? esc_html( wp_unslash( $value ) ) : '--'; ?></td>
-                            <td><?php echo ( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
+                            <td><?php echo ! empty( $new_value[$key] ) && is_scalar( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
                         </tr>
                         <?php } ?>
                     <?php $i++; } ?>
