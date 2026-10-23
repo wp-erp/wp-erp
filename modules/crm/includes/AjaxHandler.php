@@ -593,9 +593,13 @@ class AjaxHandler {
 			$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
 		}
 
+		if ( ! current_user_can( 'erp_crm_add_contact' ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$id    = isset( $_POST['user_id'] ) ? intval( wp_unslash( $_POST['user_id'] ) ) : 0;
 		$type  = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-		$is_wp = isset( $_POST['is_wp'] ) ? true : false;
+		$is_wp = isset( $_POST['is_wp'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['is_wp'] ) );
 
 		if ( ! $id ) {
 			$this->send_error( __( 'User not found', 'erp' ) );
@@ -616,6 +620,16 @@ class AjaxHandler {
 
 		if ( is_wp_error( $people_id ) ) {
 			$this->send_error( $people_id->get_error_message() );
+		}
+
+		// Give the converted contact an owner, so a CRM agent can see and edit it
+		if ( 'contact' === $type ) {
+			$people = \WeDevs\ERP\Framework\Models\People::find( $people_id );
+
+			if ( $people && ! $people->contact_owner ) {
+				$people->update( array( 'contact_owner' => get_current_user_id() ) );
+				erp_crm_purge_cache( array( 'list' => 'people', 'type' => $type ) );
+			}
 		}
 
 		$statuses = erp_crm_customer_get_status_count( $type );

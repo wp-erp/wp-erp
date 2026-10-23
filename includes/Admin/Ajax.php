@@ -720,6 +720,11 @@ class Ajax {
             'types' => isset( $people->types ) ? $people->types : array()
         );
 
+        // WP users not in ERP yet are converted by their WP user ID
+        if ( null === $safe_data['id'] && false !== $user ) {
+            $safe_data['user_id'] = $user->ID;
+        }
+
         // seems like we found one
         $this->send_success( $safe_data );
     }
