@@ -97,12 +97,13 @@ class ContactsController extends REST_Controller {
      */
     public function get_contacts( $request ) {
         $args = [
+            'type'   => 'contact',
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
         $items       = erp_get_peoples( $args );
-        $total_items = erp_get_peoples( [ 'count' => true ] );
+        $total_items = erp_get_peoples( [ 'type' => 'contact', 'count' => true ] );
 
         $formated_items = [];
 
@@ -376,7 +377,6 @@ class ContactsController extends REST_Controller {
      * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        wp_send_json( $item );
         $data = [
             'id'            => (int) $item->id,
             'first_name'    => $item->first_name,

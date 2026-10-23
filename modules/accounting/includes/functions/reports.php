@@ -274,8 +274,10 @@ function erp_acct_get_filtered_sales_tax_report( $args ) {
         return [];
     }
 
+    // Skip estimates, drafts, voided invoices and edited (closed) invoices along
+    // with their contra entries, none of them carry a live tax liability
     $sql['from']  = "{$wpdb->prefix}erp_acct_invoices AS inv";
-    $sql['where'] = "inv.trn_date BETWEEN '%s' AND '%s'";
+    $sql['where'] = "inv.trn_date BETWEEN '%s' AND '%s' AND inv.estimate = 0 AND inv.status NOT IN (1, 7, 8)";
     $sql['extra'] = '';
     $values       = [ $args['start_date'], $args['end_date'] ];
 

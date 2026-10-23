@@ -301,7 +301,11 @@ class BillsController extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
-        erp_acct_void_bill( $id );
+        $result = erp_acct_void_bill( $id );
+
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
 
         return new WP_REST_Response( true, 204 );
     }

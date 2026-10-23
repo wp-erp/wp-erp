@@ -261,6 +261,7 @@ final class Accounting {
      */
     public function init_filters() {
         add_filter( 'erp_settings_pages', [ $this, 'add_settings_page' ] );
+        add_filter( 'woocommerce_prevent_admin_access', 'erp_ac_wc_prevent_admin_access' );
     }
 
     /**

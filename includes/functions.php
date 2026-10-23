@@ -2659,7 +2659,25 @@ function erp_get_editable_roles() {
 	if ( ! function_exists( 'get_editable_roles' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 	}
+
+	// ERP hides its own non-public roles (HR Manager, CRM Manager, CRM Agent,
+	// Recruiter...) from the WP role list, keep them here
+	$erp_role_filters = [];
+
+	foreach ( [ 'erp_hr_filter_editable_roles', 'erp_crm_filter_editable_roles', 'erp_ac_filter_editable_roles' ] as $callback ) {
+		$priority = has_filter( 'editable_roles', $callback );
+
+		if ( false !== $priority ) {
+			remove_filter( 'editable_roles', $callback, $priority );
+			$erp_role_filters[ $callback ] = $priority;
+		}
+	}
+
 	$wp_roles = get_editable_roles();
+
+	foreach ( $erp_role_filters as $callback => $priority ) {
+		add_filter( 'editable_roles', $callback, $priority );
+	}
 
 	if ( ! current_user_can( 'administrator' ) ) {
 		unset( $wp_roles['administrator'] );

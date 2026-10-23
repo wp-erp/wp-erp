@@ -2383,11 +2383,16 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
         $is_contact_group_joined = false;
         $table_alias             = 1;
         $tag_table_joined        = 0;
+        $or_groups               = 0;
 
-        foreach ( $query_data as $key => $or_query ) {
+        foreach ( $query_data as $or_query ) {
             if ( $or_query ) {
-                $i                     = 0;
-                $custom_sql['where'][] = ( $key === 0 ) ? 'AND (' : 'OR (';
+                $i = 0;
+
+                // Wrap all OR groups in one AND ( ... ) so they can't escape
+                // conditions added before this filter, like the agent's owner limit
+                $custom_sql['where'][] = ( $or_groups === 0 ) ? 'AND ( (' : 'OR (';
+                $or_groups ++;
 
                 foreach ( $or_query as $field => $value ) {
                     if ( in_array( $field, $pep_fileds, true ) ) {
@@ -2578,6 +2583,10 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
             }
 
             $table_alias ++;
+        }
+
+        if ( $or_groups ) {
+            $custom_sql['where'][] = ')';
         }
     }
 

@@ -197,7 +197,7 @@ export default {
                         HTTP.post('bills/' + row.id + '/void').then(response => {
                             this.showAlert('success', __('Transaction has been void!', 'erp'));
                         }).catch(error => {
-                            throw error;
+                            this.showAlert('error', error.response.data.message);
                         });
                     }
                     if (row.trn_type === 'pay_bill') {
