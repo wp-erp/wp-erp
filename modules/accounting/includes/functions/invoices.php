@@ -783,6 +783,22 @@ function erp_acct_void_invoice( $invoice_no ) {
 		return;
 	}
 
+	// Voiding only reverses the invoice's own entries, so a payment received
+	// against it would stay in cash with nothing to offset it
+	$payments = (int) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT COUNT(rec.id)
+            FROM {$wpdb->prefix}erp_acct_invoice_receipts_details AS rec_detail
+            INNER JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS rec ON rec.voucher_no = rec_detail.voucher_no
+            WHERE rec_detail.invoice_no = %d AND rec.status <> 8",
+			$invoice_no
+		)
+	);
+
+	if ( $payments ) {
+		return new WP_Error( 'invoice-has-payments', __( 'This invoice has payments received against it. Please void those payments first.', 'erp' ), array( 'status' => 400 ) );
+	}
+
 	$wpdb->update(
 		$wpdb->prefix . 'erp_acct_invoices',
 		array(
@@ -792,7 +808,13 @@ function erp_acct_void_invoice( $invoice_no ) {
 	);
 
 	$wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $invoice_no ) );
-	$wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'invoice_no' => $invoice_no ) );
+	$wpdb->delete(
+		$wpdb->prefix . 'erp_acct_invoice_account_details',
+		array(
+			'invoice_no' => $invoice_no,
+			'trn_no'     => $invoice_no,
+		)
+	);
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(

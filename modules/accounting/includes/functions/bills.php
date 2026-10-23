@@ -452,6 +452,22 @@ function erp_acct_void_bill( $id ) {
         return;
     }
 
+    // Voiding only reverses the bill's own entries, so a payment made
+    // against it would stay out of cash with nothing to offset it
+    $payments = (int) $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT COUNT(pay.id)
+            FROM {$wpdb->prefix}erp_acct_pay_bill_details AS pay_detail
+            INNER JOIN {$wpdb->prefix}erp_acct_pay_bill AS pay ON pay.voucher_no = pay_detail.voucher_no
+            WHERE pay_detail.bill_no = %d AND pay.status <> 8",
+            $id
+        )
+    );
+
+    if ( $payments ) {
+        return new WP_Error( 'bill-has-payments', __( 'This bill has payments made against it. Please void those payments first.', 'erp' ), [ 'status' => 400 ] );
+    }
+
     $wpdb->update(
         $wpdb->prefix . 'erp_acct_bills',
         [
@@ -461,7 +477,7 @@ function erp_acct_void_bill( $id ) {
     );
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', [ 'trn_no' => $id ] );
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', [ 'bill_no' => $id ] );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', [ 'bill_no' => $id, 'trn_no' => $id ] );
 
     erp_acct_purge_cache( [ 'list' => 'sales_transaction,purchase_transaction,expense_transaction' ] );
 }

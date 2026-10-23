@@ -352,7 +352,11 @@ class InvoicesController extends REST_Controller {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
-        erp_acct_void_invoice( $id );
+        $result = erp_acct_void_invoice( $id );
+
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
 
         return new WP_REST_Response( true, 204 );
     }
