@@ -1668,11 +1668,22 @@
                     var selfVue = this;
 
                     var self = $(e.target),
+                        form = self.closest('form'),
                         type = self.data('type'),
                         user_id = self.data('user_id'),
-                        is_wp = self.data('is_wp');
+                        is_wp = self.data('is_wp'),
+                        first_name = $.trim( form.find('#first_name').val() || '' ),
+                        last_name = $.trim( form.find('#last_name').val() || '' ),
+                        life_stage = form.find('select[name="contact[meta][life_stage]"]').val() || '';
 
                     if ( this.isRequestDone ) {
+                        return;
+                    }
+
+                    // a WP user is made a contact with the details typed in the form, so ask for the required ones first
+                    if ( 'yes' === is_wp && 'contact' === type && ( ! first_name || ! life_stage ) ) {
+                        self.closest('.modal-suggession').find('.erp-crm-required-notice').remove();
+                        self.closest('.modal-suggession').append('<p class="erp-crm-required-notice" style="color:#d63638;margin:5px 0 0;">' + wpErpCrm.wpuser_required_fields + '</p>');
                         return;
                     }
 
@@ -1684,6 +1695,9 @@
                             user_id: user_id,
                             type: type,
                             is_wp: is_wp,
+                            first_name: first_name,
+                            last_name: last_name,
+                            life_stage: life_stage,
                             _wpnonce: wpErpCrm.nonce
                         },
                         success: function( resp ) {
@@ -1773,7 +1787,8 @@
 
                         },
                         error: function( response ) {
-                            isRequestDone = false;
+                            selfVue.isRequestDone = false;
+                            self.closest('.modal-suggession').find('.erp-loader').remove();
                             alert(response);
                         }
                     });

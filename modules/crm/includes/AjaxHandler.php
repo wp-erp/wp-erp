@@ -609,6 +609,21 @@ class AjaxHandler {
 			$this->send_error( __( 'Type not found', 'erp' ) );
 		}
 
+		// A WP user becomes a contact with the details typed in the form, so the required ones must be there
+		$first_name = isset( $_POST['first_name'] ) ? sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) : '';
+		$last_name  = isset( $_POST['last_name'] ) ? sanitize_text_field( wp_unslash( $_POST['last_name'] ) ) : '';
+		$life_stage = isset( $_POST['life_stage'] ) ? sanitize_key( wp_unslash( $_POST['life_stage'] ) ) : '';
+
+		if ( $is_wp && 'contact' === $type ) {
+			if ( empty( $first_name ) ) {
+				$this->send_error( __( 'Please enter the first name before creating the contact.', 'erp' ) );
+			}
+
+			if ( ! array_key_exists( $life_stage, erp_crm_get_life_stages_dropdown_raw() ) ) {
+				$this->send_error( __( 'Please select a life stage before creating the contact.', 'erp' ) );
+			}
+		}
+
 		$args = array(
 			'type'       => $type,
 			'is_wp_user' => $is_wp,
@@ -628,8 +643,20 @@ class AjaxHandler {
 
 			if ( $people && ! $people->contact_owner ) {
 				$people->update( array( 'contact_owner' => get_current_user_id() ) );
-				erp_crm_purge_cache( array( 'list' => 'people', 'type' => $type ) );
 			}
+
+			if ( $people && $is_wp ) {
+				$people->update(
+					array(
+						'first_name' => $first_name,
+						'last_name'  => $last_name,
+					)
+				);
+
+				( new \WeDevs\ERP\CRM\Contact( $people_id, 'contact' ) )->update_life_stage( $life_stage );
+			}
+
+			erp_crm_purge_cache( array( 'list' => 'people', 'type' => $type ) );
 		}
 
 		$statuses = erp_crm_customer_get_status_count( $type );
