@@ -455,7 +455,7 @@ class AjaxHandler {
 				$ids[] = $contact_id;
 			}
 		} else {
-			if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) && ! current_user_can( 'erp_crm_agent' ) ) {
+			if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) ) {
 				$this->send_error( __( 'You don\'t have any permission to delete this contact', 'erp' ) );
 			}
 			$ids[] = $customer_id;
