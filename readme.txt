@@ -5,7 +5,7 @@ Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.10
+Stable tag: 1.17.11
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -330,6 +330,26 @@ It may take longer to respond to more advanced or technical queries. We promise 
 Please report security bugs found in the source code of the WP ERP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb52d-9e2d-4917-82cf-95032b4443ce). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Changelog ==
+= v1.17.11 → Oct 23, 2026
+--------------------------
+* [Fixed] Any logged-in user could read the audit log change history; the viewer is now limited to administrators.
+* [Fixed] Several admin AJAX handlers were missing capability checks.
+* [Fixed] A CRM Agent could make themselves Administrator through a user-meta update.
+* [Fixed] Stored XSS through the body of an inbound email.
+* [Fixed] A CRM Agent could read, search, delete, or add activity to contacts owned by other agents.
+* [Fixed] Employees could read a colleague's full HR record and phone numbers, and any private post through the announcement viewer.
+* [Fixed] The CRM contacts REST endpoint returned one raw contact instead of the full list.
+* [Fixed] Adding an existing WordPress user as a CRM contact failed with "User not found", and the typed name and life stage were lost.
+* [Fixed] Voiding a partly paid invoice or bill left its payment in Cash and unbalanced the Trial Balance; void the payments first.
+* [Fixed] The Sales Tax Report counted voided invoices, estimates and edited invoices.
+* [Fixed] Tax was not calculated on invoices and estimates.
+* [Fixed] Accounting Managers were redirected to WooCommerce My Account instead of WP ERP Accounting.
+* [Fixed] Accounting and Settings screens were blank when translations were loaded.
+* [Fixed] The People page timed out on sites with many employees.
+* [Fixed] "Make WP User" did not offer the HR Manager, CRM Manager, CRM Agent and Recruiter roles.
+* [Fixed] Import Users skipped users who already had a WP ERP record with no type.
+* [Fixed] A PHP 8.1+ deprecation notice in erp_get_people_by() and a fatal error in the removed API key handlers.
+
 = v1.17.10 → Sep 22, 2026
 --------------------------
 * [Fixed] PHP object injection when reading purchase attachments in Accounting, reachable by the erp_ac_manager role.
