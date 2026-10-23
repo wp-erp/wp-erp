@@ -769,7 +769,7 @@ function erp_insert_people( $args = [], $return_object = false ) {
     }
 
     if ( ! empty( $people_type ) && ! $people->hasType( $people_type ) ) {
-        if ( empty( $is_existing_people ) || ( $people->hasType( 'employee' ) && 'contact' === $people_type ) ) {
+        if ( empty( $is_existing_people ) || ( $people->hasType( 'employee' ) && 'contact' === $people_type ) || ! $people->types()->count() ) {
             $people->assignType( $type_obj );
         }
     }
