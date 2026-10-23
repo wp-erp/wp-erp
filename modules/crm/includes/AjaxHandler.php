@@ -1358,10 +1358,30 @@ class AjaxHandler {
 		$activity_type   = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 		$message         = wp_kses_post( wp_unslash( html_entity_decode($_POST['message'], ENT_COMPAT|ENT_HTML401,'UTF-8' ) ) );
 		$user_id         = absint( wp_unslash( $_POST['user_id'] ) );
-		$created_by      = ! empty( $_POST['created_by'] ) ? absint( wp_unslash( $_POST['created_by'] ) ) : '';
+		$created_by      = get_current_user_id();
 		$email_subject   = ! empty( $_POST['email_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['email_subject'] ) ) : '';
 		$attachments     = ! empty( $_POST['attachments'] ) ? map_deep( wp_unslash( $_POST['attachments'] ), 'sanitize_text_field' ) : array();
 		$old_attachments = ! empty( $_POST['old_attachments'] ) ? map_deep( wp_unslash( $_POST['old_attachments'] ), 'sanitize_text_field' ) : array();
+
+		// `erp_crm_edit_contact` is mapped to an ownership check for CRM agents
+		if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		// An existing activity can only be changed on its own contact, by its author or a CRM manager
+		if ( $activity_id ) {
+			$activity = \WeDevs\ERP\CRM\Models\Activity::find( $activity_id );
+
+			if ( ! $activity || (int) $activity->user_id !== $user_id ) {
+				$this->send_error( __( 'Activity not found', 'erp' ) );
+			}
+
+			if ( (int) $activity->created_by !== get_current_user_id() && ! current_user_can( erp_crm_get_manager_role() ) ) {
+				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+			}
+
+			$created_by = (int) $activity->created_by;
+		}
 
 		if ( ! empty( $old_attachments ) ) {
 			foreach ( $old_attachments as $old_atch ) {
@@ -1627,7 +1647,19 @@ class AjaxHandler {
 			$this->send_error( __( 'Feeds Not found', 'erp' ) );
 		}
 
-		$feed_id = isset( $_POST['feed_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_id'] ) ) : '';
+		$feed_id = isset( $_POST['feed_id'] ) ? absint( wp_unslash( $_POST['feed_id'] ) ) : 0;
+		$feed    = \WeDevs\ERP\CRM\Models\Activity::find( $feed_id );
+
+		if ( ! $feed ) {
+			$this->send_error( __( 'Feeds Not found', 'erp' ) );
+		}
+
+		// A CRM agent may only delete their own activity on their own contact
+		if ( ! current_user_can( erp_crm_get_manager_role() ) ) {
+			if ( ! current_user_can( 'erp_crm_edit_contact', (int) $feed->user_id ) || (int) $feed->created_by !== get_current_user_id() ) {
+				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+			}
+		}
 
 		erp_crm_customer_delete_activity_feed( $feed_id );
 
