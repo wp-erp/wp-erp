@@ -1479,7 +1479,7 @@ class AjaxHandler {
 		}
 
 		$user_id = get_current_user_id();
-		\WeDevs\ERP\HRM\Models\Announcement::find( $row_id )->where( 'user_id', $user_id )->update( array( 'status' => 'read' ) );
+		\WeDevs\ERP\HRM\Models\Announcement::where( 'id', $row_id )->where( 'user_id', $user_id )->update( array( 'status' => 'read' ) );
 
 		return $this->send_success();
 	}
@@ -1502,9 +1502,23 @@ class AjaxHandler {
 			$this->send_error();
 		}
 
-		\WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->update( array( 'status' => 'read' ) );
+		// The id comes from the request, so only hand out a published announcement sent to this user
+		$announcement = get_post( $post_id );
 
-		$post = get_post( $post_id );
+		if ( ! $announcement || 'erp_hr_announcement' !== $announcement->post_type || 'publish' !== $announcement->post_status ) {
+			$this->send_error( __( 'Announcement not found', 'erp' ) );
+		}
+
+		$user_id      = get_current_user_id();
+		$is_recipient = \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->where( 'user_id', $user_id )->count() > 0;
+
+		if ( ! $is_recipient && ! current_user_can( erp_hr_get_manager_role() ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		\WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->where( 'user_id', $user_id )->update( array( 'status' => 'read' ) );
+
+		$post = $announcement;
 		setup_postdata( $post );
 
 		$post_data = array(
@@ -2465,6 +2479,11 @@ class AjaxHandler {
 	 * @return int
 	 */
 	public function get_total_pending_requests() {
+		// Only HR managers see the Requests page and its badge
+		if ( ! current_user_can( 'erp_hr_manager' ) ) {
+			$this->send_success( 0 );
+		}
+
 		$requests = erp_hr_get_employee_pending_requests_count();
 		$pending  = 0;
 
