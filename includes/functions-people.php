@@ -165,16 +165,14 @@ function erp_get_peoples( $args = [] ) {
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
             } elseif ( is_array( $type ) ) {
                 $sql['where'][] = $wpdb->prepare(
-                    'AND ( people.first_name ) LIKE %s OR ' .
-                    '( people.last_name ) LIKE %s',
+                    'AND ( people.first_name LIKE %s OR people.last_name LIKE %s )',
                     [ $search_like, $search_like ]
                 );
             } elseif ( $type === 'customer' || $type === 'vendor' ) {
                 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
                     if ( $type === 'customer' ) {
                         $sql['where'][] = $wpdb->prepare(
-                            'AND ( people.first_name ) LIKE %s OR ' .
-                            '( people.last_name ) LIKE %s',
+                            'AND ( people.first_name LIKE %s OR people.last_name LIKE %s )',
                             [ $search_like, $search_like ]
                         );
                     } else {
@@ -182,10 +180,7 @@ function erp_get_peoples( $args = [] ) {
                     }
                 } else {
                     $sql['where'][] = $wpdb->prepare(
-                        'AND ( people.first_name ) LIKE %s OR ' .
-                        '( people.last_name ) LIKE %s OR ' .
-                        '( people.email ) LIKE %s OR ' .
-                        '( people.company ) LIKE %s',
+                        'AND ( people.first_name LIKE %s OR people.last_name LIKE %s OR people.email LIKE %s OR people.company LIKE %s )',
                         [ $search_like, $search_like, $search_like, $search_like ]
                     );
                 }
