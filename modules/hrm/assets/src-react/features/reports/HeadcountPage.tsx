@@ -1,0 +1,202 @@
+/**
+ * `/reports/headcount` — headcount by month + active employee list.
+ *
+ * Mirrors views/reporting/headcount.php: a year + department filter, the active
+ * total, a 12-month headcount bar chart (recharts, mirroring the legacy flot
+ * chart), and the filtered active employee table. Data from
+ * `GET /reports/headcount?year=&department=`.
+ */
+
+import { Button, ChartContainer, ChartTooltip, ChartTooltipContent, SmartSelect } from '@wedevs/plugin-ui';
+import { Users } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import type { JSX } from 'react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+
+import { EmptyState } from '@/shared/components/EmptyState';
+import { FilterLabel } from '@/shared/components/FieldLabels';
+import { FilterButton } from '@/shared/components/FilterButton';
+import { __, sprintf } from '@/shared/i18n';
+import { formatDisplayDate, siteToday, todaySiteYmd } from '@/shared/utils/date';
+
+import { ReportNameCell } from './ReportNameCell';
+import { ReportShell, ReportState } from './ReportShell';
+import { useHeadcount } from './useReports';
+
+function fmtDate( value: string | null ): string {
+	return formatDisplayDate( value, ( value ?? '' ).slice( 0, 10 ) || '—' );
+}
+
+function monthLabel( ym: string ): string {
+	const [ y, m ] = ym.split( '-' ).map( Number );
+	if ( ! y || ! m ) {
+		return ym;
+	}
+	return new Date( y, m - 1, 1 ).toLocaleDateString( undefined, { month: 'short', year: '2-digit' } );
+}
+
+const HEADCOUNT_CONFIG = {
+	count: { label: __( 'Headcount', 'erp' ), color: '#6366f1' },
+};
+
+export function HeadcountPage(): JSX.Element {
+	const today = siteToday();
+	const now   = today.getFullYear();
+	// The figures are read live, so the report is "as of" today on the site clock.
+	const asOf  = formatDisplayDate( todaySiteYmd() );
+	const [ year, setYear ]             = useState( String( now ) );
+	const [ department, setDepartment ] = useState( 0 );
+	const [ showFilters, setShowFilters ] = useState( false );
+
+	const { data, loading, error } = useHeadcount( year, department );
+
+	// Incremental "load more" so a large active-employee list doesn't render at
+	// once. Reset the window whenever the filtered dataset changes.
+	const PAGE = 20;
+	const [ visible, setVisible ] = useState( PAGE );
+	useEffect( () => { setVisible( PAGE ); }, [ data ] );
+
+	const yearOptions = useMemo( () => {
+		const ys = data?.years ?? [];
+		return ys.map( ( y ) => ( { value: String( y ), label: String( y ) } ) );
+	}, [ data ] );
+
+	const deptOptions = useMemo(
+		() => [
+			{ value: '', label: __( 'All Departments', 'erp' ) },
+			...( data?.departments ?? [] ).map( ( d ) => ( { value: String( d.id ), label: d.label } ) ),
+		],
+		[ data ]
+	);
+
+	const chartData = useMemo(
+		() => ( data?.chart ?? [] ).map( ( p ) => ( { month: p.month, count: p.count } ) ),
+		[ data ]
+	);
+
+	const activeFilterCount = ( department ? 1 : 0 );
+	const filterButtonActive = showFilters || activeFilterCount > 0;
+
+	const toolbar = (
+		<div className="space-y-3">
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<div className="flex items-center gap-3">
+					<span className="inline-flex items-center gap-2 rounded-md bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+						<Users size={ 16 } aria-hidden="true" />
+						{ __( 'Total Employees', 'erp' ) }: { data?.total ?? 0 }
+					</span>
+					{ /* Legacy parity: the report stated the day its headcount was
+					     taken. Without it the total reads as timeless. */ }
+					<span className="text-sm text-muted-foreground">
+						{ sprintf(
+							/* translators: %s: the date the figures were read. */
+							__( 'as of %s', 'erp' ),
+							asOf
+						) }
+					</span>
+				</div>
+				<div className="flex items-center gap-3">
+					<FilterLabel>
+						{ __( 'Year', 'erp' ) }
+						<SmartSelect
+							options={ yearOptions }
+							value={ year }
+							onValueChange={ ( v ) => setYear( v || String( now ) ) }
+							placeholder={ String( now ) }
+							className="h-9 w-32 bg-background"
+							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+						/>
+					</FilterLabel>
+					<FilterButton
+						active={ filterButtonActive }
+						count={ activeFilterCount }
+						onToggle={ () => setShowFilters( ( prev ) => ! prev ) }
+					/>
+				</div>
+			</div>
+			{ filterButtonActive ? (
+				<div className="flex flex-wrap items-center gap-2 rounded-md border border-border bg-muted/20 p-3">
+					<FilterLabel>
+						{ __( 'Department', 'erp' ) }
+						<SmartSelect
+							options={ deptOptions }
+							value={ String( department || '' ) }
+							onValueChange={ ( v ) => setDepartment( Number( v || 0 ) ) }
+							placeholder={ __( 'All Departments', 'erp' ) }
+							showClear
+							className="h-9 w-56 bg-background"
+							contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))]"
+						/>
+					</FilterLabel>
+				</div>
+			) : null }
+		</div>
+	);
+
+	return (
+		<ReportShell title={ __( 'Head Count', 'erp' ) } toolbar={ toolbar }>
+			<ReportState loading={ loading } error={ error } empty={ false }>
+				{ /* Headcount by month — recharts bar chart (legacy flot parity). */ }
+				<div className="mb-5 border-b border-border pb-5">
+					<h3 className="mb-3 text-sm font-semibold text-foreground">{ __( 'Headcount by Month', 'erp' ) }</h3>
+					<ChartContainer config={ HEADCOUNT_CONFIG } className="h-[260px] w-full">
+						<BarChart data={ chartData } margin={ { left: 4, right: 12, top: 8 } }>
+							<CartesianGrid vertical={ false } strokeDasharray="3 3" className="stroke-border" />
+							<XAxis
+								dataKey="month"
+								tickLine={ false }
+								axisLine={ false }
+								tickMargin={ 8 }
+								tickFormatter={ monthLabel }
+								className="text-xs"
+							/>
+							<YAxis tickLine={ false } axisLine={ false } width={ 28 } allowDecimals={ false } className="text-xs" />
+							<ChartTooltip content={ <ChartTooltipContent labelFormatter={ ( v ) => monthLabel( String( v ) ) } /> } />
+							<Bar dataKey="count" fill="var(--color-count)" radius={ [ 4, 4, 0, 0 ] } barSize={ 28 } />
+						</BarChart>
+					</ChartContainer>
+				</div>
+
+				{ ( data?.employees ?? [] ).length === 0 ? (
+					<EmptyState size="page" icon={ Users } title={ __( 'No employees match these filters.', 'erp' ) } />
+				) : (
+					<div className="erp-card-in overflow-hidden rounded-[10px] border border-border bg-card shadow-sm">
+						<div className="overflow-x-auto">
+						<table className="w-full min-w-160 text-left">
+						<thead className="border-b border-border bg-card">
+							<tr className="h-10">
+								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Name', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Hire Date', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Job Title', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Department', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Location', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Status', 'erp' ) }</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ ( data?.employees ?? [] ).slice( 0, visible ).map( ( emp ) => (
+								<tr key={ emp.user_id } className="h-18 border-b border-border bg-card last:border-b-0 hover:bg-muted/40">
+									<td className="px-4 align-middle font-medium text-foreground"><ReportNameCell name={ emp.name } avatar={ emp.avatar } /></td>
+									<td className="whitespace-nowrap px-2 align-middle text-sm text-muted-foreground">{ fmtDate( emp.hire_date ) }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ emp.designation ?? '—' }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ emp.department ?? '—' }</td>
+									<td className="px-2 align-middle text-sm text-foreground">{ emp.location ?? '—' }</td>
+									<td className="px-2 align-middle text-sm capitalize text-muted-foreground">{ emp.status ?? '—' }</td>
+								</tr>
+							) ) }
+						</tbody>
+					</table>
+						</div>
+						{ ( data?.employees?.length ?? 0 ) > visible ? (
+							<div className="flex justify-center border-t border-border p-3">
+								<Button type="button" variant="outline" className="h-10 px-4" onClick={ () => setVisible( ( v ) => v + PAGE ) }>
+									{ __( 'Load more', 'erp' ) } ({ ( data?.employees?.length ?? 0 ) - visible })
+								</Button>
+							</div>
+						) : null }
+					</div>
+				) }
+			</ReportState>
+		</ReportShell>
+	);
+}

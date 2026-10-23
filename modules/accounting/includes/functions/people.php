@@ -182,7 +182,8 @@ function erp_acct_get_people_address( $people_id ) {
  * Format people address
  */
 function erp_acct_format_people_address( $address = [] ) {
-    $add = '';
+    $add     = '';
+    $address = (array) $address;
 
     $keys   = array_keys( $address );
     $values = array_values( $address );

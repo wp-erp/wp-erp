@@ -42,9 +42,12 @@ export default defineConfig({
         bypassCSP: true,
         actionTimeout: 15_000,
         navigationTimeout: (isCI ? 45 : 30) * 1000,
-        trace: 'on-first-retry',
+        // A Pro run would put the private erp-pro sources (trace network/source
+        // capture) and screens into the uploaded blob reports of this public
+        // repo, so traces and videos stay off whenever ERP_PRO is on.
+        trace: isPro ? 'off' : 'on-first-retry',
         screenshot: 'only-on-failure',
-        video: 'on-first-retry',
+        video: isPro ? 'off' : 'on-first-retry',
     },
     projects: [
         { name: 'local_site_setup', testMatch: ['**/_localSite.setup.ts'] },

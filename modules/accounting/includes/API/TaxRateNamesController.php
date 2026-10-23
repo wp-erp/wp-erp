@@ -359,7 +359,7 @@ class TaxRateNamesController extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $data = array_merge( $item, $additional_fields );
+        $data = array_merge( (array) $item, $additional_fields );
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
