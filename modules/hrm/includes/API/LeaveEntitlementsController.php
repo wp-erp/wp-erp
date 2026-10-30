@@ -82,8 +82,14 @@ class LeaveEntitlementsController extends REST_Controller {
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
-        $items       = erp_hr_leave_get_entitlements( $args );
-        $total_items = erp_hr_leave_count_entitlements();
+        // Without erp_leave_manage an employee only gets their own entitlements
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $args['user_id'] = get_current_user_id();
+        }
+
+        $entitlements = erp_hr_leave_get_entitlements( $args );
+        $items        = $entitlements['data'];
+        $total_items  = $entitlements['total'];
 
         $formated_items = [];
 
@@ -111,6 +117,10 @@ class LeaveEntitlementsController extends REST_Controller {
 
         if ( empty( $id ) || empty( $item->id ) ) {
             return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
+        }
+
+        if ( get_current_user_id() !== (int) $item->user_id && ! current_user_can( 'erp_leave_manage' ) ) {
+            return new WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to view this entitlement.', 'erp' ), [ 'status' => rest_authorization_required_code() ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );

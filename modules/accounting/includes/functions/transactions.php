@@ -1658,10 +1658,9 @@ function erp_acct_get_transaction( $transaction_id ) {
  */
 function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, $hash_to_verify = '', $algo = 'sha256' ) {
     if ( $transaction_id && $transaction_type && $hash_to_verify ) {
-        $to_hash       = $transaction_id . $transaction_type;
-        $hash_original = hash( $algo, $to_hash );
+        $hash_original = erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $algo );
 
-        if ( $hash_original === $hash_to_verify ) {
+        if ( hash_equals( $hash_original, $hash_to_verify ) ) {
             return true;
         }
     }
@@ -1682,8 +1681,9 @@ function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $al
     $hash_string = '';
 
     if ( $transaction_id && $transaction_type ) {
-        $to_hash     = $transaction_id . $transaction_type;
-        $hash_string = hash( $algo, $to_hash );
+        // Keyed with a site secret, a plain hash of id + type can be computed by anyone
+        $to_hash     = $transaction_id . '|' . $transaction_type;
+        $hash_string = hash_hmac( $algo, $to_hash, wp_salt( 'auth' ) );
     }
 
     return $hash_string;
