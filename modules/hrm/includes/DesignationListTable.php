@@ -84,7 +84,7 @@ class DesignationListTable extends WP_List_Table {
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $designation->title, $this->row_actions( $actions ), $link_to_employee );
+        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $designation->title ), $this->row_actions( $actions ), esc_url( $link_to_employee ) );
     }
 
     /**

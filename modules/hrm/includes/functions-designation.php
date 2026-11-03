@@ -19,6 +19,10 @@ function erp_hr_create_designation( $args = [] ) {
 
     $fields = wp_parse_args( $args, $defaults );
 
+    // Sanitize here so every writer (REST, AJAX, CSV import) stores plain text
+    $fields['title']       = sanitize_text_field( $fields['title'] );
+    $fields['description'] = sanitize_textarea_field( $fields['description'] );
+
     // validation
     if ( empty( $fields['title'] ) ) {
         return new WP_Error( 'no-name', __( 'No designation name provided.', 'erp' ) );
