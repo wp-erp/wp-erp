@@ -1697,20 +1697,72 @@ function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $al
  * @return string
  */
 function erp_acct_get_pdf_filename( $voucher_no ) {
-    global $wp_filesystem;
-    require_once ABSPATH . 'wp-admin/includes/file.php';
-    WP_Filesystem();
+    $voucher_no = absint( $voucher_no );
 
-    $inv_dir = WP_CONTENT_DIR . '/uploads/erp-pdfs/';
+    // Unguessable folder per voucher, the stored PDFs must not be reachable by voucher number.
+    // The file name stays readable since it is what customers see on the email attachment.
+    $token   = substr( hash_hmac( 'sha256', 'erp-acct-pdf-' . $voucher_no, wp_salt( 'auth' ) ), 0, 32 );
+    $inv_dir = erp_acct_get_pdf_dir() . $token . '/';
 
     if ( ! file_exists( $inv_dir ) ) {
-        $wp_filesystem->mkdir( $inv_dir, 0777, true );
+        wp_mkdir_p( $inv_dir );
     }
 
     $pdf_file = $inv_dir . "voucher_{$voucher_no}.pdf";
 
     return $pdf_file;
 }
+
+/**
+ * Get the pdf directory, creating and protecting it if needed
+ *
+ * @since 1.17.12
+ *
+ * @return string
+ */
+function erp_acct_get_pdf_dir() {
+    $inv_dir = WP_CONTENT_DIR . '/uploads/erp-pdfs/';
+
+    if ( ! file_exists( $inv_dir ) ) {
+        wp_mkdir_p( $inv_dir );
+    }
+
+    if ( ! file_exists( $inv_dir . 'index.php' ) ) {
+        @file_put_contents( $inv_dir . 'index.php', "<?php\n// Silence is golden.\n" ); // phpcs:ignore
+    }
+
+    if ( ! file_exists( $inv_dir . '.htaccess' ) ) {
+        @file_put_contents( $inv_dir . '.htaccess', "<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Deny from all\n</IfModule>\n" ); // phpcs:ignore
+    }
+
+    return $inv_dir;
+}
+
+/**
+ * Protect the pdf directory and remove pdfs stored under the old guessable names
+ *
+ * Old versions saved every voucher as `voucher_{id}.pdf` in a public folder.
+ * They are regenerated under the new name whenever needed.
+ *
+ * @since 1.17.12
+ *
+ * @return void
+ */
+function erp_acct_secure_pdf_dir() {
+    if ( get_option( 'erp_acct_pdf_dir_secured' ) ) {
+        return;
+    }
+
+    $inv_dir = erp_acct_get_pdf_dir();
+
+    foreach ( (array) glob( $inv_dir . 'voucher_*.pdf' ) as $file ) {
+        wp_delete_file( $file );
+    }
+
+    update_option( 'erp_acct_pdf_dir_secured', 1, false );
+}
+
+add_action( 'admin_init', 'erp_acct_secure_pdf_dir' );
 
 /**
  * Insert data into `erp_acct_people_trn_details` table
@@ -1775,11 +1827,71 @@ function erp_acct_update_data_into_people_trn_details( $transaction, $voucher_no
  * @return string
  */
 function erp_acct_pdf_abs_path_to_url( $voucher_no ) {
-    $upload_url = wp_upload_dir();
-    $url        = $upload_url['baseurl'] . '/erp-pdfs/' . "voucher_{$voucher_no}.pdf";
+    $url = add_query_arg(
+        [
+            'action'     => 'erp_acct_download_pdf',
+            'voucher_no' => absint( $voucher_no ),
+        ],
+        admin_url( 'admin-post.php' )
+    );
 
     return esc_url_raw( $url );
 }
+
+/**
+ * Stream a transaction pdf to a logged in user who can view that transaction
+ *
+ * @since 1.17.12
+ *
+ * @return void
+ */
+function erp_acct_download_pdf() {
+    $voucher_no = isset( $_GET['voucher_no'] ) ? absint( wp_unslash( $_GET['voucher_no'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    $type       = $voucher_no ? erp_acct_get_transaction_type( $voucher_no ) : '';
+
+    if ( empty( $type ) ) {
+        wp_die( esc_html__( 'Transaction not found.', 'erp' ), '', [ 'response' => 404 ] );
+    }
+
+    $sales_types = [ 'invoice', 'payment', 'estimate', 'return_payment', 'sales_return' ];
+    $capability  = in_array( $type, $sales_types, true ) ? 'erp_ac_view_sale' : 'erp_ac_view_expense';
+
+    if ( ! current_user_can( $capability ) ) {
+        wp_die( esc_html__( 'You do not have permission to view this transaction.', 'erp' ), '', [ 'response' => 403 ] );
+    }
+
+    if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+        wp_die( esc_html__( 'ERP PDF extension is not installed. Please install the extension for PDF support', 'erp' ) );
+    }
+
+    $transaction = (array) erp_acct_get_transaction( $voucher_no );
+
+    if ( empty( $transaction['voucher_no'] ) ) {
+        wp_die( esc_html__( 'Transaction not found.', 'erp' ), '', [ 'response' => 404 ] );
+    }
+
+    $file_name = erp_acct_get_pdf_filename( $voucher_no );
+
+    // Notices printed while building the pdf would corrupt it, so drop any stray output
+    ob_start();
+    erp_acct_generate_pdf( [], $transaction, $file_name, 'F' );
+    ob_end_clean();
+
+    if ( ! file_exists( $file_name ) ) {
+        wp_die( esc_html__( 'PDF not generated!', 'erp' ), '', [ 'response' => 500 ] );
+    }
+
+    nocache_headers();
+    header( 'Content-Type: application/pdf' );
+    header( 'Content-Disposition: inline; filename="voucher_' . $voucher_no . '.pdf"' );
+    header( 'Content-Length: ' . filesize( $file_name ) );
+    header( 'X-Content-Type-Options: nosniff' );
+
+    readfile( $file_name ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
+    exit;
+}
+
+add_action( 'admin_post_erp_acct_download_pdf', 'erp_acct_download_pdf' );
 
 /**
  * Get formatted transaction status for pdf voucher
