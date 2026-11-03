@@ -455,7 +455,7 @@ class BillsController extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['bill_details'] ) ) {
-            $prepared_item['bill_details'] = $request['bill_details'];
+            $prepared_item['bill_details'] = erp_acct_sanitize_line_items_particulars( $request['bill_details'] );
         }
 
         if ( isset( $request['status'] ) ) {
@@ -463,7 +463,7 @@ class BillsController extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['particulars'] ) ) {
-            $prepared_item['particulars'] = $request['particulars'];
+            $prepared_item['particulars'] = sanitize_textarea_field( $request['particulars'] );
         }
 
         if ( isset( $request['attachments'] ) ) {

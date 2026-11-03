@@ -678,3 +678,26 @@ function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
         )
     );
 }
+
+/**
+ * Sanitize the free-text particulars of transaction line items
+ *
+ * @since 1.17.12
+ *
+ * @param array $items
+ *
+ * @return array
+ */
+function erp_acct_sanitize_line_items_particulars( $items ) {
+    if ( ! is_array( $items ) ) {
+        return $items;
+    }
+
+    foreach ( $items as $key => $item ) {
+        if ( is_array( $item ) && isset( $item['particulars'] ) ) {
+            $items[ $key ]['particulars'] = sanitize_textarea_field( $item['particulars'] );
+        }
+    }
+
+    return $items;
+}
