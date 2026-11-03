@@ -1435,3 +1435,31 @@ function intercept_single_user_delete($user_id) {
         );
     }
 }
+
+/**
+ * Remove HR-managed job fields from employee data unless the current user is an HR manager
+ *
+ * Employees may edit their own profile, but job details like pay, status,
+ * department or employee id are only editable by an HR manager.
+ *
+ * @since 1.17.12
+ *
+ * @param array $data Employee data with `work` and `personal` keys
+ *
+ * @return array
+ */
+function erp_hr_strip_restricted_employee_fields( $data ) {
+    if ( current_user_can( erp_hr_get_manager_role() ) ) {
+        return $data;
+    }
+
+    if ( ! empty( $data['work'] ) && is_array( $data['work'] ) ) {
+        $data['work'] = array_intersect_key( $data['work'], [ 'date_of_birth' => true ] );
+    }
+
+    if ( isset( $data['personal']['employee_id'] ) ) {
+        unset( $data['personal']['employee_id'] );
+    }
+
+    return $data;
+}

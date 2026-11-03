@@ -797,6 +797,8 @@ class AjaxHandler {
 			if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
 				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 			}
+
+			$posted = erp_hr_strip_restricted_employee_fields( $posted );
 		} elseif ( ! current_user_can( 'erp_create_employee' ) ) {
 				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
@@ -1058,6 +1060,15 @@ class AjaxHandler {
 				)
 			)
 		);
+
+		if ( empty( $history ) ) {
+			$this->send_error( __( 'No history found!', 'erp' ) );
+		}
+
+		// The HR nonce is given to every employee, so check the history owner too (self or HR manager)
+		if ( ! current_user_can( 'erp_view_jobinfo', (int) $history->user_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
 
 		$history->date = erp_current_datetime()->modify( $history->date )->format( 'Y-m-d' );
 

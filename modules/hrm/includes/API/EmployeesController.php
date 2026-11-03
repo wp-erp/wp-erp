@@ -588,7 +588,8 @@ class EmployeesController extends REST_Controller {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
-        $data    = $this->prepare_item_for_database( $request );
+        // Employees pass the permission check for their own record, so drop the job fields only HR may change
+        $data    = erp_hr_strip_restricted_employee_fields( $this->prepare_item_for_database( $request ) );
         $updated = $employee->update_employee( $data );
 
         if ( is_wp_error( $updated ) ) {

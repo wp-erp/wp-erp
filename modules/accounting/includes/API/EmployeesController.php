@@ -40,7 +40,7 @@ class EmployeesController extends \WeDevs\ERP\API\REST_Controller {
                     'callback'            => [ $this, 'get_employees' ],
                     'args'                => $this->get_collection_params(),
                     'permission_callback' => function ( $request ) {
-                        return current_user_can( 'erp_view_list' );
+                        return current_user_can( 'erp_ac_view_expense' );
                     },
                 ],
                 'schema' => [ $this, 'get_public_item_schema' ],
@@ -58,7 +58,7 @@ class EmployeesController extends \WeDevs\ERP\API\REST_Controller {
                         'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                     ],
                     'permission_callback' => function ( $request ) {
-                        return current_user_can( 'erp_list_employee' );
+                        return current_user_can( 'erp_ac_view_expense' );
                     },
                 ],
                 'schema' => [ $this, 'get_public_item_schema' ],
@@ -74,7 +74,7 @@ class EmployeesController extends \WeDevs\ERP\API\REST_Controller {
                     'callback'            => [ $this, 'get_transactions' ],
                     'args'                => $this->get_collection_params(),
                     'permission_callback' => function ( $request ) {
-                        return current_user_can( 'erp_view_list' );
+                        return current_user_can( 'erp_ac_view_expense' );
                     },
                 ],
             ]
