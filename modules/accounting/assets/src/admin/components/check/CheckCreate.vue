@@ -277,7 +277,7 @@ export default {
             this.basic_fields.deposit_to      = { id: parseInt(check.deposit_to) };
             this.basic_fields.trn_by          = this.pay_methods.find(method => method.id === check.trn_by);
             this.basic_fields.billing_address = check.address;
-            this.basic_fields.trn_date        = check.trn_date;
+            this.basic_fields.trn_date        = check.date;
             this.basic_fields.check_no        = check.ref;
             this.status                       = check.status;
             this.particulars                  = check.particulars;
