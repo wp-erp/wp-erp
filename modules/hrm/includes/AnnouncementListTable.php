@@ -178,12 +178,20 @@ class AnnouncementListTable extends WP_List_Table {
         }
 
         //prepare modal for large number of text data in a cell
-        $cell_content     = count( $sent_to ) === 0 ? '&mdash;' : implode( ', ', $sent_to );
-        $cell_content     = $type === 'all_employee' ? esc_html__( 'All employees', 'erp' ) : $cell_content;
+        if ( $type === 'all_employee' ) {
+            return esc_html__( 'All employees', 'erp' );
+        }
+
+        if ( count( $sent_to ) === 0 ) {
+            return '&mdash;';
+        }
+
+        // Department/designation titles and user names are stored data, so escape before output
+        $cell_content     = implode( ', ', $sent_to );
         $threshold_length = 65;
 
         if ( strlen( $cell_content ) < $threshold_length ) {
-            return $cell_content;
+            return esc_html( $cell_content );
         } else {
             $list_content = '<ul style="list-style: square;">'; //this list will be shown in the modal popup
 
@@ -194,7 +202,11 @@ class AnnouncementListTable extends WP_List_Table {
 
             $list_content .= '</ul>';
 
-            return substr( $cell_content, 0, $threshold_length ) . "<span style='cursor: pointer;' title='" . esc_attr__( 'Show More', 'erp' ) . "' data-more-content='$list_content' class='expand-for-more-ann'> (" . esc_html__( 'more', 'erp' ) . ')</button>';
+            // The modal injects this as HTML, so double-encode: esc_attr() would not, and the
+            // browser's attribute decoding would turn the escaped names back into live markup
+            $list_content = htmlspecialchars( $list_content, ENT_QUOTES, 'UTF-8', true );
+
+            return esc_html( substr( $cell_content, 0, $threshold_length ) ) . "<span style='cursor: pointer;' title='" . esc_attr__( 'Show More', 'erp' ) . "' data-more-content='$list_content' class='expand-for-more-ann'> (" . esc_html__( 'more', 'erp' ) . ')</button>';
         }
     }
 
