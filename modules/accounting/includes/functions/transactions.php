@@ -843,6 +843,11 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $transaction = (object) $transaction;
     }
 
+    // An orphaned voucher (no transaction row) has nothing to print
+    if ( empty( $transaction->voucher_no ) ) {
+        return;
+    }
+
     $company     = new \WeDevs\ERP\Company();
     $theme_color = erp_get_option( 'erp_ac_pdf_theme_color', false, '#9e9e9e' );
 
@@ -920,7 +925,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
 
     // Set Due Date
-    if ( $transaction->due_date ) {
+    if ( ! empty( $transaction->due_date ) ) {
         $trn_pdf->set_reference( $transaction->due_date, __( 'Due Date', 'erp' ) );
     }
 
@@ -932,10 +937,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     $trn_pdf->set_from( $from_address );
 
     // Set to Address
-    $to_address = array_values( erp_acct_get_people_address( $user_id ) );
+    $to_address = erp_acct_get_people_address( $user_id );
+    $to_address = is_array( $to_address ) ? array_values( $to_address ) : [];
 
     if ( empty( $to_address ) ) {
-        $to_address = erp_get_people( $user_id )->email;
+        $people     = erp_get_people( $user_id );
+        $to_address = ( $people && ! is_wp_error( $people ) && ! empty( $people->email ) ) ? [ $people->email ] : [];
     }
     array_unshift( $to_address, $user->get_full_name() );
 
