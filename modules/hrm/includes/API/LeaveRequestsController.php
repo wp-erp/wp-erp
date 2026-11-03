@@ -353,6 +353,19 @@ class LeaveRequestsController extends REST_Controller {
         }
 
         $args['status'] = $request['status'] ?? $args['status'] ?? '';
+
+        // Without erp_leave_manage an employee only gets their own requests, plus
+        // colleagues' approved upcoming dates for the "who is out" widget
+        $can_manage = current_user_can( 'erp_leave_manage' );
+
+        if ( ! $can_manage ) {
+            if ( $args['type'] == 'upcoming' ) {
+                $args['status'] = 1;
+            } else {
+                $args['user_id'] = get_current_user_id();
+            }
+        }
+
         $leave_requests = erp_hr_get_leave_requests( $args );
         $items          = $leave_requests['data'];
         $total          = $leave_requests['total'];
@@ -360,6 +373,18 @@ class LeaveRequestsController extends REST_Controller {
         $formatted_items = [];
 
         foreach ( $items as $item ) {
+            if ( ! $can_manage && $args['type'] == 'upcoming' && get_current_user_id() !== (int) $item->user_id ) {
+                $employee          = new Employee( $item->user_id );
+                $formatted_items[] = [
+                    'user_id'       => (int) $item->user_id,
+                    'employee_name' => $employee->display_name,
+                    'avatar_url'    => $employee->get_avatar_url( 80 ),
+                    'start_date'    => erp_format_date( $item->start_date, 'Y-m-d' ),
+                    'end_date'      => erp_format_date( $item->end_date, 'Y-m-d' ),
+                ];
+                continue;
+            }
+
             $data              = $this->prepare_item_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -383,6 +408,10 @@ class LeaveRequestsController extends REST_Controller {
 
         if ( empty( $id ) || empty( $item->id ) ) {
             return new WP_Error( 'rest_leave_request_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
+        }
+
+        if ( get_current_user_id() !== (int) $item->user_id && ! current_user_can( 'erp_leave_manage' ) ) {
+            return new WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to view this leave request.', 'erp' ), [ 'status' => rest_authorization_required_code() ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
