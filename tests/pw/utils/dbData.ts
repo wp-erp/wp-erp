@@ -36,6 +36,7 @@ export const tables = {
     users: t('users'),
     userMeta: t('usermeta'),
     options: t('options'),
+    posts: t('posts'),
 } as const;
 
 /** WP ERP options (mostly php-serialized arrays). */

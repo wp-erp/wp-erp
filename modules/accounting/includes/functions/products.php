@@ -494,9 +494,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_product_categories
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_product_categories
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -506,9 +509,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_product_types
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_product_types
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -518,9 +524,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_tax_categories
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_tax_categories
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -530,12 +539,15 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT people.id
-                                FROM {$wpdb->prefix}erp_peoples AS people
-                                LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
-                                ON people.id = rel.people_id
-                                WHERE people.id = {$line[ $value ]}
-                                AND rel.people_types_id = 4"
+                                $wpdb->prepare(
+                                    "SELECT people.id
+                                    FROM {$wpdb->prefix}erp_peoples AS people
+                                    LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
+                                    ON people.id = rel.people_id
+                                    WHERE people.id = %d
+                                    AND rel.people_types_id = 4",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 

@@ -1552,6 +1552,11 @@ class AjaxHandler {
 	public function birthday_wish() {
 		$this->verify_hrm_nonce();
 
+		// The HR nonce is given to every employee, and this mails any user id, so keep it to HR managers
+		if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$employee_user_id = ( isset( $_POST['employee_user_id'] ) ) ? intval( wp_unslash( $_POST['employee_user_id'] ) ) : '';
 
 		// To prevent sending wish multiple time
@@ -1616,9 +1621,15 @@ class AjaxHandler {
 	public function employee_delete_performance() {
 		$this->verify_hrm_nonce();
 
-		$id      = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-		$user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+		$id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+		$performance = \WeDevs\ERP\HRM\Models\Performance::find( $id );
 
+		if ( ! $performance ) {
+			$this->send_error( __( 'Performance review does not exist.', 'erp' ) );
+		}
+
+		// Check against the employee the review belongs to, not a user_id sent with the request
+		$user_id            = (int) $performance->employee_id;
 		$department_lead_id = erp_hr_get_department_lead_by_user( $user_id );
 
 		// Check permission
@@ -1629,7 +1640,7 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		\WeDevs\ERP\HRM\Models\Performance::find( $id )->delete();
+		$performance->delete();
 
 		$this->send_success();
 	}
@@ -2204,6 +2215,11 @@ class AjaxHandler {
 		$user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 		$policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 		$status  = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'all';
+
+		// The leave tab is only shown to the employee or an HR manager, so the request must match that
+		if ( ! current_user_can( 'erp_view_employee', $user_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
 
 		$args = array(
 			'f_year'  => $year,

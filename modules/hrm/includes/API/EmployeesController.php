@@ -430,11 +430,30 @@ class EmployeesController extends REST_Controller {
             return;
         }
 
+        // Any employee can reach this route, so only accept images rather than every core-allowed type
+        $allowed_mimes = [
+            'jpg|jpeg|jpe' => 'image/jpeg',
+            'gif'          => 'image/gif',
+            'png'          => 'image/png',
+            'webp'         => 'image/webp',
+        ];
+
+        $filetype = wp_check_filetype( $file['name'], $allowed_mimes );
+
+        if ( empty( $filetype['type'] ) ) {
+            return new WP_Error( 'invalid_file_type', __( 'Only image files (jpg, jpeg, gif, png, webp) are allowed.', 'erp' ), [ 'status' => 400 ] );
+        }
+
         require_once ABSPATH . 'wp-admin/includes/image.php';
         require_once ABSPATH . 'wp-admin/includes/file.php';
         require_once ABSPATH . 'wp-admin/includes/media.php';
 
-        $attachment_id =  media_handle_upload( 'image', 0 );
+        // Passing overrides replaces the default, so test_form has to be turned off again
+        $attachment_id =  media_handle_upload( 'image', 0, [], [ 'test_form' => false, 'mimes' => $allowed_mimes ] );
+
+        if ( is_wp_error( $attachment_id ) ) {
+            return new WP_Error( 'invalid_file_type', $attachment_id->get_error_message(), [ 'status' => 400 ] );
+        }
 
         $response = [
             'photo_id'  => $attachment_id,
