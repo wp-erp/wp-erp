@@ -163,14 +163,11 @@ class Ajax {
 			$email_option    = $email->get_option_id();
 			$option_value    = get_option( $email_option );
 			$disable_allowed = true;
-			$is_enabled      = 'no';
+			// Templates without a saved state are enabled, only an explicit 'no' turns one off
+			$is_enabled      = ( isset( $option_value['is_enable'] ) && 'no' === $option_value['is_enable'] ) ? 'no' : 'yes';
 
 			if ( in_array( $email_option, $can_not_be_disabled ) ) {
 				$disable_allowed = false;
-			}
-
-			if ( isset( $option_value['is_enable'] ) ) {
-				$is_enabled = 'yes';
 			}
 
 			$email_data = array(
@@ -229,7 +226,7 @@ class Ajax {
 		}
 
 		if ( empty( $email_data['is_enable'] ) ) {
-			$email_data['is_enable'] = 'no';
+			$email_data['is_enable'] = 'yes';
 		}
 
 		foreach ( $email->find as $key => $find ) {
@@ -256,7 +253,7 @@ class Ajax {
 		}
 
 		$email_id   = ! empty( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
-		$is_enabled = ! empty( $_REQUEST['is_enable'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['is_enable'] ) ) : '';
+		$is_enabled = isset( $_REQUEST['is_enable'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['is_enable'] ) ) : null;
 
 		if ( empty( $email_id ) ) {
 			$this->send_error( __( 'Invalid email template ID', 'erp' ) );
@@ -268,8 +265,12 @@ class Ajax {
 			'body'    => ! empty( $_REQUEST['body'] ) ? wp_kses_post( wp_unslash( $_REQUEST['body'] ) ) : '',
 		);
 
-		if ( 'yes' === $is_enabled ) {
-			$option_data['is_enable'] = 'yes';
+		if ( null === $is_enabled ) {
+			// Keep the current state when the request doesn't send one
+			$current                  = get_option( $email_id, array() );
+			$option_data['is_enable'] = ( isset( $current['is_enable'] ) && 'no' === $current['is_enable'] ) ? 'no' : 'yes';
+		} else {
+			$option_data['is_enable'] = 'yes' === $is_enabled ? 'yes' : 'no';
 		}
 
 		update_option( $email_id, $option_data );
@@ -297,11 +298,8 @@ class Ajax {
 		if ( ! empty( $option_id ) ) {
 			$email_option = get_option( $option_id, array() );
 
-			if ( 'yes' === $option_value ) {
-				$email_option['is_enable'] = 'yes';
-			} else {
-				unset( $email_option['is_enable'] );
-			}
+			$email_option              = is_array( $email_option ) ? $email_option : array();
+			$email_option['is_enable'] = 'yes' === $option_value ? 'yes' : 'no';
 
 			update_option( $option_id, $email_option );
 		}

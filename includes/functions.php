@@ -3496,6 +3496,10 @@ function add_enable_disable_option_save() {
 		return;
 	}
 
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
 	if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] === 'save_email_enable_or_disable' ) {
 		$registered_email = array_keys( wperp()->emailer->get_emails() );
 		$is_enable_email  = isset( $_POST['isEnableEmail'] ) ? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['isEnableEmail'] ) ) : [];
