@@ -608,7 +608,14 @@ class EmployeesController extends REST_Controller {
         }
 
         // Employees pass the permission check for their own record, so drop the job fields only HR may change
-        $data    = erp_hr_strip_restricted_employee_fields( $this->prepare_item_for_database( $request ) );
+        $data = erp_hr_strip_restricted_employee_fields( $this->prepare_item_for_database( $request ) );
+
+        // The email is the login of the WordPress account: changing it on a
+        // more privileged account would hand that account over.
+        if ( ! empty( $data['user_email'] ) && ! $this->can_change_login_email( $id, $data['user_email'] ) ) {
+            return new WP_Error( 'rest_cannot_change_email', __( 'You are not allowed to change the email address of this account.', 'erp' ), [ 'status' => 403 ] );
+        }
+
         $updated = $employee->update_employee( $data );
 
         if ( is_wp_error( $updated ) ) {
@@ -624,6 +631,49 @@ class EmployeesController extends REST_Controller {
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
+    }
+
+    /**
+     * Whether the current user may change a user's login email.
+     *
+     * @since 1.17.12
+     *
+     * @param int    $user_id   User whose email changes.
+     * @param string $new_email Requested email.
+     *
+     * @return bool
+     */
+    protected function can_change_login_email( $user_id, $new_email ) {
+        $user = get_userdata( $user_id );
+
+        if ( ! $user || strtolower( $user->user_email ) === strtolower( (string) $new_email ) ) {
+            return true;
+        }
+
+        if ( current_user_can( 'edit_user', $user_id ) ) {
+            return true;
+        }
+
+        if ( is_multisite() && is_super_admin( $user_id ) ) {
+            return false;
+        }
+
+        // HR may only change the email of an account whose every role they
+        // could assign. A plain reader role (subscriber) grants nothing.
+        foreach ( (array) $user->roles as $role ) {
+            $role_object = get_role( $role );
+            $caps        = $role_object ? array_keys( array_filter( (array) $role_object->capabilities ) ) : [];
+
+            if ( $role_object && ! array_diff( $caps, [ 'read', 'level_0' ] ) ) {
+                continue;
+            }
+
+            if ( ! erp_can_current_user_assign_role( $role ) ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

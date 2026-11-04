@@ -156,14 +156,26 @@ class LeavePoliciesController extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_policy( $request ) {
-        $item   = $this->prepare_item_for_database( $request );
-        $policy = erp_hr_leave_insert_policy( $item );
+        $item      = $this->prepare_item_for_database( $request );
+        $policy_id = erp_hr_leave_insert_policy( $item );
+
+        if ( is_wp_error( $policy_id ) ) {
+            $policy_id->add_data( [ 'status' => 400 ] );
+
+            return $policy_id;
+        }
+
+        $policy = erp_hr_leave_get_policy( (int) $policy_id );
+
+        if ( empty( $policy->id ) ) {
+            return new WP_Error( 'rest_policy_not_created', __( 'The leave policy could not be created.', 'erp' ), [ 'status' => 400 ] );
+        }
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $policy, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $policy->id ) ) );
 
         return $response;
     }
