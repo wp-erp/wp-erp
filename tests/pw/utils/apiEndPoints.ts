@@ -23,6 +23,7 @@ export const endPoints = {
     designations: erp('hrm/designations'),
     designation: (id: string | number) => erp(`hrm/designations/${id}`),
     announcements: erp('hrm/announcements'),
+    employeePhotoUpload: erp('hrm/employees/upload'),
     leavePolicies: erp('hrm/leaves/policies'),
     leaveRequests: erp('hrm/leaves/requests'),
     leaveEntitlements: erp('hrm/leaves/entitlements'),
