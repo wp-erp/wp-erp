@@ -164,7 +164,7 @@ class Ajax {
 			$option_value    = get_option( $email_option );
 			$disable_allowed = true;
 			// Templates without a saved state are enabled, only an explicit 'no' turns one off
-			$is_enabled      = ( isset( $option_value['is_enable'] ) && 'no' === $option_value['is_enable'] ) ? 'no' : 'yes';
+			$is_enabled = ( isset( $option_value['is_enable'] ) && 'no' === $option_value['is_enable'] ) ? 'no' : 'yes';
 
 			if ( in_array( $email_option, $can_not_be_disabled ) ) {
 				$disable_allowed = false;
