@@ -334,7 +334,7 @@ class Email extends Settings_Page {
      */
     public function style_inline( $content ) {
         // make sure we only inline CSS for html emails
-        if ( in_array( $this->get_content_type(), [ 'text/html', 'multipart/alternative' ] ) && class_exists( 'DOMDocument' ) ) {
+        if ( '' !== trim( (string) $content ) && in_array( $this->get_content_type(), [ 'text/html', 'multipart/alternative' ] ) && class_exists( 'DOMDocument' ) ) {
 
             // get CSS styles
             ob_start();
@@ -347,7 +347,8 @@ class Email extends Settings_Page {
                 $emogrifier = new \WeDevs\ERP\Lib\Emogrifier( $content, $css );
                 $content    = $emogrifier->emogrify();
             } catch ( \Exception $e ) {
-                echo esc_html( $e->getMessage() );
+                // Don't echo here, it corrupts REST/AJAX responses
+                error_log( 'WP ERP email: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             }
         }
 

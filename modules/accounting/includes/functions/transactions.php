@@ -1445,16 +1445,20 @@ function erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_na
     $receiver = isset( $request['receiver'] ) ? $request['receiver'] : [];
     // translators: %s: type
     $subject = isset( $request['subject'] ) ? $request['subject'] : sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
-    $body    = isset( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );
-    // $attach_pdf = isset( $request['attachment'] ) && 'on' === $request['attachment'] ? true : false;
+    $body    = ! empty( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );
+    // The Send Mail modal posts the checkbox as a boolean, older callers may post 'on'
+    $attach_pdf = isset( $request['attachment'] ) && rest_sanitize_boolean( $request['attachment'] );
+    $pdf_file   = '';
 
-    $pdf_file = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
+    if ( $attach_pdf ) {
+        $pdf_file = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
-    if ( $pdf_file ) {
-        $result = $trn_email->trigger( $receiver, $subject, $body, $pdf_file );
-    } else {
-        wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
+        if ( ! $pdf_file ) {
+            wp_die( esc_html__( 'PDF not generated!', 'erp' ) );
+        }
     }
+
+    $result = $trn_email->trigger( $receiver, $subject, $body, $pdf_file );
 
     return $result;
 }
