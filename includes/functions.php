@@ -4140,7 +4140,8 @@ function erp_print_js() {
 		 *
 		 * @param string $js JavaScript code.
 		 */
-		echo esc_html( apply_filters( 'erp_queued_js', $js ) );
+		// The queued JS is built server-side and must be printed as a script, not escaped as text.
+		echo apply_filters( 'erp_queued_js', $js ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		unset( $erp_queued_js );
 	}
