@@ -3,6 +3,8 @@
 namespace WeDevs\ERP\HRM\API;
 
 use WeDevs\ERP\API\REST_Controller;
+use WeDevs\ERP\HRM\Models\FinancialYear;
+use WeDevs\ERP\HRM\Models\Leave;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -108,12 +110,19 @@ class LeavePoliciesController extends REST_Controller {
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
-        $items       = erp_hr_leave_get_policies( $args );
+        $policies    = erp_hr_leave_get_policies( $args );
         $total_items = erp_hr_count_leave_policies();
 
         $formated_items = [];
 
-        foreach ( $items as $item ) {
+        // erp_hr_leave_get_policies() returns display-formatted rows, load the raw policy
+        foreach ( $policies['data'] as $policy ) {
+            $item = erp_hr_leave_get_policy( (int) $policy->id );
+
+            if ( empty( $item->id ) ) {
+                continue;
+            }
+
             $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -156,7 +165,12 @@ class LeavePoliciesController extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_policy( $request ) {
-        $item      = $this->prepare_item_for_database( $request );
+        $item = $this->prepare_item_for_database( $request );
+
+        if ( is_wp_error( $item ) ) {
+            return $item;
+        }
+
         $policy_id = erp_hr_leave_insert_policy( $item );
 
         if ( is_wp_error( $policy_id ) ) {
@@ -196,10 +210,21 @@ class LeavePoliciesController extends REST_Controller {
             return new WP_Error( 'rest_policy_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 400 ] );
         }
 
-        $item = $this->prepare_item_for_database( $request );
+        $item = $this->prepare_item_for_database( $request, $policy );
+
+        if ( is_wp_error( $item ) ) {
+            return $item;
+        }
 
         $policy_id = erp_hr_leave_insert_policy( $item );
-        $policy    = erp_hr_leave_get_policy( $policy_id );
+
+        if ( is_wp_error( $policy_id ) ) {
+            $policy_id->add_data( [ 'status' => 400 ] );
+
+            return $policy_id;
+        }
+
+        $policy = erp_hr_leave_get_policy( (int) $policy_id );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $policy, $request );
@@ -228,64 +253,110 @@ class LeavePoliciesController extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request request object
+     * Maps the REST fields to the arguments erp_hr_leave_insert_policy()
+     * expects, the same way the admin policy form does.
      *
-     * @return array $prepared_item
+     * @since 1.17.12 Map to the leave_id/f_year based policy structure
+     *
+     * @param WP_REST_Request $request request object
+     * @param object|null     $policy  existing policy when updating
+     *
+     * @return array|WP_Error $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database( $request, $policy = null ) {
         $prepared_item = [];
 
-        // required arguments.
-        if ( isset( $request['name'] ) ) {
-            $prepared_item['name'] = $request['name'];
+        if ( $policy ) {
+            $prepared_item = [
+                'id'                  => (int) $policy->id,
+                'leave_id'            => $policy->leave_id,
+                'employee_type'       => $policy->employee_type,
+                'department_id'       => $policy->department_id,
+                'designation_id'      => $policy->designation_id,
+                'location_id'         => $policy->location_id,
+                'gender'              => $policy->gender,
+                'marital'             => $policy->marital,
+                'f_year'              => $policy->f_year,
+                'description'         => $policy->description,
+                'days'                => $policy->days,
+                'color'               => $policy->color,
+                'applicable_from'     => $policy->applicable_from_days,
+                'apply_for_new_users' => $policy->apply_for_new_users,
+            ];
+        }
+
+        // Leave type (by id or name) and financial year can only be set on create
+        if ( ! $policy ) {
+            $leave = null;
+
+            if ( ! empty( $request['leave_id'] ) ) {
+                $leave = Leave::find( absint( $request['leave_id'] ) );
+            } elseif ( ! empty( $request['name'] ) ) {
+                $leave = Leave::where( 'name', sanitize_text_field( $request['name'] ) )->first();
+            }
+
+            if ( empty( $leave ) ) {
+                return new WP_Error( 'rest_policy_invalid_leave', __( 'Invalid leave type. Pass an existing leave_id or leave type name.', 'erp' ), [ 'status' => 400 ] );
+            }
+
+            $prepared_item['leave_id'] = (int) $leave->id;
+
+            // Financial year, defaults to the current one
+            if ( ! empty( $request['f_year'] ) ) {
+                $f_year = FinancialYear::find( absint( $request['f_year'] ) );
+            } else {
+                $f_year = erp_hr_get_financial_year_from_date();
+            }
+
+            if ( empty( $f_year ) ) {
+                return new WP_Error( 'rest_policy_invalid_year', __( 'Invalid or missing financial year.', 'erp' ), [ 'status' => 400 ] );
+            }
+
+            $prepared_item['f_year'] = (int) $f_year->id;
         }
 
         if ( isset( $request['days'] ) ) {
-            $prepared_item['value'] = absint( $request['days'] );
+            $prepared_item['days'] = absint( $request['days'] );
         }
 
-        $prepared_item['color'] = isset( $request['color'] ) ? $request['color'] : '#fafafa';
-
-        // optional arguments.
-        if ( isset( $request['id'] ) ) {
-            $prepared_item['id'] = absint( $request['id'] );
-        }
-
-        if ( isset( $request['department'] ) ) {
-            $prepared_item['department'] = absint( $request['department'] );
-        }
-
-        if ( isset( $request['designation'] ) ) {
-            $prepared_item['designation'] = absint( $request['designation'] );
-        }
-
-        if ( isset( $request['gender'] ) ) {
-            $prepared_item['gender'] = $request['gender'];
-        }
-
-        if ( isset( $request['marital'] ) ) {
-            $prepared_item['marital'] = $request['marital'];
-        }
-
-        if ( isset( $request['activate'] ) ) {
-            $activate_types            = array_flip( $this->activate_types );
-            $prepared_item['activate'] = $activate_types[ $request['activate'] ];
-        }
-
-        if ( isset( $request['execute_day'] ) ) {
-            $prepared_item['execute_day'] = absint( $request['execute_day'] );
-        }
-
-        if ( isset( $request['effective_date'] ) ) {
-            $prepared_item['effective_date'] = gmdate( 'Y-m-d', strtotime( $request['effective_date'] ) );
-        }
-
-        if ( isset( $request['location'] ) ) {
-            $prepared_item['location'] = absint( $request['location'] );
+        if ( isset( $request['color'] ) ) {
+            $prepared_item['color'] = sanitize_text_field( $request['color'] );
+        } elseif ( ! $policy ) {
+            $prepared_item['color'] = '#fafafa';
         }
 
         if ( isset( $request['description'] ) ) {
-            $prepared_item['description'] = $request['description'];
+            $prepared_item['description'] = sanitize_text_field( $request['description'] );
+        }
+
+        if ( isset( $request['applicable_from'] ) ) {
+            $prepared_item['applicable_from'] = absint( $request['applicable_from'] );
+        }
+
+        if ( isset( $request['apply_for_new_users'] ) ) {
+            $prepared_item['apply_for_new_users'] = rest_sanitize_boolean( $request['apply_for_new_users'] ) ? 1 : 0;
+        }
+
+        // Filters, -1 means "all" as in the admin form
+        if ( ! $policy ) {
+            $filters = [
+                'employee_type'  => 'employee_type',
+                'department'     => 'department_id',
+                'designation'    => 'designation_id',
+                'location'       => 'location_id',
+                'gender'         => 'gender',
+                'marital'        => 'marital',
+            ];
+
+            foreach ( $filters as $field => $column ) {
+                $prepared_item[ $column ] = ! empty( $request[ $field ] ) ? sanitize_text_field( $request[ $field ] ) : '-1';
+            }
+
+            $prepared_item += [
+                'description'         => '',
+                'applicable_from'     => 0,
+                'apply_for_new_users' => 0,
+            ];
         }
 
         return $prepared_item;
@@ -301,18 +372,25 @@ class LeavePoliciesController extends REST_Controller {
      * @return WP_REST_Response $response response data
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item  = (object) $item;
+        $leave = Leave::find( $item->leave_id );
+
         $data = [
-            'id'             => (int) $item->id,
-            'name'           => $item->name,
-            'days'           => (int) $item->value,
-            'color'          => $item->color,
-            'gender'         => ( $item->gender != -1 ) ? $item->gender : null,
-            'marital'        => ( $item->marital != -1 ) ? $item->marital : null,
-            'activate'       => $this->activate_types[ $item->activate ],
-            'execute_day'    => (int) $item->execute_day,
-            'effective_date' => gmdate( 'Y-m-d', strtotime( $item->effective_date ) ),
-            'location'       => ( $item->location != -1 ) ? $item->location : null,
-            'description'    => $item->description,
+            'id'                  => (int) $item->id,
+            'leave_id'            => (int) $item->leave_id,
+            'name'                => $leave ? $leave->name : null,
+            'days'                => (int) $item->days,
+            'color'               => $item->color,
+            'f_year'              => (int) $item->f_year,
+            'employee_type'       => ( $item->employee_type != -1 ) ? $item->employee_type : null,
+            'department'          => ( $item->department_id != -1 ) ? (int) $item->department_id : null,
+            'designation'         => ( $item->designation_id != -1 ) ? (int) $item->designation_id : null,
+            'location'            => ( $item->location_id != -1 ) ? (int) $item->location_id : null,
+            'gender'              => ( $item->gender != -1 ) ? $item->gender : null,
+            'marital'             => ( $item->marital != -1 ) ? $item->marital : null,
+            'applicable_from'     => (int) $item->applicable_from_days,
+            'apply_for_new_users' => (bool) $item->apply_for_new_users,
+            'description'         => $item->description,
         ];
 
         if ( isset( $request['include'] ) ) {
@@ -321,10 +399,10 @@ class LeavePoliciesController extends REST_Controller {
             if ( in_array( 'department', $include_params ) ) {
                 $departments_controller = new DepartmentsController();
 
-                $department_id      = (int) $item->department;
+                $department_id      = (int) $item->department_id;
                 $data['department'] = null;
 
-                if ( $department_id ) {
+                if ( $department_id > 0 ) {
                     $department         = $departments_controller->get_department( ['id' => $department_id ] );
                     $data['department'] = ! is_wp_error( $department ) ? $department->get_data() : null;
                 }
@@ -333,10 +411,10 @@ class LeavePoliciesController extends REST_Controller {
             if ( in_array( 'designation', $include_params ) ) {
                 $designations_controller = new DesignationsController();
 
-                $designation_id      = (int) $item->designation;
+                $designation_id      = (int) $item->designation_id;
                 $data['designation'] = null;
 
-                if ( $designation_id ) {
+                if ( $designation_id > 0 ) {
                     $designation         = $designations_controller->get_designation( ['id' => $designation_id ] );
                     $data['designation'] = ! is_wp_error( $designation ) ? $designation->get_data() : null;
                 }
@@ -370,14 +448,23 @@ class LeavePoliciesController extends REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
+                'leave_id'    => [
+                    'description' => __( 'Leave type id. Either leave_id or name is required on create.', 'erp' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                ],
                 'name'        => [
-                    'description' => __( 'Name for the resource.', 'erp' ),
+                    'description' => __( 'Leave type name, used when leave_id is not given.', 'erp' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'    => true,
+                ],
+                'f_year'      => [
+                    'description' => __( 'Financial year id. Defaults to the current financial year.', 'erp' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
                 ],
                 'days'        => [
                     'description' => __( 'Days for the resource.', 'erp' ),
