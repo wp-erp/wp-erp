@@ -64,22 +64,44 @@ env:
 
 jobs:
     # ── Build wp-erp (free) ONCE. ──────────────────────────────────────────────
-    # wp-erp ships its built JS/CSS in-repo, so there is NO npm build — we only run
-    # `composer install` to produce vendor/ (the runtime autoloader). The whole tree
-    # (source + vendor + tests/pw) is tarred and shared as an artifact so the e2e/api
-    # shards download it instead of each re-running composer. Mirrors Dokan's build_lite.
+    # The compiled JS/CSS (accounting SPA bundles, assets/js/i18n.js, vendor.js,
+    # erp-settings*) are gitignored since #1609 and only built at release time, so
+    # build them here the same way deploy-erp.yml does (Node from .nvmrc — webpack 3
+    # and node-sass 4 need Node 12), then `composer install` for vendor/. The whole
+    # tree (source + built assets + vendor + tests/pw) is tarred and shared as an
+    # artifact so the e2e/api shards download it instead of each rebuilding.
     build_lite:
         name: build wp-erp
         runs-on: ubuntu-latest
-        timeout-minutes: 15
+        timeout-minutes: 20
         steps:
             - name: Checkout wp-erp (free)
               uses: actions/checkout@v4
 
+            - name: Use Node.js from .nvmrc
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+                  cache-dependency-path: package-lock.json
+
+            - name: Build JS/CSS assets (wp-erp)
+              run: |
+                  npm ci --no-audit --no-fund
+                  npm run build
+                  # Fail loudly if a bundle the admin screens enqueue is missing.
+                  for f in modules/accounting/assets/js/admin.js \
+                           modules/accounting/assets/js/bootstrap.js \
+                           assets/js/i18n.js \
+                           assets/js/vendor.js \
+                           assets/js/erp-settings.js; do
+                      test -s "$f" || { echo "::error::missing built asset $f"; exit 1; }
+                  done
+
             - name: Composer install (wp-erp)
               run: composer install --no-dev -o --no-interaction || composer update --no-dev -o
 
-            # Tar the runtime tree. node_modules is dev-only (assets are committed) and
+            # Tar the runtime tree. node_modules is only needed for the asset build and
             # the .auth/report/wp-data dirs are run outputs — none are needed downstream.
             - name: Tar wp-erp build (source + vendor + tests/pw)
               run: |

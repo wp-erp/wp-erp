@@ -40,6 +40,8 @@ const CORE = {
 
     criticalError: 'There has been a critical error on this website',
     notAllowed: /not allowed to access this page/i,
+    // Newer WP answers an admin page that isn't registered for the user with "does not exist"
+    pageDenied: /not allowed to access this page|requested page does not exist/i,
 } as const;
 
 const COMPANY_OPTION = '_erp_company';
@@ -334,7 +336,7 @@ test.describe('CORE setup wizard access — employee', () => {
     test('NC-08 employee cannot reach the setup wizard', { tag: ['@lite', '@core', '@employee'] }, async ({ page }) => {
         await page.goto(CORE.setupWizardUrl);
         // The wizard page is not registered for non-admins → WP denies the screen.
-        await expect(page.getByText(CORE.notAllowed).first()).toBeVisible({ timeout: 20_000 });
+        await expect(page.getByText(CORE.pageDenied).first()).toBeVisible({ timeout: 20_000 });
     });
 });
 
