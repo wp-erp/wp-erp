@@ -756,7 +756,7 @@ class TaxRatesController extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['particulars'] ) ) {
-            $prepared_item['particulars'] = $request['particulars'];
+            $prepared_item['particulars'] = sanitize_textarea_field( $request['particulars'] );
         }
 
         if ( isset( $request['amount'] ) ) {

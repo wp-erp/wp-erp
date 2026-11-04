@@ -322,7 +322,7 @@ class PayPurchasesController extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['purchase_details'] ) ) {
-            $prepared_item['purchase_details'] = $request['purchase_details'];
+            $prepared_item['purchase_details'] = erp_acct_sanitize_line_items_particulars( $request['purchase_details'] );
         }
 
         if ( isset( $request['amount'] ) ) {
@@ -342,7 +342,7 @@ class PayPurchasesController extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['particulars'] ) ) {
-            $prepared_item['particulars'] = $request['particulars'];
+            $prepared_item['particulars'] = sanitize_textarea_field( $request['particulars'] );
         }
 
         if ( isset( $request['status'] ) ) {

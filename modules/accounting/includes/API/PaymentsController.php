@@ -324,11 +324,11 @@ class PaymentsController extends \WeDevs\ERP\API\REST_Controller {
         }
 
         if ( isset( $request['line_items'] ) ) {
-            $prepared_item['line_items'] = $request['line_items'];
+            $prepared_item['line_items'] = erp_acct_sanitize_line_items_particulars( $request['line_items'] );
         }
 
         if ( isset( $request['particulars'] ) ) {
-            $prepared_item['particulars'] = $request['particulars'];
+            $prepared_item['particulars'] = sanitize_textarea_field( $request['particulars'] );
         }
 
         if ( isset( $request['invoice_no'] ) ) {
