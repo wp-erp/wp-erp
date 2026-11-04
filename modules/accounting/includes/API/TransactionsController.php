@@ -738,20 +738,17 @@ class TransactionsController extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.', 'erp' ), [ 'status' => 404 ] );
         }
 
-        $response = [
-            'status'  => 304,
-            'message' => 'There was an error sending mail!',
-        ];
-
         $file_name   = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
         $transaction = (object) $request['trn_data'];
 
-        if ( erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name, 'F' ) ) {
-            $response['status']  = 200;
-            $response['message'] = 'mail sent successfully.';
+        if ( ! erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name, 'F' ) ) {
+            return new WP_Error( 'rest_mail_not_sent', __( 'There was an error sending mail!', 'erp' ), [ 'status' => 500 ] );
         }
 
-        return $response;
+        return [
+            'status'  => 200,
+            'message' => 'mail sent successfully.',
+        ];
     }
 
     /**
