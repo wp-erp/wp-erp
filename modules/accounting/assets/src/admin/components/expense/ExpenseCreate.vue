@@ -319,7 +319,7 @@ export default {
             this.basic_fields.deposit_to      = { id: parseInt(expense.deposit_to) };
             this.basic_fields.trn_by          = this.pay_methods.find(method => method.id === expense.trn_by);
             this.basic_fields.billing_address = expense.address;
-            this.basic_fields.trn_date        = expense.trn_date;
+            this.basic_fields.trn_date        = expense.date;
             this.basic_fields.trn_ref         = expense.ref;
             this.status                       = expense.status;
             this.particulars                  = expense.particulars;

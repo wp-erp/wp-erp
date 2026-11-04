@@ -48,21 +48,14 @@ export default {
                     end: new Date(erp_acct_var.fy_upper_range)
                 }
             }],
-            selectedDate: ''
+            // start from the parent's value, otherwise created() below wipes a preset date
+            selectedDate: this.value || ''
         };
     },
 
     watch: {
         value(newVal) {
-            if(newVal.length === 0) {
-                this.selectedDate = '';
-            } else {
-                if (!newVal) {
-                    this.selectedDate = this.getCurrentDate();
-                } else {
-                    this.selectedDate = newVal;
-                }
-            }
+            this.selectedDate = newVal || '';
 
             this.$emit('input', this.selectedDate);
         }
