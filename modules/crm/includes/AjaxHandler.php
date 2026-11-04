@@ -413,6 +413,11 @@ class AjaxHandler {
 			$this->send_error( __( 'Cotact does not exists.', 'erp' ) );
 		}
 
+		// This only feeds the edit form, and erp_crm_list_contact doesn't scope agents to their own contacts
+		if ( ! current_user_can( 'erp_crm_edit_contact', $customer_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$this->send_success( $customer->to_array() );
 	}
 
@@ -1840,10 +1845,22 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filterId'] ) ) : 0;
+		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? intval( wp_unslash( $_POST['filterId'] ) ) : 0;
 
 		if ( ! $id ) {
 			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		$search_item = \WeDevs\ERP\CRM\Models\SaveSearch::find( $id );
+
+		if ( ! $search_item ) {
+			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		// Agents may only delete their own segments, not other agents' or global ones
+		if ( ! current_user_can( erp_crm_get_manager_role() ) && ! current_user_can( 'manage_options' )
+			&& get_current_user_id() !== (int) $search_item->user_id ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$result = erp_crm_delete_save_search_item( $id );
@@ -1861,6 +1878,10 @@ class AjaxHandler {
 	public function get_single_schedule_details() {
 		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
 			$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+		}
+
+		if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$query_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;
