@@ -184,7 +184,11 @@ class Ajax {
 				false !== strpos( get_class( $email ), 'ERP_Document' ) ||
 				false !== strpos( get_class( $email ), 'ERP_Recruitment' ) ||
 				false !== strpos( get_class( $email ), 'Recruitment\\Emails' ) ||
-				false !== strpos( get_class( $email ), 'Training' )
+				false !== strpos( get_class( $email ), 'Training' ) ||
+				false !== strpos( get_class( $email ), 'Payroll\\Emails' ) ||
+				false !== strpos( get_class( $email ), 'Attendance\\Emails' ) ||
+				false !== strpos( get_class( $email ), 'DocumentManager\\Emails' ) ||
+				false !== strpos( get_class( $email ), 'AssetManagement\\' )
 			) {
 				$emails['hrm'][] = $email_data;
 			} elseif ( false !== strpos( get_class( $email ), 'CRM' ) ) {
