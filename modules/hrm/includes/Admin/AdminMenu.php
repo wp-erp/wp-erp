@@ -204,7 +204,10 @@ class AdminMenu {
 
         erp_render_menu( $component );
 
-        call_user_func( $callback );
+        // Redirect-only submenus (e.g. payroll/attendance settings) register an empty callback
+        if ( is_callable( $callback ) ) {
+            call_user_func( $callback );
+        }
     }
 
     /**
