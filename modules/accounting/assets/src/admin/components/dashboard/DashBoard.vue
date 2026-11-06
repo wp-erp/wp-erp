@@ -6,7 +6,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">{{ __('Dashboard', 'erp') }}</h2>
-                    <a class="wperp-btn btn--primary" :href="tutorialUrl" id="btn-tutorial-start">
+                    <a class="wperp-btn btn--primary" href="#" @click.prevent="showTutorial = true" id="btn-tutorial-start">
                         <span class="dashicons dashicons-controls-play"></span>
                         {{ __(' Start Tutorial', 'erp') }}
                     </a>
@@ -14,6 +14,27 @@
             </div>
         </div>
         <!-- End .header-section -->
+
+        <!-- Tutorial Video Modal -->
+        <div class="erp-tutorial-modal" v-if="showTutorial">
+            <div class="erp-tutorial-modal-overlay" @click="showTutorial = false"></div>
+            <div class="erp-tutorial-modal-content">
+                <div class="erp-tutorial-modal-header">
+                    <h3>{{ __('Accounting Tutorial', 'erp') }}</h3>
+                    <a href="#" class="erp-tutorial-modal-close" @click.prevent="showTutorial = false">&times;</a>
+                </div>
+                <div class="erp-tutorial-modal-body">
+                    <iframe
+                        width="100%"
+                        height="450"
+                        :src="tutorialVideoUrl"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
+        </div>
 
         <div class="wperp-dashboard">
             <div class="wperp-row">
@@ -115,9 +136,10 @@ export default {
             title4        : __('Bills to pay', 'erp'),
             closable      : true,
             msg           : __('Accounting', 'erp'),
-            to_receive    : [],
-            to_pay        : [],
-            tutorialUrl   : erp_acct_var.erp_acct_tut_url
+            to_receive      : [],
+            to_pay          : [],
+            showTutorial    : false,
+            tutorialVideoUrl: erp_acct_var.erp_acct_tut_url
         };
     },
 
@@ -164,3 +186,60 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.erp-tutorial-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.erp-tutorial-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+}
+.erp-tutorial-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 6px;
+    width: 90%;
+    max-width: 850px;
+    z-index: 10000;
+    overflow: hidden;
+}
+.erp-tutorial-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.erp-tutorial-modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+.erp-tutorial-modal-close {
+    font-size: 24px;
+    text-decoration: none;
+    color: #666;
+    line-height: 1;
+}
+.erp-tutorial-modal-close:hover {
+    color: #000;
+}
+.erp-tutorial-modal-body {
+    padding: 0;
+}
+.erp-tutorial-modal-body iframe {
+    display: block;
+}
+</style>
