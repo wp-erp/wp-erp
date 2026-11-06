@@ -54,6 +54,7 @@ class NinjaForms {
                         'fields'       => [],
                         'contactGroup' => '0',
                         'contactOwner' => '0',
+                        'lifeStage'    => '',
                     ];
 
                     foreach ( $form->fields as $i => $field ) {
@@ -75,6 +76,10 @@ class NinjaForms {
                     if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['contact_owner'] ) ) {
                         $forms[ $form_id ]['contactOwner'] = $saved_settings['ninja_forms'][ $form_id ]['contact_owner'];
                     }
+
+                    if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['life_stage'] ) ) {
+                        $forms[ $form_id ]['lifeStage'] = $saved_settings['ninja_forms'][ $form_id ]['life_stage'];
+                    }
                 }
             }
         } else {
@@ -92,6 +97,7 @@ class NinjaForms {
                     'fields'       => [],
                     'contactGroup' => '0',
                     'contactOwner' => '0',
+                    'lifeStage'    => '',
                 ];
 
                 foreach ( $fields as $i => $field ) {
@@ -115,6 +121,10 @@ class NinjaForms {
 
                 if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['contact_owner'] ) ) {
                     $forms[ $form_id ]['contactOwner'] = $saved_settings['ninja_forms'][ $form_id ]['contact_owner'];
+                }
+
+                if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['life_stage'] ) ) {
+                    $forms[ $form_id ]['lifeStage'] = $saved_settings['ninja_forms'][ $form_id ]['life_stage'];
                 }
             }
         }
