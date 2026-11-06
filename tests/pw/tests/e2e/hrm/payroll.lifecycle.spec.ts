@@ -137,8 +137,8 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
         expect(String(body?.data ?? ''), 'nonce-failure message').toMatch(/nonce/i);
     });
 
-    // PRL-02 — create the pay calendar AND assign the employee in one call. No
-    // nonce on this handler. Assert the three DB rows it writes.
+    // PRL-02 — create the pay calendar AND assign the employee in one call. Needs
+    // the page nonce (payroll_nonce). Assert the three DB rows it writes.
     test('step 2: create_pay_calendar inserts calendar + type-settings + employee-join', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         expect(state.empId, 'employee captured in step 1').toBeTruthy();
         const payroll = new PayrollLifecyclePage(page);

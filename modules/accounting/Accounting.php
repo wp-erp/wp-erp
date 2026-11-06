@@ -87,6 +87,11 @@ final class Accounting {
             $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
             $pdf_install = new PDFInstall();
 
+            // Installing/activating a plugin changes state, so only act on a link carrying our nonce
+            if ( $action && ! wp_verify_nonce( isset( $_GET['_wpnonce'] ) ? sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ) : '', 'erp-pdf-action' ) ) {
+                $action = '';
+            }
+
             if ( $action === 'install' ) {
                 $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.zip' );
             } elseif ( $action === 'active' ) {
@@ -111,19 +116,14 @@ final class Accounting {
      * @return void
      */
     public function pdf_notice_message( $type ) {
-        $host     = empty( $_SERVER['HTTP_HOST'] ) ? '' : esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) );
-        $uri      = empty( $_SERVER['REQUEST_URI'] ) ? '' : esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-        $sign     = empty( $_GET ) ? '?' : '&';
-
-        $actual_link = "{$host}{$uri}";
+        $action_link = wp_nonce_url( add_query_arg( 'erp-pdf', $type ), 'erp-pdf-action' );
 
         echo '<div class="updated notice is-dismissible notice-pdf"><p>';
         echo wp_kses_post( sprintf(
-            // translators: %1$s: 'install' or 'active', %2$s: link, %3$s: type
-            __( 'Please %1$s <a href="%2$serp-pdf=%3$s">WP ERP PDF</a> extension to get PDF export feature.', 'erp' ),
+            // translators: %1$s: 'install' or 'active', %2$s: link
+            __( 'Please %1$s <a href="%2$s">WP ERP PDF</a> extension to get PDF export feature.', 'erp' ),
             $type === 'install' ? __( 'install', 'erp' ) : __( 'active', 'erp' ),
-            $actual_link . $sign,
-            $type
+            esc_url( $action_link )
         ) );
         echo '</p></div>';
     }
@@ -261,6 +261,7 @@ final class Accounting {
      */
     public function init_filters() {
         add_filter( 'erp_settings_pages', [ $this, 'add_settings_page' ] );
+        add_filter( 'woocommerce_prevent_admin_access', 'erp_ac_wc_prevent_admin_access' );
     }
 
     /**

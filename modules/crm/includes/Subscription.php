@@ -563,7 +563,20 @@ class Subscription {
 
             if ( ! empty( $this->sub_page_id ) && absint( $page->ID ) === $this->sub_page_id ) {
                 if ( ! empty( $_GET['subscription-id'] ) ) {
-                    $subscription_ids = array_map( 'intval', explode( ':', wp_unslash( $_GET['subscription-id'] ) ) );
+                    if ( 'confirm' !== sanitize_text_field( wp_unslash( $_GET['erp-subscription-action'] ) ) ) {
+                        return;
+                    }
+
+                    // Hashes are opaque string tokens. Never cast them to int, as MySQL
+                    // would then match every hash that doesn't start with a digit.
+                    $subscription_ids = array_map( 'sanitize_text_field', explode( ':', wp_unslash( $_GET['subscription-id'] ) ) );
+                    $subscription_ids = array_values( array_filter( $subscription_ids, function ( $hash ) {
+                        return (bool) preg_match( '/^[a-zA-Z0-9]{20,64}$/', $hash );
+                    } ) );
+
+                    if ( empty( $subscription_ids ) ) {
+                        return;
+                    }
 
                     $this->subscribed_groups = Models\ContactSubscriber::whereIn( 'hash', $subscription_ids )->get();
 

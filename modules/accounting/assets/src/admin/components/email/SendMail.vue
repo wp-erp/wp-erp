@@ -113,7 +113,12 @@ export default {
                 this.$store.dispatch('spinner/setSpinner', false);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
+
+                const message = error.response && error.response.data && error.response.data.message
+                    ? error.response.data.message
+                    : __('There was an error sending mail!', 'erp');
+
+                this.showAlert('error', message);
             });
         }
     }

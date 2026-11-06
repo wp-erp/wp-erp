@@ -456,7 +456,7 @@ function erp_acct_validate_csv_data( $data ) {
     $errors          = [];
     $product_data    = [];
     $to_be_updated   = [];
-    $processed_data  = '';
+    $processed_data  = [];
     $temp_type       = $data['type'];
     $update_existing = (int) $data['update_existing'] ? true : false;
     $curr_date       = erp_current_datetime()->format( 'Y-m-d' );
@@ -480,7 +480,7 @@ function erp_acct_validate_csv_data( $data ) {
         }
 
         if ( is_array( $data['fields'] ) && ! empty( $data['fields'] ) ) {
-            $product_data[ $index ] = '';
+            $product_data[ $index ] = [];
             $product_exists_id      = '';
             $product_checked        = false;
 
@@ -494,9 +494,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_product_categories
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_product_categories
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -506,9 +509,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_product_types
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_product_types
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -518,9 +524,12 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT id
-                                FROM {$wpdb->prefix}erp_acct_tax_categories
-                                WHERE id = {$line[ $value ]}"
+                                $wpdb->prepare(
+                                    "SELECT id
+                                    FROM {$wpdb->prefix}erp_acct_tax_categories
+                                    WHERE id = %d",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -530,12 +539,15 @@ function erp_acct_validate_csv_data( $data ) {
 
                         if ( ! empty( $line[ $value ] ) ) {
                             $valid_value = $wpdb->get_var(
-                                "SELECT people.id
-                                FROM {$wpdb->prefix}erp_peoples AS people
-                                LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
-                                ON people.id = rel.people_id
-                                WHERE people.id = {$line[ $value ]}
-                                AND rel.people_types_id = 4"
+                                $wpdb->prepare(
+                                    "SELECT people.id
+                                    FROM {$wpdb->prefix}erp_peoples AS people
+                                    LEFT JOIN {$wpdb->prefix}erp_people_type_relations AS rel
+                                    ON people.id = rel.people_id
+                                    WHERE people.id = %d
+                                    AND rel.people_types_id = 4",
+                                    absint( $line[ $value ] )
+                                )
                             );
                         }
 
@@ -566,15 +578,13 @@ function erp_acct_validate_csv_data( $data ) {
                 }
 
                 if ( empty( $product_exists_id ) ) {
-                    $product_data[ $index ] .= "'{$value}',";
+                    $product_data[ $index ][ $key ] = $value;
                 } else {
                     $to_be_updated[ $product_exists_id ][ $key ] = $value;
                 }
             }
 
-            if ( empty( $product_exists_id ) ) {
-                $product_data[ $index ] .= "'{$user}','{$curr_date}'";
-            } else {
+            if ( ! empty( $product_exists_id ) ) {
                 unset( $product_data[ $index ] );
             }
 
@@ -583,7 +593,7 @@ function erp_acct_validate_csv_data( $data ) {
     }
 
     if ( ! empty( $product_data ) ) {
-        $processed_data = '(' . implode( '),(', $product_data ) . ')';
+        $processed_data = array_values( $product_data );
     }
 
     return [
@@ -605,26 +615,49 @@ function erp_acct_validate_csv_data( $data ) {
 function erp_acct_import_products( $data ) {
     global $wpdb;
 
-    if ( ! empty( $data['items'] ) ) {
-        $inserted = $wpdb->query(
-            $wpdb->prepare(
-                "INSERT INTO {$wpdb->prefix}erp_acct_products
-                 (name, product_type_id, category_id, cost_price, sale_price, vendor, tax_cat_id, created_by, created_at)
-                VALUES %s",
-                $data['items']
-            )
-        );
+    $columns   = [ 'name', 'product_type_id', 'category_id', 'cost_price', 'sale_price', 'vendor', 'tax_cat_id' ];
+    $curr_date = erp_current_datetime()->format( 'Y-m-d' );
+    $user      = get_current_user_id();
 
-        if ( is_wp_error( $inserted ) ) {
-            return new WP_Error( 'import-db-error', __( 'Something went wrong', 'erp' ) );
+    if ( ! empty( $data['items'] ) && is_array( $data['items'] ) ) {
+        $placeholders = [];
+        $values       = [];
+
+        // Bind every value of every row, never build the VALUES list from strings
+        foreach ( $data['items'] as $item ) {
+            if ( ! is_array( $item ) ) {
+                continue;
+            }
+
+            $placeholders[] = '(' . implode( ', ', array_fill( 0, count( $columns ) + 2, '%s' ) ) . ')';
+
+            foreach ( $columns as $column ) {
+                $values[] = isset( $item[ $column ] ) ? $item[ $column ] : '';
+            }
+
+            $values[] = $user;
+            $values[] = $curr_date;
+        }
+
+        if ( ! empty( $placeholders ) ) {
+            $inserted = $wpdb->query(
+                $wpdb->prepare(
+                    "INSERT INTO {$wpdb->prefix}erp_acct_products
+                    (name, product_type_id, category_id, cost_price, sale_price, vendor, tax_cat_id, created_by, created_at)
+                    VALUES " . implode( ', ', $placeholders ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                    $values
+                )
+            );
+
+            if ( false === $inserted ) {
+                return new WP_Error( 'import-db-error', __( 'Something went wrong', 'erp' ) );
+            }
         }
     }
 
     if ( ! empty( $data['update'] ) ) {
-        $curr_date = erp_current_datetime()->format( 'Y-m-d' );
-        $user      = get_current_user_id();
-
         foreach ( $data['update'] as $id => $field_data ) {
+            $field_data               = array_intersect_key( (array) $field_data, array_flip( $columns ) );
             $field_data['updated_at'] = $curr_date;
             $field_data['updated_by'] = $user;
 

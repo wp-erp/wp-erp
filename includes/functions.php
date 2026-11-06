@@ -908,7 +908,7 @@ function erp_months_dropdown( $title = false ) {
 	}
 
 	for ( $m = 1; $m <= 12; $m++ ) {
-		$months[ $m ] = sprintf( __( '%s', 'erp' ), gmdate( 'F', mktime( 0, 0, 0, $m, 1 ) ) );
+		$months[ $m ] = date_i18n( 'F', mktime( 0, 0, 0, $m, 1 ) );
 	}
 
 	return $months;
@@ -2704,7 +2704,25 @@ function erp_get_editable_roles() {
 	if ( ! function_exists( 'get_editable_roles' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/user.php';
 	}
+
+	// ERP hides its own non-public roles (HR Manager, CRM Manager, CRM Agent,
+	// Recruiter...) from the WP role list, keep them here
+	$erp_role_filters = [];
+
+	foreach ( [ 'erp_hr_filter_editable_roles', 'erp_crm_filter_editable_roles', 'erp_ac_filter_editable_roles' ] as $callback ) {
+		$priority = has_filter( 'editable_roles', $callback );
+
+		if ( false !== $priority ) {
+			remove_filter( 'editable_roles', $callback, $priority );
+			$erp_role_filters[ $callback ] = $priority;
+		}
+	}
+
 	$wp_roles = get_editable_roles();
+
+	foreach ( $erp_role_filters as $callback => $priority ) {
+		add_filter( 'editable_roles', $callback, $priority );
+	}
 
 	if ( ! current_user_can( 'administrator' ) ) {
 		unset( $wp_roles['administrator'] );
@@ -3036,11 +3054,9 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 			admin_url( 'admin.php' )
 		);
 
-		$class     = $active === $item['slug'] ? 'active ' : '';
 		$pro_popup = '';
 		if ( ! empty( $item['pro_popup'] ) ) {
 			$pro_popup = '<span class="pro-popup">Pro</span>';
-			$class    .= ' pro-popup-main ';
 		}
 
 		if ( $dropdown ) {
@@ -3052,7 +3068,13 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 				),
 				admin_url( 'admin.php' )
 			);
-			$class .= ( ! empty( $_GET['sub-section'] ) && $_GET['sub-section'] === $item['slug'] ) ? 'active ' : '';
+			$class = ( ! empty( $_GET['sub-section'] ) && $_GET['sub-section'] === $item['slug'] ) ? 'active ' : '';
+		} else {
+			$class = $active === $item['slug'] ? 'active ' : '';
+		}
+
+		if ( ! empty( $item['pro_popup'] ) ) {
+			$class .= ' pro-popup-main ';
 		}
 
 		if ( ! empty( $item['direct_link'] ) ) {
@@ -3481,13 +3503,8 @@ function add_enable_disable_section_to_email_column( $email ) {
 	$get_option_id    = $email->get_option_id();
 	$get_option_value = get_option( $get_option_id );
 
-	if ( isset( $get_option_value['is_enable'] ) ) {
-		if ( $get_option_value['is_enable'] === 'yes' ) {
-			$is_enable = ' checked';
-		}
-	} else {
-		$is_enable = '';
-	}
+	// Templates without a saved state are enabled, only an explicit 'no' turns one off
+	$is_enable = ( isset( $get_option_value['is_enable'] ) && 'no' === $get_option_value['is_enable'] ) ? '' : ' checked';
 	$can_not_be_disabled = apply_filters(
 		'email_settings_enable_filter',
 		array(
@@ -3528,28 +3545,23 @@ function add_enable_disable_option_save() {
 		return;
 	}
 
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
 	if ( isset( $_POST['save_email_enable_or_disable'] ) && $_POST['save_email_enable_or_disable'] === 'save_email_enable_or_disable' ) {
 		$registered_email = array_keys( wperp()->emailer->get_emails() );
+		$is_enable_email  = isset( $_POST['isEnableEmail'] ) ? array_map( 'sanitize_text_field', wp_unslash( (array) $_POST['isEnableEmail'] ) ) : [];
 
 		foreach ( $registered_email as $remail ) {
 			$cur_email_init   = wperp()->emailer->get_email( $remail );
 			$cur_email_id     = 'erp_email_settings_' . $cur_email_init->id;
 			$cur_email_option = get_option( $cur_email_id );
 
-			if ( isset( $cur_email_option['is_enable'] ) ) {
-				unset( $cur_email_option['is_enable'] );
-				update_option( $cur_email_id, $cur_email_option );
-			}
-		}
-
-		if ( isset( $_POST['isEnableEmail'] ) ) {
-			$is_enable_email = array_map( 'sanitize_text_field', wp_unslash( $_POST['isEnableEmail'] ) );
-
-			foreach ( $is_enable_email as $key => $value ) {
-				$email_arr              = get_option( $key );
-				$email_arr['is_enable'] = 'yes';
-				update_option( $key, $email_arr );
-			}
+			// Store the state explicitly, a missing value means enabled
+			$cur_email_option              = is_array( $cur_email_option ) ? $cur_email_option : [];
+			$cur_email_option['is_enable'] = isset( $is_enable_email[ $cur_email_id ] ) ? 'yes' : 'no';
+			update_option( $cur_email_id, $cur_email_option );
 		}
 	}
 }
@@ -3622,13 +3634,14 @@ function filter_enabled_email( $email ) {
 	}
 	$get_email_settings = get_option( $get_option_id );
 
-	if ( isset( $get_email_settings['is_enable'] ) && $get_email_settings['is_enable'] === 'yes' ) {
+	// Only an explicit 'no' disables a template, templates without a saved state stay enabled
+	if ( ! isset( $get_email_settings['is_enable'] ) || 'no' !== $get_email_settings['is_enable'] ) {
 		return $email;
 	}
 	add_filter(
 		'erp_email_recipient_' . $email->id,
 		function ( $recipient, $object ) {
-			return $recipient;
+			return '';
 		},
 		10,
 		2
@@ -4167,7 +4180,8 @@ function erp_print_js() {
 		 *
 		 * @param string $js JavaScript code.
 		 */
-		echo esc_html( apply_filters( 'erp_queued_js', $js ) );
+		// The queued JS is built server-side and must be printed as a script, not escaped as text.
+		echo apply_filters( 'erp_queued_js', $js ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		unset( $erp_queued_js );
 	}

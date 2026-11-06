@@ -37,8 +37,28 @@ if ( $employee->get_status() == 'terminated' && ! current_user_can( 'erp_hr_mana
         <div class="erp-area-left full-width erp-hr-employees-wrap-inner">
             <div id="erp-area-left-inner">
 
+                <?php
+                // A colleague only gets directory details, same as erp-hr-emp-get refuses the full record
+                $can_view_employee = current_user_can( 'erp_view_employee', $employee->get_user_id() );
+                $employee_data     = $employee->to_array();
+
+                if ( ! $can_view_employee ) {
+                    $employee_data = [
+                        'id'         => $employee_data['id'],
+                        'user_id'    => $employee_data['user_id'],
+                        'user_email' => $employee_data['user_email'],
+                        'name'       => $employee_data['name'],
+                        'avatar'     => $employee_data['avatar'],
+                        'work'       => [
+                            'designation' => $employee_data['work']['designation'],
+                            'department'  => $employee_data['work']['department'],
+                            'location'    => $employee_data['work']['location'],
+                        ],
+                    ];
+                }
+                ?>
                 <script type="text/javascript">
-                    window.wpErpCurrentEmployee = <?php echo wp_json_encode( $employee->to_array() ); ?>;
+                    window.wpErpCurrentEmployee = <?php echo wp_json_encode( $employee_data ); ?>;
                 </script>
 
                 <div class="erp-profile-top">
@@ -66,12 +86,15 @@ if ( $employee->get_status() == 'terminated' && ! current_user_can( 'erp_hr_mana
                             <?php
                             $phones = [];
 
-                            if ( $work_phone = $employee->get_work_phone() ) {
-                                $phones[] = $work_phone;
-                            }
+                            // keep a colleague's phone numbers private
+                            if ( $can_view_employee ) {
+                                if ( $work_phone = $employee->get_work_phone() ) {
+                                    $phones[] = $work_phone;
+                                }
 
-                            if ( $mobile_phone = $employee->get_mobile() ) {
-                                $phones[] = $mobile_phone;
+                                if ( $mobile_phone = $employee->get_mobile() ) {
+                                    $phones[] = $mobile_phone;
+                                }
                             }
 
                             if ( $phones ) {

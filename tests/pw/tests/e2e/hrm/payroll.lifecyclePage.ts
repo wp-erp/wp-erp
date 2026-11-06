@@ -27,10 +27,12 @@ import { dbUtils } from '@utils/dbUtils';
  *   → get_payrun_list / get_pay_calendar.
  *
  * Nonce notes per handler (read from the source):
- *   - create_pay_calendar  : NO verify_nonce (only the logged-in cookie is needed).
  *   - get_employee_list_by_calid / get_pay_calendar / get_payrun_list : NO verify_nonce.
- *   - get_available_employees / add_payitem / start_variable_input /
- *     add_additional_allowance_deduction : REQUIRE wpErpPayroll.nonce (payroll_nonce).
+ *   - get_available_employees / create_pay_calendar / add_payitem /
+ *     start_variable_input / add_additional_allowance_deduction : REQUIRE
+ *     wpErpPayroll.nonce (payroll_nonce). create_pay_calendar gained its nonce
+ *     check in erp-pro 90777c449 (legacy payroll AJAX hardening).
+ *   - every erp_payroll_* action also requires the erp_hr_manager capability.
  */
 
 // Pro payroll tables (string literals — dbData.tables carries only free tables).
@@ -172,7 +174,7 @@ export class PayrollLifecyclePage {
     }
 
     /**
-     * Step 2 — create a pay calendar and assign employees in one call. No nonce.
+     * Step 2 — create a pay calendar and assign employees in one call. Requires the nonce.
      * empids MUST be non-empty (the handler builds an INSERT...VALUES loop and
      * SQL-errors on empty). cal_type is unique per calendar (handler-enforced).
      */
@@ -184,6 +186,7 @@ export class PayrollLifecyclePage {
     }) {
         const parts = [
             'action=erp_payroll_create_pay_calendar',
+            `_wpnonce=${encodeURIComponent(this.nonce)}`,
             `cal_name=${encodeURIComponent(args.calName)}`,
             `cal_type=${encodeURIComponent(args.calType)}`,
             `paydaymode=${args.payDayMode ?? 1}`,

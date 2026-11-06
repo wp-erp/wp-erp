@@ -19,6 +19,12 @@ class License {
      */
     private $api_url = 'https://wperp.com/';
 
+    private $file;
+    private $item_name;
+    private $version;
+    private $author;
+    private $short_name;
+
     public function __construct( $file, $addon_name, $version, $author, $api_url = null ) {
 
         // bail out if it's a local server
@@ -176,8 +182,18 @@ class License {
      * @return void
      */
     public function save_and_activate_license() {
+        // Runs on every admin_init, so only act on an actual license form submission
+        if ( ! isset( $_POST[ $this->get_license_option_key() ] ) ) {
+            return;
+        }
+
         if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
             wp_die( esc_html( __( 'Nonce verification failed!', 'erp' ) ) );
+        }
+
+        // `erp-nonce` is printed on every admin page, so it can't be the only gate
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         if ( isset( $_POST[ $this->get_license_option_key() ] ) ) {

@@ -334,7 +334,7 @@ class Email extends Settings_Page {
      */
     public function style_inline( $content ) {
         // make sure we only inline CSS for html emails
-        if ( in_array( $this->get_content_type(), [ 'text/html', 'multipart/alternative' ] ) && class_exists( 'DOMDocument' ) ) {
+        if ( '' !== trim( (string) $content ) && in_array( $this->get_content_type(), [ 'text/html', 'multipart/alternative' ] ) && class_exists( 'DOMDocument' ) ) {
 
             // get CSS styles
             ob_start();
@@ -347,7 +347,8 @@ class Email extends Settings_Page {
                 $emogrifier = new \WeDevs\ERP\Lib\Emogrifier( $content, $css );
                 $content    = $emogrifier->emogrify();
             } catch ( \Exception $e ) {
-                echo esc_html( $e->getMessage() );
+                // Don't echo here, it corrupts REST/AJAX responses
+                error_log( 'WP ERP email: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             }
         }
 
@@ -363,6 +364,15 @@ class Email extends Settings_Page {
         return apply_filters( 'erp_settings_email_form_fields_' . $this->id, $this->form_fields );
     }
 
+
+    /**
+     * Whether this email type is enabled in global settings.
+     *
+     * @return bool
+     */
+    public function is_enabled() {
+        return 'yes' === $this->get_option( 'is_enable', 'yes' );
+    }
     /**
      * Send the email.
      *
@@ -375,6 +385,10 @@ class Email extends Settings_Page {
      * @return bool
      */
     public function send( $to, $subject, $message, $headers, $attachments ) {
+        if ( ! $this->is_enabled() ) {
+            return false;
+        }
+
         $message    = apply_filters( 'erp_mail_content', $this->style_inline( $message ) );
         $recipients = apply_filters( 'erp_mail_recipients', $to );
 

@@ -395,3 +395,18 @@ function erp_ac_filter_editable_roles( $all_roles = [] ) {
 
     return $all_roles;
 }
+
+/**
+ * Let accounting managers into wp-admin when WooCommerce is active
+ *
+ * @param bool $prevent_access
+ *
+ * @return bool
+ */
+function erp_ac_wc_prevent_admin_access( $prevent_access ) {
+    if ( current_user_can( erp_ac_get_manager_role() ) ) {
+        return false;
+    }
+
+    return $prevent_access;
+}

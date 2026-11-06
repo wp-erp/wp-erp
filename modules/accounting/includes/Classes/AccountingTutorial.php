@@ -331,5 +331,3 @@ class AccountingTutorial {
         );
 	}
 }
-
-new AccountingTutorial();

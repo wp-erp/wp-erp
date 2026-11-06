@@ -65,7 +65,8 @@ class ContactsController extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_crm_list_contact' );
+                    // `erp_crm_edit_contact` is mapped to an ownership check for CRM agents
+                    return current_user_can( 'erp_crm_list_contact' ) && current_user_can( 'erp_crm_edit_contact', $request['id'] );
                 },
             ],
             [
@@ -96,12 +97,13 @@ class ContactsController extends REST_Controller {
      */
     public function get_contacts( $request ) {
         $args = [
+            'type'   => 'contact',
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
         $items       = erp_get_peoples( $args );
-        $total_items = erp_get_peoples( [ 'count' => true ] );
+        $total_items = erp_get_peoples( [ 'type' => 'contact', 'count' => true ] );
 
         $formated_items = [];
 

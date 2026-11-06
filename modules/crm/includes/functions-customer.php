@@ -685,7 +685,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
  * @return string
  */
 function erp_crm_format_activity_feed_message( $message, $activity ) {
-    return apply_filters( 'erp_crm_format_activity_feed_message', stripslashes( $message ), $activity );
+    return apply_filters( 'erp_crm_format_activity_feed_message', wp_kses_post( stripslashes( $message ) ), $activity );
 }
 
 /**
@@ -2394,11 +2394,16 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
         $is_contact_group_joined = false;
         $table_alias             = 1;
         $tag_table_joined        = 0;
+        $or_groups               = 0;
 
-        foreach ( $query_data as $key => $or_query ) {
+        foreach ( $query_data as $or_query ) {
             if ( $or_query ) {
-                $i                     = 0;
-                $custom_sql['where'][] = ( $key === 0 ) ? 'AND (' : 'OR (';
+                $i = 0;
+
+                // Wrap all OR groups in one AND ( ... ) so they can't escape
+                // conditions added before this filter, like the agent's owner limit
+                $custom_sql['where'][] = ( $or_groups === 0 ) ? 'AND ( (' : 'OR (';
+                $or_groups ++;
 
                 foreach ( $or_query as $field => $value ) {
                     if ( in_array( $field, $pep_fileds, true ) ) {
@@ -2590,6 +2595,10 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
 
             $table_alias ++;
         }
+
+        if ( $or_groups ) {
+            $custom_sql['where'][] = ')';
+        }
     }
 
     return $custom_sql;
@@ -2690,6 +2699,10 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
  * @return array erp_crm_save_customer_feed_data
  */
 function erp_crm_save_email_activity( $email, $inbound_email_address ) {
+    // Inbound mail is attacker-controlled: it is stored in the timeline and forwarded on.
+    $email['body']    = wp_kses_post( $email['body'] );
+    $email['subject'] = sanitize_text_field( $email['subject'] );
+
     $extra_data = [ 'replied' => 1 ];
 
     if ( isset( $email['attachments'] ) ) {
@@ -2704,8 +2717,8 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
     );
 
     $save_data = [
-        'user_id'       => $email['cid'],
-        'created_by'    => $email['sid'],
+        'user_id'       => absint( $email['cid'] ),
+        'created_by'    => absint( $email['sid'] ),
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
@@ -2786,6 +2799,10 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
  * @return array customer_feed_data
  */
 function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
+    // Inbound mail is attacker-controlled: it is stored in the timeline and forwarded on.
+    $email['body']    = wp_kses_post( $email['body'] );
+    $email['subject'] = sanitize_text_field( $email['subject'] );
+
     $extra_data = [ 'replied' => 1 ];
 
     if ( isset( $email['attachments'] ) ) {
@@ -2800,8 +2817,8 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     );
 
     $save_data = [
-        'user_id'       => $email['cid'],
-        'created_by'    => $email['sid'],
+        'user_id'       => absint( $email['cid'] ),
+        'created_by'    => absint( $email['sid'] ),
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],

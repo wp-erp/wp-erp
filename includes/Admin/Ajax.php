@@ -4,7 +4,6 @@ namespace WeDevs\ERP\Admin;
 
 use WeDevs\ERP\Admin\Models\CompanyLocations;
 use WeDevs\ERP\Company;
-use WeDevs\ERP\Framework\Models\APIKey;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -29,8 +28,6 @@ class Ajax {
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
         $this->action( 'wp_ajax_erp_check_gmail_connection_established', 'check_gmail_connection_established' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
-        $this->action( 'wp_ajax_erp-api-key', 'new_api_key' );
-        $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key' );
         $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer' );
         $this->action( 'wp_ajax_erp-toggle-module', 'toggle_module' );
         $this->action( 'wp_ajax_erp_import_csv', 'import_csv' );
@@ -583,15 +580,29 @@ class Ajax {
             return;
         }
 
+        // Audit log lives under Tools; `erp-nonce` is printed on every admin page so it can't be the only gate
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $log_id = isset( $_POST['id'] ) ? intval( wp_unslash( $_POST['id'] ) ) : 0;
 
         if ( ! $log_id ) {
             $this->send_error();
         }
 
-        $log       = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
-        $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
-        $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
+        $log = \WeDevs\ERP\Admin\Models\AuditLog::find( $log_id );
+
+        if ( ! $log ) {
+            $this->send_error( __( 'Audit log entry does not exist.', 'erp' ) );
+        }
+
+        $old_value = maybe_unserialize( base64_decode( (string) $log->old_value ) );
+        $new_value = maybe_unserialize( base64_decode( (string) $log->new_value ) );
+
+        // "add"/"delete" entries store no diff, so there may be nothing to iterate
+        $old_value = is_array( $old_value ) ? $old_value : [];
+        $new_value = is_array( $new_value ) ? $new_value : [];
         ob_start(); ?>
         <div class="wrap">
             <table class="wp-list-table widefat fixed audit-log-change-table">
@@ -614,7 +625,7 @@ class Ajax {
                 <tbody>
                     <?php $i=1; ?>
                     <?php foreach ( $old_value as $key => $value ) {
-                         if(is_array($value) && is_array($new_value[$key]) ) {
+                         if(is_array($value) && isset($new_value[$key]) && is_array($new_value[$key]) ) {
                             foreach ($value as $sub_key => $sub_value) {
                                 if ( isset( $new_value[$key][$sub_key] ) ) {
                                     ?>
@@ -643,7 +654,7 @@ class Ajax {
                         <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
                             <td class="col-date"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $key ) ) ); ?></td>
                             <td><?php echo ( $value ) ? esc_html( wp_unslash( $value ) ) : '--'; ?></td>
-                            <td><?php echo ( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
+                            <td><?php echo ! empty( $new_value[$key] ) && is_scalar( $new_value[$key] ) ? esc_html( wp_unslash( $new_value[$key] ) ) : '--'; ?></td>
                         </tr>
                         <?php } ?>
                     <?php $i++; } ?>
@@ -712,6 +723,11 @@ class Ajax {
             'id' => isset( $people->id ) ? $people->id : null,
             'types' => isset( $people->types ) ? $people->types : array()
         );
+
+        // WP users not in ERP yet are converted by their WP user ID
+        if ( null === $safe_data['id'] && false !== $user ) {
+            $safe_data['user_id'] = $user->ID;
+        }
 
         // seems like we found one
         $this->send_success( $safe_data );
@@ -815,7 +831,8 @@ class Ajax {
             return;
         }
 
-        if ( ! erp_crm_is_current_user_manager() && erp_crm_is_current_user_crm_agent() ) {
+        // Only blocking CRM agents let every other role (HR/Accounting managers...) through
+        if ( ! current_user_can( erp_crm_get_manager_role() ) && ! current_user_can( 'manage_options' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -925,61 +942,6 @@ class Ajax {
         }
 
         $this->send_success( [ 'left' => $left, 'total_items' => $total_items, 'exists' => 0 ] );
-    }
-
-    /**
-     * New api key
-     *
-     * @return void
-     */
-    public function new_api_key() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-api-key' ) ) {
-            return;
-        }
-
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-
-        if ( $id ) {
-            $api_key = \WeDevs\ERP\Framework\Models\APIKey::find( $id );
-
-            $api_key->update( [
-                'name'    => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-                'user_id' => isset( $_POST['user_id'] ) ? intval( wp_unslash( $_POST['user_id'] ) ) : 0,
-            ] );
-
-            $this->send_success( $api_key );
-        }
-
-        $api_key = [
-            'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-            'api_key'    => 'ck_' . esc_html( erp_generate_key() ),
-            'api_secret' => 'cs_' . esc_html( erp_generate_key() ),
-            'user_id'    => intval( $_POST['user_id'] ),
-            'created_at' => current_time( 'mysql' ),
-        ];
-
-        $data = \WeDevs\ERP\Framework\Models\APIKey::create( $api_key );
-
-        $this->send_success( $data );
-    }
-
-    /**
-     * Delete api key
-     *
-     * @return void
-     */
-    public function delete_api_key() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'erp-nonce' ) ) {
-            return;
-        }
-
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-
-        if ( $id ) {
-            APIKey::find( $id )->delete();
-        }
-
-        $this->send_success();
     }
 
     /**

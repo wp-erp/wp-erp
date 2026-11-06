@@ -334,6 +334,9 @@ class AjaxHandler {
 			$this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
 		}
 
+		// The linked WP user must never come from the request, otherwise any WP account could be targeted.
+		unset( $data['user_id'] );
+
 		if ( $data['id'] ) {
 			$customer_data = new Contact( $data['id'] );
 		}
@@ -410,6 +413,11 @@ class AjaxHandler {
 			$this->send_error( __( 'Cotact does not exists.', 'erp' ) );
 		}
 
+		// This only feeds the edit form, and erp_crm_list_contact doesn't scope agents to their own contacts
+		if ( ! current_user_can( 'erp_crm_edit_contact', $customer_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$this->send_success( $customer->to_array() );
 	}
 
@@ -452,7 +460,7 @@ class AjaxHandler {
 				$ids[] = $contact_id;
 			}
 		} else {
-			if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) && ! current_user_can( 'erp_crm_agent' ) ) {
+			if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) ) {
 				$this->send_error( __( 'You don\'t have any permission to delete this contact', 'erp' ) );
 			}
 			$ids[] = $customer_id;
@@ -590,9 +598,13 @@ class AjaxHandler {
 			$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
 		}
 
+		if ( ! current_user_can( 'erp_crm_add_contact' ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$id    = isset( $_POST['user_id'] ) ? intval( wp_unslash( $_POST['user_id'] ) ) : 0;
 		$type  = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-		$is_wp = isset( $_POST['is_wp'] ) ? true : false;
+		$is_wp = isset( $_POST['is_wp'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['is_wp'] ) );
 
 		if ( ! $id ) {
 			$this->send_error( __( 'User not found', 'erp' ) );
@@ -600,6 +612,21 @@ class AjaxHandler {
 
 		if ( empty( $type ) ) {
 			$this->send_error( __( 'Type not found', 'erp' ) );
+		}
+
+		// A WP user becomes a contact with the details typed in the form, so the required ones must be there
+		$first_name = isset( $_POST['first_name'] ) ? sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) : '';
+		$last_name  = isset( $_POST['last_name'] ) ? sanitize_text_field( wp_unslash( $_POST['last_name'] ) ) : '';
+		$life_stage = isset( $_POST['life_stage'] ) ? sanitize_key( wp_unslash( $_POST['life_stage'] ) ) : '';
+
+		if ( $is_wp && 'contact' === $type ) {
+			if ( empty( $first_name ) ) {
+				$this->send_error( __( 'Please enter the first name before creating the contact.', 'erp' ) );
+			}
+
+			if ( ! array_key_exists( $life_stage, erp_crm_get_life_stages_dropdown_raw() ) ) {
+				$this->send_error( __( 'Please select a life stage before creating the contact.', 'erp' ) );
+			}
 		}
 
 		$args = array(
@@ -613,6 +640,28 @@ class AjaxHandler {
 
 		if ( is_wp_error( $people_id ) ) {
 			$this->send_error( $people_id->get_error_message() );
+		}
+
+		// Give the converted contact an owner, so a CRM agent can see and edit it
+		if ( 'contact' === $type ) {
+			$people = \WeDevs\ERP\Framework\Models\People::find( $people_id );
+
+			if ( $people && ! $people->contact_owner ) {
+				$people->update( array( 'contact_owner' => get_current_user_id() ) );
+			}
+
+			if ( $people && $is_wp ) {
+				$people->update(
+					array(
+						'first_name' => $first_name,
+						'last_name'  => $last_name,
+					)
+				);
+
+				( new \WeDevs\ERP\CRM\Contact( $people_id, 'contact' ) )->update_life_stage( $life_stage );
+			}
+
+			erp_crm_purge_cache( array( 'list' => 'people', 'type' => $type ) );
 		}
 
 		$statuses = erp_crm_customer_get_status_count( $type );
@@ -1314,10 +1363,30 @@ class AjaxHandler {
 		$activity_type   = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 		$message         = wp_kses_post( wp_unslash( html_entity_decode($_POST['message'], ENT_COMPAT|ENT_HTML401,'UTF-8' ) ) );
 		$user_id         = absint( wp_unslash( $_POST['user_id'] ) );
-		$created_by      = ! empty( $_POST['created_by'] ) ? absint( wp_unslash( $_POST['created_by'] ) ) : '';
+		$created_by      = get_current_user_id();
 		$email_subject   = ! empty( $_POST['email_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['email_subject'] ) ) : '';
 		$attachments     = ! empty( $_POST['attachments'] ) ? map_deep( wp_unslash( $_POST['attachments'] ), 'sanitize_text_field' ) : array();
 		$old_attachments = ! empty( $_POST['old_attachments'] ) ? map_deep( wp_unslash( $_POST['old_attachments'] ), 'sanitize_text_field' ) : array();
+
+		// `erp_crm_edit_contact` is mapped to an ownership check for CRM agents
+		if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
+		// An existing activity can only be changed on its own contact, by its author or a CRM manager
+		if ( $activity_id ) {
+			$activity = \WeDevs\ERP\CRM\Models\Activity::find( $activity_id );
+
+			if ( ! $activity || (int) $activity->user_id !== $user_id ) {
+				$this->send_error( __( 'Activity not found', 'erp' ) );
+			}
+
+			if ( (int) $activity->created_by !== get_current_user_id() && ! current_user_can( erp_crm_get_manager_role() ) ) {
+				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+			}
+
+			$created_by = (int) $activity->created_by;
+		}
 
 		if ( ! empty( $old_attachments ) ) {
 			foreach ( $old_attachments as $old_atch ) {
@@ -1583,7 +1652,19 @@ class AjaxHandler {
 			$this->send_error( __( 'Feeds Not found', 'erp' ) );
 		}
 
-		$feed_id = isset( $_POST['feed_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feed_id'] ) ) : '';
+		$feed_id = isset( $_POST['feed_id'] ) ? absint( wp_unslash( $_POST['feed_id'] ) ) : 0;
+		$feed    = \WeDevs\ERP\CRM\Models\Activity::find( $feed_id );
+
+		if ( ! $feed ) {
+			$this->send_error( __( 'Feeds Not found', 'erp' ) );
+		}
+
+		// A CRM agent may only delete their own activity on their own contact
+		if ( ! current_user_can( erp_crm_get_manager_role() ) ) {
+			if ( ! current_user_can( 'erp_crm_edit_contact', (int) $feed->user_id ) || (int) $feed->created_by !== get_current_user_id() ) {
+				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+			}
+		}
 
 		erp_crm_customer_delete_activity_feed( $feed_id );
 
@@ -1764,10 +1845,22 @@ class AjaxHandler {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
-		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? sanitize_text_field( wp_unslash( $_POST['filterId'] ) ) : 0;
+		$id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? intval( wp_unslash( $_POST['filterId'] ) ) : 0;
 
 		if ( ! $id ) {
 			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		$search_item = \WeDevs\ERP\CRM\Models\SaveSearch::find( $id );
+
+		if ( ! $search_item ) {
+			$this->send_error( __( 'Search segment not found', 'erp' ) );
+		}
+
+		// Agents may only delete their own segments, not other agents' or global ones
+		if ( ! current_user_can( erp_crm_get_manager_role() ) && ! current_user_can( 'manage_options' )
+			&& get_current_user_id() !== (int) $search_item->user_id ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$result = erp_crm_delete_save_search_item( $id );
@@ -1785,6 +1878,10 @@ class AjaxHandler {
 	public function get_single_schedule_details() {
 		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'wp-erp-crm-nonce' ) ) {
 			$this->send_error( __( 'Error: Nonce verification failed', 'erp' ) );
+		}
+
+		if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
 		$query_id = isset( $_REQUEST['id'] ) ? intval( wp_unslash( $_REQUEST['id'] ) ) : 0;

@@ -678,3 +678,34 @@ function erp_acct_insert_bank_transaction_charge_into_ledger( $payment_data ) {
         )
     );
 }
+
+/**
+ * Sanitize the free-text particulars of transaction line items
+ *
+ * Bill lines send their particulars as `description`, the others as `particulars`.
+ *
+ * @since 1.17.12
+ *
+ * @param array $items
+ *
+ * @return array
+ */
+function erp_acct_sanitize_line_items_particulars( $items ) {
+    if ( ! is_array( $items ) ) {
+        return $items;
+    }
+
+    foreach ( $items as $key => $item ) {
+        if ( ! is_array( $item ) ) {
+            continue;
+        }
+
+        foreach ( [ 'particulars', 'description' ] as $field ) {
+            if ( isset( $item[ $field ] ) ) {
+                $items[ $key ][ $field ] = sanitize_textarea_field( $item[ $field ] );
+            }
+        }
+    }
+
+    return $items;
+}

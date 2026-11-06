@@ -185,6 +185,11 @@ function erp_acct_format_people_address( $address = [] ) {
     $add     = '';
     $address = (array) $address;
 
+    // No row when the people record is gone, e.g. a deleted vendor
+    if ( empty( $address ) || ! is_array( $address ) ) {
+        return $add;
+    }
+
     $keys   = array_keys( $address );
     $values = array_values( $address );
 

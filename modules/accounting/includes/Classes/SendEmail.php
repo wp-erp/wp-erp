@@ -20,7 +20,8 @@ class SendEmail extends Email {
             $results[] = $this->send( $receiver_emails, $subject, $body, '', $attachment );
         }
 
-        if ( in_array( false, $results, true ) ) {
+        // Nothing was sent when there is no recipient
+        if ( empty( $results ) || in_array( false, $results, true ) ) {
             return false;
         }
 
