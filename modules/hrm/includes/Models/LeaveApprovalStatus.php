@@ -12,7 +12,7 @@ class LeaveApprovalStatus extends Model {
 
     protected $fillable = [
         'leave_request_id', 'approval_status_id', 'approved_by',
-        'approved_date', 'message',
+        'approved_date', 'message', 'forward_to',
     ];
 
     /**
@@ -82,5 +82,21 @@ class LeaveApprovalStatus extends Model {
      */
     public function leave_approved_by() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\HrUser', 'approved_by', 'id' );
+    }
+
+    /**
+     * Relation to the user a request was forwarded to (Advanced Leave multilevel).
+     *
+     * Both the pro AJAX handler and the v2 approval-chain endpoint have always
+     * read `$approval->leave_forward_to->display_name`, but the relation was
+     * never declared and `forward_to` was not fillable — so the recipient was
+     * silently dropped on write and the column rendered `-` on read.
+     *
+     * @since 1.18.1
+     *
+     * @return object
+     */
+    public function leave_forward_to() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\HrUser', 'forward_to', 'id' );
     }
 }

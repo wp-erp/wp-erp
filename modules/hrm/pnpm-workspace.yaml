@@ -1,0 +1,15 @@
+# pnpm settings for the HRM React build. pnpm 11+ reads pnpm settings from
+# this file only; the "pnpm" field in package.json is ignored.
+
+# pnpm 11+ refuses to prepare a git-hosted dependency that runs build scripts
+# unless it is allowlisted: @wedevs/plugin-ui is a github: dep, so `pnpm run
+# build` stops with ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED without this. The
+# `false` entries keep the old default (script not run) for the rest.
+allowBuilds:
+  '@wedevs/plugin-ui': true
+  '@wedevs/plugin-ui@https://codeload.github.com/getdokan/plugin-ui/tar.gz/f5d308f31543a376eca856c97104753550918eed': true
+  '@parcel/watcher': false
+  core-js: false
+  esbuild: false
+  core-js-pure: false
+  unrs-resolver: false

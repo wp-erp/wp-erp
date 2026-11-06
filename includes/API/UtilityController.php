@@ -48,8 +48,23 @@ class UtilityController extends REST_Controller {
      * @return mixed|WP_REST_Response
      */
     public function get_active_plugins( $request ) {
-        $active_plugins = get_option( 'active_plugins' );
-        $response       = rest_ensure_response( $active_plugins );
+        $active_plugins = (array) get_option( 'active_plugins', [] );
+
+        // Every employee may ask whether the ERP add-ons are active; only an
+        // administrator sees the rest of the site's plugin list (it tells an
+        // attacker which vulnerable versions to try).
+        if ( ! current_user_can( 'activate_plugins' ) ) {
+            $active_plugins = array_values(
+                array_filter(
+                    $active_plugins,
+                    static function ( $plugin ) {
+                        return (bool) preg_match( '#^(wp-)?erp[^/]*/#', (string) $plugin );
+                    }
+                )
+            );
+        }
+
+        $response = rest_ensure_response( $active_plugins );
 
         return $response;
     }

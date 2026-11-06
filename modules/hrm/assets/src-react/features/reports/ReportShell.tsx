@@ -1,0 +1,80 @@
+/**
+ * Shared chrome for the report pages, following the employee-profile design
+ * system: a page title, a line/underline tab bar (`ReportsTabs`), and a
+ * borderless card (`rounded-[10px] bg-card p-6 shadow-sm`) with a section title
+ * + divider — identical to `EmployeeSinglePage`'s `DetailCard`.
+ */
+
+import { FileText } from 'lucide-react';
+import type { JSX, ReactNode } from 'react';
+import { TableSkeleton } from '@/shared/components/TableSkeleton';
+
+import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { EmptyState } from '@/shared/components/EmptyState';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { __ } from '@/shared/i18n';
+
+import { ReportsTabs } from './ReportsTabs';
+
+interface ReportShellProps {
+	readonly title:    string;
+	readonly toolbar?: ReactNode;
+	readonly children: ReactNode;
+}
+
+/** Page title + report tabs + profile-style card, gated on the HR-manager role. */
+export function ReportShell( { title, toolbar, children }: ReportShellProps ): JSX.Element {
+	return (
+		<CapabilityGate caps={ [ 'erp_hr_manager' ] }>
+			<ErrorBoundary>
+				<div className="mx-auto w-full max-w-full space-y-6">
+					<header>
+						<h1 className="text-2xl font-bold leading-8 text-foreground">
+							{ __( 'Reports', 'erp' ) }
+						</h1>
+					</header>
+
+					<ReportsTabs />
+
+					<section className="rounded-[10px] bg-card p-6 shadow-sm">
+						<h2 className="mt-0 text-2xl font-bold leading-tight tracking-tight text-foreground">{ title }</h2>
+						<div className="mb-4 mt-4 h-px w-full bg-border" />
+						{ toolbar ? <div className="mb-5">{ toolbar }</div> : null }
+						{ children }
+					</section>
+				</div>
+			</ErrorBoundary>
+		</CapabilityGate>
+	);
+}
+
+interface ReportStateProps {
+	readonly loading: boolean;
+	readonly error:   string | null;
+	readonly empty:   boolean;
+	readonly emptyText?: string;
+	/** One line of help under the empty title. */
+	readonly emptyDescription?: string | undefined;
+	readonly children: ReactNode;
+}
+
+/** Uniform loading / error / empty fallback used inside a report card. */
+export function ReportState( { loading, error, empty, emptyText, emptyDescription, children }: ReportStateProps ): JSX.Element {
+	if ( error ) {
+		return <p className="py-6 text-sm text-destructive">{ error }</p>;
+	}
+	if ( loading ) {
+		return <TableSkeleton rows={ 6 } />;
+	}
+	if ( empty ) {
+		return (
+			<EmptyState
+				size="page"
+				icon={ FileText }
+				title={ emptyText ?? __( 'No records found.', 'erp' ) }
+				description={ emptyDescription }
+			/>
+		);
+	}
+	return <>{ children }</>;
+}

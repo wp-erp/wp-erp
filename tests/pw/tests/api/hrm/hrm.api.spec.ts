@@ -8,6 +8,9 @@ import type { APIRequestContext } from '@utils/test';
 /**
  * HRM REST specs (/erp/v1/hrm/*).
  *
+ * The v1 HRM routes ship with WP ERP Pro (the free plugin registers only
+ * /erp/v2), so these run in Pro mode only (@pro).
+ *
  * Coverage per resource: list (GET 200 + schema), create (POST -> id),
  * read-back (GET by id), and a negative (unauthorized via the no-auth context,
  * or an invalid payload -> 4xx). All grounded in the real controllers under
@@ -30,7 +33,7 @@ test.afterAll(async () => {
 
 test.describe('HRM REST — departments / designations / employees', () => {
     // ── Departments ──────────────────────────────────────────────────────────
-    test('GET departments returns 200 + an array of departments', { tag: ['@lite', '@hrm'] }, async () => {
+    test('GET departments returns 200 + an array of departments', { tag: ['@pro', '@hrm'] }, async () => {
         const [response, body] = await api.get(endPoints.departments);
         expect(response.status()).toBe(200);
         expect(Array.isArray(body)).toBe(true);
@@ -38,7 +41,7 @@ test.describe('HRM REST — departments / designations / employees', () => {
         expect(parsed.success, JSON.stringify(body).slice(0, 300)).toBe(true);
     });
 
-    test('POST creates a department, then GET by id reads it back', { tag: ['@lite', '@hrm'] }, async () => {
+    test('POST creates a department, then GET by id reads it back', { tag: ['@pro', '@hrm'] }, async () => {
         const dept = data.hrm.department();
         const [created, id] = await api.create(endPoints.departments, {
             title: dept.title,
@@ -54,14 +57,14 @@ test.describe('HRM REST — departments / designations / employees', () => {
     });
 
     // ── Designations ─────────────────────────────────────────────────────────
-    test('GET designations returns 200 + an array', { tag: ['@lite', '@hrm'] }, async () => {
+    test('GET designations returns 200 + an array', { tag: ['@pro', '@hrm'] }, async () => {
         const [response, body] = await api.get(endPoints.designations);
         expect(response.status()).toBe(200);
         expect(Array.isArray(body)).toBe(true);
         expect(schemas.list(schemas.designation).safeParse(body).success).toBe(true);
     });
 
-    test('POST creates a designation, then GET by id reads it back', { tag: ['@lite', '@hrm'] }, async () => {
+    test('POST creates a designation, then GET by id reads it back', { tag: ['@pro', '@hrm'] }, async () => {
         const desig = data.hrm.designation();
         const [, id] = await api.create(endPoints.designations, {
             title: desig.title,
@@ -75,14 +78,14 @@ test.describe('HRM REST — departments / designations / employees', () => {
     });
 
     // ── Employees ────────────────────────────────────────────────────────────
-    test('GET employees returns 200 + an array (schema)', { tag: ['@lite', '@hrm'] }, async () => {
+    test('GET employees returns 200 + an array (schema)', { tag: ['@pro', '@hrm'] }, async () => {
         const [response, body] = await api.get(endPoints.employees);
         expect(response.status()).toBe(200);
         expect(Array.isArray(body)).toBe(true);
         expect(schemas.list(schemas.employee).safeParse(body).success).toBe(true);
     });
 
-    test('POST creates an employee, then GET by user_id reads it back', { tag: ['@lite', '@hrm'] }, async () => {
+    test('POST creates an employee, then GET by user_id reads it back', { tag: ['@pro', '@hrm'] }, async () => {
         // Seed a department/designation first so the employee links cleanly.
         const [, deptId] = await api.create(endPoints.departments, data.hrm.department());
         const [, desigId] = await api.create(endPoints.designations, data.hrm.designation());
@@ -112,17 +115,14 @@ test.describe('HRM REST — departments / designations / employees', () => {
     });
 
     // ── Negative: invalid id read-back ───────────────────────────────────────
-    test('GET a non-existent employee returns a blank record (lenient API)', { tag: ['@lite', '@hrm'] }, async () => {
-        // QA finding: WP ERP responds 200 with an EMPTY employee object (user_id="")
-        // for an unknown id instead of a 404 — a validation gap worth flagging.
-        const [response, body] = await api.get(endPoints.employee(99999999), undefined, false);
-        expect(response.status()).toBe(200);
-        expect(String(body?.user_id ?? '')).toBe('');
-        expect(String(body?.first_name ?? '')).toBe('');
+    test('GET a non-existent employee returns 404', { tag: ['@pro', '@hrm'] }, async () => {
+        // An unknown id used to answer 200 with an empty employee object; it is a 404 now.
+        const [response] = await api.get(endPoints.employee(99999999), undefined, false);
+        expect(response.status()).toBe(404);
     });
 
     // ── Negative: invalid create payload ─────────────────────────────────────
-    test('POST department with an empty title is rejected (negative)', { tag: ['@lite', '@hrm'] }, async () => {
+    test('POST department with an empty title is rejected (negative)', { tag: ['@pro', '@hrm'] }, async () => {
         // erp_hr_create_department requires a title; an empty payload must not
         // yield a valid 2xx-created resource with an id.
         const [response, body] = await api.post(endPoints.departments, { data: {} }, false);
@@ -143,7 +143,7 @@ test.describe('HRM REST — unauthorized access', () => {
         await anonContext.dispose();
     });
 
-    test('creating an employee without auth is rejected (4xx)', { tag: ['@lite', '@hrm'] }, async () => {
+    test('creating an employee without auth is rejected (4xx)', { tag: ['@pro', '@hrm'] }, async () => {
         // No cookie + no X-WP-Nonce: WP REST must reject the write
         // (erp_create_employee cap fails) with a 401/403.
         const emp = data.hrm.employee();

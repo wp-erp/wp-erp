@@ -177,12 +177,27 @@ class Module {
             return;
         }
 
-        // Persist the checkbox value whenever the announcement is saved.
-        $push_enabled = isset( $_REQUEST['hr_announcement_send_push'] ) // phpcs:ignore WordPress.Security.NonceVerification
-            ? sanitize_text_field( wp_unslash( $_REQUEST['hr_announcement_send_push'] ) ) // phpcs:ignore WordPress.Security.NonceVerification
-            : '';
+        // Persist the checkbox value only when the legacy announcement metabox is
+        // what submitted this save. An unchecked checkbox is simply absent from
+        // the POST, so the value cannot be inferred from the field alone — the
+        // metabox nonce is the marker that says "this form owns the flag".
+        //
+        // Without that test every REST save wrote '' over the stored value, so
+        // editing a Vue-created announcement in the React dialog silently turned
+        // its push delivery off.
+        $is_legacy_form_submit = isset( $_POST['hr_announcement_meta_action_nonce'] )
+            && wp_verify_nonce(
+                sanitize_key( wp_unslash( $_POST['hr_announcement_meta_action_nonce'] ) ),
+                'hr_announcement_meta_action'
+            );
 
-        update_post_meta( $post_id, '_announcement_send_push', $push_enabled );
+        if ( $is_legacy_form_submit ) {
+            $push_enabled = isset( $_POST['hr_announcement_send_push'] )
+                ? sanitize_text_field( wp_unslash( $_POST['hr_announcement_send_push'] ) )
+                : '';
+
+            update_post_meta( $post_id, '_announcement_send_push', $push_enabled );
+        }
 
         if ( ! $this->handler ) {
             return;

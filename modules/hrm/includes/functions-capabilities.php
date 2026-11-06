@@ -199,6 +199,80 @@ function erp_hr_get_caps_for_role( $role = '' ) {
 }
 
 /**
+ * Sync the actual WP role capabilities with the (filterable) `erp_hr_get_caps_for_role`
+ * map.
+ *
+ * `add_role()` in the installer does NOT update a role that already exists, so once
+ * a role is created its caps go stale whenever `erp_hr_get_caps_for_role()` gains a
+ * new cap — including caps a pro module appends via the `erp_hr_get_caps_for_role`
+ * filter. That stale state means `current_user_can()` disagrees with the cap map the
+ * React client probes (boot payload + `/erp/v2/me/capabilities`), so UI gated on those
+ * caps silently disappears (e.g. an employee's own profile tabs).
+ *
+ * This grants mapped caps onto the live role, but never overrides a site owner's choice:
+ * a cap already present on the role (granted, or explicitly set to false) is left alone,
+ * and when `$previous` (the map from the last sync) is given, only caps that are new
+ * compared with it are granted, so a cap the owner removed is not re-granted on the next
+ * map change. With no previous map (first run after upgrade) every missing cap is granted.
+ *
+ * @param array|null $previous Role => cap map from the last sync, or null on the first run.
+ *
+ * @return void
+ */
+function erp_hr_sync_role_caps( $previous = null ) {
+    if ( ! function_exists( 'erp_hr_get_roles' ) ) {
+        return;
+    }
+
+    foreach ( array_keys( (array) erp_hr_get_roles() ) as $role_key ) {
+        $role = get_role( $role_key );
+        if ( ! $role ) {
+            continue;
+        }
+        foreach ( (array) erp_hr_get_caps_for_role( $role_key ) as $cap => $grant ) {
+            if ( ! $grant || array_key_exists( $cap, (array) $role->capabilities ) ) {
+                continue;
+            }
+            if ( is_array( $previous ) && ! empty( $previous[ $role_key ][ $cap ] ) ) {
+                continue;
+            }
+            $role->add_cap( $cap );
+        }
+    }
+}
+
+/**
+ * Re-sync role caps only when the cap map changes (cheap admin_init guard).
+ *
+ * The signature covers every ERP HR role's full (filtered) cap map, so the moment a
+ * pro module adds a cap via the `erp_hr_get_caps_for_role` filter the signature
+ * changes and the new caps land on the live roles automatically: the canonical way
+ * for any new module to register its capabilities. The full map is stored alongside
+ * the signature so the next sync grants only caps that are new since this one.
+ *
+ * @return void
+ */
+function erp_hr_maybe_sync_role_caps() {
+    if ( ! function_exists( 'erp_hr_get_roles' ) ) {
+        return;
+    }
+
+    $map = [];
+    foreach ( array_keys( (array) erp_hr_get_roles() ) as $role_key ) {
+        $map[ $role_key ] = erp_hr_get_caps_for_role( $role_key );
+    }
+    $signature = md5( serialize( $map ) );
+
+    if ( get_option( 'erp_hr_role_caps_signature' ) !== $signature ) {
+        $previous = get_option( 'erp_hr_role_caps_map', null );
+        erp_hr_sync_role_caps( is_array( $previous ) ? $previous : null );
+        update_option( 'erp_hr_role_caps_map', $map, false );
+        update_option( 'erp_hr_role_caps_signature', $signature );
+    }
+}
+add_action( 'admin_init', 'erp_hr_maybe_sync_role_caps' );
+
+/**
  * Maps HR capabilities to employee or HR manager
  *
  * @param array  $caps    Capabilities for meta capability
@@ -258,7 +332,10 @@ function erp_hr_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] )
             $employee_id = isset( $args[0] ) ? $args[0] : false;
 
             if ( $user_id == $employee_id ) {
-                $caps = [ $cap ];
+                // An offboarded person keeps reading their own record, but no
+                // longer changes it: every self-service write is refused, only
+                // the `erp_view_*` caps stay.
+                $caps = 0 !== strpos( $cap, 'erp_view_' ) && erp_hr_is_offboarded_user( $user_id ) ? [ 'do_not_allow' ] : [ $cap ];
             } else {
                 $hr_manager_role = erp_hr_get_manager_role();
                 // HR manager can read any employee
@@ -309,7 +386,9 @@ function erp_hr_map_meta_caps( $caps = [], $cap = '', $user_id = 0, $args = [] )
             $employee_id = isset( $args[0] ) ? $args[0] : false;
             $employee    = new \WeDevs\ERP\HRM\Employee( $employee_id );
 
-            if ( $employee->get_reporting_to() && $employee->get_reporting_to() == $user_id ) {
+            // A line manager reviews their reports only while they are an
+            // active employee themselves.
+            if ( $employee->get_reporting_to() && $employee->get_reporting_to() == $user_id && ! erp_hr_is_offboarded_user( $user_id ) ) {
                 $caps = [ 'employee' ];
             } else {
                 $caps = [ $cap ];

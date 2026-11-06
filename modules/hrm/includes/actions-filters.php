@@ -16,6 +16,11 @@ add_action( 'erp_daily_scheduled_events', 'erp_hr_schedule_check_todays_work_ann
 add_action( 'erp_hr_leave_insert_policy', 'erp_hr_apply_policy_existing_employee', 10, 1 ); //@since 1.6.0
 add_action( 'erp_hr_schedule_announcement_email', 'erp_hr_send_announcement_email', 10, 2 );
 add_action( 'erp_hr_leave_new', 'erp_hr_save_leave_attachment', 10, 3 ); //@since 1.5.10
+// Keep leave documents out of media listings for anyone but HR
+add_action( 'pre_get_posts', 'erp_hr_hide_leave_documents_in_admin' );
+add_filter( 'rest_attachment_query', 'erp_hr_hide_leave_documents' );
+add_filter( 'ajax_query_attachments_args', 'erp_hr_hide_leave_documents' );
+add_filter( 'rest_request_before_callbacks', 'erp_hr_hide_leave_document_rest_item', 10, 3 );
 // Filters *****************************************************************/
 add_filter( 'erp_map_meta_caps', 'erp_hr_map_meta_caps', 10, 4 );
 add_filter( 'editable_roles', 'erp_hr_filter_editable_roles' );
