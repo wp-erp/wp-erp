@@ -106,9 +106,14 @@ export function bootApiFetch(): void {
 		const isIdempotent = method === 'GET' || method === 'HEAD';
 		const callerSignal = options.signal as AbortSignal | undefined;
 
+		let timedOut = false;
+
 		const runOnce = (): Promise< unknown > => {
 			const controller = new AbortController();
-			const timer      = setTimeout( () => controller.abort(), REQUEST_TIMEOUT_MS );
+			const timer      = setTimeout( () => {
+				timedOut = true;
+				controller.abort();
+			}, REQUEST_TIMEOUT_MS );
 
 			if ( callerSignal ) {
 				if ( callerSignal.aborted ) {
@@ -135,6 +140,16 @@ export function bootApiFetch(): void {
 					attempt += 1;
 					await delay( 2 ** attempt * 250 ); // 500ms, then 1000ms
 					continue;
+				}
+
+				// Our own 30s timer aborted it, not the caller: report a timeout
+				// instead of the browser's "signal is aborted without reason".
+				if ( timedOut && ! callerSignal?.aborted ) {
+					throw {
+						code:    'erp_hr_request_timeout',
+						message: __( 'The server took too long to respond. Please try again.', 'erp' ),
+						status:  0,
+					} satisfies ApiError;
 				}
 
 				throw err;
