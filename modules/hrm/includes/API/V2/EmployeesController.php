@@ -1491,6 +1491,7 @@ class EmployeesController extends RestController {
 			'user_id'         => (int) $employee->get_user_id(),
 			'full_name'       => (string) $employee->get_full_name(),
 			'avatar_url'      => $employee->get_avatar_url( 80 ) ?: null,
+			'photo_id'        => (int) $employee->get_photo_id(),
 			'employee_id'     => (string) $employee->employee_id,
 			'first_name'      => (string) $employee->first_name,
 			'middle_name'     => $str( 'middle_name' ),

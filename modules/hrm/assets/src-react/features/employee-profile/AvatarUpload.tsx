@@ -13,7 +13,7 @@
 import apiFetch from '@wordpress/api-fetch';
 import { Avatar, AvatarFallback, AvatarImage, Button, Spinner, toast } from '@wedevs/plugin-ui';
 import { Camera, Trash2 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
@@ -31,6 +31,8 @@ interface AvatarResponse {
 interface AvatarUploadProps {
 	readonly userId:    number;
 	readonly avatarUrl: string;
+	/** An uploaded photo exists (`photo_id`), not just the Gravatar fallback URL. */
+	readonly hasPhoto:  boolean;
 	readonly fullName:  string;
 	readonly initials:  string;
 	readonly onChange:  ( avatarUrl: string ) => void;
@@ -43,6 +45,7 @@ interface AvatarUploadProps {
 export function AvatarUpload( {
 	userId,
 	avatarUrl,
+	hasPhoto: initialHasPhoto,
 	fullName,
 	initials,
 	onChange,
@@ -52,6 +55,8 @@ export function AvatarUpload( {
 	const inputRef = useRef< HTMLInputElement >( null );
 	const [ busy, setBusy ] = useState( false );
 	const [ confirmOpen, setConfirmOpen ] = useState( false );
+	const [ hasPhoto, setHasPhoto ] = useState( initialHasPhoto );
+	useEffect( () => setHasPhoto( initialHasPhoto ), [ initialHasPhoto ] );
 
 	async function handleFile( file: File ): Promise< void > {
 		setBusy( true );
@@ -64,6 +69,7 @@ export function AvatarUpload( {
 				body:   form,
 			} );
 			onChange( body.avatar_url ?? '' );
+			setHasPhoto( true );
 			// Show the photo that just landed — the confirmation is the picture.
 			erpToast.success( __( 'Photo updated.', 'erp' ), {
 				user: { name: fullName, avatar: body.avatar_url ?? undefined },
@@ -86,6 +92,7 @@ export function AvatarUpload( {
 				method: 'DELETE',
 			} );
 			onChange( body.avatar_url ?? '' );
+			setHasPhoto( false );
 			toast.success( __( 'Photo removed.', 'erp' ) );
 			setConfirmOpen( false );
 		} catch ( raw ) {
@@ -133,7 +140,7 @@ export function AvatarUpload( {
 						>
 							<Camera size={ 16 } aria-hidden="true" />
 						</Button>
-						{ avatarUrl ? (
+						{ hasPhoto ? (
 							<Button
 								type="button"
 								variant="ghost"

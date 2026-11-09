@@ -95,6 +95,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 					<AvatarUpload
 						userId={ userId }
 						avatarUrl={ avatarUrl }
+						hasPhoto={ Number( str( record, 'photo_id' ) ) > 0 }
 						fullName={ fullName }
 						initials={ initials( fullName ) }
 						sizeClass="size-[90px]"

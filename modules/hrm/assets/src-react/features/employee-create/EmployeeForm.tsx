@@ -86,6 +86,7 @@ interface EmployeeFormProps {
 	readonly employeeId?: number;
 	/** Current avatar URL in edit mode — seeds the photo section preview. */
 	readonly initialAvatarUrl?: string;
+	readonly initialHasPhoto?: boolean;
 }
 
 export function EmployeeForm( {
@@ -101,6 +102,7 @@ export function EmployeeForm( {
 	onCancel,
 	employeeId,
 	initialAvatarUrl,
+	initialHasPhoto = false,
 }: EmployeeFormProps ): JSX.Element {
 	const isEdit = mode === 'edit';
 
@@ -411,6 +413,7 @@ export function EmployeeForm( {
 								<AvatarUpload
 									userId={ employeeId ?? 0 }
 									avatarUrl={ photoUrl }
+									hasPhoto={ initialHasPhoto }
 									fullName={ `${ form.first_name ?? '' } ${ form.last_name ?? '' }`.trim() }
 									initials={
 										(

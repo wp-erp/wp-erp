@@ -73,6 +73,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 	const [ initial, setInitial ] = useState< FormState | null >( null );
 	const [ fullName, setFullName ] = useState( '' );
 	const [ avatarUrl, setAvatarUrl ] = useState( '' );
+	const [ hasPhoto, setHasPhoto ] = useState( false );
 	const [ loadError, setLoadError ] = useState< string | null >( null );
 	const [ submitError, setSubmitError ] = useState< string | null >( null );
 	const [ submitting, setSubmitting ] = useState( false );
@@ -87,6 +88,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 				}
 				setFullName( String( record.full_name ?? '' ) );
 				setAvatarUrl( String( record.avatar_url ?? '' ) );
+				setHasPhoto( Number( record.photo_id ?? 0 ) > 0 );
 				setInitial( toFormState( record ) );
 			} )
 			.catch( ( raw ) => {
@@ -157,6 +159,7 @@ function EmployeeEditInner( { userId }: { userId: number } ): JSX.Element {
 					initialValues={ initial }
 					employeeId={ userId }
 					initialAvatarUrl={ avatarUrl }
+					initialHasPhoto={ hasPhoto }
 					submitLabel={ __( 'Save Changes', 'erp' ) }
 					busyLabel={ __( 'Saving…', 'erp' ) }
 					submitting={ submitting }
