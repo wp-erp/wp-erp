@@ -404,9 +404,11 @@ function DashboardInner(): JSX.Element {
 						</div>
 
 						{ /* Right rail (Figma): self-service My Attendance + Attendance
-						   Status, aligned to the top of the section. */ }
+						   Status, aligned to the top of the section. The last card
+						   stretches to the column's bottom, so a module switched off
+						   leaves no empty space beside the calendar. */ }
 						{ proSelfWidgets.length > 0 ? (
-							<div className="flex flex-col gap-6 xl:w-[300px] xl:shrink-0">
+							<div className="flex flex-col gap-6 xl:w-[300px] xl:shrink-0 [&>:last-child]:flex-1">
 								{ proSelfWidgets.map( ( Widget, i ) => (
 									<Widget key={ `self-${ i }` } />
 								) ) }
