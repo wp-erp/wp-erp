@@ -2693,8 +2693,26 @@ class Employee {
             $args['comments'] = $comments;
         }
 
-        $this->update_employment_status( $args );
+        // A future date is only scheduled: the employee stays active until
+        // erp_hr_apply_scheduled_terminations() applies it on that day.
+        $terminate_day = erp_current_datetime()->modify( $args['terminate_date'] )->format( 'Y-m-d' );
 
+        if ( $terminate_day > erp_current_datetime()->format( 'Y-m-d' ) ) {
+            update_user_meta( $this->id, '_erp_hr_termination', $args );
+            update_user_meta( $this->id, '_erp_hr_termination_scheduled', $terminate_day );
+
+            erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $this->id ] );
+
+            return $this;
+        }
+
+        $result = $this->update_employment_status( $args );
+
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
+
+        delete_user_meta( $this->id, '_erp_hr_termination_scheduled' );
         update_user_meta( $this->id, '_erp_hr_termination', $args );
 
         erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $this->id ] );

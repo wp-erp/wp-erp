@@ -29,6 +29,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { TextButton } from '@/shared/components/TextButton';
 import { useCan } from '@/shared/hooks/useCan';
 import { request, restPath } from '@/shared/utils/apiFetch';
+import { todaySiteYmd } from '@/shared/utils/date';
 import { __ } from '@/shared/i18n';
 import { storeName as employeesStoreName } from '@/stores/employees';
 import type { EmployeeTerminateInput } from '@/stores/employees';
@@ -116,12 +117,15 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 			void terminateEmployee( userId, payload )
 				.then( () => {
 					setTermOpen( false );
+					// A future date is only scheduled: the employee stays active until then.
+					const scheduled = payload.terminate_date > todaySiteYmd();
 					// Reflect the new status + termination facts in the header/overview
 					// without a full reload (mirrors what the GET would return).
 					setRecord( ( prev ) => ( prev ? {
 						...prev,
-						status:      'terminated',
+						status:      scheduled ? prev.status : 'terminated',
 						termination: {
+							scheduled,
 							terminate_date:            payload.terminate_date,
 							termination_type:          payload.termination_type,
 							termination_reason:        payload.termination_reason,
@@ -144,16 +148,17 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 	);
 
 	const handleReactivate = useCallback( (): void => {
+		const cancelling = record !== null && str( record, 'status' ) !== 'terminated';
 		void reactivateEmployee( userId )
 			.then( () => {
 				setRecord( ( prev ) => ( prev ? { ...prev, status: 'active', termination: null } : prev ) );
-				toast.success( __( 'Employee reactivated.', 'erp' ) );
+				toast.success( cancelling ? __( 'Termination cancelled.', 'erp' ) : __( 'Employee reactivated.', 'erp' ) );
 			} )
 			.catch( ( raw ) => {
 				const err = raw as { message?: string };
 				toast.error( err?.message || __( 'Could not reactivate the employee. Please try again.', 'erp' ) );
 			} );
-	}, [ reactivateEmployee, userId ] );
+	}, [ reactivateEmployee, userId, record ] );
 
 	// Active tab lives in the URL (`?tab=job`) so a refresh / deep-link keeps the
 	// open tab instead of snapping back to Overview. `replace` so tab switches
@@ -269,7 +274,7 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 				onTerminate={ () => { setTermError( null ); setTermOpen( true ); } }
 				canTerminate={ canTerminateCap && currentUserId !== userId && str( record, 'status' ) !== 'terminated' }
 				onReactivate={ handleReactivate }
-				canReactivate={ canEditCap && currentUserId !== userId && str( record, 'status' ) === 'terminated' }
+				canReactivate={ canEditCap && currentUserId !== userId && ( str( record, 'status' ) === 'terminated' || ( record.termination as { scheduled?: boolean } | null )?.scheduled === true ) }
 				onOpenTab={ setTab }
 				canViewNotes={ canViewNotes }
 			/>

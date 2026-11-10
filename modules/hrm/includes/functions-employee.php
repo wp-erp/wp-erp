@@ -717,6 +717,44 @@ function erp_hr_employee_terminate( $data ) {
 }
 
 /**
+ * Apply the future-dated terminations whose date has come.
+ *
+ * Runs on `erp_daily_scheduled_events`. Each scheduled termination is applied
+ * once: the schedule meta is removed before the termination runs.
+ *
+ * @since 2.0.0
+ *
+ * @return void
+ */
+function erp_hr_apply_scheduled_terminations() {
+    $user_ids = get_users( [
+        'meta_key'     => '_erp_hr_termination_scheduled',
+        'meta_value'   => erp_current_datetime()->format( 'Y-m-d' ),
+        'meta_compare' => '<=',
+        'meta_type'    => 'DATE',
+        'fields'       => 'ID',
+    ] );
+
+    foreach ( $user_ids as $user_id ) {
+        $args = get_user_meta( $user_id, '_erp_hr_termination', true );
+
+        delete_user_meta( $user_id, '_erp_hr_termination_scheduled' );
+
+        $employee = new \WeDevs\ERP\HRM\Employee( (int) $user_id );
+
+        // Someone who already left in the meantime keeps that status.
+        if ( empty( $args ) || ! is_array( $args ) || ! $employee->is_employee()
+            || in_array( $employee->get_status(), [ 'terminated', 'resigned', 'deceased' ], true ) ) {
+            continue;
+        }
+
+        $args['user_id'] = (int) $user_id;
+
+        erp_hr_employee_terminate( $args );
+    }
+}
+
+/**
  * Get employee genders
  *
  * @return array all genders

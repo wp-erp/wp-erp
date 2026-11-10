@@ -28,6 +28,8 @@ interface TerminationShape {
 	readonly termination_reason_label?:  string;
 	readonly eligible_for_rehire?:       string;
 	readonly eligible_for_rehire_label?: string;
+	/** A future-dated termination not applied yet: the employee is still active. */
+	readonly scheduled?:                 boolean;
 }
 
 function asTermination( value: unknown ): TerminationShape | null {
@@ -67,8 +69,13 @@ export function TerminationCard( { termination }: { readonly termination: unknow
 		<section className="rounded-[10px] border border-destructive/30 bg-card p-6 shadow-sm">
 			<h2 className="mt-0 flex items-center gap-2 text-2xl font-bold leading-tight tracking-tight text-foreground">
 				<UserX size={ 20 } className="text-destructive" aria-hidden="true" />
-				{ __( 'Termination', 'erp' ) }
+				{ data.scheduled ? __( 'Termination scheduled', 'erp' ) : __( 'Termination', 'erp' ) }
 			</h2>
+			{ data.scheduled ? (
+				<p className="mb-0 mt-2 text-sm text-muted-foreground">
+					{ __( 'The employee stays active until the termination date.', 'erp' ) }
+				</p>
+			) : null }
 			<div className="mb-4 mt-4 h-px w-full bg-border" />
 			<dl className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
 				<Row icon={ Calendar } label={ __( 'Termination Date', 'erp' ) } value={ date } />

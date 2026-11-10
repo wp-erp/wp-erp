@@ -1070,7 +1070,8 @@ class EmployeesController extends RestController {
 	 *
 	 * Terminates an employee through the unchanged `Employee::terminate()` model
 	 * (same path the legacy admin used). All four fields are required and the
-	 * model enforces the same validation, sets status to `terminated`, writes the
+	 * model enforces the same validation, sets status to `terminated` (or, for a
+	 * future date, schedules it for that day), writes the
 	 * `_erp_hr_termination` meta and fires every legacy hook.
 	 *
 	 * @param WP_REST_Request $request Request.
@@ -1162,6 +1163,18 @@ class EmployeesController extends RestController {
 
 		if ( ! $employee->is_employee() ) {
 			return new \WP_Error( 'rest_employee_invalid_id', __( 'Invalid employee id.', 'erp' ), [ 'status' => 404 ] );
+		}
+
+		$scheduled = get_user_meta( $user_id, '_erp_hr_termination_scheduled', true );
+		delete_user_meta( $user_id, '_erp_hr_termination_scheduled' );
+
+		// Cancelling a scheduled termination: the employee never left, so there
+		// is no status change or history row to write.
+		if ( '' !== (string) $scheduled && 'terminated' !== $employee->get_status() ) {
+			delete_user_meta( $user_id, '_erp_hr_termination' );
+			erp_hrm_purge_cache( [ 'list' => 'employee', 'employee_id' => $user_id ] );
+
+			return rest_ensure_response( $this->get_edit_data( new Employee( $user_id ) ) );
 		}
 
 		// Record the status change in the employment history, the same way
@@ -1568,6 +1581,8 @@ class EmployeesController extends RestController {
 			'termination_reason_label'  => '' !== $reason ? (string) erp_hr_get_terminate_reason( $reason ) : '',
 			'eligible_for_rehire'       => $rehire,
 			'eligible_for_rehire_label' => '' !== $rehire ? (string) erp_hr_get_terminate_rehire_options( $rehire ) : '',
+			// A future-dated termination not applied yet: the employee is still active.
+			'scheduled'                 => '' !== (string) get_user_meta( $user_id, '_erp_hr_termination_scheduled', true ),
 		];
 	}
 

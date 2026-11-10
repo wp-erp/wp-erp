@@ -170,7 +170,7 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 						{ onReactivate && canReactivate ? (
 							<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ onReactivate }>
 								<UserCheck size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
-								{ __( 'Reactivate', 'erp' ) }
+								{ str( record, 'status' ) === 'terminated' ? __( 'Reactivate', 'erp' ) : __( 'Cancel termination', 'erp' ) }
 							</Button>
 						) : null }
 						{ onTerminate && canTerminate ? (

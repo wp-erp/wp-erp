@@ -113,7 +113,9 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 			<EmployeeExtraFieldsView employeeId={ userId } sections={ [ 'top' ] } />
 
 			{ /* Termination details — self / managers only, when terminated (legacy tab-general.php:348). */ }
-			{ canEdit && status === 'terminated' ? <TerminationCard termination={ record.termination } /> : null }
+			{ canEdit && ( status === 'terminated' || ( record.termination as { scheduled?: boolean } | null )?.scheduled === true )
+				? <TerminationCard termination={ record.termination } />
+				: null }
 
 			<DetailCard title={ __( 'Employment', 'erp' ) }>
 				<Item icon={ IdCard } label={ __( 'Employee ID', 'erp' ) } value={ str( record, 'employee_id' ) } />
@@ -122,7 +124,10 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 				{ /* Stored calendar dates — rendered in the site date format like every
 				     table in the app, not as the raw `YYYY-MM-DD` the server sends. */ }
 				<Item icon={ Calendar } label={ __( 'Date of Hire', 'erp' ) } value={ formatCalendarDate( str( record, 'hiring_date' ), '' ) } />
-				<Item icon={ CalendarOff } label={ __( 'Employee End Date', 'erp' ) } value={ formatCalendarDate( str( record, 'end_date' ), '' ) } />
+				{ /* A terminated employee's end is the termination date shown above. */ }
+				{ status === 'terminated' && str( record, 'end_date' ) === '' ? null : (
+					<Item icon={ CalendarOff } label={ __( 'Employee End Date', 'erp' ) } value={ formatCalendarDate( str( record, 'end_date' ), '' ) } />
+				) }
 				<Item icon={ Building2 } label={ __( 'Department', 'erp' ) } value={ str( record, 'department_name' ) } />
 				<Item icon={ Tag } label={ __( 'Job Title', 'erp' ) } value={ str( record, 'designation_name' ) } />
 				<Item icon={ MapPin } label={ __( 'Location', 'erp' ) } value={ str( record, 'location_name' ) } />
