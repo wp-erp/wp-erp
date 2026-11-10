@@ -1,14 +1,6 @@
 # pnpm settings for the HRM React build. pnpm 11+ reads pnpm settings from
 # this file only; the "pnpm" field in package.json is ignored.
 
-# pnpm 10 (the version CI runs) reads this list. Once this file exists it no
-# longer takes the "pnpm" field in package.json, and a git-hosted dependency
-# has to be listed by its tarball URL as well, or a fresh install stops with
-# ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED.
-onlyBuiltDependencies:
-  - '@wedevs/plugin-ui'
-  - '@wedevs/plugin-ui@https://codeload.github.com/getdokan/plugin-ui/tar.gz/f5d308f31543a376eca856c97104753550918eed'
-
 # pnpm 11+ refuses to prepare a git-hosted dependency that runs build scripts
 # unless it is allowlisted: @wedevs/plugin-ui is a github: dep, so `pnpm run
 # build` stops with ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED without this. The
