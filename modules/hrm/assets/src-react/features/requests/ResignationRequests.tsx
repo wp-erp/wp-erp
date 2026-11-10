@@ -8,6 +8,14 @@
  */
 
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
     Button,
     Dialog,
     DialogContent,
@@ -29,6 +37,7 @@ import type { JSX } from "react";
 import { RequestsCountsContext, RequestsTabContext } from "./requests-tab-context";
 
 import { OrgDeleteDialog } from "@/features/org/OrgDeleteDialog";
+import { AllottedAssetsWarning, useAllottedAssets } from "@/shared/components/AllottedAssetsWarning";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { TablePager } from "@/shared/components/TablePager";
 import { RowActionsMenu } from "@/shared/components/RowActionsMenu";
@@ -73,6 +82,8 @@ export function ResignationRequests(): JSX.Element {
     const [busy, setBusy] = useState(false);
     const [creating, setCreating] = useState(false);
     const [deleting, setDeleting] = useState<ResignRow | null>(null);
+    const [approving, setApproving] = useState<ResignRow | null>(null);
+    const approvingAssets = useAllottedAssets(approving?.employee.id ?? 0, null !== approving);
 
     function load(): void {
         setLoading(true);
@@ -91,7 +102,7 @@ export function ResignationRequests(): JSX.Element {
     }
     useEffect(load, [page, perPage]);
 
-    function act(id: number, kind: "approve" | "reject" | "delete"): void {
+    function act(id: number, kind: "approve" | "reject" | "delete", date = ""): void {
         setBusy(true);
         const p =
             "delete" === kind
@@ -101,7 +112,15 @@ export function ResignationRequests(): JSX.Element {
                       data: {},
                   });
         p.then(() => {
-            toast.success(__("Done.", "erp"));
+            toast.success(
+                "approve" === kind
+                    ? sprintf(
+                          /* translators: %s: resignation date */
+                          __("Resignation approved. It takes effect on %s.", "erp"),
+                          formatCalendarDate(date),
+                      )
+                    : __("Done.", "erp"),
+            );
             load();
             refreshCounts();
         })
@@ -111,6 +130,7 @@ export function ResignationRequests(): JSX.Element {
             .finally(() => {
                 setBusy(false);
                 setDeleting(null);
+                setApproving(null);
             });
     }
 
@@ -220,7 +240,7 @@ export function ResignationRequests(): JSX.Element {
                                                             id: "approve",
                                                             label: __("Approve", "erp"),
                                                             icon: Check,
-                                                            onSelect: () => act(r.id, "approve"),
+                                                            onSelect: () => setApproving(r),
                                                             hidden: "pending" !== r.status,
                                                             disabled: busy,
                                                         },
@@ -286,6 +306,45 @@ export function ResignationRequests(): JSX.Element {
                 onCancel={() => setDeleting(null)}
             />
 
+            <AlertDialog
+                open={null !== approving}
+                onOpenChange={(o) => (o || busy ? undefined : setApproving(null))}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            {__("Approve this resignation?", "erp")}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {approving
+                                ? sprintf(
+                                      /* translators: 1: employee name, 2: resignation date */
+                                      __("%1$s stays active until %2$s. On that date the status changes to Resigned.", "erp"),
+                                      approving.employee.name || __("This employee", "erp"),
+                                      formatCalendarDate(approving.date),
+                                  )
+                                : ""}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AllottedAssetsWarning names={approvingAssets} />
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={busy} onClick={() => setApproving(null)}>
+                            {__("Cancel", "erp")}
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            disabled={busy}
+                            onClick={() => {
+                                if (approving) {
+                                    act(approving.id, "approve", approving.date);
+                                }
+                            }}
+                        >
+                            {busy ? __("Approving…", "erp") : __("Approve", "erp")}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             {creating ? (
                 <NewResignationDialog
                     onClose={() => setCreating(false)}
@@ -300,15 +359,18 @@ export function ResignationRequests(): JSX.Element {
     );
 }
 
-function NewResignationDialog({
+export function NewResignationDialog({
+    userId,
     onClose,
     onSaved,
 }: {
+    /** File for this employee (profile entry); hides the employee picker. */
+    readonly userId?: number;
     readonly onClose: () => void;
     readonly onSaved: () => void;
 }): JSX.Element {
-    const [employeeId, setEmployeeId] = useState("");
-    const employee = useEmployeeSearch(true, undefined, employeeId);
+    const [employeeId, setEmployeeId] = useState(userId ? String(userId) : "");
+    const employee = useEmployeeSearch(!userId, undefined, employeeId);
     const [reasons, setReasons] = useState<ReasonOption[]>([]);
     const [reason, setReason] = useState("");
     const [date, setDate] = useState(todaySiteYmd());
@@ -369,6 +431,7 @@ function NewResignationDialog({
                 </DialogHeader>
                 <div className="h-px w-full bg-border" />
 
+                {userId ? null : (
                 <div className="flex flex-col gap-2.5">
                     <FormLabel>
                         {__("Employee", "erp")}
@@ -384,6 +447,7 @@ function NewResignationDialog({
                         className="h-10 w-full"
                     />
                 </div>
+                )}
                 <div className="flex flex-col gap-2.5">
                     <FormLabel>
                         {__("Reason", "erp")}

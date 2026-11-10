@@ -21,6 +21,7 @@ import {
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 
+import { AllottedAssetsWarning, useAllottedAssets } from '@/shared/components/AllottedAssetsWarning';
 import { __, sprintf } from '@/shared/i18n';
 import type { EmployeeTerminateInput } from '@/stores/employees';
 
@@ -35,6 +36,8 @@ import {
 interface TerminateDialogProps {
 	readonly open:         boolean;
 	readonly employeeName: string;
+	/** Employee being terminated; used to warn about assets still allotted. */
+	readonly userId?:      number;
 	readonly busy:         boolean;
 	readonly error:        string | null;
 	readonly onClose:      () => void;
@@ -56,6 +59,7 @@ const EMPTY_FORM: EmployeeTerminateInput = {
 export function TerminateDialog( {
 	open,
 	employeeName,
+	userId = 0,
 	busy,
 	error,
 	onClose,
@@ -63,6 +67,7 @@ export function TerminateDialog( {
 }: TerminateDialogProps ): JSX.Element {
 	const [ form, setForm ]     = useState< EmployeeTerminateInput >( EMPTY_FORM );
 	const [ errors, setErrors ] = useState< Record< string, string > >( {} );
+	const allottedAssets        = useAllottedAssets( userId, open );
 
 	// Reset the form each time the dialog opens for a fresh employee.
 	useEffect( () => {
@@ -158,6 +163,8 @@ export function TerminateDialog( {
 						error={ errors.eligible_for_rehire }
 						placeholder={ __( '- Select -', 'erp' ) }
 					/>
+
+					<AllottedAssetsWarning names={ allottedAssets } />
 
 					{ error ? (
 						<Alert variant="destructive">

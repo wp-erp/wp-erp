@@ -10,12 +10,13 @@
  * `EmployeeProfileInner`.
  */
 
-import { Skeleton, toast } from '@wedevs/plugin-ui';
+import { Button, Skeleton, toast } from '@wedevs/plugin-ui';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	ArrowLeft,
 	Briefcase,
 	CalendarClock,
+	LogOut,
 	Shield,
 	StickyNote,
 	TrendingUp,
@@ -27,6 +28,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { TextButton } from '@/shared/components/TextButton';
+import { useBoot } from '@/shared/hooks/useBoot';
 import { useCan } from '@/shared/hooks/useCan';
 import { request, restPath } from '@/shared/utils/apiFetch';
 import { todaySiteYmd } from '@/shared/utils/date';
@@ -37,6 +39,7 @@ import { storeName as meStoreName } from '@/stores/me';
 import type { MeUser } from '@/stores/me/types';
 
 import { TerminateDialog } from '../employees/actions/TerminateDialog';
+import { NewResignationDialog } from '../requests/ResignationRequests';
 import { useProfileExtraTabs } from '../employee-create/profile-tabs';
 import { OverviewTab } from './OverviewTab';
 import { ProfileHeader } from './ProfileHeader';
@@ -63,6 +66,10 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 	const canTerminateCap = useCan( 'erp_can_terminate' );
 	// A leaver keeps their own profile but not the directory, so no link back to it.
 	const canListPeople   = useCan( 'erp_list_employee' );
+	// HR files a resignation for the employee (pro Resignation routes, manager only).
+	const { isPro }       = useBoot();
+	const isHrManager     = useCan( 'erp_hr_manager' );
+	const [ resignOpen, setResignOpen ] = useState( false );
 
 	// Per-target caps (meta-mapped against THIS employee). The global `useCan`
 	// map resolves review/edit caps to manager-only; a department lead is granted
@@ -245,6 +252,8 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 	// Fall back to Overview when the URL names a tab the current user can't see
 	// (e.g. a deep-link to ?tab=permission without the cap) so the body never blanks.
 	const tab = tabs.some( ( t ) => t.value === rawTab ) ? rawTab : 'overview';
+	const canResign = isPro && isHrManager && currentUserId !== userId && str( record, 'status' ) === 'active'
+		&& ! ( record.termination as { scheduled?: boolean } | null )?.scheduled;
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
@@ -269,7 +278,15 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 					// photo (not the stale one) when navigating back.
 					invalidate();
 				} }
-				extraActions={ headerActions }
+				extraActions={ canResign ? (
+					<>
+						{ headerActions }
+						<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setResignOpen( true ) }>
+							<LogOut size={ 16 } strokeWidth={ 2 } aria-hidden="true" />
+							{ __( 'Resign', 'erp' ) }
+						</Button>
+					</>
+				) : headerActions }
 				onPrint={ () => window.print() }
 				onTerminate={ () => { setTermError( null ); setTermOpen( true ); } }
 				canTerminate={ canTerminateCap && currentUserId !== userId && str( record, 'status' ) !== 'terminated' }
@@ -282,11 +299,16 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 			<TerminateDialog
 				open={ termOpen }
 				employeeName={ str( record, 'full_name' ) }
+				userId={ userId }
 				busy={ termBusy }
 				error={ termError }
 				onClose={ () => setTermOpen( false ) }
 				onSubmit={ submitTerminate }
 			/>
+
+			{ resignOpen ? (
+				<NewResignationDialog userId={ userId } onClose={ () => setResignOpen( false ) } onSaved={ () => setResignOpen( false ) } />
+			) : null }
 
 			{ /* Body — left sidebar nav (white card, blue active) + content. */ }
 			<div className="flex flex-col gap-6 lg:flex-row lg:items-start">

@@ -299,6 +299,7 @@ export function EmployeeActionsProvider( { children }: ProviderProps ): JSX.Elem
 			<TerminateDialog
 				open={ isTerminate }
 				employeeName={ name }
+				userId={ isTerminate ? pending.employee.user_id : 0 }
 				busy={ busy }
 				error={ isTerminate ? error : null }
 				onClose={ close }
