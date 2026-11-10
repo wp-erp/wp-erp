@@ -26,6 +26,13 @@ jobs:
         with:
           php-version: '7.4'
           tools: wp-cli
+      # setup-php can fail to fetch wp-cli without failing its own step ("Could
+      # not setup wp-cli"), and the POT step then dies minutes later. Fetch the
+      # official phar when it is missing, and stop here if that fails too.
+      - name: Make sure wp-cli is installed
+        run: |
+          command -v wp >/dev/null || { sudo curl -fsSL --retry 3 -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && sudo chmod +x /usr/local/bin/wp; }
+          wp --info
       - name: Install and build
         run: |
           npm ci
