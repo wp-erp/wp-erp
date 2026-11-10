@@ -32,6 +32,23 @@ node_modules
 /modules/hrm/pnpm-lock.yaml
 /modules/hrm/.npmrc
 /modules/hrm/.nvmrc
+/modules/hrm/pnpm-workspace.yaml
+/modules/hrm/vitest.config.ts
+
+# Build-time scripts: the release build (bin/) and composer's post-install
+# patch (composer-scripts/). Nothing loads them at runtime.
+/bin
+/composer-scripts
+
+# Source maps and Sass partials of the legacy assets.
+*.map
+_flaticon.scss
+
+# Docs and tests of vendor packages. Licence texts stay: rsync takes the first
+# rule that matches, so the include line has to come before *.md.
++ LICENSE.md
+*.md
+/vendor/*/*/tests
 
 # Dev/config files
 .distignore
