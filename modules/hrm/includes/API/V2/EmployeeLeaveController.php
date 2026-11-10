@@ -894,12 +894,15 @@ class EmployeeLeaveController extends RestController {
 	 * @return array
 	 */
 	private function map_requests( array $requests ): array {
-		$out = [];
+		$out      = [];
+		$approval = $this->latest_approvals( wp_list_pluck( $requests, 'id' ) );
 
 		foreach ( $requests as $request ) {
 			$request       = (object) $request;
 			$status_code   = $request->status ?? '';
 			$day_status_id = (string) ( $request->day_status_id ?? '1' );
+			$latest        = $approval[ (int) ( $request->id ?? 0 ) ] ?? null;
+			$lead_response = $latest && in_array( (int) $latest->approval_status_id, [ 1, 3 ], true );
 
 			// Whole-day vs partial-day: legacy shows the day-status label for
 			// anything other than full days (day_status_id 1).
@@ -915,9 +918,55 @@ class EmployeeLeaveController extends RestController {
 				'reason'      => $this->cast_string_or_null( isset( $request->reason ) ? stripslashes( (string) $request->reason ) : '' ) ?? '',
 				'days'        => $this->cast_float_or_null( $request->days ?? null ) ?? 0,
 				'duration'    => $duration,
-				'status'      => '' !== $status_code ? (string) erp_hr_leave_request_get_statuses( $status_code ) : '',
+				// Advanced Leave multilevel: a lead responded, HR has not decided yet.
+				'status'      => 2 === (int) $status_code && $lead_response
+					? __( 'Pending (awaiting HR)', 'erp' )
+					: ( '' !== $status_code ? (string) erp_hr_leave_request_get_statuses( $status_code ) : '' ),
 				'status_code' => $this->cast_int_or_null( $status_code ),
+				// Why it was rejected: the note on the latest (deciding) approval entry.
+				'approver_note' => 3 === (int) $status_code && $latest ? (string) $latest->message : '',
 			];
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Latest approval-status entry per leave request, in one query.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $request_ids Leave request ids.
+	 *
+	 * @return array<int, object> Rows (`approval_status_id`, `message`) keyed by request id.
+	 */
+	private function latest_approvals( array $request_ids ): array {
+		global $wpdb;
+
+		$request_ids = array_values( array_unique( array_filter( array_map( 'intval', $request_ids ) ) ) );
+
+		if ( ! $request_ids ) {
+			return [];
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, \count( $request_ids ), '%d' ) );
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT las.leave_request_id, las.approval_status_id, las.message
+				 FROM {$wpdb->prefix}erp_hr_leave_approval_status AS las
+				 INNER JOIN (
+					SELECT MAX( id ) AS id FROM {$wpdb->prefix}erp_hr_leave_approval_status
+					WHERE leave_request_id IN ( {$placeholders} )
+					GROUP BY leave_request_id
+				 ) AS latest ON latest.id = las.id", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$request_ids
+			)
+		);
+
+		$out = [];
+		foreach ( (array) $rows as $row ) {
+			$out[ (int) $row->leave_request_id ] = $row;
 		}
 
 		return $out;

@@ -571,7 +571,10 @@ class LeaveRequestsController extends RestController {
 			'extra_leaves' => $this->cast_float_or_null( $row->extra_leaves ?? null ) ?? 0,
 			'spent'        => $this->cast_float_or_null( $row->spent ?? null ) ?? 0,
 			'status'       => (int) ( $row->status ?? 0 ),
-			'status_label' => $this->status_label( (int) ( $row->status ?? 0 ) ),
+			// Advanced Leave multilevel: a lead responded, HR has not decided yet.
+			'status_label' => 2 === (int) ( $row->status ?? 0 ) && $approval['lead_response']
+				? __( 'Pending (awaiting HR)', 'erp' )
+				: $this->status_label( (int) ( $row->status ?? 0 ) ),
 			'reason'       => (string) ( $row->reason ?? '' ),
 			'message'      => (string) ( $row->message ?? '' ),
 			'color'        => (string) ( $row->color ?? '' ),
@@ -655,7 +658,7 @@ class LeaveRequestsController extends RestController {
 
 			$latest = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT las.leave_request_id, las.message, las.approved_by, las.created_at
+					"SELECT las.leave_request_id, las.approval_status_id, las.message, las.approved_by, las.created_at
 					 FROM {$wpdb->prefix}erp_hr_leave_approval_status AS las
 					 INNER JOIN (
 						SELECT MAX( id ) AS id FROM {$wpdb->prefix}erp_hr_leave_approval_status
@@ -710,12 +713,16 @@ class LeaveRequestsController extends RestController {
 	 *
 	 * @param int $request_id Leave request ID.
 	 *
-	 * @return array{name:string,date:string|null,message:string}
+	 * `lead_response` (@since 2.0.0) is true when the latest entry is an approve
+	 * or reject: on a request that is still pending only a department lead
+	 * (Advanced Leave multilevel) writes one, since an HR decision closes it.
+	 *
+	 * @return array{name:string,date:string|null,message:string,lead_response:bool}
 	 */
 	private function approval_meta( int $request_id ): array {
 		global $wpdb;
 
-		$empty = [ 'name' => '', 'date' => null, 'message' => '' ];
+		$empty = [ 'name' => '', 'date' => null, 'message' => '', 'lead_response' => false ];
 
 		if ( ! $request_id ) {
 			return $empty;
@@ -726,7 +733,7 @@ class LeaveRequestsController extends RestController {
 		} else {
 			$row = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT message, approved_by, created_at
+					"SELECT approval_status_id, message, approved_by, created_at
 					 FROM {$wpdb->prefix}erp_hr_leave_approval_status
 					 WHERE leave_request_id = %d
 					 ORDER BY id DESC
@@ -750,6 +757,7 @@ class LeaveRequestsController extends RestController {
 			'name'    => $user->display_name,
 			'date'    => $this->ts_to_iso( $row->created_at ),
 			'message' => (string) ( $row->message ?? '' ),
+			'lead_response' => in_array( (int) ( $row->approval_status_id ?? 0 ), [ 1, 3 ], true ),
 		];
 	}
 

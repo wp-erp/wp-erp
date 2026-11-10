@@ -8,10 +8,12 @@
 
 import { applyFilters } from '@wordpress/hooks';
 import { Suspense, lazy } from 'react';
+import type { JSX } from 'react';
 import { Navigate, createHashRouter } from 'react-router-dom';
 import type { RouteObject } from 'react-router-dom';
 
 import { CapabilityGate } from '@/shared/components/CapabilityGate';
+import { useCan } from '@/shared/hooks/useCan';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { HOOKS } from '@/shared/filters';
 import { __ } from '@/shared/i18n';
@@ -576,6 +578,9 @@ export function buildHashRouter(): ReturnType< typeof createHashRouter > {
 				// nav label reads "Holidays" on its own, so the bare path is the one
 				// people type. Alias it rather than answer "Page not found".
 				{ path: 'holidays', element: <Navigate to="/leave/holidays" replace /> },
+				// `#/leave` is the section root: leave moderators land on the request
+				// list, everyone else on their own leave tab.
+				{ path: 'leave', element: <LeaveRoot /> },
 				...wrapRoutes(),
 				{ path: '*', element: <NotFound /> },
 			],
@@ -586,3 +591,9 @@ export function buildHashRouter(): ReturnType< typeof createHashRouter > {
 }
 
 export { baseRoutes };
+
+/** `#/leave` redirect: the request list for leave moderators, else My Leave. */
+function LeaveRoot(): JSX.Element {
+	const canModerate = useCan( 'erp_leave_moderate' );
+	return <Navigate to={ canModerate ? '/leave/requests' : '/my-profile?tab=leave' } replace />;
+}

@@ -51,6 +51,8 @@ export interface LeaveRequest {
 	readonly duration:    string;
 	readonly status:      string;
 	readonly status_code: number | null;
+	/** Rejection note from the approver; empty unless rejected. */
+	readonly approver_note: string;
 }
 
 export interface LeaveOption {

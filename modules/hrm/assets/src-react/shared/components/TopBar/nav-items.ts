@@ -273,15 +273,15 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		],
 	},
 	{
-		// Employee self-service: their own profile on the Leave tab. Managers
-		// (`erp_leave_manage`) already have the Leave menu above, so it hides for them.
+		// Employee self-service: their own profile on the Leave tab. `erp_leave_self`
+		// (derived server-side) is the `employee` cap, or for a leave manager, being
+		// an employee too: they can request leave for themselves.
 		id:                    'my-leave',
 		label:                 __( 'My Leave', 'erp' ),
 		path:                  '/my-profile?tab=leave',
 		icon:                  'log-out',
 		hasDropdown:           false,
-		capabilities:          [ 'employee' ],
-		hiddenForCapabilities: [ 'erp_leave_manage' ],
+		capabilities:          [ 'erp_leave_self' ],
 		// The route is shared with My Profile, so a pathname match would also
 		// light this up on the other profile tabs.
 		activeMatches:         [],

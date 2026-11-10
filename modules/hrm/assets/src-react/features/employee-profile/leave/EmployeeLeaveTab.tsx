@@ -267,6 +267,11 @@ export function EmployeeLeaveTab( { userId, targetCaps = {} }: { readonly userId
 											{ row.status ? (
 												<StatusPill tone={ leaveStatusTone( row.status_code ) }>{ row.status }</StatusPill>
 											) : '—' }
+											{ row.approver_note ? (
+												<span className="mt-1 block max-w-48 truncate text-xs italic text-muted-foreground" title={ row.approver_note }>
+													{ row.approver_note }
+												</span>
+											) : null }
 										</td>
 									</tr>
 								) ) }

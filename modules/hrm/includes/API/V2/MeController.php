@@ -151,6 +151,13 @@ class MeController extends RestController {
 		$capabilities['erp_leave_moderate'] = current_user_can( 'erp_leave_manage' )
 			|| ( function_exists( 'erp_hr_is_current_user_dept_lead' ) && erp_hr_is_current_user_dept_lead() );
 
+		// Derived (@since 2.0.0): shows "My Leave". A leave manager gets it only when
+		// they are an employee too (they can request leave for themselves); everyone
+		// else keeps the plain `employee` cap gate.
+		$capabilities['erp_leave_self'] = current_user_can( 'erp_leave_manage' )
+			? \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', get_current_user_id() )->exists()
+			: current_user_can( 'employee' );
+
 		$payload = [
 			'user_id'       => (int) $user_id,
 			'display_name'  => $this->cast_string_or_null( $user->display_name ) ?? '',
