@@ -242,3 +242,45 @@ function erp_hr_restore_announcements( $announcement_ids ) {
         return $fail_count + ( empty( wp_untrash_post( $id ) ) ? 1 : 0 );
     }, 0 );
 }
+
+/**
+ * Add the `(user_id, status, post_id)` index to `erp_hr_announcement` on existing sites.
+ *
+ * The table holds one row per announcement per employee. The employee notices
+ * query filters by user and reads only the status and post id, so this index
+ * answers it without reading the table. New installs get it from the table
+ * definition. Runs once per plugin version, with a retry guard on failure.
+ *
+ * @since 2.0.0
+ *
+ * @return void
+ */
+function erp_hr_maybe_add_announcement_index() {
+    global $wpdb;
+
+    if ( WPERP_VERSION === get_option( 'erp_hr_announcement_index_checked', '' ) || ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+
+    // A failed attempt is not retried on every admin request.
+    if ( get_transient( 'erp_hr_announcement_index_retry' ) ) {
+        return;
+    }
+
+    $table = $wpdb->prefix . 'erp_hr_announcement';
+
+    if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ) !== $table ) {
+        set_transient( 'erp_hr_announcement_index_retry', 1, HOUR_IN_SECONDS );
+        return;
+    }
+
+    $has_index = $wpdb->get_var( $wpdb->prepare( "SHOW INDEX FROM `{$table}` WHERE Key_name = %s", 'user_status_post' ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name only.
+
+    if ( ! $has_index && false === $wpdb->query( "ALTER TABLE `{$table}` ADD INDEX `user_status_post` (`user_id`, `status`, `post_id`)" ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name only.
+        set_transient( 'erp_hr_announcement_index_retry', 1, HOUR_IN_SECONDS );
+        return;
+    }
+
+    update_option( 'erp_hr_announcement_index_checked', WPERP_VERSION );
+}
+add_action( 'admin_init', 'erp_hr_maybe_add_announcement_index' );

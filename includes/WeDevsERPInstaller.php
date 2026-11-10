@@ -822,7 +822,8 @@ Account Manager
                 PRIMARY KEY (id),
                 KEY `user_id` (`user_id`),
                 KEY `post_id` (`post_id`),
-                KEY `status` (`status`)
+                KEY `status` (`status`),
+                KEY `user_status_post` (`user_id`,`status`,`post_id`)
             ) $charset_collate;",
 
             "CREATE TABLE `{$wpdb->prefix}erp_peoples` (

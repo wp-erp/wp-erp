@@ -1604,12 +1604,28 @@ function erp_hr_get_leave_requests( $args = [], $cached = true ) {
     if ( is_array( $requests ) && ! empty( $requests ) ) {
         $available_leaves = [];
 
+        // One query each for the users and the balances instead of one per row.
+        // The balance is read from the first row of each employee + leave type,
+        // as the loop below does. Every row joined an entitlement, so it is never empty.
+        $first_entitlements = [];
+
+        foreach ( $requests as $single_request ) {
+            $key = $single_request['user_id'] . '-' . $single_request['leave_id'];
+
+            if ( ! isset( $first_entitlements[ $key ] ) ) {
+                $first_entitlements[ $key ] = $single_request['leave_entitlement_id'];
+            }
+        }
+
+        cache_users( array_unique( array_map( 'absint', wp_list_pluck( $requests, 'user_id' ) ) ) );
+        $balances = erp_hr_leave_get_balances_for_entitlements( $first_entitlements );
+
         foreach ( $requests as $single_request ) {
             $request = (object) $single_request;
 
             // get available days
             if ( ! isset( $available_leaves[ $request->user_id ] ) || ! array_key_exists( $request->leave_id, $available_leaves[ $request->user_id ] ) ) {
-                $policy_data = erp_hr_leave_get_balance_for_single_entitlement( $request->leave_entitlement_id );
+                $policy_data = isset( $balances[ $request->leave_entitlement_id ] ) ? $balances[ $request->leave_entitlement_id ] : [];
 
                 if ( ! is_array( $policy_data ) || empty( $policy_data ) ) {
                     continue;
@@ -2587,6 +2603,70 @@ function erp_hr_leave_get_balance_for_single_entitlement( $entitlement_id ) {
     }
 
     return $balance;
+}
+
+/**
+ * Leave balances for many entitlements in one query
+ *
+ * Same SQL and shape as erp_hr_leave_get_balance_for_single_entitlement(),
+ * grouped by entitlement, so a list does not run one query per row.
+ *
+ * @since 2.0.0
+ *
+ * @param array $entitlement_ids
+ *
+ * @return array Balances keyed by entitlement id. Unknown ids are left out.
+ */
+function erp_hr_leave_get_balances_for_entitlements( $entitlement_ids ) {
+    global $wpdb;
+
+    $entitlement_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $entitlement_ids ) ) ) );
+
+    if ( empty( $entitlement_ids ) ) {
+        return [];
+    }
+
+    $placeholders = implode( ', ', array_fill( 0, count( $entitlement_ids ), '%d' ) );
+
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $results = $wpdb->get_results( $wpdb->prepare( "
+    SELECT en.id, en.leave_id, en.user_id, en.f_year, fy.start_date, fy.end_date, l.name AS policy_name,
+    IFNULL( sum(en.day_in), 0 ) AS policy_day_in,
+    IFNULL( ( SELECT sum(en2.day_in) AS total_day_in FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_in,
+    IFNULL( ( SELECT sum(en2.day_out) AS total_day_out FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year ), 0 ) AS total_day_out,
+    IFNULL( ( SELECT sum(en2.day_in) AS extra_leaves FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en2 WHERE en2.user_id = en.user_id AND en2.leave_id = en.leave_id AND en2.f_year = en.f_year AND en2.trn_type = 'unpaid_leave' ), 0 ) AS extra_leaves,
+    IFNULL( ( SELECT sum(rq.days) AS leave_spent FROM {$wpdb->prefix}erp_hr_leave_requests AS rq WHERE rq.user_id = en.user_id AND rq.leave_id = en.leave_id AND rq.last_status = 1 AND rq.start_date BETWEEN fy.start_date AND fy.end_date ), 0 ) AS leave_spent
+    FROM {$wpdb->prefix}erp_hr_leave_entitlements AS en
+    LEFT JOIN {$wpdb->prefix}erp_hr_financial_years AS fy ON fy.id = en.f_year
+    LEFT JOIN {$wpdb->prefix}erp_hr_leaves AS l ON l.id = en.leave_id
+    WHERE en.id IN ($placeholders)
+    GROUP BY en.id
+    ", $entitlement_ids ) );
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+    $balances = [];
+
+    foreach ( (array) $results as $result ) {
+        $balances[ $result->id ] = [
+            'entitlement_id' => $result->id,
+            'days'           => $result->policy_day_in,
+            'from_date'      => $result->start_date,
+            'to_date'        => $result->end_date,
+            'leave_id'       => $result->leave_id,
+            'policy_id'      => $result->id,
+            'policy'         => $result->policy_name,
+            'scheduled'      => 0,
+            'entitlement'    => $result->policy_day_in,
+            'total'          => $result->total_day_in,
+            'available'      => $result->total_day_in - $result->total_day_out,
+            'extra_leave'    => $result->extra_leaves,
+            'day_in'         => $result->total_day_in,
+            'day_out'        => $result->total_day_out,
+            'spent'          => $result->leave_spent,
+        ];
+    }
+
+    return $balances;
 }
 
 /**
