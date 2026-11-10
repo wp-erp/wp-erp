@@ -52,6 +52,8 @@ jobs:
           # Reproduced locally: same commit builds clean in a normal path and
           # fails identically under a node_modules path.
           npm_config_store_dir: ${{ runner.temp }}/pnpm-store
+          # pnpm 11 ignores npm_config_store_dir and reads its own pnpm_config_ name.
+          pnpm_config_store_dir: ${{ runner.temp }}/pnpm-store
         run: npm run build:react
 
       # Back to Node 12 for the POT step: makepot runs wpvuei18n, which belongs to
