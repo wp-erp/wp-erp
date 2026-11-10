@@ -238,7 +238,7 @@ function LeaveForwardInner(): JSX.Element {
 						size="page"
 						icon={ CalendarDays }
 						title={ __( 'No forward leaves to process.', 'erp' ) }
-						description={ __( 'Unused leave you carry over to the next financial year shows up here at year end.', 'erp' ) }
+						description={ __( 'Leave left over in the previous financial year shows up here, once the current financial year has started and a policy allows carryover or encashment.', 'erp' ) }
 					/>
 				) : (
 					<div className="overflow-x-auto">

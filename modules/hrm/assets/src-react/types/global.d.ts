@@ -75,6 +75,8 @@ export interface BootPayload {
 	/** "Administrator", "HR Manager", or the employee's job title (user menu). */
 	readonly roleLabel?:    string;
 	readonly isPro:         boolean;
+	/** ERP Pro's Remote Work setting is on (absent on an older server). */
+	readonly remoteWorkEnabled?: boolean;
 	readonly isHrManager:   boolean;
 	readonly api:           BootPayloadApi;
 	readonly nonce:         string;

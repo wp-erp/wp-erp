@@ -65,7 +65,7 @@ function FinancialYearsInner(): JSX.Element {
 		setBusy( true );
 		try {
 			await save( draft );
-			toast.success( __( 'Settings saved successfully !', 'erp' ) );
+			toast.success( __( 'Financial years saved.', 'erp' ) );
 		} catch ( raw ) {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not save financial years.', 'erp' ) );
 		} finally {

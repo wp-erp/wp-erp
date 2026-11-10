@@ -304,6 +304,8 @@ final class Enqueue {
 			 * @param bool $is_pro Whether pro is present and licensed.
 			 */
 			'isPro'         => (bool) apply_filters( 'erp_hr_is_pro_active', class_exists( 'WP_ERP_Pro' ) ),
+			// ERP Pro's Settings > HR > Remote Work switch; the self-service button follows it like legacy did.
+			'remoteWorkEnabled' => 'yes' === erp_get_option( 'erp_hr_remote_work_enable' ),
 			// The role as a capability only: an offboarded HR manager loses the role's
 			// caps, so a raw `$user->roles` check would still report them as a manager.
 			'isHrManager'   => function_exists( 'erp_hr_get_manager_role' )

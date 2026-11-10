@@ -47,7 +47,7 @@ const today = (): string => todaySiteYmd();
  */
 export function MyRequestActions(): JSX.Element | null {
 	const [ open, setOpen ] = useState< Kind >( null );
-	const { isPro } = useBoot();
+	const { isPro, remoteWorkEnabled } = useBoot();
 	// Both create routes file for the caller's own employee record, so a user
 	// without one (an administrator who is not an employee) is refused.
 	const isEmployee = useCan( 'employee' );
@@ -60,9 +60,11 @@ export function MyRequestActions(): JSX.Element | null {
 
 	return (
 		<>
-			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setOpen( 'remote_work' ) }>
-				<Laptop size={ 16 } aria-hidden="true" />{ __( 'Remote Work', 'erp' ) }
-			</Button>
+			{ remoteWorkEnabled ? (
+				<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4" onClick={ () => setOpen( 'remote_work' ) }>
+					<Laptop size={ 16 } aria-hidden="true" />{ __( 'Remote Work', 'erp' ) }
+				</Button>
+			) : null }
 			<Button variant="outline" size="sm" className="h-9 gap-1.5 px-4 border-destructive text-destructive hover:border-destructive hover:text-destructive" onClick={ () => setOpen( 'resignation' ) }>
 				<LogOut size={ 16 } aria-hidden="true" />{ __( 'Resign', 'erp' ) }
 			</Button>
