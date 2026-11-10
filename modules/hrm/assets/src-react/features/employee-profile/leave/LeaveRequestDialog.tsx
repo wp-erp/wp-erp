@@ -260,6 +260,15 @@ export function LeaveRequestDialog( {
 								validation.total
 							) }
 							{ validation.sandwich ? ` ${ __( '(Sandwich rule applied)', 'erp' ) }` : '' }
+							{ validation.unpaid ? (
+								<p className="m-0 mt-1 text-destructive">
+									{ sprintf(
+										/* translators: %s: number of days over the balance */
+										validation.unpaid === 1 ? __( '%s day is over the balance and will be unpaid.', 'erp' ) : __( '%s days are over the balance and will be unpaid.', 'erp' ),
+										String( validation.unpaid )
+									) }
+								</p>
+							) : null }
 						</div>
 					) : null }
 

@@ -153,6 +153,11 @@ export function EmployeeLeaveTab( { userId, targetCaps = {} }: { readonly userId
 										{ /* Taken: approved days up to today. Scheduled: approved days still ahead (legacy balance table). */ }
 										<span>{ sprintf( __( 'Scheduled %s', 'erp' ), num( row.scheduled ?? 0 ) ) }</span>
 									</div>
+									{ row.unpaid ? (
+										<div className="mt-1 text-xs text-destructive">
+											{ sprintf( __( '%s days unpaid (over the balance)', 'erp' ), num( row.unpaid ) ) }
+										</div>
+									) : null }
 									{ /* Entitlement period — the window this balance belongs to, the
 									     same validity the entitlements list shows. */ }
 									{ row.from_date || row.to_date ? (

@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 
 import { HOOKS } from '@/shared/filters';
+import { useCan } from '@/shared/hooks/useCan';
 import { __, sprintf } from '@/shared/i18n';
 
 import { TextareaField } from '../employee-create/fields';
@@ -56,8 +57,14 @@ export function LeaveRequestModerateDialog( {
 
 	const isReject     = action === 'reject';
 	const who          = request?.name ?? '';
+	// A department lead who is not a leave manager must give a reason either way
+	// (Advanced Leave multilevel answers 400 without one).
+	const canModerate  = useCan( 'erp_leave_moderate' );
+	const canManage    = useCan( 'erp_leave_manage' );
+	const isLeadOnly   = canModerate && ! canManage;
+	const noteRequired = isReject || isLeadOnly;
 	// Legacy hard-rejects an empty reason on reject (functions-leave.php:1695).
-	const reasonMissing = isReject && reason.trim() === '';
+	const reasonMissing = noteRequired && reason.trim() === '';
 
 	// Pro-injected moderate extras (Advanced Leave multilevel: the approval chain).
 	const moderateExtras = request
@@ -76,7 +83,9 @@ export function LeaveRequestModerateDialog( {
 							? sprintf(
 									isReject
 										? __( 'Reject %1$s’s %2$s request? You can add a note explaining why.', 'erp' )
-										: __( 'Approve %1$s’s %2$s request? You can add an optional note.', 'erp' ),
+										: noteRequired
+											? __( 'Approve %1$s’s %2$s request? Add a note for HR.', 'erp' )
+											: __( 'Approve %1$s’s %2$s request? You can add an optional note.', 'erp' ),
 									who,
 									request?.policy_name ?? ''
 							  )
@@ -84,6 +93,18 @@ export function LeaveRequestModerateDialog( {
 					</DialogDescription>
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
+
+				{ ! isReject && ( request?.extra_leaves ?? 0 ) > 0 ? (
+					<Alert variant="destructive">
+						<AlertDescription>
+							{ sprintf(
+								/* translators: %s: number of days over the balance */
+								__( '%s days of this request are over the balance and will be unpaid.', 'erp' ),
+								String( request?.extra_leaves ?? 0 )
+							) }
+						</AlertDescription>
+					</Alert>
+				) : null }
 
 				{ moderateExtras.length > 0 ? (
 					<div className="flex flex-col gap-3">
@@ -97,14 +118,14 @@ export function LeaveRequestModerateDialog( {
 				<div>
 					<TextareaField
 						id="leave_request_reason"
-						label={ isReject ? __( 'Reason', 'erp' ) : __( 'Note (optional)', 'erp' ) }
+						label={ isReject ? __( 'Reason', 'erp' ) : noteRequired ? __( 'Note', 'erp' ) : __( 'Note (optional)', 'erp' ) }
 						value={ reason }
 						onChange={ setReason }
 						rows={ 3 }
 					/>
 					{ reasonMissing ? (
 						<p className="mt-1.5 text-sm text-destructive">
-							{ __( 'A reason is required to reject this request.', 'erp' ) }
+							{ isReject ? __( 'A reason is required to reject this request.', 'erp' ) : __( 'A note is required to approve this request.', 'erp' ) }
 						</p>
 					) : null }
 				</div>

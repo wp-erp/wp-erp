@@ -568,11 +568,20 @@ class EmployeeLeaveController extends RestController {
 
 		$total = (int) ( $days['total'] ?? 0 );
 
+		// With extra unpaid leave on, days past the balance are booked as unpaid;
+		// the form tells the employee before they submit.
+		$unpaid = 0;
+		if ( get_option( 'enable_extra_leave', 'no' ) === 'yes' ) {
+			$balance = (array) erp_hr_leave_get_balance_for_single_entitlement( $policy_id );
+			$unpaid  = max( 0, $total - (float) ( $balance['available'] ?? 0 ) );
+		}
+
 		return rest_ensure_response(
 			[
 				'total'    => $total,
 				'sandwich' => $this->cast_bool( $days['sandwich'] ?? false ),
 				'days'     => $breakdown,
+				'unpaid'   => $unpaid,
 			]
 		);
 	}
@@ -626,7 +635,7 @@ class EmployeeLeaveController extends RestController {
 
 		return rest_ensure_response(
 			[
-				'summary'  => $this->map_summary( $employee->get_leave_summary(), $this->refunded_days( $user_id, $current_id ), $this->scheduled_days( $user_id, $current_id ) ),
+				'summary'  => $this->map_summary( $employee->get_leave_summary(), $this->refunded_days( $user_id, $current_id ), $this->scheduled_days( $user_id, $current_id ), $this->unpaid_days( $user_id, $current_id ) ),
 				'requests' => $this->map_requests( (array) $employee->get_leave_requests( $request_args ) ),
 				'meta'     => $this->build_meta( $employee, $current_id ),
 			]
@@ -688,10 +697,11 @@ class EmployeeLeaveController extends RestController {
 	 * @param mixed $summary   Balance object/array keyed by leave id.
 	 * @param array $refunded  Days handed back by a rejected approval, keyed by leave id.
 	 * @param array $scheduled Approved days still ahead, keyed by leave id.
+	 * @param array $unpaid    Approved days over the balance, booked as unpaid, keyed by leave id.
 	 *
 	 * @return array
 	 */
-	private function map_summary( $summary, array $refunded = [], array $scheduled = [] ): array {
+	private function map_summary( $summary, array $refunded = [], array $scheduled = [], array $unpaid = [] ): array {
 		$out = [];
 
 		foreach ( (array) $summary as $row ) {
@@ -712,6 +722,8 @@ class EmployeeLeaveController extends RestController {
 				// taken: taken + scheduled = spent, and entitled - spent = left.
 				'scheduled'   => (float) ( $scheduled[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ),
 				'taken'       => max( 0, ( $this->cast_float_or_null( $row['spent'] ?? null ) ?? 0 ) - (float) ( $scheduled[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ) ),
+				// Days approved beyond the balance (Advanced Leave "Extra Unpaid Leave").
+				'unpaid'      => (float) ( $unpaid[ (int) ( $row['leave_id'] ?? 0 ) ] ?? 0 ),
 				'from_date'   => $this->cast_entitlement_date( $row['from_date'] ?? null ),
 				'to_date'     => $this->cast_entitlement_date( $row['to_date'] ?? null ),
 			];
@@ -762,9 +774,12 @@ class EmployeeLeaveController extends RestController {
 	 * Approved leave days still ahead of today, per leave id, for one financial
 	 * year: the "Scheduled" column of the legacy balance table.
 	 *
-	 * Counts the working days of approved requests (`last_status = 1`) dated
-	 * after today, from the per-day request details. A half-day request has one
-	 * detail row and counts as its own `days` value.
+	 * Counts the days of approved requests (`last_status = 1`) dated after
+	 * today, from the per-day request details. A half-day request has one
+	 * detail row and counts as its own `days` value. Off days count too when
+	 * the request booked them (sandwich rule: `days` is more than its working
+	 * rows), so scheduled matches what was deducted and nothing future lands
+	 * in "taken".
 	 *
 	 * @since 2.0.0
 	 *
@@ -788,7 +803,8 @@ class EmployeeLeaveController extends RestController {
 				"SELECT rq.leave_id, SUM( CASE WHEN rq.days < 1 THEN rq.days ELSE 1 END ) AS scheduled
 				FROM {$wpdb->prefix}erp_hr_leave_request_details AS d
 				INNER JOIN {$wpdb->prefix}erp_hr_leave_requests AS rq ON rq.id = d.leave_request_id
-				WHERE d.user_id = %d AND d.f_year = %d AND d.workingday_status = 1 AND d.leave_date >= %d AND rq.last_status = 1
+				WHERE d.user_id = %d AND d.f_year = %d AND d.leave_date >= %d AND rq.last_status = 1
+					AND ( d.workingday_status = 1 OR rq.days > ( SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_leave_request_details AS w WHERE w.leave_request_id = rq.id AND w.workingday_status = 1 ) )
 				GROUP BY rq.leave_id",
 				$user_id,
 				$f_year,
@@ -799,6 +815,45 @@ class EmployeeLeaveController extends RestController {
 		$out = [];
 		foreach ( (array) $rows as $row ) {
 			$out[ (int) $row->leave_id ] = (float) $row->scheduled;
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Unpaid days per leave policy for an employee's financial year.
+	 *
+	 * Sums the unpaid-leave ledger of approved requests (`last_status = 1`).
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $user_id Employee user id.
+	 * @param int $f_year  Financial year id.
+	 *
+	 * @return array<int, float> Unpaid days keyed by leave id.
+	 */
+	private function unpaid_days( int $user_id, int $f_year ): array {
+		global $wpdb;
+
+		if ( ! $f_year ) {
+			return [];
+		}
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT u.leave_id, SUM( u.days ) AS unpaid
+				FROM {$wpdb->prefix}erp_hr_leaves_unpaid AS u
+				INNER JOIN {$wpdb->prefix}erp_hr_leave_requests AS rq ON rq.id = u.leave_request_id
+				WHERE u.user_id = %d AND u.f_year = %d AND rq.last_status = 1
+				GROUP BY u.leave_id",
+				$user_id,
+				$f_year
+			)
+		);
+
+		$out = [];
+		foreach ( (array) $rows as $row ) {
+			$out[ (int) $row->leave_id ] = (float) $row->unpaid;
 		}
 
 		return $out;

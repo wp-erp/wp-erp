@@ -60,12 +60,12 @@ function AvailableCell( {
 		return (
 			<span
 				className="text-destructive"
-				title={ __( 'Extra Leave', 'erp' ) }
+				title={ __( 'Days over the balance, booked as unpaid leave', 'erp' ) }
 			>
 				{ sprintf(
 					extra === 1
-						? __( '-%s day', 'erp' )
-						: __( '-%s days', 'erp' ),
+						? __( '%s day unpaid', 'erp' )
+						: __( '%s days unpaid', 'erp' ),
 					String( extra )
 				) }
 			</span>

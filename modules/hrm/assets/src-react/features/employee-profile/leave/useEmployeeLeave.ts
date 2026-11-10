@@ -35,6 +35,8 @@ export interface LeaveSummary {
 	readonly scheduled?:  number;
 	/** Approved days already taken (`spent` minus `scheduled`); absent on an older server. */
 	readonly taken?:      number;
+	/** Approved days over the balance, booked as unpaid; absent on an older server. */
+	readonly unpaid?:     number;
 	readonly from_date:   string | null;
 	readonly to_date:     string | null;
 }
@@ -113,6 +115,8 @@ export interface LeaveDateValidation {
 	readonly total:    number;
 	readonly sandwich: boolean;
 	readonly days:     ReadonlyArray< { date: string; status: string | null } >;
+	/** Days past the balance that will be unpaid (extra unpaid leave on); absent on an older server. */
+	readonly unpaid?:  number;
 }
 
 /**

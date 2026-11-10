@@ -112,6 +112,8 @@ export interface LeaveDateValidation {
 	readonly total:    number;
 	readonly sandwich: boolean;
 	readonly days:     ReadonlyArray< { date: string; status: string | null } >;
+	/** Days past the balance that will be unpaid (extra unpaid leave on); absent on an older server. */
+	readonly unpaid?:  number;
 }
 
 /**
