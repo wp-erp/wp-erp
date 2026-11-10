@@ -341,7 +341,8 @@ final class Enqueue {
 			// wp_logout_url() returns an HTML-escaped (`&amp;`) URL; decode it for JSON.
 			'logoutUrl'     => esc_url_raw( wp_specialchars_decode( wp_logout_url( admin_url( 'admin.php?page=erp-hr' ) ) ) ),
 			'assets'        => [
-				'logoUrl'      => WPERP_HRM_ASSETS . '/images/logo.svg',
+				// Only when the file ships: a missing logo showed as a broken image (404) on the welcome screen.
+				'logoUrl'      => file_exists( WPERP_HRM_PATH . '/assets/images/logo.svg' ) ? WPERP_HRM_ASSETS . '/images/logo.svg' : '',
 				// Base URL for the shared pro-popup illustration set, reused by the
 				// React "Upgrade to Pro" upsell modal (parity with the legacy popup).
 				'proPopupUrl'  => defined( 'WPERP_ASSETS' ) ? WPERP_ASSETS . '/images/pro-popup' : '',
