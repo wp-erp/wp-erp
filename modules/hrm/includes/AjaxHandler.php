@@ -1373,6 +1373,7 @@ class AjaxHandler {
 		\WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( array( 'status' => 'active' ) );
 
 		delete_user_meta( $id, '_erp_hr_termination' );
+		delete_user_meta( $id, '_erp_hr_termination_scheduled' );
 
 		$this->send_success();
 	}
