@@ -2886,12 +2886,14 @@ function erp_hr_get_custom_leave_report( $user_id, $f_year = null, $start_date =
                 $day_in  = floatval( $days_count['day_in'] );
                 $day_out = floatval( $days_count['day_out'] );
 
-                // total spent
+                // total spent: working days, plus off days the request booked (sandwich rule: its days exceed its working rows)
                 $leave_spent = $wpdb->get_var(
                     $wpdb->prepare(
                         "SELECT count(rq_details.id) FROM {$wpdb->prefix}erp_hr_leave_request_details as rq_details
                                 LEFT JOIN {$wpdb->prefix}erp_hr_leave_requests as rq on rq.id = rq_details.leave_request_id
-                                WHERE rq.leave_entitlement_id = %d AND rq_details.user_id = %d AND rq_details.workingday_status = %d AND rq_details.leave_date BETWEEN %d AND %d",
+                                WHERE rq.leave_entitlement_id = %d AND rq_details.user_id = %d
+                                AND ( rq_details.workingday_status = %d OR rq.days > ( SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_leave_request_details AS w WHERE w.leave_request_id = rq.id AND w.workingday_status = 1 ) )
+                                AND rq_details.leave_date BETWEEN %d AND %d",
                         [ $result->id, $user_id, 1, $start_date, $end_date ]
                     )
                 );

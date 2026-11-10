@@ -330,28 +330,27 @@ class ReportsController extends RestController {
 		// Oldest month first (the view builds newest-first then plots by timestamp).
 		$chart = array_reverse( $chart );
 
-		// A trashed employee keeps `status = 'active'`; only `deleted_at` marks them.
-		$total_emp_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL" );
+		// Employed on the "as of" day (today, or the last day of a past year): hired
+		// by then and not yet gone. A future hire is not counted yet, and someone
+		// leaving later in the year still is. A trashed employee keeps
+		// `status = 'active'`; only `deleted_at` marks them.
+		$as_of = ( $query_year && $query_year < (int) current_time( 'Y' ) ) ? $query_year . '-12-31' : current_time( 'Y-m-d' );
 
-		$user_all      = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL" );
-		$user_filtered = [];
+		$user_all = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT user_id, department FROM {$wpdb->prefix}erp_hr_employees
+				WHERE deleted_at IS NULL AND hiring_date <> '0000-00-00' AND hiring_date <= %s
+				AND ( status = 'active' OR ( termination_date IS NOT NULL AND termination_date <> '0000-00-00' AND termination_date >= %s ) )",
+				$as_of,
+				$as_of
+			)
+		);
+		$total_emp_count = count( $user_all );
+		$user_filtered   = [];
 
 		foreach ( $user_all as $user ) {
 			if ( $query_dept && $user->department != $query_dept ) {
 				continue;
-			}
-
-			if ( '0000-00-00' == $user->hiring_date ) {
-				continue;
-			}
-
-			$hiring_year      = (int) substr( $user->hiring_date, 0, 4 );
-			$termination_year = '0000-00-00' == $user->termination_date ? (int) current_time( 'Y' ) : (int) substr( $user->termination_date, 0, 4 );
-
-			if ( $query_year ) {
-				if ( $query_year < $hiring_year || $query_year > $termination_year ) {
-					continue;
-				}
 			}
 
 			$user_filtered[] = (int) $user->user_id;
@@ -715,7 +714,17 @@ class ReportsController extends RestController {
 		$start_date           = $request['start'] !== null && '' !== $request['start'] ? (string) $request['start'] : null;
 		$end_date             = $request['end'] !== null && '' !== $request['end'] ? (string) $request['end'] : null;
 
-		$query = EmployeeModel::where( 'status', 'active' )->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );
+		// Everyone employed at some point in the period, so leave taken by someone
+		// who has since left still shows: active, or gone on/after the period start.
+		global $wpdb;
+		$fy_start     = $wpdb->get_var( $wpdb->prepare( "SELECT start_date FROM {$wpdb->prefix}erp_hr_financial_years WHERE id = %d", (int) $selected_f_year ) );
+		$period_start = $start_date ? gmdate( 'Y-m-d', strtotime( $start_date ) ) : ( $fy_start ? erp_current_datetime()->setTimestamp( (int) $fy_start )->format( 'Y-m-d' ) : current_time( 'Y-m-d' ) );
+
+		$query = EmployeeModel::where(
+			static function ( $q ) use ( $period_start ) {
+				$q->where( 'status', 'active' )->orWhere( 'termination_date', '>=', $period_start );
+			}
+		)->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );
 
 		if ( $selected_department && -1 != $selected_department ) {
 			$query->where( 'department', $selected_department );

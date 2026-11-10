@@ -10,6 +10,8 @@ export interface DashboardSummary {
 	readonly total_departments:  number;
 	readonly total_designations: number;
 	readonly pending_requests:   number;
+	/** Checked in today (Attendance on), else headcount minus today's leave; absent on an older server. */
+	readonly present_today?:     number;
 }
 
 export interface DashboardPerson {

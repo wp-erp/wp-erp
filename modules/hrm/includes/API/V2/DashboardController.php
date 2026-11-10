@@ -274,6 +274,7 @@ class DashboardController extends RestController {
 				'total_departments'    => count( (array) $departments ),
 				'total_designations'   => count( (array) $designations ),
 				'pending_requests'     => $pending_requests,
+				'present_today'        => $this->present_today( $total_employees ),
 			],
 			'on_leave'           => $on_leave,
 			'about_to_end'       => $about_to_end,
@@ -638,5 +639,50 @@ class DashboardController extends RestController {
 		// site-local midnight — format in the site timezone (`wp_date`), not
 		// UTC, or the day shifts back one for positive-offset sites.
 		return wp_date( 'Y-m-d', (int) $value );
+	}
+
+	/**
+	 * How many active employees are present today.
+	 *
+	 * With ERP Pro Attendance on, the employees checked in on today's roster.
+	 * Otherwise the active headcount minus the employees on approved leave
+	 * today (not this month's and next month's leave list).
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $total_employees Active headcount.
+	 *
+	 * @return int
+	 */
+	private function present_today( int $total_employees ): int {
+		global $wpdb;
+
+		$today = erp_current_datetime()->format( 'Y-m-d' );
+
+		if ( function_exists( 'erp_att_get_all_attendance' ) ) {
+			return (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT( DISTINCT ds.user_id ) FROM {$wpdb->prefix}erp_attendance_date_shift AS ds
+					INNER JOIN {$wpdb->prefix}erp_hr_employees AS e ON e.user_id = ds.user_id AND e.status = 'active'
+					WHERE ds.date = %s AND ds.present = 1",
+					$today
+				)
+			);
+		}
+
+		// Leave days are stored as site-local midnights.
+		$midnight = erp_current_datetime()->setTime( 0, 0, 0 )->getTimestamp();
+
+		$on_leave = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT( DISTINCT d.user_id ) FROM {$wpdb->prefix}erp_hr_leave_request_details AS d
+				INNER JOIN {$wpdb->prefix}erp_hr_leave_requests AS rq ON rq.id = d.leave_request_id AND rq.last_status = 1
+				INNER JOIN {$wpdb->prefix}erp_hr_employees AS e ON e.user_id = d.user_id AND e.status = 'active'
+				WHERE d.leave_date = %d",
+				$midnight
+			)
+		);
+
+		return max( 0, $total_employees - $on_leave );
 	}
 }

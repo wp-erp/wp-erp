@@ -354,10 +354,7 @@ function DashboardInner(): JSX.Element {
 						<StatCard
 							icon={ UserCheck }
 							label={ __( 'Present Today', 'erp' ) }
-							value={ Math.max(
-								0,
-								( summary?.total_employees ?? 0 ) - ( data?.on_leave.length ?? 0 )
-							) }
+							value={ summary?.present_today ?? 0 }
 							tint="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
 						/>
 						<StatCard

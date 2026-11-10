@@ -42,9 +42,10 @@ const HEADCOUNT_CONFIG = {
 export function HeadcountPage(): JSX.Element {
 	const today = siteToday();
 	const now   = today.getFullYear();
-	// The figures are read live, so the report is "as of" today on the site clock.
-	const asOf  = formatDisplayDate( todaySiteYmd() );
 	const [ year, setYear ]             = useState( String( now ) );
+	// The server counts who was employed on this day: today for the running
+	// year, the last day of a past year.
+	const asOf  = formatDisplayDate( Number( year ) < now ? `${ year }-12-31` : todaySiteYmd() );
 	const [ department, setDepartment ] = useState( 0 );
 	const [ showFilters, setShowFilters ] = useState( false );
 
