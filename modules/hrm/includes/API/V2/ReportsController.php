@@ -201,7 +201,8 @@ class ReportsController extends RestController {
 	 * @return WP_REST_Response
 	 */
 	public function get_age_profile(): WP_REST_Response {
-		$data = erp_hr_get_age_breakdown_data();
+		// Employed today, the same rule as the Head Count list.
+		$data = erp_hr_get_age_breakdown_data( current_time( 'Y-m-d' ) );
 		$rows = [];
 
 		foreach ( (array) $data as $row ) {
@@ -480,7 +481,7 @@ class ReportsController extends RestController {
 	/**
 	 * GET /reports/years-of-service.
 	 *
-	 * Mirrors views/reporting/years-of-service.php: active employees grouped by
+	 * Mirrors views/reporting/years-of-service.php: employees employed today grouped by
 	 * hire month then day, each carrying the completed years of service.
 	 *
 	 * @return WP_REST_Response
@@ -488,7 +489,21 @@ class ReportsController extends RestController {
 	public function get_years_of_service(): WP_REST_Response {
 		global $wpdb;
 
-		$all_user_id = array_map( 'intval', (array) $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' AND deleted_at IS NULL" ) );
+		// Employed today, the same rule as the Head Count list: hired by today and
+		// active, or leaving on a later date.
+		$as_of       = current_time( 'Y-m-d' );
+		$all_user_id = array_map(
+			'intval',
+			(array) $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT user_id FROM {$wpdb->prefix}erp_hr_employees
+					WHERE deleted_at IS NULL AND hiring_date <> '0000-00-00' AND hiring_date <= %s
+					AND ( status = 'active' OR ( termination_date IS NOT NULL AND termination_date <> '0000-00-00' AND termination_date >= %s ) )",
+					$as_of,
+					$as_of
+				)
+			)
+		);
 		$people      = erp_hr_get_employee_display_data( $all_user_id, 60 );
 		$hire_data   = [];
 

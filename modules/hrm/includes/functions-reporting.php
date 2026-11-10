@@ -152,9 +152,14 @@ function erp_hr_get_gender_count( $department = null ) {
 /**
  * Gets data for Employee Breakdown Table on ERP HR Reporting
  *
+ * @since 2.0.0 Added the `$as_of` parameter.
+ *
+ * @param string $as_of Optional `Y-m-d`. When set, counts who is employed on that
+ *                      day (hired by then, not yet left) instead of current status.
+ *
  * @return object
  */
-function erp_hr_get_age_breakdown_data() {
+function erp_hr_get_age_breakdown_data( $as_of = '' ) {
     $employees          = new \WeDevs\ERP\HRM\Models\Employee();
     $departments        = erp_hr_get_departments();
     $age_breakdown_data = [];
@@ -167,7 +172,17 @@ function erp_hr_get_age_breakdown_data() {
     $tot_65plus         = 0;
 
     foreach ( $departments as $department ) {
-        $emp_by_dept      = $employees->where( [ 'department' => $department->id, 'status' => 'active' ] )->get();
+        if ( $as_of ) {
+            $emp_by_dept = $employees->where( 'department', $department->id )
+                ->where( 'hiring_date', '<>', '0000-00-00' )
+                ->where( 'hiring_date', '<=', $as_of )
+                ->where( function ( $q ) use ( $as_of ) {
+                    $q->where( 'status', 'active' )->orWhere( 'termination_date', '>=', $as_of );
+                } )
+                ->get();
+        } else {
+            $emp_by_dept = $employees->where( [ 'department' => $department->id, 'status' => 'active' ] )->get();
+        }
         $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
 
         $tot_under18 += $emp_by_dept_data['_under_18'];
