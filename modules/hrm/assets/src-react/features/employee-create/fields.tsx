@@ -18,7 +18,7 @@ import {
 	SmartSelect,
 	Textarea,
 } from '@wedevs/plugin-ui';
-import type { JSX, ReactNode } from 'react';
+import { useEffect, useRef, type JSX, type ReactNode } from 'react';
 
 import { DateField } from '@/shared/DateField';
 import { employeeOptionRenderer } from '@/shared/components/EmployeeOption';
@@ -55,7 +55,7 @@ function FieldShell( {
 	return (
 		<div className={ [ 'flex min-w-0 flex-col gap-2.5', className ?? '' ].join( ' ' ) }>
 			<div className="flex min-h-[1.25rem] items-center justify-between gap-2">
-				<Label htmlFor={ id } className="text-sm font-medium text-foreground">
+				<Label htmlFor={ id } id={ `${ id }-label` } className="text-sm font-medium text-foreground">
 					{ label }
 					{ required ? <span className="ml-0.5 text-destructive">*</span> : null }
 				</Label>
@@ -236,29 +236,37 @@ export function SmartSelectField( {
 	// same face the Employees table does, without each caller opting in.
 	const hasAvatars = options.some( ( o ) => Boolean( o.avatar ) );
 
+	const triggerWrap = useRef< HTMLDivElement >( null );
+	// shortcut: SmartSelect takes no id/aria props, so its trigger is named from the DOM after each render, upgrade when plugin-ui exposes an id or aria-labelledby prop
+	useEffect( () => {
+		triggerWrap.current?.querySelector( '[data-slot="smart-select-trigger"]' )?.setAttribute( 'aria-labelledby', `${ id }-label` );
+	} );
+
 	return (
 		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className } labelAction={ labelAction }>
-			<SmartSelect
-				options={ options as { value: string; label: string }[] }
-				{ ...( hasAvatars ? { renderOption: employeeOptionRenderer( options ) } : {} ) }
-				value={ value }
-				onValueChange={ onChange }
-				placeholder={ placeholder ?? __( '- Select -', 'erp' ) }
-				searchPlaceholder={ searchPlaceholder ?? __( 'Search…', 'erp' ) }
-				emptyMessage={ emptyMessage ?? __( 'No matches found.', 'erp' ) }
-				invalid={ error ? true : false }
-				{ ...( disabled !== undefined ? { disabled } : {} ) }
-				{ ...( onSearch ? { onSearch } : {} ) }
-				{ ...( loading !== undefined ? { loading } : {} ) }
-				showClear
-				className="h-10 w-full"
-				// plugin-ui's SmartSelect content reads `--anchor-width`, but its
-				// popover positioner sets `--popover-anchor-width` — so the popup
-				// collapses to its intrinsic width. Force it to the trigger width.
-				// Cap the height so the list fits below the trigger and Base UI's
-				// collision-flip keeps it under the field instead of flipping above.
-				contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))] max-h-[min(16rem,var(--available-height))] overflow-y-auto"
-			/>
+			<div ref={ triggerWrap } className="contents">
+				<SmartSelect
+					options={ options as { value: string; label: string }[] }
+					{ ...( hasAvatars ? { renderOption: employeeOptionRenderer( options ) } : {} ) }
+					value={ value }
+					onValueChange={ onChange }
+					placeholder={ placeholder ?? __( '- Select -', 'erp' ) }
+					searchPlaceholder={ searchPlaceholder ?? __( 'Search…', 'erp' ) }
+					emptyMessage={ emptyMessage ?? __( 'No matches found.', 'erp' ) }
+					invalid={ error ? true : false }
+					{ ...( disabled !== undefined ? { disabled } : {} ) }
+					{ ...( onSearch ? { onSearch } : {} ) }
+					{ ...( loading !== undefined ? { loading } : {} ) }
+					showClear
+					className="h-10 w-full"
+					// plugin-ui's SmartSelect content reads `--anchor-width`, but its
+					// popover positioner sets `--popover-anchor-width` — so the popup
+					// collapses to its intrinsic width. Force it to the trigger width.
+					// Cap the height so the list fits below the trigger and Base UI's
+					// collision-flip keeps it under the field instead of flipping above.
+					contentClassName="!w-[var(--popover-anchor-width,var(--anchor-width))] max-h-[min(16rem,var(--available-height))] overflow-y-auto"
+				/>
+			</div>
 		</FieldShell>
 	);
 }

@@ -18,7 +18,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	RichTextEditor,
 	SmartMultiSelect,
 	Textarea,
 } from '@wedevs/plugin-ui';
@@ -26,6 +25,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { JSX } from 'react';
 
 import { CheckLabel, FormLabel } from '@/shared/components/FieldLabels';
+import { RichTextEditor } from '@/shared/components/RichTextEditor';
 import { FieldSourceAction } from '@/shared/components/FieldSourceLink';
 import { DateTimeInput } from '@/shared/components/NativeInputs';
 import { __ } from '@/shared/i18n';
