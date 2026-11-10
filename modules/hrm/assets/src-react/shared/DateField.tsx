@@ -15,6 +15,8 @@ import type { JSX } from 'react';
 import { siteToday } from '@/shared/utils/date';
 
 interface DateFieldProps {
+	/** Input id, so a `<Label htmlFor>` names the field. */
+	readonly id?:          string | undefined;
 	readonly value:        string;
 	readonly onChange:     ( value: string ) => void;
 	readonly className?:   string | undefined;
@@ -89,6 +91,7 @@ export const captionDropdownProps = (
 };
 
 export function DateField( {
+	id,
 	value,
 	onChange,
 	className,
@@ -138,6 +141,7 @@ export function DateField( {
 			trigger={ () => (
 				<div className="relative">
 					<Input
+						id={ id }
 						type="text"
 						readOnly
 						disabled={ disabled }

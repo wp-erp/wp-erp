@@ -100,6 +100,7 @@ export function TextField( {
 		<FieldShell id={ id } label={ label } required={ required } error={ error } className={ className }>
 			{ type === 'date' ? (
 				<DateField
+					id={ id }
 					value={ value }
 					onChange={ onChange }
 					disabled={ disabled }
