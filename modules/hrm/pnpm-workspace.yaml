@@ -13,3 +13,9 @@ allowBuilds:
   esbuild: false
   core-js-pure: false
   unrs-resolver: false
+
+# pnpm 11+ ignores .npmrc's node-linker / strict-peer-dependencies, so they are
+# repeated here. Without the flat layout webpack cannot resolve deps such as
+# recharts and @wordpress/scripts' loaders, and the build fails.
+nodeLinker: hoisted
+strictPeerDependencies: false
