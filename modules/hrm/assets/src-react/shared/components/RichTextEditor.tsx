@@ -8,8 +8,10 @@ import { useEffect, useRef, type ComponentProps, type JSX } from 'react';
 
 import { __ } from '@/shared/i18n';
 
-export function RichTextEditor( props: ComponentProps< typeof PluginRichTextEditor > ): JSX.Element {
+export function RichTextEditor( { ariaLabel, ...props }: ComponentProps< typeof PluginRichTextEditor > & { readonly ariaLabel?: string } ): JSX.Element {
 	const wrap = useRef< HTMLDivElement >( null );
+	// The editing area's accessible name: the caller's label, else the placeholder.
+	const areaName = ariaLabel ?? ( typeof props.placeholder === 'string' && props.placeholder ? props.placeholder : __( 'Content', 'erp' ) );
 
 	// shortcut: the toolbar has only hard-coded English button titles and unnamed selects, so they are named from the DOM after mount, upgrade when plugin-ui exposes toolbar label props
 	useEffect( () => {
@@ -39,6 +41,16 @@ export function RichTextEditor( props: ComponentProps< typeof PluginRichTextEdit
 			select.setAttribute( 'aria-label', selects[ i ] ?? '' );
 		} );
 	}, [] );
+
+	// shortcut: the editable area has no label prop, so it is named from the DOM, upgrade when plugin-ui exposes one
+	useEffect( () => {
+		const area = wrap.current?.querySelector( '[contenteditable="true"]' );
+		if ( area ) {
+			area.setAttribute( 'role', 'textbox' );
+			area.setAttribute( 'aria-multiline', 'true' );
+			area.setAttribute( 'aria-label', areaName );
+		}
+	} );
 
 	return (
 		<div ref={ wrap }>

@@ -92,6 +92,35 @@ export function AnnouncementFormDialog( {
 	onSubmit,
 }: AnnouncementFormDialogProps ): JSX.Element {
 	const [ form, setForm ]       = useState< FormState >( EMPTY );
+
+	// shortcut: SmartMultiSelect takes no aria props and always renders Clear/Close as listbox options, so the triggers are named and those two are turned into buttons from the DOM, upgrade when plugin-ui exposes trigger aria props and a footer slot
+	useEffect( () => {
+		const fix = (): void => {
+			[ 'erp-announce-departments-label', 'erp-announce-designations-label', 'erp-announce-employees-label' ].forEach( ( id ) => {
+				let box = document.getElementById( id )?.parentElement ?? null;
+				while ( box && ! box.querySelector( '[data-slot="smart-multi-select-trigger"]' ) ) {
+					box = box.parentElement;
+				}
+				const trigger = box?.querySelector( '[data-slot="smart-multi-select-trigger"]' );
+				if ( trigger && trigger.getAttribute( 'aria-labelledby' ) !== id ) {
+					trigger.setAttribute( 'aria-labelledby', id );
+				}
+			} );
+			document.querySelectorAll( '.erp-announce-picker [cmdk-group-items] > div > [cmdk-item]' ).forEach( ( item ) => {
+				if ( item.getAttribute( 'role' ) !== 'button' ) {
+					item.setAttribute( 'role', 'button' );
+				}
+				if ( item.hasAttribute( 'aria-selected' ) ) {
+					item.removeAttribute( 'aria-selected' );
+				}
+			} );
+		};
+		fix();
+		// The popup is portaled and remounts on open, and cmdk re-adds aria-selected on highlight, so watch the body.
+		const observer = new MutationObserver( fix );
+		observer.observe( document.body, { childList: true, subtree: true, attributes: true, attributeFilter: [ 'aria-selected' ] } );
+		return () => observer.disconnect();
+	}, [ form.assignType ] );
 	const [ titleErr, setTitleErr ] = useState( '' );
 	const [ recipientErr, setRecipientErr ] = useState( '' );
 
@@ -238,10 +267,11 @@ export function AnnouncementFormDialog( {
 					{ form.assignType === 'by_department' ? (
 						<div className="flex flex-col gap-2.5">
 							<div className="flex min-h-[1.25rem] items-center justify-between gap-2">
-							<span className="text-sm font-medium text-foreground">{ __( 'Departments', 'erp' ) }</span>
+							<span id="erp-announce-departments-label" className="text-sm font-medium text-foreground">{ __( 'Departments', 'erp' ) }</span>
 							<FieldSourceAction source="departments" />
 						</div>
 							<SmartMultiSelect
+								contentClassName="erp-announce-picker"
 								options={ deptMulti }
 								value={ form.departments }
 								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, departments: v } ) ); setRecipientErr( '' ); } }
@@ -254,10 +284,11 @@ export function AnnouncementFormDialog( {
 					{ form.assignType === 'by_designation' ? (
 						<div className="flex flex-col gap-2.5">
 							<div className="flex min-h-[1.25rem] items-center justify-between gap-2">
-							<span className="text-sm font-medium text-foreground">{ __( 'Designations', 'erp' ) }</span>
+							<span id="erp-announce-designations-label" className="text-sm font-medium text-foreground">{ __( 'Designations', 'erp' ) }</span>
 							<FieldSourceAction source="designations" />
 						</div>
 							<SmartMultiSelect
+								contentClassName="erp-announce-picker"
 								options={ desigMulti }
 								value={ form.designations }
 								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, designations: v } ) ); setRecipientErr( '' ); } }
@@ -269,8 +300,9 @@ export function AnnouncementFormDialog( {
 
 					{ form.assignType === 'selected_employee' ? (
 						<div className="flex flex-col gap-2.5">
-							<span className="text-sm font-medium text-foreground">{ __( 'Employees', 'erp' ) }</span>
+							<span id="erp-announce-employees-label" className="text-sm font-medium text-foreground">{ __( 'Employees', 'erp' ) }</span>
 							<SmartMultiSelect
+								contentClassName="erp-announce-picker"
 								options={ empMulti }
 								value={ form.employees }
 								onValueChange={ ( v ) => { setForm( ( p ) => ( { ...p, employees: v } ) ); setRecipientErr( '' ); } }
