@@ -264,8 +264,10 @@ class LeavePoliciesController extends RestController {
 		// The half-day filter only ever sets the flag on, so unticking it was
 		// ignored and half-day could never be turned off again. Clear it here when
 		// the form sends it off (the legacy filter is left as it is).
-		if ( \array_key_exists( 'enable-halfday', $sent_extra ) && 'on' !== $sent_extra['enable-halfday'] && isset( $policy->halfday_enable ) ) {
-			LeavePolicy::where( 'id', $id )->update( [ 'halfday_enable' => 0 ] );
+		// The form sends a JSON boolean, so compare the sanitized value ('on' / '').
+		if ( \array_key_exists( 'enable-halfday', $sent_extra ) && 'on' !== $this->sanitize_extra_value( $sent_extra['enable-halfday'] ) && isset( $policy->halfday_enable ) ) {
+			// The builder update skips the model's timestamp setter, so set updated_at as a timestamp here.
+			LeavePolicy::where( 'id', $id )->update( [ 'halfday_enable' => 0, 'updated_at' => erp_current_datetime()->getTimestamp() ] );
 		}
 
 		return rest_ensure_response( $this->prepare_item_for_response( LeavePolicy::find( $id ), $request ) );
