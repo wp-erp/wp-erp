@@ -5,10 +5,13 @@
  *
  * @since 1.0.0
  * @since 1.1.14 Using settings saved in ERP Settings > HR > Workdays tab
+ * @since 2.0.0 Passes the employee to the `work_days` filter
+ *
+ * @param int|null $user_id Employee whose week is wanted (a shift can override the company week).
  *
  * @return array
  */
-function erp_hr_get_work_days() {
+function erp_hr_get_work_days( $user_id = null ) {
     $default = [
         'mon' => 8,
         'tue' => 8,
@@ -33,7 +36,7 @@ function erp_hr_get_work_days() {
         'sun' => get_option( 'sun', $wizard_settings['sun'] ),
     ];
 
-    return apply_filters( 'work_days', $days );
+    return apply_filters( 'work_days', $days, $user_id );
 }
 
 /**
@@ -63,7 +66,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date, $user_id 
 		'days' => [],
 		'total' => 0,
 	];
-    $work_days     = erp_hr_get_work_days();
+    $work_days     = erp_hr_get_work_days( $user_id );
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
 
     foreach ( $between_dates as $date ) {
@@ -127,7 +130,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date, $user_id = 
 		'total' => 0,
 		'sandwich' => 0,
 	];
-    $work_days     = erp_hr_get_work_days();
+    $work_days     = erp_hr_get_work_days( $user_id );
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
 
     $sandwich_rules_applied = erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, $user_id );
@@ -181,7 +184,7 @@ function erp_hr_can_apply_sandwich_rules_between_dates( $start_date, $end_date, 
     }
 
     global $wpdb;
-    $work_days = erp_hr_get_work_days();
+    $work_days = erp_hr_get_work_days( $user_id );
 
     $previous_dates = [];
     $next_dates     = [];
