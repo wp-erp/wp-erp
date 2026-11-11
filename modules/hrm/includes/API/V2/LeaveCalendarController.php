@@ -214,7 +214,10 @@ class LeaveCalendarController extends RestController {
 
 		$holidays        = $holiday->get()->toArray();
 		$match_holidays  = [];
-		$filter_holidays = apply_filters( 'filter_holidays', [], $start_date, $end_date );
+		// The employee whose week applies (their shift weekend); 0 on the company
+		// calendar, where the company work week applies, never the viewer's shift.
+		$week_user_id    = ( $is_manager && 'all' === $scope ) ? 0 : (int) $user_id;
+		$filter_holidays = apply_filters( 'filter_holidays', [], $start_date, $end_date, $week_user_id );
 
 		// --- Weekend background blocks (when no custom holiday filter is active) ---
 		if ( empty( $filter_holidays ) ) {

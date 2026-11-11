@@ -2302,7 +2302,8 @@ class AjaxHandler {
 
 		$holidays        = $holiday->get()->toArray();
 		$match_holidays  = array();
-		$filter_holidays = apply_filters( 'filter_holidays', array(), $start_date, $end_date );
+		// The viewer's own calendar: their shift weekend applies.
+		$filter_holidays = apply_filters( 'filter_holidays', array(), $start_date, $end_date, $user_id );
 
 		if ( empty( $filter_holidays ) ) {
 			$weekends  = array();
