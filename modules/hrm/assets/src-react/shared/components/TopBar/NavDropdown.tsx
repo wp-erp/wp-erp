@@ -40,6 +40,7 @@ export function useNavPopover() {
 	const wrapRef    = useRef< HTMLDivElement >( null );
 	const triggerRef = useRef< HTMLButtonElement >( null );
 	const closeTimer = useRef< number | undefined >( undefined );
+	const openedAt   = useRef( 0 );
 	const location   = useLocation();
 
 	const place = useCallback( () => {
@@ -61,8 +62,19 @@ export function useNavPopover() {
 			closeTimer.current = undefined;
 		}
 		place();
+		openedAt.current = Date.now();
 		setOpen( true );
 	}, [ place ] );
+
+	// Click toggles, except right after hover opened it: moving onto an item and
+	// clicking it fires mouseenter (open) then click, which closed it again.
+	const toggle = useCallback( () => {
+		if ( ! open ) {
+			openMenu();
+		} else if ( Date.now() - openedAt.current > 400 ) {
+			setOpen( false );
+		}
+	}, [ open, openMenu ] );
 
 	const closeSoon = useCallback( () => {
 		closeTimer.current = window.setTimeout( () => setOpen( false ), 120 );
@@ -103,7 +115,7 @@ export function useNavPopover() {
 		};
 	}, [ open, place ] );
 
-	return { open, setOpen, coords, wrapRef, triggerRef, openMenu, closeSoon };
+	return { open, setOpen, coords, wrapRef, triggerRef, openMenu, closeSoon, toggle };
 }
 
 interface NavPanelProps {
@@ -210,7 +222,7 @@ interface NavDropdownProps {
 }
 
 export function NavDropdown( { item, active, Icon, items }: NavDropdownProps ): JSX.Element {
-	const { open, setOpen, coords, wrapRef, triggerRef, openMenu, closeSoon } = useNavPopover();
+	const { open, setOpen, coords, wrapRef, triggerRef, openMenu, closeSoon, toggle } = useNavPopover();
 
 	return (
 		<div
@@ -226,7 +238,7 @@ export function NavDropdown( { item, active, Icon, items }: NavDropdownProps ): 
 				aria-expanded={ open }
 				// Lets the scrolling top bar find and reveal the active section.
 				data-active={ active ? 'true' : undefined }
-				onClick={ () => ( open ? setOpen( false ) : openMenu() ) }
+				onClick={ toggle }
 				className={ [
 					'group relative inline-flex shrink-0 items-center gap-1.5 px-3 text-sm transition-colors',
 					active ? 'font-medium text-primary' : 'font-normal text-foreground hover:text-primary',

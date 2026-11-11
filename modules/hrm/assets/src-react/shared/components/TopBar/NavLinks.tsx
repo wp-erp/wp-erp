@@ -112,10 +112,11 @@ export function NavLinks(): JSX.Element {
 		list.scrollBy( { left: distance * forward * ( edges.rtl ? -1 : 1 ), behavior: 'smooth' } );
 	};
 
-	const fade = [
-		edges.start ? 'transparent, black 1.5rem' : 'black',
-		edges.end ? 'black calc(100% - 1.5rem), transparent' : 'black',
-	].join( ', ' );
+	// Edge fades are overlays, not a mask on the list: a mask also clips the
+	// dropdown panels painted inside it (position: fixed does not escape it).
+	const toEnd   = edges.rtl ? 'left' : 'right';
+	const toStart = edges.rtl ? 'right' : 'left';
+	const FADE    = 'pointer-events-none absolute inset-y-0 z-10 w-6';
 
 	return (
 		<nav
@@ -136,18 +137,22 @@ export function NavLinks(): JSX.Element {
 				</button>
 			) : null }
 
-			<div
-				ref={ listRef }
-				onScroll={ measure }
-				style={ {
-					maskImage:       `linear-gradient(to ${ edges.rtl ? 'left' : 'right' }, ${ fade })`,
-					WebkitMaskImage: `linear-gradient(to ${ edges.rtl ? 'left' : 'right' }, ${ fade })`,
-				} }
-				className="erp-hr-topbar-nav-scroll flex min-w-0 flex-1 flex-nowrap items-stretch overflow-x-auto whitespace-nowrap"
-			>
-				{ menu.entries.map( ( entry ) => (
-					<NavEntry key={ entry.item.id } entry={ entry } menu={ menu } />
-				) ) }
+			<div className="relative flex min-w-0 flex-1">
+				<div
+					ref={ listRef }
+					onScroll={ measure }
+					className="erp-hr-topbar-nav-scroll flex min-w-0 flex-1 flex-nowrap items-stretch overflow-x-auto whitespace-nowrap"
+				>
+					{ menu.entries.map( ( entry ) => (
+						<NavEntry key={ entry.item.id } entry={ entry } menu={ menu } />
+					) ) }
+				</div>
+				{ edges.start ? (
+					<span aria-hidden="true" className={ `${ FADE } start-0` } style={ { background: `linear-gradient(to ${ toEnd }, var(--background, #fff), transparent)` } } />
+				) : null }
+				{ edges.end ? (
+					<span aria-hidden="true" className={ `${ FADE } end-0` } style={ { background: `linear-gradient(to ${ toStart }, var(--background, #fff), transparent)` } } />
+				) : null }
 			</div>
 
 			{ edges.overflow ? (
