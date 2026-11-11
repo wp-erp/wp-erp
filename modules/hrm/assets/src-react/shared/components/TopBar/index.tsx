@@ -25,7 +25,8 @@ export function TopBar(): JSX.Element {
 			<header className="erp-hr-topbar" role="banner">
 				<div className="flex min-w-0 flex-1 items-stretch">
 					<Logo />
-					<div className="erp-hr-topbar-nav-scroll flex min-w-0 flex-1 items-stretch overflow-x-auto">
+					{ /* NavLinks owns the sideways scroll and its edge arrows. */ }
+					<div className="flex min-w-0 flex-1 items-stretch">
 						<NavLinks />
 					</div>
 				</div>

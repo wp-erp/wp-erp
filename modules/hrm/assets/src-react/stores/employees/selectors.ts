@@ -13,6 +13,20 @@ import type {
 	EmployeesState,
 } from './types';
 
+// The two list selectors build a new array/object on every call, and `useSelect`
+// re-renders a consumer whenever a returned value is not `===` the last one. So
+// each keeps its last result and returns it while its inputs are the same
+// references (the reducer replaces a slice only when it changes). Hand-rolled:
+// `createSelector` comes from core's wp.data, which WordPress 5.6 lacks.
+const EMPTY: readonly EmployeeListItem[] = [];
+let lastRows: { ids: readonly number[]; byId: EmployeesState[ 'byId' ]; rows: readonly EmployeeListItem[] } | null = null;
+let lastQuery: {
+	filters:    EmployeesState[ 'filters' ];
+	sort:       EmployeesState[ 'sort' ];
+	pagination: EmployeesState[ 'pagination' ];
+	query:      EmployeeListQuery;
+} | null = null;
+
 export function getEmployees(
 	state: EmployeesState,
 	query: EmployeeListQuery
@@ -20,7 +34,10 @@ export function getEmployees(
 	const key = toQueryKey( query );
 	const ids = state.byQuery[ key ];
 	if ( ! ids ) {
-		return [];
+		return EMPTY;
+	}
+	if ( lastRows && lastRows.ids === ids && lastRows.byId === state.byId ) {
+		return lastRows.rows;
 	}
 	const out: EmployeeListItem[] = [];
 	for ( const id of ids ) {
@@ -29,6 +46,7 @@ export function getEmployees(
 			out.push( item );
 		}
 	}
+	lastRows = { ids, byId: state.byId, rows: out };
 	return out;
 }
 
@@ -98,11 +116,17 @@ export function getCounts(
  * pagination). Used by the resolver hook to fetch the right page.
  */
 export function getCurrentQuery( state: EmployeesState ): EmployeeListQuery {
-	return {
-		...state.filters,
-		orderby:  state.sort.orderby,
-		order:    state.sort.order,
-		page:     state.pagination.page,
-		per_page: state.pagination.perPage,
+	const { filters, sort, pagination } = state;
+	if ( lastQuery && lastQuery.filters === filters && lastQuery.sort === sort && lastQuery.pagination === pagination ) {
+		return lastQuery.query;
+	}
+	const query = {
+		...filters,
+		orderby:  sort.orderby,
+		order:    sort.order,
+		page:     pagination.page,
+		per_page: pagination.perPage,
 	};
+	lastQuery = { filters, sort, pagination, query };
+	return query;
 }

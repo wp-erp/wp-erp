@@ -257,7 +257,8 @@ export function EmployeeProfileInner( { userId, headerActions }: { userId: numbe
 
 	return (
 		<div className="mx-auto w-full max-w-full space-y-6">
-			{ canListPeople && (
+			{ /* Not on My Profile: it is reached from the user menu, not from People. */ }
+			{ canListPeople && ! location.pathname.startsWith( '/my-profile' ) && (
 				<TextButton
 					onClick={ back }
 					className="inline-flex items-center gap-1.5 font-medium transition-colors"

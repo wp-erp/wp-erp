@@ -423,8 +423,9 @@ export const TOPBAR_NAV_ITEMS: ReadonlyArray< NavItem > = [
 		icon:          'wallet',
 		hasDropdown:   false,
 		// Shows only when the pro Reimbursement module is active. Route provided by
-		// the pro module via `erp_hr.routes`.
-		capabilities:  [ 'employee' ],
+		// the pro module via `erp_hr.routes`. Employees and HR managers both use it,
+		// so the gate is the derived either-or key, not `employee` alone.
+		capabilities:  [ 'erp_reimbursement_view' ],
 		activeMatches: [ '/reimbursement' ],
 		module:        'reimbursement',
 		pro:           true,

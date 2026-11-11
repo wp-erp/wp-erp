@@ -278,6 +278,12 @@ final class Enqueue {
 			? \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', get_current_user_id() )->exists()
 			: current_user_can( 'employee' );
 
+		// Derived (@since 2.0.0): shows "Reimbursement". Employees file claims there,
+		// and HR managers review them, the same users the pro REST routes allow.
+		$capabilities['erp_reimbursement_view'] = current_user_can( 'employee' )
+			|| current_user_can( erp_hr_get_manager_role() )
+			|| current_user_can( 'erp_hr_reimbursement_manage' );
+
 		$theme_mode = self::resolve_theme_mode( $user_id );
 		$color_scheme = self::resolve_color_scheme( $theme_mode );
 		$nav_layout = self::resolve_nav_layout( $user_id );

@@ -20,5 +20,7 @@ export function HireDateCell( { row }: HireDateCellProps ): JSX.Element {
 		return <span className="text-muted-foreground">—</span>;
 	}
 	const formatted = formatCalendarDate( row.hire_date );
-	return <span className="text-sm text-foreground">{ formatted }</span>;
+	// No wrapping: a date format with spaces or slashes otherwise lets the table
+	// squeeze this last column to one character instead of scrolling.
+	return <span className="whitespace-nowrap text-sm text-foreground">{ formatted }</span>;
 }

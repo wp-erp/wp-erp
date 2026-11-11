@@ -91,7 +91,8 @@ function Stat( { icon: Icon, label, value, sub, tint }: StatProps ): JSX.Element
 			</span>
 			<div className="min-w-0">
 				<p className="truncate text-2xl font-bold leading-7 text-foreground">{ value }</p>
-				<p className="line-clamp-2 text-xs text-muted-foreground">{ sub ? `${ label } · ${ sub }` : label }</p>
+				{ /* The unit only makes sense next to a value: "— Age · years" reads broken. */ }
+				<p className="line-clamp-2 text-xs text-muted-foreground">{ sub && value !== '—' ? `${ label } · ${ sub }` : label }</p>
 			</div>
 		</div>
 	);

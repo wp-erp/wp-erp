@@ -71,7 +71,7 @@ export function TablePager( {
 						value={ String( perPage ) }
 						onValueChange={ ( v ) => onPerPage( parseInt( String( v ), 10 ) ) }
 					>
-						<SelectTrigger aria-label={ aria } className="h-8 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none">
+						<SelectTrigger aria-label={ aria } className="h-8 min-w-16 shrink-0 cursor-pointer rounded-md border border-border bg-card pl-2 pr-6 text-xs font-medium text-foreground focus:border-primary focus:outline-none">
 							<SelectValue placeholder={ aria } />
 						</SelectTrigger>
 						<SelectContent align="start" alignItemWithTrigger={ false }>
