@@ -134,6 +134,9 @@ export function useNavMenu(): NavMenu {
 	const activeModules = boot.modules ?? [];
 	const isPro = boot.isPro;
 	const { openUpsell } = useProUpsell();
+	// The Pro upsell is for the people who buy the plugin: an employee never sees a
+	// Pro-badged entry, only HR managers and administrators do.
+	const canSeeUpsell = hasCap( 'erp_hr_manager' );
 
 	// `erp_hr.nav.groups` lets an add-on append (or reorder) top-level entries;
 	// they go through the same gates as the built-in ones below.
@@ -149,9 +152,9 @@ export function useNavMenu(): NavMenu {
 				return false;
 			}
 			// Pro-module item whose module is inactive: show only as a "Pro" upsell
-			// badge when the Pro plugin is absent (legacy parity).
+			// badge when the Pro plugin is absent (legacy parity), and only to managers.
 			if ( item.module && ! activeModules.includes( item.module ) ) {
-				return Boolean( item.pro && ! isPro );
+				return Boolean( item.pro && ! isPro && canSeeUpsell );
 			}
 			return true;
 		} )
@@ -170,7 +173,7 @@ export function useNavMenu(): NavMenu {
 				( sub ) =>
 					( sub.capabilities.length === 0 || hasCap( sub.capabilities ) ) &&
 					! sub.hiddenForCapabilities?.some( ( cap ) => hasCap( cap ) ) &&
-					( ! sub.module || activeModules.includes( sub.module ) || Boolean( sub.pro && ! isPro ) )
+					( ! sub.module || activeModules.includes( sub.module ) || Boolean( sub.pro && ! isPro && canSeeUpsell ) )
 			)
 			.map( ( sub ) => ( {
 				sub,

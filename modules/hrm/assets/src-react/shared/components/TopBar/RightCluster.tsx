@@ -46,6 +46,7 @@ const DEFAULTS: readonly TopBarRightItem[] = [
 
 export function RightCluster(): JSX.Element {
 	const isPro = useBoot().isPro;
+	const canSeeUpsell = useCan( 'erp_hr_manager' );
 	// The bell is for employees; a manager has the Announcements page instead.
 	const isEmployee = useCan( 'erp_list_employee' );
 	const isManager  = useCan( 'erp_view_announcement' );
@@ -54,7 +55,8 @@ export function RightCluster(): JSX.Element {
 	const items = useMemo( () => {
 		// When Pro is absent, the free shell shows its own "Upgrade" upsell button
 		// (Pro injects its own What's New / Support / Upgrade set when installed).
-		const base: readonly TopBarRightItem[] = isPro
+		// Employees never get the upsell: it is for the people who buy the plugin.
+		const base: readonly TopBarRightItem[] = isPro || ! canSeeUpsell
 			? DEFAULTS
 			: [
 					{ id: 'erp-hr/upgrade', weight: 30, render: () => <UpgradeButton /> },
@@ -73,7 +75,7 @@ export function RightCluster(): JSX.Element {
 		return [ ...merged ].sort(
 			( a, b ) => ( a.weight ?? 50 ) - ( b.weight ?? 50 )
 		);
-	}, [ isPro, showBell ] );
+	}, [ isPro, canSeeUpsell, showBell ] );
 
 	return (
 		<div
