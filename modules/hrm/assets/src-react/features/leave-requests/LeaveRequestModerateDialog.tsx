@@ -23,7 +23,7 @@ import type { JSX, ReactNode } from 'react';
 
 import { HOOKS } from '@/shared/filters';
 import { useCan } from '@/shared/hooks/useCan';
-import { __, sprintf } from '@/shared/i18n';
+import { __, _n, sprintf } from '@/shared/i18n';
 
 import { TextareaField } from '../employee-create/fields';
 import type { LeaveRequest } from './types';
@@ -98,8 +98,20 @@ export function LeaveRequestModerateDialog( {
 					<Alert variant="destructive">
 						<AlertDescription>
 							{ sprintf(
-								/* translators: %s: number of days over the balance */
-								__( '%s days of this request are over the balance and will be unpaid.', 'erp' ),
+								// A lead's approval books nothing: the days are unpaid once HR approves.
+								canManage
+									? /* translators: %s: number of days over the balance */ _n(
+										'%s day of this request is over the balance and will be unpaid.',
+										'%s days of this request are over the balance and will be unpaid.',
+										request?.request_extra_days ?? 0,
+										'erp'
+									)
+									: /* translators: %s: number of days over the balance */ _n(
+										'%s day of this request is over the balance and will be unpaid if HR approves it.',
+										'%s days of this request are over the balance and will be unpaid if HR approves it.',
+										request?.request_extra_days ?? 0,
+										'erp'
+									),
 								String( request?.request_extra_days ?? 0 )
 							) }
 						</AlertDescription>
