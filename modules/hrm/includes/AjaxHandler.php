@@ -948,7 +948,7 @@ class AjaxHandler {
 		$user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
 
 		// Check permission
-		if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+		if ( ! current_user_can( 'erp_manage_jobinfo', $user_id ) ) {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
@@ -1008,7 +1008,7 @@ class AjaxHandler {
 		$user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
 
 		// Check permission
-		if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+		if ( ! current_user_can( 'erp_manage_jobinfo', $user_id ) ) {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
@@ -1174,7 +1174,7 @@ class AjaxHandler {
 		$user_id    = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
 		// Check permission
-		if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+		if ( ! current_user_can( 'erp_manage_jobinfo', $user_id ) ) {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
@@ -1204,7 +1204,7 @@ class AjaxHandler {
 		$user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
 		// Check permission
-		if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+		if ( ! current_user_can( 'erp_manage_jobinfo', $user_id ) ) {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
