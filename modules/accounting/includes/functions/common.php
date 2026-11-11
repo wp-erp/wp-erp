@@ -549,7 +549,7 @@ function erp_acct_exist_people( $email, $types = [] ) {
     $people = erp_get_people_by( 'email', $email );
 
     // this $email belongs to nobody
-    if ( ! $people ) {
+    if ( ! $people || is_wp_error( $people ) || empty( $people->types ) ) {
         return false;
     }
 
@@ -558,7 +558,7 @@ function erp_acct_exist_people( $email, $types = [] ) {
     }
 
     foreach ( $types as $type ) {
-        if ( in_array( $type, $people->types, true ) ) {
+        if ( in_array( $type, (array) $people->types, true ) ) {
             return $type;
         }
     }

@@ -2,6 +2,12 @@
 global $wpdb;
 
 $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' ORDER BY hiring_date DESC" );
+
+$per_page     = 20;
+$current_page = isset( $_REQUEST['paged'] ) ? max( 1, absint( $_REQUEST['paged'] ) ) : 1;
+$total_items  = count( $all_user_id );
+$total_pages  = (int) ceil( $total_items / $per_page );
+$paged_users  = array_slice( $all_user_id, ( $current_page - 1 ) * $per_page, $per_page );
 ?>
 <div class="wrap">
     <h1><?php esc_html_e( 'Salary History', 'erp' ); ?></h1>
@@ -18,8 +24,8 @@ $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employ
         </thead>
         <tbody>
             <?php
-            if ( $all_user_id ) {
-                foreach ( $all_user_id as $user_id ) {
+            if ( $paged_users ) {
+                foreach ( $paged_users as $user_id ) {
                     $employee      = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
                     $compensations = $employee->get_job_histories( 'compensation' );
 
@@ -48,4 +54,22 @@ $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employ
             ?>
         </tbody>
     </table>
+
+    <?php
+    if ( $total_pages > 1 ) {
+        $page_links = paginate_links( array(
+            'base'      => add_query_arg( 'paged', '%#%' ),
+            'format'    => '',
+            'prev_text' => __( '&laquo;', 'erp' ),
+            'next_text' => __( '&raquo;', 'erp' ),
+            'total'     => $total_pages,
+            'current'   => $current_page,
+        ) );
+
+        echo '<div class="tablenav bottom"><div class="tablenav-pages">';
+        echo '<span class="displaying-num">' . esc_html( sprintf( _n( '%s item', '%s items', $total_items, 'erp' ), number_format_i18n( $total_items ) ) ) . '</span>';
+        echo wp_kses_post( $page_links );
+        echo '</div></div>';
+    }
+    ?>
 </div>

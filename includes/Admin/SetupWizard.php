@@ -103,7 +103,12 @@ class SetupWizard {
         wp_enqueue_style( 'erp-setup', WPERP_ASSETS . '/css/setup.css', [ 'dashicons', 'install' ] );
 
         wp_register_script( 'erp-select2', WPERP_ASSETS . '/vendor/select2/select2.full.min.js', false, false, true );
-        wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2' ], gmdate( 'Ymd' ), true );
+        // erp.js calls $.fn.tipTip on load, so the wizard needs the plugin too.
+        if ( ! wp_script_is( 'erp-tiptip', 'registered' ) ) {
+            wp_register_script( 'erp-tiptip', WPERP_ASSETS . '/vendor/tiptip/jquery.tipTip.min.js', [ 'jquery' ], WPERP_VERSION, true );
+        }
+
+        wp_register_script( 'erp-setup', WPERP_ASSETS . "/js/erp$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'erp-select2', 'erp-tiptip' ], gmdate( 'Ymd' ), true );
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
             call_user_func( $this->steps[ $this->step ]['handler'] );

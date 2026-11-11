@@ -73,7 +73,7 @@ abstract class Item {
      */
     protected function populate( $item ) {
         $this->id   = (int) $item->id;
-        $this->name = stripslashes( $item->title );
+        $this->name = stripslashes( (string) $item->title );
         $this->data = $item;
     }
 

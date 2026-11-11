@@ -1373,6 +1373,7 @@ class AjaxHandler {
 		\WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( array( 'status' => 'active' ) );
 
 		delete_user_meta( $id, '_erp_hr_termination' );
+		delete_user_meta( $id, '_erp_hr_termination_scheduled' );
 
 		$this->send_success();
 	}
@@ -2301,7 +2302,8 @@ class AjaxHandler {
 
 		$holidays        = $holiday->get()->toArray();
 		$match_holidays  = array();
-		$filter_holidays = apply_filters( 'filter_holidays', array(), $start_date, $end_date );
+		// The viewer's own calendar: their shift weekend applies.
+		$filter_holidays = apply_filters( 'filter_holidays', array(), $start_date, $end_date, $user_id );
 
 		if ( empty( $filter_holidays ) ) {
 			$weekends  = array();

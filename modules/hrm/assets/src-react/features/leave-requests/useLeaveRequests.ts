@@ -1,0 +1,200 @@
+/**
+ * List + approve/reject/delete hook for central Leave Requests, plus a
+ * leave-type option loader for the filter.
+ *
+ * Reads + writes `erp/v2/leave-requests`, which delegates (server side) to the
+ * unchanged v1 model layer: `erp_hr_get_leave_requests()`,
+ * `erp_hr_leave_request_update_status()` (balance adjustments + status-history
+ * rows + e-mail notifications), `erp_hr_delete_leave_request()` (cascade).
+ */
+
+import { useCallback, useEffect, useState } from 'react';
+
+import { __ } from '@/shared/i18n';
+import type { ApiError } from '@/shared/utils/apiFetch';
+import { request, requestWithHeaders, restPath } from '@/shared/utils/apiFetch';
+import { toInt } from '@/shared/utils/coerce';
+
+import type { LeaveRequest } from './types';
+
+interface IdName { id: number; name: string }
+
+export interface LeaveTypeOption {
+	readonly value: number;
+	readonly label: string;
+}
+
+/** Per-status request counts for the status tabs. */
+export interface LeaveRequestCounts {
+	readonly all:      number;
+	readonly approved: number;
+	readonly pending:  number;
+	readonly rejected: number;
+	/** Status 4 — Advanced Leave's Forwarded state; 0 without the pro module. */
+	readonly forwarded: number;
+}
+
+const EMPTY_COUNTS: LeaveRequestCounts = { all: 0, approved: 0, pending: 0, rejected: 0, forwarded: 0 };
+
+interface UseLeaveRequestsArgs {
+	readonly status:        number;
+	readonly leaveId:       number;
+	readonly year:          number;
+	readonly departmentId:  number;
+	readonly designationId: number;
+	readonly type:          string;
+	readonly search:        string;
+	/** ISO `YYYY-MM-DD`; the range applies only when BOTH bounds are set. */
+	readonly startDate:     string;
+	readonly endDate:       string;
+	readonly orderby:       string;
+	readonly order:         'asc' | 'desc';
+	readonly page:          number;
+	readonly perPage:       number;
+}
+
+/**
+ * Approve / reject response. `message` is set when the server recorded the
+ * response but left the request open (Advanced Leave multi-level approval:
+ * a department lead's response waits for the HR decision).
+ */
+export interface LeaveModerateResult {
+	readonly id:       number;
+	readonly status:   number;
+	readonly message?: string;
+}
+
+export interface UseLeaveRequestsResult {
+	readonly rows:           readonly LeaveRequest[];
+	readonly total:          number;
+	readonly counts:         LeaveRequestCounts;
+	readonly loading:        boolean;
+	readonly error:          string | null;
+	readonly reload:         () => Promise< void >;
+	readonly approve:        ( id: number, reason: string ) => Promise< LeaveModerateResult >;
+	readonly reject:         ( id: number, reason: string ) => Promise< LeaveModerateResult >;
+	readonly remove:         ( id: number ) => Promise< void >;
+	/** Resolves with how many of the ids the server could not process. */
+	readonly bulk:           ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ) => Promise< number >;
+	readonly loadLeaveTypes: () => Promise< readonly LeaveTypeOption[] >;
+}
+
+export function useLeaveRequests( {
+	status,
+	leaveId,
+	year,
+	departmentId,
+	designationId,
+	type,
+	search,
+	startDate,
+	endDate,
+	orderby,
+	order,
+	page,
+	perPage,
+}: UseLeaveRequestsArgs ): UseLeaveRequestsResult {
+	const [ rows, setRows ]       = useState< readonly LeaveRequest[] >( [] );
+	const [ total, setTotal ]     = useState( 0 );
+	const [ counts, setCounts ]   = useState< LeaveRequestCounts >( EMPTY_COUNTS );
+	const [ loading, setLoading ] = useState( true );
+	const [ error, setError ]     = useState< string | null >( null );
+
+	const reload = useCallback( async (): Promise< void > => {
+		setLoading( true );
+		setError( null );
+		try {
+			const { body, headers } = await requestWithHeaders< LeaveRequest[] >(
+				restPath( 'v2', '/leave-requests', {
+					status:         status || '',
+					policy_id:      leaveId,
+					year,
+					department_id:  departmentId || '',
+					designation_id: designationId || '',
+					type:           type || '',
+					search,
+					// The range only takes effect server-side when BOTH bounds are present.
+					start_date:     startDate && endDate ? startDate : '',
+					end_date:       startDate && endDate ? endDate : '',
+					orderby,
+					order,
+					page,
+					per_page:       perPage,
+				} )
+			);
+			const list = Array.isArray( body ) ? body : [];
+			setRows( list );
+			setTotal( toInt( headers.get( 'X-WP-Total' ), list.length ) );
+
+			// Per-status tab counts, scoped to the SAME calendar year as the list
+			// (the controller buckets counts identically) so the tab numbers always
+			// agree with the visible rows.
+			try {
+				const c = await request< LeaveRequestCounts >( restPath( 'v2', '/leave-requests/counts', { year } ) );
+				setCounts( {
+					all:       Number( c?.all ?? 0 ),
+					approved:  Number( c?.approved ?? 0 ),
+					pending:   Number( c?.pending ?? 0 ),
+					rejected:  Number( c?.rejected ?? 0 ),
+					forwarded: Number( c?.forwarded ?? 0 ),
+				} );
+			} catch {
+				setCounts( EMPTY_COUNTS );
+			}
+		} catch ( raw ) {
+			setError( ( raw as ApiError )?.message ?? __( 'Could not load leave requests.', 'erp' ) );
+		} finally {
+			setLoading( false );
+		}
+	}, [ status, leaveId, year, departmentId, designationId, type, search, startDate, endDate, orderby, order, page, perPage ] );
+
+	useEffect( () => {
+		void reload();
+	}, [ reload ] );
+
+	const approve = useCallback(
+		async ( id: number, reason: string ): Promise< LeaveModerateResult > => {
+			const res = await request< LeaveModerateResult >( restPath( 'v2', `/leave-requests/${ id }/approve` ), { method: 'PUT', data: { reason } } );
+			await reload();
+			return res;
+		},
+		[ reload ]
+	);
+
+	const reject = useCallback(
+		async ( id: number, reason: string ): Promise< LeaveModerateResult > => {
+			const res = await request< LeaveModerateResult >( restPath( 'v2', `/leave-requests/${ id }/reject` ), { method: 'PUT', data: { reason } } );
+			await reload();
+			return res;
+		},
+		[ reload ]
+	);
+
+	const remove = useCallback(
+		async ( id: number ): Promise< void > => {
+			await request( restPath( 'v2', `/leave-requests/${ id }` ), { method: 'DELETE' } );
+			await reload();
+		},
+		[ reload ]
+	);
+
+	const bulk = useCallback(
+		async ( action: 'approve' | 'reject' | 'delete', ids: readonly number[] ): Promise< number > => {
+			// Best effort on the server: `{ done, failed }`, still a 200 when
+			// some ids were refused.
+			const res = await request< { failed?: unknown[] } >( restPath( 'v2', '/leave-requests/bulk' ), { method: 'POST', data: { action, ids } } );
+			await reload();
+			return Array.isArray( res?.failed ) ? res.failed.length : 0;
+		},
+		[ reload ]
+	);
+
+	const loadLeaveTypes = useCallback( async (): Promise< readonly LeaveTypeOption[] > => {
+		// From the policy form options, which a department lead may read:
+		// `/leave-types` is manager-only and answered a lead with a 403.
+		const res = await request< { leave_types?: IdName[] } >( restPath( 'v2', '/leave-policies/form-options' ) );
+		return Array.isArray( res?.leave_types ) ? res.leave_types.map( ( t ) => ( { value: t.id, label: t.name } ) ) : [];
+	}, [] );
+
+	return { rows, total, counts, loading, error, reload, approve, reject, remove, bulk, loadLeaveTypes };
+}

@@ -70,7 +70,7 @@ function erp_ac_updater_get_invoice_num_fromat_from_submit_invoice( $submit_invo
     //was found
     $pattern = str_replace( '{id}', '([0-9]+)', $invoice_format ); // INV-([0-9])+-INV
 
-    preg_match( "/${pattern}/", $submit_invoice, $match );
+    preg_match( "/{$pattern}/", $submit_invoice, $match );
 
     $id            = isset( $match[1] ) ? $match[1] : false;
     $check_invoice = false;

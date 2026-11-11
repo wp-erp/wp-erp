@@ -646,8 +646,8 @@ class HrLog {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_value'],
-                'new_value'     => $changes['new_value'],
+                'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+                'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
             ] );
         }
     }
@@ -804,8 +804,8 @@ class HrLog {
                 'message'       => $message,
                 'created_by'    => get_current_user_id(),
                 'changetype'    => 'edit',
-                'old_value'     => $changes['old_value'],
-                'new_value'     => $changes['new_value'],
+                'old_value'     => $changes['old_value'] ? base64_encode( maybe_serialize( $changes['old_value'] ) ) : '',
+                'new_value'     => $changes['new_value'] ? base64_encode( maybe_serialize( $changes['new_value'] ) ) : '',
             ] );
         }
     }
