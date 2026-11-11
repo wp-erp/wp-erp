@@ -337,15 +337,20 @@ class HRM {
 
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
 
-        wp_localize_script( 'erp-hr-requests', 'erpHrReq', [
-            'nonce'          => wp_create_nonce( 'wp-erp-hr-nonce' ),
-            'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-            'adminurl'       => admin_url( 'admin.php' ),
-            'request_types'  => erp_hr_get_employee_requests_types(),
-            'employees'      => erp_hr_get_employees_dropdown_raw(),
-            'filterEmployee' => __( 'Employee', 'erp' ),
-            'clear'          => __( 'Clear', 'erp' )
-        ] );
+        // Only the Requests page uses this, and building it reads every leave
+        // request, so skip it on the other HR pages (wp_localize_script would
+        // drop it anyway, but only after the queries had run).
+        if ( wp_script_is( 'erp-hr-requests', 'enqueued' ) ) {
+            wp_localize_script( 'erp-hr-requests', 'erpHrReq', [
+                'nonce'          => wp_create_nonce( 'wp-erp-hr-nonce' ),
+                'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+                'adminurl'       => admin_url( 'admin.php' ),
+                'request_types'  => erp_hr_get_employee_requests_types(),
+                'employees'      => erp_hr_get_employees_dropdown_raw(),
+                'filterEmployee' => __( 'Employee', 'erp' ),
+                'clear'          => __( 'Clear', 'erp' )
+            ] );
+        }
 
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_style( 'erp-select2' );
