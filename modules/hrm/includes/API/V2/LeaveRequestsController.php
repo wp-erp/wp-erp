@@ -43,6 +43,13 @@ class LeaveRequestsController extends RestController {
 	private $latest_approvals = [];
 
 	/**
+	 * Whether the current user has an approval-status row per request id.
+	 *
+	 * @var array<int,bool>
+	 */
+	private $current_user_responses = [];
+
+	/**
 	 * @return void
 	 */
 	public function register_routes() {
@@ -580,7 +587,7 @@ class LeaveRequestsController extends RestController {
 			// Days of THIS pending request over the balance, i.e. what approving it
 			// books as unpaid (same rule as the approve path, days - available).
 			// `extra_leaves` is the unpaid total already booked for the policy year.
-			'request_extra_days' => 2 === (int) ( $row->status ?? 0 )
+			'request_extra_days' => in_array( (int) ( $row->status ?? 0 ), [ 2, 4 ], true )
 				? max( 0, (float) ( $row->days ?? 0 ) - (float) ( $row->available ?? 0 ) )
 				: 0,
 			'spent'        => $this->cast_float_or_null( $row->spent ?? null ) ?? 0,
@@ -600,12 +607,12 @@ class LeaveRequestsController extends RestController {
 			// F8 — moderator name + when + note (empty when still pending).
 			'approved_by'  => $approval['name'],
 			// False once this lead has responded and the request waits for HR, so
-			// Approve / Reject leave the menu (a second try is a 409). Leave
-			// managers can always decide.
-			'can_respond'  => ! ( 2 === (int) ( $row->status ?? 0 )
-				&& $approval['lead_response']
-				&& get_current_user_id() === $approval['by']
-				&& ! current_user_can( 'erp_leave_manage' ) ),
+			// Approve / Reject leave the menu (a second try is a 409). Same rule as
+			// Advanced Leave: any earlier response by this user, on a pending or
+			// forwarded request. Leave managers can always decide.
+			'can_respond'  => ! ( in_array( (int) ( $row->status ?? 0 ), [ 2, 4 ], true )
+				&& ! current_user_can( 'erp_leave_manage' )
+				&& $this->responded_by_current_user( (int) $id ) ),
 			'approved_at'  => $approval['date'],
 			'approver_note'=> $approval['message'],
 			// F3 — uploaded supporting documents as viewable/downloadable links.
@@ -701,6 +708,18 @@ class LeaveRequestsController extends RestController {
 					$user_ids[] = (int) $row->approved_by;
 				}
 			}
+
+			$responded = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT DISTINCT leave_request_id FROM {$wpdb->prefix}erp_hr_leave_approval_status
+					 WHERE approved_by = %d AND leave_request_id IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					array_merge( [ get_current_user_id() ], $request_ids )
+				)
+			);
+
+			foreach ( $request_ids as $request_id ) {
+				$this->current_user_responses[ $request_id ] = in_array( (string) $request_id, (array) $responded, true );
+			}
 		}
 
 		$user_ids = array_values( array_unique( array_filter( $user_ids ) ) );
@@ -723,6 +742,35 @@ class LeaveRequestsController extends RestController {
 		if ( $photo_ids ) {
 			_prime_post_caches( $photo_ids, false, true );
 		}
+	}
+
+	/**
+	 * Whether the current user already has an entry in a request's approval chain.
+	 *
+	 * @param int $request_id Leave request ID.
+	 *
+	 * @return bool
+	 */
+	private function responded_by_current_user( int $request_id ): bool {
+		global $wpdb;
+
+		if ( ! $request_id ) {
+			return false;
+		}
+
+		if ( ! array_key_exists( $request_id, $this->current_user_responses ) ) {
+			$this->current_user_responses[ $request_id ] = (bool) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT 1 FROM {$wpdb->prefix}erp_hr_leave_approval_status
+					 WHERE leave_request_id = %d AND approved_by = %d
+					 LIMIT 1",
+					$request_id,
+					get_current_user_id()
+				)
+			);
+		}
+
+		return $this->current_user_responses[ $request_id ];
 	}
 
 	/**
