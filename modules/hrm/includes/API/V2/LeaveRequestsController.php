@@ -279,10 +279,18 @@ class LeaveRequestsController extends RestController {
 		$update = erp_hr_leave_request_update_status( $request_id, $status, sanitize_text_field( $reason ) );
 
 		if ( is_wp_error( $update ) ) {
+			// Keep a status the error already carries (Advanced Leave answers 409
+			// when a lead has already responded); map our own codes otherwise.
+			$error_data = $update->get_error_data();
+
 			return new \WP_Error(
 				$update->get_error_code() ?: 'rest_leave_request_error',
 				$update->get_error_message(),
-				[ 'status' => $this->error_status( $update->get_error_code() ) ]
+				[
+					'status' => is_array( $error_data ) && ! empty( $error_data['status'] )
+						? (int) $error_data['status']
+						: $this->error_status( $update->get_error_code() ),
+				]
 			);
 		}
 
@@ -569,6 +577,12 @@ class LeaveRequestsController extends RestController {
 			// Extra (over-drawn) leave days (F18) — drives the red "Extra Leave"
 			// indicator; mirrors the legacy `available` column's `extra_leaves`.
 			'extra_leaves' => $this->cast_float_or_null( $row->extra_leaves ?? null ) ?? 0,
+			// Days of THIS pending request over the balance, i.e. what approving it
+			// books as unpaid (same rule as the approve path, days - available).
+			// `extra_leaves` is the unpaid total already booked for the policy year.
+			'request_extra_days' => 2 === (int) ( $row->status ?? 0 )
+				? max( 0, (float) ( $row->days ?? 0 ) - (float) ( $row->available ?? 0 ) )
+				: 0,
 			'spent'        => $this->cast_float_or_null( $row->spent ?? null ) ?? 0,
 			'status'       => (int) ( $row->status ?? 0 ),
 			// Advanced Leave multilevel: a lead responded, HR has not decided yet.
@@ -585,6 +599,13 @@ class LeaveRequestsController extends RestController {
 			'created_at'   => $this->ts_to_iso( $row->created_at ?? null ),
 			// F8 — moderator name + when + note (empty when still pending).
 			'approved_by'  => $approval['name'],
+			// False once this lead has responded and the request waits for HR, so
+			// Approve / Reject leave the menu (a second try is a 409). Leave
+			// managers can always decide.
+			'can_respond'  => ! ( 2 === (int) ( $row->status ?? 0 )
+				&& $approval['lead_response']
+				&& get_current_user_id() === $approval['by']
+				&& ! current_user_can( 'erp_leave_manage' ) ),
 			'approved_at'  => $approval['date'],
 			'approver_note'=> $approval['message'],
 			// F3 — uploaded supporting documents as viewable/downloadable links.
@@ -717,12 +738,14 @@ class LeaveRequestsController extends RestController {
 	 * or reject: on a request that is still pending only a department lead
 	 * (Advanced Leave multilevel) writes one, since an HR decision closes it.
 	 *
-	 * @return array{name:string,date:string|null,message:string,lead_response:bool}
+	 * `by` is the moderator's user id (0 when there is none).
+	 *
+	 * @return array{name:string,date:string|null,message:string,lead_response:bool,by:int}
 	 */
 	private function approval_meta( int $request_id ): array {
 		global $wpdb;
 
-		$empty = [ 'name' => '', 'date' => null, 'message' => '', 'lead_response' => false ];
+		$empty = [ 'name' => '', 'date' => null, 'message' => '', 'lead_response' => false, 'by' => 0 ];
 
 		if ( ! $request_id ) {
 			return $empty;
@@ -758,6 +781,7 @@ class LeaveRequestsController extends RestController {
 			'date'    => $this->ts_to_iso( $row->created_at ),
 			'message' => (string) ( $row->message ?? '' ),
 			'lead_response' => in_array( (int) ( $row->approval_status_id ?? 0 ), [ 1, 3 ], true ),
+			'by'            => (int) $row->approved_by,
 		];
 	}
 

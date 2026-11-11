@@ -373,8 +373,8 @@ export function LeaveRequestsTable( {
 										<RowActionsMenu
 											label={ sprintf( __( 'Actions for %s', 'erp' ), req.name ) }
 											actions={ [
-												{ id: 'approve', label: __( 'Approve', 'erp' ), icon: Check, onSelect: () => onModerate( 'approve', req ), hidden: ! ( req.status === 2 || req.status === 4 ) },
-												{ id: 'reject', label: __( 'Reject', 'erp' ), icon: X, onSelect: () => onModerate( 'reject', req ), variant: 'destructive', hidden: ! ( req.status === 2 || req.status === 4 ) },
+												{ id: 'approve', label: __( 'Approve', 'erp' ), icon: Check, onSelect: () => onModerate( 'approve', req ), hidden: ! ( req.status === 2 || req.status === 4 ) || req.can_respond === false },
+												{ id: 'reject', label: __( 'Reject', 'erp' ), icon: X, onSelect: () => onModerate( 'reject', req ), variant: 'destructive', hidden: ! ( req.status === 2 || req.status === 4 ) || req.can_respond === false },
 												// Reverse moderation: reject an approved request, or approve a rejected one (legacy list-table behaviour).
 												{ id: 'reverse-reject', label: __( 'Reject', 'erp' ), icon: RotateCcw, onSelect: () => onModerate( 'reject', req ), variant: 'destructive', hidden: req.status !== 1 },
 												{ id: 'reverse-approve', label: __( 'Approve', 'erp' ), icon: RotateCcw, onSelect: () => onModerate( 'approve', req ), hidden: req.status !== 3 },

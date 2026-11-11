@@ -94,13 +94,13 @@ export function LeaveRequestModerateDialog( {
 				</DialogHeader>
 				<div className="h-px w-full bg-border" />
 
-				{ ! isReject && ( request?.extra_leaves ?? 0 ) > 0 ? (
+				{ ! isReject && ( request?.request_extra_days ?? 0 ) > 0 ? (
 					<Alert variant="destructive">
 						<AlertDescription>
 							{ sprintf(
 								/* translators: %s: number of days over the balance */
 								__( '%s days of this request are over the balance and will be unpaid.', 'erp' ),
-								String( request?.extra_leaves ?? 0 )
+								String( request?.request_extra_days ?? 0 )
 							) }
 						</AlertDescription>
 					</Alert>

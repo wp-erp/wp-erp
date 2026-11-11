@@ -45,6 +45,10 @@ export interface LeaveRequest {
 	readonly day_status_label: string;
 	readonly available:     number;
 	readonly extra_leaves:  number;
+	/** Days of this pending request over the balance (unpaid if approved). */
+	readonly request_extra_days?: number;
+	/** False once this lead has responded and the request waits for HR. */
+	readonly can_respond?: boolean;
 	readonly spent:         number;
 	readonly status:        number;
 	readonly status_label:  string;
