@@ -1065,6 +1065,8 @@ function erp_acct_receive_payments_from_customer( $args = array() ) {
 	$invoice_act_details = "{$wpdb->prefix}erp_acct_invoice_account_details";
 	$items               = $args['count'] ? ' COUNT( id ) as total_number ' : ' id, voucher_no, due_date, (amount + tax - discount) as amount, invs.due as due ';
 
+	$order_by = erp_acct_sql_order_by( $args['orderby'], $args['order'], $invoices, 'id', 'invoice' );
+
 	$query = $wpdb->prepare(
 		"SELECT $items FROM $invoices as invoice INNER JOIN
         (SELECT invoice_no, SUM( ia.debit - ia.credit) as due
@@ -1073,10 +1075,8 @@ function erp_acct_receive_payments_from_customer( $args = array() ) {
         HAVING due <> 0) as invs
         ON invoice.voucher_no = invs.invoice_no
         WHERE invoice.customer_id = %d AND invoice.status != 1 AND invoice.estimate != 1
-        ORDER BY %s %s $limit",
-		$args['people_id'],
-		$args['orderby'],
-		$args['order']
+        ORDER BY {$order_by} $limit",
+		$args['people_id']
 	);
 
 	if ( $args['count'] ) {

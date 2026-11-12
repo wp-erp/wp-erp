@@ -27,13 +27,13 @@ function erp_acct_get_purchases( $args = [] ) {
 
     $limit = '';
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    if ( -1 !== (int) $args['number'] ) {
+        $limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', $args['number'], $args['offset'] );
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_purchase Where %d=%d ORDER BY {$args['orderby']} {$args['order']} %s", 1, 1, $limit);
+    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase ORDER BY " . erp_acct_sql_order_by( $args['orderby'], $args['order'], "{$wpdb->prefix}erp_acct_purchase" ) . " {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -815,6 +815,8 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
     $purchase_act_details = "{$wpdb->prefix}erp_acct_purchase_account_details";
     $items                = $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
 
+    $order_by = erp_acct_sql_order_by( $args['orderby'], $args['order'], $purchases, 'id', 'purchase' );
+
     $query = $wpdb->prepare(
         "SELECT $items FROM $purchases as purchase INNER JOIN
         (
@@ -825,10 +827,8 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
         ) as ps
         ON purchase.voucher_no = ps.purchase_no
         WHERE purchase.vendor_id = %d AND purchase.status != 1 AND purchase.purchase_order != 1
-        ORDER BY %s %s $limit",
-        $args['vendor_id'],
-        $args['orderby'],
-        $args['order']
+        ORDER BY {$order_by} $limit",
+        $args['vendor_id']
     );
 
     erp_disable_mysql_strict_mode();

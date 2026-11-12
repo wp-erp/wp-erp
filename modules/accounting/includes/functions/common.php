@@ -709,3 +709,45 @@ function erp_acct_sanitize_line_items_particulars( $items ) {
 
     return $items;
 }
+
+/**
+ * Build the body of an ORDER BY clause for an accounting list query.
+ *
+ * Column names and directions cannot be bound with `$wpdb->prepare()`: a
+ * `%s` placeholder turns them into string literals, which sort nothing (and
+ * a LIMIT bound the same way is silently dropped). Only a real column of
+ * `$table` is accepted, falling back to `$default`, and only ASC or DESC.
+ *
+ * @since 1.18.0
+ *
+ * @param string $orderby Requested column, optionally prefixed with `$alias.`.
+ * @param string $order   ASC or DESC (anything else is DESC).
+ * @param string $table   Full table name.
+ * @param string $default Column used when `$orderby` is not a column of `$table`.
+ * @param string $alias   Table alias used in the query, if any.
+ *
+ * @return string
+ */
+function erp_acct_sql_order_by( $orderby, $order, $table, $default = 'id', $alias = '' ) {
+    global $wpdb;
+
+    static $columns = [];
+
+    if ( ! isset( $columns[ $table ] ) ) {
+        $columns[ $table ] = (array) $wpdb->get_col( "SHOW COLUMNS FROM `{$table}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    }
+
+    $orderby = (string) $orderby;
+
+    if ( $alias && 0 === strpos( $orderby, $alias . '.' ) ) {
+        $orderby = substr( $orderby, strlen( $alias ) + 1 );
+    }
+
+    if ( ! in_array( $orderby, $columns[ $table ], true ) ) {
+        $orderby = $default;
+    }
+
+    $order = 'ASC' === strtoupper( (string) $order ) ? 'ASC' : 'DESC';
+
+    return ( $alias ? $alias . '.' : '' ) . "`{$orderby}` {$order}";
+}

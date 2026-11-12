@@ -263,7 +263,7 @@ class BankAccountsController extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'order_by' => isset( $request['order_by'] ) ? $request['order_by'] : 'id',
             'order'    => isset( $request['order'] ) ? $request['order'] : 'DESC',
-            'number'   => isset( $request['per_page'] ) ? (int) $request['per_page'] : 20,
+            'number'   => isset( $request['per_page'] ) ? (int) $request['per_page'] : -1, // the transfers list calls without per_page
             'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 

@@ -418,11 +418,13 @@ function erp_acct_get_transfer_vouchers( $args = [] ) {
 
     $limit = '';
 
-    if ( -1 !== $args['number'] ) {
-        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    if ( -1 !== (int) $args['number'] ) {
+        $limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', $args['number'], $args['offset'] );
     }
 
-    $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_transfer_voucher ORDER BY %s %s %s", $args['order_by'], $args['order'], $limit ), ARRAY_A );
+    $table    = "{$wpdb->prefix}erp_acct_transfer_voucher";
+    $order_by = erp_acct_sql_order_by( $args['order_by'], $args['order'], $table );
+    $result   = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY {$order_by} {$limit}", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     return $result;
 }
