@@ -158,6 +158,7 @@ function DashboardInner(): JSX.Element {
 	}
 
 	const summary = data?.summary;
+	const hasPresentToday = typeof summary?.present_today === 'number';
 	const isManager = data?.is_hr_manager ?? false;
 
 	// Per-card flex classes (applied to every card individually — NOT via a `*:`
@@ -346,7 +347,7 @@ function DashboardInner(): JSX.Element {
 					<div className="flex flex-col gap-6 xl:flex-row">
 						<div className="flex min-w-0 flex-1 flex-col gap-6">
 					{ /* Summary stat cards */ }
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+					<div className={ `grid grid-cols-1 gap-4 sm:grid-cols-2 ${ hasPresentToday ? 'lg:grid-cols-3 xl:grid-cols-5' : 'xl:grid-cols-4' }` }>
 						<StatCard
 							icon={ Users }
 							label={ __( 'Employees', 'erp' ) }
@@ -354,12 +355,15 @@ function DashboardInner(): JSX.Element {
 							tint="bg-primary/10 text-primary"
 							to={ canListEmployees ? '/employees' : undefined }
 						/>
-						<StatCard
-							icon={ UserCheck }
-							label={ __( 'Present Today', 'erp' ) }
-							value={ summary?.present_today ?? 0 }
-							tint="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-						/>
+						{ /* Only Pro Attendance records presence; without it the server sends null. */ }
+						{ hasPresentToday ? (
+							<StatCard
+								icon={ UserCheck }
+								label={ __( 'Present Today', 'erp' ) }
+								value={ summary?.present_today ?? 0 }
+								tint="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+							/>
+						) : null }
 						<StatCard
 							icon={ Building2 }
 							label={ __( 'Departments', 'erp' ) }

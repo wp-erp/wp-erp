@@ -274,7 +274,7 @@ class DashboardController extends RestController {
 				'total_departments'    => count( (array) $departments ),
 				'total_designations'   => count( (array) $designations ),
 				'pending_requests'     => $pending_requests,
-				'present_today'        => $this->present_today( $total_employees ),
+				'present_today'        => $this->present_today(),
 			],
 			'on_leave'           => $on_leave,
 			'about_to_end'       => $about_to_end,
@@ -383,7 +383,18 @@ class DashboardController extends RestController {
 			return $b['count'] <=> $a['count'];
 		} );
 
-		return array_slice( $out, 0, 8 );
+		// Eight bars at most; past that the smaller departments share one bar,
+		// so the chart still adds up to everyone with a department.
+		if ( count( $out ) > 8 ) {
+			$rest  = array_slice( $out, 7 );
+			$out   = array_slice( $out, 0, 7 );
+			$out[] = [
+				'name'  => __( 'Other departments', 'erp' ),
+				'count' => array_sum( array_column( $rest, 'count' ) ),
+			];
+		}
+
+		return $out;
 	}
 
 	/**
@@ -642,47 +653,29 @@ class DashboardController extends RestController {
 	}
 
 	/**
-	 * How many active employees are present today.
+	 * How many active employees are checked in on today's roster.
 	 *
-	 * With ERP Pro Attendance on, the employees checked in on today's roster.
-	 * Otherwise the active headcount minus the employees on approved leave
-	 * today (not this month's and next month's leave list).
+	 * Only ERP Pro Attendance records presence. Without it there is nothing to
+	 * count, so this is null and the dashboard leaves the card out.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param int $total_employees Active headcount.
-	 *
-	 * @return int
+	 * @return int|null
 	 */
-	private function present_today( int $total_employees ): int {
+	private function present_today(): ?int {
 		global $wpdb;
 
-		$today = erp_current_datetime()->format( 'Y-m-d' );
-
-		if ( function_exists( 'erp_att_get_all_attendance' ) ) {
-			return (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT( DISTINCT ds.user_id ) FROM {$wpdb->prefix}erp_attendance_date_shift AS ds
-					INNER JOIN {$wpdb->prefix}erp_hr_employees AS e ON e.user_id = ds.user_id AND e.status = 'active'
-					WHERE ds.date = %s AND ds.present = 1",
-					$today
-				)
-			);
+		if ( ! function_exists( 'erp_att_get_all_attendance' ) ) {
+			return null;
 		}
 
-		// Leave days are stored as site-local midnights.
-		$midnight = erp_current_datetime()->setTime( 0, 0, 0 )->getTimestamp();
-
-		$on_leave = (int) $wpdb->get_var(
+		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT( DISTINCT d.user_id ) FROM {$wpdb->prefix}erp_hr_leave_request_details AS d
-				INNER JOIN {$wpdb->prefix}erp_hr_leave_requests AS rq ON rq.id = d.leave_request_id AND rq.last_status = 1
-				INNER JOIN {$wpdb->prefix}erp_hr_employees AS e ON e.user_id = d.user_id AND e.status = 'active'
-				WHERE d.leave_date = %d",
-				$midnight
+				"SELECT COUNT( DISTINCT ds.user_id ) FROM {$wpdb->prefix}erp_attendance_date_shift AS ds
+				INNER JOIN {$wpdb->prefix}erp_hr_employees AS e ON e.user_id = ds.user_id AND e.status = 'active'
+				WHERE ds.date = %s AND ds.present = 1",
+				erp_current_datetime()->format( 'Y-m-d' )
 			)
 		);
-
-		return max( 0, $total_employees - $on_leave );
 	}
 }
