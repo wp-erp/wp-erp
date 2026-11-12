@@ -698,7 +698,10 @@ test.describe('Department and designation titles are sanitised and escaped (wp-e
         }
 
         test('designation list escapes a stored title', TAGS('@hrm', '@admin'), async ({ page }) => {
-            await assertEscaped(page, 'wp-admin/admin.php?page=erp-hr&section=people&sub-section=designation', `pwxss${S.tag}desig`, `PwDesig ${S.tag}`);
+            // The list is 20 per page by title, so open the page the stored row lands on
+            const before = await q(`SELECT COUNT(*) AS n FROM ${P}erp_hr_designations WHERE title < ?`, [`PwDesig ${S.tag}`]);
+            const paged = Math.floor(Number(before[0]?.n ?? 0) / 20) + 1;
+            await assertEscaped(page, `wp-admin/admin.php?page=erp-hr&section=people&sub-section=designation&paged=${paged}`, `pwxss${S.tag}desig`, `PwDesig ${S.tag}`);
         });
 
         test('announcement list escapes department and designation names', TAGS('@hrm', '@admin'), async ({ page }) => {

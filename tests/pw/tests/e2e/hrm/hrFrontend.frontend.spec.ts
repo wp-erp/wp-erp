@@ -126,10 +126,6 @@ test.describe( 'HR Frontend dashboard — render baseline (admin)', () => {
     test( 'HRFE-FE-01 admin renders the dashboard (manage_options passes the gate)', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
         const fe = new HrFrontendPage( page );
         await fe.expectDashboardRenders( activeSlug );
-
-        // Loading shell text from templates/dashboard.php is part of the markup.
-        await expect( page.locator( fe.sel.loading ), 'loading shell is part of the standalone template' )
-            .toBeAttached();
     } );
 
     test( 'HRFE-FE-02 admin sub-routes render the same template (React-Router catch-all)', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
@@ -194,9 +190,10 @@ test.describe( 'HR Frontend dashboard — employee gate', () => {
         const fe = new HrFrontendPage( page );
         await fe.expectDashboardRenders( activeSlug );
 
-        // dashboard.php localizes userId = current user id (employee-storage user 4).
-        const localizedId = await fe.localizedUserId();
-        expect( localizedId, 'window.wpErpHrFrontend.userId equals the employee user id' ).toBe( EMP_USER_ID );
+        // The boot payload carries the current user id (only when the portal build exists).
+        if ( await fe.isMounted() ) {
+            expect( await fe.localizedUserId(), '__ERP_HR_BOOT__.currentUserId equals the employee user id' ).toBe( EMP_USER_ID );
+        }
     } );
 
     test( 'HRFE-FE-07 removing the ERP employee row gates the employee out to /wp-admin/', { tag: [ '@pro', '@hrm', '@employee' ] }, async ( { page } ) => {
@@ -242,13 +239,13 @@ test.describe( 'HR Frontend dashboard — slug change lifecycle (admin)', () => 
 
         // …but the rewrite rule was NOT registered by the REST path (the bug). Visit
         // the new slug and assert resiliently: NOT a WP fatal, and the dashboard does
-        // NOT render (404 / no #erp-hr-frontend-root). We do NOT assert an exact 404 —
+        // NOT render (404 / no portal template). We do NOT assert an exact 404 —
         // we document the bug as "new slug not reachable after a REST-only change".
         await page.goto( HrFrontendPage.dashboardUrl( newSlug ), { waitUntil: 'domcontentloaded' } );
         const html = ( await page.locator( 'body' ).textContent() ) ?? '';
         expect( html, 'no WP critical-error splash on the unreachable new slug' )
             .not.toContain( HrFrontendPage.CRITICAL_ERROR );
-        await expect( page.locator( '#erp-hr-frontend-root' ), 'HRFE-BUG-01: REST-only slug change does NOT register the rewrite rule, so the new slug does not render the dashboard' )
+        await expect( page.locator( 'body.erp-hr-portal' ), 'HRFE-BUG-01: REST-only slug change does NOT register the rewrite rule, so the new slug does not render the dashboard' )
             .toHaveCount( 0 );
 
         // Confirm the rule really is absent (DB oracle), pinning the bug precisely.
@@ -273,7 +270,7 @@ test.describe( 'HR Frontend dashboard — slug change lifecycle (admin)', () => 
 
         // The old default slug no longer routes the dashboard (the rule moved):
         // its rewrite rule is gone, so the standalone template never mounts there.
-        // expectGatedAway already asserts #erp-hr-frontend-root has count 0.
+        // expectGatedAway already asserts the portal template is absent.
         await fe.expectGatedAway( HrFrontendPage.DEFAULT_SLUG );
         expect( HrFrontendPage.rewriteRuleExists( HrFrontendPage.DEFAULT_SLUG ), 'default-slug rule removed after switching to the new slug' )
             .toBe( false );

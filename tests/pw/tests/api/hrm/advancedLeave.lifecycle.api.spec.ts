@@ -55,8 +55,8 @@ const entitlementsTable = `${PREFIX}_erp_hr_leave_entitlements`;
 const requestsTable = `${PREFIX}_erp_hr_leave_requests`;
 const approvalStatusTable = `${PREFIX}_erp_hr_leave_approval_status`;
 
-// Active employee user id present in the QA fixture (status='active').
-const EMP = 7;
+// The employee role user the auth setup creates (Pro's v1 create refuses a user who is not an employee).
+const EMP = Number(process.env.EMPLOYEE_USER_ID ?? 5);
 // Day grant on the policy / entitlement.
 const GRANT_DAYS = 20;
 // 3-day request (2026-06-15..17 inclusive) that gets approved → consumes 3.
@@ -120,8 +120,9 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
     // Remove every row this run created (best-effort; serial so ids are known).
     try {
-        await dbUtils.dbQuery(`DELETE FROM ${requestsTable} WHERE user_id = ?`, [EMP]);
-        await dbUtils.dbQuery(`DELETE FROM ${entitlementsTable} WHERE user_id = ?`, [EMP]);
+        // EMP is the shared employee user, so only this run's leave type is removed
+        await dbUtils.dbQuery(`DELETE FROM ${requestsTable} WHERE user_id = ? AND leave_id = ?`, [EMP, LT]);
+        await dbUtils.dbQuery(`DELETE FROM ${entitlementsTable} WHERE user_id = ? AND leave_id = ?`, [EMP, LT]);
         if (REQ || REQ2) {
             await dbUtils.dbQuery(
                 `DELETE FROM ${approvalStatusTable} WHERE leave_request_id IN (?, ?)`,
@@ -302,17 +303,15 @@ test.describe('Advanced Leave lifecycle — request + approve (pro, admin)', () 
         expect(Number(r.leave_entitlement_id), 'request bound to the entitlement').toBe(ENT);
     });
 
-    // ALV-LC-05 — a JSON body (instead of form) is rejected: the handler reads
-    // get_body_params(), empty for application/json → 400 required-entitlement.
-    test('ALV-LC-05 JSON body → 400 required-entitlement (handler reads form params)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    // ALV-LC-05 — a request without an entitlement (policy) is a clean 400, JSON or form.
+    test('ALV-LC-05 request without a policy → 400 rest_invalid_entitlement', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(
             endPoints.leaveRequests,
-            { data: { employee_id: EMP, policy: ENT, start_date: '2026-08-01', end_date: '2026-08-02', reason: 'json' } },
+            { data: { employee_id: EMP, start_date: '2026-08-01', end_date: '2026-08-02', reason: 'json' } },
             false,
         );
-        expect(resp.status(), 'JSON body is a clean 400, not a fatal').toBe(400);
-        expect(String(body?.code ?? ''), 'required-entitlement surfaced for empty body params')
-            .toContain('rest_leave_request_required_entitlement');
+        expect(resp.status(), 'a missing policy is a clean 400, not a fatal').toBe(400);
+        expect(String(body?.code ?? '')).toBe('rest_invalid_entitlement');
     });
 
     // ALV-LC-06 — approve the pending request. 200 with status=1 (approved) and

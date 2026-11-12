@@ -193,13 +193,10 @@ test.describe('CFB REST — list custom fields (admin)', () => {
         expect(ok, 'list body is an array, an object, or a falsy not-yet-saved value').toBe(true);
     });
 
-    test('CFB-API-02 list with no params is 200 (defaults to empty type/section)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    test('CFB-API-02 list with no type is a 400 (the type is required)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(FIELD_BUILDER, undefined, false);
-        expect(resp.status()).toBe(200);
-        // With an empty people_type the option name is 'erp--fields' -> false; with a
-        // non-'all' section the function returns [] (functions.php L20-28).
-        const acceptable = Array.isArray(body) || body === false || body === null || body === '' || typeof body === 'object';
-        expect(acceptable, 'no-param list is array-or-falsy, never a fatal').toBe(true);
+        expect(resp.status()).toBe(400);
+        expect((body as { code?: string })?.code).toBe('rest_invalid_people_type');
     });
 
     test('CFB-API-03 list with a concrete section filters to that section (array)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
@@ -212,12 +209,10 @@ test.describe('CFB REST — list custom fields (admin)', () => {
         expect(allBasic, 'a section filter never leaks other-section fields').toBe(true);
     });
 
-    test('CFB-API-04 unknown people type yields a 200 array-or-falsy (no 5xx)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    test('CFB-API-04 unknown people type is a 400, never used as an option name', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.get(`${FIELD_BUILDER}?type=not_a_real_type_${Date.now()}&section=all`, undefined, false);
-        // get_option('erp-<garbage>-fields') is false; section='all' returns it verbatim.
-        expect(resp.status(), 'unknown type is not an error path').toBe(200);
-        const ok = Array.isArray(body) || body === false || body === null || body === '' || typeof body === 'object';
-        expect(ok, 'unknown type body is array-or-falsy').toBe(true);
+        expect(resp.status()).toBe(400);
+        expect((body as { code?: string })?.code).toBe('rest_invalid_people_type');
     });
 
     test('CFB-API-05 unknown section yields a 200 empty array', { tag: ['@pro', '@hrm', '@admin'] }, async () => {

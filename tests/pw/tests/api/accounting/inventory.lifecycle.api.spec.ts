@@ -13,7 +13,7 @@ import { AccountingPage } from '../../e2e/accounting/accountingPage';
  * the full inventory chain and asserts each DB/UI effect to the row:
  *
  *   A) CSV products import surface (validate → import):
- *      POST /products/csv/validate  (multipart) → {data:<VALUES tuple-list>, update:[], total}
+ *      POST /products/csv/validate  (multipart) → {data:[{name, product_type_id, ...}], update:[], total}
  *      POST /products/csv/import    (json)      → echoes total, status 201
  *      Handlers: WeDevs\ERP\Accounting\API\InventoryProductsController::{validate_csv_data,
  *      import_products} → erp_acct_validate_csv_data / erp_acct_import_products
@@ -35,13 +35,10 @@ import { AccountingPage } from '../../e2e/accounting/accountingPage';
  *      each INSERT a wp_erp_acct_product_details row keyed by the transaction voucher_no.
  *
  * LIVE-VERIFIED FACTS this spec encodes (probed via curl + wp-cli during authoring):
- *  - validate of a well-formed CSV → 200 {data:"('Name','1','','10.50','25.00','','','1','<date>'),...",
- *    update:[], total:N}. data is a SQL VALUES tuple-list string in INSERT column order.
- *  - BUG-1 (import inserts 0 rows): import returns HTTP 201 + body=total but the
- *    product count is UNCHANGED. erp_acct_import_products does
- *    $wpdb->prepare("INSERT ... VALUES %s", $data['items']) which single-quotes the
- *    WHOLE tuple-list → "You have an error in your SQL syntax near '(\'..\',..)'" →
- *    the error is swallowed and $data['total'] is still returned → 201. (debug.log.)
+ *  - validate of a well-formed CSV → 200 {data:[{name, product_type_id, category_id,
+ *    cost_price, ...}], update:[], total:N}: one row object per CSV line.
+ *  - import binds every value of every row (fixed in 1d3f73459; it used to build a
+ *    VALUES string and insert nothing), so the validated rows are really inserted.
  *  - BUG-2 (item-summary no_sale): reports.php:163-164 selects sum(details.stock_in)
  *    for BOTH no_purchase AND no_sale, so no_sale wrongly equals no_purchase
  *    (purchased 5 / sold 3 → both report '5'). We assert no_purchase; no_sale is the bug.
@@ -58,7 +55,7 @@ import { AccountingPage } from '../../e2e/accounting/accountingPage';
  *
  * RESILIENCE: every write uses assert=false and branches on status; we assert
  * "not a fatal beyond what is documented" + the real effect, never a brittle exact
- * status (except the documented BUG-1 201 and the route-miss 404s). Unique data via a
+ * status (except the route-miss 404s). Unique data via a
  * fresh Date.now() suffix; afterAll deletes ONLY this run's rows (scoped by suffix/ids).
  *
  * SERIAL: this file mutates shared singleton inventory tables (product_details ledger,
@@ -226,6 +223,7 @@ test.afterAll(async () => {
         }
         // Delete this run's products by the unique suffix (NEVER a blanket product_id).
         await dbUtils.dbQuery(`DELETE FROM ${PRODUCTS} WHERE name LIKE ?`, [`LifeProd_${RUN}%`]);
+        await dbUtils.dbQuery(`DELETE FROM ${PRODUCTS} WHERE name IN (?, ?)`, [`CsvImpA_${RUN}`, `CsvImpB_${RUN}`]);
     } catch {
         /* ignore cleanup failures on a shared site */
     }
@@ -255,70 +253,28 @@ test.describe('Inventory lifecycle — CSV products import surface (admin)', () 
         expect(Number(obj?.total), 'total equals the number of data rows').toBe(names.length);
         // update is an empty array when update_existing=0.
         expect(Array.isArray(obj?.update), 'update is an array').toBe(true);
-        // data is a SQL VALUES tuple-list string in the INSERT column order.
-        expect(typeof obj?.data, 'data is the VALUES tuple-list string').toBe('string');
-        for (const name of names) {
-            expect(String(obj?.data), `data carries the row for ${name}`).toContain(name);
-        }
-        // The category column is blanked on output (the DB-existence check empties it).
-        expect(String(obj?.data), 'cost_price 10.50 present in the tuple-list').toContain('10.50');
+        // data is one row object per CSV line, in the importer's column names.
+        expect(Array.isArray(obj?.data), 'data is an array of rows').toBe(true);
+        const rows = obj.data as Array<Record<string, unknown>>;
+        expect(rows.map((r) => r.name), 'one row per CSV line').toEqual(names);
+        expect(String(rows[0]?.cost_price), 'cost_price carried through').toBe('10.50');
     });
 
-    test('INVLC-HP-02 import echoes total and does not fatal (resilient)', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // First validate to obtain the exact `items` tuple-list the importer expects.
-        const names = [`CsvImpEcho_${RUN}`];
+    test('INVLC-HP-02 import inserts the validated rows and echoes the total', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
+        const names = [`CsvImpA_${RUN}`, `CsvImpB_${RUN}`];
         const [vStatus, vBody] = await postValidate(csvMultipart(buildCsv(names.map((name) => ({ name })))));
-        test.skip(vStatus !== 200, 'validate did not return 200 in this environment');
-        const items = String((vBody as { data?: unknown })?.data ?? '');
+        expect(vStatus, 'validate of a clean CSV is a 200').toBe(200);
+        const items = (vBody as { data?: unknown })?.data;
         const total = Number((vBody as { total?: unknown })?.total ?? 0);
-        expect(items, 'validate produced a non-empty items tuple-list').not.toBe('');
+        expect(Array.isArray(items) && items.length, 'validate produced the rows to import').toBe(names.length);
 
         const [resp, body] = await api.post(CSV_IMPORT, { data: { items, update: [], total } }, false);
-        // The importer must not be a server fatal; on success it set_status(201) and
-        // echoes the total it was handed (see BUG-01 for the data-integrity gap).
-        expect(resp.status(), 'import must not be a server fatal').toBeLessThan(500);
-        if (resp.status() === 201) {
-            expect(Number(body), 'import echoes the parsed-row total').toBe(total);
-        }
-    });
+        expect(resp.status(), JSON.stringify(body)).toBe(201);
+        expect(Number(body), 'import echoes the parsed-row total').toBe(total);
 
-    test('INVLC-BUG-01 KNOWN BUG: import returns 201/body=total but inserts ZERO products', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
-        // erp_acct_import_products does $wpdb->prepare("INSERT ... VALUES %s", $items),
-        // which wraps the WHOLE tuple-list in single quotes → invalid SQL → the error is
-        // swallowed and $data['total'] is still returned → REST 201. Net effect: a "201
-        // success" that imports NOTHING. We assert that, post-import, NO product carries
-        // the imported names — the data-integrity proof, independent of the 201 echo.
-        const names = [`CsvBugA_${RUN}`, `CsvBugB_${RUN}`];
-        const [vStatus, vBody] = await postValidate(csvMultipart(buildCsv(names.map((name) => ({ name })))));
-        test.skip(vStatus !== 200, 'validate did not return 200 in this environment');
-        const items = String((vBody as { data?: unknown })?.data ?? '');
-        const total = Number((vBody as { total?: unknown })?.total ?? names.length);
-
-        // Baseline: none of the imported names exist yet.
         const inClause = names.map(() => '?').join(',');
-        let before: Array<{ c: number }> = [];
-        try {
-            before = await dbUtils.dbQuery<{ c: number }>(
-                `SELECT COUNT(*) AS c FROM ${PRODUCTS} WHERE name IN (${inClause})`,
-                names,
-            );
-        } catch {
-            test.skip(true, 'DB unavailable for the import data-integrity oracle');
-            return;
-        }
-        expect(Number(before[0]?.c ?? -1), 'no imported-named product exists before import').toBe(0);
-
-        const [resp, body] = await api.post(CSV_IMPORT, { data: { items, update: [], total } }, false);
-        // Document the deceptive success: 201 + body echoes the total.
-        expect(resp.status(), 'KNOWN BUG: import answers a 201 success').toBe(201);
-        expect(Number(body), 'KNOWN BUG: body echoes the (uninserted) total').toBe(total);
-
-        // The proof: STILL zero rows for those names — the import silently inserted nothing.
-        const after = await dbUtils.dbQuery<{ c: number }>(
-            `SELECT COUNT(*) AS c FROM ${PRODUCTS} WHERE name IN (${inClause})`,
-            names,
-        );
-        expect(Number(after[0]?.c ?? -1), 'KNOWN BUG: import inserted ZERO products despite the 201 (VALUES %s double-quotes the tuple-list)').toBe(0);
+        const after = await dbUtils.dbQuery<{ c: number }>(`SELECT COUNT(*) AS c FROM ${PRODUCTS} WHERE name IN (${inClause})`, names);
+        expect(Number(after[0]?.c ?? -1), 'every validated row is inserted').toBe(names.length);
     });
 
     test('INVLC-NC-01 validate with an empty category_id column surfaces the import-error envelope', { tag: ['@pro', '@accounting', '@admin'] }, async () => {
