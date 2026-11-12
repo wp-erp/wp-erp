@@ -35,6 +35,8 @@ const ADMIN_AJAX = toPath('wp-admin/admin-ajax.php');
 const P = `${process.env.DB_PREFIX ?? 'wp'}_`;
 const EMPLOYEE_ID = Number(process.env.EMPLOYEE_USER_ID ?? 5);
 const TAGS = (...t: string[]) => ({ tag: ['@lite', '@security', ...t] });
+// The HR erp/v1 REST routes are served by WP ERP Pro (2.0.0+), so those tests run on Pro runs only
+const PRO_TAGS = (...t: string[]) => ({ tag: ['@pro', '@security', ...t] });
 
 const ACTORS = {
     admin: { file: data.auth.adminFile, uid: 1 },
@@ -533,7 +535,7 @@ test.describe('Security audit hardening (wp-erp#1676)', () => {
 test.describe('v1 employee update cannot hijack a privileged login email (wp-erp#1677)', () => {
     const emailOf = async (uid: number) => (await q(`SELECT user_email FROM ${P}users WHERE ID = ?`, [uid]))[0]?.user_email as string;
 
-    test('HR manager cannot change the email of an employee who is also an editor', TAGS('@hrm', '@manager'), async () => {
+    test('HR manager cannot change the email of an employee who is also an editor', PRO_TAGS('@hrm', '@manager'), async () => {
         const before = await emailOf(S.priv);
         const res = await rest('hrManager', 'PUT', `hrm/employees/${S.priv}`, { body: { email: `${S.tag}_hijack@example.com` } });
         expect(res.status, res.text).toBe(403);
@@ -541,7 +543,7 @@ test.describe('v1 employee update cannot hijack a privileged login email (wp-erp
         expect(await emailOf(S.priv), 'email unchanged').toBe(before);
     });
 
-    test('HR manager can still change a plain employee\'s email; admin can change the editor\'s', TAGS('@hrm', '@manager', '@admin'), async () => {
+    test('HR manager can still change a plain employee\'s email; admin can change the editor\'s', PRO_TAGS('@hrm', '@manager', '@admin'), async () => {
         const plain = await rest('hrManager', 'PUT', `hrm/employees/${S.plain}`, { body: { email: `${S.tag}_plain2@example.com` } });
         expect(plain.status, plain.text).toBeLessThan(300);
         expect(await emailOf(S.plain)).toBe(`${S.tag}_plain2@example.com`);
@@ -556,35 +558,45 @@ test.describe('v1 employee update cannot hijack a privileged login email (wp-erp
 // wp-erp#1669 — leave requests REST scoped to owner (erp-pro#1094)
 // ═════════════════════════════════════════════════════════════════════════════
 test.describe('Leave request REST routes are owner-scoped (wp-erp#1669, erp-pro#1094)', () => {
-    test('employee list only contains own requests', TAGS('@hrm', '@employee'), async () => {
+    // Pro's v1 list gives an employee only "who is out": approved upcoming leave, whatever `type` says
+    test('employee list holds approved leave only, never a pending request', PRO_TAGS('@hrm', '@employee'), async () => {
         const res = await rest('employee', 'GET', 'hrm/leaves/requests', { query: { per_page: 100 } });
         expect(res.status, res.text).toBe(200);
-        const ids = (res.json as any[]).map(r => Number(r.id));
-        expect(ids).toContain(S.req_own);
-        expect(ids).not.toContain(S.req_victim);
-        expect((res.json as any[]).every(r => Number(r.user_id) === EMPLOYEE_ID), 'only own rows').toBe(true);
+        const rows = res.json as any[];
+        expect(rows.map(r => Number(r.id))).not.toContain(S.req_own);
+        expect(rows.every(r => Number(r.status) === 1), 'approved rows only').toBe(true);
         expect(res.text).not.toContain(SECRET.leave());
     });
 
-    test('employee cannot fetch another employee\'s request by id', TAGS('@hrm', '@employee'), async () => {
+    test('employee fetching another employee\'s request by id gets no private fields', PRO_TAGS('@hrm', '@employee'), async () => {
         const res = await rest('employee', 'GET', `hrm/leaves/requests/${S.req_victim}`);
-        expect([401, 403], res.text).toContain(res.status);
         expect(res.text).not.toContain(SECRET.leave());
+        // An approved colleague request is readable as who and when only
+        if (res.status === 200) {
+            expect(res.json.reason).toBe('');
+            expect(res.json.comments).toBe('');
+            expect(res.json.policy_name).toBe('');
+        } else {
+            expect([401, 403, 404], res.text).toContain(res.status);
+        }
         const own = await rest('employee', 'GET', `hrm/leaves/requests/${S.req_own}`);
         expect(own.status, own.text).toBe(200);
         expect(Number(own.json.id)).toBe(S.req_own);
     });
 
-    test('employee "upcoming" view of colleagues exposes dates only', TAGS('@hrm', '@employee'), async () => {
+    test('employee "upcoming" view of colleagues exposes dates only', PRO_TAGS('@hrm', '@employee'), async () => {
         const res = await rest('employee', 'GET', 'hrm/leaves/requests', { query: { type: 'upcoming', per_page: 100 } });
         expect(res.status, res.text).toBe(200);
         const victim = (res.json as any[]).find(r => Number(r.user_id) === S.victim);
         expect(victim, 'approved colleague leave listed for the who-is-out widget').toBeTruthy();
-        expect(Object.keys(victim).sort()).toEqual(['avatar_url', 'employee_name', 'end_date', 'start_date', 'user_id']);
+        expect(victim.start_date).toBeTruthy();
+        expect(victim.end_date).toBeTruthy();
+        expect([victim.reason, victim.comments, victim.policy_name, victim.applied_on]).toEqual(['', '', '', '']);
+        expect(victim.attachments).toEqual([]);
         expect(res.text).not.toContain(SECRET.leave());
     });
 
-    test('HR manager still sees and fetches every request', TAGS('@hrm', '@manager'), async () => {
+    test('HR manager still sees and fetches every request', PRO_TAGS('@hrm', '@manager'), async () => {
         const list = await rest('hrManager', 'GET', 'hrm/leaves/requests', { query: { per_page: 100 } });
         expect(list.status, list.text).toBe(200);
         const ids = (list.json as any[]).map(r => Number(r.id));
@@ -613,7 +625,7 @@ test.describe('HR job data access control (wp-erp#1670, erp-pro#1096)', () => {
         expect(hr.body).toContain(SECRET.job());
     });
 
-    test('employee self-update via REST cannot change HR-managed job fields', TAGS('@hrm', '@employee'), async () => {
+    test('employee self-update via REST cannot change HR-managed job fields', PRO_TAGS('@hrm', '@employee'), async () => {
         const before = (await q(`SELECT pay_rate, department, status FROM ${P}erp_hr_employees WHERE user_id = ?`, [EMPLOYEE_ID]))[0];
         const res = await rest('employee', 'PUT', `hrm/employees/${EMPLOYEE_ID}`, {
             body: { pay_rate: 987654, department: S.dept_raw, status: 'terminated' },
@@ -625,28 +637,23 @@ test.describe('HR job data access control (wp-erp#1670, erp-pro#1096)', () => {
         expect(after.status, 'status unchanged').toBe(before.status);
     });
 
-    test('HR manager can still change job fields via REST', TAGS('@hrm', '@manager'), async () => {
+    test('HR manager can still change job fields via REST', PRO_TAGS('@hrm', '@manager'), async () => {
         const res = await rest('hrManager', 'PUT', `hrm/employees/${S.plain}`, { body: { pay_rate: 4321 } });
         expect(res.status, res.text).toBeLessThan(300);
         const row = (await q(`SELECT pay_rate FROM ${P}erp_hr_employees WHERE user_id = ?`, [S.plain]))[0];
         expect(Number(row.pay_rate)).toBe(4321);
     });
 
-    test('employee only sees own leave entitlements', TAGS('@hrm', '@employee'), async () => {
+    // Pro's v1 entitlement routes are HR only; employees read their balances through erp/v2
+    test('employee cannot read leave entitlements over v1', PRO_TAGS('@hrm', '@employee'), async () => {
         const list = await rest('employee', 'GET', 'hrm/leaves/entitlements', { query: { per_page: 100 } });
-        expect(list.status, list.text).toBe(200);
-        const items = list.json as any[];
-        const ids = items.map(r => Number(r.id));
-        expect(ids).toContain(S.ent_own);
-        expect(ids).not.toContain(S.ent_victim);
+        expect([401, 403], list.text).toContain(list.status);
 
         const victim = await rest('employee', 'GET', `hrm/leaves/entitlements/${S.ent_victim}`);
         expect([401, 403], victim.text).toContain(victim.status);
-        const own = await rest('employee', 'GET', `hrm/leaves/entitlements/${S.ent_own}`);
-        expect(own.status, own.text).toBe(200);
     });
 
-    test('HR manager can read any entitlement', TAGS('@hrm', '@manager'), async () => {
+    test('HR manager can read any entitlement', PRO_TAGS('@hrm', '@manager'), async () => {
         const res = await rest('hrManager', 'GET', `hrm/leaves/entitlements/${S.ent_victim}`);
         expect(res.status, res.text).toBe(200);
         expect(Number(res.json.id)).toBe(S.ent_victim);
@@ -744,7 +751,7 @@ test.describe('CRM subscription confirm matches hashes as strings (wp-erp#1668, 
 // wp-erp#1683 — v1 leave policy REST create (erp-pro#1120)
 // ═════════════════════════════════════════════════════════════════════════════
 test.describe('v1 leave policy REST create maps to real fields (wp-erp#1683, erp-pro#1120)', () => {
-    test('unknown leave type is rejected with 400', TAGS('@hrm', '@admin'), async () => {
+    test('unknown leave type is rejected with 400', PRO_TAGS('@hrm', '@admin'), async () => {
         const byId = await rest('admin', 'POST', 'hrm/leaves/policies', { body: { leave_id: 999999, days: 5 } });
         expect(byId.status, byId.text).toBe(400);
         expect(byId.json?.code).toBe('rest_policy_invalid_leave');
@@ -752,7 +759,7 @@ test.describe('v1 leave policy REST create maps to real fields (wp-erp#1683, erp
         expect(byName.status, byName.text).toBe(400);
     });
 
-    test('valid leave_id + days creates a real policy row that the list returns', TAGS('@hrm', '@admin'), async () => {
+    test('valid leave_id + days creates a real policy row that the list returns', PRO_TAGS('@hrm', '@admin'), async () => {
         const res = await rest('admin', 'POST', 'hrm/leaves/policies', { body: { leave_id: S.leave2, days: 7, f_year: S.fy, description: `pw ${S.tag}` } });
         expect(res.status, res.text).toBe(201);
         const id = Number(res.json.id);

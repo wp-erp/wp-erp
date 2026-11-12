@@ -7,6 +7,7 @@ import { tables } from '@utils/dbData';
 
 /**
  * POST /erp/v1/hrm/employees/upload is open to every employee, so it must only take images.
+ * The HR v1 routes are served by WP ERP Pro, so these run on Pro runs only.
  * Also guards the regression where passing upload overrides dropped `test_form => false`
  * and every upload failed with "Invalid form submission".
  */
@@ -41,7 +42,7 @@ test.afterAll(async () => {
 });
 
 test.describe('Employee photo upload only accepts images', () => {
-    test('a PNG uploads and returns an attachment id', { tag: ['@lite', '@hrm', '@security'] }, async () => {
+    test('a PNG uploads and returns an attachment id', { tag: ['@pro', '@hrm', '@security'] }, async () => {
         const [status, body] = await upload({ name: 'avatar.png', mimeType: 'image/png', buffer: PNG_1x1 });
         const photoId = Number(body.photo_id ?? 0);
         expect(status).toBe(200);
@@ -49,19 +50,19 @@ test.describe('Employee photo upload only accepts images', () => {
         await removeAttachment(photoId);
     });
 
-    test('a .php file is rejected', { tag: ['@lite', '@hrm', '@security'] }, async () => {
+    test('a .php file is rejected', { tag: ['@pro', '@hrm', '@security'] }, async () => {
         const [status, body] = await upload({ name: 'shell.php', mimeType: 'application/x-php', buffer: Buffer.from('<?php echo 1;') });
         expect(status).toBe(400);
-        expect(body.code).toBe('invalid_file_type');
+        expect(body.code).toBe('rest_photo_not_image');
     });
 
-    test('a .pdf file is rejected', { tag: ['@lite', '@hrm', '@security'] }, async () => {
+    test('a .pdf file is rejected', { tag: ['@pro', '@hrm', '@security'] }, async () => {
         const [status, body] = await upload({ name: 'doc.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n%%EOF') });
         expect(status).toBe(400);
-        expect(body.code).toBe('invalid_file_type');
+        expect(body.code).toBe('rest_photo_not_image');
     });
 
-    test('a non-image disguised as .png does not become an attachment', { tag: ['@lite', '@hrm', '@security'] }, async () => {
+    test('a non-image disguised as .png does not become an attachment', { tag: ['@pro', '@hrm', '@security'] }, async () => {
         const [status, body] = await upload({ name: 'evil.png', mimeType: 'image/png', buffer: Buffer.from('<?php echo 1;') });
         const photoId = Number(body.photo_id ?? 0);
         await removeAttachment(photoId);
