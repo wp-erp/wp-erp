@@ -127,6 +127,35 @@ class HRM {
         UiEngineResolver::instance()->register_hooks();
         WelcomeNotice::instance()->register_hooks();
         V2Manager::init();
+
+        $this->action( 'admin_notices', 'outdated_pro_notice' );
+    }
+
+    /**
+     * Warn when an older WP ERP Pro is active.
+     *
+     * The HR v1 REST routes moved to Pro, so a Pro release from before the move
+     * (no v1 Manager class) loses the screens that call them until it is updated.
+     *
+     * @since 1.18.0
+     *
+     * @return void
+     */
+    public function outdated_pro_notice() {
+        if ( ! class_exists( 'WP_ERP_Pro' ) || class_exists( '\WeDevs\ERP_PRO\Feature\HRM\Api\V1\Manager' ) || ! current_user_can( 'update_plugins' ) ) {
+            return;
+        }
+
+        printf(
+            '<div class="notice notice-warning"><p>%s</p></div>',
+            esc_html(
+                sprintf(
+                    /* translators: %s: installed WP ERP Pro version. */
+                    __( 'WP ERP needs WP ERP Pro 2.0.0 or newer, and you have %s. Pro features that use the HR REST API (HR Frontend, Attendance, Document Manager, Recruitment and the mobile app) will not work until you update WP ERP Pro.', 'erp' ),
+                    defined( 'ERP_PRO_PLUGIN_VERSION' ) ? ERP_PRO_PLUGIN_VERSION : __( 'an older version', 'erp' )
+                )
+            )
+        );
     }
 
     /**
