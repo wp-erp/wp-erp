@@ -1004,6 +1004,14 @@ function erp_convert_to_people( $args = [] ) {
             'photo_id'    => get_user_meta( $wp_user->ID, 'photo_id', true ),
         ];
 
+        // Optional profile extras the people checks would refuse (a localhost or
+        // intranet profile URL, a free-form phone) must not block the conversion.
+        foreach ( [ 'phone' => 'erp_is_valid_contact_no', 'mobile' => 'erp_is_valid_contact_no', 'fax' => 'erp_is_valid_contact_no', 'website' => 'erp_is_valid_url' ] as $key => $is_valid ) {
+            if ( ! empty( $params[ $key ] ) && ! $is_valid( $params[ $key ] ) ) {
+                $params[ $key ] = '';
+            }
+        }
+
         $people_id = erp_insert_people( $params );
 
         if ( is_wp_error( $people_id ) ) {

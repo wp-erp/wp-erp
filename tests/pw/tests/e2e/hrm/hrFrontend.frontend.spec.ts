@@ -212,15 +212,14 @@ test.describe( 'HR Frontend dashboard — employee gate', () => {
 // ──────────────────────────────────────────────────────────────────────────
 // Slug-change lifecycle — Step 10 + HRFE-BUG-01
 //
-// (a) REST slug change: asserted resiliently — NOT a fatal, success:true, but the
-//     new slug URL may 404 (HRFE-BUG-01 — rule never registered by the REST path).
-// (b) wp-cli slug change: the deterministic path that DOES register the rule, used
-//     for the positive "new slug renders" assertion.
+// (a) REST slug change: success:true, and the new slug is reachable right away
+//     (HRFE-BUG-01, the REST path never registering the rule, is fixed).
+// (b) wp-cli slug change: the same through the option + a rewrite flush.
 // ──────────────────────────────────────────────────────────────────────────
 test.describe( 'HR Frontend dashboard — slug change lifecycle (admin)', () => {
     test.use( { storageState: data.auth.adminFile } );
 
-    test( 'HRFE-FE-08 REST slug change returns success but the new slug is NOT immediately reachable (HRFE-BUG-01)', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
+    test( 'HRFE-FE-08 REST slug change returns success and the new slug is reachable at once', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
         const stamp = Date.now();
         const newSlug = `pw-hrfe-rest-${stamp}`;
 
@@ -237,20 +236,9 @@ test.describe( 'HR Frontend dashboard — slug change lifecycle (admin)', () => 
         // The option DID change (update_option ran)…
         expect( await HrFrontendPage.getSlug(), 'slug option reflects the REST change' ).toBe( newSlug );
 
-        // …but the rewrite rule was NOT registered by the REST path (the bug). Visit
-        // the new slug and assert resiliently: NOT a WP fatal, and the dashboard does
-        // NOT render (404 / no portal template). We do NOT assert an exact 404 —
-        // we document the bug as "new slug not reachable after a REST-only change".
-        await page.goto( HrFrontendPage.dashboardUrl( newSlug ), { waitUntil: 'domcontentloaded' } );
-        const html = ( await page.locator( 'body' ).textContent() ) ?? '';
-        expect( html, 'no WP critical-error splash on the unreachable new slug' )
-            .not.toContain( HrFrontendPage.CRITICAL_ERROR );
-        await expect( page.locator( 'body.erp-hr-portal' ), 'HRFE-BUG-01: REST-only slug change does NOT register the rewrite rule, so the new slug does not render the dashboard' )
-            .toHaveCount( 0 );
-
-        // Confirm the rule really is absent (DB oracle), pinning the bug precisely.
-        expect( HrFrontendPage.rewriteRuleExists( newSlug ), 'HRFE-BUG-01: no rewrite rule for the new slug after a REST-only change' )
-            .toBe( false );
+        // The REST path registers the new rule (was HRFE-BUG-01), so the slug renders at once.
+        expect( HrFrontendPage.rewriteRuleExists( newSlug ), 'rewrite rule for the new slug' ).toBe( true );
+        await new HrFrontendPage( page ).expectDashboardRenders( newSlug );
     } );
 
     test( 'HRFE-FE-09 wp-cli slug change registers the rule and the new slug renders the dashboard', { tag: [ '@pro', '@hrm', '@admin' ] }, async ( { page } ) => {
