@@ -303,15 +303,15 @@ test.describe('Advanced Leave lifecycle — request + approve (pro, admin)', () 
         expect(Number(r.leave_entitlement_id), 'request bound to the entitlement').toBe(ENT);
     });
 
-    // ALV-LC-05 — a request without an entitlement (policy) is a clean 400, JSON or form.
-    test('ALV-LC-05 request without a policy → 400 rest_invalid_entitlement', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    // ALV-LC-05 — `policy` is a required route arg, so a request without it is a clean 400.
+    test('ALV-LC-05 request without a policy → 400 rest_missing_callback_param', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp, body] = await api.post(
             endPoints.leaveRequests,
             { data: { employee_id: EMP, start_date: '2026-08-01', end_date: '2026-08-02', reason: 'json' } },
             false,
         );
         expect(resp.status(), 'a missing policy is a clean 400, not a fatal').toBe(400);
-        expect(String(body?.code ?? '')).toBe('rest_invalid_entitlement');
+        expect(String(body?.code ?? '')).toBe('rest_missing_callback_param');
     });
 
     // ALV-LC-06 — approve the pending request. 200 with status=1 (approved) and
