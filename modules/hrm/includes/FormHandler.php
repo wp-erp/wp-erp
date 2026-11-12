@@ -410,6 +410,12 @@ class FormHandler {
 		$employee_table = new \WeDevs\ERP\HRM\EmployeeListTable();
 		$action         = $employee_table->current_action();
 
+		// Every employee can view the list, but removing, permanently deleting
+		// and restoring employees is the HR manager's job, as on the REST routes.
+		if ( in_array( $action, array( 'delete', 'permanent_delete', 'restore' ), true ) && ! current_user_can( 'erp_delete_employee' ) ) {
+			wp_die( esc_html__( 'You do not have sufficient permissions to do this action', 'erp' ), '', array( 'response' => 403 ) );
+		}
+
 		if ( $action ) {
 			$req_uri_bulk = ( isset( $_SERVER['REQUEST_URI'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
