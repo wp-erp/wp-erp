@@ -155,7 +155,7 @@ test.describe('Reimbursement REST — employee requests (admin)', () => {
         // Risk A (line_items present) + Risk B (admin may have no erp_peoples row):
         // assert=false, PASS on 201 OR a documented <500; DB-assert gated on ok().
         const [resp, body] = await api.post(EMP_REQUESTS, { data: payload }, false);
-        expect(resp.status(), 'reimbursement create must not return a fatal 500 unexpectedly').toBeLessThan(500);
+        expect(resp.status(), `reimbursement create must not 500: ${JSON.stringify(body)}`).toBeLessThan(500);
 
         if (!resp.ok()) {
             // Known cause (Risk B): acting admin has no erp_peoples row -> null-property

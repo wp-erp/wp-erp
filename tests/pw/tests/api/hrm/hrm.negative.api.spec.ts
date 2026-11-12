@@ -123,16 +123,14 @@ test.describe('HRM REST — validation rejections (admin)', () => {
         expectRejected(resp.status(), body, 'invalid hiring date');
     });
 
-    test('HRM-NC-11 department empty title is accepted (validation gap)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-11 department empty title is rejected', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.post(endPoints.departments, { data: { title: '' } }, false);
-        // FINDING (BUGS.md): an empty department title is accepted (no required-title guard).
-        expect([200, 201], 'empty department title is (incorrectly) accepted').toContain(resp.status());
+        expect(resp.status(), 'empty department title is refused').toBe(400);
     });
 
-    test('HRM-NC-12 designation empty title is accepted (validation gap)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+    test('HRM-NC-12 designation empty title is rejected', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
         const [resp] = await api.post(endPoints.designations, { data: { title: '' } }, false);
-        // FINDING (BUGS.md): an empty designation title is accepted (no required-title guard).
-        expect([200, 201], 'empty designation title is (incorrectly) accepted').toContain(resp.status());
+        expect(resp.status(), 'empty designation title is refused').toBe(400);
     });
 
     test('HRM-NC-13 deleting a department with employees is allowed (validation gap)', { tag: ['@pro', '@hrm', '@admin'] }, async () => {

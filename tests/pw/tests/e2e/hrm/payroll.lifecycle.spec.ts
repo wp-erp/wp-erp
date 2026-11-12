@@ -29,10 +29,10 @@ import { PayrollLifecyclePage, PAYROLL_LIFECYCLE_TABLES } from './payroll.lifecy
  * order and shares one calendar/payitem across the lifecycle block.
  *
  * Resilient assertions: never assert an exact 500; assert NOT the WP fatal splash
- * and the real DB effect. The two documented bugs (PAYROLL-BUG-01: missing
- * wp_erp_hr_payroll_payrun table orphaning every row at payrun_id=0 and emptying
- * get_payrun_list; PAYROLL-BUG-02: get_employees_for_dropdown gates on the wrong
- * cap) are asserted as their observable effects, not as a fatal.
+ * and the real DB effect. PAYROLL-BUG-01 (the missing wp_erp_hr_payroll_payrun table
+ * orphaned every row at payrun_id=0) is fixed, so the pay-run id is asserted; the
+ * documented PAYROLL-BUG-02 (get_employees_for_dropdown gates on the wrong cap) is
+ * asserted as its observable effect, not as a fatal.
  *
  * Every test carries a tier tag (@pro), the @hrm module tag and a role tag.
  */
@@ -63,6 +63,7 @@ const state: {
     empId?: number;
     calId?: number;
     payItemId?: number;
+    payRunId?: number;
     payBasic: number;
 } = { payBasic: PAY_BASIC };
 
@@ -272,9 +273,7 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
 
     // PRL-05 — GENERATE the pay-run: start_variable_input inserts the COMPUTED
     // basic-pay row (pay_item_id=-1, pay_item_amount=pay_basic, add_or_deduct=1).
-    // payrunid=0 → INSERT branch. The response 'prun' is 0 because the
-    // wp_erp_hr_payroll_payrun table is missing (PAYROLL-BUG-01) — assert the
-    // payrun_detail row, which IS written, not the orphaned prun id.
+    // payrunid=0 → INSERT branch, which creates the pay-run and returns its id as 'prun'.
     test('step 5: start_variable_input writes the computed basic-pay payrun_detail row', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         expect(state.calId, 'calendar ready').toBeTruthy();
         expect(state.empId, 'employee ready').toBeTruthy();
@@ -304,10 +303,10 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
         expect(Number(basic!.pay_item_amount), 'basic equals pay_basic').toBeCloseTo(state.payBasic, 2);
         expect(Number(basic!.pay_item_add_or_deduct), 'basic adds (1)').toBe(1);
 
-        // PAYROLL-BUG-01 — the orphan: prun is 0 and the row carries payrun_id=0
-        // because the payrun parent table is absent. Documented, not failed.
-        expect(Number(body?.data?.prun ?? -1), 'prun orphaned at 0 (missing payrun table)').toBe(0);
-        expect(Number(basic!.payrun_id), 'detail row orphaned at payrun_id=0').toBe(0);
+        // The pay-run row exists and the detail row belongs to it (was orphaned at 0, PAYROLL-BUG-01).
+        state.payRunId = Number(body?.data?.prun ?? 0);
+        expect(state.payRunId, 'pay-run created').toBeGreaterThan(0);
+        expect(Number(basic!.payrun_id), 'detail row belongs to the pay-run').toBe(state.payRunId);
     });
 
     // PRL-06 — add the additional allowance to the employee in the pay-run. This
@@ -321,7 +320,7 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
 
         const { status, body, raw } = await payroll.addAdditionalAllowanceDeduction({
             empId: state.empId!,
-            payRunId: 0,
+            payRunId: state.payRunId ?? 0,
             calId: state.calId!,
             paymentDate: PAYMENT_DATE,
             additionalInfo: 1,
@@ -376,11 +375,9 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
     });
 
     // PRL-07 — list-appearance. The calendar surfaces in get_pay_calendar with
-    // cal_emp_number reflecting the assigned employee. get_payrun_list returns []
-    // because it INNER-JOINs the missing payrun table (PAYROLL-BUG-01) — so the
-    // resilient list-appearance assertion is on the calendar + the payrun_detail
-    // DB rows, NOT on get_payrun_list.
-    test('step 7: calendar appears in get_pay_calendar; payrun list empty (missing-table bug)', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
+    // cal_emp_number reflecting the assigned employee, and the pay-run from step 5
+    // is in get_payrun_list.
+    test('step 7: calendar appears in get_pay_calendar; the pay-run appears in the payrun list', { tag: ['@pro', '@hrm', '@admin'] }, async ({ page }) => {
         expect(state.calId, 'calendar ready').toBeTruthy();
         const payroll = new PayrollLifecyclePage(page);
         await payroll.bootstrap();
@@ -397,11 +394,10 @@ test.describe('HRM Payroll pay-run lifecycle (pro, admin)', () => {
         // get_payrun_list is empty (not an error) — the documented missing-table bug.
         const runs = await payroll.getPayrunList();
         expect(runs.status, 'no 5xx').toBeLessThan(500);
-        expect(runs.raw, 'no PHP fatal even with the missing table').not.toContain(CRITICAL_ERROR);
-        expect(runs.body?.success, 'payrun list responds (empty, not error)').toBe(true);
+        expect(runs.raw, 'no PHP fatal').not.toContain(CRITICAL_ERROR);
+        expect(runs.body?.success, 'payrun list responds').toBe(true);
         expect(Array.isArray(runs.body?.data), 'payrun list is an array').toBe(true);
-        // PAYROLL-BUG-01: with the parent table absent, the INNER JOIN yields [].
-        expect((runs.body?.data ?? []).length, 'payrun list empty due to missing parent table').toBe(0);
+        expect((runs.body?.data ?? []).length, 'the pay-run is listed').toBeGreaterThanOrEqual(1);
     });
 });
 

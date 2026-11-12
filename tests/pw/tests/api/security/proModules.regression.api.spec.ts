@@ -334,8 +334,9 @@ test.describe('Workflow AJAX requires nonce + erp_workflow_menu_permission (erp-
             action: 'erp_wf_new_workflow',
             _wpnonce: nonce.hr!['erp-wf-new-workflow'],
             workflow_name: wf.name,
-            events_group: 'general',
-            event: 'created_user',
+            // Created User rules are administrator-only, so the HR manager builds on Created Employee
+            events_group: 'hrm',
+            event: 'created_employee',
             conditions_group: 'or',
             activate: 'false',
             delay_time: 0,
@@ -458,11 +459,11 @@ test.describe('Workflow input is sanitized and Update Field is limited (erp-pro#
     });
 
     for (const field of ['role', 'user_pass']) {
-        test(`Update Field "${field}" on Created User is rejected on save`, { tag: ['@pro', '@workflow', '@hrManager', '@security'] }, async () => {
+        test(`Update Field "${field}" on Created User is rejected on save`, { tag: ['@pro', '@workflow', '@admin', '@security'] }, async () => {
             const name = `pw_wf_${field}_${RUN}`;
-            const res = await ajax('hr', {
+            const res = await ajax('admin', {
                 action: 'erp_wf_new_workflow',
-                _wpnonce: nonce.hr!['erp-wf-new-workflow'],
+                _wpnonce: nonce.admin!['erp-wf-new-workflow'],
                 workflow_name: name,
                 events_group: 'general',
                 event: 'created_user',
@@ -479,9 +480,9 @@ test.describe('Workflow input is sanitized and Update Field is limited (erp-pro#
             expect(res.text).toMatch(/can not be updated by a workflow/);
             expect(await dbUtils.dbQuery(`SELECT id FROM ${T('erp_workflows')} WHERE name = ?`, [name]), 'nothing saved').toHaveLength(0);
 
-            const edit = await ajax('hr', {
+            const edit = await ajax('admin', {
                 action: 'erp_wf_edit_workflow',
-                _wpnonce: nonce.hr!['erp-wf-edit-workflow'],
+                _wpnonce: nonce.admin!['erp-wf-edit-workflow'],
                 workflow_id: ids.workflow,
                 workflow_name: wf.name,
                 events_group: 'general',
@@ -499,11 +500,11 @@ test.describe('Workflow input is sanitized and Update Field is limited (erp-pro#
         });
     }
 
-    test('Update Field "first_name" on Created User is still accepted', { tag: ['@pro', '@workflow', '@hrManager', '@security'] }, async () => {
+    test('Update Field "first_name" on Created User is still accepted', { tag: ['@pro', '@workflow', '@admin', '@security'] }, async () => {
         const name = `pw_wf_first_name_${RUN}`;
-        const res = await ajax('hr', {
+        const res = await ajax('admin', {
             action: 'erp_wf_new_workflow',
-            _wpnonce: nonce.hr!['erp-wf-new-workflow'],
+            _wpnonce: nonce.admin!['erp-wf-new-workflow'],
             workflow_name: name,
             events_group: 'general',
             event: 'created_user',

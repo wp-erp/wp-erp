@@ -21,9 +21,8 @@ import { dbUtils } from '@utils/dbUtils';
  *  - modules/pro/hr-frontend/includes/functions.php
  *      get_erp_dashboard_slug() default 'wp-erp'; get_erp_dashboard_title() default 'WP ERP'
  *  - modules/pro/hr-frontend/templates/dashboard.php
- *      #erp-hr-frontend-root, #erp-hr-frontend-loading ('Loading HR Dashboard...'),
- *      <title> = get_erp_dashboard_title(), window.wpErpHrFrontend{userId,…},
- *      <script src=.../hr-frontend.js?ver=…>
+ *      <body class="erp-hr-portal">, then #erp-hr-app + dist-react/portal.js +
+ *      window.__ERP_HR_BOOT__ when the portal build exists, else .erp-hr-portal-notice
  *  - modules/pro/hr-frontend/includes/DashboardSettings.php
  *      POST /erp/v1/hrm/hr-frontend/settings {hr_frontend_slug,hr_frontend_dashboard_title,…}
  *      → update_option(...) + flush_rewrite_rules() ONLY if slug changed (see HRFE-BUG-01).
@@ -61,10 +60,12 @@ export class HrFrontendPage {
 
     // Standalone-template DOM markers (templates/dashboard.php).
     readonly sel = {
-        root: '#erp-hr-frontend-root',
-        loading: '#erp-hr-frontend-loading',
-        loadingText: 'Loading HR Dashboard...',
-        bundle: 'script[src*="hr-frontend.js"]',
+        // The portal template (templates/dashboard.php) renders this body for an allowed
+        // user, with the React mount when the portal build exists and a notice when not.
+        root: 'body.erp-hr-portal',
+        app: '#erp-hr-app',
+        notice: '.erp-hr-portal-notice',
+        bundle: 'script[src*="dist-react/portal.js"]',
     } as const;
 
     /** REST settings endpoint (DashboardSettings::register_rest_routes). */
@@ -169,8 +170,8 @@ export class HrFrontendPage {
 
     /**
      * Visit the dashboard URL for `slug` and assert it RENDERS the standalone
-     * template: the React root + loading shell + bundle present, no fatal, and
-     * (best-effort) the localized window.wpErpHrFrontend object is present.
+     * portal template: no fatal, and either the React mount (bundle + boot payload)
+     * or, when the portal is not built, its notice.
      *
      * Returns the navigation response so callers can branch on HTTP status when a
      * gate/redirect is in play (page.goto follows redirects; the final response
@@ -184,25 +185,28 @@ export class HrFrontendPage {
         expect( body, 'authorized render shows no WP critical-error splash' )
             .not.toContain( HrFrontendPage.CRITICAL_ERROR );
 
-        // The standalone dashboard template mounts these (templates/dashboard.php).
-        await expect( this.page.locator( this.sel.root ), 'React root #erp-hr-frontend-root is present' )
-            .toBeAttached( { timeout: 30_000 } );
-        await expect( this.page.locator( this.sel.bundle ), 'hr-frontend.js bundle is enqueued' )
+        await expect( this.page.locator( this.sel.root ), 'portal template is served' )
             .toBeAttached( { timeout: 30_000 } );
 
-        // window.wpErpHrFrontend localized object (userId etc.) is present.
-        const localized = await this.page.evaluate( () => {
-            const w = window as unknown as { wpErpHrFrontend?: { userId?: number } };
-            return w.wpErpHrFrontend ?? null;
-        } );
-        expect( localized, 'window.wpErpHrFrontend localized object is present' ).not.toBeNull();
+        // CI does not build Pro's React bundles, so the template shows its notice there.
+        if ( ! ( await this.isMounted() ) ) {
+            await expect( this.page.locator( this.sel.notice ), 'unbuilt portal shows its notice' ).toBeVisible();
+            return;
+        }
+        await expect( this.page.locator( this.sel.bundle ), 'portal.js bundle is enqueued' ).toBeAttached();
+        expect( await this.localizedUserId(), 'boot payload carries the current user' ).not.toBeNull();
     }
 
-    /** Read window.wpErpHrFrontend.userId from a rendered dashboard. */
+    /** Whether the React portal mounted (its build is present). */
+    async isMounted(): Promise<boolean> {
+        return ( await this.page.locator( this.sel.app ).count() ) > 0;
+    }
+
+    /** Read window.__ERP_HR_BOOT__.currentUserId from a mounted portal. */
     async localizedUserId(): Promise<number | null> {
         return this.page.evaluate( () => {
-            const w = window as unknown as { wpErpHrFrontend?: { userId?: number } };
-            const id = w.wpErpHrFrontend?.userId;
+            const w = window as unknown as { __ERP_HR_BOOT__?: { currentUserId?: number } };
+            const id = w.__ERP_HR_BOOT__?.currentUserId;
             return typeof id === 'number' ? id : null;
         } );
     }
@@ -210,7 +214,7 @@ export class HrFrontendPage {
     /**
      * Visit the dashboard URL and assert it is GATED (the standalone template does
      * NOT render). page.goto follows the 302, landing on wp-login.php (unauth) or
-     * /wp-admin/ (no-cap); in either case #erp-hr-frontend-root must be absent.
+     * /wp-admin/ (no-cap); in either case the portal template must be absent.
      */
     async expectGatedAway( slug: string ): Promise<string> {
         await this.page.goto( HrFrontendPage.dashboardUrl( slug ), { waitUntil: 'domcontentloaded' } );
@@ -221,7 +225,7 @@ export class HrFrontendPage {
             .not.toContain( HrFrontendPage.CRITICAL_ERROR );
 
         // Dashboard markers must be absent on the redirect target.
-        await expect( this.page.locator( this.sel.root ), 'gated user never sees the dashboard root' )
+        await expect( this.page.locator( this.sel.root ), 'gated user never sees the portal' )
             .toHaveCount( 0 );
 
         return finalUrl;
