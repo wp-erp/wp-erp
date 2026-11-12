@@ -61,6 +61,7 @@ import {
 import { parseServerDate, siteToday } from '@/shared/utils/date';
 import { fmtDate, greeting } from './format';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
+import { SetupChecklist } from './SetupChecklist';
 import {
 	fetchAnnouncement,
 	markAnnouncementRead,
@@ -324,6 +325,8 @@ function DashboardInner(): JSX.Element {
 					</IconButton>
 				</div>
 			</header>
+
+			<SetupChecklist />
 
 			{ loading && ! data ? (
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

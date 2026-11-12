@@ -1,7 +1,7 @@
 /**
  * WP-ERP HR module — React 19 admin build (module-scoped).
  *
- * Extends @wordpress/scripts default config. Single entry: `employees`.
+ * Extends @wordpress/scripts default config. Entries: `employees`, `hr-globals`, `onboarding`.
  * Output: ./assets/dist-react/
  *
  * Isolated from the plugin-root webpack.config.js (which builds Settings + Accounting + i18n).
@@ -47,6 +47,11 @@ module.exports = {
 		'hr-globals': path.resolve(
 			__dirname,
 			'assets/src-react/app/pages/hr-globals.entry.tsx'
+		),
+		// Setup wizard on `index.php?page=erp-setup` (Admin\SetupWizard).
+		onboarding: path.resolve(
+			__dirname,
+			'assets/src-react/app/pages/onboarding.entry.tsx'
 		),
 	},
 	output: {

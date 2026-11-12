@@ -15,9 +15,11 @@ interface EmployeeImportResultProps {
 	readonly result:  ImportResult;
 	readonly onReset: () => void;
 	readonly onClose: () => void;
+	/** Label of the close button (the setup wizard reads "Continue"). */
+	readonly closeLabel?: string;
 }
 
-export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImportResultProps ): JSX.Element {
+export function EmployeeImportResult( { result, onReset, onClose, closeLabel }: EmployeeImportResultProps ): JSX.Element {
 	return (
 		<div className="space-y-4">
 			<div className="flex flex-col items-center justify-center gap-3 rounded-[10px] border border-border bg-card px-6 py-10 text-center">
@@ -67,7 +69,7 @@ export function EmployeeImportResult( { result, onReset, onClose }: EmployeeImpo
 					{ __( 'Import another file', 'erp' ) }
 				</Button>
 				<Button type="button" className="h-10 px-6" onClick={ onClose }>
-					{ __( 'Done', 'erp' ) }
+					{ closeLabel ?? __( 'Done', 'erp' ) }
 				</Button>
 			</DialogFooter>
 		</div>

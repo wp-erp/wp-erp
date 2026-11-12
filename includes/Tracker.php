@@ -90,4 +90,15 @@ class Tracker {
     public function not_allowed() {
         return ! $this->insights->tracking_allowed();
     }
+
+    /**
+     * Whether the admin has answered the tracking question (allowed or declined).
+     *
+     * @since 1.18.0
+     *
+     * @return bool
+     */
+    public function answered() {
+        return false !== get_option( $this->client->slug . '_allow_tracking', false );
+    }
 }
