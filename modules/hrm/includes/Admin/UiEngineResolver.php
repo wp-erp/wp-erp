@@ -40,6 +40,13 @@ final class UiEngineResolver {
 	public const ENGINE_LEGACY = 'vue';
 
 	/**
+	 * The `erp_ui` values in switch links: what people read in the address bar.
+	 * `react` is still accepted from links made before.
+	 */
+	public const URL_NEW    = 'new';
+	public const URL_LEGACY = 'legacy';
+
+	/**
 	 * Singleton instance.
 	 *
 	 * @var self|null
@@ -154,7 +161,8 @@ final class UiEngineResolver {
 	 * @return string 'react', 'vue', or ''.
 	 */
 	public function forced_engine(): string {
-		$forced = (string) get_option( self::SITE_OPTION, 'auto' );
+		// Never saved, or saved empty: the new interface for everyone (Settings::default_ui_engine()).
+		$forced = (string) get_option( self::SITE_OPTION );
 
 		return in_array( $forced, [ self::ENGINE_REACT, self::ENGINE_LEGACY ], true ) ? $forced : '';
 	}
@@ -205,7 +213,8 @@ final class UiEngineResolver {
 		}
 
 		$target = isset( $_GET['erp_ui'] ) ? sanitize_key( wp_unslash( $_GET['erp_ui'] ) ) : '';
-		if ( ! in_array( $target, [ self::ENGINE_REACT, 'legacy' ], true ) ) {
+		$target = self::URL_NEW === $target ? self::ENGINE_REACT : $target;
+		if ( ! in_array( $target, [ self::ENGINE_REACT, self::URL_LEGACY ], true ) ) {
 			return;
 		}
 
@@ -237,7 +246,7 @@ final class UiEngineResolver {
 		// the stale (previous-engine) document and the switch only appears after a
 		// manual refresh. `erp_ui` (the now-active engine) makes it cache-distinct
 		// and is ignored by the page itself (the resolver reads user-meta).
-		$engine_arg = ( 'legacy' === $target ) ? self::ENGINE_LEGACY : self::ENGINE_REACT;
+		$engine_arg = ( self::URL_LEGACY === $target ) ? self::URL_LEGACY : self::URL_NEW;
 
 		// Land on the legacy screen that matches where the user actually was.
 		// Without this the switch always dropped them on the HR dashboard, which
@@ -327,7 +336,8 @@ final class UiEngineResolver {
 	 * Build a nonce-stamped switch URL for the given page slug and target.
 	 *
 	 * @param string $page_slug HR admin page slug (must start with `erp-hr`).
-	 * @param string $target    Either 'react' or 'legacy'.
+	 * @param string $target    Either 'react' (ENGINE_REACT) or 'legacy'. The link
+	 *                          itself reads `erp_ui=new` or `erp_ui=legacy`.
 	 *
 	 * @return string
 	 */
@@ -358,7 +368,7 @@ final class UiEngineResolver {
 				[
 					'page'       => $page_slug,
 					'erp_action' => self::SWITCH_ACTION,
-					'erp_ui'     => $target,
+					'erp_ui'     => self::ENGINE_REACT === $target ? self::URL_NEW : self::URL_LEGACY,
 				],
 				$origin
 			),
