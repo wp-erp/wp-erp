@@ -137,6 +137,10 @@ class HRM {
      * The HR v1 REST routes moved to Pro, so a Pro release from before the move
      * (no v1 Manager class) loses the screens that call them until it is updated.
      *
+     * The class check decides whether to warn. The version only picks the
+     * wording: a Pro that is not older than the required version but still lacks
+     * the class has incomplete files, and asking to update it would be wrong.
+     *
      * @since 1.18.0
      *
      * @return void
@@ -146,16 +150,25 @@ class HRM {
             return;
         }
 
-        printf(
-            '<div class="notice notice-warning"><p>%s</p></div>',
-            esc_html(
-                sprintf(
-                    /* translators: %s: installed WP ERP Pro version. */
-                    __( 'WP ERP needs WP ERP Pro 2.0.0 or newer, and you have %s. Pro features that use the HR REST API (HR Frontend, Attendance, Document Manager, Recruitment and the mobile app) will not work until you update WP ERP Pro.', 'erp' ),
-                    defined( 'ERP_PRO_PLUGIN_VERSION' ) ? ERP_PRO_PLUGIN_VERSION : __( 'an older version', 'erp' )
-                )
-            )
-        );
+        $required  = '2.0.0';
+        $installed = defined( 'ERP_PRO_PLUGIN_VERSION' ) ? ERP_PRO_PLUGIN_VERSION : '';
+
+        if ( '' === $installed || version_compare( $installed, $required, '<' ) ) {
+            $message = sprintf(
+                /* translators: 1: required WP ERP Pro version, 2: installed WP ERP Pro version. */
+                __( 'WP ERP needs WP ERP Pro %1$s or newer, and you have %2$s. Pro features that use the HR REST API (HR Frontend, Attendance, Document Manager, Recruitment and the mobile app) will not work until you update WP ERP Pro.', 'erp' ),
+                $required,
+                '' !== $installed ? $installed : __( 'an older version', 'erp' )
+            );
+        } else {
+            $message = sprintf(
+                /* translators: %s: installed WP ERP Pro version. */
+                __( 'WP ERP Pro %s is missing its HR REST API files. Pro features that use it (HR Frontend, Attendance, Document Manager, Recruitment and the mobile app) will not work until you reinstall WP ERP Pro.', 'erp' ),
+                $installed
+            );
+        }
+
+        printf( '<div class="notice notice-warning"><p>%s</p></div>', esc_html( $message ) );
     }
 
     /**
