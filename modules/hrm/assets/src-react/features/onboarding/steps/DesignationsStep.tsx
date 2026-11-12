@@ -25,6 +25,7 @@ export function DesignationsStep( { values, saving, onNext }: StepProps ): JSX.E
 			subtitle={ __( 'Add the job titles used across your teams.', 'erp' ) }
 			label={ __( 'Select Designation', 'erp' ) }
 			placeholder={ __( 'Add or select a designation', 'erp' ) }
+			manageNote={ __( 'Setup only adds designations. To rename or delete one, use HR → People → Designations.', 'erp' ) }
 			suggestions={ suggestions }
 			initial={ values.designations }
 			saving={ saving }

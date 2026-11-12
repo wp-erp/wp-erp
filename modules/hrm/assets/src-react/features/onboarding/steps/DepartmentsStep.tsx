@@ -25,6 +25,7 @@ export function DepartmentsStep( { values, saving, onNext }: StepProps ): JSX.El
 			subtitle={ __( 'Add the departments that make up your organization.', 'erp' ) }
 			label={ __( 'Select Department', 'erp' ) }
 			placeholder={ __( 'Add or select a department', 'erp' ) }
+			manageNote={ __( 'Setup only adds departments. To rename or delete one, use HR → People → Departments.', 'erp' ) }
 			suggestions={ suggestions }
 			initial={ values.departments }
 			saving={ saving }

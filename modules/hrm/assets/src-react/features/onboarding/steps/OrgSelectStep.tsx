@@ -19,6 +19,8 @@ interface OrgSelectStepProps {
 	readonly subtitle: string;
 	readonly label: string;
 	readonly placeholder: string;
+	/** Where existing items are removed: setup only ever adds. */
+	readonly manageNote: string;
 	readonly suggestions: readonly string[];
 	readonly initial: readonly string[];
 	readonly saving: boolean;
@@ -46,6 +48,7 @@ export function OrgSelectStep( {
 	subtitle,
 	label,
 	placeholder,
+	manageNote,
 	suggestions,
 	initial,
 	saving,
@@ -101,6 +104,7 @@ export function OrgSelectStep( {
 					<p className="mt-2 text-xs text-muted-foreground">
 						{ __( 'Not in the list? Open it and use + beside Search to add your own.', 'erp' ) }
 					</p>
+					<p className="mt-1 text-xs text-muted-foreground">{ manageNote }</p>
 				</div>
 
 				<NextButton saving={ saving } />

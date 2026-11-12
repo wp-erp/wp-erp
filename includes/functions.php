@@ -4348,8 +4348,9 @@ function erp_reset_data() {
 		$plugin_wp_erp = end( $wp_erp_url ) . '/wp-erp.php';
 		deactivate_plugins( $plugin_wp_erp );
 
-		// Set a flag to prevent installer from recreating default data during reset
-		update_option( 'erp_reset_in_progress', true );
+		// Set a flag to prevent installer from recreating default data during reset.
+		// It holds a timestamp, so a reset that dies here cannot block the defaults forever.
+		update_option( 'erp_reset_in_progress', time() );
 
 		// Activate and add deafult modules
 		activate_plugin( $plugin_wp_erp );

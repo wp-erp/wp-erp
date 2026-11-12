@@ -51,6 +51,11 @@ class OnboardingController extends RestController {
 	const SAMPLE_DATA_LOCK = 'erp_onboarding_sample_data_loading';
 
 	/**
+	 * Held while `complete` creates leave policies.
+	 */
+	const COMPLETE_LOCK = 'erp_onboarding_completing';
+
+	/**
 	 * Sample people use this reserved domain, so no email reaches anyone and
 	 * a second load can tell the sample is already there.
 	 */
@@ -207,43 +212,39 @@ class OnboardingController extends RestController {
 	public function save_step( $request ) {
 		$data = (array) $request->get_json_params();
 
-		// Basic step.
-		if ( array_key_exists( 'companyName', $data ) || array_key_exists( 'businessType', $data ) ) {
-			$company = new \WeDevs\ERP\Company();
-			$update  = [];
+		// Basic step. Every value is checked before anything is written, so a
+		// rejected request leaves the stored settings as they were.
+		$company_update = [];
+		$general_update = [];
 
-			if ( array_key_exists( 'companyName', $data ) ) {
-				$name = sanitize_text_field( (string) $data['companyName'] );
+		if ( array_key_exists( 'companyName', $data ) ) {
+			$name = sanitize_text_field( (string) $data['companyName'] );
 
-				if ( '' === $name ) {
-					return new WP_Error( 'rest_invalid_param', __( 'Company name is required.', 'erp' ), [ 'status' => 400 ] );
-				}
-
-				$update['name'] = $name;
+			if ( '' === $name ) {
+				return new WP_Error( 'rest_invalid_param', __( 'Company name is required.', 'erp' ), [ 'status' => 400 ] );
 			}
 
-			if ( array_key_exists( 'businessType', $data ) ) {
-				$type = (string) $data['businessType'];
-
-				if ( '' !== $type && ! array_key_exists( $type, $this->business_types() ) ) {
-					return new WP_Error( 'rest_invalid_param', __( 'Choose a business type from the list.', 'erp' ), [ 'status' => 400 ] );
-				}
-
-				$update['business_type'] = $type;
-			}
-
-			$company->update( $update );
+			$company_update['name'] = $name;
 		}
 
-		$general = get_option( 'erp_settings_general', [] );
-		$general = is_array( $general ) ? $general : [];
-		$touched = false;
+		if ( array_key_exists( 'businessType', $data ) ) {
+			$type = (string) $data['businessType'];
+
+			if ( '' !== $type && ! array_key_exists( $type, $this->business_types() ) ) {
+				return new WP_Error( 'rest_invalid_param', __( 'Choose a business type from the list.', 'erp' ), [ 'status' => 400 ] );
+			}
+
+			$company_update['business_type'] = $type;
+		}
 
 		if ( array_key_exists( 'financialYearStarts', $data ) ) {
 			$month = array_search( strtolower( (string) $data['financialYearStarts'] ), self::MONTHS, true );
 
-			$general['gen_financial_month'] = false === $month ? '1' : (string) ( $month + 1 );
-			$touched                        = true;
+			if ( false === $month ) {
+				return new WP_Error( 'rest_invalid_param', __( 'Choose the month the financial year starts.', 'erp' ), [ 'status' => 400 ] );
+			}
+
+			$general_update['gen_financial_month'] = (string) ( $month + 1 );
 		}
 
 		if ( array_key_exists( 'companyStartDate', $data ) ) {
@@ -253,8 +254,7 @@ class OnboardingController extends RestController {
 				return new WP_Error( 'rest_invalid_param', __( 'Company start date is required.', 'erp' ), [ 'status' => 400 ] );
 			}
 
-			$general['gen_com_start'] = $date;
-			$touched                  = true;
+			$general_update['gen_com_start'] = $date;
 		}
 
 		if ( array_key_exists( 'currency', $data ) ) {
@@ -264,8 +264,7 @@ class OnboardingController extends RestController {
 				return new WP_Error( 'rest_invalid_param', __( 'Choose a currency from the list.', 'erp' ), [ 'status' => 400 ] );
 			}
 
-			$general['erp_currency'] = $currency;
-			$touched                 = true;
+			$general_update['erp_currency'] = $currency;
 		}
 
 		if ( array_key_exists( 'dateFormat', $data ) ) {
@@ -275,12 +274,19 @@ class OnboardingController extends RestController {
 				return new WP_Error( 'rest_invalid_param', __( 'Choose a date format from the list.', 'erp' ), [ 'status' => 400 ] );
 			}
 
-			$general['date_format'] = $format;
-			$touched                = true;
+			$general_update['date_format'] = $format;
 		}
 
-		if ( $touched ) {
-			update_option( 'erp_settings_general', $general );
+		if ( $company_update ) {
+			// Company::update() saves the whole option over its defaults, so merge
+			// with what is stored or the address, logo and phone are wiped.
+			$stored = get_option( \WeDevs\ERP\Company::key, [] );
+			( new \WeDevs\ERP\Company() )->update( array_merge( is_array( $stored ) ? $stored : [], $company_update ) );
+		}
+
+		if ( $general_update ) {
+			$general = get_option( 'erp_settings_general', [] );
+			update_option( 'erp_settings_general', array_merge( is_array( $general ) ? $general : [], $general_update ) );
 		}
 
 		// Appsero "Share Essentials". Only a changed (or first) answer is sent:
@@ -458,14 +464,34 @@ class OnboardingController extends RestController {
 	 *
 	 * @param WP_REST_Request $request Request.
 	 *
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
-	public function complete( $request ): WP_REST_Response {
+	public function complete( $request ) {
 		$selected = get_option( self::LEAVE_TYPES_OPTION, [] );
 		$f_year   = $this->current_financial_year_id();
+		$errors   = [];
 
+		// The Ready screen finishes setup on arrival and again from its button;
+		// only one request at a time may create policies, or both insert the same one.
 		if ( $f_year && is_array( $selected ) && ! empty( $selected ) ) {
-			$this->create_leave_policies( $f_year, $selected );
+			if ( ! $this->acquire_lock( self::COMPLETE_LOCK ) ) {
+				return new WP_Error( 'erp_onboarding_completing', __( 'Setup is already being finished. Give it a moment.', 'erp' ), [ 'status' => 409 ] );
+			}
+
+			try {
+				$this->create_leave_policies( $f_year, $selected, $errors );
+			} finally {
+				delete_option( self::COMPLETE_LOCK );
+			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			return new WP_Error(
+				'erp_onboarding_policies_failed',
+				/* translators: %s: list of leave types and errors. */
+				sprintf( __( 'Some leave policies could not be created: %s', 'erp' ), implode( '; ', $errors ) ),
+				[ 'status' => 500 ]
+			);
 		}
 
 		update_option( self::COMPLETED_OPTION, '1' );
@@ -494,11 +520,17 @@ class OnboardingController extends RestController {
 			return new WP_Error( 'erp_sample_data_exists', __( 'Sample data is already on this site.', 'erp' ), [ 'status' => 409 ] );
 		}
 
-		if ( get_transient( self::SAMPLE_DATA_LOCK ) ) {
+		if ( ! $this->acquire_lock( self::SAMPLE_DATA_LOCK ) ) {
 			return new WP_Error( 'erp_sample_data_running', __( 'Sample data is already being loaded. Give it a minute.', 'erp' ), [ 'status' => 409 ] );
 		}
 
-		set_transient( self::SAMPLE_DATA_LOCK, 1, 5 * MINUTE_IN_SECONDS );
+		// Checked again under the lock: a request that waited behind the first one
+		// must not load a second copy.
+		if ( $this->sample_user_ids( 1 ) ) {
+			delete_option( self::SAMPLE_DATA_LOCK );
+
+			return new WP_Error( 'erp_sample_data_exists', __( 'Sample data is already on this site.', 'erp' ), [ 'status' => 409 ] );
+		}
 
 		if ( function_exists( 'set_time_limit' ) ) {
 			// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- twenty account creations can pass a 30 second host default.
@@ -512,7 +544,11 @@ class OnboardingController extends RestController {
 			$result = $this->seed_sample_data();
 		} finally {
 			remove_filter( 'pre_wp_mail', '__return_false' );
-			delete_transient( self::SAMPLE_DATA_LOCK );
+			delete_option( self::SAMPLE_DATA_LOCK );
+		}
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
 
 		return rest_ensure_response( array_merge( [ 'success' => true ], $result ) );
@@ -820,8 +856,8 @@ class OnboardingController extends RestController {
 			[ 'id' => 'annual_leave', 'name' => __( 'Annual Leave', 'erp' ), 'days' => 20, 'color' => '#4CAF50', 'description' => __( 'Paid vacation days for personal time off', 'erp' ) ],
 			[ 'id' => 'sick_leave', 'name' => __( 'Sick Leave', 'erp' ), 'days' => 14, 'color' => '#F44336', 'description' => __( 'Leave for illness or medical appointments', 'erp' ) ],
 			[ 'id' => 'casual_leave', 'name' => __( 'Casual Leave', 'erp' ), 'days' => 10, 'color' => '#2196F3', 'description' => __( 'Short-notice leave for personal matters', 'erp' ) ],
-			[ 'id' => 'maternity_leave', 'name' => __( 'Maternity Leave', 'erp' ), 'days' => 90, 'color' => '#E91E63', 'description' => __( 'Leave for expecting mothers', 'erp' ) ],
-			[ 'id' => 'paternity_leave', 'name' => __( 'Paternity Leave', 'erp' ), 'days' => 10, 'color' => '#9C27B0', 'description' => __( 'Leave for new fathers', 'erp' ) ],
+			[ 'id' => 'maternity_leave', 'name' => __( 'Maternity Leave', 'erp' ), 'days' => 90, 'color' => '#E91E63', 'description' => __( 'Leave for expecting mothers', 'erp' ), 'gender' => 'female' ],
+			[ 'id' => 'paternity_leave', 'name' => __( 'Paternity Leave', 'erp' ), 'days' => 10, 'color' => '#9C27B0', 'description' => __( 'Leave for new fathers', 'erp' ), 'gender' => 'male' ],
 		];
 	}
 
@@ -851,12 +887,17 @@ class OnboardingController extends RestController {
 	 * Create a policy for each chosen leave type in the given leave year, skipping
 	 * types that already have one there.
 	 *
+	 * Scope values are the strings `'-1'` ("all"), exactly as the HR screens
+	 * save them: the employee-type column is an enum, so an integer -1 lands as
+	 * '' and the policy then matches nobody.
+	 *
 	 * @param int   $f_year   Leave year id.
 	 * @param array $selected Predefined slugs and `custom_<leave id>` values.
+	 * @param array $errors   Receives a message for every policy that could not be created.
 	 *
 	 * @return array<int, int> Leave id => policy id, for the policies now in that year.
 	 */
-	private function create_leave_policies( int $f_year, array $selected ): array {
+	private function create_leave_policies( int $f_year, array $selected, array &$errors = [] ): array {
 		global $wpdb;
 
 		$existing = [];
@@ -903,19 +944,24 @@ class OnboardingController extends RestController {
 				);
 			}
 
-			if ( is_wp_error( $leave_id ) || ! $leave_id || isset( $existing[ (int) $leave_id ] ) ) {
+			if ( is_wp_error( $leave_id ) || ! $leave_id ) {
+				$errors[] = is_wp_error( $leave_id ) ? $leave_id->get_error_message() : $type['name'];
+				continue;
+			}
+
+			if ( isset( $existing[ (int) $leave_id ] ) ) {
 				continue;
 			}
 
 			$policy_id = erp_hr_leave_insert_policy(
 				[
 					'leave_id'            => (int) $leave_id,
-					'employee_type'       => -1,
-					'department_id'       => -1,
-					'designation_id'      => -1,
-					'location_id'         => -1,
-					'gender'              => -1,
-					'marital'             => -1,
+					'employee_type'       => '-1',
+					'department_id'       => '-1',
+					'designation_id'      => '-1',
+					'location_id'         => '-1',
+					'gender'              => $type['gender'] ?? '-1',
+					'marital'             => '-1',
 					'f_year'              => $f_year,
 					'description'         => $type['description'],
 					'days'                => $type['days'],
@@ -925,9 +971,13 @@ class OnboardingController extends RestController {
 				]
 			);
 
-			if ( ! is_wp_error( $policy_id ) && $policy_id ) {
-				$existing[ (int) $leave_id ] = (int) $policy_id;
+			if ( is_wp_error( $policy_id ) || ! $policy_id ) {
+				/* translators: 1: leave type name, 2: error message. */
+				$errors[] = sprintf( __( '%1$s: %2$s', 'erp' ), $type['name'], is_wp_error( $policy_id ) ? $policy_id->get_error_message() : __( 'could not be created.', 'erp' ) );
+				continue;
 			}
+
+			$existing[ (int) $leave_id ] = (int) $policy_id;
 		}
 
 		return $existing;
@@ -936,9 +986,9 @@ class OnboardingController extends RestController {
 	/**
 	 * Seed the sample company.
 	 *
-	 * @return array Counts of what was created.
+	 * @return array|WP_Error Counts of what was created.
 	 */
-	private function seed_sample_data(): array {
+	private function seed_sample_data() {
 		global $wpdb;
 
 		// Org structure.
@@ -952,24 +1002,54 @@ class OnboardingController extends RestController {
 		$departments  = array_map( 'intval', wp_list_pluck( erp_hr_get_departments( [ 'number' => -1 ] ), 'id' ) );
 		$designations = array_map( 'intval', wp_list_pluck( erp_hr_get_designations( [ 'number' => -1 ] ), 'id' ) );
 
-		// A leave year covering today.
+		// A leave year covering today: the current one, or a new one that starts
+		// after every existing year (never overlapping) and ends on 31 December.
 		$f_year = $this->current_financial_year_id();
 		$year   = (int) wp_date( 'Y' );
 
 		if ( ! $f_year || ! $this->year_covers_today( $f_year ) ) {
-			$years   = erp_get_hr_financial_years();
+			$years = erp_get_hr_financial_years();
+			$start = $year . '-01-01';
+			$names = [];
+
+			foreach ( $years as $fy ) {
+				$names[] = (string) $fy['fy_name'];
+
+				if ( $fy['end_date'] >= $start ) {
+					$start = wp_date( 'Y-m-d', strtotime( $fy['end_date'] . ' +1 day' ) );
+				}
+			}
+
+			$end = $year . '-12-31';
+
+			if ( $start > wp_date( 'Y-m-d' ) || $start > $end ) {
+				return new WP_Error( 'erp_sample_data_leave_year', __( 'A leave year already covers dates after today, so no sample leave year could be added. Add a leave year that covers today and try again.', 'erp' ), [ 'status' => 409 ] );
+			}
+
+			$name = (string) $year;
+			for ( $n = 2; in_array( $name, $names, true ); $n++ ) {
+				$name = $year . ' (' . $n . ')';
+			}
+
 			$years[] = [
-				'fy_name'    => (string) $year,
-				'start_date' => $year . '-01-01',
-				'end_date'   => $year . '-12-31',
+				'fy_name'    => $name,
+				'start_date' => $start,
+				'end_date'   => $end,
 			];
 
-			erp_settings_save_leave_years( $years );
+			$saved = erp_settings_save_leave_years( $years );
+
+			if ( is_wp_error( $saved ) ) {
+				$saved->add_data( [ 'status' => 500 ] );
+				return $saved;
+			}
+
 			$f_year = $this->current_financial_year_id();
 		}
 
 		// Leave types and policies (all predefined types).
-		$policies = $f_year ? $this->create_leave_policies( $f_year, wp_list_pluck( $this->predefined_leave_types(), 'id' ) ) : [];
+		$policy_errors = [];
+		$policies      = $f_year ? $this->create_leave_policies( $f_year, wp_list_pluck( $this->predefined_leave_types(), 'id' ), $policy_errors ) : [];
 
 		// Holidays for this year.
 		$holidays = 0;
@@ -1269,6 +1349,44 @@ class OnboardingController extends RestController {
 
 	private function business_type_options(): array {
 		return $this->to_choices( $this->business_types() );
+	}
+
+	/**
+	 * Take a lock row atomically. `add_option()` is not atomic (it upserts), so
+	 * this inserts directly and only the request that inserted the row wins. A
+	 * lock older than five minutes is left over from a request that died, and is
+	 * taken over.
+	 *
+	 * @param string $name Option name used as the lock.
+	 *
+	 * @return bool Whether this request holds the lock.
+	 */
+	private function acquire_lock( string $name ): bool {
+		global $wpdb;
+
+		$insert = static function () use ( $wpdb, $name ) {
+			return 1 === (int) $wpdb->query(
+				$wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $name, (string) time() )
+			);
+		};
+
+		if ( $insert() ) {
+			wp_cache_delete( $name, 'options' );
+			return true;
+		}
+
+		$since = (int) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $name ) );
+
+		if ( $since && $since < time() - 5 * MINUTE_IN_SECONDS ) {
+			$wpdb->delete( $wpdb->options, [ 'option_name' => $name ] );
+
+			if ( $insert() ) {
+				wp_cache_delete( $name, 'options' );
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function is_ymd( string $value ): bool {

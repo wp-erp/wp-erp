@@ -116,16 +116,26 @@ export function OnboardingPage(): JSX.Element {
 	}, [ step.name ] );
 
 	// Finish setup the moment "You're All Set!" shows, so closing the tab on
-	// that screen still leaves the leave policies created. The server skips
-	// policies that already exist, so the button's own call is harmless.
-	const finished = useRef( false );
+	// that screen still leaves the leave policies created. The button reuses
+	// this same request rather than sending a second one alongside it.
+	const finishing = useRef< Promise< { redirect_url: string } > | null >( null );
+
+	function finish(): Promise< { redirect_url: string } > {
+		if ( ! finishing.current ) {
+			finishing.current = completeOnboarding().catch( ( raw ) => {
+				finishing.current = null;
+				throw raw;
+			} );
+		}
+
+		return finishing.current;
+	}
+
 	useEffect( () => {
-		if ( 'ready' !== step.id || finished.current ) {
+		if ( 'ready' !== step.id ) {
 			return;
 		}
-		finished.current = true;
-		completeOnboarding().catch( ( raw ) => {
-			finished.current = false;
+		finish().catch( ( raw ) => {
 			toast.error( ( raw as ApiError )?.message ?? __( 'Could not finish setup. Please try again.', 'erp' ) );
 		} );
 	}, [ step.id ] );
@@ -164,7 +174,7 @@ export function OnboardingPage(): JSX.Element {
 		setSaving( true );
 		setError( null );
 		try {
-			const { redirect_url: redirectUrl } = await completeOnboarding();
+			const { redirect_url: redirectUrl } = await finish();
 			// `redirect_url` carries the default hash route; a link in the final
 			// step swaps it to land on the screen it names.
 			window.location.href = target ? redirectUrl.replace( /#.*$/, '' ) + target : redirectUrl;
