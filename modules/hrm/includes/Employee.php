@@ -578,6 +578,16 @@ class Employee {
         $posted = erp_array_flatten( $posted );
         $posted = array_except( $posted, $restricted );
 
+        // Every posted key that is not a work field becomes user meta, so keep
+        // out the meta WordPress and WP ERP use internally. A self-service
+        // profile save could otherwise plant `erp_last_removed_role`, which a
+        // later restore hands back as a role, or overwrite capabilities.
+        $posted = array_filter( $posted, [ $this, 'is_writable_meta_key' ], ARRAY_FILTER_USE_KEY );
+
+        if ( ! empty( $data['additional'] ) && is_array( $data['additional'] ) ) {
+            $data['additional'] = array_filter( $data['additional'], [ $this, 'is_writable_meta_key' ], ARRAY_FILTER_USE_KEY );
+        }
+
         // An administrator's WordPress account (login email, website, name) is
         // not HR's to rewrite: the email is the password reset address. Their
         // HR record still updates.
@@ -2731,6 +2741,33 @@ class Employee {
         $restricted_data = [];
 
         return apply_filters( 'erp_hr_employee_restricted_data', $restricted_data, $this->user_id, $this );
+    }
+
+    /**
+     * Whether posted employee data may be stored under this user meta key.
+     *
+     * Refused: protected meta (leading underscore), keys under the table
+     * prefix (`{prefix}capabilities`, `{prefix}user_level`, per-site keys on
+     * multisite), and internal keys such as `erp_last_removed_role`.
+     *
+     * @since 1.18.0
+     *
+     * @param string|int $key Meta key.
+     *
+     * @return bool
+     */
+    public function is_writable_meta_key( $key ) {
+        global $wpdb;
+
+        $key = (string) $key;
+
+        if ( '' === $key || is_protected_meta( $key, 'user' ) || 0 === strpos( $key, $wpdb->base_prefix ) ) {
+            return false;
+        }
+
+        $blocked = apply_filters( 'erp_hr_employee_blocked_meta_keys', [ 'erp_last_removed_role', 'session_tokens' ] );
+
+        return ! in_array( $key, (array) $blocked, true );
     }
 
     /**

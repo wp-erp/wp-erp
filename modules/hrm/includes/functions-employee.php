@@ -324,7 +324,9 @@ function erp_employee_restore( $employee_ids, $restore_role_only = false ) {
             if ( ! empty( $wp_user ) ) {
                 $role = get_user_meta( $user_id, 'erp_last_removed_role', true );
 
-                if ( ! empty( $role ) ) {
+                // Removal only ever stores an HR role here. Anything else was
+                // not put there by WP ERP and is never handed out.
+                if ( ! empty( $role ) && is_string( $role ) && array_key_exists( $role, erp_hr_get_roles() ) ) {
                     $wp_user->add_role( $role );
                 }
 
@@ -435,7 +437,9 @@ function erp_employee_delete( $employee_ids, $force = false ) {
             if ( ! empty ( $current_role ) ) {
                 $wp_user->remove_role( $current_role );
 
-                add_user_meta( $employee_wp_user_id, 'erp_last_removed_role', $current_role );
+                // Replace, never append: restore reads the first row, so an
+                // older row would win over the role removed just now.
+                update_user_meta( $employee_wp_user_id, 'erp_last_removed_role', $current_role );
                 $user_default_role = get_option( 'default_role', 'subscriber' );
                 $wp_user->add_role( $user_default_role );
             }
