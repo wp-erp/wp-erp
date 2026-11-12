@@ -34,6 +34,8 @@ interface EmployeeImportUploadProps {
 	readonly onImport:    () => void;
 	/** Column-matching step, rendered below the dropzone once a file is parsed. */
 	readonly children?:   ReactNode;
+	/** Label of the cancel button (the setup wizard reads "Skip for Now"). */
+	readonly cancelLabel?: string;
 }
 
 export function EmployeeImportUpload( {
@@ -49,6 +51,7 @@ export function EmployeeImportUpload( {
 	onCancel,
 	onImport,
 	children,
+	cancelLabel,
 }: EmployeeImportUploadProps ): JSX.Element {
 	return (
 		<div className="space-y-4">
@@ -106,7 +109,7 @@ export function EmployeeImportUpload( {
 
 			<DialogFooter className="gap-5 sm:gap-5">
 				<Button type="button" variant="outline" className="h-10 px-6" disabled={ submitting } onClick={ onCancel }>
-					{ __( 'Cancel', 'erp' ) }
+					{ cancelLabel ?? __( 'Cancel', 'erp' ) }
 				</Button>
 				<Button type="button" className="h-10 gap-1.5 px-6" disabled={ ! canImport } onClick={ onImport }>
 					<Upload size={ 16 } aria-hidden="true" />

@@ -683,6 +683,42 @@ body:has(#erp-hr-app) {
 	}
 }
 
+/* Setup wizard (features/onboarding): the intro icon floats, the finish 🎉 pops. */
+.erp-float {
+	animation: erp-float 3s ease-in-out infinite;
+}
+@keyframes erp-float {
+	0%,
+	100% {
+		transform: translateY( 0 );
+	}
+	50% {
+		transform: translateY( -8px );
+	}
+}
+.erp-celebrate {
+	animation: erp-celebrate 0.5s ease;
+}
+@keyframes erp-celebrate {
+	0% {
+		opacity: 0;
+		transform: scale( 0 );
+	}
+	50% {
+		transform: scale( 1.2 );
+	}
+	100% {
+		opacity: 1;
+		transform: scale( 1 );
+	}
+}
+@media ( prefers-reduced-motion: reduce ) {
+	.erp-float,
+	.erp-celebrate {
+		animation: none;
+	}
+}
+
 /* Welcome screen (app/WelcomeScreen.tsx): fades in, the glows drift, it fades
  * and lifts away on close. */
 .erp-welcome {

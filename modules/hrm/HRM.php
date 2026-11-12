@@ -168,6 +168,7 @@ class HRM {
         // Registered here, not in Settings: the settings data request reads the
         // fields without constructing the HR Settings page.
         add_filter( 'default_option_erp_hr_ui_engine', [ Settings::class, 'default_ui_engine' ] );
+        add_filter( 'option_erp_hr_ui_engine', [ Settings::class, 'default_ui_engine' ] );
     }
 
     /**

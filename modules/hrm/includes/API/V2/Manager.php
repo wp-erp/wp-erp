@@ -66,6 +66,7 @@ class Manager {
 
 		$controllers = [
 			MeController::class,
+			OnboardingController::class,
 			EmployeesController::class,
 			EmployeeUserController::class,
 			EmployeeNotesController::class,

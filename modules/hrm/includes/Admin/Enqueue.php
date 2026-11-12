@@ -85,23 +85,19 @@ final class Enqueue {
 	}
 
 	/**
-	 * Enqueue the React bundle for the given HR admin page.
+	 * Register a built entry's script (after the shared vendor chunk), its
+	 * translations and its stylesheet, without enqueueing them.
 	 *
-	 * @param string $page_slug HR admin page slug (e.g. `erp-hr`).
+	 * @since 1.18.0
 	 *
-	 * @return bool True when a bundle was enqueued; false when the page is not
-	 *              wired or the build artifact is missing.
+	 * @param string $entry Bundle entry name (e.g. `employees`, `onboarding`).
+	 *
+	 * @return string Script handle; empty when the build is missing.
 	 */
-	public static function for_page( string $page_slug ): bool {
-		$entry = self::PAGE_ENTRIES[ $page_slug ] ?? null;
-		if ( ! $entry ) {
-			return false;
-		}
-
+	public static function register_entry( string $entry ): string {
 		$asset_path = WPERP_HRM_PATH . '/assets/dist-react/' . $entry . '.asset.php';
 		if ( ! file_exists( $asset_path ) ) {
-			self::warn_missing_build( $page_slug, $entry, $asset_path );
-			return false;
+			return '';
 		}
 
 		$asset = include $asset_path;
@@ -132,6 +128,51 @@ final class Enqueue {
 			true
 		);
 
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			$lang_dir = defined( 'WPERP_PATH' ) ? WPERP_PATH . '/i18n/languages' : '';
+			if ( $lang_dir ) {
+				wp_set_script_translations( $handle, 'erp', $lang_dir );
+			}
+		}
+
+		// CSS — emitted as `<entry>.css` when the entry imports CSS. wp-scripts
+		// also emits `<entry>-rtl.css`; `wp_style_add_data( …, 'rtl', 'replace' )`
+		// makes WordPress swap to it automatically on RTL locales.
+		if ( file_exists( WPERP_HRM_PATH . '/assets/dist-react/' . $entry . '.css' ) ) {
+			wp_register_style(
+				$handle,
+				WPERP_HRM_ASSETS . '/dist-react/' . $entry . '.css',
+				[],
+				$version
+			);
+			wp_style_add_data( $handle, 'rtl', 'replace' );
+		}
+
+		return $handle;
+	}
+
+	/**
+	 * Enqueue the React bundle for the given HR admin page.
+	 *
+	 * @param string $page_slug HR admin page slug (e.g. `erp-hr`).
+	 *
+	 * @return bool True when a bundle was enqueued; false when the page is not
+	 *              wired or the build artifact is missing.
+	 */
+	public static function for_page( string $page_slug ): bool {
+		$entry = self::PAGE_ENTRIES[ $page_slug ] ?? null;
+		if ( ! $entry ) {
+			return false;
+		}
+
+		$asset_path = WPERP_HRM_PATH . '/assets/dist-react/' . $entry . '.asset.php';
+		if ( ! file_exists( $asset_path ) ) {
+			self::warn_missing_build( $page_slug, $entry, $asset_path );
+			return false;
+		}
+
+		$handle = self::register_entry( $entry );
+
 		// Boot payload — emitted as `window.__ERP_HR_BOOT__ = {...};` BEFORE
 		// the bundle runs.
 		$payload = self::build_boot_payload( $page_slug );
@@ -143,25 +184,7 @@ final class Enqueue {
 
 		wp_enqueue_script( $handle );
 
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			$lang_dir = defined( 'WPERP_PATH' ) ? WPERP_PATH . '/i18n/languages' : '';
-			if ( $lang_dir ) {
-				wp_set_script_translations( $handle, 'erp', $lang_dir );
-			}
-		}
-
-		// CSS — emitted as `<entry>.css` when the entry imports CSS. wp-scripts
-		// also emits `<entry>-rtl.css`; `wp_style_add_data( …, 'rtl', 'replace' )`
-		// makes WordPress swap to it automatically on RTL locales.
-		$css_relative = '/assets/dist-react/' . $entry . '.css';
-		if ( file_exists( WPERP_HRM_PATH . $css_relative ) ) {
-			wp_register_style(
-				$handle,
-				WPERP_HRM_ASSETS . '/dist-react/' . $entry . '.css',
-				[],
-				$version
-			);
-			wp_style_add_data( $handle, 'rtl', 'replace' );
+		if ( wp_style_is( $handle, 'registered' ) ) {
 			wp_enqueue_style( $handle );
 		}
 
