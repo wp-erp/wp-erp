@@ -410,9 +410,11 @@ function DashboardInner(): JSX.Element {
 						{ /* Right rail (Figma): self-service My Attendance + Attendance
 						   Status, aligned to the top of the section. The last card
 						   stretches to the column's bottom, so a module switched off
-						   leaves no empty space beside the calendar. */ }
+						   leaves no empty space beside the calendar. A widget that has
+						   nothing to show marks its root `data-dash-empty`; when every
+						   widget does, the rail is hidden and the calendar takes the row. */ }
 						{ proSelfWidgets.length > 0 ? (
-							<div className="flex flex-col gap-6 xl:w-[300px] xl:shrink-0 [&>:last-child]:flex-1">
+							<div className="flex flex-col gap-6 xl:w-[300px] xl:shrink-0 [&>:last-child]:flex-1 [&:not(:has(>:not([data-dash-empty])))]:hidden">
 								{ proSelfWidgets.map( ( Widget, i ) => (
 									<Widget key={ `self-${ i }` } />
 								) ) }
