@@ -33,13 +33,13 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
     if ( false === $tax_rates ) {
         $limit = '';
 
-        if ( -1 !== $args['number'] ) {
-            $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
+        if ( -1 !== (int) $args['number'] ) {
+            $limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', $args['number'], $args['offset'] );
         }
 
         $sql  = 'SELECT';
         $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-        $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
+        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY " . erp_acct_sql_order_by( $args['orderby'], $args['order'], "{$wpdb->prefix}erp_acct_taxes" ) . " {$limit}";
 
         if ( $args['count'] ) {
             $tax_rates_count = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared

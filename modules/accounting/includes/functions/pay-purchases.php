@@ -27,13 +27,13 @@ function erp_acct_get_pay_purchases( $args = [] ) {
 
     $limit = '';
 
-    if ( -1 !== $args['number'] ) {
-        $limit = $wpdb->prepare( "LIMIT %d OFFSET %d", $args['number'], $args['offset'] );
+    if ( -1 !== (int) $args['number'] ) {
+        $limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', $args['number'], $args['offset'] );
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= $wpdb->prepare( "FROM {$wpdb->prefix}erp_acct_pay_purchase where %d=%d ORDER BY {$args['orderby']} {$args['order']} %s", 1, 1, $limit );
+    $sql .= "FROM {$wpdb->prefix}erp_acct_pay_purchase ORDER BY " . erp_acct_sql_order_by( $args['orderby'], $args['order'], "{$wpdb->prefix}erp_acct_pay_purchase" ) . " {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared

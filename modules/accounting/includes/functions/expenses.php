@@ -27,13 +27,13 @@ function erp_acct_get_expenses( $args = [] ) {
 
     $limit = '';
 
-    if ( '-1' === $args['number'] ) {
-        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
+    if ( -1 !== (int) $args['number'] ) {
+        $limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', $args['number'], $args['offset'] );
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= $wpdb->prepare("FROM {$wpdb->prefix}erp_acct_expenses WHERE `trn_by_ledger_id` IS NOT NULL ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
+    $sql .= "FROM {$wpdb->prefix}erp_acct_expenses WHERE `trn_by_ledger_id` IS NOT NULL ORDER BY " . erp_acct_sql_order_by( $args['orderby'], $args['order'], "{$wpdb->prefix}erp_acct_expenses" ) . " {$limit}";
 
     erp_disable_mysql_strict_mode();
     

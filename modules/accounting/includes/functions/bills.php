@@ -27,13 +27,13 @@ function erp_acct_get_bills( $args = [] ) {
 
     $limit = '';
 
-    if ( $args['number'] != '-1' ) {
-        $limit = $wpdb->prepare("LIMIT %d OFFSET %d", $args['number'], $args['offset']);
+    if ( -1 !== (int) $args['number'] ) {
+        $limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', $args['number'], $args['offset'] );
     }
 
     $sql  = 'SELECT';
     $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
-    $sql .= $wpdb->prepare("FROM {$wpdb->prefix}erp_acct_bills WHERE `trn_by_ledger_id` IS NULL ORDER BY %s %s %s", $args['orderby'], $args['order'], $limit);
+    $sql .= "FROM {$wpdb->prefix}erp_acct_bills ORDER BY " . erp_acct_sql_order_by( $args['orderby'], $args['order'], "{$wpdb->prefix}erp_acct_bills" ) . " {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -634,6 +634,8 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     $bill_act_details = "{$wpdb->prefix}erp_acct_bill_account_details";
     $items            = $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
 
+    $order_by = erp_acct_sql_order_by( $args['orderby'], $args['order'], $bills, 'id', 'bill' );
+
     $query = $wpdb->prepare(
         "SELECT $items FROM $bills as bill INNER JOIN (
             SELECT bill_no, ABS(SUM( ba.debit - ba.credit)) as due
@@ -641,10 +643,8 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
             GROUP BY ba.bill_no HAVING due > 0 ) as bs
             ON bill.voucher_no = bs.bill_no
             WHERE bill.vendor_id = %d AND bill.status != 1
-            ORDER BY %s %s $limit",
-        $args['people_id'],
-        $args['orderby'],
-        $args['order']
+            ORDER BY {$order_by} $limit",
+        $args['people_id']
     );
 
     if ( $args['count'] ) {

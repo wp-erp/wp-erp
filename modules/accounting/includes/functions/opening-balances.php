@@ -405,6 +405,10 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
 function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
     global $wpdb;
 
+    if ( empty( $fy_start_date ) ) {
+        return 0;
+    }
+
     // mainly ( debit - credit )
     return (float) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(balance) AS amount
     FROM ( SELECT SUM( debit - credit ) AS balance
@@ -422,6 +426,10 @@ function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
  */
 function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
     global $wpdb;
+
+    if ( empty( $fy_start_date ) ) {
+        return 0;
+    }
 
     /**
      *? Why only bills, not expense?
