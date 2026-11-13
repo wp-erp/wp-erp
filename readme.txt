@@ -5,7 +5,7 @@ Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.17.11
+Stable tag: 2.0.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -330,6 +330,53 @@ It may take longer to respond to more advanced or technical queries. We promise 
 Please report security bugs found in the source code of the WP ERP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb52d-9e2d-4917-82cf-95032b4443ce). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Changelog ==
+= v2.0.0 → Nov XX, 2026
+--------------------------
+* [Added] A new HR admin interface, now the default for every site. You can switch to the legacy screens from any HR page.
+* [Added] Redesigned HR Dashboard with attendance status, team calendar, who's out, birthdays, announcements and contracts about to end.
+* [Added] Redesigned Employees screen with table and grid views, a new employee profile, photo upload, CSV import, and Terminate and Print actions.
+* [Added] Redesigned Departments, Designations and Org Chart screens, with bulk delete.
+* [Added] Redesigned Leave Management: leave types, policies, holidays, entitlements, requests and the leave calendar, with bulk approve, reject and delete.
+* [Added] People > Requests: one tabbed screen for every request type, with a count on each tab.
+* [Added] Redesigned Announcements with scheduling and a read-only view.
+* [Added] Redesigned Reports, including Headcount, Years of Service, Salary History and leave reports.
+* [Added] Employee self-service in the new design: My Profile, Take a Leave, team leave calendar and Help.
+* [Added] HR Financial Years settings in the new interface.
+* [Added] Setup wizard rebuilt in the new design, with optional sample data and a getting-started checklist on the dashboard.
+* [Added] Global search, dark mode, mobile layouts, RTL support and localized date pickers across the HR screens.
+* [Added] Inline "Add new" on Location, Financial Year and Leave Policy fields, plus links to the setup screen when something must be created first.
+* [Added] Payroll, attendance, document and asset emails are now listed under Settings > Emails.
+* [Improved] HR screens are much faster on sites with hundreds of employees.
+* [Improved] Legacy HR admin pages no longer load every leave request on each page view.
+* [Improved] Each action is shown only to users who are allowed to perform it.
+* [Improved] All dates and times in the HR screens follow the site timezone.
+* [Improved] Setup wizard now defaults to USD and has Share Essentials enabled.
+* [Improved] A clear notice, instead of fatal errors, when WP ERP Pro is outdated or an upgrade is incomplete.
+* [Improved] Compatibility with PHP 7.4 through 8.5.
+* [Fixed] Dashboard and report figures (Present Today, Head Count, leave, Years of Service) did not match the data and counted trashed employees.
+* [Fixed] Leave balances counted future leave as taken, a request could be approved twice, and no warning was shown for unpaid leave.
+* [Fixed] Half-day leave could not be turned on or off in a leave policy.
+* [Fixed] Advanced Leave: forward amounts were unformatted, past-year requests got stuck, and a policy update reset carry-forward.
+* [Fixed] Leave calendars shaded the wrong weekend instead of the company work week, and the department filter did not narrow the list.
+* [Fixed] Calendar dates showed one day off when the browser and site timezones differ.
+* [Fixed] A future-dated termination took effect immediately.
+* [Fixed] Department leads could not open the leave requests screen to approve their team.
+* [Fixed] Employees could not edit their own profile when a required custom field was set.
+* [Fixed] The employee dashboard showed draft and trashed announcements, and "About to End" listed contracts that had already ended.
+* [Fixed] Employees without a first or last name were missing from employee pickers, and the country dropdown showed raw HTML entities.
+* [Fixed] Data updaters did not run on case-sensitive servers.
+* [Fixed] The HR menu highlighted the wrong submenu item, and redirect-only HR submenus caused a fatal error.
+* [Fixed] An invalid profile URL or phone number blocked converting a user to a contact or employee.
+* [Fixed] Radio option labels in erp_html_form_input() could not be clicked or styled.
+* [Fixed] Accounting list sorting and paging were ignored, and the purchases, pay purchases and bills REST lists failed.
+* [Fixed] CRM contact form integration settings did not load.
+* [Fixed] The welcome email was sent even when disabled in email settings.
+* [Fixed] Month names in date dropdowns were not translatable.
+* [Fixed] Spreadsheet formulas in CSV exports are now neutralised.
+* [Fixed] Access control in the HR employee, leave, dashboard and announcement REST endpoints, and in employee photo upload.
+* [Fixed] Access control for job info, pay and employment changes, privileged accounts, and employee bulk delete and restore.
+* [Changed] The legacy HR v1 REST API routes (erp/v1/hrm/...) moved to WP ERP Pro. Sites calling them without Pro should use the v2 HR endpoints.
+
 = v1.17.11 → Oct 23, 2026
 --------------------------
 * [Fixed] Any logged-in user could read the audit log change history; the viewer is now limited to administrators.
