@@ -77,10 +77,10 @@ class HRM {
             define( 'WPERP_HRM_VERSION', \defined( 'WPERP_VERSION' ) ? WPERP_VERSION : '1.0.0' );
         }
         // Minimum free HR version that ships the v2 REST + React admin contract.
-        // The React UI is introduced in 1.18.0; pro refuses to load its React
+        // The React UI is introduced in 2.0.0; pro refuses to load its React
         // bundles against an older free (see wp-erp-pro version guard).
         if ( ! \defined( 'WPERP_HRM_MIN_VERSION' ) ) {
-            define( 'WPERP_HRM_MIN_VERSION', '1.18.0' );
+            define( 'WPERP_HRM_MIN_VERSION', '2.0.0' );
         }
         // Minimum WP ERP Pro version that registers the HR v1 REST routes, which
         // moved out of free. Older Pro keeps loading; only its REST features stop.
