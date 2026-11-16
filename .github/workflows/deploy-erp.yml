@@ -149,7 +149,7 @@ jobs:
         if: github.event_name == 'push' && github.repository == 'wp-erp/wp-erp'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
-          dry-run: false
+          dry-run: true
         env:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
