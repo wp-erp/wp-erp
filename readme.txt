@@ -330,7 +330,7 @@ It may take longer to respond to more advanced or technical queries. We promise 
 Please report security bugs found in the source code of the WP ERP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb52d-9e2d-4917-82cf-95032b4443ce). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Changelog ==
-= v2.0.0 → Nov XX, 2026
+= v2.0.0 → Nov 16, 2026
 --------------------------
 * [Added] A new HR admin interface, now the default for every site. You can switch to the legacy screens from any HR page.
 * [Added] Redesigned HR Dashboard with attendance status, team calendar, who's out, birthdays, announcements and contracts about to end.
