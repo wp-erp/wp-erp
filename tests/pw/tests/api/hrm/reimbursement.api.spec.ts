@@ -15,12 +15,10 @@ import { restUrl, BASE_URL } from '@utils/helpers';
  *   modules/hrm/reimbursement/Module.php  (table schemas)
  *
  * RESILIENCE (grounded 500 risk — tolerated, never asserted as an exact 500):
- *  (A) create_employee_reimb_request forwards $data['line_items'] into a foreach
- *      (employee-requests.php:117,195). PROBED: omitting line_items does NOT fatal —
- *      in PHP 8 a `foreach` over the missing (null) key is only a WARNING, so the
- *      create is SILENTLY ACCEPTED as a clean 201 (a data-integrity bug, documented in
- *      REIMB-EC-01 + bug-reports/BUGS.md). Happy-path create payloads still carry a
- *      non-empty line_items array so detail rows are actually written.
+ *  (A) The controller validates line_items before saving: a create without line items
+ *      is rejected with 400 rest_reimb_invalid_line_items and no row is written
+ *      (REIMB-EC-01). Happy-path create payloads carry a non-empty line_items array so
+ *      detail rows are actually written.
  *  (B) erp_acct_reimb_insert_request resolves people_id from
  *      erp_get_people_by('user_id', get_current_user_id())->id (lines 86-90). If the
  *      acting admin has no erp_peoples row, $people is false => null-property access
@@ -263,37 +261,16 @@ test.describe('Reimbursement REST — employee requests (admin)', () => {
         expect(Number(detail[0]?.c ?? 0), 'detail rows replaced with the updated line items').toBe(1);
     });
 
-    test('REIMB-EC-01 create WITHOUT line_items — KNOWN BUG: silently accepted as a clean 201', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
-        // KNOWN BUG (data-integrity defect) — see bug-reports/BUGS.md.
-        // PROBED REALITY: omitting line_items does NOT fatal and is NOT rejected. The
-        // controller has no required-field / emptiness guard. prepare_item_for_database
-        // only copies line_items when isset(), so $request_data['line_items'] is absent;
-        // erp_acct_insert_request_details_data then foreach()es over the missing key
-        // ($data['line_items'] === null). In PHP 8 a `foreach` over null is only a
-        // WARNING (not a TypeError) and WP_DEBUG is off, so execution continues:
-        //   1. erp_acct_reimb_insert_request() STILL inserts a reimburse_requests row
-        //      (with zero detail rows), and
-        //   2. create_employee_reimb_request() then hard-sets set_status(201) and builds
-        //      the body from $request_data (the INPUT array, not the persisted row), so
-        //      the response echoes id:null / people_id:null / line_items:[] but is a 201.
-        // => an item-less reimbursement request is SILENTLY ACCEPTED as a clean 201
-        //    instead of being rejected with a 4xx validation error. Reframed to DOCUMENT
-        //    the observed 201 so the suite stays green and the defect stays visible.
+    test('REIMB-EC-01 create WITHOUT line_items → 400, nothing saved', { tag: ['@pro', '@hrm', '@admin'] }, async () => {
+        // EmployeeRequestsController validates line_items before any insert: an empty or
+        // missing list is rejected with 400 rest_reimb_invalid_line_items. (Before that
+        // guard, the request was accepted as a 201 and an item-less row was persisted.)
         const noItems = reimbPayload();
         delete (noItems as Record<string, unknown>).line_items;
 
         const [resp, body] = await api.post(EMP_REQUESTS, { data: noItems }, false);
-        expect(
-            resp.status(),
-            'missing line_items is currently accepted as a clean 201 — KNOWN BUG, see bug-reports/BUGS.md',
-        ).toBe(201);
-        // The body is built off the INPUT, so id comes back null while the DB row is
-        // still inserted under the unique reference; harvest it (and any detail rows)
-        // by reference for teardown so the junk row is cleaned up.
-        expect(body, 'a body is returned for the (wrongly) accepted create').toBeTruthy();
-        const obj = (body ?? {}) as Record<string, unknown>;
-        // Documented defect: the echoed id is null (prepare runs off the input array).
-        expect(obj.id ?? null, 'the wrongly-accepted 201 echoes a null id (response built off input)').toBeNull();
+        expect(resp.status(), 'missing line_items is rejected').toBe(400);
+        expect((body as { code?: string } | null)?.code, 'validation error code').toBe('rest_reimb_invalid_line_items');
 
         const ref = String((noItems as { reference?: string }).reference ?? '');
         if (ref) {
@@ -301,8 +278,9 @@ test.describe('Reimbursement REST — employee requests (admin)', () => {
                 `SELECT id FROM ${REIMB_REQUESTS} WHERE reference = ?`,
                 [ref],
             );
-            // Defect confirmed at the DB layer too: a junk request row was persisted.
+            // Clean up anyway if a row slipped through, then assert none did.
             for (const r of leaked) createdRequestIds.push(Number(r.id));
+            expect(leaked.length, 'no request row is written for a rejected create').toBe(0);
         }
     });
 
