@@ -298,7 +298,7 @@ function DashboardInner(): JSX.Element {
 							  )
 							: greeting() }
 						<span
-							className="ml-1.5 inline-block"
+							className="wp-exclude-emoji ml-1.5 inline-block"
 							aria-hidden="true"
 						>
 							👋

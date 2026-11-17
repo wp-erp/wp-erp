@@ -35,7 +35,7 @@ export function ReadyStep( { saving, onComplete }: StepProps ): JSX.Element {
 				{ /* The burst starts at the 🎉, so it is centred on this card. */ }
 				<div className="relative mb-6 flex justify-center">
 					<Confetti />
-					<span className="erp-celebrate text-[64px] leading-none" role="img" aria-label={ __( 'Celebration', 'erp' ) }>
+					<span className="wp-exclude-emoji erp-celebrate text-[64px] leading-none" role="img" aria-label={ __( 'Celebration', 'erp' ) }>
 						🎉
 					</span>
 				</div>
