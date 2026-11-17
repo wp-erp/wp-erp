@@ -171,7 +171,7 @@ export function ProUpsellProvider( { children }: { children: ReactNode } ): JSX.
 								<span className="text-[#f7941d]">{ __( 'Upgrade to', 'erp' ) }</span>{ ' ' }
 								{ __( 'WP ERP', 'erp' ) } <strong>{ __( 'Pro', 'erp' ) }</strong>
 							</h2>
-							<p className="mb-6 mt-2 text-base text-muted-foreground">
+							<p className="wp-exclude-emoji mb-6 mt-2 text-base text-muted-foreground">
 								{ __( 'to experience even more powerful features 🎉', 'erp' ) }
 							</p>
 
