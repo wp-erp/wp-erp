@@ -451,9 +451,10 @@ class Employee {
                 return new WP_Error( 'cannot-create-employee', __( 'Cannot create an employee. Please check all the fields and try again.', 'erp' ) );
             }
         } elseif ( ! in_array( erp_hr_get_employee_role(), (array) $wp_user->roles ) ) {
-            // set_role() replaces every role: never turn an administrator into
-            // a plain employee on an HR manager's say.
-            if ( is_user_logged_in() && erp_hr_is_account_above_current_user( $wp_user->ID ) ) {
+            // set_role() replaces every role, so only for an account the caller
+            // has the say over: never an administrator, an editor or another
+            // manager whose capabilities an HR manager does not hold.
+            if ( is_user_logged_in() && ! erp_hr_can_manage_wp_account( $wp_user->ID ) ) {
                 return new WP_Error( 'cannot-manage-account', __( 'You are not allowed to make this user an employee.', 'erp' ) );
             }
 
