@@ -1275,6 +1275,11 @@ class AjaxHandler {
 		$total_no    = isset( $_POST['total_no'] ) ? intval( $_POST['total_no'] ) : 0;
 		$offset_no   = isset( $_POST['offset_no'] ) ? intval( $_POST['offset_no'] ) : 0;
 
+		// The HR nonce is given to every employee, so check the requested record too (self or HR manager)
+		if ( ! current_user_can( 'erp_view_employee', $employee_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$employee = new Employee( $employee_id );
 
 		$notes = $employee->get_notes( $total_no, $offset_no );
