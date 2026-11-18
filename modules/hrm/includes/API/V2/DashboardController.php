@@ -557,9 +557,10 @@ class DashboardController extends RestController {
 			return '';
 		}
 
-		$content = wp_strip_all_tags( (string) get_post_field( 'post_content', $post_id ) );
+		// Shared excerpt: keeps "&", "<" and ">" as written (wp_strip_all_tags left "&amp;").
+		$excerpt = AnnouncementsController::build_excerpt( (string) get_post_field( 'post_content', $post_id ), 14 );
 
-		return $this->cast_string_or_null( wp_trim_words( $content, 14, '…' ) ) ?? '';
+		return $this->cast_string_or_null( $excerpt ) ?? '';
 	}
 
 	/**

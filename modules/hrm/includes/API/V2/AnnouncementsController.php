@@ -293,7 +293,7 @@ class AnnouncementsController extends RestController {
 			$items[] = [
 				'id'           => (int) $row->ID,
 				'title'        => $this->cast_string_or_null( $row->post_title ) ?? __( '(no title)', 'erp' ),
-				'excerpt'      => $this->build_excerpt( (string) $row->post_content ),
+				'excerpt'      => self::build_excerpt( (string) $row->post_content ),
 				'html_content' => (string) wp_kses_post( wpautop( (string) $row->post_content ) ),
 				'author'       => (string) get_the_author_meta( 'display_name', (int) $row->post_author ),
 				'date'         => $this->cast_date_iso( $row->post_date ),
@@ -893,7 +893,7 @@ class AnnouncementsController extends RestController {
 		return [
 			'id'                  => (int) $post->ID,
 			'title'               => (string) get_the_title( $post ),
-			'excerpt'             => $this->build_excerpt( (string) $post->post_content ),
+			'excerpt'             => self::build_excerpt( (string) $post->post_content ),
 			'status'              => (string) $post->post_status,
 			'date'                => $this->cast_date_iso( $post->post_date ),
 			'author'              => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
@@ -1028,21 +1028,23 @@ class AnnouncementsController extends RestController {
 	 * The body is rich text, so two things bite a naive strip: tags removed with
 	 * no separator run the surrounding words together (`ITALICWORDhttps://…`),
 	 * and stripped entities survive as literal `&nbsp;` / `&amp;`. Replace tags
-	 * with a space, decode, collapse the whitespace that leaves, then trim.
+	 * with a space, collapse the whitespace that leaves, trim the words, then
+	 * decode. Decoding comes last: `wp_trim_words()` strips tags, so a decoded
+	 * "<4 slots left>" would vanish. Shared with the dashboard's announcement card.
 	 *
 	 * The client renders this as a plain string, not HTML, so there is no sink
 	 * to escape for here.
 	 *
 	 * @param string $content Raw post content.
+	 * @param int    $words   Words to keep.
 	 *
 	 * @return string
 	 */
-	private function build_excerpt( string $content ): string {
+	public static function build_excerpt( string $content, int $words = 30 ): string {
 		$text = preg_replace( '/<[^>]+>/', ' ', $content );
-		$text = html_entity_decode( (string) $text, ENT_QUOTES, get_bloginfo( 'charset' ) );
-		$text = trim( (string) preg_replace( '/\s+/u', ' ', $text ) );
+		$text = trim( (string) preg_replace( '/\s+/u', ' ', (string) $text ) );
 
-		return wp_trim_words( $text, 30 );
+		return html_entity_decode( wp_trim_words( $text, $words ), ENT_QUOTES, get_bloginfo( 'charset' ) );
 	}
 
 }
