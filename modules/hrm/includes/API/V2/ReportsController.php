@@ -333,14 +333,15 @@ class ReportsController extends RestController {
 
 		// Employed on the "as of" day (today, or the last day of a past year): hired
 		// by then and not yet gone. A future hire is not counted yet, and someone
-		// leaving later in the year still is. A trashed employee keeps
-		// `status = 'active'`; only `deleted_at` marks them.
+		// leaving later in the year still is. No hire date ('0000-00-00' or NULL)
+		// counts as hired, as Total Employees counts every active employee. A
+		// trashed employee keeps `status = 'active'`; only `deleted_at` marks them.
 		$as_of = ( $query_year && $query_year < (int) current_time( 'Y' ) ) ? $query_year . '-12-31' : current_time( 'Y-m-d' );
 
 		$user_all = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT user_id, department FROM {$wpdb->prefix}erp_hr_employees
-				WHERE deleted_at IS NULL AND hiring_date <> '0000-00-00' AND hiring_date <= %s
+				WHERE deleted_at IS NULL AND ( hiring_date IS NULL OR hiring_date <= %s )
 				AND ( status = 'active' OR ( termination_date IS NOT NULL AND termination_date <> '0000-00-00' AND termination_date >= %s ) )",
 				$as_of,
 				$as_of
@@ -497,7 +498,7 @@ class ReportsController extends RestController {
 			(array) $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT user_id FROM {$wpdb->prefix}erp_hr_employees
-					WHERE deleted_at IS NULL AND hiring_date <> '0000-00-00' AND hiring_date <= %s
+					WHERE deleted_at IS NULL AND ( hiring_date IS NULL OR hiring_date <= %s )
 					AND ( status = 'active' OR ( termination_date IS NOT NULL AND termination_date <> '0000-00-00' AND termination_date >= %s ) )",
 					$as_of,
 					$as_of
@@ -513,7 +514,13 @@ class ReportsController extends RestController {
 			}
 
 			$employee = $people[ $user_id ];
-			$date     = date_parse_from_format( 'Y-m-d', $employee['hiring_date'] ?? '' );
+
+			// No hire date, no anniversary: '0000-00-00' would parse as year 0.
+			if ( empty( $employee['hiring_date'] ) || '0000-00-00' === $employee['hiring_date'] ) {
+				continue;
+			}
+
+			$date     = date_parse_from_format( 'Y-m-d', $employee['hiring_date'] );
 			$month    = (int) $date['month'];
 			$day      = (int) $date['day'];
 
