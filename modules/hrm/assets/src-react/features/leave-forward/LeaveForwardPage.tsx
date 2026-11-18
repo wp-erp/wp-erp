@@ -199,7 +199,7 @@ function LeaveForwardInner(): JSX.Element {
 					<div role="tablist" aria-label={ __( 'Forward Leaves', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ pending ? __( 'Pending', 'erp' ) : __( 'Applied', 'erp' ) }</span>
-							<span className="font-normal text-[#a5a5aa]">({ pending ? rows.length : total })</span>
+							<span className="font-normal text-muted-foreground">({ pending ? rows.length : total })</span>
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>
@@ -322,7 +322,7 @@ export function LeaveForwardPage(): JSX.Element {
 }
 
 function Th( { children, className = 'whitespace-nowrap px-2' }: { children: ReactNode; className?: string } ): JSX.Element {
-	return <th scope="col" className={ `${ className } text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]` }>{ children }</th>;
+	return <th scope="col" className={ `${ className } text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground` }>{ children }</th>;
 }
 
 /** Trigger a client-side CSV download. */

@@ -60,8 +60,8 @@ export function HolidaysTable( {
 					) : null }
 					<SortHeader< SortColumn > label={ __( 'Title', 'erp' ) } sortKey="title" orderBy={ orderby } order={ order } onSort={ onSort } ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Title', 'erp' ) ) } first />
 					<SortHeader< SortColumn > label={ __( 'Date', 'erp' ) } sortKey="start" orderBy={ orderby } order={ order } onSort={ onSort } ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Date', 'erp' ) ) } first={ false } />
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Duration', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Description', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Duration', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Description', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

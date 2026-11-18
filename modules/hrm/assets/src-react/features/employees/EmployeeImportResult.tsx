@@ -46,9 +46,9 @@ export function EmployeeImportResult( { result, onReset, onClose, closeLabel }: 
 					<table className="w-full min-w-88 text-left text-sm">
 						<thead className="border-b border-border bg-card">
 							<tr className="h-10">
-								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Row', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Email', 'erp' ) }</th>
-								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Error', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Row', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Email', 'erp' ) }</th>
+								<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Error', 'erp' ) }</th>
 							</tr>
 						</thead>
 						<tbody>

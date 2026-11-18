@@ -975,7 +975,7 @@ body:has(#erp-hr-app) {
 	border-radius: 6px !important;
 }
 
-/* Table header titles are not bold — let the th/tr spec (font-normal #828282) win over the UA th{font-weight:bold} default. */
+/* Table header titles are not bold: let the th/tr spec (font-normal text-muted-foreground) win over the UA th{font-weight:bold} default. */
 #erp-hr-app thead th { font-weight: inherit; }
 
 /* ─── Card/section + page titles → #25252D ───
@@ -991,23 +991,25 @@ body:has(#erp-hr-app) {
 	color: #25252D !important;
 }
 
-/* ─── Input placeholder text → #A5A5AA ───
+/* ─── Input placeholder text → muted foreground ───
  * All field placeholders (input/textarea/search, incl. portaled dialogs).
- * Id-scoped + !important + opacity:1 to beat utilities layer + UA dimming. */
+ * Id-scoped + !important + opacity:1 to beat utilities layer + UA dimming.
+ * The muted token, not a fixed grey: the old #A5A5AA was 2.45:1 on white
+ * (WCAG AA needs 4.5:1), and the token follows light and dark. */
 #erp-hr-app ::placeholder,
 #erp-hr-app ::-webkit-input-placeholder,
 .pui-root ::placeholder,
 .pui-root ::-webkit-input-placeholder {
-	color: #A5A5AA !important;
+	color: var( --muted-foreground ) !important;
 	opacity: 1 !important;
 }
 
-/* ─── Select / SmartSelect / Combobox placeholder → #A5A5AA ───
+/* ─── Select / SmartSelect / Combobox placeholder → muted foreground ───
  * DS selects show their placeholder via a [data-placeholder] element (styled
  * `text-muted-foreground`), not a native ::placeholder — cover it too. */
 #erp-hr-app [data-placeholder]:not( [contenteditable] ),
 .pui-root [data-placeholder]:not( [contenteditable] ) {
-	color: #A5A5AA !important;
+	color: var( --muted-foreground ) !important;
 }
 
 /* ─── Rich text editor: the text is foreground, only its empty state muted ───
@@ -1029,7 +1031,7 @@ body:has(#erp-hr-app) {
 }
 
 :is( .pui-root, #erp-hr-app ) [contenteditable][data-placeholder]:empty::before {
-	color: #A5A5AA;
+	color: var( --muted-foreground );
 }
 
 /* ─── No compact buttons — every button ≥ 40px ───

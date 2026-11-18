@@ -90,9 +90,9 @@ export function GenderProfilePage(): JSX.Element {
 						<table className="w-full min-w-160 text-left">
 					<thead className="border-b border-border bg-card">
 						<tr className="h-10">
-							<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Gender', 'erp' ) }</th>
-							<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Count', 'erp' ) }</th>
-							<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Percentage', 'erp' ) }</th>
+							<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Gender', 'erp' ) }</th>
+							<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Count', 'erp' ) }</th>
+							<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Percentage', 'erp' ) }</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -140,10 +140,10 @@ export function GenderProfilePage(): JSX.Element {
 							<table className="w-full min-w-160 text-left">
 								<thead className="border-b border-border bg-card">
 									<tr className="h-10">
-										<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Department', 'erp' ) }</th>
-										<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Male', 'erp' ) }</th>
-										<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Female', 'erp' ) }</th>
-										<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Unspecified', 'erp' ) }</th>
+										<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Department', 'erp' ) }</th>
+										<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Male', 'erp' ) }</th>
+										<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Female', 'erp' ) }</th>
+										<th scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Unspecified', 'erp' ) }</th>
 									</tr>
 								</thead>
 								<tbody>

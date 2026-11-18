@@ -22,7 +22,7 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import type { ComponentProps, JSX } from 'react';
 
-const THCLS_TEXT = 'text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]';
+const THCLS_TEXT = 'text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground';
 
 /** Default scheme: the padding is resolved in CSS from the cell's position. */
 const THCLS_AUTO = `whitespace-nowrap px-2 first:pl-4 last:pr-4 ${ THCLS_TEXT }`;

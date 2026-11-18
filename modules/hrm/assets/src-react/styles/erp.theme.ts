@@ -29,7 +29,8 @@ export const erpLightTokens: ThemeTokens = {
 	secondaryForeground: '#25262B',
 
 	muted:               'oklch(0.9700 0 0)',
-	mutedForeground:     'oklch(0.5560 0 0)',
+	// 0.52 (#696969): 4.8:1 on the WP admin grey #f0f0f1, 5.5:1 on white (WCAG AA).
+	mutedForeground:     'oklch(0.5200 0 0)',
 
 	accent:              'oklch(0.9550 0.0260 263.0900)',
 	accentForeground:    'oklch(0.6230 0.2140 263.0900)',

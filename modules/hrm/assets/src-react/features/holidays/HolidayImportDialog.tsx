@@ -213,9 +213,9 @@ export function HolidayImportDialog( {
 							<thead className="sticky top-0 border-b border-border bg-card">
 								<tr className="h-10">
 									<th scope="col" className="w-10 px-4" />
-									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Title', 'erp' ) }</th>
-									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Start', 'erp' ) }</th>
-									<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'End', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Title', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Start', 'erp' ) }</th>
+									<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'End', 'erp' ) }</th>
 								</tr>
 							</thead>
 							<tbody>

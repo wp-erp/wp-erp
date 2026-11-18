@@ -65,12 +65,12 @@ export function LeaveEntitlementsTable( {
 							<Checkbox checked={ allOnPageSelected } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
 						</th>
 					) : null }
-					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Employee', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Policy', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Days', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Validity', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Available', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Spent', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Employee', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Policy', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Days', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Validity', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Available', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Spent', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

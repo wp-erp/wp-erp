@@ -101,7 +101,7 @@ export function CalendarGrid( { weeks, byDay, thisMonth, todayKey, loading, dimO
 			{ /* Weekday header */ }
 			<div className="grid grid-cols-7 border-b border-border">
 				{ WEEKDAYS.map( ( wd ) => (
-					<div key={ wd } className="px-2 py-2 text-center text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+					<div key={ wd } className="px-2 py-2 text-center text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
 						{ wd }
 					</div>
 				) ) }

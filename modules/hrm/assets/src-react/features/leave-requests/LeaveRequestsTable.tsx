@@ -156,7 +156,7 @@ export function LeaveRequestsTable( {
 							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Employee', 'erp' ) ) }
 							first
 						/>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
 							{ __( 'Leave Type', 'erp' ) }
 						</th>
 						<SortHeader
@@ -188,7 +188,7 @@ export function LeaveRequestsTable( {
 						/>
 						{ /* Not sortable: the balance is computed per row, and the server's
 						   "available" order is by entitlement id, not by the number shown. */ }
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
 							{ __( 'Available', 'erp' ) }
 						</th>
 						<SortHeader
@@ -200,13 +200,13 @@ export function LeaveRequestsTable( {
 							ariaLabel={ sprintf( __( 'Sort by %s', 'erp' ), __( 'Status', 'erp' ) ) }
 							first={ false }
 						/>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
 							{ __( 'Reason', 'erp' ) }
 						</th>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
 							{ approverHeader }
 						</th>
-						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+						<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
 							{ __( 'Docs', 'erp' ) }
 						</th>
 						<th scope="col" className="w-24 px-4">

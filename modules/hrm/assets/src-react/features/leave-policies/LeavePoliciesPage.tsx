@@ -236,7 +236,7 @@ function LeavePoliciesInner(): JSX.Element {
 					<div role="tablist" aria-label={ __( 'Leave Policies', 'erp' ) } className="-mb-2 flex max-w-full items-stretch overflow-x-auto pb-2">
 						<span role="tab" aria-selected="true" className="relative inline-flex h-11 items-center gap-1.5 px-4 text-sm font-medium text-primary">
 							<span>{ __( 'All', 'erp' ) }</span>
-							<span className="font-normal text-[#a5a5aa]">({ total })</span>
+							<span className="font-normal text-muted-foreground">({ total })</span>
 							<span aria-hidden="true" className="absolute inset-x-0 -bottom-2 h-0.5 bg-primary" />
 						</span>
 					</div>
