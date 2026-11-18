@@ -117,10 +117,11 @@ jobs:
           BASE_REF: origin/${{ github.base_ref }}
         run: |
           # Plugin Check exits non-zero when it finds anything; the report decides.
+          # .github and tests are not part of the released plugin (.distignore).
           wp-env run cli wp plugin check erp \
             --slug=erp \
             --format=json \
-            --exclude-directories=vendor,tests,node_modules \
+            --exclude-directories=.github,vendor,tests,node_modules \
             --exclude-files=.wp-env.json \
             --require=./wp-content/plugins/plugin-check/cli.php \
             > "$RUNNER_TEMP/plugin-check.txt" || true
