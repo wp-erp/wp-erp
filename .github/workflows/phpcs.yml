@@ -1,39 +1,134 @@
+name: Code checks
+
 on: pull_request
 
-name: Inspections
+concurrency:
+  group: code-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# Both jobs report only what the pull request introduces: a finding counts when
+# it sits on a line the pull request adds or changes. See
+# .github/scripts/changed-lines-report.php.
 jobs:
-  runPHPCSInspection:
-    name: Run PHPCS inspection
+  phpcs:
+    name: PHPCS (security, PHP compatibility)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.3"
+          php-version: "8.2"
           coverage: none
-          tools: composer, cs2pr
+          tools: composer
 
       - name: Get Composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
-      - name: Setup cache
-        uses: pat-s/always-upload-cache@v1.1.4
+      - name: Cache Composer packages
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-suggest --no-progress
+        run: composer install --prefer-dist --no-progress --no-interaction
 
-      - id: changes
+      - name: Run PHPCS on the changed files
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
         run: |
-          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          FILES=$(curl -s -X GET -G $URL | jq -r '.[] | .filename' | xargs)
-          echo "::set-output name=files::$FILES"
+          mapfile -t FILES < <(git diff --name-only --diff-filter=AM "$BASE_REF"...HEAD -- '*.php')
 
-      - name: Detect coding standard violations
-        run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | vendor/bin/cs2pr --graceful-warnings
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo "No PHP file changed."
+            exit 0
+          fi
+
+          # PHPCS exits non-zero when it finds anything; the report decides.
+          vendor/bin/phpcs -q --no-colors --report=json --report-file="$RUNNER_TEMP/phpcs.json" "${FILES[@]}" || true
+
+          php .github/scripts/changed-lines-report.php phpcs "$RUNNER_TEMP/phpcs.json" "$BASE_REF"
+
+  plugin-check:
+    name: Plugin Check (WordPress.org)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Look for changed PHP files
+        id: changes
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: |
+          if [ -n "$(git diff --name-only --diff-filter=AM "$BASE_REF"...HEAD -- '*.php' 'readme.txt')" ]; then
+            echo "php=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No PHP file changed."
+            echo "php=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup PHP
+        if: steps.changes.outputs.php == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer
+
+      - name: Install runtime dependencies
+        if: steps.changes.outputs.php == 'true'
+        run: composer install --no-dev --prefer-dist --no-progress --no-interaction
+
+      - name: Setup Node
+        if: steps.changes.outputs.php == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Start WordPress
+        if: steps.changes.outputs.php == 'true'
+        run: |
+          # The plugin's WordPress.org slug is `erp`: mounted under any other
+          # folder name, every string fails the text domain check.
+          echo '{ "core": null, "plugins": [], "mappings": { "wp-content/plugins/erp": "." }, "port": 8880, "testsPort": 8881 }' > .wp-env.json
+
+          npm -g --no-fund --no-audit install @wordpress/env
+          wp-env start --update || wp-env start --update
+          wp-env run cli wp plugin install plugin-check --activate
+
+      - name: Run Plugin Check
+        if: steps.changes.outputs.php == 'true'
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: |
+          # Plugin Check exits non-zero when it finds anything; the report decides.
+          wp-env run cli wp plugin check erp \
+            --slug=erp \
+            --format=json \
+            --exclude-directories=vendor,tests,node_modules \
+            --exclude-files=.wp-env.json \
+            --require=./wp-content/plugins/plugin-check/cli.php \
+            > "$RUNNER_TEMP/plugin-check.txt" || true
+
+          if ! grep -q '^FILE: ' "$RUNNER_TEMP/plugin-check.txt"; then
+            echo "::error::Plugin Check returned no results."
+            cat "$RUNNER_TEMP/plugin-check.txt"
+            exit 1
+          fi
+
+          php .github/scripts/changed-lines-report.php plugin-check "$RUNNER_TEMP/plugin-check.txt" "$BASE_REF"
