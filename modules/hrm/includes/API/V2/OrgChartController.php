@@ -154,6 +154,13 @@ class OrgChartController extends RestController {
 	private $people = [];
 
 	/**
+	 * User ids already drawn in the team being built, as keys.
+	 *
+	 * @var array
+	 */
+	private $placed = [];
+
+	/**
 	 * Load every active employee and the display data of each possible node in
 	 * a fixed number of queries, instead of one `Employee` object and one
 	 * children query per node.
@@ -238,7 +245,12 @@ class OrgChartController extends RestController {
 			$data['email']  = current_user_can( erp_hr_get_manager_role() ) ? $manager['email'] : '';
 		}
 
-		$path[ $emp_id ] = true;
+		if ( 1 === $depth ) {
+			$this->placed = [];
+		}
+
+		$path[ $emp_id ]         = true;
+		$this->placed[ $emp_id ] = true;
 
 		foreach ( $this->employees as $id => $employee ) {
 			if ( $employee['department'] !== $dept_id ) {
@@ -274,6 +286,22 @@ class OrgChartController extends RestController {
 			}
 
 			$data['children'][] = $child;
+		}
+
+		// Anyone the walk could not reach (a Reports To loop, or a manager who
+		// is gone or in another team) hangs off the top instead of vanishing.
+		if ( 1 === $depth ) {
+			foreach ( $this->employees as $id => $employee ) {
+				if ( $employee['department'] === $dept_id && ! isset( $this->placed[ $id ] ) ) {
+					$child = $this->sort_employees( $id, $dept_id, 2, $path );
+
+					if ( ! $emp_id ) {
+						$child['className'] = 'no-parent';
+					}
+
+					$data['children'][] = $child;
+				}
+			}
 		}
 
 		return $data;
