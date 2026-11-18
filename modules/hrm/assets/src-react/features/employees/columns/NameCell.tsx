@@ -29,22 +29,23 @@ export function NameCell( { row }: NameCellProps ): JSX.Element {
 				{ row.avatar_url ? <AvatarImage src={ row.avatar_url } alt="" /> : null }
 				<AvatarFallback>{ initials }</AvatarFallback>
 			</Avatar>
-			<div className="flex min-w-0 flex-col leading-tight">
+			<div className="flex min-w-0 max-w-xs flex-col leading-tight">
 				{ canView ? (
 					<NavLink
 						to={ `/employees/${ row.user_id }` }
 						viewTransition
-						className="whitespace-nowrap text-sm font-semibold text-foreground hover:text-primary hover:underline"
+						className="truncate text-sm font-semibold text-foreground hover:text-primary hover:underline"
+						title={ name }
 					>
 						{ name }
 					</NavLink>
 				) : (
-					<span className="whitespace-nowrap text-sm font-semibold text-foreground">
+					<span className="truncate text-sm font-semibold text-foreground" title={ name }>
 						{ name }
 					</span>
 				) }
 				{ subtitle ? (
-					<span className="whitespace-nowrap text-xs text-muted-foreground">{ subtitle }</span>
+					<span className="truncate text-xs text-muted-foreground" title={ subtitle }>{ subtitle }</span>
 				) : null }
 			</div>
 		</div>

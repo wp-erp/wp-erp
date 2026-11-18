@@ -80,13 +80,14 @@ export function DepartmentsTable( {
 								<div style={ { paddingLeft: `${ ( depthOf?.( dept.id ) ?? 0 ) * 20 }px` } }>
 									<Link
 										to={ `/employees?department_id=${ dept.id }` }
-										className="font-medium text-foreground hover:text-primary hover:underline"
+										className="block max-w-xs truncate font-medium text-foreground hover:text-primary hover:underline"
+										title={ dept.title }
 									>
 										{ ( depthOf?.( dept.id ) ?? 0 ) > 0 ? <span className="mr-1 text-muted-foreground" aria-hidden="true">└</span> : null }
 										{ dept.title }
 									</Link>
 									{ dept.description ? (
-										<div className="truncate text-xs text-muted-foreground">{ dept.description }</div>
+										<div className="max-w-xs truncate text-xs text-muted-foreground" title={ dept.description }>{ dept.description }</div>
 									) : null }
 								</div>
 							</td>

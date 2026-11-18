@@ -109,9 +109,9 @@ export function ProfileHeader( { record, userId, canEdit, onEdit, onAvatarChange
 					</Avatar>
 				) }
 
-				<div className="flex min-w-0 flex-1 flex-col gap-1.5">
+				<div className="flex min-w-0 flex-[1_1_12rem] flex-col gap-1.5">
 					<div className="flex flex-wrap items-center gap-2">
-						<h1 className="m-0 text-2xl font-bold leading-8 text-foreground">
+						<h1 className="m-0 min-w-0 text-2xl font-bold leading-8 text-foreground wrap-anywhere">
 							{ fullName || __( 'Employee', 'erp' ) }
 						</h1>
 						<BirthdayBadge

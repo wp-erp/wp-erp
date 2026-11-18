@@ -27,7 +27,9 @@ export function DetailCard( { title, children }: DetailCardProps ): JSX.Element 
 
 export function Item( { label, value, icon: Icon }: { readonly label: string; readonly value: string; readonly icon?: LucideIcon } ): JSX.Element {
 	return (
-		<div className="flex items-start gap-2.5">
+		// `min-w-0` and `wrap-anywhere`: a long value with no spaces (a website,
+		// an email) wraps inside its grid cell instead of running off the card.
+		<div className="flex min-w-0 items-start gap-2.5">
 			{ Icon ? (
 				<span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
 					<Icon size={ 14 } aria-hidden="true" />
@@ -35,7 +37,7 @@ export function Item( { label, value, icon: Icon }: { readonly label: string; re
 			) : null }
 			<div className="flex min-w-0 flex-col gap-0.5">
 				<dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{ label }</dt>
-				<dd className="text-sm text-foreground">{ value.trim() === '' ? '—' : value }</dd>
+				<dd className="text-sm text-foreground wrap-anywhere">{ value.trim() === '' ? '—' : value }</dd>
 			</div>
 		</div>
 	);
