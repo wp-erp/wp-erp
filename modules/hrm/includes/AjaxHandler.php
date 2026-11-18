@@ -1250,8 +1250,8 @@ class AjaxHandler {
 		$employee = new Employee( $user_id );
 
 		if ( $employee->is_employee() ) {
-			// Check permission
-			if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+			// Check permission: notes are HR's own, not the employee's
+			if ( ! current_user_can( 'erp_manage_review', $user_id ) ) {
 				$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 			}
 
@@ -1275,9 +1275,15 @@ class AjaxHandler {
 		$total_no    = isset( $_POST['total_no'] ) ? intval( $_POST['total_no'] ) : 0;
 		$offset_no   = isset( $_POST['offset_no'] ) ? intval( $_POST['offset_no'] ) : 0;
 
+		// The HR nonce is given to every employee, so check the requested record too. Notes are
+		// HR's own: HR managers and the line manager, never the employee (as the REST API does)
+		if ( ! current_user_can( 'erp_manage_review', $employee_id ) ) {
+			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+		}
+
 		$employee = new Employee( $employee_id );
 
-		$notes = $employee->get_notes( $total_no, $offset_no );
+		$notes =$employee->get_notes( $total_no, $offset_no );
 
 		ob_start();
 		include WPERP_HRM_VIEWS . '/employee/tab-notes-row.php';
@@ -1299,8 +1305,8 @@ class AjaxHandler {
 
 		$employee = new Employee( $user_id );
 
-		// Check permission
-		if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
+		// Check permission: an employee must not delete the notes HR wrote about them
+		if ( ! current_user_can( 'erp_manage_review', $employee->get_user_id() ) ) {
 			$this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
 		}
 
