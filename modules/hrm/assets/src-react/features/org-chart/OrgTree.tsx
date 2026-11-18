@@ -4,24 +4,55 @@
  * leaf-only reports collapse into.
  */
 
-import type { JSX } from 'react';
+import type { JSX, ReactNode } from 'react';
 
 import { OrgCard } from './OrgCard';
 import { realChildren, type DeptName, type ServerNode } from './org-chart-format';
 
-/** Dashed, department-labelled cluster of leaf reports. */
-function DeptGroup( { label, members }: { readonly label: string; readonly members: readonly ServerNode[] } ): JSX.Element {
+/** Dashed frame with a team name on its top edge. */
+function Frame( { label, children }: { readonly label: string; readonly children: ReactNode } ): JSX.Element {
 	return (
 		<div className="relative rounded-[10px] border-2 border-dashed border-primary/40 px-5 pb-5 pt-7">
 			<span className="absolute -top-3 left-5 rounded bg-card px-2 text-sm font-semibold text-foreground">{ label }</span>
-			<ul className="flex flex-wrap justify-center gap-3">
+			{ children }
+		</div>
+	);
+}
+
+/** Dashed, department-labelled cluster of leaf reports. Wraps at four cards
+ *  (`w-60` each plus gaps): the chart is `w-max`, so nothing else would wrap it. */
+function DeptGroup( { label, members }: { readonly label: string; readonly members: readonly ServerNode[] } ): JSX.Element {
+	return (
+		<Frame label={ label }>
+			<ul className="flex max-w-[63rem] flex-wrap justify-center gap-3">
 				{ members.map( ( m ) => (
 					<li key={ m.id }>
 						<OrgCard node={ m } />
 					</li>
 				) ) }
 			</ul>
-		</div>
+		</Frame>
+	);
+}
+
+/**
+ * One team in All Teams, framed with its name ("No Team" for people with no
+ * department): its lead's tree when it has a lead, else its people, their
+ * reporting lines kept.
+ */
+export function TeamGroup( { label, roots, deptName }: { readonly label: string; readonly roots: readonly ServerNode[]; readonly deptName: DeptName } ): JSX.Element {
+	if ( roots.every( ( r ) => realChildren( r ).length === 0 ) ) {
+		return <DeptGroup label={ label } members={ roots } />;
+	}
+
+	return (
+		<Frame label={ label }>
+			<ul className="flex items-start justify-center gap-8">
+				{ roots.map( ( root ) => (
+					<OrgSubtree key={ root.id } node={ root } deptName={ deptName } />
+				) ) }
+			</ul>
+		</Frame>
 	);
 }
 
