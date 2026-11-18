@@ -85,7 +85,9 @@ function LeaveRequestsInner(): JSX.Element {
 	const inTabs = useContext( RequestsTabContext );
 	const [ status, setStatus ] = useState( 2 );
 	const [ leaveId, setLeaveId ] = useState( 0 );
-	const [ year, setYear ] = useState( 0 );
+	// Open on the present year, so the list is not years of history; the
+	// filter keeps whatever the user picks after that (0 = all years).
+	const [ year, setYear ] = useState( () => siteToday().getFullYear() );
 	const [ departmentId, setDepartmentId ] = useState( 0 );
 	const [ designationId, setDesignationId ] = useState( 0 );
 	const [ employmentType, setEmploymentType ] = useState( '' );
