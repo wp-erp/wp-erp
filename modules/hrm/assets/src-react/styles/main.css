@@ -1005,9 +1005,31 @@ body:has(#erp-hr-app) {
 /* ─── Select / SmartSelect / Combobox placeholder → #A5A5AA ───
  * DS selects show their placeholder via a [data-placeholder] element (styled
  * `text-muted-foreground`), not a native ::placeholder — cover it too. */
-#erp-hr-app [data-placeholder],
-.pui-root [data-placeholder] {
+#erp-hr-app [data-placeholder]:not( [contenteditable] ),
+.pui-root [data-placeholder]:not( [contenteditable] ) {
 	color: #A5A5AA !important;
+}
+
+/* ─── Rich text editor: the text is foreground, only its empty state muted ───
+ * plugin-ui's RichTextEditor puts `data-placeholder` on the editable area itself
+ * (always: it defaults to "Start typing..."), and the rule above painted every
+ * word typed into it the placeholder grey. It is also `.prose`, whose colours
+ * are typography's fixed greys. Text and its prose parts take the theme
+ * foreground; the placeholder, drawn by the editor's own `:empty::before`,
+ * stays muted. Covers the editor in the app and in portalled dialogs. */
+:is( .pui-root, #erp-hr-app ) [contenteditable][data-placeholder] {
+	color: var( --foreground ) !important;
+	--tw-prose-body: var( --foreground ) !important;
+	--tw-prose-headings: var( --foreground ) !important;
+	--tw-prose-bold: var( --foreground ) !important;
+	--tw-prose-links: var( --foreground ) !important;
+	--tw-prose-counters: var( --foreground ) !important;
+	--tw-prose-bullets: var( --foreground ) !important;
+	--tw-prose-quotes: var( --foreground ) !important;
+}
+
+:is( .pui-root, #erp-hr-app ) [contenteditable][data-placeholder]:empty::before {
+	color: #A5A5AA;
 }
 
 /* ─── No compact buttons — every button ≥ 40px ───
