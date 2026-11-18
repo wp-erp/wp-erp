@@ -35,7 +35,10 @@ export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
 	const rawLabel  = ev.employee_name || ev.title;
 	const label     = isPending ? rawLabel.replace( /\s*\(\s*Pending\s*\)\s*/i, ' ' ).trim() : rawLabel;
 	const title     = [ ev.employee_name, ev.title, ev.reason ].filter( Boolean ).join( ' — ' );
-	const style     = { backgroundColor: ev.color ? `${ ev.color }22` : 'var(--muted)' };
+	// A pending request is yellow whatever its leave type, so it stands out
+	// from approved leave; approved leave keeps the leave type's tint.
+	const tint      = ev.color ? `${ ev.color }22` : 'var(--muted)';
+	const style     = { backgroundColor: isPending ? 'var(--warning-light)' : tint };
 
 	const inner = (
 		<>
@@ -47,7 +50,7 @@ export function LeaveChip( { ev }: { ev: CalendarEvent } ): JSX.Element {
 			</Avatar>
 			<span className="min-w-0 truncate">{ label }</span>
 			{ isPending ? (
-				<span className="ml-auto shrink-0 rounded-full bg-warning-light px-1.5 py-px text-[9px] font-semibold uppercase leading-tight text-warning-on-light">
+				<span className="ml-auto shrink-0 rounded-full bg-warning px-1.5 py-px text-[9px] font-semibold uppercase leading-tight text-warning-foreground">
 					{ __( 'Pending', 'erp' ) }
 				</span>
 			) : null }
