@@ -137,14 +137,15 @@ export function OverviewTab( { userId, record, canEdit }: OverviewTabProps ): JS
 				{ /* Pay is sensitive — only self / managers (erp_edit_employee), matching legacy tab-job.php. */ }
 				{ canEdit ? (
 					<>
-						<div className="flex items-start gap-2.5">
-							<span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-								<DollarSign size={ 14 } aria-hidden="true" />
-							</span>
-							<div className="flex min-w-0 flex-col gap-0.5">
-								<dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{ __( 'Pay Rate', 'erp' ) }</dt>
-								<dd className="text-sm text-foreground"><PayRateReveal value={ str( record, 'pay_rate' ) } /></dd>
-							</div>
+						{ /* Same `dl > div > dt + dd` shape as Item; the value is a reveal control. */ }
+						<div className="relative flex min-w-0 flex-col gap-0.5 ps-[2.375rem]">
+							<dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+								<span className="absolute start-0 top-0 mt-0.5 inline-flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+									<DollarSign size={ 14 } aria-hidden="true" />
+								</span>
+								{ __( 'Pay Rate', 'erp' ) }
+							</dt>
+							<dd className="text-sm text-foreground"><PayRateReveal value={ str( record, 'pay_rate' ) } /></dd>
 						</div>
 						<Item icon={ Wallet } label={ __( 'Pay Type', 'erp' ) } value={ labelOf( PAY_TYPE_OPTIONS, str( record, 'pay_type' ) ) } />
 					</>

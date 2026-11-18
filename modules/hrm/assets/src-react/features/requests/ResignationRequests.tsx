@@ -182,22 +182,22 @@ export function ResignationRequests(): JSX.Element {
                         <table className="w-full min-w-160 text-left text-sm">
                             <thead className="border-b border-border bg-card">
                                 <tr className="h-10">
-                                    <th className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                    <th className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
                                         {__("Employee", "erp")}
                                     </th>
-                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
                                         {__("Reason", "erp")}
                                     </th>
-                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
                                         {__("Date", "erp")}
                                     </th>
-                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
                                         {__("Request Date", "erp")}
                                     </th>
-                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                    <th className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
                                         {__("Status", "erp")}
                                     </th>
-                                    <th className="whitespace-nowrap pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">
+                                    <th className="whitespace-nowrap pl-2 pr-4 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">
                                         {__("Actions", "erp")}
                                     </th>
                                 </tr>

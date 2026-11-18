@@ -42,14 +42,14 @@ export function LeavePoliciesTable( {
 				<tr className="h-10">
 					<SortHeader label={ __( 'Name', 'erp' ) } sortKey="name" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first />
 					<SortHeader label={ __( 'Days', 'erp' ) } sortKey="days" orderBy={ sort.key } order={ sort.dir } onSort={ onToggleSort } first={ false } />
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Department', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Designation', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Location', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Type', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Gender', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Marital', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Year', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Description', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Department', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Designation', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Location', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Type', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Gender', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Marital', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Year', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Description', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

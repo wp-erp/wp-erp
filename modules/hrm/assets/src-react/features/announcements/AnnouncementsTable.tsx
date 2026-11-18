@@ -41,11 +41,11 @@ export function AnnouncementsTable( { rows, canManage, selected, allChecked, onT
 							<Checkbox checked={ allChecked } onCheckedChange={ onToggleAll } aria-label={ __( 'Select all', 'erp' ) } />
 						</th>
 					) : null }
-					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Title', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Type', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Recipients', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Author', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Date', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Title', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Type', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Recipients', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Author', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Date', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>

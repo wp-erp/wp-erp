@@ -409,6 +409,11 @@ class Employee {
             // Extract only the Protocol+domain from the URL as per WordPress recommendation.
             $parsed_url = wp_parse_url( $data['personal']['user_url'] );
             $data['personal']['user_url'] = $parsed_url['scheme'] . '://' . $parsed_url['host'];
+
+            // `wp_users.user_url` holds 100 characters, measured as stored.
+            if ( mb_strlen( esc_url_raw( $data['personal']['user_url'] ) ) > 100 ) {
+                return new WP_Error( 'invalid-user-url', __( 'The website can be at most 100 characters.', 'erp' ) );
+            }
         }
 
 
@@ -595,6 +600,12 @@ class Employee {
             unset( $posted['user_email'], $posted['user_url'], $posted['first_name'], $posted['last_name'] );
         }
 
+        // `wp_users.user_url` holds 100 characters and `wp_update_user()` refuses
+        // a longer one. Refuse it before anything is written, measured as stored.
+        if ( ! empty( $posted['user_url'] ) && mb_strlen( esc_url_raw( (string) $posted['user_url'] ) ) > 100 ) {
+            return new WP_Error( 'invalid-user-url', __( 'The website can be at most 100 characters.', 'erp' ) );
+        }
+
         //update user email
         if ( isset( $posted['user_email'] )
              && $posted['user_email'] !== $this->wp_user->user_email
@@ -615,10 +626,15 @@ class Employee {
         // Persist it there and unset it from the posted array so the
         // personal-meta loop below does not also write it to user_meta.
         if ( \array_key_exists( 'user_url', $posted ) ) {
-            wp_update_user( [
+            $result = wp_update_user( [
                 'ID'       => $this->user_id,
                 'user_url' => (string) $posted['user_url'],
             ] );
+
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+
             unset( $posted['user_url'] );
         }
 

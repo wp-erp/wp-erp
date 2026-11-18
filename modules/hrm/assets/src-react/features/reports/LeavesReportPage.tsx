@@ -232,9 +232,9 @@ export function LeavesReportPage(): JSX.Element {
 						<table className="w-full text-left">
 					<thead className="border-b border-border bg-card">
 						<tr className="h-10">
-							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-card px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Name', 'erp' ) }</th>
+							<th scope="col" className="sticky left-0 z-20 whitespace-nowrap bg-card px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Name', 'erp' ) }</th>
 							{ columns.map( ( col ) => (
-								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ col.name }</th>
+								<th key={ col.leave_id } scope="col" className="whitespace-nowrap px-2 text-right text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ col.name }</th>
 							) ) }
 						</tr>
 					</thead>

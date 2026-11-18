@@ -42,3 +42,20 @@ export function topTrees( tree: ServerNode | null ): ServerNode[] {
 	}
 	return unwrap( tree );
 }
+
+/** One team in All Teams: its department (0 = No Team) and its top-level cards. */
+export interface TeamGroupData {
+	readonly deptId: number;
+	readonly roots:  ServerNode[];
+}
+
+/** All Teams only (`null` otherwise): the server's per-department groups,
+ *  kept apart so each team is drawn with its name; empty teams are left out. */
+export function teamGroups( tree: ServerNode | null ): TeamGroupData[] | null {
+	if ( ! tree?.is_array ) {
+		return null;
+	}
+	return ( tree.children ?? [] )
+		.map( ( group ) => ( { deptId: group.dept_id, roots: topTrees( group ) } ) )
+		.filter( ( group ) => group.roots.length > 0 );
+}

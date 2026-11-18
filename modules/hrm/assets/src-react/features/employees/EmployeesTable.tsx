@@ -124,7 +124,7 @@ export function EmployeesTable(): JSX.Element {
 								key={ col.id }
 								scope="col"
 								aria-sort={ ariaSortFor( col, currentOrderBy, currentOrder ) }
-								className={ `whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282] ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_HEAD } ${ stickyName }` : '' }` }
+								className={ `whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground ${ col.id === COLUMN_IDS.NAME ? `${ STICKY_HEAD } ${ stickyName }` : '' }` }
 							>
 								{ col.sortable ? (
 									<SortButton

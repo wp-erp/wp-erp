@@ -30,8 +30,8 @@ import { request, restPath } from '@/shared/utils/apiFetch';
 import type { ApiError } from '@/shared/utils/apiFetch';
 
 import { DeptPill } from './DeptPill';
-import { OrgSubtree } from './OrgTree';
-import { topTrees, type ChartResponse, type DeptName } from './org-chart-format';
+import { OrgSubtree, TeamGroup } from './OrgTree';
+import { teamGroups, topTrees, type ChartResponse, type DeptName } from './org-chart-format';
 
 const ZOOM_MIN  = 0.5;
 const ZOOM_MAX  = 1.5;
@@ -69,6 +69,7 @@ function OrgChartInner(): JSX.Element {
 	}, [ deptId ] );
 
 	const roots       = useMemo( () => topTrees( data?.tree ?? null ), [ data ] );
+	const groups      = useMemo( () => teamGroups( data?.tree ?? null ), [ data ] );
 	const departments = useMemo(
 		() => ( data?.departments ?? [] ).filter( ( d ) => d.value !== '' ),
 		[ data ]
@@ -150,14 +151,25 @@ function OrgChartInner(): JSX.Element {
 							: __( 'The chart is drawn from your departments, their leads and who reports to whom. Add departments and employees to see it.', 'erp' ) }
 					/>
 				) : (
-					<div
-						className="origin-top transition-transform"
-						style={ { transform: `scale(${ zoom })`, width: `${ 100 / zoom }%` } }
-					>
+					// `w-max min-w-full`: a team wider than the box overflows to the right,
+					// where it can be scrolled to, instead of past the left edge where it
+					// cannot; a narrow one stays centred. `zoom`, unlike a transform, also
+					// resizes the scroll area, so every card stays reachable at any zoom.
+					<div className="w-max min-w-full" style={ { zoom } }>
 						<ul className="flex flex-wrap items-start justify-center gap-12 p-2">
-							{ roots.map( ( root ) => (
-								<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } deptName={ deptName } />
-							) ) }
+							{ groups
+								? groups.map( ( group ) => (
+									<li key={ group.deptId }>
+										<TeamGroup
+											label={ group.deptId > 0 ? deptName( group.deptId ) : __( 'No Team', 'erp' ) }
+											roots={ group.roots }
+											deptName={ deptName }
+										/>
+									</li>
+								) )
+								: roots.map( ( root ) => (
+									<OrgSubtree key={ `${ root.dept_id }-${ root.id }` } node={ root } deptName={ deptName } />
+								) ) }
 						</ul>
 					</div>
 				) }

@@ -51,9 +51,9 @@ export function LeaveTypesTable( {
 							/>
 						</th>
 					) : null }
-					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Leave Type', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Description', 'erp' ) }</th>
-					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-[#828282]">{ __( 'Created', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-4 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Leave Type', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Description', 'erp' ) }</th>
+					<th scope="col" className="whitespace-nowrap px-2 text-[12px] font-normal uppercase leading-[1.4] tracking-normal text-muted-foreground">{ __( 'Created', 'erp' ) }</th>
 					<th scope="col" className="w-20 px-4">
 						<span className="sr-only">{ __( 'Actions', 'erp' ) }</span>
 					</th>
