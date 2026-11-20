@@ -59,7 +59,7 @@ import {
 	ProWidget,
 } from './DashboardWidgets';
 import { parseServerDate, siteToday } from '@/shared/utils/date';
-import { fmtDate, greeting } from './format';
+import { fmtDate, greeting, greetingName } from './format';
 import { MiniCalendarWidget } from './MiniCalendarWidget';
 import { SetupChecklist } from './SetupChecklist';
 import {
@@ -110,7 +110,7 @@ function DashboardInner(): JSX.Element {
 	const canManageDesignations = useCan( 'erp_manage_designation' );
 
 	const currentUserId = user?.id ?? 0;
-	const name = user?.displayName ? user.displayName.split( ' ' )[ 0 ] : '';
+	const name = greetingName( user?.displayName );
 
 	const [ viewing, setViewing ] = useState< AnnouncementContent | null >(
 		null

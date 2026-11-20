@@ -18,6 +18,7 @@ import { __, sprintf } from '@/shared/i18n';
 import { Reveal, RevealWords, afterWords } from '@/shared/motion/Reveal';
 import { prefersReducedMotion } from '@/shared/motion/MotionContext';
 import { useBoot } from '@/shared/hooks/useBoot';
+import { greetingName } from '@/features/dashboard/format';
 
 /** How long the welcome takes to fade away before the page starts. */
 const EXIT_MS = 280;
@@ -33,7 +34,7 @@ export function WelcomeScreen( { onDone }: WelcomeScreenProps ): JSX.Element {
 	const button = useRef< HTMLButtonElement >( null );
 
 	const title = __( 'Welcome to the new WP ERP', 'erp' );
-	const name = boot.displayName ? boot.displayName.split( ' ' )[ 0 ] : '';
+	const name = greetingName( boot.displayName );
 	const linesAt = afterWords( title, 150 );
 
 	const features = [

@@ -63,3 +63,14 @@ export function initials( name: string ): string {
 	const last = parts.length > 1 ? parts[ parts.length - 1 ]?.[ 0 ] ?? '' : '';
 	return ( first + last ).toUpperCase();
 }
+
+/**
+ * The name the greeting addresses: the last word of the display name, the
+ * family name for "First Last". The first word is often a title or prefix
+ * ("Md.", "Dr."), which read as "Good afternoon, Md.".
+ */
+export function greetingName( displayName?: string | null ): string {
+	const words = ( displayName ?? '' ).trim().split( /\s+/ ).filter( Boolean );
+
+	return words[ words.length - 1 ] ?? '';
+}
