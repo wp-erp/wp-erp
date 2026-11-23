@@ -264,7 +264,7 @@ class BankAccountsController extends \WeDevs\ERP\API\REST_Controller {
             'order_by' => isset( $request['order_by'] ) ? $request['order_by'] : 'id',
             'order'    => isset( $request['order'] ) ? $request['order'] : 'DESC',
             'number'   => isset( $request['per_page'] ) ? (int) $request['per_page'] : -1, // the transfers list calls without per_page
-            'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'offset'   => ( $request['per_page'] * ( max( 1, (int) $request['page'] ) - 1 ) ),
         ];
 
         $items    = erp_acct_get_transfer_vouchers( $args );

@@ -114,7 +114,7 @@ class PeopleController extends \WeDevs\ERP\API\REST_Controller {
     public function get_all_people( $request ) {
         $args = [
             'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'offset' => ( $request['per_page'] * ( max( 1, (int) $request['page'] ) - 1 ) ),
             'type'   => ! empty( $request['type'] ) ? $request['type'] : [ 'customer', 'employee', 'vendor' ],
             's'      => ! empty( $request['search'] ) ? $request['search'] : '',
         ];

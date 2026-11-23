@@ -104,7 +104,7 @@ class PaymentsController extends \WeDevs\ERP\API\REST_Controller {
     public function get_payments( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'offset' => ( $request['per_page'] * ( max( 1, (int) $request['page'] ) - 1 ) ),
         ];
 
         $formatted_items   = [];
