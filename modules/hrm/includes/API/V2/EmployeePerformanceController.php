@@ -125,7 +125,8 @@ class EmployeePerformanceController extends RestController {
 	 * @return bool
 	 */
 	protected function is_department_lead( int $user_id ): bool {
-		if ( ! $user_id || get_current_user_id() === $user_id || ! function_exists( 'erp_hr_get_department_lead_by_user' ) ) {
+		// No lead comes back as 0, which a visitor's user id equals.
+		if ( ! $user_id || ! get_current_user_id() || get_current_user_id() === $user_id || ! function_exists( 'erp_hr_get_department_lead_by_user' ) ) {
 			return false;
 		}
 

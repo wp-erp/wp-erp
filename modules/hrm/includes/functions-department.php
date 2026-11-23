@@ -294,7 +294,8 @@ function erp_hr_match_user_dept_lead_with_current_user( $user_id ) {
     if ( $emp_department ) {
         $department = Department::find( $emp_department );
 
-        if ( get_current_user_id() === absint( $department->lead ) ) {
+        // A department with no lead stores 0, which a visitor's user id equals.
+        if ( get_current_user_id() && get_current_user_id() === absint( $department->lead ) ) {
             return true;
         }
     }

@@ -3318,6 +3318,9 @@ function erp_hr_get_department_leads_id() {
     $results   = $wpdb->get_results( "SELECT `lead` FROM {$wpdb->prefix}erp_hr_depts", ARRAY_A );
     $dep_leads = wp_list_pluck( $results, 'lead' );
 
+    // A department with no lead stores 0, which is nobody's user id.
+    $dep_leads = array_values( array_filter( array_map( 'absint', $dep_leads ) ) );
+
     return $dep_leads;
 }
 
@@ -3332,9 +3335,14 @@ function erp_hr_is_current_user_dept_lead() {
     $leads        = erp_hr_get_department_leads_id();
     $logged_in_us = get_current_user_id();
 
+    // A visitor is user 0, the value a department with no lead stores.
+    if ( ! $logged_in_us ) {
+        return false;
+    }
+
     // A terminated or trashed lead keeps the department slot until someone
     // replaces them, but no longer moderates its leave.
-    return (bool) in_array( $logged_in_us, $leads ) && ! erp_hr_is_offboarded_user( $logged_in_us );
+    return (bool) in_array( $logged_in_us, $leads, true ) && ! erp_hr_is_offboarded_user( $logged_in_us );
 }
 
 /**
