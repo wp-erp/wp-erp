@@ -240,7 +240,7 @@ class DashboardController extends RestController {
 			foreach ( (array) $posts as $post ) {
 				$announcements[] = [
 					'id'      => (int) $post->ID,
-					'title'   => $this->cast_string_or_null( $post->post_title ) ?? __( '(no title)', 'erp' ),
+					'title'   => $this->cast_string_or_null( AnnouncementsController::plain_title( (string) $post->post_title ) ) ?? __( '(no title)', 'erp' ),
 					'excerpt' => $this->announcement_excerpt( (int) $post->ID ),
 					'date'    => $this->cast_date_iso( $post->post_date ),
 					'read'    => true,
@@ -251,7 +251,7 @@ class DashboardController extends RestController {
 			foreach ( (array) $assigned as $row ) {
 				$announcements[] = [
 					'id'      => (int) ( $row->post_id ?? $row->ID ?? 0 ),
-					'title'   => $this->cast_string_or_null( $row->post_title ?? '' ) ?? __( '(no title)', 'erp' ),
+					'title'   => $this->cast_string_or_null( AnnouncementsController::plain_title( (string) ( $row->post_title ?? '' ) ) ) ?? __( '(no title)', 'erp' ),
 					'excerpt' => $this->announcement_excerpt( (int) ( $row->post_id ?? $row->ID ?? 0 ) ),
 					'date'    => $this->cast_date_iso( $row->post_date ?? null ),
 					'read'    => ( $row->status ?? 'unread' ) === 'read',
