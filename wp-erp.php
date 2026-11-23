@@ -60,7 +60,43 @@ use WeDevs\ERP\Framework\Modules;
 use WeDevs\ERP\Admin\UserProfile;
 use WeDevs\ERP\WeDevsERPInstaller;
 
-require_once __DIR__ . '/vendor/autoload.php';
+$erp_composer_loader = require_once __DIR__ . '/vendor/autoload.php';
+
+/*
+ * WP ERP's database layer is built on its bundled Illuminate (Laravel) 5.8. Other
+ * plugins can ship their own, newer Illuminate in the same global namespace. Composer
+ * puts each plugin's loader in front of the ones registered before it, so a plugin
+ * loaded after WP ERP served its Illuminate interfaces to WP ERP's models and the site
+ * fatals ("Declaration of Illuminate\Database\Eloquent\Model::resolveRouteBinding()
+ * must be compatible with ..."). Serve Illuminate classes from WP ERP's own copy
+ * first, and move that loader back to the front once every plugin has loaded. Only the
+ * Illuminate namespace is affected; other libraries keep resolving as before.
+ */
+if ( $erp_composer_loader instanceof \Composer\Autoload\ClassLoader ) {
+    $erp_illuminate_autoload = static function ( $class_name ) use ( $erp_composer_loader ) {
+        if ( 0 !== strpos( $class_name, 'Illuminate\\' ) ) {
+            return;
+        }
+
+        $file = $erp_composer_loader->findFile( $class_name );
+
+        if ( $file ) {
+            require $file;
+        }
+    };
+
+    spl_autoload_register( $erp_illuminate_autoload, true, true );
+
+    add_action(
+        'plugins_loaded',
+        static function () use ( $erp_illuminate_autoload ) {
+            spl_autoload_unregister( $erp_illuminate_autoload );
+            spl_autoload_register( $erp_illuminate_autoload, true, true );
+        },
+        -999999
+    );
+}
+
 define( 'WPERP_VERSION', '2.0.0' );
 define( 'WPERP_FILE', __FILE__ );
 define( 'WPERP_PATH', dirname( WPERP_FILE ) );
