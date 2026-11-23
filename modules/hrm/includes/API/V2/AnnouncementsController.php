@@ -292,7 +292,7 @@ class AnnouncementsController extends RestController {
 		foreach ( (array) $rows as $row ) {
 			$items[] = [
 				'id'           => (int) $row->ID,
-				'title'        => $this->cast_string_or_null( $row->post_title ) ?? __( '(no title)', 'erp' ),
+				'title'        => $this->cast_string_or_null( self::plain_title( (string) $row->post_title ) ) ?? __( '(no title)', 'erp' ),
 				'excerpt'      => self::build_excerpt( (string) $row->post_content ),
 				'html_content' => (string) wp_kses_post( wpautop( (string) $row->post_content ) ),
 				'author'       => (string) get_the_author_meta( 'display_name', (int) $row->post_author ),
@@ -892,7 +892,7 @@ class AnnouncementsController extends RestController {
 
 		return [
 			'id'                  => (int) $post->ID,
-			'title'               => (string) get_the_title( $post ),
+			'title'               => self::plain_title( (string) $post->post_title ),
 			'excerpt'             => self::build_excerpt( (string) $post->post_content ),
 			'status'              => (string) $post->post_status,
 			'date'                => $this->cast_date_iso( $post->post_date ),
@@ -1045,6 +1045,21 @@ class AnnouncementsController extends RestController {
 		$text = trim( (string) preg_replace( '/\s+/u', ' ', (string) $text ) );
 
 		return html_entity_decode( wp_trim_words( $text, $words ), ENT_QUOTES, get_bloginfo( 'charset' ) );
+	}
+
+	/**
+	 * An announcement title as it was typed.
+	 *
+	 * WordPress stores `&`, `<` and `>` in a post title as entities. The client
+	 * renders the title as a plain string, so "R&D" would read "R&amp;D".
+	 * Shared with the dashboard's announcement card.
+	 *
+	 * @param string $title Stored post title.
+	 *
+	 * @return string
+	 */
+	public static function plain_title( string $title ): string {
+		return html_entity_decode( $title, ENT_QUOTES, get_bloginfo( 'charset' ) );
 	}
 
 }
