@@ -346,6 +346,8 @@ Please report security bugs found in the source code of the WP ERP plugin throug
 * [Fixed] The dashboard greeted the user by a title such as "Md." instead of their name.
 * [Fixed] Long names and values ran outside their rows and cards on the employee screens.
 * [Fixed] Emoji in the HR screens were replaced by images loaded from another site.
+* [Fixed] Accounting list endpoints gave a database error when the API was called without a page number.
+* [Fixed] Saving a new CRM contact failed with an error when the request had no social profile fields.
 * [Improved] Muted text, placeholders and table headers in the HR screens now meet WCAG AA contrast.
 
 = v2.0.0 → Nov 16, 2026
