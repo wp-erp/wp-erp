@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for WP ERP">
-    <description>Generally-applicable sniffs for WordPress plugins.</description>
+<ruleset name="WP ERP">
+    <description>Security, PHP compatibility and translation checks for WP ERP.</description>
+
+    <!--
+        Formatting rules are left out on purpose. The code base predates them
+        (26,000+ findings, most of them array syntax and indentation), so they
+        failed every pull request and hid the findings that matter. What is left
+        is what causes a vulnerability, a fatal error on a supported PHP version,
+        or a broken translation.
+
+        The pull request check reports a finding only on a line the pull request
+        changes: see .github/workflows/phpcs.yml.
+    -->
 
     <!-- What to scan -->
     <file>.</file>
@@ -12,109 +23,54 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/bin/*</exclude-pattern>
-    <exclude-pattern>*/templates/*</exclude-pattern>
 
     <!-- How to scan -->
-    <!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
-    <!-- Annotated ruleset: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
-    <arg value="sp"/> <!-- Show sniff and progress -->
-    <arg name="basepath" value="./"/><!-- Strip the file paths down to the relevant bit -->
+    <arg value="sp"/>
+    <arg name="basepath" value="./"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
-    <arg name="parallel" value="8"/><!-- Enables parallel processing when available for faster results. -->
+    <arg name="parallel" value="8"/>
 
-    <!-- Rules: Check PHP version compatibility -->
-    <!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-    <config name="testVersion" value="5.6-"/>
-    <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
+    <!-- PHP compatibility: readme.txt "Requires PHP: 7.4" -->
+    <config name="testVersion" value="7.4-"/>
     <rule ref="PHPCompatibilityWP"/>
 
-    <!-- Rules: WordPress Coding Standards -->
-    <!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
-    <!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-    <config name="minimum_supported_wp_version" value="4.4"/>
-    <rule ref="WordPress-Core"/>
-    <rule ref="WordPress">
-        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
-    </rule>
-    <rule ref="WordPress.WP.I18n">
-        <properties>
-            <!-- Value: replace the text domain used. -->
-            <property name="text_domain" type="array" value="erp"/>
-        </properties>
-    </rule>
-    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
-        <properties>
-            <property name="blank_line_check" value="true"/>
-        </properties>
+    <!-- readme.txt "Requires at least: 5.6" -->
+    <config name="minimum_supported_wp_version" value="5.6"/>
+
+    <!-- Syntax errors -->
+    <rule ref="Generic.PHP.Syntax"/>
+
+    <!-- Security: escaping, nonces, input handling, redirects -->
+    <rule ref="WordPress.Security">
+        <!-- An exception message is escaped where it is printed, not where it is thrown. -->
+        <exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
     </rule>
 
-    <rule ref="Squiz.Commenting">
-        <severity>0</severity>
-    </rule>
+    <!-- Security: SQL injection -->
+    <rule ref="WordPress.DB.PreparedSQL"/>
+    <rule ref="WordPress.DB.PreparedSQLPlaceholders"/>
 
-    <rule ref="PEAR.Functions.FunctionCallSignature">
-        <properties>
-            <property name="requiredSpacesAfterOpen" value="1"/>
-            <property name="requiredSpacesBeforeClose" value="1"/>
-        </properties>
-        <severity>0</severity>
-    </rule>
-    <rule ref="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket" />
-    <rule ref="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket" />
-
-    <rule ref="Generic.Commenting.DocComment.SpacingBeforeTags">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.Files.FileName">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.PHP.DevelopmentFunctions">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned">
-        <severity>0</severity>
-    </rule>
-    <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSameWarning">
-        <severity>0</severity>
-    </rule>
-    <rule ref="Generic.Commenting.DocComment.MissingShort">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.PHP.YodaConditions.NotYoda">
-        <severity>0</severity>
-    </rule>
-    <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie.ContentAfterBrace">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceAfterCloseParenthesis">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound">
-        <type>warning</type>
-    </rule>
-    <rule ref="WordPress.DB.DirectDatabaseQuery.NoCaching">
-        <severity>0</severity>
-    </rule>
+    <!-- Loose in_array() has let the wrong role or status through before. -->
+    <rule ref="WordPress.PHP.StrictInArray"/>
     <rule ref="WordPress.PHP.StrictInArray.MissingTrueStrict">
         <type>error</type>
     </rule>
-    <!-- <rule ref="WordPress.PHP.StrictComparisons.LooseComparison">
-        <type>error</type>
-    </rule> -->
-    <rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.DB.PreparedSQL.NotPrepared">
-        <type>warning</type>
-    </rule>
-    <rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
-        <severity>0</severity>
-    </rule>
-    <rule ref="WordPress.PHP.DevelopmentFunctions.error_log_var_export">
-        <severity>0</severity>
+
+    <!-- Functions that must not ship -->
+    <rule ref="WordPress.PHP.NoSilencedErrors"/>
+    <rule ref="WordPress.PHP.RestrictedPHPFunctions"/>
+    <rule ref="WordPress.PHP.DiscouragedPHPFunctions"/>
+    <rule ref="WordPress.WP.DeprecatedFunctions"/>
+    <rule ref="WordPress.WP.DeprecatedParameters"/>
+    <rule ref="WordPress.WP.DeprecatedClasses"/>
+
+    <!-- Translations -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="erp"/>
+            </property>
+        </properties>
     </rule>
 </ruleset>
