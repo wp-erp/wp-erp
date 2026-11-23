@@ -110,6 +110,10 @@ const HelpPage = lazy( () =>
 	import( '@/features/help' ).then( ( m ) => ( { default: m.HelpPage } ) )
 );
 
+const McpPage = lazy( () =>
+	import( '@/features/mcp' ).then( ( m ) => ( { default: m.McpPage } ) )
+);
+
 const ReportsIndexPage = lazy( () =>
 	import( '@/features/reports' ).then( ( m ) => ( { default: m.ReportsIndexPage } ) )
 );
@@ -489,6 +493,20 @@ const baseRoutes: AppRoute[] = [
 			id:        'my-profile',
 			title:     __( 'My Profile', 'erp' ),
 			group:     'people',
+			showInNav: false,
+		},
+	},
+	{
+		id:           'ai-connection',
+		path:         '/ai-connection',
+		element:      McpPage,
+		// Open to every signed-in user: the page shows each person only what the
+		// administrator has granted them, and the REST API enforces the rest.
+		capabilities: [],
+		handle: {
+			id:        'ai-connection',
+			title:     __( 'AI Connection', 'erp' ),
+			group:     'help',
 			showInNav: false,
 		},
 	},
