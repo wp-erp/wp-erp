@@ -3,7 +3,7 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 2.0.1
 License: GPLv2
