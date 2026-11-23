@@ -321,6 +321,8 @@ class AjaxHandler {
 		$posted['contact']['meta']['life_stage'] = isset( $_POST['contact']['meta']['life_stage'] ) ? sanitize_title_with_dashes( wp_unslash( $_POST['contact']['meta']['life_stage'] ) ) : '';
 		$posted['contact']['main']['company']    = stripslashes( ! empty( $posted['contact']['main']['company'] ) ? $posted['contact']['main']['company'] : '' ); // To remove Apostrophe slash
 
+		$posted['contact']['social']             = isset( $posted['contact']['social'] ) && is_array( $posted['contact']['social'] ) ? $posted['contact']['social'] : [];
+
 		$data = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
 		$data['first_name'] = ! empty( $data['first_name'] ) ? stripslashes( $data['first_name'] ) : '';
