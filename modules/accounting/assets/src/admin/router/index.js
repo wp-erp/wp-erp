@@ -63,7 +63,7 @@ import SalesTaxReportCustomerBased from '../components/reports/sales-tax/Custome
 Vue.use(Router);
 
 /* global acct */
-export default new Router({
+const router = new Router({
     linkActiveClass: 'router-link-active',
     routes: acct.hooks.applyFilters('erp_acct_admin_routes', [
         {
@@ -877,3 +877,18 @@ export default new Router({
         }
     }
 });
+
+// `:id` and `:page` come from the address bar and are put into REST URLs as
+// they are. Both are always numbers; anything else could add its own query
+// string to a request sent with the user's nonce.
+router.beforeEach((to, from, next) => {
+    const isNumber = (value) => value === undefined || /^\d+$/.test(value);
+
+    if (isNumber(to.params.id) && isNumber(to.params.page)) {
+        next();
+    } else {
+        next({ name: 'DashBoard' });
+    }
+});
+
+export default router;
