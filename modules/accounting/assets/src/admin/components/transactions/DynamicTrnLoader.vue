@@ -16,7 +16,14 @@ export default {
     mounted() {
         this.voucher_no = this.$route.params.id;
 
-        HTTP.get(`/transactions/voucher-type/${this.voucher_no}`).then((response) => {
+        // The id comes from the address bar. Anything but digits could add
+        // its own query string to the REST request.
+        if (!/^\d+$/.test(this.voucher_no)) {
+            this.$router.push({ name: 'DashBoard' });
+            return;
+        }
+
+        HTTP.get(`/transactions/voucher-type/${encodeURIComponent(this.voucher_no)}`).then((response) => {
             this.voucher_type = response.data;
 
             if (this.voucher_type === 'invoice' || this.voucher_type === 'estimate' || this.voucher_type === 'payment' || this.voucher_type === 'return_payment') {
