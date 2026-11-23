@@ -2778,13 +2778,19 @@ class Employee {
 
         $key = (string) $key;
 
-        if ( '' === $key || is_protected_meta( $key, 'user' ) || 0 === strpos( $key, $wpdb->base_prefix ) ) {
+        // MySQL compares meta_key ignoring case, accents and zero-width characters,
+        // so a key that only looks different would still overwrite the real row.
+        if ( sanitize_key( $key ) !== strtolower( $key ) ) {
+            return false;
+        }
+
+        if ( '' === $key || is_protected_meta( $key, 'user' ) || 0 === stripos( $key, $wpdb->base_prefix ) ) {
             return false;
         }
 
         $blocked = apply_filters( 'erp_hr_employee_blocked_meta_keys', [ 'erp_last_removed_role', 'session_tokens' ] );
 
-        return ! in_array( $key, (array) $blocked, true );
+        return ! in_array( strtolower( $key ), (array) $blocked, true );
     }
 
     /**

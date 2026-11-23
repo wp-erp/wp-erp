@@ -477,6 +477,12 @@ function erp_is_protected_user_meta_key( $key ) {
         return true;
     }
 
+    // MySQL compares meta_key ignoring case, accents and zero-width characters,
+    // so a key that only looks different would still overwrite the real row.
+    if ( sanitize_key( $key ) !== strtolower( $key ) ) {
+        return true;
+    }
+
     if ( is_protected_meta( $key, 'user' ) ) {
         return true;
     }
