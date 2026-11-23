@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs
 Donate Link: https://tareq.co/donate
 Tags: Accounting, crm, HR, recruitment, WooCommerce CRM
 Requires at least: 5.6
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -330,6 +330,24 @@ It may take longer to respond to more advanced or technical queries. We promise 
 Please report security bugs found in the source code of the WP ERP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb52d-9e2d-4917-82cf-95032b4443ce). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Changelog ==
+= v2.0.1 → Nov 23, 2026
+--------------------------
+* [Fixed] Security: a logged-out visitor could read leave requests, and approve or reject them, when a department had no lead. Researcher: Elaprendiz1927 (via Patchstack)
+* [Fixed] Security: a crafted Accounting transaction link could make a logged-in administrator's browser send a forged request. Researcher: Santh (via Patchstack)
+* [Fixed] Security: a CRM Agent could change protected user data through a look-alike meta key when adding a contact. Researcher: Michael Frese (via Patchstack)
+* [Fixed] Security: an HR manager could replace the roles of an existing user they are not allowed to manage by adding that user as an employee. Researcher: jonathan mendiola (via Patchstack)
+* [Fixed] Security: employees could read, add and delete the notes HR wrote about them. Notes are now limited to HR managers and the line manager. Researcher: Peter Wilfahrt
+* [Fixed] Head Count left out active employees with no hire date, and this month's bar did not match the total.
+* [Fixed] Leave Requests opened on the wrong year instead of the present one.
+* [Fixed] Pending leave is now shown in yellow on the leave calendar.
+* [Fixed] The org chart did not draw people whose Reports To formed a loop, and All Teams did not name each team.
+* [Fixed] An ampersand in an announcement title or preview was shown as HTML code.
+* [Fixed] A website address longer than 100 characters was dropped without an error when editing an employee.
+* [Fixed] The dashboard greeted the user by a title such as "Md." instead of their name.
+* [Fixed] Long names and values ran outside their rows and cards on the employee screens.
+* [Fixed] Emoji in the HR screens were replaced by images loaded from another site.
+* [Improved] Muted text, placeholders and table headers in the HR screens now meet WCAG AA contrast.
+
 = v2.0.0 → Nov 16, 2026
 --------------------------
 * [Added] A new HR admin interface, now the default for every site. You can switch to the legacy screens from any HR page.
