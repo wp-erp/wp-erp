@@ -174,6 +174,10 @@ class ContactsController extends REST_Controller {
      */
     public function create_contact( $request ) {
         $item = $this->prepare_item_for_database( $request );
+
+        // A create request must never point at an existing record.
+        unset( $item['id'] );
+
         $id   = erp_insert_people( $item );
 
         $contact = erp_get_people( $id );
@@ -199,6 +203,10 @@ class ContactsController extends REST_Controller {
 
         foreach ( $contacts as $contact ) {
             $item = $this->prepare_item_for_database( $contact );
+
+            // A create request must never point at an existing record.
+            unset( $item['id'] );
+
             $id   = erp_insert_people( $item );
 
             if ( is_wp_error( $id ) ) {
