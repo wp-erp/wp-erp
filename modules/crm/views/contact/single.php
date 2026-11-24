@@ -42,7 +42,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
 
             <div class="col-2 column-left erp-single-customer-row" id="erp-customer-details">
                 <div class="left-content">
-                    <div class="customer-image-wraper">
+                    <div class="customer-image-wraper" v-pre>
                         <div class="row">
                             <div class="col-2 avatar">
                                 <?php echo wp_kses_post( $customer->get_avatar( 100 ) ); ?>
@@ -86,7 +86,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                         <div class="erp-handlediv" title="<?php esc_attr_e( 'Click to toggle', 'erp' ); ?>"><br></div>
                         <h3 class="erp-hndle"><span><?php esc_attr_e( 'Basic Info', 'erp' ); ?></span></h3>
                         <div class="inside">
-                            <ul class="erp-list separated">
+                            <ul class="erp-list separated" v-pre>
                                 <li><?php erp_print_key_value( __( 'First Name', 'erp' ), $customer->get_first_name() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Last Name', 'erp' ), $customer->get_last_name() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Date of Birth', 'erp' ), $customer->get_birthday() ); ?></li>
@@ -110,7 +110,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                                 <div class="inner-wrap">
                                     <h4><?php esc_html_e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
-                                        <div class="user-wrap-content">
+                                        <div class="user-wrap-content" v-pre>
                                             <?php
                                             $crm_user_id = $customer->get_contact_owner();
 
@@ -147,7 +147,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                                         <form action="" method="post">
 
                                             <div class="crm-aget-search-select-wrap">
-                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ); ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>">
+                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ); ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>" v-pre>
                                                     <option value=""><?php esc_html_e( 'Select a agent', 'erp' ); ?></option>
                                                     <?php if ( $crm_user_id ) { ?>
                                                         <option value="<?php echo esc_attr( $crm_user_id ); ?>" selected><?php echo esc_html( $user_string ); ?></option>
@@ -175,7 +175,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                             <div class="tagsdiv" id="tagsdiv-erp-crm-tag">
                                 <div class="nojs-tags hide-if-js">
                                     <label for="tax-input-post_tag">Add or remove tags</label>
-                                    <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc">
+                                    <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc" v-pre>
                                             <?php echo esc_html( implode( ',', $contact_tags ) ); ?>
                                         </textarea></p>
                                 </div>
@@ -211,7 +211,7 @@ $life_stages      = erp_crm_get_life_stages_dropdown_raw();
                         is-permitted="<?php echo esc_attr( current_user_can( 'erp_crm_edit_contact', $customer->id ) ); ?>"
                     ></contact-assign-group>
 
-                    <?php do_action( 'erp_crm_contact_left_widgets', $customer ); ?>
+                    <div v-pre><?php do_action( 'erp_crm_contact_left_widgets', $customer ); ?></div>
                 </div>
             </div>
 

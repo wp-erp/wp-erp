@@ -16,7 +16,7 @@ $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect
         <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="<?php esc_attr_e( 'Select a template...', 'erp' ); ?>">
             <option value=""><?php esc_attr_e( 'Select a template', 'erp' ); ?></option>
             <?php foreach ( $save_replies as $save_reply ) : ?>
-                <option value="<?php echo esc_attr( $save_reply->id ); ?>"><?php echo esc_html( $save_reply->name ); ?></option>
+                <option value="<?php echo esc_attr( $save_reply->id ); ?>" v-pre><?php echo esc_html( $save_reply->name ); ?></option>
             <?php endforeach; ?>
         </select>
     </p>
@@ -25,14 +25,14 @@ $settings_url = admin_url( 'admin.php?page=erp-settings#/erp-email/email_connect
         <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo esc_attr( $current_user->ID ); ?>">
         <label><?php esc_html_e( 'From', 'erp' ); ?></label>
         <span class="sep">:</span>
-        <span class="value"><?php echo esc_attr( $current_user->display_name ); ?></span>
+        <span class="value" v-pre><?php echo esc_attr( $current_user->display_name ); ?></span>
     </p>
 
     <p class="email-to" v-if="!feed">
         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo esc_attr( $customer->id ); ?>">
         <label><?php esc_html_e( 'To', 'erp' ); ?></label>
         <span class="sep">:</span>
-        <span class="value"><?php echo esc_html( $customer->get_full_name() ); ?></span>
+        <span class="value" v-pre><?php echo esc_html( $customer->get_full_name() ); ?></span>
     </p>
 
     <p class="email-subject" v-if="!feed">

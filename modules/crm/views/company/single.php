@@ -42,7 +42,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
 
                 <div class="left-content">
 
-                    <div class="customer-image-wraper">
+                    <div class="customer-image-wraper" v-pre>
                         <div class="row">
                             <div class="col-2 avatar">
                                 <?php echo wp_kses_post( $customer->get_avatar( 100 ) ); ?>
@@ -86,7 +86,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
                         <div class="erp-handlediv" title="<?php esc_attr_e( 'Click to toggle', 'erp' ); ?>"><br></div>
                         <h3 class="erp-hndle"><span><?php esc_html_e( 'Basic Info', 'erp' ); ?></span></h3>
                         <div class="inside">
-                            <ul class="erp-list separated">
+                            <ul class="erp-list separated" v-pre>
                                 <li><?php erp_print_key_value( __( 'Name', 'erp' ), $customer->get_full_name() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $customer->get_phone() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $customer->get_fax() ); ?></li>
@@ -106,7 +106,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
                                 <div class="inner-wrap">
                                     <h4><?php esc_html_e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
-                                        <div class="user-wrap-content">
+                                        <div class="user-wrap-content" v-pre>
                                             <?php
                                             $crm_user_id = $customer->get_contact_owner();
 
@@ -141,7 +141,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
                                         <form action="" method="post">
 
                                             <div class="crm-aget-search-select-wrap">
-                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ); ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>">
+                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php esc_attr_e( 'Search a crm agent', 'erp' ); ?>" data-val="<?php echo esc_attr( $crm_user_id ); ?>" data-selected="<?php echo esc_attr( $user_string ); ?>" v-pre>
                                                     <option value=""><?php esc_html_e( 'Select a agent', 'erp' ); ?></option>
                                                     <?php if ( $crm_user_id ) { ?>
                                                         <option value="<?php echo esc_attr( $crm_user_id ); ?>" selected><?php echo esc_html( $user_string ); ?></option>
@@ -169,7 +169,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
                             <div class="tagsdiv" id="tagsdiv-erp-crm-tag">
                                 <div class="nojs-tags hide-if-js">
                                     <label for="tax-input-post_tag"><?php esc_html_e( 'Add or remove tags', 'erp' ); ?></label>
-                                    <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc">
+                                    <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc" v-pre>
                                             <?php echo esc_html( implode( ',', $contact_tags ) ); ?>
                                         </textarea></p>
                                 </div>
@@ -205,7 +205,7 @@ $trashed      = erp_is_people_trashed( $customer->id );
                         is-permitted="<?php echo esc_attr( current_user_can( 'erp_crm_edit_contact', $customer->id ) ); ?>"
                     ></contact-assign-group>
 
-                    <?php do_action( 'erp_crm_company_left_widgets', $customer ); ?>
+                    <div v-pre><?php do_action( 'erp_crm_company_left_widgets', $customer ); ?></div>
 
                 </div>
             </div>
