@@ -26,7 +26,7 @@ $crm_users = erp_crm_get_crm_user();
                 <select style="width:260px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php esc_attr_e( 'Created by..', 'erp' ); ?>">
                     <option value="-1"><?php esc_html_e( 'All', 'erp' ); ?></option>
                     <?php foreach ( $crm_users as $crm_user ) { ?>
-                        <option value="<?php echo esc_attr( $crm_user->ID ); ?>"><?php echo esc_html( $crm_user->display_name ); ?></option>
+                        <option value="<?php echo esc_attr( $crm_user->ID ); ?>" v-pre><?php echo esc_html( $crm_user->display_name ); ?></option>
                     <?php } ?>
                 </select>
             </div>
