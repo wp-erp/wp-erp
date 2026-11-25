@@ -19,7 +19,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@wedevs/plugin-ui';
-import { LogOut, PanelLeft, PanelTop, UserCircle2 } from 'lucide-react';
+import { LogOut, PanelLeft, PanelTop, Sparkles, UserCircle2 } from 'lucide-react';
 import type { JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,6 +71,10 @@ export function UserMenu(): JSX.Element {
 				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/my-profile' ) }>
 					<UserCircle2 size={ 14 } aria-hidden="true" />
 					{ __( 'My profile', 'erp' ) }
+				</DropdownMenuItem>
+				<DropdownMenuItem className="gap-2" onClick={ () => navigate( '/ai-connection' ) }>
+					<Sparkles size={ 14 } aria-hidden="true" />
+					{ __( 'AI connection', 'erp' ) }
 				</DropdownMenuItem>
 				<DropdownMenuItem className="gap-2" onClick={ toggle }>
 					{ layout === 'sidebar' ? (

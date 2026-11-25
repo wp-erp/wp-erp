@@ -16,6 +16,7 @@ use WeDevs\ERP\HRM\Admin\UiEngineResolver;
 use WeDevs\ERP\HRM\Admin\WelcomeNotice;
 use WeDevs\ERP\HRM\Admin\UserProfile;
 use WeDevs\ERP\HRM\API\V2\Manager as V2Manager;
+use WeDevs\ERP\HRM\MCP\MCP;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -132,6 +133,9 @@ class HRM {
         UiEngineResolver::instance()->register_hooks();
         WelcomeNotice::instance()->register_hooks();
         V2Manager::init();
+
+        // MCP server: lets AI clients work with HR data as a given user.
+        MCP::init();
 
         $this->action( 'admin_notices', 'outdated_pro_notice' );
     }
