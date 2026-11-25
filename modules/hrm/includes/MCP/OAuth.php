@@ -31,9 +31,18 @@ defined( 'ABSPATH' ) || exit;
 class OAuth {
 
 	/**
-	 * The wp-login.php action behind the consent screen.
+	 * The nonce action on the consent screen.
 	 */
 	const AUTHORIZE_ACTION = 'erp_hr_mcp_authorize';
+
+	/**
+	 * The path of the consent screen, under the site's home URL.
+	 *
+	 * It is not a wp-login.php action: some hosts and security plugins send
+	 * anyone who is already signed in away from wp-login.php, whatever the
+	 * action, and the consent screen would never be seen.
+	 */
+	const AUTHORIZE_PATH = '/erp-hr-mcp/authorize';
 
 	/**
 	 * Prefix on a client id.
@@ -107,7 +116,21 @@ class OAuth {
 	 * @return string
 	 */
 	public static function authorize_url(): string {
-		return add_query_arg( 'action', self::AUTHORIZE_ACTION, site_url( 'wp-login.php', 'login' ) );
+		return home_url( self::AUTHORIZE_PATH );
+	}
+
+	/**
+	 * The authorization endpoint advertised to clients.
+	 *
+	 * It lives beside the token and registration endpoints and only forwards
+	 * to the consent screen. It has no query string of its own, because some
+	 * clients build the sign-in link by adding "?" and their parameters to
+	 * this address as plain text.
+	 *
+	 * @return string
+	 */
+	public static function authorization_endpoint(): string {
+		return rest_url( Settings::REST_NAMESPACE . Settings::REST_ROUTE . '/oauth/authorize' );
 	}
 
 	/**
@@ -119,7 +142,7 @@ class OAuth {
 	public function register(): void {
 		// The HR module boots during init, so that hook has already passed.
 		add_action( 'parse_request', [ $this, 'maybe_serve_metadata' ], 0 );
-		add_action( 'login_form_' . self::AUTHORIZE_ACTION, [ $this, 'handle_authorize' ] );
+		add_action( 'parse_request', [ $this, 'maybe_serve_authorize' ], 0 );
 	}
 
 	/**
@@ -128,6 +151,18 @@ class OAuth {
 	 * @return void
 	 */
 	public function register_routes(): void {
+		register_rest_route(
+			Settings::REST_NAMESPACE,
+			Settings::REST_ROUTE . '/oauth/authorize',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'forward_authorize' ],
+				// Open by design: it only forwards to the consent screen,
+				// which asks the person to sign in.
+				'permission_callback' => '__return_true',
+			]
+		);
+
 		register_rest_route(
 			Settings::REST_NAMESPACE,
 			Settings::REST_ROUTE . '/oauth/register',
@@ -150,6 +185,30 @@ class OAuth {
 				'permission_callback' => '__return_true',
 			]
 		);
+	}
+
+	/**
+	 * Forward an authorization request to the consent screen.
+	 *
+	 * @param WP_REST_Request $request The request.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function forward_authorize( WP_REST_Request $request ): WP_REST_Response {
+		$args = [];
+
+		foreach ( [ 'response_type', 'client_id', 'redirect_uri', 'code_challenge', 'code_challenge_method', 'state', 'scope', 'resource' ] as $key ) {
+			$value = $request->get_param( $key );
+
+			if ( is_string( $value ) && '' !== $value ) {
+				$args[ $key ] = rawurlencode( $value );
+			}
+		}
+
+		$response = new WP_REST_Response( null, 302 );
+		$response->header( 'Location', add_query_arg( $args, self::authorize_url() ) );
+
+		return $this->no_store( $response );
 	}
 
 	/**
@@ -191,6 +250,28 @@ class OAuth {
 		nocache_headers();
 		header( 'Access-Control-Allow-Origin: *' );
 		wp_send_json( $document );
+	}
+
+	/**
+	 * Serve the consent screen when its path is requested.
+	 *
+	 * @return void
+	 */
+	public function maybe_serve_authorize(): void {
+		$path = (string) wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
+		$home = (string) wp_parse_url( home_url(), PHP_URL_PATH );
+
+		if ( '' !== $home && '/' !== $home && 0 === strpos( $path, $home ) ) {
+			$path = substr( $path, strlen( untrailingslashit( $home ) ) );
+		}
+
+		if ( self::AUTHORIZE_PATH !== untrailingslashit( $path ) ) {
+			return;
+		}
+
+		nocache_headers();
+		$this->handle_authorize();
+		exit;
 	}
 
 	/**
@@ -574,7 +655,7 @@ class OAuth {
 
 		return [
 			'issuer'                                         => self::issuer(),
-			'authorization_endpoint'                         => self::authorize_url(),
+			'authorization_endpoint'                         => self::authorization_endpoint(),
 			'token_endpoint'                                 => $base . '/token',
 			'registration_endpoint'                          => $base . '/register',
 			'response_types_supported'                       => [ 'code' ],
@@ -657,8 +738,24 @@ class OAuth {
 		$host = (string) wp_parse_url( $params['redirect_uri'], PHP_URL_HOST );
 		$host = '' === $host ? (string) wp_parse_url( $params['redirect_uri'], PHP_URL_SCHEME ) . '://' : $host;
 
-		login_header( __( 'Connect an AI app', 'erp' ) );
+		status_header( 200 );
+		header( 'Content-Type: text/html; charset=' . get_bloginfo( 'charset' ) );
+		header( 'X-Frame-Options: DENY' );
 		?>
+		<!DOCTYPE html>
+		<html <?php language_attributes(); ?>>
+		<head>
+			<meta charset="<?php bloginfo( 'charset' ); ?>" />
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
+			<meta name="robots" content="noindex, nofollow" />
+			<meta name="referrer" content="no-referrer" />
+			<title><?php echo esc_html( __( 'Connect an AI app', 'erp' ) . ' ‹ ' . get_bloginfo( 'name' ) ); ?></title>
+			<?php wp_print_styles( [ 'login' ] ); ?>
+			<style>#login input[type="radio"]:checked::before { background-color: #3858e9; }</style>
+		</head>
+		<body class="login wp-core-ui">
+		<div id="login">
+		<h1 style="font-size:20px;font-weight:600;text-align:center;margin-bottom:24px;"><?php esc_html_e( 'Connect an AI app', 'erp' ); ?></h1>
 		<form method="post" action="<?php echo esc_url( self::authorize_url() ); ?>">
 			<?php wp_nonce_field( self::AUTHORIZE_ACTION ); ?>
 			<?php foreach ( $params as $key => $value ) : ?>
@@ -713,7 +810,9 @@ class OAuth {
 				</p>
 			<?php endif; ?>
 		</form>
+		</div>
+		</body>
+		</html>
 		<?php
-		login_footer();
 	}
 }
